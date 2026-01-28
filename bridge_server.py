@@ -1005,6 +1005,7 @@ async def impute_genes(state: CellState):
                 "top_genes": top_markers,
                 "latent_coords": latent.flatten().tolist(), # Returns full n_latent (e.g. 20)
                 "model_mode": model_mode,
+                "data_integrity": get_current_integrity(),
                 "scientific_summary": scientific_summary,
                 "ai_expert_insight": ai_expert_insight
             }
