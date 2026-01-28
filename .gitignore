@@ -1,0 +1,13 @@
+__pycache__/
+*.pyc
+env/
+venv/
+.env
+.DS_Store
+*.log
+*.h5ad
+!*.h5ad.part*
+models/driftmlp_trained/driftmlp.pt
+models/scvi_model/model.pt
+mnodels/scvi_model_hca/model.pt
+.gitattributes

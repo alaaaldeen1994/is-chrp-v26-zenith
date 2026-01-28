@@ -1,0 +1,22 @@
+fastapi
+uvicorn
+scvi-tools>=1.1.0
+torch
+numpy<2.0
+pandas
+scipy
+fpdf2
+matplotlib
+pillow
+python-dateutil
+openai
+python-dotenv
+anndata
+aiofiles
+httpx
+psutil
+# Security Dependencies
+itsdangerous>=2.1.0
+slowapi>=0.1.9
+bleach>=6.0.0
+pydantic[email]>=2.0.0

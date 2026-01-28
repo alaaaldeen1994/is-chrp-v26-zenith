@@ -1,0 +1,1149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nilus Lab | Zenith Research Console</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --primary: #3b82f6;
+            /* Research Blue */
+            --primary-hover: #2563eb;
+            --text-dark: #0f172a;
+            --text-muted: #64748b;
+            --bg-light: #ffffff;
+            --nav-border: #f1f5f9;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            overflow-x: hidden;
+        }
+
+        h1,
+        h2,
+        h3,
+        .nav-item {
+            font-family: 'Outfit', sans-serif;
+        }
+
+        /* --- PRE-NAV BAR --- */
+        .pre-nav {
+            background: #ffffff;
+            border-bottom: 1px solid var(--nav-border);
+            padding: 0.5rem 2rem;
+            display: flex;
+            justify-content: flex-end;
+            gap: 1.5rem;
+            font-size: 11px;
+            font-weight: 600;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* --- MAIN NAVIGATION --- */
+        nav {
+            background: #ffffff;
+            border-bottom: 1px solid var(--nav-border);
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .nav-item {
+            font-size: 14px;
+            font-weight: 500;
+            color: #475569;
+            transition: color 0.2s ease;
+            position: relative;
+        }
+
+        .nav-item:hover {
+            color: var(--primary);
+        }
+
+        .nav-item.active {
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        /* --- HERO BANNER --- */
+        .hero {
+            position: relative;
+            background: #000;
+            height: 480px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            padding: 0 10%;
+            color: #fff;
+        }
+
+        .hero-bg {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.3) 100%),
+                url('https://images.unsplash.com/photo-1614935151651-0bea6508db6b?auto=format&fit=crop&q=80&w=2000');
+            /* Professional Microscope/Lab background */
+            background-size: cover;
+            background-position: center;
+            z-index: 1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            max-width: 650px;
+        }
+
+        .hero-label {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--primary);
+        }
+
+        .hero-title {
+            font-size: 64px;
+            font-weight: 900;
+            line-height: 1.05;
+            margin-bottom: 2rem;
+            letter-spacing: -0.04em;
+        }
+
+        .btn-launch {
+            background-color: var(--primary);
+            color: #fff;
+            padding: 1.25rem 3rem;
+            border-radius: 8px;
+            /* Professional sharp edges with slight rounding */
+            font-size: 16px;
+            font-weight: 800;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .btn-launch:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 20px 40px rgba(59, 130, 246, 0.3);
+        }
+
+        /* --- BRANDING SECTION --- */
+        .brand-section {
+            padding: 8rem 10%;
+            display: flex;
+            align-items: center;
+            gap: 8rem;
+        }
+
+        .brand-visual {
+            width: 380px;
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        /* Geometric pattern representation for Zenith */
+        .zenith-cipher {
+            width: 320px;
+            height: 320px;
+            background: radial-gradient(circle, #eff6ff 0%, #dbeafe 100%);
+            border: 1px solid #bfdbfe;
+            border-radius: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .brand-info {
+            flex: 1;
+        }
+
+        .brand-tag {
+            font-size: 14px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            display: block;
+        }
+
+        .brand-headline {
+            font-size: 48px;
+            font-weight: 900;
+            color: var(--text-dark);
+            line-height: 1.1;
+            margin-bottom: 2rem;
+            letter-spacing: -0.02em;
+        }
+
+        .brand-headline span {
+            color: var(--primary);
+        }
+
+        .brand-text {
+            font-size: 18px;
+            color: var(--text-muted);
+            line-height: 1.7;
+            margin-bottom: 3rem;
+            max-width: 600px;
+        }
+
+        /* --- CORE CAPABILITIES --- */
+        .capability-grid {
+            padding: 0 10% 8rem;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 3rem;
+        }
+
+        .capability-card {
+            background: #fff;
+            border-bottom: 2px solid transparent;
+            padding: 3rem 0;
+            transition: all 0.3s ease;
+        }
+
+        .capability-card:hover {
+            border-bottom-color: var(--primary);
+        }
+
+        .capability-card i {
+            color: var(--primary);
+            margin-bottom: 2rem;
+            display: block;
+        }
+
+        .capability-card h3 {
+            font-size: 22px;
+            font-weight: 800;
+            margin-bottom: 1rem;
+        }
+
+        .capability-card p {
+            font-size: 15px;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        /* --- FOOTER PLATFORM STATUS --- */
+        footer {
+            background-color: #f8fafc;
+            border-top: 1px solid var(--nav-border);
+            padding: 6rem 10% 3rem;
+        }
+
+        .platform-status {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 4rem;
+            margin-bottom: 3rem;
+        }
+
+        .status-metric h4 {
+            font-size: 11px;
+            font-weight: 800;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            margin-bottom: 0.5rem;
+        }
+
+        .status-metric p {
+            font-size: 24px;
+            font-weight: 900;
+            color: var(--text-dark);
+        }
+
+        /* --- COOKIE / COMPLIANCE --- */
+        .compliance-bar {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            z-index: 2000;
+            width: calc(100% - 4rem);
+            max-width: 800px;
+        }
+
+        .btn-accept {
+            background: var(--text-dark);
+            color: #fff;
+            padding: 0.6rem 2rem;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 12px;
+            white-space: nowrap;
+        }
+
+        /* LOGIN MODAL - PREMIUM DESIGN */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 41, 59, 0.95) 100%);
+            backdrop-filter: blur(12px);
+            z-index: 9998;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+            border-radius: 24px;
+            max-width: 480px;
+            width: 90%;
+            padding: 3.5rem 3rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25),
+                0 0 0 1px rgba(148, 163, 184, 0.1);
+            position: relative;
+            animation: modalSlideIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-30px) scale(0.95);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            background: #f1f5f9;
+            border: none;
+            color: #64748b;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 10px;
+            transition: all 0.2s;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-close:hover {
+            background: #e2e8f0;
+            color: #334155;
+            transform: rotate(90deg);
+        }
+
+        /* Form Input Groups */
+        .input-group {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+
+        .input-group label {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+            font-size: 15px;
+            font-weight: 500;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            pointer-events: none;
+            background: linear-gradient(180deg, transparent 0%, transparent 45%, #ffffff 45%, #ffffff 55%, transparent 55%);
+            padding: 0 0.25rem;
+        }
+
+        .auth-input {
+            width: 100%;
+            padding: 1.25rem 1rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 15px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-family: 'Inter', sans-serif;
+            background: white;
+            color: #1e293b;
+        }
+
+        .auth-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1),
+                0 4px 12px rgba(59, 130, 246, 0.15);
+            transform: translateY(-1px);
+        }
+
+        .auth-input:focus+label,
+        .auth-input:not(:placeholder-shown)+label {
+            top: 0;
+            font-size: 12px;
+            color: #3b82f6;
+            font-weight: 600;
+        }
+
+        .auth-btn {
+            width: 100%;
+            padding: 1.25rem 2rem;
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .auth-btn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, transparent 100%);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .auth-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4);
+        }
+
+        .auth-btn:hover::before {
+            opacity: 1;
+        }
+
+        .auth-btn:active {
+            transform: translateY(0);
+        }
+
+        .auth-btn:disabled {
+            background: #cbd5e1;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .google-btn {
+            width: 100%;
+            padding: 1rem;
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            color: #1e293b;
+        }
+
+        .google-btn:hover {
+            border-color: #cbd5e1;
+            background: #f8fafc;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .divider {
+            position: relative;
+            text-align: center;
+            margin: 2rem 0;
+        }
+
+        .divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent 0%, #e2e8f0 20%, #e2e8f0 80%, transparent 100%);
+        }
+
+        .divider span {
+            background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+            padding: 0 1rem;
+            position: relative;
+            color: #64748b;
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .error-box {
+            padding: 0.875rem 1rem;
+            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+            border-left: 4px solid #ef4444;
+            border-radius: 10px;
+            color: #991b1b;
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 1.5rem;
+            animation: shake 0.4s;
+        }
+
+        @keyframes shake {
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            25% {
+                transform: translateX(-8px);
+            }
+
+            75% {
+                transform: translateX(8px);
+            }
+        }
+
+        .toggle-link {
+            color: #3b82f6;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            border-bottom: 2px solid transparent;
+        }
+
+        .toggle-link:hover {
+            color: #2563eb;
+            border-bottom-color: #3b82f6;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- LOGIN MODAL -->
+    <div class="modal-overlay" id="login-modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeLoginModal()">
+                <i data-lucide="x" class="w-6 h-6"></i>
+            </button>
+
+            <div class="text-center mb-8">
+                <div
+                    class="w-16 h-16 bg-gradient-to-br from-slate-900 to-slate-700 rounded-2xl flex items-center justify-center mx-auto mb-5 shadow-xl">
+                    <i data-lucide="dna" class="w-10 h-10 text-teal-400"></i>
+                </div>
+                <h2 class="text-3xl font-black text-slate-900 mb-2" style="font-family: 'Outfit', sans-serif;"
+                    id="modal-title">Welcome Back</h2>
+                <p class="text-slate-500 text-sm" id="modal-subtitle">Sign in to access your research dashboard</p>
+            </div>
+
+            <!-- Error Display -->
+            <div id="modal-error" class="hidden error-box">
+                <p id="modal-error-text"></p>
+            </div>
+
+            <!-- Google Sign-In (PRIMARY OPTION) -->
+            <button onclick="signInWithGoogle()" type="button" class="google-btn mb-6">
+                <svg width="20" height="20" viewBox="0 0 48 48">
+                    <path fill="#EA4335"
+                        d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z" />
+                    <path fill="#4285F4"
+                        d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z" />
+                    <path fill="#FBBC05"
+                        d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z" />
+                    <path fill="#34A853"
+                        d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z" />
+                    <path fill="none" d="M0 0h48v48H0z" />
+                </svg>
+                <span>Continue with Google</span>
+            </button>
+
+            <!-- Divider -->
+            <div class="divider mb-6">
+                <span>Or continue with email</span>
+            </div>
+
+            <!-- Email/Password Form -->
+            <form id="auth-form-modal" onsubmit="handleAuthModal(event)">
+                <!-- Email Input with Floating Label -->
+                <div class="input-group">
+                    <input type="email" id="modal-email" class="auth-input" placeholder=" " required>
+                    <label>Email Address</label>
+                </div>
+
+                <!-- Password Input with Floating Label -->
+                <div class="input-group">
+                    <input type="password" id="modal-password" class="auth-input" placeholder=" " required>
+                    <label>Password</label>
+                </div>
+
+                <!-- Confirm Password (Hidden by default) -->
+                <div id="modal-confirm-container" class="input-group hidden">
+                    <input type="password" id="modal-confirm-password" class="auth-input" placeholder=" ">
+                    <label>Confirm Password</label>
+                </div>
+
+                <button type="submit" class="auth-btn" id="modal-submit-btn">
+                    <span id="modal-btn-text">Sign In</span>
+                    <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                </button>
+            </form>
+
+            <!-- Toggle to Create Account -->
+            <div class="mt-8 text-center">
+                <p class="text-sm text-slate-600">
+                    <span id="modal-toggle-text">New to Nilus Lab?</span>
+                    <button onclick="toggleAuthMode()" class="toggle-link ml-1" id="modal-toggle-btn">Create
+                        Account</button>
+                </p>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- MAIN NAVIGATION -->
+    <nav>
+        <div class="flex items-center gap-6">
+            <div class="flex items-center gap-3">
+                <!-- DNA Icon matching simulation -->
+                <div class="w-10 h-10 bg-slate-900 rounded-lg flex items-center justify-center">
+                    <i data-lucide="dna" class="w-6 h-6 text-teal-400"></i>
+                </div>
+                <!-- Text matching simulation gradient -->
+                <div class="font-sans font-bold tracking-tight leading-none flex items-center">
+                    <span class="text-xl text-slate-800 tracking-tight mr-1">NILUS</span>
+                    <span
+                        class="text-xl bg-clip-text text-transparent bg-gradient-to-r from-teal-400 to-cyan-300">LAB</span>
+                </div>
+            </div>
+            <div class="h-8 w-px bg-slate-200 mx-4"></div>
+            <div class="nav-links">
+                <a href="#" class="nav-item active">Zenith Mainframe</a>
+                <a href="technical_catalog.html" class="nav-item">Foundation Catalog</a>
+                <a href="trials.html" class="nav-item">Virtual Trials</a>
+                <a href="index.html" class="nav-item">Simulation Lab</a>
+            </div>
+        </div>
+        <div class="flex items-center gap-8">
+            <!-- Show when NOT logged in -->
+            <div id="auth-signed-out" class="hidden">
+                <button onclick="openLoginModal()"
+                    class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-lg font-bold text-sm transition-all flex items-center gap-2">
+                    <i data-lucide="log-in" class="w-4 h-4"></i>
+                    Sign In
+                </button>
+            </div>
+
+            <!-- Show when logged in -->
+            <div id="auth-signed-in" class="hidden flex items-center gap-8">
+                <div class="text-right">
+                    <p class="text-[9px] text-slate-400 font-bold uppercase tracking-widest">Principal Investigator</p>
+                    <p class="text-[13px] font-black text-slate-800" id="profile-name">—</p>
+                </div>
+                <button onclick="performLogout()"
+                    class="text-xs font-black text-red-500 hover:text-red-600 transition-colors uppercase tracking-[0.1em]">Sign
+                    Out</button>
+                <i data-lucide="bell" class="w-5 h-5 text-slate-400 cursor-pointer"></i>
+                <i data-lucide="help-circle" class="w-5 h-5 text-slate-400 cursor-pointer"></i>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <header class="hero">
+        <div class="hero-bg"></div>
+
+        <div class="hero-content">
+            <p class="hero-label">Research Executive Update</p>
+            <h1 class="hero-title">Zenith Zenith-102M:<br>Next-Generation Large<br>Scale Simulation Trajectories</h1>
+            <button onclick="checkAuthAndRedirect('index.html')" class="btn-launch">
+                Enter Simulation Terminal
+                <i data-lucide="terminal" class="w-5 h-5 ml-2"></i>
+            </button>
+        </div>
+
+        <div class="ml-auto hidden lg:block text-right border-l border-white/10 pl-16">
+            <p class="text-4xl font-black text-blue-400">PRO LEVEL</p>
+            <p class="text-lg font-bold opacity-70 mt-2">Active Multi-Node Cluster</p>
+            <p class="mono text-sm mt-8 opacity-50">EPOCH_TIME: <span id="clock">00:00:00</span></p>
+        </div>
+    </header>
+
+    <!-- WHAT IS ZENITH? SUMMARY SECTION -->
+    <section
+        style="background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%); padding: 6rem 10%; border-bottom: 1px solid #e2e8f0;">
+        <div class="max-w-4xl mx-auto text-center mb-16">
+            <span class="text-xs font-black text-blue-600 uppercase tracking-[0.3em] mb-4 block">Platform
+                Overview</span>
+            <h2 class="text-5xl font-black text-slate-900 mb-6"
+                style="font-family: 'Outfit', sans-serif; line-height: 1.1;">
+                What is <span style="color: #3b82f6;">Zenith</span>?
+            </h2>
+            <p class="text-xl text-slate-600 leading-relaxed max-w-3xl mx-auto">
+                Zenith is an AI-powered platform for <strong>simulating cellular reprogramming and aging</strong>.
+                It enables researchers to model complex biological trajectories, run virtual clinical trials,
+                and identify therapeutic targets—all through advanced neural network predictions.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            <!-- Feature 1: Simulation Lab -->
+            <div
+                class="bg-white border-2 border-slate-100 rounded-2xl p-8 hover:border-blue-400 hover:shadow-2xl transition-all duration-300 group">
+                <div
+                    class="w-16 h-16 bg-blue-100 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-blue-600 transition-colors">
+                    <i data-lucide="microscope" class="w-8 h-8 text-blue-600 group-hover:text-white"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-slate-900 mb-4" style="font-family: 'Outfit', sans-serif;">Simulation
+                    Lab</h3>
+                <p class="text-slate-600 leading-relaxed mb-6">
+                    Real-time visualization of cellular dynamics. Watch thousands of cells transition between states
+                    (iPSCs, neurons, tumors) as they respond to reprogramming protocols.
+                </p>
+                <button onclick="checkAuthAndRedirect('index.html')"
+                    class="inline-flex items-center gap-2 text-blue-600 font-bold text-sm hover:gap-4 transition-all cursor-pointer bg-transparent border-none p-0">
+                    Launch Lab <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </button>
+            </div>
+
+            <!-- Feature 2: Virtual Trials -->
+            <div
+                class="bg-white border-2 border-slate-100 rounded-2xl p-8 hover:border-emerald-400 hover:shadow-2xl transition-all duration-300 group">
+                <div
+                    class="w-16 h-16 bg-emerald-100 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-emerald-600 transition-colors">
+                    <i data-lucide="activity" class="w-8 h-8 text-emerald-600 group-hover:text-white"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-slate-900 mb-4" style="font-family: 'Outfit', sans-serif;">Virtual
+                    Trials</h3>
+                <p class="text-slate-600 leading-relaxed mb-6">
+                    Run high-throughput clinical trials on digital cohorts. Test longevity interventions across
+                    diverse patient populations and generate Kaplan-Meier survival curves.
+                </p>
+                <button onclick="checkAuthAndRedirect('trials.html')"
+                    class="inline-flex items-center gap-2 text-emerald-600 font-bold text-sm hover:gap-4 transition-all cursor-pointer bg-transparent border-none p-0">
+                    Start Trial <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </button>
+            </div>
+
+            <!-- Feature 3: Safety & Discovery -->
+            <div
+                class="bg-white border-2 border-slate-100 rounded-2xl p-8 hover:border-purple-400 hover:shadow-2xl transition-all duration-300 group">
+                <div
+                    class="w-16 h-16 bg-purple-100 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-purple-600 transition-colors">
+                    <i data-lucide="shield-check" class="w-8 h-8 text-purple-600 group-hover:text-white"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-slate-900 mb-4" style="font-family: 'Outfit', sans-serif;">Safety
+                    Modeling</h3>
+                <p class="text-slate-600 leading-relaxed mb-6">
+                    Automated oncogenic risk detection during reprogramming. AI monitors cellular identity
+                    preservation and flags potential tumor formation.
+                </p>
+                <a href="technical_catalog.html"
+                    class="inline-flex items-center gap-2 text-purple-600 font-bold text-sm hover:gap-4 transition-all">
+                    Learn More <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- Quick Stats Bar -->
+        <div
+            class="max-w-5xl mx-auto mt-16 bg-slate-900 rounded-3xl p-10 grid grid-cols-1 md:grid-cols-4 gap-8 text-center">
+            <div>
+                <p class="text-4xl font-black text-blue-400 mb-2">7.13B</p>
+                <p class="text-xs text-slate-400 uppercase tracking-widest font-bold">Parameters</p>
+            </div>
+            <div>
+                <p class="text-4xl font-black text-emerald-400 mb-2">1,000</p>
+                <p class="text-xs text-slate-400 uppercase tracking-widest font-bold">Gene Dimensions</p>
+            </div>
+            <div>
+                <p class="text-4xl font-black text-purple-400 mb-2">99.8%</p>
+                <p class="text-xs text-slate-400 uppercase tracking-widest font-bold">Fidelity</p>
+            </div>
+            <div>
+                <p class="text-4xl font-black text-orange-400 mb-2">32</p>
+                <p class="text-xs text-slate-400 uppercase tracking-widest font-bold">vCPUs</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- BRANDING SECTION -->
+    <section class="brand-section">
+        <div class="brand-visual">
+            <div class="zenith-cipher">
+                <svg viewBox="0 0 200 200" class="w-48 h-48 text-blue-600 opacity-80">
+                    <!-- Geometric Cipher Representation -->
+                    <circle cx="100" cy="100" r="80" fill="none" stroke="currentColor" stroke-width="0.5"
+                        stroke-dasharray="2 4" />
+                    <circle cx="100" cy="100" r="60" fill="none" stroke="currentColor" stroke-width="0.5" />
+                    <rect x="60" y="60" width="80" height="80" rx="4" fill="none" stroke="currentColor" stroke-width="2"
+                        transform="rotate(45 100 100)" />
+                    <line x1="100" y1="20" x2="100" y2="180" stroke="currentColor" stroke-width="0.5" />
+                    <line x1="20" y1="100" x2="180" y2="100" stroke="currentColor" stroke-width="0.5" />
+                </svg>
+            </div>
+            <!-- Identity Stamp -->
+            <div class="absolute -bottom-6 -right-6 bg-white shadow-xl p-4 border border-slate-100 rounded-lg">
+                <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Authenticated Seal</p>
+                <div class="w-12 h-1 bg-blue-600"></div>
+            </div>
+        </div>
+
+        <div class="brand-info">
+            <span class="brand-tag">Foundation Architecture</span>
+            <h2 class="brand-headline">
+                Propelling Life Science with <br>
+                <span>Generative Trajectory Modeling.</span>
+            </h2>
+            <p class="brand-text">
+                The Zenith Mainframe delivers high-precision modeling for cellular longevity and reprogramming. By
+                mapping thousands of gene dimensions, we provide the evidence needed to navigate complex biological
+                transitions.
+            </p>
+
+            <div class="flex gap-12">
+                <div>
+                    <p class="text-3xl font-black text-slate-900 mb-1">7.13B</p>
+                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Neural Parameters</p>
+                </div>
+                <div class="h-12 w-px bg-slate-200"></div>
+                <div>
+                    <p class="text-3xl font-black text-slate-900 mb-1">99.8%</p>
+                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Model Fidelity</p>
+                </div>
+                <div class="h-12 w-px bg-slate-200"></div>
+                <div>
+                    <p class="text-3xl font-black text-slate-900 mb-1">32 vCPUs</p>
+                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Compute Velocity</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CORE CAPABILITIES -->
+    <section class="capability-grid">
+        <div class="capability-card">
+            <i data-lucide="target" class="w-12 h-12"></i>
+            <h3>Target Identification</h3>
+            <p>Advanced algorithmic screening to pinpoint high-value genomic targets for specific therapeutic
+                interventions and state induction.</p>
+        </div>
+        <div class="capability-card">
+            <i data-lucide="workflow" class="w-12 h-12"></i>
+            <h3>Generative Dynamics</h3>
+            <p>Utilizing proprietary SDE solvers to model continuous trajectories of cell fate conversion and
+                aging-related cellular drift.</p>
+        </div>
+        <div class="capability-card">
+            <i data-lucide="shield-alert" class="w-12 h-12"></i>
+            <h3>Safety Hardening</h3>
+            <p>Comprehensive monitoring systems designed to detect and mitigate oncogenic risk factors during
+                reprogramming cycles.</p>
+        </div>
+    </section>
+
+    <!-- PLATFORM STATUS FOOTER -->
+    <footer>
+        <div class="platform-status">
+            <div class="status-metric">
+                <h4>System Health</h4>
+                <p class="text-blue-600">Optimal</p>
+            </div>
+            <div class="status-metric">
+                <h4>Neural Core</h4>
+                <p>Zenith-102M</p>
+            </div>
+            <div class="status-metric">
+                <h4>Data Pipeline</h4>
+                <p>Encrypted (RSA-4096)</p>
+            </div>
+            <div class="status-metric">
+                <h4>Cluster Latency</h4>
+                <p>0.04 ms</p>
+            </div>
+        </div>
+
+        <div class="flex flex-col md:flex-row justify-between items-center gap-8">
+            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-[0.3em]">
+                © 2026 Nilus Research Institutional Node. All Proprietary Rights Reserved.
+            </p>
+            <div class="flex gap-10">
+                <a href="about.html"
+                    class="text-[10px] font-black text-slate-400 hover:text-blue-600 transition-colors uppercase tracking-widest">Lab
+                    Ops</a>
+                <a href="legal.html"
+                    class="text-[10px] font-black text-slate-400 hover:text-blue-600 transition-colors uppercase tracking-widest">Compliance</a>
+                <a href="contact.html"
+                    class="text-[10px] font-black text-slate-400 hover:text-blue-600 transition-colors uppercase tracking-widest">Contact</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- COMPLIANCE NOTICE -->
+    <div class="compliance-bar" id="compliance-bar">
+        <p class="text-sm text-slate-600 font-medium">
+            This research node implements rigorous security and data processing protocols to ensure the integrity of
+            simulated clinical environments.
+        </p>
+        <button class="btn-accept" onclick="document.getElementById('compliance-bar').style.display='none'">Confirm
+            Access</button>
+    </div>
+
+    <!-- SCRIPTS -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="js/firebase_config.js"></script>
+    <script>
+        lucide.createIcons();
+
+        function updateClock() {
+            const now = new Date();
+            const timeStr = now.toTimeString().split(' ')[0];
+            const clockEl = document.getElementById('clock');
+            if (clockEl) clockEl.innerText = timeStr;
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // Public page - show different UI based on auth state
+        firebase.auth().onAuthStateChanged((user) => {
+            const signedIn = document.getElementById('auth-signed-in');
+            const signedOut = document.getElementById('auth-signed-out');
+
+            if (user) {
+                // User is logged in
+                signedIn.classList.remove('hidden');
+                signedIn.classList.add('flex');
+                signedOut.classList.add('hidden');
+
+                const nameEl = document.getElementById('profile-name');
+                const displayName = user.email.split('@')[0].toUpperCase();
+                if (nameEl) {
+                    nameEl.innerText = displayName;
+                }
+            } else {
+                // User is NOT logged in
+                signedIn.classList.add('hidden');
+                signedOut.classList.remove('hidden');
+            }
+
+            lucide.createIcons(); // Re-render icons after UI change
+        });
+
+        function checkAuthAndRedirect(url) {
+            const user = firebase.auth().currentUser;
+            if (user) {
+                window.location.href = url;
+            } else {
+                // Open login modal instead of redirecting
+                openLoginModal();
+            }
+        }
+
+        function performLogout() {
+            firebase.auth().signOut().then(() => {
+                window.location.reload(); // Reload to show signed-out state
+            });
+        }
+
+        // Modal control
+        let isLoginMode = true;
+
+        function openLoginModal() {
+            document.getElementById('login-modal').classList.add('active');
+            lucide.createIcons();
+        }
+
+        function closeLoginModal() {
+            document.getElementById('login-modal').classList.remove('active');
+            document.getElementById('auth-form-modal').reset();
+            document.getElementById('modal-error').classList.add('hidden');
+        }
+
+        function toggleAuthMode() {
+            isLoginMode = !isLoginMode;
+            const title = document.getElementById('modal-title');
+            const subtitle = document.getElementById('modal-subtitle');
+            const btnText = document.getElementById('modal-btn-text');
+            const toggleText = document.getElementById('modal-toggle-text');
+            const toggleBtn = document.getElementById('modal-toggle-btn');
+            const confirmContainer = document.getElementById('modal-confirm-container');
+            const confirmInput = document.getElementById('modal-confirm-password');
+
+            if (isLoginMode) {
+                title.innerText = 'Welcome Back';
+                subtitle.innerText = 'Sign in to access simulation tools';
+                btnText.innerText = 'Sign In';
+                toggleText.innerText = 'New to Nilus Lab?';
+                toggleBtn.innerText = 'Create Account';
+                confirmContainer.classList.add('hidden');
+                confirmInput.removeAttribute('required');
+            } else {
+                title.innerText = 'Create Account';
+                subtitle.innerText = 'Join the research platform';
+                btnText.innerText = 'Sign Up';
+                toggleText.innerText = 'Already have an account?';
+                toggleBtn.innerText = 'Sign In';
+                confirmContainer.classList.remove('hidden');
+                confirmInput.setAttribute('required', 'true');
+            }
+            document.getElementById('modal-error').classList.add('hidden');
+        }
+
+        async function handleAuthModal(e) {
+            e.preventDefault();
+            const email = document.getElementById('modal-email').value;
+            const password = document.getElementById('modal-password').value;
+            const submitBtn = document.getElementById('modal-submit-btn');
+            const errorDiv = document.getElementById('modal-error');
+            const errorText = document.getElementById('modal-error-text');
+
+            if (!isLoginMode) {
+                const confirmPassword = document.getElementById('modal-confirm-password').value;
+                if (password !== confirmPassword) {
+                    errorText.innerText = 'Passwords do not match';
+                    errorDiv.classList.remove('hidden');
+                    return;
+                }
+            }
+
+            // Loading state
+            const originalContent = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="animate-spin w-5 h-5" data-lucide="loader-2"></i> Processing...';
+            submitBtn.disabled = true;
+            errorDiv.classList.add('hidden');
+            lucide.createIcons();
+
+            try {
+                if (isLoginMode) {
+                    await firebase.auth().signInWithEmailAndPassword(email, password);
+                } else {
+                    await firebase.auth().createUserWithEmailAndPassword(email, password);
+                }
+
+                // Success
+                submitBtn.innerHTML = '<i data-lucide="check" class="w-5 h-5"></i> Success!';
+                lucide.createIcons();
+
+                setTimeout(() => {
+                    closeLoginModal();
+                    window.location.reload(); // Stay on profile page, just refresh to show signed-in state
+                }, 800);
+
+            } catch (error) {
+                console.error('Auth error:', error);
+                submitBtn.innerHTML = originalContent;
+                submitBtn.disabled = false;
+                errorText.innerText = parseAuthError(error.code);
+                errorDiv.classList.remove('hidden');
+                lucide.createIcons();
+            }
+        }
+
+        // Google Sign-In
+        async function signInWithGoogle() {
+            const provider = new firebase.auth.GoogleAuthProvider();
+            const errorDiv = document.getElementById('modal-error');
+            const errorText = document.getElementById('modal-error-text');
+
+            try {
+                await firebase.auth().signInWithPopup(provider);
+                // Success - auth state change will trigger reload
+                closeLoginModal();
+                setTimeout(() => {
+                    window.location.reload();
+                }, 500);
+            } catch (error) {
+                console.error('Google sign-in error:', error);
+                errorText.innerText = error.code === 'auth/popup-closed-by-user'
+                    ? 'Sign-in cancelled'
+                    : 'Google sign-in failed. Please try again.';
+                errorDiv.classList.remove('hidden');
+            }
+        }
+
+
+        function parseAuthError(code) {
+            switch (code) {
+                case 'auth/invalid-email': return 'Invalid email address';
+                case 'auth/user-not-found': return 'No account found with this email';
+                case 'auth/wrong-password': return 'Incorrect password';
+                case 'auth/email-already-in-use': return 'Email already registered';
+                case 'auth/weak-password': return 'Password must be at least 6 characters';
+                default: return 'Authentication failed. Please try again.';
+            }
+        }
+
+        // Close modal on outside click
+        document.getElementById('login-modal').addEventListener('click', function (e) {
+            if (e.target === this) {
+                closeLoginModal();
+            }
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bio-Microscopy Colony Simulation | Kagawea Ultra</title>
+    <style>
+        :root {
+            --bg: #000000;
+            --panel: rgba(10, 10, 15, 0.95);
+            --accent: #34d399;
+            --text: #f8fafc;
+        }
+
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'JetBrains Mono', monospace;
+            overflow: hidden;
+        }
+
+        #viewport {
+            width: 100vw;
+            height: 100vh;
+            filter: contrast(1.3) brightness(1.2) saturate(1.4);
+        }
+
+        /* Microscopy Effects */
+        .scanline-overlay {
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.08) 50%);
+            background-size: 100% 4px;
+            pointer-events: none;
+            z-index: 5;
+            opacity: 0.3;
+        }
+
+        .bloom-overlay {
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(circle at center, transparent 30%, rgba(0, 0, 0, 0.4) 100%);
+            pointer-events: none;
+            z-index: 4;
+        }
+
+        .controls {
+            position: fixed;
+            top: 30px;
+            left: 30px;
+            width: 300px;
+            background: var(--panel);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 24px;
+            z-index: 10;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+        }
+
+        .header {
+            font-size: 10px;
+            font-weight: 900;
+            letter-spacing: 3px;
+            color: var(--accent);
+            text-transform: uppercase;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--accent);
+            border-radius: 50%;
+            box-shadow: 0 0 12px var(--accent);
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 0.3;
+                transform: scale(0.8);
+            }
+
+            50% {
+                opacity: 1;
+                transform: scale(1.1);
+            }
+        }
+
+        .control-group {
+            margin-bottom: 20px;
+        }
+
+        .label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 9px;
+            color: #64748b;
+            margin-bottom: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            height: 3px;
+            background: #1e293b;
+            border-radius: 2px;
+            appearance: none;
+            outline: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            appearance: none;
+            width: 14px;
+            height: 14px;
+            background: var(--accent);
+            border: 2px solid #000;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(52, 211, 153, 0.4);
+        }
+
+        .legend {
+            margin-top: 24px;
+            padding-top: 24px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 10px;
+            margin-bottom: 10px;
+            color: #94a3b8;
+        }
+
+        .swatch {
+            width: 10px;
+            height: 10px;
+            border-radius: 3px;
+        }
+
+        #meta-data {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 9px;
+            color: #475569;
+            text-align: right;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="scanline-overlay"></div>
+    <div class="bloom-overlay"></div>
+
+    <div class="controls">
+        <div class="header">
+            <div class="header-dot"></div>
+            Microscopy Analysis
+        </div>
+
+        <div class="control-group">
+            <div class="label">
+                <span>COLONY RADIUS</span>
+                <span id="val-radius">380px</span>
+            </div>
+            <input type="range" id="input-radius" min="100" max="600" value="380">
+        </div>
+
+        <div class="control-group">
+            <div class="label">
+                <span>CELL DENSITY</span>
+                <span id="val-density">1800</span>
+            </div>
+            <input type="range" id="input-density" min="500" max="4000" value="1800">
+        </div>
+
+        <div class="control-group">
+            <div class="label">
+                <span>CHANNEL: 488nm (GREEN)</span>
+                <span id="val-green">90%</span>
+            </div>
+            <input type="range" id="input-green" min="0" max="150" value="90">
+        </div>
+
+        <div class="control-group">
+            <div class="label">
+                <span>CHANNEL: DAPI (BLUE)</span>
+                <span id="val-blue">70%</span>
+            </div>
+            <input type="range" id="input-blue" min="0" max="150" value="70">
+        </div>
+
+        <div class="legend">
+            <div class="legend-item">
+                <div class="swatch" style="background: #10b981; box-shadow: 0 0 10px #10b981;"></div>
+                <span>Phalloidin (Actin Filaments)</span>
+            </div>
+            <div class="legend-item">
+                <div class="swatch" style="background: #f43f5e; box-shadow: 0 0 10px #f43f5e;"></div>
+                <span>mCherry (Cytoplasm)</span>
+            </div>
+            <div class="legend-item">
+                <div class="swatch" style="background: #6366f1; box-shadow: 0 0 10px #6366f1;"></div>
+                <span>DAPI (Nuclear DNA)</span>
+            </div>
+        </div>
+    </div>
+
+    <div id="meta-data">
+        OBJECTIVE: 40X OIL IMMERSION<br>
+        EXPOSURE: 180ms<br>
+        STATUS: SCANNING COLONY... 60 FPS
+    </div>
+
+    <canvas id="viewport"></canvas>
+
+    <script>
+        const canvas = document.getElementById('viewport');
+        const ctx = canvas.getContext('2d');
+
+        const params = {
+            radius: 380,
+            density: 1800,
+            green: 0.9,
+            blue: 0.7,
+            red: 0.8
+        };
+
+        let cells = [];
+        let bgFilaments = [];
+
+        class Cell {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.size = 8 + Math.random() * 10;
+                this.pulseOffset = Math.random() * Math.PI * 2;
+                this.offsets = Array.from({ length: 12 }, () => 0.8 + Math.random() * 0.5);
+                this.health = Math.random();
+                this.isEdge = false;
+
+                // Nuclear offset
+                this.nx = (Math.random() - 0.5) * 6;
+                this.ny = (Math.random() - 0.5) * 6;
+            }
+
+            update() {
+                const centerX = canvas.width / 2;
+                const centerY = canvas.height / 2;
+                const dx = centerX - this.x;
+                const dy = centerY - this.y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+
+                this.isEdge = dist > params.radius * 0.85;
+
+                // Brownian Jitter
+                this.x += Math.sin(Date.now() * 0.001 + this.pulseOffset) * 0.2;
+                this.y += Math.cos(Date.now() * 0.0012 + this.pulseOffset) * 0.2;
+
+                // Move toward colony centroid
+                if (dist > params.radius) {
+                    this.x += dx * 0.03;
+                    this.y += dy * 0.03;
+                }
+            }
+
+            draw() {
+                const time = Date.now() * 0.001 + this.pulseOffset;
+                const flicker = 0.9 + Math.sin(time * 5) * 0.1;
+
+                ctx.globalCompositeOperation = 'screen';
+
+                // 1. CYTOPLASM (Red/Magenta - Fluorescence Depth)
+                const cytGrad = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.size * 1.8);
+                const a = (this.health > 0.8 ? 0.4 : 0.1) * params.red;
+                cytGrad.addColorStop(0, `rgba(244, 63, 94, ${a})`);
+                cytGrad.addColorStop(1, `rgba(124, 58, 237, 0)`);
+
+                ctx.fillStyle = cytGrad;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size * 2, 0, Math.PI * 2);
+                ctx.fill();
+
+                // 2. NUCLEUS (DAPI Blue - Sharp focus)
+                const nSize = this.size * 0.35;
+                ctx.beginPath();
+                ctx.fillStyle = `rgba(129, 140, 248, ${0.95 * params.blue})`;
+                // Glow for nucleus
+                ctx.shadowBlur = 10;
+                ctx.shadowColor = '#6366f1';
+                ctx.arc(this.x + this.nx, this.y + this.ny, nSize, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.shadowBlur = 0;
+
+                // 3. MEMBRANE (Crisp Green Filaments)
+                ctx.beginPath();
+                ctx.strokeStyle = `rgba(52, 211, 153, ${params.green * flicker * 0.8})`;
+                ctx.lineWidth = 1.2;
+
+                for (let i = 0; i <= 12; i++) {
+                    const ang = (i / 12) * Math.PI * 2;
+                    const r = this.size * this.offsets[i % 12];
+                    const px = this.x + Math.cos(ang) * r;
+                    const py = this.y + Math.sin(ang) * r;
+                    if (i === 0) ctx.moveTo(px, py);
+                    else ctx.lineTo(px, py);
+                }
+                ctx.stroke();
+
+                // 4. OUTER FILOPODIA (The "Hairy" Edge)
+                if (this.isEdge && Math.random() > 0.2) {
+                    const angToCenter = Math.atan2(this.y - canvas.height / 2, this.x - canvas.width / 2);
+                    const branches = 1 + Math.floor(Math.random() * 2);
+
+                    for (let b = 0; b < branches; b++) {
+                        const hairAng = angToCenter + (Math.random() - 0.5) * 1.5;
+                        const hairLen = 25 + Math.random() * 40;
+
+                        ctx.beginPath();
+                        ctx.strokeStyle = `rgba(16, 185, 129, ${0.4 * params.green})`;
+                        ctx.lineWidth = 0.8;
+                        ctx.moveTo(this.x, this.y);
+
+                        const controlX = this.x + Math.cos(hairAng) * hairLen * 0.5 + (Math.random() - 0.5) * 20;
+                        const controlY = this.y + Math.sin(hairAng) * hairLen * 0.5 + (Math.random() - 0.5) * 20;
+
+                        ctx.quadraticCurveTo(controlX, controlY,
+                            this.x + Math.cos(hairAng) * hairLen,
+                            this.y + Math.sin(hairAng) * hairLen);
+                        ctx.stroke();
+                    }
+                }
+
+                ctx.globalCompositeOperation = 'source-over';
+            }
+        }
+
+        function initBackground() {
+            bgFilaments = Array.from({ length: 80 }, () => ({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                len: 200 + Math.random() * 400,
+                ang: Math.random() * Math.PI * 2,
+                rot: (Math.random() - 0.5) * 0.001
+            }));
+        }
+
+        function drawBackground() {
+            ctx.strokeStyle = 'rgba(52, 211, 153, 0.05)';
+            ctx.lineWidth = 0.5;
+            bgFilaments.forEach(f => {
+                f.ang += f.rot;
+                ctx.beginPath();
+                ctx.moveTo(f.x, f.y);
+                ctx.lineTo(f.x + Math.cos(f.ang) * f.len, f.y + Math.sin(f.ang) * f.len);
+                ctx.stroke();
+            });
+        }
+
+        function initSimulation() {
+            cells = [];
+            initBackground();
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+
+            for (let i = 0; i < params.density; i++) {
+                // Sphere cluster packing
+                const ang = Math.random() * Math.PI * 2;
+                const r = Math.sqrt(Math.random()) * params.radius;
+                const x = centerX + Math.cos(ang) * r;
+                const y = centerY + Math.sin(ang) * r;
+                cells.push(new Cell(x, y));
+            }
+        }
+
+        function resize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            initSimulation();
+        }
+
+        function animate() {
+            ctx.fillStyle = '#000000';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            drawBackground();
+
+            // Atmospheric Glow
+            const atmGrad = ctx.createRadialGradient(
+                canvas.width / 2, canvas.height / 2, 0,
+                canvas.width / 2, canvas.height / 2, params.radius * 2.5
+            );
+            atmGrad.addColorStop(0, 'rgba(124, 58, 237, 0.1)');
+            atmGrad.addColorStop(0.5, 'rgba(16, 185, 129, 0.06)');
+            atmGrad.addColorStop(1, 'transparent');
+            ctx.fillStyle = atmGrad;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Z-Sort (Simple)
+            cells.sort((a, b) => a.y - b.y);
+
+            cells.forEach(cell => {
+                cell.update();
+                cell.draw();
+            });
+
+            requestAnimationFrame(animate);
+        }
+
+        // Interaction
+        document.getElementById('input-radius').addEventListener('input', (e) => {
+            params.radius = parseInt(e.target.value);
+            document.getElementById('val-radius').innerText = params.radius + 'px';
+        });
+
+        document.getElementById('input-density').addEventListener('input', (e) => {
+            params.density = parseInt(e.target.value);
+            document.getElementById('val-density').innerText = params.density;
+            initSimulation();
+        });
+
+        document.getElementById('input-green').addEventListener('input', (e) => {
+            params.green = e.target.value / 100;
+            document.getElementById('val-green').innerText = e.target.value + '%';
+        });
+
+        document.getElementById('input-blue').addEventListener('input', (e) => {
+            params.blue = e.target.value / 100;
+            document.getElementById('val-blue').innerText = e.target.value + '%';
+        });
+
+        window.addEventListener('resize', resize);
+        resize();
+        animate();
+
+    </script>
+</body>
+
+</html>

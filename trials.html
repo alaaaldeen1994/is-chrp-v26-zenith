@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nilus Lab | Enterprise Virtual Trials</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <style>
+        body {
+            background: #020617;
+            color: #f8fafc;
+            font-family: 'Inter', sans-serif;
+            overflow: hidden;
+        }
+
+        .mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .grid-bg {
+            background-image: linear-gradient(rgba(30, 41, 59, 0.3) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(30, 41, 59, 0.3) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+    </style>
+</head>
+
+<body class="grid-bg h-screen flex flex-col">
+
+    <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur p-4 flex justify-between items-center z-50">
+        <div class="flex items-center gap-4">
+            <a href="profile.html"
+                class="w-8 h-8 bg-slate-800 hover:bg-slate-700 rounded flex items-center justify-center text-slate-400 transition-colors mr-2 shadow-inner">
+                <i data-lucide="chevron-left" class="w-5 h-5"></i>
+            </a>
+            <div
+                class="w-8 h-8 bg-blue-600 rounded flex items-center justify-center font-black text-xs tracking-tighter shadow-lg shadow-blue-500/20">
+                NL</div>
+            <div>
+                <h1 class="font-bold text-sm tracking-wide text-white">NILUS LAB <span class="text-blue-500">ZENITH
+                        LSST-100</span></h1>
+                <div class="text-[10px] text-slate-400 mono">VIRTUAL CLINICAL TRIAL PLATFORM (V28.2)</div>
+            </div>
+        </div>
+        <div class="flex gap-4">
+            <div class="bg-black/40 px-3 py-1 rounded border border-slate-700 flex flex-col items-end">
+                <span class="text-[9px] text-slate-500 uppercase font-bold">Active License</span>
+                <span class="text-[11px] text-emerald-400 font-mono">PHARMA_TIER_1</span>
+            </div>
+        </div>
+    </header>
+
+    <div class="flex flex-1 overflow-hidden">
+        <!-- Sidebar Controls -->
+        <aside class="w-80 border-r border-slate-800 bg-slate-900/50 p-6 flex flex-col gap-6 overflow-y-auto">
+
+            <div>
+                <h3 class="text-[10px] font-bold text-blue-400 uppercase tracking-widest mb-3">Target Disease</h3>
+                <select id="disease-select"
+                    class="w-full bg-black border border-slate-700 text-sm p-3 rounded text-slate-300 focus:border-blue-500 outline-none">
+                    <option value="ALZ">Alzheimer's (Neurodegeneration)</option>
+                    <option value="CF">Cardiac Fibrosis (Post-MI)</option>
+                    <option value="EP">Endothelial Dysfunction</option>
+                    <option value="HPC">Hutchinson-Gilford Progeria</option>
+                </select>
+            </div>
+
+            <div>
+                <h3 class="text-[10px] font-bold text-blue-400 uppercase tracking-widest mb-3">Cohort Configuration</h3>
+                <div class="space-y-4">
+                    <div class="bg-black/40 p-3 rounded border border-slate-800">
+                        <div class="flex justify-between text-xs mb-1">
+                            <span class="text-slate-400">Cohort Size (N)</span>
+                            <span class="text-white font-mono" id="val-n">1000</span>
+                        </div>
+                        <input type="range" min="100" max="10000" step="100" value="1000"
+                            class="w-full accent-blue-500 h-1 bg-slate-700 rounded-lg appearance-none cursor-pointer"
+                            oninput="document.getElementById('val-n').innerText = this.value">
+                    </div>
+
+                    <div class="bg-black/40 p-3 rounded border border-slate-800">
+                        <div class="flex justify-between text-xs mb-1">
+                            <span class="text-slate-400">Genetic Variance (σ)</span>
+                            <span class="text-white font-mono" id="val-var">High</span>
+                        </div>
+                        <select
+                            class="w-full bg-slate-900 text-xs mt-2 p-1 border border-slate-700 rounded text-slate-400">
+                            <option>High (Diverse Pop.)</option>
+                            <option>Medium (Standard)</option>
+                            <option>Low (Isogenic Twin)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <h3 class="text-[10px] font-bold text-emerald-400 uppercase tracking-widest mb-3">Investigational
+                    Protocol</h3>
+                <div
+                    class="p-3 border border-emerald-500/30 bg-emerald-500/5 rounded flex items-center justify-between">
+                    <span class="text-xs font-bold text-emerald-100">DRP-Alpha-12</span>
+                    <span class="text-[9px] bg-emerald-500 text-black px-1.5 py-0.5 rounded font-bold">ACTIVE</span>
+                </div>
+            </div>
+
+            <div class="mt-auto">
+                <button onclick="startTrial()" id="btn-start"
+                    class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-4 rounded-lg shadow-lg shadow-blue-500/20 transition-all flex items-center justify-center gap-2">
+                    <i data-lucide="play-circle" class="w-5 h-5"></i>
+                    INITIATE PHASE III
+                </button>
+
+                <button onclick="exportTrialData()" id="btn-export"
+                    class="hidden mt-4 w-full bg-slate-800 border border-slate-700 hover:bg-slate-700 text-slate-300 font-bold py-3 rounded-lg transition-all flex items-center justify-center gap-2 text-xs">
+                    <i data-lucide="download"></i>
+                    EXPORT DATA PACKAGE (CSV)
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Visualization Area -->
+        <main class="flex-1 p-8 relative flex flex-col gap-6">
+
+            <!-- Status Bar -->
+            <div id="trial-status"
+                class="hidden absolute top-4 left-1/2 -translate-x-1/2 bg-slate-800/90 border border-slate-600 rounded-full px-6 py-2 flex items-center gap-4 shadow-xl z-20">
+                <div class="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></div>
+                <span class="text-xs font-mono text-blue-200">Processing <span id="sim-counter">0</span> Digital
+                    Twins</span>
+            </div>
+
+            <!-- Top Row: KM Plot & Scatter -->
+            <div class="grid grid-cols-3 gap-6 h-1/2">
+                <!-- Kaplan Meier -->
+                <div
+                    class="col-span-2 bg-slate-900/50 border border-slate-800 rounded-xl p-5 flex flex-col relative overflow-hidden">
+                    <div class="absolute inset-0 grid-bg opacity-50 pointer-events-none"></div>
+                    <div class="flex justify-between items-start mb-4 z-10">
+                        <div>
+                            <h3 class="text-sm font-bold text-white">Kaplan-Meier Survival Analysis</h3>
+                            <p class="text-[10px] text-slate-500">Event: Cellular Senescence/Failure</p>
+                        </div>
+                        <div class="text-right hidden" id="p-value-box">
+                            <div class="text-[10px] uppercase text-slate-500 font-bold">Log-Rank p-value</div>
+                            <div class="text-xl font-mono text-emerald-400 font-bold" id="p-value">--</div>
+                        </div>
+                    </div>
+                    <div class="flex-1 relative z-10">
+                        <canvas id="km-chart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Waterfall Plot -->
+                <div class="bg-slate-900/50 border border-slate-800 rounded-xl p-5 flex flex-col">
+                    <h3 class="text-sm font-bold text-white mb-1">Efficacy Waterfall</h3>
+                    <p class="text-[10px] text-slate-500 mb-4">% BioAge Reduction per Patient</p>
+                    <div class="flex-1 relative">
+                        <canvas id="waterfall-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom Row: Diversity Heatmap -->
+            <div class="h-1/2 bg-slate-900/50 border border-slate-800 rounded-xl p-5 flex flex-col">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-sm font-bold text-white">Population Manifold Response</h3>
+                    <div class="flex gap-4 text-[10px] text-slate-400">
+                        <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                            Responder</span>
+                        <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-yellow-500"></span>
+                            Non-Responder</span>
+                    </div>
+                </div>
+                <div class="flex-1 relative ml-15" id="heatmap-container">
+                    <canvas id="manifold-chart"></canvas>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- Trial Logic Script -->
+    <script>
+        lucide.createIcons();
+        let kmChart, waterfallChart, manifoldChart;
+
+        function initCharts() {
+            // Kaplan-Meier
+            const ctxKM = document.getElementById('km-chart').getContext('2d');
+            kmChart = new Chart(ctxKM, {
+                type: 'line',
+                data: {
+                    labels: Array.from({ length: 100 }, (_, i) => i),
+                    datasets: [
+                        { label: 'Placebo/Standard', data: [], borderColor: '#94a3b8', borderDash: [5, 5], step: 'before', pointRadius: 0 },
+                        { label: 'DRP-Alpha-12', data: [], borderColor: '#3b82f6', step: 'before', pointRadius: 0 }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { min: 0, max: 1.0, title: { display: true, text: 'Survival Probability' }, grid: { color: '#1e293b' } },
+                        x: { title: { display: true, text: 'Simulated Days' }, grid: { display: false } }
+                    },
+                    plugins: { legend: { position: 'bottom', labels: { color: '#cbd5e1' } } }
+                }
+            });
+
+            // Waterfall
+            const ctxWF = document.getElementById('waterfall-chart').getContext('2d');
+            waterfallChart = new Chart(ctxWF, {
+                type: 'bar',
+                data: { labels: [], datasets: [{ label: 'Delta Age', data: [], backgroundColor: [] }] },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    scales: { x: { display: false }, y: { grid: { color: '#1e293b' } } },
+                    plugins: { legend: { display: false } }
+                }
+            });
+
+            const ctxMan = document.getElementById('manifold-chart').getContext('2d');
+            manifoldChart = new Chart(ctxMan, {
+                type: 'scatter',
+                data: {
+                    datasets: [{
+                        label: 'Patient Outcomes',
+                        data: [],
+                        backgroundColor: '#3b82f6'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { x: { display: false }, y: { display: false } },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+
+        async function startTrial() {
+            const btn = document.getElementById('btn-start');
+            btn.disabled = true;
+            btn.innerHTML = `<i class="animate-spin" data-lucide="loader-2"></i> COMPUTING 1000-DIM TENSORS...`;
+            document.getElementById('trial-status').classList.remove('hidden');
+
+            const total = parseInt(document.getElementById('val-n').innerText);
+            document.getElementById('sim-counter').innerText = total;
+
+            try {
+                const disease = document.getElementById('disease-select').value;
+                const variance = document.getElementById('val-var').innerText || 'Medium'; // Logic to get text value needs refinement if select is used
+                // Actually the select is just "High (Diverse...)" so we need to grab the value or text
+                // Let's assume the Python default handles it if we pass raw string, or we map it.
+                // The select element query:
+                const varSelect = document.querySelectorAll('select')[1]; // 2nd select
+                const varValue = varSelect ? varSelect.options[varSelect.selectedIndex].text.split(' ')[0] : 'Medium';
+
+                // CALL PYTHON BRIDGE
+                const response = await fetch('/run_virtual_trial', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-API-Key': 'zenith-v26-secure-key-4922'
+                    },
+                    body: JSON.stringify({
+                        disease: disease,
+                        cohort_size: total,
+                        variance: varValue
+                    })
+                });
+
+                if (!response.ok) throw new Error("Backend Error");
+                const data = await response.json();
+                currentData = data; // Store globally for export
+
+                // UPDATE CHARTS (Fast Render)
+                kmChart.data.datasets[0].data = data.km_placebo;
+                kmChart.data.datasets[1].data = data.km_active;
+                kmChart.update();
+
+                waterfallChart.data.labels = data.waterfall_data.map((_, i) => i);
+                waterfallChart.data.datasets[0].data = data.waterfall_data;
+                waterfallChart.data.datasets[0].backgroundColor = data.waterfall_data.map(v => v < 0 ? '#10b981' : '#dc2626');
+                waterfallChart.update();
+
+                const manifoldData = data.manifold_x.map((x, i) => ({ x: x, y: data.manifold_y[i] }));
+                const pointColors = data.responder_status.map(isResp => isResp ? '#10b981' : '#f59e0b');
+
+                manifoldChart.data.datasets[0].data = manifoldData;
+                manifoldChart.data.datasets[0].backgroundColor = pointColors;
+                manifoldChart.update();
+
+                // Stats
+                document.getElementById('p-value-box').classList.remove('hidden');
+                document.getElementById('p-value').innerText = `p < ${data.p_value.toExponential(2)}`;
+
+                finishTrial();
+
+            } catch (e) {
+                console.error(e);
+                btn.innerHTML = `<i data-lucide="alert-circle"></i> SIMULATION ERROR`;
+                btn.classList.replace('bg-blue-600', 'bg-red-600');
+                btn.disabled = false;
+            }
+        }
+
+        let currentData = null; // Store data for export
+
+        function finishTrial() {
+            const btn = document.getElementById('btn-start');
+            btn.innerHTML = `<i data-lucide="check-circle"></i> TRIAL COMPLETE`;
+            btn.classList.replace('bg-blue-600', 'bg-emerald-600');
+            document.getElementById('trial-status').classList.add('hidden');
+
+            // Show Export Button
+            document.getElementById('btn-export').classList.remove('hidden');
+
+            lucide.createIcons();
+        }
+
+        function exportTrialData() {
+            if (!currentData) return;
+
+            // HEADERS
+            let csv = "PatientID,Group,Outcome_BioAge_Delta,Responder_Status\n";
+
+            // ROWS (Reconstructing form aggregate data for demo download)
+            // Since we receive aggregate histograms/plots, we reconstruct row-level data from the waterfall array
+            // In a real app, backend would return the full CSV URL. 
+            // We will format the 'waterfall_data' which corresponds to individual patients.
+
+            currentData.waterfall_data.forEach((val, idx) => {
+                const pid = `P-${String(idx).padStart(4, '0')}`;
+                const group = "Active_Arm";
+                const outcome = val.toFixed(4);
+                const status = val < 0 ? "Responder" : "Non-Responder";
+                csv += `${pid},${group},${outcome},${status}\n`;
+            });
+
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `NilusLab_Trial_Results_${Date.now()}.csv`;
+            a.click();
+        }
+
+        window.onload = initCharts;
+    </script>
+</body>
+
+</html>
