@@ -1847,17 +1847,50 @@ async def startup_event():
     print("🚀 SYSTEM DIAGNOSTIC: STARTUP COMPLETE")
     print("="*50)
     
-    # Verify Zenith Model
-    if os.path.exists(TRAINED_DRIFTMLP_PATH):
-        print(f"✅ ZENITH MODEL: FOUND at {TRAINED_DRIFTMLP_PATH}")
-        size_mb = os.path.getsize(TRAINED_DRIFTMLP_PATH) / (1024 * 1024)
-        print(f"📊 MODEL SIZE: {size_mb:.2f} MB")
-        if size_mb > 400:
-            print("🌟 STATUS: FULL 102M PARAMETER MODEL LOADED")
+    # 1. Debug Directory State
+    drift_dir = os.path.dirname(TRAINED_DRIFTMLP_PATH)
+    if os.path.exists(drift_dir):
+        files = os.listdir(drift_dir)
+        print(f"📂 CONTENTS provided in {drift_dir}: {len(files)} files")
+        # print(files) # Uncomment if needed
+        
+        # 2. Check for Split Parts
+        parts = sorted([f for f in files if f.startswith("driftmlp.pt.part")])
+        if parts:
+            print(f"📦 FOUND {len(parts)} SPLIT PARTS for Zenith Model")
+            
+            # 3. Trigger Reassembly if needed
+            if not os.path.exists(TRAINED_DRIFTMLP_PATH) or os.path.getsize(TRAINED_DRIFTMLP_PATH) < 1000:
+                print(f"🔄 INITIATING REASSEMBLY of Zenith V28 Model ({len(parts)} parts)...")
+                try:
+                    with open(TRAINED_DRIFTMLP_PATH, 'wb') as outfile:
+                        for part in parts:
+                            part_path = os.path.join(drift_dir, part)
+                            print(f"   - Merging {part}...")
+                            with open(part_path, 'rb') as infile:
+                                outfile.write(infile.read())
+                    print("✅ REASSEMBLY SUCCESSFUL!")
+                except Exception as e:
+                    print(f"❌ REASSEMBLY FAILED: {str(e)}")
         else:
-            print("⚠️ STATUS: MODEL SEEMS SMALL - CHECK REASSEMBLY")
+            print("⚠️ NO SPLIT PARTS FOUND for Zenith Model")
+
+    # 4. Verify Final Model File
+    if os.path.exists(TRAINED_DRIFTMLP_PATH):
+        try:
+            size_mb = os.path.getsize(TRAINED_DRIFTMLP_PATH) / (1024 * 1024)
+            print(f"📊 MODEL FILE FOUND: {size_mb:.2f} MB")
+            
+            if size_mb > 100:
+                # Load weights
+                drift_model.load_state_dict(torch.load(TRAINED_DRIFTMLP_PATH, map_location='cpu'))
+                print("🌟 STATUS: ZENITH V28 (102M) WEIGHTS LOADED SUCCESSFULLY")
+            else:
+                print("⚠️ STATUS: MODEL FILE TOO SMALL - LIKELY CORRUPT/POINTER")
+        except Exception as e:
+             print(f"❌ STATUS: FAILED TO LOAD WEIGHTS: {e}")
     else:
-        print("❌ ZENITH MODEL: NOT FOUND (Using Random Weights)")
+        print("❌ STATUS: ZENITH MODEL FILE MISSING (Using Random Weights)")
         
     print("="*50 + "\n")
     
