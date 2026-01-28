@@ -1841,6 +1841,26 @@ async def run_virtual_trial(req: TrialRequest):
 async def serve_trials():
     return FileResponse("trials.html")
     
+@app.on_event("startup")
+async def startup_event():
+    print("\n" + "="*50)
+    print("🚀 SYSTEM DIAGNOSTIC: STARTUP COMPLETE")
+    print("="*50)
+    
+    # Verify Zenith Model
+    if os.path.exists(TRAINED_DRIFTMLP_PATH):
+        print(f"✅ ZENITH MODEL: FOUND at {TRAINED_DRIFTMLP_PATH}")
+        size_mb = os.path.getsize(TRAINED_DRIFTMLP_PATH) / (1024 * 1024)
+        print(f"📊 MODEL SIZE: {size_mb:.2f} MB")
+        if size_mb > 400:
+            print("🌟 STATUS: FULL 102M PARAMETER MODEL LOADED")
+        else:
+            print("⚠️ STATUS: MODEL SEEMS SMALL - CHECK REASSEMBLY")
+    else:
+        print("❌ ZENITH MODEL: NOT FOUND (Using Random Weights)")
+        
+    print("="*50 + "\n")
+    
 if __name__ == "__main__":
     port = int(os.getenv("PORT", 9999))
     # ZENITH PRO: Leverage high-compute environment (32 vCPUs)
