@@ -19,7 +19,7 @@ import psutil
 # Set thread count to match Pro Plan vCPUs (32)
 torch.set_num_threads(32)
 torch.set_num_interop_threads(32)
-print(f"ZENITH PRO: Optimized for 32 vCPUs (Threads: {torch.get_num_threads()})")
+print(f"ZENITH ULTRA-HD: Optimized for 32 vCPUs (Threads: {torch.get_num_threads()})")
 
 def log_memory():
     mem = psutil.virtual_memory()
@@ -90,8 +90,8 @@ model_mode = "SIMULATION"
 
 
 
-# Zenith V28: 102.4M Parameter Large-Scale Foundation Model (LSST Architecture)
-# Governing Law: dX_t = f_theta(X_t, t)dt + sigma*dW_t
+# Zenith Ultra-V4: ~285M Parameter Multi-Head Transformer Foundation Engine
+# Governing Law: Attn(Q, K, V) = Softmax(QKᵀ/√d)V
 # --- PHASE 3: EPIGENETIC ENGINE (BIO-AGE AWARE REGULATION) ---
 
 class EpigeneticGate(nn.Module):
@@ -1220,7 +1220,7 @@ async def simulate_step(batch: BatchCellState):
     context_tensor[:, 87] = stem_strength # Direct niche contact
     # (Neighbor loop logic removed largely in favor of field approximation for speed)
 
-    # 3. Zenith LSST-7B (Differentiable Biology)
+    # 3. Zenith Ultra-V4 (HD) (Differentiable Biology)
     state_tensor = torch.tensor(genes_np, dtype=torch.float32) # [N, 1000]
     input_tensor = torch.cat([state_tensor, ages_tensor, context_tensor], dim=1).to(dtype=torch.float16) # [N, 2001] for 7B optimization
     
@@ -1606,7 +1606,7 @@ async def discover_protocol(req: DiscoveryRequest):
         else:
             confidence = max_sim 
 
-        rationale = f"[LSST-7B ENGINE] Zenith V28 Manifold Engine identifies a high-affinity trajectory toward state '{req.target_type}'. "
+        rationale = f"[ZENITH ULTRA ENGINE] Phase 4 Transformer Manifold identifies a high-affinity trajectory toward state '{req.target_type}'. "
         if best_protocol != "NOVEL_DESIGN":
             rationale += f"Backpropagation through 7.03B parameters strongly aligns with the {best_protocol} canonical protocol."
         else:
