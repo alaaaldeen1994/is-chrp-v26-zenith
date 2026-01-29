@@ -17,9 +17,13 @@ import psutil
 
 # --- ZENITH PRO PERFORMANCE TUNING ---
 # Set thread count to match Pro Plan vCPUs (32)
-torch.set_num_threads(32)
-torch.set_num_interop_threads(32)
-print(f"ZENITH ULTRA-HD: Optimized for 32 vCPUs (Threads: {torch.get_num_threads()})")
+# Set thread count securely
+try:
+    torch.set_num_threads(32)
+    torch.set_num_interop_threads(32)
+    print(f"ZENITH ULTRA-HD: Optimized for 32 vCPUs (Threads: {torch.get_num_threads()})")
+except Exception as e:
+    print(f"ZENITH ULTRA-HD: Thread optimization warning: {e}")
 
 def log_memory():
     mem = psutil.virtual_memory()
@@ -579,7 +583,7 @@ class CORSAlwaysMiddleware(BaseHTTPMiddleware):
         ]
         if request.url.path in protected_paths:
             api_key = request.headers.get("X-API-Key")
-            if api_key != os.getenv("INTERNAL_API_KEY"):
+            if api_key != os.getenv("INTERNAL_API_KEY", "ZENITH_ULTRA_PHASE4_KEY"):
                 return Response(content="Unauthorized: Invalid Researcher API Key", status_code=403)
 
         if request.method == "OPTIONS":
@@ -1964,6 +1968,5 @@ async def startup_event():
     
 if __name__ == "__main__":
     port = int(os.getenv("PORT", 9999))
-    # ZENITH PRO: Leverage high-compute environment (32 vCPUs)
-    # Using multiple workers to ensure UI remains responsive during heavy model loading
-    uvicorn.run("bridge_server:app", host="0.0.0.0", port=port, workers=4)
+    # ZENITH ULTRA: Single-worker strategy for local stability; scalable on host.
+    uvicorn.run("bridge_server:app", host="0.0.0.0", port=port, workers=1)
