@@ -125,11 +125,51 @@
         }
 
         .hero-title {
-            font-size: 64px;
+            font-size: 72px;
             font-weight: 900;
-            line-height: 1.05;
+            line-height: 1.0;
             margin-bottom: 2rem;
-            letter-spacing: -0.04em;
+            letter-spacing: -0.05em;
+            background: linear-gradient(to bottom, #ffffff 30%, #94a3b8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .glass-hud {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.5);
+        }
+
+        .bio-pulse {
+            width: 12px;
+            height: 12px;
+            background: #2dd4bf;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 8px;
+            box-shadow: 0 0 15px #2dd4bf;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+
+            50% {
+                transform: scale(1.5);
+                opacity: 0.5;
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
         }
 
         .btn-launch {
@@ -717,18 +757,32 @@
         <div class="hero-bg"></div>
 
         <div class="hero-content">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bio-pulse"></span>
+                <p class="text-teal-400 font-bold tracking-[0.2em] text-xs uppercase">Live Human Cell Atlas Feed:
+                    150,000+ Cells</p>
+            </div>
             <p class="hero-label">Research Executive Update</p>
-            <h1 class="hero-title">Zenith Zenith-102M:<br>Next-Generation Large<br>Scale Simulation Trajectories</h1>
-            <button onclick="checkAuthAndRedirect('index.html')" class="btn-launch">
-                Enter Simulation Terminal
-                <i data-lucide="terminal" class="w-5 h-5 ml-2"></i>
-            </button>
+            <h1 class="hero-title">Zenith Ultra-5K:<br>Foundation Generative<br>Biological Engine</h1>
+            <div class="flex gap-4">
+                <button onclick="checkAuthAndRedirect('index.html')" class="btn-launch">
+                    Launch Research Console
+                    <i data-lucide="terminal" class="w-5 h-5 ml-2"></i>
+                </button>
+                <div class="glass-hud px-6 py-4 flex items-center gap-6">
+                    <div>
+                        <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-1">Architecture</p>
+                        <p class="text-white font-black">12-Layer Transformer</p>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="ml-auto hidden lg:block text-right border-l border-white/10 pl-16">
-            <p class="text-4xl font-black text-blue-400">PRO LEVEL</p>
-            <p class="text-lg font-bold opacity-70 mt-2">Active Multi-Node Cluster</p>
-            <p class="mono text-sm mt-8 opacity-50">EPOCH_TIME: <span id="clock">00:00:00</span></p>
+            <p class="text-4xl font-black text-blue-400">ULTRA HD</p>
+            <p class="text-lg font-bold opacity-70 mt-2">Active Bio-Manifold</p>
+            <p class="mono text-sm mt-8 opacity-50">GENOME_RESOLUTION: <span class="text-teal-400">5,000 GENES</span>
+            </p>
         </div>
     </header>
 
@@ -810,22 +864,22 @@
 
         <!-- Quick Stats Bar -->
         <div
-            class="max-w-5xl mx-auto mt-16 bg-slate-900 rounded-3xl p-10 grid grid-cols-1 md:grid-cols-4 gap-8 text-center">
+            class="max-w-5xl mx-auto mt-16 bg-slate-900 rounded-3xl p-10 grid grid-cols-1 md:grid-cols-4 gap-8 text-center border border-white/5">
             <div>
-                <p class="text-4xl font-black text-blue-400 mb-2">7.13B</p>
+                <p class="text-4xl font-black text-blue-400 mb-2">~280M</p>
                 <p class="text-xs text-slate-400 uppercase tracking-widest font-bold">Parameters</p>
             </div>
             <div>
-                <p class="text-4xl font-black text-emerald-400 mb-2">1,000</p>
-                <p class="text-xs text-slate-400 uppercase tracking-widest font-bold">Gene Dimensions</p>
+                <p class="text-4xl font-black text-emerald-400 mb-2">5,000</p>
+                <p class="text-xs text-slate-400 uppercase tracking-widest font-bold">Gene Vocabulary</p>
             </div>
             <div>
-                <p class="text-4xl font-black text-purple-400 mb-2">99.8%</p>
-                <p class="text-xs text-slate-400 uppercase tracking-widest font-bold">Fidelity</p>
+                <p class="text-4xl font-black text-purple-400 mb-2">150k</p>
+                <p class="text-xs text-slate-400 uppercase tracking-widest font-bold">HCA Heart Cells</p>
             </div>
             <div>
                 <p class="text-4xl font-black text-orange-400 mb-2">32</p>
-                <p class="text-xs text-slate-400 uppercase tracking-widest font-bold">vCPUs</p>
+                <p class="text-xs text-slate-400 uppercase tracking-widest font-bold">Parallel Threads</p>
             </div>
         </div>
     </section>

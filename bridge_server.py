@@ -157,7 +157,7 @@ class ZenithV2DeepDrift(nn.Module):
     Zenith Ultra-5K: Foundation Generative Biology Engine.
     Epigenetic-Clock Aware (V26.9).
     """
-    def __init__(self, input_dim=5000, hidden_dim=2048, depth=12, num_heads=8):
+    def __init__(self, input_dim=5000, hidden_dim=1024, depth=12, num_heads=8):
         super().__init__()
         print(f"🧬 INITIALIZING ZENITH ULTRA-ENGINE: Epigenetic-Aware 5K Transformer")
         
@@ -172,9 +172,9 @@ class ZenithV2DeepDrift(nn.Module):
         ])
         
         self.decoder = nn.Sequential(
-            nn.Linear(hidden_dim, 2048),
+            nn.Linear(hidden_dim, 1024),
             nn.GELU(),
-            nn.Linear(2048, input_dim + 1)
+            nn.Linear(1024, input_dim + 1)
         )
 
         self._init_weights()
