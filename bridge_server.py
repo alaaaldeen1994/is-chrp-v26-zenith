@@ -2076,20 +2076,42 @@ async def run_virtual_trial(req: TrialRequest):
     print(f"🧠 SIMULATING RIPPLE EFFECT (5-Day Neural SDE Progression...)")
     
     with torch.no_grad():
+        # Precision Match
+        target_dtype = next(model.parameters()).dtype
+        
+        # 5K Noise Setup (Pre-calc for speed if desired, but here effectively random per step is fine)
+        noise_mean, noise_std = 0.1, 0.05
+
         for step in range(5):
-            # Input format: [Genes (1000), Age (1), Context (1000)]
+            # Age Vector
             age_vec = torch.zeros(N, 1) + (0.5 + step * 0.1)
-            # Concat to [N, 2001]
-            active_input = torch.cat([active_cohort, age_vec, active_cohort], dim=1)
-            placebo_input = torch.cat([placebo_cohort, age_vec, placebo_cohort], dim=1)
             
-            # Predict Drift (Velocity)
-            active_drift = model(active_input)
-            placebo_drift = model(placebo_input)
+            # --- PREPARE ACTIVE INPUT (5K) ---
+            # Pad Active [N, 1000] -> [N, 5000]
+            pad_act = torch.normal(mean=noise_mean, std=noise_std, size=(N, 4000))
+            active_5k = torch.cat([active_cohort, pad_act], dim=1)
             
-            # Update States (Euler Integration)
-            active_cohort = torch.clamp(active_cohort + active_drift[:, :1000] * 0.2, 0, 1)
-            placebo_cohort = torch.clamp(placebo_cohort + placebo_drift[:, :1000] * 0.2, 0, 1)
+            # Context (Zeros) [N, 5000]
+            ctx_act = torch.zeros(N, 5000)
+            
+            # Final Active: [N, 10001]
+            act_in = torch.cat([active_5k, ctx_act, age_vec], dim=1).to(dtype=target_dtype)
+            
+            # --- PREPARE PLACEBO INPUT (5K) ---
+            pad_pla = torch.normal(mean=noise_mean, std=noise_std, size=(N, 4000))
+            placebo_5k = torch.cat([placebo_cohort, pad_pla], dim=1)
+            ctx_pla = torch.zeros(N, 5000)
+            
+            pla_in = torch.cat([placebo_5k, ctx_pla, age_vec], dim=1).to(dtype=target_dtype)
+            
+            # Predict Drift
+            active_drift = model(act_in)
+            placebo_drift = model(pla_in)
+            
+            # Update States (Only top 1000 genes matter for the cohort tracking)
+            # Drift output is [N, 5001], taking first 1000 is correct.
+            active_cohort = torch.clamp(active_cohort + active_drift[:, :1000].to(dtype=torch.float32) * 0.2, 0, 1)
+            placebo_cohort = torch.clamp(placebo_cohort + placebo_drift[:, :1000].to(dtype=torch.float32) * 0.2, 0, 1)
             
     # 3. CALCULATE REAL-TIME RISK (Predictive Transcriptomics)
     # Instead of hardcoded numbers, we look at the final predicted state:
