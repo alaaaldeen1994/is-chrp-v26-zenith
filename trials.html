@@ -191,6 +191,17 @@
     <script>
         lucide.createIcons();
         let kmChart, waterfallChart, manifoldChart;
+        window.csrfToken = null;
+
+        function fetchCsrfToken() {
+            fetch('/api/csrf-token', { credentials: 'include' })
+                .then(res => res.json())
+                .then(data => {
+                    window.csrfToken = data.csrf_token;
+                    console.log('[Security] CSRF token initialized for Trials');
+                })
+                .catch(err => console.warn('[Security] Failed to fetch CSRF token:', err));
+        }
 
         function initCharts() {
             // Kaplan-Meier
@@ -269,7 +280,8 @@
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'X-API-Key': 'DEVELOPER_KEY'
+                        'X-API-Key': 'DEVELOPER_KEY',
+                        'X-CSRF-Token': window.csrfToken || ''
                     },
                     body: JSON.stringify({
                         disease: disease,
@@ -354,7 +366,10 @@
             a.click();
         }
 
-        window.onload = initCharts;
+        window.onload = () => {
+            initCharts();
+            fetchCsrfToken();
+        };
     </script>
 </body>
 

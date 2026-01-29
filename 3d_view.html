@@ -144,7 +144,8 @@
         <div class="absolute top-10 left-10">
             <h1 class="text-3xl font-bold tracking-[0.5em] uppercase text-white">Zenith <span
                     class="text-cyan-400">PRO</span></h1>
-            <p class="text-[9px] opacity-40 tracking-[0.7em] mt-1 uppercase">Zenith-102M Foundation Model (102M Param) //
+            <p class="text-[9px] opacity-40 tracking-[0.7em] mt-1 uppercase">Zenith-102M Foundation Model (102M Param)
+                //
                 Latent
                 Manifold</p>
         </div>
@@ -233,12 +234,23 @@
         let backendCells = [];
         let backendReady = false;
         let frameCount = 0;
+        window.csrfToken = null;
+
+        function fetchCsrfToken() {
+            fetch('/api/csrf-token', { credentials: 'include' })
+                .then(res => res.json())
+                .then(data => {
+                    window.csrfToken = data.csrf_token;
+                    console.log('[Security] CSRF token initialized for 3D View');
+                })
+                .catch(err => console.warn('[Security] Failed to fetch CSRF token:', err));
+        }
 
         // Fetch live cell data from backend
         async function fetchBackendCells() {
             try {
                 const response = await fetch('/api/cells/live', {
-                    headers: { 'X-API-Key': 'zenith-v26-secure-key-4922' }
+                    headers: { 'X-API-Key': 'DEVELOPER_KEY' }
                 });
                 const data = await response.json();
 
@@ -473,6 +485,7 @@
             renderer.render(scene, camera);
         }
         animate();
+        fetchCsrfToken();
 
         // --- 8. INTERACTIVE HANDLERS ---
         const slider = document.getElementById('gene-slider');
@@ -501,7 +514,8 @@
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'X-API-Key': 'zenith-v26-secure-key-4922'
+                        'X-API-Key': 'DEVELOPER_KEY',
+                        'X-CSRF-Token': window.csrfToken || ''
                     },
                     body: JSON.stringify({ target_density: count })
                 }).then(() => {

@@ -841,7 +841,8 @@ const BiosimBridge = {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
-                            'X-API-Key': this.internalApiKey
+                            'X-API-Key': this.internalApiKey,
+                            'X-CSRF-Token': window.csrfToken || ''
                         },
                         body: JSON.stringify(payload)
                     });
@@ -1476,16 +1477,17 @@ def run(protocol: protocol_api.ProtocolContext):
         try {
             const response = await fetch(`${this.endpoint}/generate_report`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-API-Key': BiosimBridge.internalApiKey,
+                    'X-CSRF-Token': window.csrfToken || ''
+                },
                 body: JSON.stringify({
                     api_key: apiKey || null,
                     timestamp: new Date().toISOString(),
                     agent_count: agents.length,
                     agents_sample: agents.slice(0, 50) // Send sample for analysis
-                }),
-                headers: {
-                    'X-API-Key': BiosimBridge.internalApiKey
-                }
+                })
             });
 
             if (!response.ok) throw new Error("Report Generation Failed");
@@ -2350,7 +2352,8 @@ def run(protocol: protocol_api.ProtocolContext):
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-API-Key': BiosimBridge.internalApiKey
+                    'X-API-Key': BiosimBridge.internalApiKey,
+                    'X-CSRF-Token': window.csrfToken || ''
                 },
                 body: JSON.stringify({ genes })
             });
@@ -2971,7 +2974,8 @@ const AIAssistant = {
             const response = await fetch('/chat_proxy', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'X-CSRF-Token': window.csrfToken || ''
                 },
                 body: JSON.stringify(payload)
             });

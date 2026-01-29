@@ -56,7 +56,10 @@ class CSRFMiddleware(BaseHTTPMiddleware):
             return await call_next(request)
         
         # Skip CSRF for paths that use API Key authentication
-        api_key_paths = ["/simulate_step", "/discover_protocol", "/discover_hybrid"]
+        api_key_paths = [
+            "/simulate_step", "/discover_protocol", "/discover_hybrid", "/impute", 
+            "/get_expert_reasoning", "/send_email", "/api/simulation/config", "/run_virtual_trial"
+        ]
         if request.url.path in api_key_paths:
             return await call_next(request)
         

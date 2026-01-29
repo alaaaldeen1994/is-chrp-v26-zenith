@@ -583,7 +583,7 @@ class CORSAlwaysMiddleware(BaseHTTPMiddleware):
         ]
         if request.url.path in protected_paths:
             api_key = request.headers.get("X-API-Key")
-            if api_key != os.getenv("INTERNAL_API_KEY", "ZENITH_ULTRA_PHASE4_KEY"):
+            if api_key != os.getenv("INTERNAL_API_KEY", "DEVELOPER_KEY"):
                 return Response(content="Unauthorized: Invalid Researcher API Key", status_code=403)
 
         if request.method == "OPTIONS":
