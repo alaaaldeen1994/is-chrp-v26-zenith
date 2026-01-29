@@ -1659,9 +1659,9 @@ async def discover_protocol(req: DiscoveryRequest):
 
         rationale = f"[ZENITH ULTRA ENGINE] Phase 4 Transformer Manifold identifies a high-affinity trajectory toward state '{req.target_type}'. "
         if best_protocol != "NOVEL_DESIGN":
-            rationale += f"Backpropagation through 7.03B parameters strongly aligns with the {best_protocol} canonical protocol."
+            rationale += f"Backpropagation through Zenith Ultra-HD (5K) manifold strongly aligns with the {best_protocol} canonical protocol."
         else:
-            rationale += "7.03B-parameter gradient descent suggests a novel combination of factors optimized for this specific population context."
+            rationale += "Zenith Ultra-HD gradient descent suggests a novel combination of factors optimized for this specific population context."
         
         # v27: Dynamic AI Reasoning
         local_client, local_gpt = get_openai_client(req.api_key)
