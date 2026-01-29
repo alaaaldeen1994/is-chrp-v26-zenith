@@ -1350,10 +1350,10 @@ async def simulate_step(batch: BatchCellState):
         for gene_idx in batch.knockouts:
             if 0 <= gene_idx < 1000:
                 scaled_drift[:, gene_idx] = 0.0
-                state_tensor[:, gene_idx] = 0.0
+                state_tensor_1k[:, gene_idx] = 0.0
 
     # Zenith Pro: Vectorized computation for speed
-    new_self_state = state_tensor + scaled_drift[:, :1000] * dt
+    new_self_state = state_tensor_1k + scaled_drift[:, :1000] * dt
     
     # Re-apply knockout zeroing to the resulting state to prevent numerical leak
     if batch.knockouts:
@@ -1483,13 +1483,31 @@ async def discover_hybrid(req: HybridDiscoveryRequest, request: Request):
         # 2. Setup Differentiable Input
         perturbation = torch.zeros_like(current_vec, requires_grad=True)
         
-        # 3. Backprop through Zenith-7B
-        dummy_age = torch.tensor([0.5])
-        dummy_context = torch.zeros(1000)
-        input_tensor = torch.cat([current_vec + perturbation, dummy_age, dummy_context]).unsqueeze(0) 
-        input_tensor = input_tensor.to(dtype=torch.float16) # Optimization for 7B
+        # 3. Backprop through Zenith Ultra-HD (10001 dims)
+        # Input: [Current(5000), Target(5000), Age(1)]
         
-        velocity = get_drift_model()(input_tensor) 
+        # Current with perturbation: [1, 1000] -> [1, 5000] (Pad biological noise)
+        pert_1k = current_vec + perturbation
+        noise_mean, noise_std = 0.1, 0.05
+        padding = torch.normal(mean=noise_mean, std=noise_std, size=(1, 4000))
+        current_5k = torch.cat([pert_1k.unsqueeze(0), padding], dim=1) # [1, 5000]
+        
+        # Target/Context: [1, 5000]
+        target_5k = torch.zeros(1, 5000) # Base 0
+        target_5k[0, :1000] = target_vec # Embed real target
+        
+        # Age
+        age_in = torch.tensor([[0.5]])
+
+        # Concat: [1, 10001]
+        input_tensor = torch.cat([current_5k, target_5k, age_in], dim=1) 
+        
+        # Precision Match
+        model = get_drift_model()
+        model_dtype = next(model.parameters()).dtype
+        input_tensor = input_tensor.to(dtype=model_dtype)
+        
+        velocity = model(input_tensor) 
         velocity_genes = velocity[0, :1000].to(dtype=torch.float32)
         
         loss = torch.nn.functional.mse_loss(current_vec + velocity_genes, target_vec)
