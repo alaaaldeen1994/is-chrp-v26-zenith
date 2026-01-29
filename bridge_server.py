@@ -1256,8 +1256,10 @@ async def simulate_step(batch: BatchCellState):
         drift_out, manifold = model(input_tensor, return_latent=True) 
         # Output sizes: drift=[N, 5001], manifold=[N, 3]
         
-        # Taking only the first 1000 genes of drift for the simulation loop
-        drift = drift_out[:, :1000].to(dtype=torch.float32)
+        # Take first 1000 genes AND age (index 5000) to maintain 1001-dim simulation loop compatibility
+        drift_genes = drift_out[:, :1000]
+        drift_age = drift_out[:, 5000:5001]
+        drift = torch.cat([drift_genes, drift_age], dim=1).to(dtype=torch.float32)
         
         manifold = manifold.to(dtype=torch.float32)
         
@@ -1363,7 +1365,7 @@ async def simulate_step(batch: BatchCellState):
     
     # Bio-Age Drift with Mechanistic Reversal Logic
     age_drift = scaled_drift[:, 1000] * 5.0 # Sensitivity weight
-    tet_active = state_tensor[:, 74] + state_tensor[:, 75]
+    tet_active = state_tensor_1k[:, 74] + state_tensor_1k[:, 75]
     rejuv_boost = -0.05 * tet_active # Mechanistic epigenetic reversal
     
     ages_tensor += (age_drift + rejuv_boost).unsqueeze(1) * dt

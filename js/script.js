@@ -783,7 +783,7 @@ const BiosimStore = { env: { vector: null, disease: null } };
 const BiosimBridge = {
     lastDiscovery: null, // Persists latest AI findings for robotic export
     endpoint: window.location.origin,
-    internalApiKey: 'zenith-v26-secure-key-4922', // Secure Researcher Token
+    internalApiKey: 'DEVELOPER_KEY', // Secure Researcher Token
     biosimMode: 'GENERATIVE', // v26: LOCKED TO REAL DATA
     isSyncing: false,         // Throttling flag
     isHealthChecking: false,  // Throttling flag
