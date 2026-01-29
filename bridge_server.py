@@ -1225,12 +1225,37 @@ async def simulate_step(batch: BatchCellState):
     # (Neighbor loop logic removed largely in favor of field approximation for speed)
 
     # 3. Zenith Ultra-V4 (HD) (Differentiable Biology)
-    state_tensor = torch.tensor(genes_np, dtype=torch.float32) # [N, 1000]
-    input_tensor = torch.cat([state_tensor, ages_tensor, context_tensor], dim=1).to(dtype=torch.float16) # [N, 2001] for 7B optimization
+    # 3. Zenith Ultra-V4 (HD) (Differentiable Biology)
+    # FIX: Padding 1000 -> 5000 using 'Biological Baseline Noise' (Not Zeros)
+    state_tensor_1k = torch.tensor(genes_np, dtype=torch.float32) # [N, 1000]
+    
+    # Generate Gaussian Noise (Simulating Low-Level Background Transcription)
+    # Mean=0.1 (Base expression), Std=0.05
+    noise_mean = 0.1
+    noise_std = 0.05
+    padding = torch.normal(mean=noise_mean, std=noise_std, size=(n_agents, 4000))
+    
+    state_tensor_5k = torch.cat([state_tensor_1k, padding], dim=1) # [N, 5000]
+    
+    # Pad Context to 5k (Context usually represents target/environment)
+    context_tensor_1k = context_tensor
+    # Context padding can remain zeros as it represents specific signaling inputs
+    context_padding = torch.zeros(n_agents, 4000) 
+    context_tensor_5k = torch.cat([context_tensor_1k, context_padding], dim=1) # [N, 5000]
+
+    # Input Construction: [CurrentGenes(5000), ContextGenes(5000), Age(1)] -> [N, 10001]
+    input_tensor = torch.cat([state_tensor_5k, context_tensor_5k, ages_tensor], dim=1) # [N, 10001]
+    
+    # Precision Cast
+    input_tensor = input_tensor.to(dtype=torch.float32) 
     
     with torch.no_grad():
-        drift, manifold = get_drift_model()(input_tensor, return_latent=True) # Output: [N, 1001], [N, 3]
-        drift = drift.to(dtype=torch.float32)
+        drift_out, manifold = get_drift_model()(input_tensor, return_latent=True) 
+        # Output sizes: drift=[N, 5001], manifold=[N, 3]
+        
+        # Taking only the first 1000 genes of drift for the simulation loop
+        drift = drift_out[:, :1000].to(dtype=torch.float32)
+        
         manifold = manifold.to(dtype=torch.float32)
         
     # v28: VECTOR INJECTION (1000-dim)
