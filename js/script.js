@@ -1373,11 +1373,82 @@ def run(protocol: protocol_api.ProtocolContext):
             }
 
             if (btnApply) {
-                btnApply.disabled = false;
-                btnApply.classList.remove('opacity-50', 'cursor-not-allowed');
-                btnApply.classList.add('hover:bg-slate-700', 'hover:text-white', 'cursor-pointer');
-                // Store discovery for application
-                this.lastDiscovery = data.recommended_protocol;
+                // ALTOS LABS VALIDATION LOGIC:
+                // We do NOT enable the button immediately. We run a "Virtual Assay".
+
+                // 1. Simulate 10-Day Safety Trial (Data Generation)
+                const trialDays = 10;
+                const survivalRate = [];
+                const toxicityLevel = [];
+
+                // Base toxicity from the backend (or inferred)
+                // If protocol is OSKM, higher risk. If MPTR, lower risk.
+                let baseRisk = 0.05;
+                if (data.recommended_protocol.includes('OSKM')) baseRisk = 0.3; // High risk
+                if (data.recommended_protocol.includes('MPTR')) baseRisk = 0.01; // Low risk (Altos)
+                if (data.recommended_protocol.includes('OCT4')) baseRisk = 0.02; // Min risk
+
+                let currentEuploidy = 100;
+
+                for (let i = 0; i <= trialDays; i++) {
+                    // Stochastic simulation of cell death/mutation
+                    const dayRisk = (Math.random() * baseRisk) / 2;
+                    currentEuploidy -= (dayRisk * 10); // Degrade health
+                    if (currentEuploidy < 0) currentEuploidy = 0;
+                    survivalRate.push(currentEuploidy);
+                    toxicityLevel.push(dayRisk * 100);
+                }
+
+                const finalSafety = survivalRate[trialDays];
+                const isSafe = finalSafety > 85; // FDA Threshold (Virtual)
+
+                // 2. Render Validation Graph (Hypothetical Canvas)
+                // We reuse the synergy container or create a new one
+                if (synContainer) {
+                    synContainer.innerHTML = `
+                        <div class="mb-1 flex justify-between text-[8px] uppercase font-bold text-slate-400">
+                           <span>Virtual Safety Assay (10 Days)</span>
+                           <span class="${isSafe ? 'text-emerald-400' : 'text-rose-500'}">
+                              ${isSafe ? 'PASSED' : 'FAILED'} (${finalSafety.toFixed(1)}% Survival)
+                           </span>
+                        </div>
+                        <div style="position: relative; height: 60px; width: 100%; bg-black/50 rounded border ${isSafe ? 'border-emerald-500/30' : 'border-rose-500/30'}">
+                           <canvas id="discovery-validation-chart" style="width:100%; height:100%"></canvas>
+                        </div>
+                     `;
+
+                    // Draw Chart (Quick & Dirty Canvas)
+                    setTimeout(() => {
+                        const ctx = document.getElementById('discovery-validation-chart')?.getContext('2d');
+                        if (ctx) {
+                            ctx.clearRect(0, 0, 300, 150);
+
+                            // Draw Survival Line (Green)
+                            ctx.beginPath();
+                            ctx.strokeStyle = isSafe ? '#10b981' : '#ef4444'; // Emerald or Red
+                            ctx.lineWidth = 2;
+                            ctx.moveTo(0, 60 - (survivalRate[0] / 100 * 60));
+                            for (let d = 1; d < survivalRate.length; d++) {
+                                ctx.lineTo((d / trialDays) * 300, 60 - (survivalRate[d] / 100 * 60));
+                            }
+                            ctx.stroke();
+                        }
+                    }, 100);
+                }
+
+                // 3. Enforce Go/No-Go
+                if (isSafe) {
+                    btnApply.disabled = false;
+                    btnApply.classList.remove('opacity-50', 'cursor-not-allowed');
+                    btnApply.classList.add('hover:bg-slate-700', 'hover:text-white', 'cursor-pointer');
+                    btnApply.innerHTML = "INDUCE PROTOCOL (VALIDATED)";
+                    this.lastDiscovery = data.recommended_protocol;
+                } else {
+                    btnApply.disabled = true;
+                    btnApply.classList.add('opacity-50', 'cursor-not-allowed');
+                    btnApply.innerHTML = "SAFETY CHECK FAILED";
+                    BiosimUI.notify('Trial', 'Validation Assay Failed: Toxicity too high for clinical application.', 'err');
+                }
             }
 
             BiosimUI.notify('Discovery', 'Optimal Protocol Identified', 'suc');
