@@ -1838,6 +1838,46 @@ async def discover_protocol(req: DiscoveryRequest):
         "DIRECT_CARDIO": list(range(10, 20)),
     }
 
+    # 1.5 SEMANTIC PARSING LAYER (GPT-4o)
+    # If the request is complex (long string), we ask GPT-4o to extract intent
+    semantic_override = False
+    if len(req.target_type) > 15 and req.api_key:
+        try:
+            print(f"🧠 SEMANTIC ENGINE: Parsing complex query -> '{req.target_type[:50]}...'")
+            client = openai.OpenAI(api_key=req.api_key)
+            
+            completion = client.chat.completions.create(
+                model="gpt-4o",
+                messages=[
+                    {"role": "system", "content": "You are a Biological Vector Parser. Extract the target genes or cell type from the user's request. Return a JSON with 'target_genes': [list of gene symbols] and 'protocol_name': 'short_name'. Supported genes: OCT4, SOX2, KLF4, MYC, LIN28, NANOG, GATA4, TBX5, MEF2C, NEUROD2, PAX6, TH, MAP2, SYP, TNNT2, MYH7, VIM, SIRT1, FOXO3, TP53. If a gene is not in this list, map it to the closest supported one or ignore."},
+                    {"role": "user", "content": req.target_type}
+                ],
+                response_format={"type": "json_object"}
+            )
+            
+            parse_data = json.loads(completion.choices[0].message.content)
+            custom_name = f"CUSTOM_{parse_data.get('protocol_name', 'VECTOR').upper()}"
+            target_genes = parse_data.get('target_genes', [])
+            
+            # Map Symbols to Indices (Approximation for v26 Demo)
+            # In a real app, this would use the full GENE_MAP
+            gene_map = {
+                "OCT4": 0, "SOX2": 1, "NANOG": 2, "LIN28": 3, "KLF4": 4, "MYC": 5,
+                "GATA4": 10, "TBX5": 11, "MEF2C": 12, "TNNT2": 13, "MYH7": 14,
+                "NEUROD2": 20, "PAX6": 21, "TH": 22, "MAP2": 23, "SYP": 24,
+                "SIRT1": 70, "FOXO3": 71, "TP53": 99
+            }
+            
+            custom_indices = [gene_map[g] for g in target_genes if g in gene_map]
+            
+            if custom_indices:
+                candidates[custom_name] = custom_indices
+                print(f"   > CREATED CUSTOM VECTOR: {custom_name} -> {target_genes}")
+                semantic_override = True
+                
+        except Exception as e:
+            print(f"⚠️ SEMANTIC PARSE FAILED: {e}")
+
     best_protocol = None
     best_score = -999.0
     rationale = ""
