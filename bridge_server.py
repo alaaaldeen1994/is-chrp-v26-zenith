@@ -576,16 +576,6 @@ class CORSAlwaysMiddleware(BaseHTTPMiddleware):
         if request.url.path == "/":
             print(f"TRAFFIC: Incoming request for landing page from {request.client.host}")
 
-        # Security: API Key Verification for sensitive paths
-        protected_paths = [
-            "/simulate_step", "/discover_protocol", "/discover_hybrid", "/impute", 
-            "/get_expert_reasoning", "/send_email", "/api/simulation/config", "/run_virtual_trial"
-        ]
-        if request.url.path in protected_paths:
-            api_key = request.headers.get("X-API-Key")
-            if api_key != os.getenv("INTERNAL_API_KEY", "DEVELOPER_KEY"):
-                return Response(content="Unauthorized: Invalid Researcher API Key", status_code=403)
-
         if request.method == "OPTIONS":
             return Response(
                 status_code=200,
@@ -618,7 +608,7 @@ class CORSAlwaysMiddleware(BaseHTTPMiddleware):
 
 # Add middleware in correct order (last added = first executed)
 app.add_middleware(CORSAlwaysMiddleware)       # CORS handling
-app.add_middleware(CSRFMiddleware)             # CSRF protection
+# app.add_middleware(CSRFMiddleware)             # CSRF protection (DISABLED for restoration)
 app.add_middleware(SecurityHeadersMiddleware)  # Security headers
 
 # Serve static files (Frontend)
