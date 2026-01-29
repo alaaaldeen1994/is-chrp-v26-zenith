@@ -1246,11 +1246,14 @@ async def simulate_step(batch: BatchCellState):
     # Input Construction: [CurrentGenes(5000), ContextGenes(5000), Age(1)] -> [N, 10001]
     input_tensor = torch.cat([state_tensor_5k, context_tensor_5k, ages_tensor], dim=1) # [N, 10001]
     
-    # Precision Cast
-    input_tensor = input_tensor.to(dtype=torch.float32) 
+    # AUTO-DETECT PRECISION (Fix for Float/Half Mismatch)
+    model = get_drift_model()
+    target_dtype = next(model.parameters()).dtype # Detect if model is FP16 or FP32
+    
+    input_tensor = input_tensor.to(dtype=target_dtype) 
     
     with torch.no_grad():
-        drift_out, manifold = get_drift_model()(input_tensor, return_latent=True) 
+        drift_out, manifold = model(input_tensor, return_latent=True) 
         # Output sizes: drift=[N, 5001], manifold=[N, 3]
         
         # Taking only the first 1000 genes of drift for the simulation loop
@@ -1855,7 +1858,11 @@ async def discover_protocol(req: DiscoveryRequest):
         if model:
             print("🤖 ZENITH ENGINE: Running Context-Aware Simulation...")
             
+            # Detect Precision
+            model_dtype = next(model.parameters()).dtype
+
             current_5k = torch.tensor(req.current_genes + [0.0]*4000, dtype=torch.float32).unsqueeze(0)
+            current_5k = current_5k.to(dtype=model_dtype) # Cast to Half/Float
             
             # Define Target Indices
             if req.target_type == "REJUVENATION": target_indices = range(70, 80) # Epigenetic Modifiers (Restore Youth)
@@ -1877,9 +1884,10 @@ async def discover_protocol(req: DiscoveryRequest):
 
                 with torch.no_grad():
                     # Construct Vector
-                    target_vec = torch.zeros(1, 5000)
+                    target_vec = torch.zeros(1, 5000, dtype=model_dtype)
                     target_vec[0, indices] = 1.0 
-                    age_vec = torch.tensor([[0.5]])
+                    age_vec = torch.tensor([[0.5]], dtype=model_dtype)
+                    
                     x_in = torch.cat([current_5k, target_vec, age_vec], dim=1)
                     
                     # Predict
