@@ -1307,13 +1307,14 @@ async def simulate_step(batch: BatchCellState):
     # 4. MUTATIONAL BURDEN (Real Oncogenesis)
     # DNA Repair Capacity = f(TP53, BioAge)
     # High TP53 (idx 50) -> High Repair. High Age -> Low Repair.
-    tp53_levels = state_tensor[:, 50]
+    # High TP53 (idx 50) -> High Repair. High Age -> Low Repair.
+    tp53_levels = state_tensor_1k[:, 50]
     repair_capacity = (tp53_levels * 2.0) + (1.0 - ages_tensor.squeeze())
     repair_capacity = repair_capacity.clamp(0.1, 2.0)
     
     # Stressors (Replication Stress + Inflammation)
     # MKI67 (idx 51) drives replication stress. Local signaling drives inflammation.
-    proliferation_stress = state_tensor[:, 51]
+    proliferation_stress = state_tensor_1k[:, 51]
     inflammation_stress = local_signals * 0.5
     total_stress = proliferation_stress + inflammation_stress + 0.05 # Baseline
     
