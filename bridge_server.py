@@ -1328,14 +1328,14 @@ async def simulate_step(batch: BatchCellState):
     if malignant_mask.any():
         # Collapse Identity -> Malignant State
         # High MYC(5), MKI67(51), Low TP53(50)
-        state_tensor[malignant_mask, 5] = 1.0 # MYC
-        state_tensor[malignant_mask, 51] = 1.0 # MKI67
-        state_tensor[malignant_mask, 50] = 0.0 # TP53 Loss
-        state_tensor[malignant_mask, 0] = 0.8 # Cancer Stem Cell (OCT4)
+        state_tensor_1k[malignant_mask, 5] = 1.0 # MYC
+        state_tensor_1k[malignant_mask, 51] = 1.0 # MKI67
+        state_tensor_1k[malignant_mask, 50] = 0.0 # TP53 Loss
+        state_tensor_1k[malignant_mask, 0] = 0.8 # Cancer Stem Cell (OCT4)
 
     # 5. DYNAMIC CHROMATIN (Pioneer Factor Logic)
     # Chromatin Opening = Alpha * (OCT4 + SOX2) - Beta * Age
-    pioneer_activity = state_tensor[:, 0] + state_tensor[:, 1]
+    pioneer_activity = state_tensor_1k[:, 0] + state_tensor_1k[:, 1]
     opening_rate = 0.1 * pioneer_activity
     closing_rate = 0.05 * ages_tensor.squeeze()
     
