@@ -146,12 +146,54 @@
             color: #0f172a;
         }
 
-        .glass-hud {
-            background: rgba(15, 23, 42, 0.05);
-            backdrop-filter: blur(8px);
+        .hero-console {
+            position: absolute;
+            bottom: 3rem;
+            left: 10%;
+            right: 10%;
+            z-index: 20;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
             border: 1px solid rgba(15, 23, 42, 0.1);
-            border-radius: 20px;
-            padding: 1.5rem 2.5rem;
+            padding: 1.25rem 2.5rem;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+            animation: slideUpHUD 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes slideUpHUD {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .hud-segment {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .hud-label {
+            font-size: 9px;
+            font-weight: 700;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+        }
+
+        .hud-value {
+            font-size: 14px;
+            font-weight: 800;
+            color: #0f172a;
         }
 
         .bio-pulse {
@@ -762,7 +804,6 @@
         </div>
     </nav>
 
-    <!-- HERO SECTION -->
     <header class="hero">
         <div class="hero-bg">
             <video autoplay muted loop playsinline class="hero-video">
@@ -771,14 +812,37 @@
             <div class="hero-overlay"></div>
         </div>
 
+        <!-- NEW FLOATING OPERATION CONSOLE -->
+        <div class="hero-console">
+            <div class="flex items-center gap-12">
+                <div class="hud-segment">
+                    <p class="hud-label">Zenith Architecture</p>
+                    <p class="hud-value">Ultra-5600 Manifold</p>
+                </div>
+                <div class="hud-segment">
+                    <p class="hud-label">System Feed</p>
+                    <div class="flex items-center gap-2">
+                        <span class="bio-pulse"></span>
+                        <p class="hud-value">150k+ Cells Active</p>
+                    </div>
+                </div>
+            </div>
 
+            <button onclick="checkAuthAndRedirect('index.html')" class="btn-launch">
+                Launch Research Console
+                <i data-lucide="arrow-right" class="w-4 h-4 ml-2"></i>
+            </button>
 
-        <div class="ml-auto hidden lg:block text-right border-l border-slate-200 pl-16">
-            <p class="text-4xl font-black text-blue-600">ULTRA HD</p>
-            <p class="text-lg font-bold text-slate-600 mt-2">Active Bio-Manifold</p>
-            <p class="mono text-sm mt-8 text-slate-400">GENOME_RESOLUTION: <span class="text-teal-600">5,000
-                    GENES</span>
-            </p>
+            <div class="flex items-center gap-12 text-right">
+                <div class="hud-segment">
+                    <p class="hud-label">Model status</p>
+                    <p class="hud-value text-teal-600">Stable Node</p>
+                </div>
+                <div class="hud-segment">
+                    <p class="hud-label">Resolution</p>
+                    <p class="hud-value">5,000 Genes</p>
+                </div>
+            </div>
         </div>
     </header>
 
