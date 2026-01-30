@@ -89,13 +89,13 @@
         /* --- HERO BANNER --- */
         .hero {
             position: relative;
-            background: #000;
+            background: #fff;
             height: 480px;
             overflow: hidden;
             display: flex;
             align-items: center;
             padding: 0 10%;
-            color: #fff;
+            color: #1e293b;
         }
 
         .hero-bg {
@@ -118,7 +118,7 @@
         .hero-overlay {
             position: absolute;
             inset: 0;
-            background: linear-gradient(90deg, rgba(15, 23, 42, 0.65) 0%, rgba(15, 23, 42, 0.25) 100%);
+            background: linear-gradient(90deg, rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0.4) 100%);
             z-index: 2;
         }
 
@@ -143,18 +143,15 @@
             line-height: 1.1;
             margin-bottom: 1.5rem;
             letter-spacing: -0.03em;
-            background: linear-gradient(to bottom, #ffffff 40%, rgba(255, 255, 255, 0.7) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: #0f172a;
         }
 
         .glass-hud {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(15, 23, 42, 0.05);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(15, 23, 42, 0.1);
             border-radius: 20px;
-            padding: 2.5rem;
-            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.5);
+            padding: 1.5rem 2.5rem;
         }
 
         .bio-pulse {
@@ -789,16 +786,17 @@
                 <div class="glass-hud px-6 py-4 flex items-center gap-6">
                     <div>
                         <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-1">Architecture</p>
-                        <p class="text-white font-black">12-Layer Transformer</p>
+                        <p class="text-slate-900 font-black">12-Layer Transformer</p>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="ml-auto hidden lg:block text-right border-l border-white/10 pl-16">
-            <p class="text-4xl font-black text-blue-400">ULTRA HD</p>
-            <p class="text-lg font-bold opacity-70 mt-2">Active Bio-Manifold</p>
-            <p class="mono text-sm mt-8 opacity-50">GENOME_RESOLUTION: <span class="text-teal-400">5,000 GENES</span>
+        <div class="ml-auto hidden lg:block text-right border-l border-slate-200 pl-16">
+            <p class="text-4xl font-black text-blue-600">ULTRA HD</p>
+            <p class="text-lg font-bold text-slate-600 mt-2">Active Bio-Manifold</p>
+            <p class="mono text-sm mt-8 text-slate-400">GENOME_RESOLUTION: <span class="text-teal-600">5,000
+                    GENES</span>
             </p>
         </div>
     </header>
