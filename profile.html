@@ -129,7 +129,9 @@
         .hero-content {
             position: relative;
             z-index: 10;
-            max-width: 650px;
+            max-width: 900px;
+            margin: 0 auto;
+            text-align: center;
         }
 
         .hero-label {
@@ -798,12 +800,6 @@
                 <p class="text-[9px] font-bold text-slate-500 uppercase tracking-widest">Live HCA Feed: 150k+ Cells</p>
             </div>
 
-            <button onclick="checkAuthAndRedirect('index.html')"
-                class="bg-primary text-white px-5 py-2 rounded-lg text-xs font-bold uppercase tracking-wider hover:bg-primary-hover transition-all flex items-center gap-2">
-                Launch Console
-                <i data-lucide="terminal" class="w-4 h-4"></i>
-            </button>
-
             <div class="h-6 w-px bg-slate-200 mx-2"></div>
             <!-- Show when NOT logged in -->
             <div id="auth-signed-out" class="hidden">
@@ -835,6 +831,26 @@
                 <source src="https://ik.imagekit.io/mgjimrrit/istockphoto-2189882078-640_adpp_is.mp4" type="video/mp4">
             </video>
             <div class="hero-overlay"></div>
+        </div>
+
+        <div class="hero-content">
+            <div
+                class="inline-flex items-center gap-2 px-4 py-1.5 bg-blue-600/10 border border-blue-600/20 rounded-full mb-8">
+                <span class="w-2 h-2 bg-blue-600 rounded-full animate-pulse"></span>
+                <p class="text-[10px] font-bold text-blue-700 uppercase tracking-widest">Active Invention Mainframe</p>
+            </div>
+            <h1 class="hero-title">Zenith Ultra-5K</h1>
+            <p class="text-slate-600 text-lg mb-12 max-w-2xl mx-auto font-medium leading-relaxed">
+                Empowering the next generation of biological research through <br>
+                high-fidelity generative cellular modeling and simulation.
+            </p>
+            <div class="flex justify-center">
+                <button onclick="checkAuthAndRedirect('index.html')"
+                    class="btn-launch shadow-2xl shadow-blue-500/20 scale-110">
+                    Launch Research Console
+                    <i data-lucide="terminal" class="w-5 h-5 ml-2"></i>
+                </button>
+            </div>
         </div>
     </header>
 
