@@ -19,9 +19,10 @@ import psutil
 # Set thread count to match Pro Plan vCPUs (32)
 # Set thread count securely
 try:
-    torch.set_num_threads(32)
-    torch.set_num_interop_threads(32)
-    print(f"ZENITH ULTRA-HD: Optimized for 32 vCPUs (Threads: {torch.get_num_threads()})")
+    cpus = os.cpu_count() or 1
+    torch.set_num_threads(cpus)
+    torch.set_num_interop_threads(cpus)
+    print(f"ZENITH ULTRA-HD: Optimized for {cpus} vCPUs (Threads synced)")
 except Exception as e:
     print(f"ZENITH ULTRA-HD: Thread optimization warning: {e}")
 
@@ -320,7 +321,7 @@ def get_drift_model():
     global drift_model
     if drift_model is None:
         print("LAZY INIT: Loading Zenith ULTRA-5K Transformer Model...")
-        drift_model = ZenithV2DeepDrift(input_dim=5000).to(dtype=torch.float16)
+        drift_model = ZenithV2DeepDrift(input_dim=5000).to(dtype=torch.float32)
         print("SUCCESS: Zenith Ultra-5K Model Ready")
     return drift_model
 
@@ -2025,143 +2026,100 @@ class TrialResponse(BaseModel):
 
 @app.post("/run_virtual_trial", response_model=TrialResponse)
 async def run_virtual_trial(req: TrialRequest):
-    print(f"🚀 INITIATING VIRTUAL TRIAL: {req.disease} (N={req.cohort_size})")
-    
-    # 1. GENERATE COHORT (PyTorch Tensor Logic)
-    # Create N patients with basal gene expression
-    N = req.cohort_size
-    
-    # Variance scaler
-    sigma = {"High": 1.0, "Medium": 0.5, "Low": 0.1}.get(req.variance, 0.5)
-    
-    # Base "HCA Centroid" (Standard Human) - 1000 genes
-    base_population = torch.rand(N, 1000) * 0.1 # Low expression background
-    
-    # Apply Disease Modifiers (Perturbations)
-    if req.disease == "ALZ":
-        # Neurodegeneration: High inflammation (genes 80-90), Loss of Neural markers (20-30)
-        base_population[:, 80:90] += 0.8  # Inflammatory Spike
-        base_population[:, 20:30] *= 0.2  # Neural Loss
-    elif req.disease == "CF":
-        # Cardiac Fibrosis: High Collagen (40-50), Metabolic stress (60-70)
-        base_population[:, 40:50] += 0.9 # Fibrosis
-        base_population[:, 60:70] += 0.5
-    
-    # Add Variance (Individual Patient Differences)
-    noise = torch.randn(N, 1000) * (0.05 * sigma)
-    patients = torch.clamp(base_population + noise, 0.0, 1.0)
-    
-    # 2. RUN SIMULATION (Parallelized Neural SDE)
-    # We compare Placebo (No Vector) vs Active (DRP Vector)
-    
-    active_cohort = patients.clone()
-    placebo_cohort = patients.clone()
-    model = get_drift_model()
-    model.eval()
-    
-    # Treatment Injection: Boost Pluripotency (OSKM indices 0,1,4,5)
-    active_cohort[:, [0,1,4,5]] += 0.5 
-    
-    # --- TRUE BIOLOGICAL INTELLIGENCE: The Ripple Effect ---
-    # We run 5 iterations of the SDE (equivalent to ~5 days of cell change)
-    # The model predicts how the OTHER 996 genes react to the treatment.
-    print(f"🧠 SIMULATING RIPPLE EFFECT (5-Day Neural SDE Progression...)")
-    
-    with torch.no_grad():
-        # Precision Match
-        target_dtype = next(model.parameters()).dtype
+    try:
+        print(f"🚀 INITIATING VIRTUAL TRIAL: {req.disease} (N={req.cohort_size})")
         
-        # 5K Noise Setup (Pre-calc for speed if desired, but here effectively random per step is fine)
-        noise_mean, noise_std = 0.1, 0.05
-
-        for step in range(5):
-            # Age Vector
-            age_vec = torch.zeros(N, 1) + (0.5 + step * 0.1)
-            
-            # --- PREPARE ACTIVE INPUT (5K) ---
-            # Pad Active [N, 1000] -> [N, 5000]
-            pad_act = torch.normal(mean=noise_mean, std=noise_std, size=(N, 4000))
-            active_5k = torch.cat([active_cohort, pad_act], dim=1)
-            
-            # Context (Zeros) [N, 5000]
-            ctx_act = torch.zeros(N, 5000)
-            
-            # Final Active: [N, 10001]
-            act_in = torch.cat([active_5k, ctx_act, age_vec], dim=1).to(dtype=target_dtype)
-            
-            # --- PREPARE PLACEBO INPUT (5K) ---
-            pad_pla = torch.normal(mean=noise_mean, std=noise_std, size=(N, 4000))
-            placebo_5k = torch.cat([placebo_cohort, pad_pla], dim=1)
-            ctx_pla = torch.zeros(N, 5000)
-            
-            pla_in = torch.cat([placebo_5k, ctx_pla, age_vec], dim=1).to(dtype=target_dtype)
-            
-            # Predict Drift
-            active_drift = model(act_in)
-            placebo_drift = model(pla_in)
-            
-            # Update States (Only top 1000 genes matter for the cohort tracking)
-            # Drift output is [N, 5001], taking first 1000 is correct.
-            active_cohort = torch.clamp(active_cohort + active_drift[:, :1000].to(dtype=torch.float32) * 0.2, 0, 1)
-            placebo_cohort = torch.clamp(placebo_cohort + placebo_drift[:, :1000].to(dtype=torch.float32) * 0.2, 0, 1)
-            
-    # 3. CALCULATE REAL-TIME RISK (Predictive Transcriptomics)
-    # Instead of hardcoded numbers, we look at the final predicted state:
-    # High inflammation (80-100) + Low pluripotency (0-10) = High Risk
-    
-    # Placebo Final State
-    p_stress = torch.mean(placebo_cohort[:, 80:100], dim=1)
-    p_health = torch.mean(placebo_cohort[:, 0:10], dim=1)
-    placebo_risk = p_stress * (1.5 - p_health)
-    
-    # Active Final State (The Ripple Effect result)
-    a_stress = torch.mean(active_cohort[:, 80:100], dim=1)
-    a_health = torch.mean(active_cohort[:, 0:10], dim=1)
-    active_risk = a_stress * (1.5 - a_health)
-    
-    print(f"📊 SDE RIPPLE COMPLETE. Mean Risk Reduction: {float(placebo_risk.mean() - active_risk.mean()):.4f}")
+        # 1. GENERATE COHORT (PyTorch Tensor Logic)
+        N = req.cohort_size
+        sigma = {"High": 1.0, "Medium": 0.5, "Low": 0.1}.get(req.variance, 0.5)
+        base_population = torch.rand(N, 1000) * 0.1
         
-    # 3. CALCULATE METRICS
-    
-    # Kaplan Meier Curves (Survival Probability over 100 days)
-    # S(t) = exp(-risk * t)
-    days = np.linspace(0, 10, 100)
-    
-    mean_risk_p = float(placebo_risk.mean())
-    mean_risk_a = float(active_risk.mean())
-    
-    km_placebo = [np.exp(-mean_risk_p * t) for t in days]
-    km_active = [np.exp(-mean_risk_a * t) for t in days] # DRP Predicted Survival (Model-Driven)
-    
-    # Waterfall (Efficacy)
-    # Delta Risk = Placebo Risk - Active Risk
-    delta = (placebo_risk - active_risk).numpy()
-    waterfall_data = sorted(delta.tolist())
-    
-    # Manifold (t-SNE Approximation for output)
-    # We project the 1000-dim difference to 2D
-    # Simple PCA-like projection for viz
-    diff_tensor = patients - active_cohort
-    pca_1 = diff_tensor[:, 0:500].mean(dim=1) * 100
-    pca_2 = diff_tensor[:, 500:1000].mean(dim=1) * 100
-    
-    # 4. STATISTICS
-    # T-test
-    t_stat = np.mean(delta) / (np.std(delta) / np.sqrt(N))
-    # Approximation of p-value from t-stat
-    p_value = np.exp(-0.5 * t_stat**2) # Highly simplified for speed, essentially 0 if effect is large
-    if p_value < 1e-6: p_value = 1e-6
+        if req.disease == "ALZ":
+            base_population[:, 80:90] += 0.8
+            base_population[:, 20:30] *= 0.2
+        elif req.disease == "CF":
+            base_population[:, 40:50] += 0.9
+            base_population[:, 60:70] += 0.5
+        
+        noise = torch.randn(N, 1000) * (0.05 * sigma)
+        patients = torch.clamp(base_population + noise, 0.0, 1.0)
+        
+        # 2. RUN SIMULATION
+        active_cohort = patients.clone()
+        placebo_cohort = patients.clone()
+        model = get_drift_model()
+        model.eval()
+        
+        active_cohort[:, [0,1,4,5]] += 0.5 
+        
+        with torch.no_grad():
+            target_dtype = torch.float32
+            noise_mean, noise_std = 0.1, 0.05
+            for step in range(3):
+                age_vec = torch.zeros(N, 1) + (0.5 + step * 0.1)
+                pad_act = torch.normal(mean=noise_mean, std=noise_std, size=(N, 4000))
+                active_5k = torch.cat([active_cohort, pad_act], dim=1)
+                ctx_act = torch.zeros(N, 5000)
+                act_in = torch.cat([active_5k, ctx_act, age_vec], dim=1).to(dtype=target_dtype)
+                
+                pad_pla = torch.normal(mean=noise_mean, std=noise_std, size=(N, 4000))
+                placebo_5k = torch.cat([placebo_cohort, pad_pla], dim=1)
+                ctx_pla = torch.zeros(N, 5000)
+                pla_in = torch.cat([placebo_5k, ctx_pla, age_vec], dim=1).to(dtype=target_dtype)
+                
+                active_drift = model(act_in)
+                placebo_drift = model(pla_in)
+                
+                active_cohort = torch.clamp(active_cohort + active_drift[:, :1000].to(dtype=torch.float32) * 0.2, 0, 1)
+                placebo_cohort = torch.clamp(placebo_cohort + placebo_drift[:, :1000].to(dtype=torch.float32) * 0.2, 0, 1)
+                
+        # 3. CALCULATE METRICS
+        p_stress = torch.mean(placebo_cohort[:, 80:100], dim=1)
+        p_health = torch.mean(placebo_cohort[:, 0:10], dim=1)
+        placebo_risk = p_stress * (1.5 - p_health)
+        
+        a_stress = torch.mean(active_cohort[:, 80:100], dim=1)
+        a_health = torch.mean(active_cohort[:, 0:10], dim=1)
+        active_risk = a_stress * (1.5 - a_health)
+        
+        days = np.linspace(0, 10, 100)
+        mean_risk_p = float(placebo_risk.mean())
+        mean_risk_a = float(active_risk.mean())
+        km_placebo = [np.exp(-mean_risk_p * t) for t in days]
+        km_active = [np.exp(-mean_risk_a * t) for t in days]
+        
+        delta = (placebo_risk - active_risk).numpy()
+        waterfall_data = sorted(delta.tolist())
+        
+        diff_tensor = patients - active_cohort
+        pca_1 = diff_tensor[:, 0:500].mean(dim=1) * 100
+        pca_2 = diff_tensor[:, 500:1000].mean(dim=1) * 100
+            
+        mean_delta = np.mean(delta)
+        std_delta = np.std(delta)
+        if std_delta < 1e-9:
+            t_stat = 10.0 if mean_delta > 0 else 0.0
+        else:
+            t_stat = mean_delta / (std_delta / np.sqrt(N))
+            
+        p_value = np.exp(-0.5 * t_stat**2)
+        if p_value < 1e-6: p_value = 1e-6
 
-    return {
-        "km_placebo": km_placebo,
-        "km_active": km_active,
-        "waterfall_data": waterfall_data,
-        "manifold_x": pca_1.tolist(),
-        "manifold_y": pca_2.tolist(),
-        "responder_status": (delta > 0).tolist(),
-        "p_value": float(p_value),
-        "status": "COMPLETED"
-    }
+        return {
+            "km_placebo": km_placebo,
+            "km_active": km_active,
+            "waterfall_data": waterfall_data,
+            "manifold_x": pca_1.tolist(),
+            "manifold_y": pca_2.tolist(),
+            "responder_status": (delta > 0).tolist(),
+            "p_value": float(p_value),
+            "status": "COMPLETED"
+        }
+    except Exception as e:
+        print(f"❌ TRIAL SIMULATION CRASH: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=f"Simulation Engine Failure: {str(e)}")
 
 @app.get("/v26_trials.html", response_class=FileResponse)
 async def serve_trials():

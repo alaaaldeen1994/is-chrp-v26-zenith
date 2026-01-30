@@ -261,6 +261,8 @@
             const btn = document.getElementById('btn-start');
             btn.disabled = true;
             btn.innerHTML = `<i class="animate-spin" data-lucide="loader-2"></i> COMPUTING 1000-DIM TENSORS...`;
+            btn.classList.remove('bg-red-600', 'bg-emerald-600');
+            btn.classList.add('bg-blue-600');
             document.getElementById('trial-status').classList.remove('hidden');
 
             const total = parseInt(document.getElementById('val-n').innerText);
@@ -268,12 +270,7 @@
 
             try {
                 const disease = document.getElementById('disease-select').value;
-                const variance = document.getElementById('val-var').innerText || 'Medium'; // Logic to get text value needs refinement if select is used
-                // Actually the select is just "High (Diverse...)" so we need to grab the value or text
-                // Let's assume the Python default handles it if we pass raw string, or we map it.
-                // The select element query:
-                const varSelect = document.querySelectorAll('select')[1]; // 2nd select
-                const varValue = varSelect ? varSelect.options[varSelect.selectedIndex].text.split(' ')[0] : 'Medium';
+                const variance = document.getElementById('val-var').innerText || 'Medium';
 
                 // CALL PYTHON BRIDGE
                 const response = await fetch('/run_virtual_trial', {
@@ -286,43 +283,58 @@
                     body: JSON.stringify({
                         disease: disease,
                         cohort_size: total,
-                        variance: varValue
+                        variance: variance
                     })
                 });
 
-                if (!response.ok) throw new Error("Backend Error");
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.detail || "Backend Error");
+                }
+
                 const data = await response.json();
-                currentData = data; // Store globally for export
+                currentData = data;
 
                 // UPDATE CHARTS (Fast Render)
-                kmChart.data.datasets[0].data = data.km_placebo;
-                kmChart.data.datasets[1].data = data.km_active;
-                kmChart.update();
+                if (data.km_placebo && data.km_active) {
+                    kmChart.data.datasets[0].data = data.km_placebo;
+                    kmChart.data.datasets[1].data = data.km_active;
+                    kmChart.update();
+                }
 
-                waterfallChart.data.labels = data.waterfall_data.map((_, i) => i);
-                waterfallChart.data.datasets[0].data = data.waterfall_data;
-                waterfallChart.data.datasets[0].backgroundColor = data.waterfall_data.map(v => v < 0 ? '#10b981' : '#dc2626');
-                waterfallChart.update();
+                if (data.waterfall_data) {
+                    waterfallChart.data.labels = data.waterfall_data.map((_, i) => i);
+                    waterfallChart.data.datasets[0].data = data.waterfall_data;
+                    waterfallChart.data.datasets[0].backgroundColor = data.waterfall_data.map(v => v < 0 ? '#10b981' : '#dc2626');
+                    waterfallChart.update();
+                }
 
-                const manifoldData = data.manifold_x.map((x, i) => ({ x: x, y: data.manifold_y[i] }));
-                const pointColors = data.responder_status.map(isResp => isResp ? '#10b981' : '#f59e0b');
+                if (data.manifold_x && data.manifold_y) {
+                    const manifoldData = data.manifold_x.map((x, i) => ({ x: x, y: data.manifold_y[i] }));
+                    const pointColors = (data.responder_status || []).map(isResp => isResp ? '#10b981' : '#f59e0b');
 
-                manifoldChart.data.datasets[0].data = manifoldData;
-                manifoldChart.data.datasets[0].backgroundColor = pointColors;
-                manifoldChart.update();
+                    manifoldChart.data.datasets[0].data = manifoldData;
+                    manifoldChart.data.datasets[0].backgroundColor = pointColors;
+                    manifoldChart.update();
+                }
 
                 // Stats
-                document.getElementById('p-value-box').classList.remove('hidden');
-                document.getElementById('p-value').innerText = `p < ${data.p_value.toExponential(2)}`;
+                if (data.p_value !== undefined) {
+                    document.getElementById('p-value-box').classList.remove('hidden');
+                    const pValDisplay = data.p_value < 0.0001 ? data.p_value.toExponential(2) : data.p_value.toFixed(4);
+                    document.getElementById('p-value').innerText = `p = ${pValDisplay}`;
+                }
 
                 finishTrial();
 
             } catch (e) {
-                console.error(e);
-                btn.innerHTML = `<i data-lucide="alert-circle"></i> SIMULATION ERROR`;
+                console.error('Trial Simulation Failed:', e);
+                btn.innerHTML = `<i data-lucide="alert-circle"></i> ${e.message.toUpperCase()}`;
                 btn.classList.replace('bg-blue-600', 'bg-red-600');
                 btn.disabled = false;
+                document.getElementById('trial-status').classList.add('hidden');
             }
+            lucide.createIcons();
         }
 
         let currentData = null; // Store data for export
