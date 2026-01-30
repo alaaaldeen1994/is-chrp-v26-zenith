@@ -101,12 +101,25 @@
         .hero-bg {
             position: absolute;
             inset: 0;
-            background: linear-gradient(90deg, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.3) 100%),
-                url('https://images.unsplash.com/photo-1614935151651-0bea6508db6b?auto=format&fit=crop&q=80&w=2000');
-            /* Professional Microscope/Lab background */
-            background-size: cover;
-            background-position: center;
             z-index: 1;
+            overflow: hidden;
+        }
+
+        .hero-video {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transform: translate(-50%, -50%);
+        }
+
+        .hero-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.4) 100%);
+            z-index: 2;
         }
 
         .hero-content {
@@ -754,7 +767,12 @@
 
     <!-- HERO SECTION -->
     <header class="hero">
-        <div class="hero-bg"></div>
+        <div class="hero-bg">
+            <video autoplay muted loop playsinline class="hero-video">
+                <source src="https://ik.imagekit.io/mgjimrrit/istockphoto-2189882078-640_adpp_is.mp4" type="video/mp4">
+            </video>
+            <div class="hero-overlay"></div>
+        </div>
 
         <div class="hero-content">
             <div class="flex items-center gap-3 mb-6">
