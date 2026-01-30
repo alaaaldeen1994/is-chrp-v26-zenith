@@ -751,7 +751,7 @@ async def health_check():
     return {
         "status": "online", 
         "version": "PRO", 
-        "engine": "Zenith-7B",
+        "engine": "Zenith Ultra-HD (5K)",
         "mode": model_mode, # HCA Clinical Mode status
         "zenith_status": "ready" if drift_model is not None else "lazy_init"
     }
@@ -1414,7 +1414,7 @@ async def get_target_vector_from_query(query: str, api_key: Optional[str] = None
         }
         
         prompt = (
-            f"As a expert systems biologist, help me map the goal '{query}' to a transcriptomic target state.\n"
+            f"As a expert systems biologist at Nilus Lab, help me map the goal '{query}' to a transcriptomic target state using the Zenith Ultra-HD (5K) manifold.\n"
             f"We are using a 1000-gene manifold. Here are the core indices for reference:\n{core_modules}\n\n"
             f"TASKS:\n"
             f"1. Select the top 15 genes that should be HIGHLY expressed for this state.\n"
@@ -1462,7 +1462,7 @@ async def discover_hybrid(req: HybridDiscoveryRequest, request: Request):
     """
     ZENITH-GPT HYBRID DISCOVERY: 
     1. Semantic Translation (GPT-4o)
-    2. Gradient Calculation (Zenith-7B)
+    2. Gradient Calculation (Zenith Ultra-HD 5K)
     3. Protocol Extraction
     """
     try:
@@ -1549,7 +1549,7 @@ async def discover_hybrid(req: HybridDiscoveryRequest, request: Request):
         if max_sim > 0.85:
             rationale += f"Optimization converged on a state resembling {best_protocol} signaling."
         else:
-            rationale += "The 7.03B model has identified a novel trajectory unique to this semantic target."
+            rationale += "The Zenith Ultra-HD (5K) model has identified a novel trajectory unique to this semantic target."
 
         return DiscoveryResult(
             recommended_protocol=best_protocol,
