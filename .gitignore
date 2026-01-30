@@ -5,9 +5,17 @@ venv/
 .env
 .DS_Store
 *.log
+
+# Prevent reassembled heavy files from bloating Git/Railway snapshots
 *.h5ad
+*.pt
+*.pth
+*.bin
+
+# Explicitly allow the required split parts for reassembly
 !*.h5ad.part*
-models/driftmlp_trained/driftmlp.pt
-models/scvi_model/model.pt
-mnodels/scvi_model_hca/model.pt
+!*.pt.part*
+!*.pth.part*
+!*.bin.part*
+
 .gitattributes
