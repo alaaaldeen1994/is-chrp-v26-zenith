@@ -35,10 +35,16 @@
             font-family: 'Outfit', sans-serif;
         }
 
-        /* --- PRE-NAV BAR --- */
+        /* --- STATUS BAR (ANCHORED) --- */
         .pre-nav {
-            background: #0f172a;
-            padding: 0.6rem 2rem;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 30;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 0.75rem 2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -47,6 +53,7 @@
             color: #94a3b8;
             text-transform: uppercase;
             letter-spacing: 0.15em;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .pre-nav span {
@@ -757,20 +764,7 @@
     </div>
 
 
-    <div class="pre-nav">
-        <div class="flex gap-8">
-            <p>Resolution: <span>5,000 Genes</span></p>
-            <p>Architecture: <span>Ultra-5600 Manifold</span></p>
-        </div>
-        <div class="flex gap-6 items-center">
-            <p class="flex items-center gap-2">
-                <span class="w-2 h-2 bg-teal-400 rounded-full"></span>
-                System: <span>Stable Node</span>
-            </p>
-            <div class="h-3 w-px bg-slate-700"></div>
-            <p id="clock" class="text-white">--:--:--</p>
-        </div>
-    </div>
+
 
     <!-- MAIN NAVIGATION -->
     <nav>
@@ -850,6 +844,22 @@
                     Launch Research Console
                     <i data-lucide="terminal" class="w-5 h-5 ml-2"></i>
                 </button>
+            </div>
+        </div>
+
+        <!-- ANCHORED TECHNICAL STATUS BAR -->
+        <div class="pre-nav">
+            <div class="flex gap-8">
+                <p>Resolution: <span>5,000 Genes</span></p>
+                <p>Architecture: <span>Ultra-5600 Manifold</span></p>
+            </div>
+            <div class="flex gap-6 items-center">
+                <p class="flex items-center gap-2">
+                    <span class="w-2 h-2 bg-teal-400 rounded-full"></span>
+                    System: <span>Stable Node</span>
+                </p>
+                <div class="h-3 w-px bg-slate-700"></div>
+                <p id="clock" class="text-white">--:--:--</p>
             </div>
         </div>
     </header>
