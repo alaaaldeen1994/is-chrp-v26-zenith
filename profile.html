@@ -37,17 +37,21 @@
 
         /* --- PRE-NAV BAR --- */
         .pre-nav {
-            background: #ffffff;
-            border-bottom: 1px solid var(--nav-border);
-            padding: 0.5rem 2rem;
+            background: #0f172a;
+            padding: 0.6rem 2rem;
             display: flex;
-            justify-content: flex-end;
-            gap: 1.5rem;
-            font-size: 11px;
-            font-weight: 600;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 10px;
+            font-weight: 700;
             color: #94a3b8;
             text-transform: uppercase;
-            letter-spacing: 0.05em;
+            letter-spacing: 0.15em;
+        }
+
+        .pre-nav span {
+            color: #fff;
+            margin-left: 4px;
         }
 
         /* --- MAIN NAVIGATION --- */
@@ -197,13 +201,12 @@
         }
 
         .bio-pulse {
-            width: 12px;
-            height: 12px;
+            width: 8px;
+            height: 8px;
             background: #2dd4bf;
             border-radius: 50%;
             display: inline-block;
-            margin-right: 8px;
-            box-shadow: 0 0 15px #2dd4bf;
+            box-shadow: 0 0 10px rgba(45, 212, 191, 0.5);
             animation: pulse 2s infinite;
         }
 
@@ -563,10 +566,6 @@
             box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4);
         }
 
-        .auth-btn:hover::before {
-            opacity: 1;
-        }
-
         .auth-btn:active {
             transform: translateY(0);
         }
@@ -756,6 +755,21 @@
     </div>
 
 
+    <div class="pre-nav">
+        <div class="flex gap-8">
+            <p>Resolution: <span>5,000 Genes</span></p>
+            <p>Architecture: <span>Ultra-5600 Manifold</span></p>
+        </div>
+        <div class="flex gap-6 items-center">
+            <p class="flex items-center gap-2">
+                <span class="w-2 h-2 bg-teal-400 rounded-full"></span>
+                System: <span>Stable Node</span>
+            </p>
+            <div class="h-3 w-px bg-slate-700"></div>
+            <p id="clock" class="text-white">--:--:--</p>
+        </div>
+    </div>
+
     <!-- MAIN NAVIGATION -->
     <nav>
         <div class="flex items-center gap-6">
@@ -776,10 +790,21 @@
                 <a href="#" class="nav-item active">Zenith Mainframe</a>
                 <a href="technical_catalog.html" class="nav-item">Foundation Catalog</a>
                 <a href="trials.html" class="nav-item">Virtual Trials</a>
-                <a href="index.html" class="nav-item">Simulation Lab</a>
             </div>
         </div>
-        <div class="flex items-center gap-8">
+        <div class="flex items-center gap-4">
+            <div class="flex items-center gap-2 px-4 py-2 bg-slate-50 rounded-full border border-slate-100 mr-2">
+                <span class="bio-pulse"></span>
+                <p class="text-[9px] font-bold text-slate-500 uppercase tracking-widest">Live HCA Feed: 150k+ Cells</p>
+            </div>
+
+            <button onclick="checkAuthAndRedirect('index.html')"
+                class="bg-primary text-white px-5 py-2 rounded-lg text-xs font-bold uppercase tracking-wider hover:bg-primary-hover transition-all flex items-center gap-2">
+                Launch Console
+                <i data-lucide="terminal" class="w-4 h-4"></i>
+            </button>
+
+            <div class="h-6 w-px bg-slate-200 mx-2"></div>
             <!-- Show when NOT logged in -->
             <div id="auth-signed-out" class="hidden">
                 <button onclick="openLoginModal()"
@@ -810,39 +835,6 @@
                 <source src="https://ik.imagekit.io/mgjimrrit/istockphoto-2189882078-640_adpp_is.mp4" type="video/mp4">
             </video>
             <div class="hero-overlay"></div>
-        </div>
-
-        <!-- NEW FLOATING OPERATION CONSOLE -->
-        <div class="hero-console">
-            <div class="flex items-center gap-12">
-                <div class="hud-segment">
-                    <p class="hud-label">Zenith Architecture</p>
-                    <p class="hud-value">Ultra-5600 Manifold</p>
-                </div>
-                <div class="hud-segment">
-                    <p class="hud-label">System Feed</p>
-                    <div class="flex items-center gap-2">
-                        <span class="bio-pulse"></span>
-                        <p class="hud-value">150k+ Cells Active</p>
-                    </div>
-                </div>
-            </div>
-
-            <button onclick="checkAuthAndRedirect('index.html')" class="btn-launch">
-                Launch Research Console
-                <i data-lucide="arrow-right" class="w-4 h-4 ml-2"></i>
-            </button>
-
-            <div class="flex items-center gap-12 text-right">
-                <div class="hud-segment">
-                    <p class="hud-label">Model status</p>
-                    <p class="hud-value text-teal-600">Stable Node</p>
-                </div>
-                <div class="hud-segment">
-                    <p class="hud-label">Resolution</p>
-                    <p class="hud-value">5,000 Genes</p>
-                </div>
-            </div>
         </div>
     </header>
 
