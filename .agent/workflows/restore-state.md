@@ -24,4 +24,4 @@ If the 156MB-190MB files fail to upload:
 - **OPENAI_API_KEY**: Must be set in the Railway "Variables" tab.
 - **Lazy Loading**: `bridge_server.py` must stay in `backed='r'` mode to prevent memory crashes on the server.
 
-**Saved Point: Jan 19, 2026 - Stable Zenith v26.1 Build.**
+**Saved Point: Jan 30, 2026 - Ultra-HD 5K Peak (Commit 6f3c96e).**
