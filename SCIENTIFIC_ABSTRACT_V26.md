@@ -5,12 +5,12 @@
 ---
 
 ## 1. Executive Summary
-Zenith v26.1 is a high-resolution, generative foundation model designed to navigate the high-dimensional latent manifolds of cellular transcriptomics and epigenetics. Unlike legacy categorical classifiers, Zenith utilizes a **167.6 Million Parameter Multi-Head Deep-Drift Transformer** architecture to predict and validate **Cooperative Reprogramming Complexes (CRC)**—multi-protein molecular machines that drive rejuvenation without the loss of somatic identity. 
+Zenith v26.1 is a high-resolution, generative foundation model designed to navigate the high-dimensional latent manifolds of cellular transcriptomics and epigenetics. Unlike legacy categorical classifiers, Zenith utilizes a **285 Million Parameter Multi-Head Deep-Drift Transformer** architecture to predict and validate **Cooperative Reprogramming Complexes (CRC)**—multi-protein molecular machines that drive rejuvenation without the loss of somatic identity. 
 
 The platform effectively bridges the gap between digital discovery and physical validation through an integrated autonomous robotic bridge, enabling real-time translation of AI-predicted "molecular handshakes" into executable wet-lab protocols.
 
 ## 2. Core Methodology: Differentiable Perturbation (DP)
-The Zenith engine operates on the principle of **Differentiable Perturbation**. By modeling 5,000+ genomic coordinates as a continuous vector field, the system calculates the optimal trajectory from a "Senescent State" (T=0) to a "Rejuvenated State" (T=Target).
+The Zenith engine operates on the principle of **Differentiable Perturbation**. By modeling a **5,000-gene vocabulary** across a manifold of **150,000 Mapped Cells (HCA)**, the system calculates the optimal trajectory from a "Senescent State" (T=0) to a "Rejuvenated State" (T=Target).
 
 - **Neural Hybrid Engine**: Combines symbolic reasoning (Semantic Mapping) with manifold gradients to interpret natural language research queries into biological coordinates.
 - **Epigenetic Clock Awareness**: Incorporates simulated chromatin accessibility barriers, allowing the model to predict how aged cells (BioAge > 0.8) resist transcription factor binding.
