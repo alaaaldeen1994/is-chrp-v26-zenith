@@ -823,17 +823,6 @@
         </div>
 
         <div class="hero-content relative">
-            <!-- Institutional Status Badge (Relocated to Top Right Overlay) -->
-            <div
-                class="absolute -top-12 -right-12 md:-right-24 inline-flex items-center gap-3 px-4 py-2 bg-white/80 backdrop-blur-md border border-slate-200 rounded-lg shadow-sm">
-                <span class="relative flex h-2 w-2">
-                    <span
-                        class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
-                    <span class="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
-                </span>
-                <p class="text-[10px] font-black text-slate-500 uppercase tracking-[0.1em]">Engine: <span
-                        class="text-blue-600">Active</span> // Yamanaka_OSKM_v26.1</p>
-            </div>
 
             <!-- Main Title Section -->
             <div class="mb-12">
@@ -1284,6 +1273,15 @@
             <p>Architecture: <span>Ultra-5600 Manifold</span></p>
         </div>
         <div class="flex gap-6 items-center">
+            <div class="flex items-center gap-3 px-3 py-1 bg-white/5 rounded border border-white/10 mr-4">
+                <span class="relative flex h-1.5 w-1.5">
+                    <span
+                        class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-blue-500"></span>
+                </span>
+                <p class="text-[8px] font-black text-slate-300 uppercase tracking-[0.1em]">Engine: <span
+                        class="text-blue-400">Active</span> // Yamanaka_OSKM_v26.1</p>
+            </div>
             <p class="flex items-center gap-2">
                 <span class="w-2 h-2 bg-teal-400 rounded-full"></span>
                 System: <span>Stable Node</span>
@@ -1317,7 +1315,8 @@
                 signedOut.classList.add('hidden');
 
                 const nameEl = document.getElementById('profile-name');
-                const displayName = user.email.split('@')[0].toUpperCase();
+                const fullPrefix = user.email.split('@')[0];
+                const displayName = fullPrefix.split(/[\._]/)[0].toUpperCase();
                 if (nameEl) {
                     nameEl.innerText = displayName;
                 }
