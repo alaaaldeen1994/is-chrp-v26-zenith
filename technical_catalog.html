@@ -1919,7 +1919,7 @@
                     </table>
                 </div>
 
-                <div class="bg-indigo-500/10 border border-indigo-500/30 rounded-2xl p-6">
+                <div class="bg-indigo-500/10 border border-indigo-500/30 rounded-2xl p-6 mb-8">
                     <h5
                         class="flex items-center gap-2 text-sm font-bold text-indigo-400 mb-4 uppercase tracking-widest">
                         <i data-lucide="zap" class="w-3 h-3"></i> Pro Analysis Tip
@@ -1930,6 +1930,86 @@
                         attractor and the Pluripotency-Age reset trajectory, filtering out markers of terminal
                         senescence that legacy categorical systems might miss."
                     </p>
+                </div>
+
+                <!-- Section 17.5: Synergetic Co-Binding & CRC Analysis -->
+                <h4 class="text-2xl font-bold text-white mt-10 mb-6">Section 17.5: Synergetic Co-Binding & CRC Analysis
+                </h4>
+                <div
+                    class="bg-purple-900/20 border border-purple-500/30 rounded-2xl p-8 shadow-2xl relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-64 h-64 bg-purple-500/5 blur-[80px] pointer-events-none"></div>
+
+                    <h5 class="text-lg font-black text-purple-400 mb-4 uppercase tracking-[0.2em]">Cooperative
+                        Reprogramming Complexes (CRC)</h5>
+                    <p class="text-sm text-slate-300 leading-relaxed mb-8">
+                        Zenith v26.1 introduces the ability to model <strong>Synergistic Co-Binding</strong>. Most
+                        reprogramming events rely not on an individual factor, but on a <strong>Molecular
+                            Machine</strong> created by the handshake of two or more proteins on a shared DNA promoter.
+                    </p>
+
+                    <div class="grid md:grid-cols-2 gap-8 mb-10">
+                        <div class="bg-black/60 p-6 rounded-xl border border-slate-800">
+                            <h6 class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-4">Case Study:
+                                SOX2-POU5F1 Handshake</h6>
+                            <div
+                                class="aspect-video bg-black/40 rounded-lg flex items-center justify-center border border-purple-500/20 mb-4 overflow-hidden group">
+                                <img src="assets/synergy_complex_bound.png" alt="Synergy Complex Bound"
+                                    class="w-full h-full object-contain p-2 opacity-80 group-hover:opacity-100 transition-opacity">
+                            </div>
+                            <p class="text-[11px] text-slate-400 italic">
+                                Zenith-identified "Oct-Sox" motif. The two proteins physically dock side-by-side to
+                                initiate the cardiac rejuvenation cascade.
+                            </p>
+                        </div>
+                        <div class="bg-black/60 p-6 rounded-xl border border-slate-800">
+                            <h6 class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-4">Kinetic
+                                Certainty (Synergy PAE)</h6>
+                            <div
+                                class="aspect-video bg-black/40 rounded-lg flex items-center justify-center border border-emerald-500/20 mb-4 overflow-hidden group">
+                                <img src="assets/synergy_confidence_map.png" alt="Synergy Confidence Map"
+                                    class="w-full h-full object-contain p-2 opacity-80 group-hover:opacity-100 transition-opacity">
+                            </div>
+                            <p class="text-[11px] text-slate-400 italic">
+                                Off-diagonal green clusters validate inter-molecular interaction certainty, ensuring the
+                                two factors behave as a singular unit.
+                            </p>
+                        </div>
+                    </div>
+
+                    <h5 class="text-sm font-bold text-white mb-4">Technical Benchmarks for CRC</h5>
+                    <div class="overflow-x-auto bg-black/30 rounded-xl p-4">
+                        <table class="w-full">
+                            <thead>
+                                <tr
+                                    class="text-[9px] uppercase tracking-widest text-slate-500 border-b border-slate-800">
+                                    <th class="text-left pb-4">Benchmark</th>
+                                    <th class="text-left pb-4">Required Score</th>
+                                    <th class="text-left pb-4">Biological Meaning</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-xs">
+                                <tr class="border-b border-slate-800/50">
+                                    <td class="py-4 font-bold text-blue-400">Docking Affinity ($K_d$)</td>
+                                    <td class="py-4 font-mono">
+                                        < 5.0 nM</td>
+                                    <td class="py-4 text-slate-400">High stability of the multi-protein complex on the
+                                        DNA.</td>
+                                </tr>
+                                <tr class="border-b border-slate-800/50">
+                                    <td class="py-4 font-bold text-purple-400">Synergy Precision</td>
+                                    <td class="py-4 font-mono"> > 94.2%</td>
+                                    <td class="py-4 text-slate-400">Accuracy of Zenith in predicting the specific
+                                        co-binding motif coordinate.</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-4 font-bold text-emerald-400">Kinetic Coherence</td>
+                                    <td class="py-4 font-mono"> High (ipTM > 0.8)</td>
+                                    <td class="py-4 text-slate-400">Mathematical certainty that the two proteins touch
+                                        at the correct interface.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </section>
