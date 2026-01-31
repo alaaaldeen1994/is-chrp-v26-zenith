@@ -1441,7 +1441,7 @@ async def get_target_vector_from_query(query: str, api_key: Optional[str] = None
         gene_data = data.get("genes", {})
         explanation = data.get("rationale", "Semantic mapping successful.")
         
-        target_vec = torch.zeros(1000)
+        target_vec = torch.zeros(len(GENE_SYMBOLS))
         filtered_gene_data = {}
         for genename, weight in gene_data.items():
             g_upper = genename.strip().upper()
@@ -1458,7 +1458,7 @@ async def get_target_vector_from_query(query: str, api_key: Optional[str] = None
         print(f"Hybrid Semantic Translation Error [{error_type}]: {error_msg}")
         # Log full traceback for deep debugging of connection issues
         # traceback.print_exc() 
-        return torch.tensor([0.5]*10 + [0.0]*990, dtype=torch.float32), f"Translation Error ({error_type}): {error_msg}", {}
+        return torch.tensor([0.5]*10 + [0.0]*(len(GENE_SYMBOLS)-10), dtype=torch.float32), f"Translation Error ({error_type}): {error_msg}", {}
 
 @app.post("/discover_hybrid", response_model=DiscoveryResult)
 @limiter.limit(RATE_LIMITS["discovery"])
@@ -1489,8 +1489,7 @@ async def discover_hybrid(req: HybridDiscoveryRequest, request: Request):
         current_5k = torch.cat([pert_1k.unsqueeze(0), padding], dim=1) # [1, 5000]
         
         # Target/Context: [1, 5000]
-        target_5k = torch.zeros(1, 5000) # Base 0
-        target_5k[0, :1000] = target_vec # Embed real target
+        target_5k = target_vec.unsqueeze(0) # Embed full 5000-dim target
         
         # Age
         age_in = torch.tensor([[0.5]])
@@ -1506,7 +1505,7 @@ async def discover_hybrid(req: HybridDiscoveryRequest, request: Request):
         velocity = model(input_tensor) 
         velocity_genes = velocity[0, :1000].to(dtype=torch.float32)
         
-        loss = torch.nn.functional.mse_loss(current_vec + velocity_genes, target_vec)
+        loss = torch.nn.functional.mse_loss(current_vec + velocity_genes, target_vec[:1000])
         loss.backward()
         gradient = perturbation.grad 
         
