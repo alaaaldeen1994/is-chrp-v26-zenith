@@ -186,6 +186,10 @@ class ZenithV2DeepDrift(nn.Module):
         self.register_buffer('manifold_proj', torch.randn(hidden_dim, 3))
         self.manifold_proj = self.manifold_proj / self.manifold_proj.norm(dim=0, keepdim=True)
 
+        # Scientific Honesty: Calculate actual parameter count
+        total_params = sum(p.numel() for p in self.parameters())
+        print(f"🧬 [ZENITH-CORE] Total Trainable Parameters: {total_params / 1e6:.1f} Million")
+
     def _init_weights(self):
         for m in self.modules():
             if isinstance(m, nn.Linear):
