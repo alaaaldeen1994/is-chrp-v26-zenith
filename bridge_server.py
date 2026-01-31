@@ -629,6 +629,9 @@ else:
 if os.path.exists("validation_results"):
     app.mount("/validation_results", StaticFiles(directory="validation_results"), name="validation_results")
 
+if os.path.exists("assets"):
+    app.mount("/assets", StaticFiles(directory="assets"), name="assets")
+
 # ==================== SECURITY ENDPOINTS ====================
 
 @app.get("/api/csrf-token")
