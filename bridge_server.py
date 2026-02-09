@@ -693,25 +693,16 @@ async def get_logo_full():
 
 @app.get("/favicon.ico")
 async def get_favicon():
-    # Modern approach: Return high-res PNG even for .ico requests
-    # Google Search prefers 48x48 or multiples thereof
-    if os.path.exists("favicon-48.png"):
-        return FileResponse("favicon-48.png")
-    if os.path.exists("favicon.png"):
-        return FileResponse("favicon.png")
+    if os.path.exists("favicon.ico"):
+        return FileResponse("favicon.ico")
     if os.path.exists("favicon.svg"):
         return FileResponse("favicon.svg")
     return Response(status_code=404)
 
-@app.get("/favicon.png")
-async def get_favicon_png():
-    if os.path.exists("favicon.png"):
-        return FileResponse("favicon.png")
-    return Response(status_code=404)
+
 @app.get("/")
 async def get_landing():
     return FileResponse("profile.html")
-
 
 @app.get("/index.html")
 async def get_simulation():
