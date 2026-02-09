@@ -692,8 +692,8 @@ async def get_logo_full():
 
 @app.get("/favicon.ico")
 async def get_favicon():
-    if os.path.exists("logo_transparent.png"):
-        return FileResponse("logo_transparent.png")
+    if os.path.exists("favicon.svg"):
+        return FileResponse("favicon.svg")
     return Response(status_code=404)
 
 @app.get("/")
