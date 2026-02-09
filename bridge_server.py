@@ -662,6 +662,18 @@ async def get_csrf_token(request: Request, response: Response):
     
     return {"csrf_token": token}
 
+@app.get("/googleb345720fc36e8810.html")
+async def serve_google_verify():
+    return FileResponse("googleb345720fc36e8810.html")
+
+@app.get("/sitemap.xml")
+async def get_sitemap():
+    return FileResponse("sitemap.xml")
+
+@app.get("/robots.txt")
+async def get_robots():
+    return FileResponse("robots.txt")
+
 @app.get("/logo_transparent.png")
 async def get_logo():
     path = "logo_transparent.png"
