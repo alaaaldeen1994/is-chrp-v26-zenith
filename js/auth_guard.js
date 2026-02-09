@@ -5,9 +5,9 @@
 
 auth.onAuthStateChanged(user => {
     if (!user) {
-        // No user is signed in, redirect to login
-        console.warn("Unauthorized access. Redirecting to login...");
-        window.location.href = "login.html";
+        // No user is signed in, redirect to profile landing page instead of login.html
+        console.warn("Unauthorized access. Redirecting to institutional profile...");
+        window.location.href = "profile.html";
     } else {
         console.log("Authenticated Researcher:", user.email);
         // Optional: Update UI with user info
@@ -28,8 +28,10 @@ auth.onAuthStateChanged(user => {
 function performLogout() {
     auth.signOut().then(() => {
         console.log("Signed out successfully");
-        window.location.href = "login.html";
+        // Redirect to profile page after logout
+        window.location.href = "profile.html";
     }).catch((error) => {
         console.error("Sign out error", error);
     });
 }
+

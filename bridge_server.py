@@ -1,7 +1,6 @@
 import uvicorn
-from fastapi import FastAPI, HTTPException, Request, Response
-from fastapi.responses import FileResponse
-from fastapi.middleware.cors import CORSMiddleware
+from fastapi import FastAPI, Request, HTTPException, Form, Response, Cookie
+from fastapi.responses import HTMLResponse, JSONResponse, FileResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 from typing import List, Dict, Optional, Any, Tuple
@@ -715,11 +714,11 @@ async def get_catalog_path():
 
 @app.get("/login.html")
 async def get_login():
-    return FileResponse("login.html")
+    return RedirectResponse(url="/")
 
 @app.get("/login")
 async def get_login_path():
-    return FileResponse("login.html")
+    return RedirectResponse(url="/")
 
 @app.get("/contact.html")
 async def get_contact():
