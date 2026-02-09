@@ -667,7 +667,9 @@ async def serve_google_verify():
 
 @app.get("/sitemap.xml")
 async def get_sitemap():
-    return FileResponse("sitemap.xml")
+    if os.path.exists("sitemap.xml"):
+        return FileResponse("sitemap.xml", media_type="application/xml")
+    return Response(status_code=404)
 
 @app.get("/robots.txt")
 async def get_robots():
@@ -685,16 +687,18 @@ async def get_logo_full():
     path = "logo.png"
     if os.path.exists(path):
         return FileResponse(path)
-    # Fallback to transparent logo if full logo is missing
     if os.path.exists("logo_transparent.png"):
         return FileResponse("logo_transparent.png")
     return Response(status_code=404)
 
 @app.get("/favicon.ico")
 async def get_favicon():
+    if os.path.exists("favicon.ico"):
+        return FileResponse("favicon.ico")
     if os.path.exists("favicon.svg"):
         return FileResponse("favicon.svg")
     return Response(status_code=404)
+
 
 @app.get("/")
 async def get_landing():
