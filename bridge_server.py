@@ -772,6 +772,34 @@ async def get_drp_report():
 async def get_clinical_report():
     return FileResponse("v26_clinical_report.html")
 
+@app.get("/evidence.html")
+async def get_evidence():
+    return FileResponse("evidence.html")
+
+@app.get("/evidence")
+async def get_evidence_path():
+    return FileResponse("evidence.html")
+
+@app.get("/regulatory.html")
+async def get_regulatory():
+    return FileResponse("regulatory.html")
+
+@app.get("/regulatory")
+async def get_regulatory_path():
+    return FileResponse("regulatory.html")
+
+@app.get("/pilot_dashboard.html")
+async def get_pilot_dashboard():
+    return FileResponse("pilot_dashboard.html")
+
+@app.get("/pilot_dashboard")
+async def get_pilot_dashboard_path():
+    return FileResponse("pilot_dashboard.html")
+
+@app.get("/SCIENTIFIC_ABSTRACT_V26.md")
+async def get_abstract():
+    return FileResponse("SCIENTIFIC_ABSTRACT_V26.md", media_type="text/markdown")
+
 @app.get("/health")
 async def health_check():
     """Detailed health check for UI status indicators."""
