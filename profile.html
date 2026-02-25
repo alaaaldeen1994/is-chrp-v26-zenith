@@ -822,7 +822,10 @@
             <div class="h-8 w-px bg-slate-200 mx-4"></div>
             <div class="nav-links">
                 <a href="#" class="nav-item active">Zenith Mainframe</a>
-                <a href="v26_clinical_report.html" class="nav-item text-purple-600 font-bold">Clinical Dossier</a>
+                <a href="evidence.html" class="nav-item text-emerald-600 font-bold">Evidence Registry</a>
+                <a href="regulatory.html" class="nav-item text-blue-600 font-bold">Regulatory Statement</a>
+                <a href="pilot_dashboard.html" class="nav-item text-purple-600 font-bold">Pilot Dashboard</a>
+                <a href="v26_clinical_report.html" class="nav-item">Clinical Dossier</a>
                 <a href="technical_catalog.html" class="nav-item">Foundation Catalog</a>
                 <a href="trials.html" class="nav-item">Virtual Trials</a>
             </div>
@@ -934,72 +937,115 @@
                 </button>
             </div>
 
-            <!-- Feature 2: Virtual Trials -->
+            <!-- Feature 2: Evidence Registry -->
             <div
                 class="bg-white border-2 border-slate-100 rounded-2xl p-8 hover:border-emerald-400 hover:shadow-2xl transition-all duration-300 group">
                 <div
                     class="w-16 h-16 bg-emerald-100 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-emerald-600 transition-colors">
-                    <i data-lucide="activity" class="w-8 h-8 text-emerald-600 group-hover:text-white"></i>
+                    <i data-lucide="shield-check" class="w-8 h-8 text-emerald-600 group-hover:text-white"></i>
                 </div>
-                <h3 class="text-2xl font-bold text-slate-900 mb-4" style="font-family: 'Outfit', sans-serif;">Virtual
-                    Trials</h3>
+                <h3 class="text-2xl font-bold text-slate-900 mb-4" style="font-family: 'Outfit', sans-serif;">Evidence
+                    Registry</h3>
                 <p class="text-slate-600 leading-relaxed mb-6">
-                    Run high-throughput clinical trials on digital cohorts. Test longevity interventions across
-                    diverse patient populations and generate Kaplan-Meier survival curves.
+                    Access the foundational evidence spine. Audited SOTA benchmarks, Pearson correlations, and dataset
+                    provenance for Zenith v26.1.
                 </p>
-                <button onclick="checkAuthAndRedirect('trials.html')"
+                <button onclick="window.open('evidence.html', '_blank')"
                     class="inline-flex items-center gap-2 text-emerald-600 font-bold text-sm hover:gap-4 transition-all cursor-pointer bg-transparent border-none p-0">
-                    Start Trial <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    View Registry <i data-lucide="arrow-right" class="w-4 h-4"></i>
                 </button>
             </div>
 
-            <!-- Feature 3: Safety & Discovery -->
+            <!-- Feature 3: Partnership Dashboard -->
             <div
                 class="bg-white border-2 border-slate-100 rounded-2xl p-8 hover:border-purple-400 hover:shadow-2xl transition-all duration-300 group">
                 <div
                     class="w-16 h-16 bg-purple-100 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-purple-600 transition-colors">
-                    <i data-lucide="shield-check" class="w-8 h-8 text-purple-600 group-hover:text-white"></i>
+                    <i data-lucide="layout-dashboard" class="w-8 h-8 text-purple-600 group-hover:text-white"></i>
                 </div>
-                <h3 class="text-2xl font-bold text-slate-900 mb-4" style="font-family: 'Outfit', sans-serif;">Safety
-                    Modeling</h3>
+                <h3 class="text-2xl font-bold text-slate-900 mb-4" style="font-family: 'Outfit', sans-serif;">Pilot
+                    Dashboard</h3>
                 <p class="text-slate-600 leading-relaxed mb-6">
-                    Automated oncogenic risk detection during reprogramming. AI monitors cellular identity
-                    preservation and flags potential tumor formation.
+                    Real-time tracking of Pilot Funnels, Partnership KPIs, and Risk Registers for Enterprise diligence
+                    and investor review.
                 </p>
-                <a href="technical_catalog.html"
-                    class="inline-flex items-center gap-2 text-purple-600 font-bold text-sm hover:gap-4 transition-all">
-                    Learn More <i data-lucide="arrow-right" class="w-4 h-4"></i>
-                </a>
+                <button onclick="window.open('pilot_dashboard.html', '_blank')"
+                    class="inline-flex items-center gap-2 text-purple-600 font-bold text-sm hover:gap-4 transition-all cursor-pointer bg-transparent border-none p-0">
+                    Access Dashboard <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </button>
             </div>
         </div>
 
-        <!-- High-Fidelity Technical Metrics (Seamless Institutional Layout) -->
-        <div class="max-w-6xl mx-auto mt-24 mb-12 grid grid-cols-1 md:grid-cols-4 gap-12 text-center relative">
-            <div class="group relative px-6">
-                <p
-                    class="text-5xl font-black mb-3 tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-teal-400 to-cyan-300 drop-shadow-sm">
-                    ~285M</p>
-                <p class="text-[11px] text-slate-400 uppercase tracking-[0.25em] font-black">Neural Parameters</p>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto mt-8">
+            <!-- Feature 4: Virtual Trials -->
+            <div
+                class="bg-slate-50 border-2 border-slate-100 rounded-2xl p-8 hover:border-blue-400 hover:shadow-2xl transition-all duration-300 group flex items-center gap-8">
+                <div
+                    class="w-20 h-20 bg-blue-100 rounded-2xl flex items-center justify-center flex-shrink-0 group-hover:bg-blue-600 transition-colors">
+                    <i data-lucide="activity" class="w-10 h-10 text-blue-600 group-hover:text-white"></i>
+                </div>
+                <div>
+                    <h3 class="text-2xl font-bold text-slate-900 mb-2" style="font-family: 'Outfit', sans-serif;">
+                        Virtual Trials</h3>
+                    <p class="text-slate-600 text-sm leading-relaxed mb-4">
+                        Run high-throughput clinical trials on digital cohorts. Test longevity interventions across
+                        diverse populations.
+                    </p>
+                    <button onclick="checkAuthAndRedirect('trials.html')"
+                        class="inline-flex items-center gap-2 text-blue-600 font-bold text-sm hover:gap-4 transition-all cursor-pointer bg-transparent border-none p-0">
+                        Launch Trials <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    </button>
+                </div>
             </div>
-            <div class="group relative px-6 md:border-l border-slate-100">
-                <p
-                    class="text-5xl font-black mb-3 tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-teal-400 to-cyan-300 drop-shadow-sm">
-                    5,000</p>
-                <p class="text-[11px] text-slate-400 uppercase tracking-[0.25em] font-black">Gene Vocabulary</p>
+
+            <!-- Feature 5: Regulatory Boundary -->
+            <div
+                class="bg-slate-50 border-2 border-slate-100 rounded-2xl p-8 hover:border-amber-400 hover:shadow-2xl transition-all duration-300 group flex items-center gap-8">
+                <div
+                    class="w-20 h-20 bg-amber-100 rounded-2xl flex items-center justify-center flex-shrink-0 group-hover:bg-amber-600 transition-colors">
+                    <i data-lucide="scale" class="w-10 h-10 text-amber-600 group-hover:text-white"></i>
+                </div>
+                <div>
+                    <h3 class="text-2xl font-bold text-slate-900 mb-2" style="font-family: 'Outfit', sans-serif;">
+                        Regulatory Statement</h3>
+                    <p class="text-slate-600 text-sm leading-relaxed mb-4">
+                        Formal Intended Use Statement and 12-Month Evidence Generation Roadmap for institutional
+                        compliance.
+                    </p>
+                    <button onclick="window.open('regulatory.html', '_blank')"
+                        class="inline-flex items-center gap-2 text-amber-600 font-bold text-sm hover:gap-4 transition-all cursor-pointer bg-transparent border-none p-0">
+                        Read Statement <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    </button>
+                </div>
             </div>
-            <div class="group relative px-6 md:border-l border-slate-100">
-                <p
-                    class="text-5xl font-black mb-3 tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-teal-400 to-cyan-300 drop-shadow-sm">
-                    150k</p>
-                <p class="text-[11px] text-slate-400 uppercase tracking-[0.25em] font-black">Mapped Cells (HCA)</p>
+
+            <!-- High-Fidelity Technical Metrics (Seamless Institutional Layout) -->
+            <div class="max-w-6xl mx-auto mt-24 mb-12 grid grid-cols-1 md:grid-cols-4 gap-12 text-center relative">
+                <div class="group relative px-6">
+                    <p
+                        class="text-5xl font-black mb-3 tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-teal-400 to-cyan-300 drop-shadow-sm">
+                        ~285M</p>
+                    <p class="text-[11px] text-slate-400 uppercase tracking-[0.25em] font-black">Neural Parameters</p>
+                </div>
+                <div class="group relative px-6 md:border-l border-slate-100">
+                    <p
+                        class="text-5xl font-black mb-3 tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-teal-400 to-cyan-300 drop-shadow-sm">
+                        5,000</p>
+                    <p class="text-[11px] text-slate-400 uppercase tracking-[0.25em] font-black">Gene Vocabulary</p>
+                </div>
+                <div class="group relative px-6 md:border-l border-slate-100">
+                    <p
+                        class="text-5xl font-black mb-3 tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-teal-400 to-cyan-300 drop-shadow-sm">
+                        150k</p>
+                    <p class="text-[11px] text-slate-400 uppercase tracking-[0.25em] font-black">Mapped Cells (HCA)</p>
+                </div>
+                <div class="group relative px-6 md:border-l border-slate-100">
+                    <p
+                        class="text-5xl font-black mb-3 tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-teal-400 to-cyan-300 drop-shadow-sm">
+                        32</p>
+                    <p class="text-[11px] text-slate-400 uppercase tracking-[0.25em] font-black">Inference Threads</p>
+                </div>
             </div>
-            <div class="group relative px-6 md:border-l border-slate-100">
-                <p
-                    class="text-5xl font-black mb-3 tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-teal-400 to-cyan-300 drop-shadow-sm">
-                    32</p>
-                <p class="text-[11px] text-slate-400 uppercase tracking-[0.25em] font-black">Inference Threads</p>
-            </div>
-        </div>
     </section>
 
     <!-- CORE CAPABILITY VISUAL -->
