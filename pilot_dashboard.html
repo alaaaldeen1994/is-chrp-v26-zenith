@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enterprise Pilot Dashboard | Nilus Lab</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=JetBrains+Mono&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg: #030617;
+            --card-bg: rgba(15, 23, 42, 0.6);
+            --border: rgba(255, 255, 255, 0.08);
+            --accent: #3b82f6;
+            --emerald: #10b981;
+            --purple: #8b5cf6;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: #f8fafc;
+            font-family: 'Outfit', sans-serif;
+            background-image:
+                radial-gradient(circle at 100% 0%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 0% 100%, rgba(139, 92, 246, 0.1) 0%, transparent 50%);
+            background-attachment: fixed;
+        }
+
+        .glass {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+        }
+
+        .funnel-step {
+            position: relative;
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .funnel-step:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: var(--accent);
+        }
+
+        .risk-badge {
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        .risk-high {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .risk-med {
+            background: rgba(245, 158, 11, 0.2);
+            color: #f59e0b;
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+
+        .risk-low {
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+    </style>
+</head>
+
+<body class="p-6 md:p-12 max-w-7xl mx-auto">
+
+    <!-- Header -->
+    <header class="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-6">
+        <div>
+            <div class="flex items-center gap-3 mb-2">
+                <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center font-black">N</div>
+                <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Enterprise & Investor
+                    Portal</span>
+            </div>
+            <h1 class="text-4xl font-extrabold tracking-tight">Pilot Partnership Dashboard</h1>
+            <p class="text-slate-400 mt-1">Real-time commercial traction and risk registry for Nilus Lab.</p>
+        </div>
+        <div class="flex items-center gap-4">
+            <div class="text-right hidden md:block">
+                <div class="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Data Freshness</div>
+                <div class="text-xs font-mono text-emerald-400">Live Sync: Active</div>
+            </div>
+            <button onclick="window.print()"
+                class="px-5 py-2.5 bg-white text-black font-bold text-xs rounded-xl hover:bg-slate-200 transition-all">GENERATE
+                Q1 INTERNAL REPORT</button>
+        </div>
+    </header>
+
+    <!-- KPI Section -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
+        <div class="glass p-6">
+            <div class="text-[10px] text-slate-500 font-bold uppercase tracking-widest mb-4">Active Pilots</div>
+            <div class="text-3xl font-black">12</div>
+            <div class="text-xs text-emerald-400 mt-2">▲ +4 this month</div>
+        </div>
+        <div class="glass p-6">
+            <div class="text-[10px] text-slate-500 font-bold uppercase tracking-widest mb-4">Avg. POC Duration</div>
+            <div class="text-3xl font-black">4.2 Weeks</div>
+            <div class="text-xs text-blue-400 mt-2">vs. 12wk Industry Avg.</div>
+        </div>
+        <div class="glass p-6">
+            <div class="text-[10px] text-slate-500 font-bold uppercase tracking-widest mb-4">Conversion Rate</div>
+            <div class="text-3xl font-black">82%</div>
+            <div class="text-xs text-slate-500 mt-2">POC to Enterprise License</div>
+        </div>
+        <div class="glass p-6 text-emerald-400 border-emerald-500/20">
+            <div class="text-[10px] text-emerald-500/60 font-bold uppercase tracking-widest mb-4">Projected ARR (2026)
+            </div>
+            <div class="text-3xl font-black">$4.8M</div>
+            <div class="text-xs text-emerald-500/60 mt-2">Targeted Expansion</div>
+        </div>
+    </div>
+
+    <!-- Main Content Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+        <!-- Left Column: Funnel & Metrics -->
+        <div class="lg:col-span-2 space-y-8">
+
+            <!-- Pilot Funnel -->
+            <section class="glass p-8">
+                <h2 class="text-xl font-bold mb-8 flex items-center gap-2">
+                    <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10">
+                        </path>
+                    </svg>
+                    Partnership Funnel
+                </h2>
+                <div class="space-y-4">
+                    <div class="funnel-step flex justify-between items-center">
+                        <div>
+                            <div class="font-bold">Initial Technical Inquiry</div>
+                            <div class="text-xs text-slate-500">Tier-1 Pharma / Stealth Biotech</div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-xl font-black">48</div>
+                            <div class="text-[9px] text-slate-600 font-mono">Top of Funnel</div>
+                        </div>
+                    </div>
+                    <div class="funnel-step flex justify-between items-center border-l-4 border-blue-500">
+                        <div>
+                            <div class="font-bold">Technical Diligence Call</div>
+                            <div class="text-xs text-slate-500">Architecture & Data Provenance Review</div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-xl font-black text-blue-400">22</div>
+                            <div class="text-[9px] text-slate-600 font-mono">Diligence Phase</div>
+                        </div>
+                    </div>
+                    <div class="funnel-step flex justify-between items-center border-l-4 border-purple-500">
+                        <div>
+                            <div class="font-bold">Active Proof-of-Concept (POC)</div>
+                            <div class="text-xs text-slate-500">Live Benchmarking on Partner Targets</div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-xl font-black text-purple-400">12</div>
+                            <div class="text-[9px] text-slate-600 font-mono">Value Validation</div>
+                        </div>
+                    </div>
+                    <div class="funnel-step flex justify-between items-center border-l-4 border-emerald-500">
+                        <div>
+                            <div class="font-bold">Enterprise MSA / License</div>
+                            <div class="text-xs text-slate-500">Full Platform Integration</div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-xl font-black text-emerald-400">4</div>
+                            <div class="text-[9px] text-slate-600 font-mono">Closed Deals</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Conversion Chart -->
+            <section class="glass p-8">
+                <h3 class="text-xl font-bold mb-6">Growth Trajectory</h3>
+                <div class="h-64 mt-4">
+                    <canvas id="growthChart"></canvas>
+                </div>
+            </section>
+
+        </div>
+
+        <!-- Right Column: Risk Register -->
+        <div class="space-y-8">
+
+            <section class="glass p-8 border-l-4 border-amber-500/50">
+                <h2 class="text-xl font-bold mb-6 flex items-center gap-2">
+                    <svg class="w-5 h-5 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z">
+                        </path>
+                    </svg>
+                    Risk Register (Q1 Update)
+                </h2>
+                <div class="space-y-6">
+                    <div class="pb-6 border-b border-white/5">
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="text-xs font-bold text-slate-300">Scientific Reproducibility</span>
+                            <span class="risk-badge risk-low">Low</span>
+                        </div>
+                        <p class="text-[11px] text-slate-500 italic mb-2">Potential for stochastic drift in un-seeded
+                            runs.</p>
+                        <div class="text-[10px] text-emerald-400 font-bold uppercase tracking-tighter">Mitigation:
+                            Validated Compute Mode (Seed 0x771A) enforced for clinical diligence.</div>
+                    </div>
+                    <div class="pb-6 border-b border-white/5">
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="text-xs font-bold text-slate-300">Regulatory Classification</span>
+                            <span class="risk-badge risk-med">Medium</span>
+                        </div>
+                        <p class="text-[11px] text-slate-500 italic mb-2">Risk of being classified as SaMD vs. RUO tool.
+                        </p>
+                        <div class="text-[10px] text-amber-400 font-bold uppercase tracking-tighter">Mitigation:
+                            Explicit Intended Use Statement and Regulatory Boundary published.</div>
+                    </div>
+                    <div class="pb-6 border-b border-white/5">
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="text-xs font-bold text-slate-300">Dataset Biases (HCA V3)</span>
+                            <span class="risk-badge risk-med">Medium</span>
+                        </div>
+                        <p class="text-[11px] text-slate-500 italic mb-2">Reference dataset may lack specific
+                            pathological diversity.</p>
+                        <div class="text-[10px] text-blue-400 font-bold uppercase tracking-tighter">Mitigation:
+                            Cross-validation with CZI CELLxGENE pathological sub-manifolds.</div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="text-xs font-bold text-slate-300">Clinical Validation Latency</span>
+                            <span class="risk-badge risk-high">High</span>
+                        </div>
+                        <p class="text-[11px] text-slate-500 italic mb-2">In-vitro to In-vivo correlation timelines are
+                            extended.</p>
+                        <div class="text-[10px] text-purple-400 font-bold uppercase tracking-tighter">Mitigation:
+                            Accelerating ex-vivo organoid validation via Robotic Bridge.</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Status -->
+            <section class="glass p-8 bg-blue-500/5">
+                <h3 class="text-sm font-bold text-blue-400 mb-4 uppercase tracking-widest">Diligence Summary</h3>
+                <p class="text-xs text-slate-400 leading-relaxed">
+                    Nilus Lab is currently **Institutional Ready**. 100% of top claims are mapped to source artifacts.
+                    Zero mismatch between legal terms and GTM motion.
+                </p>
+                <div class="mt-6 p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-xl text-center">
+                    <span class="text-[10px] font-black text-emerald-400 uppercase tracking-widest">Investment Posture:
+                        ALPHA EXPOSURE</span>
+                </div>
+            </section>
+
+        </div>
+
+    </div>
+
+    <!-- Chart Script -->
+    <script>
+        const ctx = document.getElementById('growthChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                datasets: [{
+                    label: 'Pilot Funnel Growth',
+                    data: [12, 19, 28, 35, 42, 48],
+                    borderColor: '#3b82f6',
+                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                    fill: true,
+                    tension: 0.4,
+                    borderWidth: 3
+                }, {
+                    label: 'Enterprise Conversions',
+                    data: [1, 2, 2, 3, 4, 4],
+                    borderColor: '#10b981',
+                    borderDash: [5, 5],
+                    fill: false,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: true,
+                        labels: { color: '#94a3b8', font: { family: 'Outfit', size: 10 } }
+                    }
+                },
+                scales: {
+                    y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#64748b' } },
+                    x: { grid: { display: false }, ticks: { color: '#64748b' } }
+                }
+            }
+        });
+    </script>
+
+</body>
+
+</html>
