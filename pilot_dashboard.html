@@ -9,6 +9,8 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=JetBrains+Mono&display=swap"
         rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+
     <style>
         :root {
             --bg: #030617;
@@ -83,6 +85,16 @@
 </head>
 
 <body class="p-6 md:p-12 max-w-7xl mx-auto">
+
+    <!-- Navigation -->
+    <nav class="mb-12 no-print">
+        <a href="profile.html"
+            class="inline-flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-sm font-bold transition-all group">
+            <i data-lucide="arrow-left" class="w-4 h-4 group-hover:-translate-x-1 transition-transform"></i>
+            Back to Researcher Console
+        </a>
+    </nav>
+
 
     <!-- Header -->
     <header class="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-6">
@@ -314,7 +326,10 @@
             }
         });
     </script>
-
+    <script>
+        lucide.createIcons();
+    </script>
 </body>
+
 
 </html>
