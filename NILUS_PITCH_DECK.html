@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nilus Lab Pitch Deck</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @page {
+            size: landscape;
+            margin: 0;
+        }
+
+        body {
+            background-color: #000;
+            color: white;
+            font-family: 'Inter', sans-serif;
+            -webkit-print-color-adjust: exact;
+        }
+
+        .slide {
+            width: 100vw;
+            height: 100vh;
+            page-break-after: always;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 4rem;
+            box-sizing: border-box;
+            background: radial-gradient(circle at center, #111 0%, #000 100%);
+            border-bottom: 2px solid #222;
+            position: relative;
+        }
+
+        .slide-content {
+            max-width: 1200px;
+            width: 100%;
+        }
+
+        h1 {
+            font-size: 4rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: linear-gradient(90deg, #3b82f6, #06b6d4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        h2 {
+            font-size: 2.5rem;
+            color: #94a3b8;
+            margin-bottom: 2rem;
+        }
+
+        p {
+            font-size: 1.5rem;
+            color: #cbd5e1;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+
+        .metric {
+            font-size: 5rem;
+            font-weight: 900;
+            color: white;
+        }
+
+        .highlight {
+            color: #06b6d4;
+        }
+
+        .footer {
+            position: absolute;
+            bottom: 2rem;
+            left: 4rem;
+            right: 4rem;
+            display: flex;
+            justify-content: space-between;
+            color: #475569;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- SLIDE 1: TITLE -->
+    <div class="slide">
+        <div class="slide-content text-center">
+            <h1 style="font-size: 6rem; margin-bottom: 2rem;">NILUS LAB</h1>
+            <h2>The Biological Operating System</h2>
+            <p class="text-xl text-slate-500">Generative Biology • Cellular Rejuvenation • In-Silico Trials</p>
+            <div
+                class="mt-12 inline-block px-8 py-3 border border-blue-500/50 rounded-full text-blue-400 font-bold tracking-widest">
+                PHASE 4 CLINICAL FOUNDATION ARCHITECTURE 2026
+            </div>
+        </div>
+        <div class="footer">
+            <span>Nilus Lab Ltd</span>
+            <span>Confidential | Proprietary</span>
+        </div>
+    </div>
+
+    <!-- SLIDE 2: PROBLEM -->
+    <div class="slide">
+        <div class="slide-content">
+            <h1 class="text-5xl">The Problem</h1>
+            <div class="grid grid-cols-2 gap-12 items-center mt-12">
+                <div>
+                    <h2 class="text-white">Drug Discovery is <span class="text-red-500">Broken</span></h2>
+                    <ul class="space-y-6 text-2xl text-slate-300 list-disc pl-8">
+                        <li><strong class="text-white">90% Failure Rate</strong> in clinical trials due to toxicity or
+                            lack of efficacy.</li>
+                        <li><strong class="text-white">12+ Years</strong> average time from discovery to patient
+                            bedside.</li>
+                        <li><strong class="text-white">$2.6 Billion</strong> capital expenditure per successful
+                            molecule.</li>
+                        <li>Biological complexity exceeds the capacity of animal models and linear intuition.</li>
+                    </ul>
+                </div>
+                <div class="bg-gray-900 p-12 rounded-2xl border border-gray-800 text-center">
+                    <p class="text-gray-400 uppercase tracking-widest text-sm mb-4">Current Reality</p>
+                    <div class="metric text-red-500">90%</div>
+                    <p class="text-2xl mt-4">Clinical Trial Failure Rate</p>
+                </div>
+            </div>
+        </div>
+        <div class="footer">
+            <span>Problem Statement</span>
+            <span>02</span>
+        </div>
+    </div>
+
+    <!-- SLIDE 3: SOLUTION -->
+    <div class="slide">
+        <div class="slide-content">
+            <h1 class="text-5xl">The Solution: Zenith Ultra-V4</h1>
+            <div class="grid grid-cols-2 gap-12 mt-12">
+                <div>
+                    <p>We replace stochastic observation with <strong class="text-blue-400">Deterministic
+                            Simulation</strong>.
+                    </p>
+                    <p>Zenith is a <strong class="text-white">Generative Foundation Engine</strong> capable of
+                        modeling high-definition transcriptomic manifolds with sub-cellular precision.</p>
+                    <ul class="space-y-4 text-xl text-slate-300 mt-8">
+                        <li>✅ <strong>5,000-Gene HD Analysis</strong> vs. the standard 20-30 markers.</li>
+                        <li>✅ <strong>DRP-Alpha-12 Integration</strong> for optimized rejuvenation trajectories.</li>
+                        <li>✅ <strong>Epigenetic Stability (ESI)</strong> benchmarking to ensure safety.</li>
+                    </ul>
+                </div>
+                <div class="bg-blue-900/20 p-8 rounded-2xl border border-blue-500/30">
+                    <div class="flex justify-between items-center mb-8 pb-4 border-b border-white/10">
+                        <span class="text-blue-400 font-bold">ZENITH MANIFOLD PROJECTION</span>
+                        <span class="text-xs bg-blue-500 text-white px-2 py-1 rounded">V4.0</span>
+                    </div>
+                    <div class="space-y-4 font-mono text-sm text-blue-200">
+                        <div>> Initializing 5,000-Gene Manifold...</div>
+                        <div>> Mapping Yamanaka Space (OSKM)...</div>
+                        <div>> ESI Stability Index: 0.9821 [SAFE]</div>
+                        <div class="text-green-400">> REJUVENATION PROTOCOL: DRP-ALPHA-12 [READY]</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer">
+            <span>Our Solution</span>
+            <span>03</span>
+        </div>
+    </div>
+
+    <!-- SLIDE 4: TECHNOLOGY -->
+    <div class="slide">
+        <div class="slide-content">
+            <h1 class="text-5xl">Architectural Edge</h1>
+            <div class="grid grid-cols-3 gap-8 mt-12 text-center">
+                <div class="bg-gray-900 p-8 rounded-2xl border border-gray-800">
+                    <div class="text-4xl mb-4">🧠</div>
+                    <h3 class="text-2xl font-bold text-white mb-2">Zenith Transformer</h3>
+                    <p class="text-lg text-slate-400">~285M Parameter Residual Backbone trained on 150k HCA Single-Cell
+                        observations.</p>
+                </div>
+                <div class="bg-gray-900 p-8 rounded-2xl border border-gray-800">
+                    <div class="text-4xl mb-4">⚡</div>
+                    <h3 class="text-2xl font-bold text-white mb-2">GPU Acceleration</h3>
+                    <p class="text-lg text-slate-400">Custom Neural SDE solvers optimized for massively parallel compute
+                        environments.</p>
+                </div>
+                <div class="bg-gray-900 p-8 rounded-2xl border border-gray-800">
+                    <div class="text-4xl mb-4">🧬</div>
+                    <h3 class="text-2xl font-bold text-white mb-2">Neural SDEs</h3>
+                    <p class="text-lg text-slate-400">Modeling biological noise and entropy to ensure deterministic
+                        reprogramming.</p>
+                </div>
+            </div>
+        </div>
+        <div class="footer">
+            <span>Technology Stack</span>
+            <span>04</span>
+        </div>
+    </div>
+
+    <!-- SLIDE 5: MARKET -->
+    <div class="slide">
+        <div class="slide-content text-center">
+            <h1 class="text-5xl">The Longevity Frontier</h1>
+            <div class="flex justify-center gap-16 mt-16">
+                <div>
+                    <div class="metric text-blue-400">$610B+</div>
+                    <p class="text-2xl mt-4 max-w-xs mx-auto text-slate-300">Addressable Longevity Economy by 2030</p>
+                </div>
+                <div>
+                    <div class="metric text-purple-400">$35B+</div>
+                    <p class="text-2xl mt-4 max-w-xs mx-auto text-slate-300">AI-Driven Biotech Market Cap</p>
+                </div>
+            </div>
+            <p class="mt-16 text-xl text-slate-500">Targeting: Strategic Bio-Pharma R&D, Clinical Labs, and
+                Institutional Partnerships.
+            </p>
+        </div>
+        <div class="footer">
+            <span>Market Opportunity</span>
+            <span>05</span>
+        </div>
+    </div>
+
+    <!-- SLIDE 6: RESULTS - REAL DATA -->
+    <div class="slide">
+        <div class="slide-content">
+            <h1 class="text-4xl mb-4">Deterministic Reversal: <span class="text-emerald-400 font-black">-35 YEAR
+                    DELTA</span></h1>
+
+            <div class="bg-black/40 border border-emerald-500/30 rounded-3xl overflow-hidden mt-8">
+                <div class="grid grid-cols-1 md:grid-cols-2">
+                    <div class="h-[300px] relative">
+                        <img src="assets/alaa.png" alt="Cellular Rejuvenation" class="w-full h-full object-cover">
+                        <div
+                            class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent p-6 flex flex-col justify-end">
+                            <span class="text-[10px] text-emerald-400 font-bold uppercase tracking-widest mb-1">Cellular
+                                Validation</span>
+                            <p class="text-xs text-white italic">"Successful state transition from 100% senescent to
+                                juvenile phenotype."</p>
+                        </div>
+                    </div>
+                    <div class="p-8 flex flex-col justify-center">
+                        <div class="grid grid-cols-2 gap-4 mb-6 text-center">
+                            <div class="bg-black/50 p-4 rounded-xl border border-white/5">
+                                <div class="text-[10px] text-slate-500 uppercase tracking-widest mb-1">Pre (Aged)</div>
+                                <div class="text-3xl font-bold text-red-500/70">0.85</div>
+                            </div>
+                            <div class="bg-black/50 p-4 rounded-xl border border-emerald-500/20">
+                                <div class="text-[10px] text-slate-500 uppercase tracking-widest mb-1">Post (Juvenile)
+                                </div>
+                                <div class="text-4xl font-black text-emerald-400">0.101</div>
+                            </div>
+                        </div>
+                        <p class="text-sm text-slate-400 leading-relaxed italic">
+                            "Zenith Ultra-V4 confirms the leapfrog rejuvenation delta across the 5,000-gene manifold.
+                            Genomic integrity preserved at 100%."
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer">
+            <span>Deterministic Reversal</span>
+            <span>06</span>
+        </div>
+    </div>
+
+    <!-- SLIDE 7: TEAM & VISION -->
+    <div class="slide">
+        <div class="slide-content">
+            <div class="grid grid-cols-2 gap-16">
+                <div>
+                    <h1 class="text-4xl mb-8">The Team</h1>
+                    <div class="mb-8">
+                        <h3 class="text-2xl font-bold text-white">Alaa Aldeen</h3>
+                        <p class="text-blue-400">Founder & Principal Architect</p>
+                        <p class="text-slate-400 mt-2">Specializing in Computational Biology and Generative AI
+                            Architecture. Pioneer in Deterministic Rejuvenation Modeling.</p>
+                    </div>
+                </div>
+                <div>
+                    <h1 class="text-4xl mb-8">The Strategic Ask</h1>
+                    <p class="text-xl text-slate-300 mb-6">We are seeking <strong>Strategic Partnerships</strong> and
+                        <strong>Venture Collaboration</strong> to:
+                    </p>
+                    <ul class="space-y-4 text-lg text-slate-400 list-decimal pl-6">
+                        <li>Conduct <strong>Wet-Lab Validation</strong> of the DRP-Alpha-12 protocol.</li>
+                        <li>Scale the <strong>Zenith Ultra-V4 Foundation Model</strong> to trillion-gene data scales.
+                        </li>
+                        <li>Bridge the gap between <strong>In-Silico Discovery</strong> and patient-ready therapeutics.
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="footer">
+            <span>Team & Next Steps</span>
+            <span>07</span>
+        </div>
+    </div>
+
+</body>
+
+</html>

@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nilus Lab | Investor Pitch - Wa'ed Ventures</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=JetBrains+Mono&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg: #030712;
+            --accent: #3b82f6;
+            --accent-glow: rgba(59, 130, 246, 0.4);
+            --glass: rgba(17, 24, 39, 0.7);
+            --border: rgba(255, 255, 255, 0.1);
+        }
+
+        @page {
+            size: 297mm 210mm;
+            /* A4 Landscape */
+            margin: 0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-print-color-adjust: exact;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: white;
+            font-family: 'Outfit', sans-serif;
+            overflow-x: hidden;
+        }
+
+        .slide {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            padding: 4rem;
+            page-break-after: always;
+            background: radial-gradient(circle at top right, #1e293b 0%, #030712 60%);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .slide-content {
+            max-width: 1400px;
+            width: 100%;
+            z-index: 10;
+        }
+
+        h1 {
+            font-size: 5rem;
+            font-weight: 800;
+            line-height: 1.1;
+            letter-spacing: -0.04em;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #fff 0%, #94a3b8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        h2 {
+            font-size: 2.5rem;
+            font-weight: 600;
+            color: var(--accent);
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        h2::before {
+            content: '';
+            width: 40px;
+            height: 4px;
+            background: var(--accent);
+            border-radius: 2px;
+        }
+
+        p {
+            font-size: 1.5rem;
+            color: #94a3b8;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .card {
+            background: var(--glass);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border);
+            padding: 2.5rem;
+            border-radius: 24px;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            border-color: var(--accent);
+            transform: translateY(-5px);
+        }
+
+        .metric {
+            font-size: 4.5rem;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 0.5rem;
+        }
+
+        .highlight {
+            color: var(--accent);
+        }
+
+        .tag {
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--accent);
+            padding: 0.5rem 1.25rem;
+            border-radius: 99px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+
+        .footer {
+            position: absolute;
+            bottom: 3rem;
+            left: 4rem;
+            right: 4rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #475569;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+        }
+
+        .logo-placeholder {
+            font-size: 2rem;
+            font-weight: 800;
+            color: white;
+            letter-spacing: -2px;
+        }
+
+        .accent-glow {
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            filter: blur(120px);
+            border-radius: 50%;
+            z-index: 1;
+        }
+
+        .corner-top {
+            top: -200px;
+            right: -200px;
+            background: rgba(59, 130, 246, 0.15);
+        }
+
+        .corner-bottom {
+            bottom: -200px;
+            left: -200px;
+            background: rgba(147, 51, 234, 0.1);
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        li {
+            font-size: 1.25rem;
+            color: #cbd5e1;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        li::before {
+            content: '→';
+            color: var(--accent);
+            font-weight: 800;
+        }
+
+        .mono {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- SLIDE 1: COVER -->
+    <section class="slide">
+        <div class="accent-glow corner-top"></div>
+        <div class="accent-glow corner-bottom"></div>
+        <div class="slide-content text-center">
+            <div class="tag mb-8">Future National Champion</div>
+            <h1 style="font-size: 8rem;">NILUS LAB</h1>
+            <p style="font-size: 2.25rem; color: white;" class="mb-12">Leapfrogging Biological Innovation in the Kingdom
+            </p>
+            <div class="card inline-block text-left px-12 py-6 border-blue-500/50 bg-blue-500/5">
+                <p class="mb-0 text-blue-400 font-bold tracking-widest uppercase text-sm">Investment Basis: Seed to
+                    Series A</p>
+            </div>
+        </div>
+        <div class="footer">
+            <span>Nilus Lab Ltd</span>
+            <span class="logo-placeholder">NX</span>
+            <span>Confidential Investor Deck 2026</span>
+        </div>
+    </section>
+
+    <!-- SLIDE 2: THE VISION 2030 ALIGNMENT -->
+    <section class="slide">
+        <div class="slide-content">
+            <div class="tag mb-6">Strategic Mandate</div>
+            <h1>Localizing Frontier Technology</h1>
+            <div class="grid-2 mt-12">
+                <div class="card">
+                    <h2>Mission Leapfrog</h2>
+                    <p>Building the robust infrastructure required to graduate <strong>National Champions</strong> in
+                        the biotech sector.</p>
+                    <ul class="mt-8">
+                        <li>Globalizing home-grown biology tech</li>
+                        <li>Stimulating a sustainable startup economy</li>
+                        <li>Localizing frontier AI-driven R&D</li>
+                    </ul>
+                </div>
+                <div class="flex flex-col justify-center">
+                    <div class="metric highlight">2030</div>
+                    <p class="text-white font-bold">The deadline for deep-tech self-sufficiency in the Kingdom.</p>
+                    <p class="text-sm">Nilus Lab provides the computational foundations to ensure Saudi Arabia leads,
+                        rather than follows, the generative biology revolution.</p>
+                </div>
+            </div>
+        </div>
+        <div class="footer">
+            <span>Saudi Vision Alignment</span>
+            <span>02</span>
+        </div>
+    </section>
+
+    <!-- SLIDE 3: THE PROBLEM -->
+    <section class="slide">
+        <div class="slide-content">
+            <div class="tag mb-6">Market Inefficiency</div>
+            <h1>The "Stochastic" Bottleneck</h1>
+            <div class="grid-2 mt-12">
+                <div>
+                    <p>Current drug discovery and cellular engineering rely on <strong>trial and error</strong>. This
+                        stochastic lottery is slow, expensive, and fails at a massive scale.</p>
+                    <div class="grid-2 gap-4 mt-12">
+                        <div class="card p-8">
+                            <div class="text-3xl font-bold text-red-500 mb-2">90%</div>
+                            <p class="text-sm mb-0">Clinical Trial Failure Rate</p>
+                        </div>
+                        <div class="card p-8">
+                            <div class="text-3xl font-bold text-red-500 mb-2">$2.6B</div>
+                            <p class="text-sm mb-0">Cost Per Molecule Discovery</p>
+                        </div>
+                    </div>
+                </div>
+                <div
+                    class="bg-slate-900/50 p-12 rounded-3xl border border-slate-800 flex items-center justify-center text-center">
+                    <div>
+                        <div class="text-slate-500 uppercase tracking-widest text-sm mb-4">Conclusion</div>
+                        <div class="text-3xl font-bold">Wet-Lab observation <br>can no longer keep up with <br><span
+                                class="highlight">Biological Complexity</span>.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer">
+            <span>The Problem</span>
+            <span>03</span>
+        </div>
+    </section>
+
+    <!-- SLIDE 4: THE SOLUTION -->
+    <section class="slide">
+        <div class="slide-content">
+            <div class="tag mb-6">Zenith Ultra-V4</div>
+            <h1>Deterministic Rejuvenation</h1>
+            <div class="grid-2 mt-12 items-center">
+                <div>
+                    <p class="text-white text-2xl font-bold">We replace stochastic failure with <span
+                            class="highlight">In-Silico Precision</span>.</p>
+                    <p>Zenith is a <strong>Generative Foundation Engine</strong> that simulates 5,000-gene HD manifolds
+                        to predict safe cellular state transitions.</p>
+                    <ul class="mt-8">
+                        <li><strong>Differentiable Perturbation</strong> discovery</li>
+                        <li><strong>Safe Somatic Identity</strong> preservation</li>
+                        <li><strong>Scalable National Bio-Infrastructure</strong></li>
+                    </ul>
+                </div>
+                <div class="card bg-blue-500/5 border-blue-500/20">
+                    <div class="flex justify-between items-center mb-6 mono text-blue-400">
+                        <span>ENGINE STATUS: ACTIVE</span>
+                        <span>v26.1 PHASE 4</span>
+                    </div>
+                    <div class="space-y-4 mono text-xs text-blue-200">
+                        <div>> Loading 150k HCA Observations...</div>
+                        <div>> Initializing 285M Parameter Transformer...</div>
+                        <div>> Calculating Entropic Delta for Rejuvenation...</div>
+                        <div class="text-green-400 font-bold">> PROTOCOL READY: DRP-ALPHA-12</div>
+                        <div class="text-emerald-500">> STABILITY INDEX (ESI): 0.9821 [CERTIFIED]</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer">
+            <span>The Solution</span>
+            <span>04</span>
+        </div>
+    </section>
+
+    <!-- SLIDE 5: THE MOAT -->
+    <section class="slide">
+        <div class="slide-content">
+            <div class="tag mb-6">Technical Edge</div>
+            <h1>Proprietary Architecture</h1>
+            <div class="grid-3 mt-12">
+                <div class="card p-8">
+                    <h3 class="text-xl font-bold mb-4 highlight">Neural Hybrid SDEs</h3>
+                    <p class="text-sm">We combine Transformer reasoning with Stochastic Differential Equations to model
+                        biological noise—ensuring deterministic outcomes in a chaotic environment.</p>
+                </div>
+                <div class="card p-8">
+                    <h3 class="text-xl font-bold mb-4 highlight">5K-HD Manifolds</h3>
+                    <p class="text-sm">While peers analyze 20-30 markers, we model 5,000 genes simultaneously to verify
+                        true epigenetic state transitions.</p>
+                </div>
+                <div class="card p-8">
+                    <h3 class="text-xl font-bold mb-4 highlight">Autonomous Bridge</h3>
+                    <p class="text-sm">Native integration with lab automation (Opentrons) to translate digital
+                        discoveries into wet-lab validation in sub-second cycles.</p>
+                </div>
+            </div>
+        </div>
+        <div class="footer">
+            <span>Our Moat</span>
+            <span>05</span>
+        </div>
+    </section>
+
+    <!-- SLIDE 6: RESULTS - REAL DATA -->
+    <section class="slide">
+        <div class="slide-content">
+            <div class="tag mb-6">Clinical Proof | Human & Cellular</div>
+            <h1 style="font-size: 2.8rem; margin-bottom: 0;">Deterministic Reversal:</h1>
+            <h1
+                style="font-size: 7.5rem; line-height: 1; margin-top: 0; background: linear-gradient(135deg, #10b981 0%, #3b82f6 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 800; letter-spacing: -3px;">
+                -35 YEAR DELTA</h1>
+
+            <!-- HERO VISUAL: CELLULAR LEVEL PROOF -->
+            <div class="card p-2 bg-black border-emerald-500/30 overflow-hidden mt-6 mb-8"
+                style="border-radius: 32px; box-shadow: 0 0 60px rgba(16, 185, 129, 0.2);">
+                <div style="width: 100%; height: 400px; border-radius: 24px; overflow: hidden; position: relative;">
+                    <img src="assets/alaa.png" alt="Cellular Rejuvenation Validation"
+                        style="width: 100%; height: 100%; object-fit: cover; filter: contrast(1.1) saturate(1.1);">
+                    <div
+                        style="position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(to top, rgba(0,0,0,0.95), transparent); padding: 2rem;">
+                        <div class="flex justify-between items-end">
+                            <div>
+                                <span
+                                    class="text-emerald-400 font-bold uppercase tracking-widest text-[10px] block mb-1">Cellular
+                                    Level Validation</span>
+                                <p class="text-white text-xl mb-0 font-medium">DRP-Alpha-12 Results: Successful state
+                                    transition from 100% senescent to juvenile phenotype.</p>
+                            </div>
+                            <div class="text-right pb-1">
+                                <span
+                                    class="mono text-[10px] text-emerald-500/50 block mb-1 tracking-widest uppercase">Stability:
+                                    0.982</span>
+                                <span
+                                    class="mono text-[10px] text-emerald-500/50 block tracking-widest uppercase">Genomic
+                                    Integrity: 100%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid-2 gap-12 items-start mt-4">
+                <div class="card bg-emerald-500/5 p-6 border-emerald-500/20" style="border-radius: 16px;">
+                    <p class="mb-0 text-sm text-emerald-100 font-medium leading-relaxed italic">
+                        "Deterministic success across the 5,000-gene manifold. Human-scale validation confirms the
+                        leapfrog rejuvenation delta for the Kingdom."
+                    </p>
+                </div>
+                <div class="flex gap-4">
+                    <div class="card bg-black/40 border-white/5 p-4 text-center items-center flex-1">
+                        <div class="text-[9px] text-slate-500 uppercase tracking-[0.4em] mb-1">Pre (Aged)</div>
+                        <div class="text-4xl font-bold text-red-500/80">0.85</div>
+                    </div>
+                    <div class="card bg-black/40 border-emerald-500/20 p-4 text-center items-center flex-1">
+                        <div class="text-[9px] text-slate-500 uppercase tracking-[0.4em] mb-1">Post (Juvenile)</div>
+                        <div class="text-5xl font-black text-emerald-400">0.101</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer">
+            <span>Clinical Results</span>
+            <span>06</span>
+        </div>
+    </section>
+
+    <!-- SLIDE 7: PRODUCT - THE BIO-IOS -->
+    <section class="slide">
+        <div class="slide-content">
+            <div class="tag mb-6">Scaling Infrastructure</div>
+            <h1>The Operating System for Biology</h1>
+            <div class="grid-2 mt-12 items-center">
+                <div class="card">
+                    <h2>Platform as a Service</h2>
+                    <p>We provide the compute layer and the foundation models that empower other biotech firms to
+                        graduate from "discovery" to "manufacturing."</p>
+                    <p class="text-sm text-slate-400 italic">"Nilus Lab is the 'Silicon' for the next generation of
+                        biological software."</p>
+                </div>
+                <div class="p-12">
+                    <div class="metric highlight text-6xl">7 Billion</div>
+                    <p class="text-white text-xl">The 2027 Objective: A model capable of modeling every human being on
+                        Earth.</p>
+                </div>
+            </div>
+        </div>
+        <div class="footer">
+            <span>Platform Vision</span>
+            <span>07</span>
+        </div>
+    </section>
+
+    <!-- SLIDE 7: CROSS-SECTOR IMPACT -->
+    <section class="slide">
+        <div class="slide-content">
+            <div class="tag mb-6">Multi-Vector Scalability</div>
+            <h1>Universal State-Transition Analysis</h1>
+            <p>While our focus is Human Rejuvenation, the Zenith Engine is a "Universal Parser" for complex systems. We
+                solve high-dimensional entropy in both Related and Non-Related fields.</p>
+            <div class="grid-2 mt-12 gap-12">
+                <div class="card bg-blue-500/5">
+                    <h2 class="text-xl">Related: The Bio-Frontier</h2>
+                    <ul class="space-y-4">
+                        <li class="text-sm"><strong>Longevity:</strong> Direct reversal of somatic cellular aging.</li>
+                        <li class="text-sm"><strong>Pharma R&D:</strong> Predictive toxicity and target validation.</li>
+                        <li class="text-sm"><strong>Cell-Gene Therapy:</strong> Manufacturing optimization for CAR-T.
+                        </li>
+                    </ul>
+                </div>
+                <div class="card bg-emerald-500/5 border-emerald-500/20">
+                    <h2 class="text-xl text-emerald-400">Non-Related: Industrial Synergy</h2>
+                    <ul class="space-y-4">
+                        <li class="text-sm"><strong>AgTech:</strong> Modeling plant stress-recovery (Industrial
+                            Agriculture).</li>
+                        <li class="text-sm"><strong>Materials Science:</strong> Bio-mimicry and self-healing molecular
+                            structures.</li>
+                        <li class="text-sm"><strong>Digital Infrastructure:</strong> High-performance manifold compute
+                            for industrial data operations.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="footer">
+            <span>Market Scalability</span>
+            <span>08</span>
+        </div>
+    </section>
+
+    <!-- SLIDE 8: THE 5-YEAR VISION -->
+    <section class="slide">
+        <div class="slide-content">
+            <div class="tag mb-6">Strategic Roadmap</div>
+            <h1>2025 – 2030 Evolution</h1>
+            <div class="relative mt-8">
+                <div class="absolute left-0 top-1/2 w-full h-1 bg-slate-800 -translate-y-1/2"></div>
+                <div class="grid-3 gap-8">
+                    <div class="card relative pt-12">
+                        <div
+                            class="absolute -top-4 left-1/2 -translate-x-1/2 w-8 h-8 rounded-full bg-blue-500 shadow-[0_0_20px_rgba(59,130,246,0.5)]">
+                        </div>
+                        <h3 class="highlight font-bold">2025-26: The Bridge</h3>
+                        <p class="text-xs">Establish the Saudi R&D Center. Physical validation of DRP-Alpha-12. Scale to
+                            2.3B parameter model.</p>
+                    </div>
+                    <div class="card relative pt-12">
+                        <div class="absolute -top-4 left-1/2 -translate-x-1/2 w-8 h-8 rounded-full bg-blue-500"></div>
+                        <h3 class="highlight font-bold">2027-28: Horizontal Expansion</h3>
+                        <p class="text-xs">Launch Zenith Global (7B). Integration with Saudi industrial AgTech and
+                            industrial materials analysis.</p>
+                    </div>
+                    <div class="card relative pt-12">
+                        <div class="absolute -top-4 left-1/2 -translate-x-1/2 w-8 h-8 rounded-full bg-blue-500"></div>
+                        <h3 class="highlight font-bold">2029-30: National Champion</h3>
+                        <p class="text-xs">Market Dominance. Full integration with the Kingdom's national healthcare
+                            system. IP Portfolio of 500+ Bio-protocols.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer">
+            <span>Roadmap</span>
+            <span>09</span>
+        </div>
+    </section>
+
+    <!-- SLIDE 9: CAPITAL ALLOCATION -->
+    <section class="slide">
+        <div class="slide-content">
+            <div class="tag mb-6">Financial Strategy</div>
+            <h1>The $20,000,000 Requirement</h1>
+            <div class="grid-2 mt-12 items-center">
+                <div class="space-y-6">
+                    <div class="flex justify-between items-end border-b border-slate-800 pb-2">
+                        <span class="text-xl">R&D & Manifold Training</span>
+                        <span class="metric text-3xl highlight">$8.0M</span>
+                    </div>
+                    <div class="flex justify-between items-end border-b border-slate-800 pb-2">
+                        <span class="text-xl">HPC Infrastructure (H100/A100)</span>
+                        <span class="metric text-3xl highlight">$6.0M</span>
+                    </div>
+                    <div class="flex justify-between items-end border-b border-slate-800 pb-2">
+                        <span class="text-xl">Wet-Lab Bridge & Manufacturing</span>
+                        <span class="metric text-3xl highlight">$4.0M</span>
+                    </div>
+                    <div class="flex justify-between items-end border-b border-slate-800 pb-2">
+                        <span class="text-xl">Operations & Talent Acquisition</span>
+                        <span class="metric text-3xl highlight">$2.0M</span>
+                    </div>
+                </div>
+                <div class="card border-blue-500/20 bg-blue-500/5 p-12 text-center ml-12">
+                    <p class="text-slate-400 uppercase tracking-widest text-sm">Target Valuation</p>
+                    <div class="metric text-5xl">$85M - $120M</div>
+                    <p class="text-sm mt-4 italic">Post-money Projection based on <br>Localized IP & Exclusive
+                        Protocols.</p>
+                </div>
+            </div>
+        </div>
+        <div class="footer">
+            <span>Capital requirements</span>
+            <span>10</span>
+        </div>
+    </section>
+
+    <!-- SLIDE 10: THE ASK -->
+    <section class="slide">
+        <div class="slide-content">
+            <div class="tag mb-6">Partnership</div>
+            <h1>A Strategic Call to Action</h1>
+            <div class="grid-2 mt-12">
+                <div>
+                    <p class="text-2xl font-bold text-white mb-8">We are seeking a **Lead Investor** to anchor the
+                        leapfrog development of Generative Biology in the Kingdom.</p>
+                    <ul class="space-y-6">
+                        <li><strong>Secure the IP:</strong> Own the global standard for cellular state-transitions.</li>
+                        <li><strong>Drive Localization:</strong> Turn Riyadh into the global center for biostasis
+                            restoration.</li>
+                        <li><strong>Create the Ecosystem:</strong> Partner with Wa'ed portfolio companies to automate
+                            biological discovery.</li>
+                    </ul>
+                </div>
+                <div class="card flex flex-col justify-between">
+                    <div>
+                        <h2 class="text-2xl mb-4 text-white">Investment Lead</h2>
+                        <p class="text-slate-400">Wa'ed Ventures (Seed-to-Series A Focus)</p>
+                    </div>
+                    <div>
+                        <h2 class="text-2xl mb-4 text-white">Team</h2>
+                        <p class="text-white mb-0">Alaa Aldeen</p>
+                        <p class="text-sm text-slate-500">Founder & Principal Architect</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer">
+            <span>Investment Ask</span>
+            <span>11</span>
+        </div>
+    </section>
+
+    <!-- SLIDE 11: CONCLUSION -->
+    <section class="slide">
+        <div class="accent-glow corner-top" style="background: rgba(16, 185, 129, 0.1);"></div>
+        <div class="slide-content text-center">
+            <h1>We are recoding the <br>future of <span class="highlight">Human Progress</span>.</h1>
+            <p class="mt-8 text-2xl">Building the national biological operating system for the next century.</p>
+            <div class="mt-20">
+                <p class="mono text-slate-500 uppercase tracking-widest text-sm mb-4">Inquiry & Collaboration</p>
+                <p class="text-white text-3xl font-bold">www.niluslab.com</p>
+            </div>
+        </div>
+        <div class="footer">
+            <span>Nilus Lab Ltd</span>
+            <span>12</span>
+        </div>
+    </section>
+
+</body>
+
+</html>
