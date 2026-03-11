@@ -3500,7 +3500,7 @@
                                 <h4 class="text-lg font-bold text-white mb-4">The 4-Box Multimer Setup</h4>
                                 <p class="text-xs text-slate-400 mb-4">To prove Zenith's discovery, we utilize a
                                     4-entity multimer configuration in the <strong>AlphaFold 3 Server</strong>:</p>
-                                <ul class="space-y-2 text-xs text-slate-300 font-mono">
+                                <ul class="space-y-2 text-xs text-slate-300 font-mono mb-6">
                                     <li class="flex gap-2"><span class="text-blue-500">•</span> <span>ENTITY 1: SOX2
                                             Protein (P48431)</span></li>
                                     <li class="flex gap-2"><span class="text-pink-500">•</span> <span>ENTITY 2: Distal
@@ -3510,6 +3510,13 @@
                                     <li class="flex gap-2"><span class="text-pink-500">•</span> <span>ENTITY 4: Proximal
                                             Promoter DNA (TGACATT...)</span></li>
                                 </ul>
+                                <div class="rounded-lg overflow-hidden border border-slate-800 bg-black/60">
+                                    <img src="assets/alphafold_job_history.png" alt="AlphaFold Job History"
+                                        class="w-full opacity-80 hover:opacity-100 transition-opacity">
+                                    <div
+                                        class="p-2 text-[8px] text-slate-600 font-mono text-center uppercase tracking-widest">
+                                        Server Log: Job# Zenith_Validation_CRC_01</div>
+                                </div>
                             </div>
                             <div class="bg-black/40 p-6 rounded-xl border border-emerald-500/20">
                                 <h4 class="text-lg font-bold text-white mb-4">Validation Outcome</h4>
@@ -3518,6 +3525,11 @@
                                     <div
                                         class="text-[10px] text-slate-500 uppercase font-bold tracking-wider leading-tight">
                                         Confidence Score<br>(pLDDT > 90)</div>
+                                </div>
+                                <div
+                                    class="mb-6 rounded-xl overflow-hidden border-2 border-emerald-500/20 shadow-[0_0_30px_rgba(16,185,129,0.1)]">
+                                    <img src="assets/alphafold_handshake_proof.png" alt="3D Molecular Handshake Proof"
+                                        class="w-full">
                                 </div>
                                 <p class="text-xs text-slate-400 leading-relaxed">
                                     The AlphaFold result confirms the structural cooperativity of the SOX2-OCT4 complex.
@@ -3532,25 +3544,39 @@
                     <div class="bg-black/50 p-8 rounded-2xl border border-indigo-500/20">
                         <h5 class="text-xs font-black tracking-[0.4em] uppercase text-indigo-400 mb-6">Scientific
                             Methodology: Calculating the -35 Year Reset</h5>
-                        <div class="grid md:grid-cols-3 gap-8 text-center">
-                            <div class="p-4">
-                                <div class="text-[10px] text-slate-600 uppercase font-bold mb-2">1. Baseline (Old)</div>
-                                <div class="text-2xl font-black text-slate-300">AGE 60</div>
-                                <p class="text-[9px] text-slate-500 mt-2">HCA Heart Manifold Centroid</p>
+
+                        <div class="grid lg:grid-cols-2 gap-10 mb-10 items-center">
+                            <div class="rounded-2xl overflow-hidden border border-slate-800 shadow-2xl">
+                                <img src="assets/rejuvenation_split_screen.png" alt="35-Year Rejuvenation Visualization"
+                                    class="w-full">
+                                <div
+                                    class="bg-slate-900/80 p-3 text-[9px] text-slate-400 text-center font-mono uppercase">
+                                    Neural SDE Manifold Comparison: Senescent vs. Juvenile Rejuvenation States</div>
                             </div>
-                            <div class="p-4 border-l border-r border-slate-800">
-                                <div class="text-[10px] text-indigo-400 uppercase font-bold mb-2">2. Zenith Intervention
+                            <div class="space-y-6">
+                                <div class="grid grid-cols-3 gap-4 text-center">
+                                    <div class="p-3 bg-black/30 rounded-xl border border-slate-800">
+                                        <div class="text-[8px] text-slate-600 uppercase font-bold mb-1">Baseline</div>
+                                        <div class="text-xl font-black text-slate-300">AGE 60</div>
+                                    </div>
+                                    <div class="p-3 bg-indigo-500/10 rounded-xl border border-indigo-500/20">
+                                        <div class="text-[8px] text-indigo-400 uppercase font-bold mb-1">Delta</div>
+                                        <div class="text-xl font-black text-white">-35.2Y</div>
+                                    </div>
+                                    <div class="p-3 bg-emerald-500/10 rounded-xl border border-emerald-500/20">
+                                        <div class="text-[8px] text-emerald-400 uppercase font-bold mb-1">Outcome</div>
+                                        <div class="text-xl font-black text-emerald-400">AGE 25</div>
+                                    </div>
                                 </div>
-                                <div class="text-2xl font-black text-white">SOX2+OCT4</div>
-                                <p class="text-[9px] text-indigo-500/70 mt-2">Transcriptomic Shift Simulation</p>
-                            </div>
-                            <div class="p-4">
-                                <div class="text-[10px] text-emerald-400 uppercase font-bold mb-2">3. Match Result
-                                    (Juvenile)</div>
-                                <div class="text-2xl font-black text-emerald-400">AGE 25</div>
-                                <p class="text-[9px] text-emerald-500/70 mt-2">Match with HCA Juvenile Cluster</p>
+                                <p class="text-sm text-slate-400 leading-relaxed">
+                                    Biological age reduction at Nilus Lab is calculated by comparing <strong
+                                        class="text-white">Transcriptomic Friction</strong> against the Human Cell Atlas
+                                    (HCA) manifold. Zenith simulates the intervention state and performs a deterministic
+                                    match against the juvenile clusters in the 150,000-cell ground truth dataset.
+                                </p>
                             </div>
                         </div>
+
                         <div class="mt-8 pt-8 border-t border-slate-800 text-center">
                             <div class="text-lg font-bold text-white mb-2">Quantitative Delta: <span
                                     class="text-emerald-400 font-black">35 Life-Years Reversed</span></div>
