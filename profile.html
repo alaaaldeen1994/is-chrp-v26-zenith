@@ -56,34 +56,20 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         :root {
-            --primary: #2dd4bf; /* High-Fidelity Teal */
-            --primary-glow: rgba(45, 212, 191, 0.4);
-            --accent: #6366f1;  /* Neural Indigo */
-            --bg-dark: #0b0f1a;
-            --surface: rgba(15, 23, 42, 0.6);
-            --border: rgba(255, 255, 255, 0.08);
-            --glass: rgba(11, 15, 26, 0.8);
-            --text-main: #f8fafc;
-            --text-dim: #94a3b8;
-        }
-
-        @keyframes mesh {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+            --primary: #3b82f6;
+            /* Research Blue */
+            --primary-hover: #2563eb;
+            --text-dark: #0f172a;
+            --text-muted: #64748b;
+            --bg-light: #ffffff;
+            --nav-border: #f1f5f9;
         }
 
         body {
             font-family: 'Inter', sans-serif;
-            background-color: var(--bg-dark);
-            background-image: 
-                radial-gradient(circle at 0% 0%, rgba(45, 212, 191, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 100% 100%, rgba(99, 102, 241, 0.1) 0%, transparent 50%);
-            background-size: 200% 200%;
-            animation: mesh 15s ease infinite;
-            color: var(--text-main);
+            background-color: var(--bg-light);
+            color: var(--text-dark);
             overflow-x: hidden;
-            scroll-behavior: smooth;
         }
 
         h1,
@@ -115,22 +101,15 @@
 
         /* --- MAIN NAVIGATION --- */
         nav {
-            background: var(--glass);
-            backdrop-filter: blur(24px);
-            border: 1px solid var(--border);
-            padding: 0.75rem 4rem;
+            background: #ffffff;
+            border-bottom: 1px solid var(--nav-border);
+            padding: 1rem 2rem;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            position: fixed;
-            top: 24px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 90%;
-            max-width: 1400px;
-            border-radius: 20px;
+            position: sticky;
+            top: 0;
             z-index: 1000;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
         }
 
         .nav-links {
@@ -142,35 +121,32 @@
         }
 
         .nav-item {
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--text-dim);
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
+            font-size: 14px;
+            font-weight: 500;
+            color: #475569;
+            transition: color 0.2s ease;
+            position: relative;
         }
 
         .nav-item:hover {
             color: var(--primary);
-            text-shadow: 0 0 10px var(--primary-glow);
         }
 
         .nav-item.active {
             color: var(--primary);
-            font-weight: 800;
+            font-weight: 700;
         }
 
         /* --- HERO BANNER --- */
         .hero {
             position: relative;
-            background: radial-gradient(circle at 50% 50%, #161b2b 0%, var(--bg-dark) 100%);
-            height: 100vh;
-            min-height: 800px;
+            background: #fff;
+            height: 480px;
             overflow: hidden;
             display: flex;
             align-items: center;
-            padding: 140px 10% 80px;
-            color: #fff;
+            padding: 0 10%;
+            color: #1e293b;
         }
 
         .hero-bg {
@@ -193,7 +169,7 @@
         .hero-overlay {
             position: absolute;
             inset: 0;
-            background: radial-gradient(circle at 60% 40%, transparent 20%, var(--bg-dark) 85%);
+            background: linear-gradient(90deg, rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0.4) 100%);
             z-index: 2;
         }
 
@@ -215,33 +191,30 @@
         }
 
         .hero-title {
-            font-size: clamp(3rem, 6vw, 5.5rem);
+            font-size: 64px;
             font-weight: 900;
-            line-height: 0.95;
-            margin-bottom: 2rem;
-            letter-spacing: -0.04em;
-            color: #fff;
-            filter: drop-shadow(0 0 20px rgba(45, 212, 191, 0.15));
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.03em;
+            color: #0f172a;
         }
 
         .hero-console {
             position: absolute;
-            bottom: 4rem;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 90%;
-            max-width: 1200px;
+            bottom: 3rem;
+            left: 10%;
+            right: 10%;
             z-index: 20;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            background: rgba(15, 23, 42, 0.4);
-            backdrop-filter: blur(24px);
-            border: 1px solid var(--border);
-            padding: 1.5rem 3rem;
-            border-radius: 24px;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
-            animation: slideUpHUD 1s cubic-bezier(0.16, 1, 0.3, 1);
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(15, 23, 42, 0.1);
+            padding: 1.25rem 2.5rem;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+            animation: slideUpHUD 0.8s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         @keyframes slideUpHUD {
@@ -273,7 +246,7 @@
         .hud-value {
             font-size: 14px;
             font-weight: 800;
-            color: #fff;
+            color: #0f172a;
         }
 
         .bio-pulse {
@@ -304,53 +277,25 @@
         }
 
         .btn-launch {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            background-color: var(--primary);
             color: #fff;
             padding: 1.25rem 3rem;
-            border-radius: 16px;
+            border-radius: 8px;
+            /* Professional sharp edges with slight rounding */
             font-size: 16px;
             font-weight: 800;
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
             display: inline-flex;
             align-items: center;
             gap: 12px;
             text-transform: uppercase;
-            letter-spacing: 0.1em;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-        }
-
-        .btn-launch:hover {
-            transform: translateY(-4px) scale(1.02);
-            box-shadow: 0 20px 40px rgba(45, 212, 191, 0.2);
-            filter: brightness(1.1);
-        }
-
-        .auth-btn {
-            width: 100%;
-            padding: 1.25rem 2rem;
-            background: linear-gradient(135deg, var(--primary) 0%, #0d9488 100%);
-            color: #000;
-            border: none;
-            border-radius: 14px;
-            font-weight: 800;
-            font-size: 15px;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            box-shadow: 0 4px 15px rgba(45, 212, 191, 0.3);
-            position: relative;
-            overflow: hidden;
-            text-transform: uppercase;
             letter-spacing: 0.05em;
         }
 
-        .auth-btn:hover {
+        .btn-launch:hover {
+            background-color: var(--primary-hover);
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(45, 212, 191, 0.4);
-            color: #fff;
+            box-shadow: 0 20px 40px rgba(59, 130, 246, 0.3);
         }
 
         /* --- BRANDING SECTION --- */
@@ -359,7 +304,6 @@
             display: flex;
             align-items: center;
             gap: 8rem;
-            background: rgba(255, 255, 255, 0.02);
         }
 
         .brand-visual {
@@ -372,15 +316,14 @@
         .zenith-cipher {
             width: 320px;
             height: 320px;
-            background: linear-gradient(135deg, rgba(45, 212, 191, 0.1) 0%, rgba(99, 102, 241, 0.1) 100%);
-            border: 1px solid var(--border);
+            background: radial-gradient(circle, #eff6ff 0%, #dbeafe 100%);
+            border: 1px solid #bfdbfe;
             border-radius: 40px;
             display: flex;
             align-items: center;
             justify-content: center;
             position: relative;
             overflow: hidden;
-            box-shadow: 0 0 40px rgba(0, 0, 0, 0.5);
         }
 
         .brand-info {
@@ -388,19 +331,19 @@
         }
 
         .brand-tag {
-            font-size: 13px;
+            font-size: 14px;
             font-weight: 800;
             text-transform: uppercase;
-            letter-spacing: 0.3em;
+            letter-spacing: 0.2em;
             color: var(--primary);
             margin-bottom: 1.5rem;
             display: block;
         }
 
         .brand-headline {
-            font-size: 44px;
+            font-size: 48px;
             font-weight: 900;
-            color: #fff;
+            color: var(--text-dark);
             line-height: 1.1;
             margin-bottom: 2rem;
             letter-spacing: -0.02em;
@@ -411,9 +354,9 @@
         }
 
         .brand-text {
-            font-size: 17px;
-            color: var(--text-dim);
-            line-height: 1.8;
+            font-size: 18px;
+            color: var(--text-muted);
+            line-height: 1.7;
             margin-bottom: 3rem;
             max-width: 600px;
         }
@@ -427,69 +370,63 @@
         }
 
         .capability-card {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid var(--border);
-            padding: 3rem 2.5rem;
-            border-radius: 24px;
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            background: #fff;
+            border-bottom: 2px solid transparent;
+            padding: 3rem 0;
+            transition: all 0.3s ease;
         }
 
         .capability-card:hover {
-            background: rgba(255, 255, 255, 0.07);
-            border-color: var(--primary);
-            transform: translateY(-10px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            border-bottom-color: var(--primary);
         }
 
         .capability-card i {
             color: var(--primary);
             margin-bottom: 2rem;
             display: block;
-            filter: drop-shadow(0 0 8px var(--primary-glow));
         }
 
         .capability-card h3 {
-            font-size: 21px;
+            font-size: 22px;
             font-weight: 800;
             margin-bottom: 1rem;
-            color: #fff;
         }
 
         .capability-card p {
-            font-size: 14px;
-            color: var(--text-dim);
-            line-height: 1.7;
+            font-size: 15px;
+            color: var(--text-muted);
+            line-height: 1.6;
         }
 
         /* --- FOOTER PLATFORM STATUS --- */
         footer {
-            background-color: var(--bg-dark);
-            border-top: 1px solid var(--border);
-            padding: 6rem 10% 4rem;
+            background-color: #f8fafc;
+            border-top: 1px solid var(--nav-border);
+            padding: 6rem 10% 3rem;
         }
 
         .platform-status {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid var(--border);
+            border-bottom: 1px solid #e2e8f0;
             padding-bottom: 4rem;
             margin-bottom: 3rem;
         }
 
         .status-metric h4 {
-            font-size: 10px;
+            font-size: 11px;
             font-weight: 800;
-            color: var(--text-dim);
+            color: #94a3b8;
             text-transform: uppercase;
-            letter-spacing: 0.3em;
-            margin-bottom: 0.75rem;
+            letter-spacing: 0.2em;
+            margin-bottom: 0.5rem;
         }
 
         .status-metric p {
-            font-size: 26px;
+            font-size: 24px;
             font-weight: 900;
-            color: #fff;
+            color: var(--text-dark);
         }
 
         /* --- COOKIE / COMPLIANCE --- */
@@ -511,41 +448,27 @@
             max-width: 800px;
         }
 
-        .compliance-bar {
-            position: fixed;
-            bottom: 2rem;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(15, 23, 42, 0.8);
-            backdrop-filter: blur(24px);
-            border: 1px solid var(--border);
-            padding: 1rem 2rem;
-            border-radius: 16px;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
-            display: flex;
-            align-items: center;
-            gap: 2rem;
-            z-index: 2000;
-            width: calc(100% - 4rem);
-            max-width: 800px;
-            color: var(--text-dim);
-            font-size: 13px;
-        }
-
         .btn-accept {
-            background: var(--primary);
-            color: #000;
+            background: var(--text-dark);
+            color: #fff;
             padding: 0.6rem 2rem;
-            border-radius: 10px;
-            font-weight: 800;
+            border-radius: 6px;
+            font-weight: 700;
             font-size: 12px;
             white-space: nowrap;
-            transition: all 0.3s;
         }
 
-        .btn-accept:hover {
-            transform: scale(1.05);
-            background: #fff;
+        /* LOGIN MODAL - PREMIUM DESIGN */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 41, 59, 0.95) 100%);
+            backdrop-filter: blur(12px);
+            z-index: 9998;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s ease-out;
         }
 
         @keyframes fadeIn {
@@ -563,13 +486,13 @@
         }
 
         .modal-content {
-            background: linear-gradient(180deg, #0f172a 0%, #0b0f1a 100%);
-            border: 1px solid var(--border);
-            border-radius: 32px;
+            background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+            border-radius: 24px;
             max-width: 480px;
             width: 90%;
             padding: 3.5rem 3rem;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25),
+                0 0 0 1px rgba(148, 163, 184, 0.1);
             position: relative;
             animation: modalSlideIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
@@ -621,42 +544,41 @@
             left: 1rem;
             top: 50%;
             transform: translateY(-50%);
-            color: var(--text-dim);
-            font-size: 14px;
+            color: #94a3b8;
+            font-size: 15px;
             font-weight: 500;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             pointer-events: none;
-            background: #0f172a;
-            padding: 0 0.5rem;
+            background: linear-gradient(180deg, transparent 0%, transparent 45%, #ffffff 45%, #ffffff 55%, transparent 55%);
+            padding: 0 0.25rem;
         }
 
         .auth-input {
             width: 100%;
             padding: 1.25rem 1rem;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid var(--border);
-            border-radius: 14px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
             font-size: 15px;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             font-family: 'Inter', sans-serif;
-            color: #fff;
+            background: white;
+            color: #1e293b;
         }
 
         .auth-input:focus {
             outline: none;
-            border-color: var(--primary);
-            background: rgba(255, 255, 255, 0.05);
-            box-shadow: 0 0 0 4px rgba(45, 212, 191, 0.1);
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1),
+                0 4px 12px rgba(59, 130, 246, 0.15);
+            transform: translateY(-1px);
         }
 
         .auth-input:focus+label,
         .auth-input:not(:placeholder-shown)+label {
             top: 0;
-            font-size: 11px;
-            color: var(--primary);
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
+            font-size: 12px;
+            color: #3b82f6;
+            font-weight: 600;
         }
 
         .auth-btn {
@@ -706,11 +628,11 @@
 
         .google-btn {
             width: 100%;
-            padding: 1.1rem;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid var(--border);
-            border-radius: 14px;
-            font-weight: 700;
+            padding: 1rem;
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-weight: 600;
             font-size: 15px;
             cursor: pointer;
             transition: all 0.3s;
@@ -718,13 +640,14 @@
             align-items: center;
             justify-content: center;
             gap: 0.75rem;
-            color: #fff;
+            color: #1e293b;
         }
 
         .google-btn:hover {
-            background: rgba(255, 255, 255, 0.08);
-            border-color: var(--primary);
-            transform: translateY(-2px);
+            border-color: #cbd5e1;
+            background: #f8fafc;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
         }
 
         .divider {
@@ -814,13 +737,13 @@
             position: absolute;
             top: 100%;
             left: 0;
-            background: rgba(15, 23, 42, 0.95);
-            backdrop-filter: blur(24px);
-            border: 1px solid var(--border);
-            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(15, 23, 42, 0.1);
+            border-radius: 12px;
             min-width: 260px;
             padding: 0.75rem;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
             opacity: 0;
             visibility: hidden;
             transform: translateY(10px);
@@ -1114,20 +1037,20 @@
                     <i data-lucide="dna" class="w-6 h-6 text-teal-400"></i>
                 </div>
                 <!-- Text matching simulation gradient -->
-                <div class="font-sans font-black tracking-tighter leading-none flex items-center">
-                    <span class="text-xl text-white mr-1">NILUS</span>
+                <div class="font-sans font-bold tracking-tight leading-none flex items-center">
+                    <span class="text-xl text-slate-800 tracking-tight mr-1">NILUS</span>
                     <span
-                        class="text-xl bg-clip-text text-transparent bg-gradient-to-r from-teal-400 to-indigo-400">LAB</span>
+                        class="text-xl bg-clip-text text-transparent bg-gradient-to-r from-teal-400 to-cyan-300">LAB</span>
                 </div>
             </div>
-            <div class="h-8 w-px bg-white/10 mx-4"></div>
+            <div class="h-8 w-px bg-slate-200 mx-4"></div>
             <div class="nav-links">
                 <a href="#" class="nav-item active">Zenith Mainframe</a>
 
                 <!-- NEW: INSTITUTIONAL DROPDOWN -->
                 <div class="nav-dropdown">
                     <div class="nav-item dropdown-trigger">
-                        Diligence <i data-lucide="chevron-down" class="w-3 h-3"></i>
+                        Institutional Diligence <i data-lucide="chevron-down" class="w-3 h-3"></i>
                     </div>
                     <div class="dropdown-menu">
                         <a href="evidence.html" class="dropdown-item">
@@ -1205,7 +1128,7 @@
             </div>
 
             <!-- Narrative Hook -->
-            <p class="text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed font-semibold mb-12">
+            <p class="text-xl text-slate-600 max-w-2xl mx-auto leading-relaxed font-semibold mb-12">
                 The world’s first generative engine for <span class="text-teal-400">Cellular Reprogramming</span>.
                 Simulating high-fidelity <span class="text-teal-400 italic tracking-wide">Yamanaka Factor</span>
                 trajectories to reverse biological aging at the cellular level.
@@ -1222,14 +1145,13 @@
     </header>
 
     <!-- FOUNDATION DISCOVERY SECTION -->
-    <section class="py-32 border-y border-white/5 relative overflow-hidden">
-        <div class="absolute inset-0 bg-[radial-gradient(circle_at_50%_120%,rgba(45,212,191,0.05),transparent)]"></div>
-        <div class="max-w-5xl mx-auto text-center px-6 relative z-10">
-            <span class="text-[10px] font-black text-teal-400 uppercase tracking-[0.6em] mb-6 block">Foundation
+    <section class="py-32 bg-white border-y border-slate-50">
+        <div class="max-w-5xl mx-auto text-center px-6">
+            <span class="text-[10px] font-black text-blue-600 uppercase tracking-[0.6em] mb-6 block">Foundation
                 Intelligence</span>
-            <h2 class="text-6xl font-black text-white mb-10 tracking-tight leading-[1.1]"
+            <h2 class="text-6xl font-black text-slate-900 mb-10 tracking-tight leading-[1.1]"
                 style="font-family: 'Outfit', sans-serif;">
-                Mapping the <span class="italic text-slate-700">Complexity</span> of <br>Biological Rejuvenation.
+                Mapping the <span class="italic text-slate-300">Complexity</span> of <br>Biological Rejuvenation.
             </h2>
             <p class="text-2xl text-slate-500 leading-relaxed max-w-4xl mx-auto font-medium">
                 Zenith is a proprietary AI framework engineered for <strong>simulating full-state cellular reprogramming
