@@ -1,13 +1,10 @@
-# Internal drafts and decks
+# Internal drafts and decks (KEEP OFF GIT)
 APOLLO_*.html
 discovery_mockup.html
 trials.html
-*.json
-*.py
+AlphaFold_*.json
 *.ipynb
-*.txt
 *.bat
-sitemap.xml
 legal.html
 regulatory.html
 stress_*
