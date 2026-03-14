@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nilus Lab — Speaking Script · Apollo</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg: #03060f;
+            --sur: #06101e;
+            --bl: #3b76f6;
+            --gr: #10b981;
+            --go: #eab308;
+            --br: rgba(255, 255, 255, 0.07);
+            --mu: #475569;
+        }
+
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: var(--bg);
+            color: #e2e8f0;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        /* ── SLIDE ── */
+        .slide {
+            width: 100vw;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 4rem 7rem;
+            position: relative;
+            border-bottom: 1px solid var(--br);
+            overflow: hidden;
+        }
+
+        .inn {
+            max-width: 1100px;
+            width: 100%;
+            z-index: 10;
+        }
+
+        /* ── GLOW ── */
+        .gl {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(160px);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .tl {
+            top: -20%;
+            left: -10%;
+            width: 500px;
+            height: 500px;
+            background: rgba(59, 118, 246, 0.12);
+        }
+
+        .tr {
+            top: -15%;
+            right: -10%;
+            width: 450px;
+            height: 450px;
+            background: rgba(59, 118, 246, 0.10);
+        }
+
+        .br2 {
+            bottom: -20%;
+            right: -10%;
+            width: 450px;
+            height: 450px;
+            background: rgba(16, 185, 129, 0.08);
+        }
+
+        /* ── FOOTER ── */
+        .ft {
+            position: absolute;
+            bottom: 2rem;
+            left: 7rem;
+            right: 7rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 20;
+        }
+
+        .ft span {
+            font-size: 0.6rem;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: var(--mu);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .fd {
+            width: 5px;
+            height: 5px;
+            background: var(--bl);
+            border-radius: 50%;
+        }
+
+        /* ── SLIDE LABEL ── */
+        .slide-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.65rem;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--bl);
+            background: rgba(59, 118, 246, 0.1);
+            border: 1px solid rgba(59, 118, 246, 0.2);
+            padding: 0.35rem 1rem;
+            border-radius: 99px;
+            margin-bottom: 1.5rem;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .slide-label.gr {
+            color: var(--gr);
+            background: rgba(16, 185, 129, 0.1);
+            border-color: rgba(16, 185, 129, 0.2);
+        }
+
+        .slide-label.go {
+            color: var(--go);
+            background: rgba(234, 179, 8, 0.1);
+            border-color: rgba(234, 179, 8, 0.2);
+        }
+
+        /* ── SLIDE TITLE ── */
+        .stitle {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--mu);
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            font-family: 'JetBrains Mono', monospace;
+            margin-bottom: 2.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--br);
+        }
+
+        /* ── SCRIPT TEXT ── */
+        .script {
+            font-size: 1.55rem;
+            color: #e2e8f0;
+            line-height: 1.8;
+            font-weight: 400;
+            max-width: 950px;
+        }
+
+        .script .hl {
+            color: #fff;
+            font-weight: 700;
+        }
+
+        .script .bl {
+            color: var(--bl);
+            font-weight: 700;
+        }
+
+        .script .gr {
+            color: var(--gr);
+            font-weight: 700;
+        }
+
+        .script .go {
+            color: var(--go);
+            font-weight: 700;
+        }
+
+        /* ── PAUSE MARKER ── */
+        .pause {
+            display: inline-block;
+            background: rgba(59, 118, 246, 0.12);
+            color: var(--bl);
+            border: 1px solid rgba(59, 118, 246, 0.2);
+            font-size: 0.6rem;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            padding: 0.2rem 0.7rem;
+            border-radius: 99px;
+            vertical-align: middle;
+            margin: 0 0.3rem;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .pause.br {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--gr);
+            border-color: rgba(16, 185, 129, 0.2);
+        }
+
+        /* ── SECTION BREAKS ── */
+        .br-line {
+            border: none;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            margin: 2rem 0;
+        }
+
+        /* ── KEY STAT INLINE ── */
+        .stat-inline {
+            display: inline-block;
+            background: rgba(59, 118, 246, 0.08);
+            border: 1px solid rgba(59, 118, 246, 0.18);
+            border-radius: 8px;
+            padding: 0.1rem 0.6rem;
+            font-weight: 700;
+            color: #fff;
+            font-size: 1.1em;
+        }
+
+        /* ── TIP BOX ── */
+        .tip {
+            margin-top: 2.5rem;
+            padding: 1.2rem 1.8rem;
+            background: rgba(234, 179, 8, 0.07);
+            border: 1px solid rgba(234, 179, 8, 0.18);
+            border-radius: 14px;
+            display: flex;
+            gap: 0.9rem;
+            align-items: flex-start;
+        }
+
+        .tip-icon {
+            font-size: 1.1rem;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .tip p {
+            font-size: 0.95rem;
+            color: #fde68a;
+            line-height: 1.5;
+        }
+
+        .tip p strong {
+            color: var(--go);
+        }
+
+        /* ── NAV ── */
+        .nav {
+            position: fixed;
+            right: 1.6rem;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            z-index: 100;
+        }
+
+        .nd {
+            width: 6px;
+            height: 6px;
+            border-radius: 3px;
+            background: rgba(255, 255, 255, 0.12);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .nd:hover,
+        .nd.active {
+            background: var(--bl);
+            box-shadow: 0 0 8px var(--bl);
+            height: 18px;
+        }
+
+        /* ── PROGRESS BAR ── */
+        .progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 2px;
+            background: var(--bl);
+            z-index: 200;
+            transition: width 0.3s;
+            box-shadow: 0 0 8px var(--bl);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="progress" id="progress"></div>
+    <nav class="nav" id="nav"></nav>
+
+    <!-- ══════════════════════════════════════
+     SLIDE 1 · COVER
+══════════════════════════════════════ -->
+    <section class="slide" id="s1"
+        style="background:radial-gradient(ellipse 80% 60% at 55% 45%,rgba(59,118,246,0.12) 0%,var(--bg) 70%);">
+        <div class="gl tl"></div>
+        <div class="inn">
+            <div class="slide-label">Slide 01 · Cover</div>
+            <div class="stitle">When the presentation opens — introduction</div>
+
+            <div class="script">
+                "Good morning Michelle — thank you so much for making time today.
+                <span class="pause">short pause</span>
+
+                My name is Kagawea, I'm the founder of Nilus Lab.
+
+                I'll keep this to 45 minutes and I want it to be a conversation — not a lecture.
+                <span class="pause">pause</span>
+
+                Very simply, what we are building is <span class="hl">the software that longevity scientists do not have
+                    yet.</span>
+
+                I'd love to show you what that means — and then hear your thoughts.
+                <span class="pause br">ask</span>
+                Does that sound good?"
+            </div>
+
+            <div class="tip">
+                <span class="tip-icon">💡</span>
+                <p><strong>Tip:</strong> Wait for her to say yes before moving on. Let her settle in. Don't rush the
+                    first 60 seconds.</p>
+            </div>
+        </div>
+        <div class="ft"><span>Nilus Lab · Speaking Script · Confidential</span><span class="fd"></span><span>01 /
+                09</span></div>
+    </section>
+
+
+    <!-- ══════════════════════════════════════
+     SLIDE 2 · THE PROBLEM
+══════════════════════════════════════ -->
+    <section class="slide" id="s2" style="background:var(--bg);">
+        <div class="gl tr" style="opacity:0.5;"></div>
+        <div class="inn">
+            <div class="slide-label">Slide 02 · The Problem</div>
+            <div class="stitle">After she says yes — begin here</div>
+
+            <div class="script">
+                "Let me start with the problem.
+                <span class="pause">pause</span>
+
+                If you want to discover a longevity therapy today —
+                a drug that can reverse aging in human cells —
+                you have almost no tools to help you predict what will work.
+                <span class="pause">pause</span>
+
+                The whole process takes <span class="hl">years.</span>
+                You run an experiment — it fails.
+                You make a small change — it fails again.
+                Each failed cycle wastes <span class="hl">weeks or months</span> of lab time.
+                And the success rate is <span class="hl">under 2 percent.</span>
+                <span class="pause">pause</span>
+
+                The reason is simple:
+                scientists have to track thousands of genes that all interact with each other at the same time.
+                No human mind can see that picture. And until now,
+                no software could either.
+                <span class="pause">pause</span>
+
+                There is also a safety problem.
+                Pushing a cell to become younger can accidentally trigger cancer.
+                And <span class="hl">today — there is no tool that tells you if you are heading toward that
+                    danger</span>
+                before it happens.
+                <span class="pause">pause</span>
+
+                That is the gap. That is what we built Nilus Lab to solve."
+            </div>
+
+            <div class="tip">
+                <span class="tip-icon">💡</span>
+                <p><strong>Tip:</strong> Slow down on "years." That word should land. Don't fill the silence after it —
+                    let her feel the weight of the problem.</p>
+            </div>
+        </div>
+        <div class="ft"><span>Nilus Lab · Speaking Script · Confidential</span><span class="fd"></span><span>02 /
+                09</span></div>
+    </section>
+
+
+    <!-- ══════════════════════════════════════
+     SLIDE 3 · THE SOLUTION
+══════════════════════════════════════ -->
+    <section class="slide" id="s3" style="background:var(--sur);">
+        <div class="gl tl" style="opacity:0.4;"></div>
+        <div class="inn">
+            <div class="slide-label">Slide 03 · Our Solution</div>
+            <div class="stitle">Transition smoothly from the problem</div>
+
+            <div class="script">
+                "So we built the map.
+                <span class="pause">pause</span>
+
+                We call it <span class="bl">Zenith v26.1.</span>
+                It is an AI system with 285 million parameters,
+                trained specifically on <span class="bl">150,000 real human cell observations</span>
+                from the Human Cell Atlas — the world's most comprehensive cell dataset.
+                <span class="pause">pause</span>
+
+                What makes it different is what it can see.
+                While traditional tools track around 200 genes at a time,
+                Zenith tracks <span class="hl">5,000 genes simultaneously.</span>
+                It sees the full picture that no human scientist can see manually.
+                <span class="pause">pause</span>
+
+                And it works fast.
+                An experiment that takes weeks in a physical lab —
+                Zenith simulates it in <span class="bl">0.12 seconds.</span>
+                <span class="pause">pause</span>
+
+                We also built a safety layer we call the <span class="bl">Epigenetic Stability Index.</span>
+                It watches the simulation in real time and stops it
+                if the cell is drifting toward a dangerous state — like cancer.
+                Only the protocols that pass this safety check move forward.
+                <span class="pause">pause</span>
+
+                And when Zenith finds a result worth testing physically,
+                it writes the lab instructions automatically
+                and sends them directly to a robotic arm in the lab.
+                <span class="hl">The AI controls the physical experiment.</span>
+                The loop is closed."
+            </div>
+        </div>
+        <div class="ft"><span>Nilus Lab · Speaking Script · Confidential</span><span class="fd"></span><span>03 /
+                09</span></div>
+    </section>
+
+
+    <!-- ══════════════════════════════════════
+     SLIDE 4 · THE PROOF
+══════════════════════════════════════ -->
+    <section class="slide" id="s4" style="background:var(--bg);">
+        <div class="gl br2" style="opacity:0.4;"></div>
+        <div class="inn">
+            <div class="slide-label gr">Slide 04 · Proof</div>
+            <div class="stitle">Shift from "what we built" to "what it did"</div>
+
+            <div class="script">
+                "Let me show you what this actually produced.
+                <span class="pause">pause</span>
+
+                We ran Zenith on aged human heart cells.
+                The cells started at a biological age score of <span class="hl">0.85</span> —
+                which means old, worn out, senescent.
+                <span class="pause">pause</span>
+
+                After running our protocol — which we call <span class="gr">DRP-Alpha-12</span> —
+                the cells came out at a biological age of <span class="gr">0.10.</span>
+                <span class="pause">pause</span>
+
+                That is the equivalent of resetting a cell by <span class="hl">35 years.</span>
+                <span class="pause">pause</span>
+
+                And critically — <span class="hl">the DNA was 100 percent intact.</span>
+                No cancer. No loss of cell identity. Full genomic safety.
+                <span class="pause">pause</span>
+
+                During this run, Zenith also made a discovery
+                that no traditional lab method has been able to find.
+                It identified a precise interaction between two proteins —
+                SOX2 and POU5F1 — with a <span class="gr">94.2 percent match score.</span>
+                When these two proteins work together at the right point,
+                they trigger a full rejuvenation cascade in the heart cell.
+                <span class="pause">pause</span>
+
+                This is the kind of insight that
+                could take a traditional lab years to find, if ever.
+                <span class="hl">Zenith found it in a single run.</span>"
+            </div>
+
+            <div class="tip">
+                <span class="tip-icon">💡</span>
+                <p><strong>Tip:</strong> Let the "35 years" number breathe. Pause after saying it. Don't immediately
+                    explain — let her process.</p>
+            </div>
+        </div>
+        <div class="ft"><span>Nilus Lab · Speaking Script · Confidential</span><span class="fd"></span><span>04 /
+                09</span></div>
+    </section>
+
+
+    <!-- ══════════════════════════════════════
+     SLIDE 5 · COMPETITIVE EDGE
+══════════════════════════════════════ -->
+    <section class="slide" id="s5" style="background:var(--sur);">
+        <div class="gl tr" style="opacity:0.4;"></div>
+        <div class="inn">
+            <div class="slide-label">Slide 05 · Competitive Edge</div>
+            <div class="stitle">If she asks about competitors — or after proof</div>
+
+            <div class="script">
+                "Now — you might wonder who else is doing this.
+                <span class="pause">pause</span>
+
+                Companies like Altos Labs and Retro Biosciences
+                are doing tremendous work.
+                But they are wet-lab companies.
+                They are our potential customers — not our competitors.
+                <span class="pause">pause</span>
+
+                In the software layer — in the computational intelligence layer —
+                there is almost nothing.
+                The tools that exist track 200 genes.
+                We track <span class="hl">5,000.</span>
+                The tools that exist have no safety system.
+                We have the <span class="hl">ESI — a real-time genomic safety guard.</span>
+                And no one else closes the loop between AI prediction
+                and physical robotic execution.
+                <span class="pause">pause</span>
+
+                Our four core advantages are:
+                <span class="pause">pause</span>
+
+                One — a proprietary dataset of <span class="bl">150,000 real cell observations</span>
+                that took years to build and train on.
+                <span class="pause">short pause</span>
+
+                Two — the <span class="bl">ESI safety system</span> — unique, not available anywhere else.
+                <span class="pause">short pause</span>
+
+                Three — a <span class="bl">closed AI-to-lab loop</span> — prediction to physical execution, fully
+                automated.
+                <span class="pause">short pause</span>
+
+                And four — a growing library of <span class="bl">patent-ready protocols</span>,
+                starting with DRP-Alpha-12.
+                <span class="pause">pause</span>
+
+                These are not easy to replicate.
+                This moat compounds over time."
+            </div>
+        </div>
+        <div class="ft"><span>Nilus Lab · Speaking Script · Confidential</span><span class="fd"></span><span>05 /
+                09</span></div>
+    </section>
+
+
+    <!-- ══════════════════════════════════════
+     SLIDE 6 · BUSINESS MODEL
+══════════════════════════════════════ -->
+    <section class="slide" id="s6" style="background:var(--bg);">
+        <div class="gl tl" style="opacity:0.4;"></div>
+        <div class="inn">
+            <div class="slide-label">Slide 06 · Business Model</div>
+            <div class="stitle">After proof and competitive edge</div>
+
+            <div class="script">
+                "So how do we make money?
+                <span class="pause">pause</span>
+
+                Think of us like <span class="hl">iOS for biology.</span>
+                Every app on your phone runs on iOS —
+                Apple doesn't build every app,
+                but every app builder needs Apple.
+                <span class="pause">pause</span>
+
+                We are not a drug company.
+                We are not betting on one single therapy making it to market.
+                We are building the <span class="bl">infrastructure that every longevity company will run on.</span>
+                <span class="pause">pause</span>
+
+                Three revenue streams:
+                <span class="pause">pause</span>
+
+                First — <span class="hl">software licensing.</span>
+                Pharma companies and research labs pay us
+                to access Zenith and run their own discovery programs on our platform.
+                This alone cuts their discovery costs by <span class="hl">90 percent.</span>
+                <span class="pause">short pause</span>
+
+                Second — <span class="hl">virtual clinical trials.</span>
+                We simulate 10,000 digital patients in parallel.
+                Labs pay us to validate their drug safety before touching a real person.
+                This dramatically reduces their Phase One risk.
+                <span class="pause">short pause</span>
+
+                Third — <span class="hl">protocol licensing.</span>
+                DRP-Alpha-12 is a discovered protocol with blockbuster IP potential.
+                We will license it — and we will keep discovering more.
+                <span class="pause">pause</span>
+
+                This is a platform play.
+                Our value compounds every time a new lab uses us
+                because we generate more proprietary data and more IP."
+            </div>
+        </div>
+        <div class="ft"><span>Nilus Lab · Speaking Script · Confidential</span><span class="fd"></span><span>06 /
+                09</span></div>
+    </section>
+
+
+    <!-- ══════════════════════════════════════
+     SLIDE 7 · ROADMAP
+══════════════════════════════════════ -->
+    <section class="slide" id="s7" style="background:var(--sur);">
+        <div class="gl br2" style="opacity:0.35;"></div>
+        <div class="inn">
+            <div class="slide-label">Slide 07 · Roadmap</div>
+            <div class="stitle">After business model — the path forward</div>
+
+            <div class="script">
+                "Here is where we are going.
+                <span class="pause">pause</span>
+
+                Right now — today — we have Zenith v26.1 running at 285 million parameters.
+                It is validated. It is live. It has produced the results I just showed you.
+                <span class="pause">pause</span>
+
+                With Series A funding — <span class="hl">20 million dollars</span> —
+                we do three things.
+
+                We scale our computing power significantly.
+                We acquire a much larger training dataset — <span class="bl">21.3 petabytes</span> of cell data.
+                And we build a 100-cell physical dry lab
+                to begin converting our in-silico findings into physical fact.
+                <span class="pause">pause</span>
+
+                By 2026 to 2027, we launch <span class="hl">Horizon-G</span>
+                — a 2.3 billion parameter model —
+                and expand beyond heart cells into brain and muscle tissue.
+                First commercial contracts begin in this window.
+                <span class="pause">pause</span>
+
+                By 2027 to 2030, we reach <span class="hl">Zenith Global</span>
+                — a 7 billion parameter model
+                that covers every major human cell type.
+                At that point, Nilus Lab becomes the standard platform for the entire longevity industry.
+                <span class="pause">pause</span>
+
+                The post-money valuation we are targeting for this round
+                is <span class="gr">115 million dollars or more,</span>
+                driven by the IP we hold and early B2B licensing."
+            </div>
+        </div>
+        <div class="ft"><span>Nilus Lab · Speaking Script · Confidential</span><span class="fd"></span><span>07 /
+                09</span></div>
+    </section>
+
+
+    <!-- ══════════════════════════════════════
+     SLIDE 8 · WHY APOLLO
+══════════════════════════════════════ -->
+    <section class="slide" id="s8" style="background:var(--bg);">
+        <div class="gl tr" style="opacity:0.4;"></div>
+        <div class="inn">
+            <div class="slide-label go">Slide 08 · Why Apollo</div>
+            <div class="stitle">The personal pitch — make it about them specifically</div>
+
+            <div class="script">
+                "I want to be clear about why we reached out to Apollo specifically.
+                <span class="pause">pause</span>
+
+                It wasn't a mass email.
+                We looked at your portfolio and how you think about health infrastructure —
+                and we believe there is a real strategic fit here.
+                <span class="pause">pause</span>
+
+                Beyond the capital itself,
+                what we need from a partner is
+                the ability to make warm introductions into pharma and biotech.
+                The companies that would license Zenith are already in your network.
+                <span class="pause">pause</span>
+
+                We also need a partner with the patience to support a platform company.
+                This is not a two-year exit story.
+                The longevity industry is a 20-year infrastructure play —
+                and we are positioning to own the intelligence layer of it.
+                <span class="pause">pause</span>
+
+                I am not asking you to commit to anything today.
+                <span class="pause">pause</span>
+
+                What I am asking for is a second meeting —
+                a 45-minute technical session where I walk your team through the Zenith engine live
+                and share the full DRP-Alpha-12 validation dataset.
+                <span class="pause">pause</span>
+
+                <span class="hl">Would that make sense as a next step?"</span>
+            </div>
+
+            <div class="tip">
+                <span class="tip-icon">🎯</span>
+                <p><strong>Stop here.</strong> After asking that question — go completely silent. Let her answer. Do not
+                    fill the silence. This is the most important moment in the call.</p>
+            </div>
+        </div>
+        <div class="ft"><span>Nilus Lab · Speaking Script · Confidential</span><span class="fd"></span><span>08 /
+                09</span></div>
+    </section>
+
+
+    <!-- ══════════════════════════════════════
+     SLIDE 9 · CLOSE
+══════════════════════════════════════ -->
+    <section class="slide" id="s9"
+        style="background:radial-gradient(ellipse 70% 70% at 35% 50%,rgba(59,118,246,0.14) 0%,var(--bg) 65%);">
+        <div class="gl tl" style="opacity:0.5;"></div>
+        <div class="inn">
+            <div class="slide-label gr">Slide 09 · Close</div>
+            <div class="stitle">End of the call — wrap up strong</div>
+
+            <div class="script">
+                "Michelle — thank you.
+                You can find everything we have covered today
+                on our research website at <span class="bl">niluslab.com.</span>
+                <span class="pause">pause</span>
+
+                I'll send you a follow-up email today
+                with a link to the full technical dossier.
+                <span class="pause">pause</span>
+
+                If there is anything you want me to expand on — any question I didn't answer well —
+                please reach out directly.
+                I am at <span class="bl">info@niluslab.com.</span>
+                <span class="pause">pause</span>
+
+                We are building something that I believe
+                the longevity field has genuinely been waiting for.
+                And I hope today showed you why.
+                <span class="pause">pause</span>
+
+                <span class="hl">Thank you very much for your time."</span>
+            </div>
+
+            <hr class="br-line">
+
+            <div style="display:flex; gap:3rem; flex-wrap:wrap; margin-top:1rem;">
+                <div>
+                    <div
+                        style="font-size:0.65rem; letter-spacing:0.18em; text-transform:uppercase; color:var(--mu); font-family:'JetBrains Mono',monospace; margin-bottom:0.4rem;">
+                        Follow-Up Email — Send Same Day</div>
+                    <div style="font-size:1.05rem; color:#fff; font-weight:600; line-height:1.7;">
+                        • Thank her for the time<br>
+                        • Link to niluslab.com<br>
+                        • Attach or link the full DRP-Alpha-12 report<br>
+                        • Propose specific dates for the technical session
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="ft"><span>Nilus Lab · Speaking Script · Confidential</span><span class="fd"></span><span>09 /
+                09</span></div>
+    </section>
+
+
+    <script>
+        const slides = document.querySelectorAll('.slide');
+        const nav = document.getElementById('nav');
+        const progress = document.getElementById('progress');
+        const labels = ['Intro', 'Problem', 'Solution', 'Proof', 'Edge', 'Business', 'Roadmap', 'Why Apollo', 'Close'];
+
+        slides.forEach((_, i) => {
+            const d = document.createElement('div');
+            d.className = 'nd'; d.title = labels[i] || `Slide ${i + 1}`;
+            d.onclick = () => slides[i].scrollIntoView({ behavior: 'smooth' });
+            nav.appendChild(d);
+        });
+
+        const obs = new IntersectionObserver(entries => {
+            entries.forEach(e => {
+                if (e.isIntersecting) {
+                    const idx = [...slides].indexOf(e.target);
+                    document.querySelectorAll('.nd').forEach((d, i) => d.classList.toggle('active', i === idx));
+                    const pct = ((idx + 1) / slides.length) * 100;
+                    progress.style.width = pct + '%';
+                }
+            });
+        }, { threshold: 0.5 });
+
+        slides.forEach(s => obs.observe(s));
+    </script>
+
+</body>
+
+</html>

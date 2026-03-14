@@ -56,7 +56,21 @@ body {
     gap: 1px;
     background-color: var(--border-dim);
     padding-right: 12px;
-    /* Moves right dashboard off the screen edge */
+}
+
+@media (max-width: 1024px) {
+    #architect-layout {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto 1fr auto;
+        height: auto;
+        min-height: 100vh;
+        overflow-y: auto;
+        padding-right: 0;
+    }
+
+    body {
+        overflow-y: auto;
+    }
 }
 
 /* --- AUTHENTIC FULLSCREEN MICROSCOPE MODE --- */
@@ -91,7 +105,8 @@ body {
     position: absolute;
     top: 30px;
     left: 30px;
-    width: 300px;
+    width: calc(100vw - 60px);
+    max-width: 300px;
     background: rgba(10, 10, 15, 0.95);
     /* Deeper black-gray balance */
     backdrop-filter: blur(40px);
@@ -172,7 +187,8 @@ body {
     position: absolute;
     top: 30px;
     right: 30px;
-    width: 320px;
+    width: calc(100vw - 60px);
+    max-width: 320px;
     background: rgba(10, 10, 15, 0.95);
     backdrop-filter: blur(40px);
     border: 1px solid rgba(255, 255, 255, 0.1);
@@ -491,7 +507,8 @@ canvas {
     position: absolute;
     top: 20px;
     left: 20px;
-    width: 260px;
+    width: calc(100vw - 40px);
+    max-width: 260px;
     background: rgba(5, 5, 5, 0.85);
     border: 1px solid var(--border-mid);
     border-left: 2px solid var(--c-brand);

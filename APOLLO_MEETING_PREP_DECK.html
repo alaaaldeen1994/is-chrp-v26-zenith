@@ -1,0 +1,1121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Call Prep — Apollo · 11:00 AM GMT</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800;900&family=JetBrains+Mono:wght@400&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg: #03060f;
+            --sur: #070e1c;
+            --blue: #3b76f6;
+            --bd: rgba(59, 118, 246, 0.12);
+            --bb: rgba(59, 118, 246, 0.22);
+            --green: #10b981;
+            --gold: #eab308;
+            --red: #ef4444;
+            --br: rgba(255, 255, 255, 0.07);
+            --mut: #475569;
+        }
+
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-print-color-adjust: exact;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: var(--bg);
+            color: #e2e8f0;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .slide {
+            width: 100vw;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 4rem 6rem;
+            position: relative;
+            border-bottom: 1px solid var(--br);
+            overflow: hidden;
+        }
+
+        .inner {
+            max-width: 1300px;
+            width: 100%;
+            z-index: 10;
+            position: relative;
+        }
+
+        /* Glows */
+        .gl {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(150px);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .gl1 {
+            top: -20%;
+            left: -10%;
+            width: 500px;
+            height: 500px;
+            background: rgba(59, 118, 246, 0.15);
+        }
+
+        .gl2 {
+            bottom: -20%;
+            right: -10%;
+            width: 450px;
+            height: 450px;
+            background: rgba(16, 185, 129, 0.08);
+        }
+
+        .gl3 {
+            top: -15%;
+            right: -10%;
+            width: 450px;
+            height: 450px;
+            background: rgba(59, 118, 246, 0.12);
+        }
+
+        .gbg {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+            opacity: 0.45;
+            background-image: linear-gradient(rgba(59, 118, 246, 0.04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(59, 118, 246, 0.04) 1px, transparent 1px);
+            background-size: 65px 65px;
+        }
+
+        /* Footer */
+        .ft {
+            position: absolute;
+            bottom: 2rem;
+            left: 6rem;
+            right: 6rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 20;
+        }
+
+        .ft span {
+            font-size: 0.6rem;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: var(--mut);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .ftd {
+            width: 5px;
+            height: 5px;
+            background: var(--blue);
+            border-radius: 50%;
+        }
+
+        /* Tags */
+        .tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--bd);
+            color: var(--blue);
+            border: 1px solid var(--bb);
+            padding: 0.4rem 1.1rem;
+            border-radius: 99px;
+            font-size: 0.68rem;
+            font-weight: 700;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            margin-bottom: 1.6rem;
+        }
+
+        .tdot {
+            width: 5px;
+            height: 5px;
+            background: var(--blue);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1
+            }
+
+            50% {
+                opacity: 0.25
+            }
+        }
+
+        /* Headings */
+        h1 {
+            font-size: 4.5rem;
+            font-weight: 900;
+            line-height: 1.0;
+            letter-spacing: -0.04em;
+            margin-bottom: 1.2rem;
+            background: linear-gradient(135deg, #fff 30%, #7ba4f8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        h1.lg {
+            font-size: 6rem;
+        }
+
+        h2 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 0.5rem;
+        }
+
+        h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 0.3rem;
+        }
+
+        p {
+            font-size: 1rem;
+            color: #94a3b8;
+            line-height: 1.6;
+        }
+
+        p.big {
+            font-size: 1.35rem;
+            color: #cbd5e1;
+            line-height: 1.5;
+        }
+
+        .b {
+            color: var(--blue);
+        }
+
+        .g {
+            color: var(--green);
+        }
+
+        .go {
+            color: var(--gold);
+        }
+
+        .r {
+            color: var(--red);
+        }
+
+        .w {
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .mn {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            color: var(--mut);
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+        }
+
+        /* Cards */
+        .c {
+            background: rgba(7, 16, 30, 0.8);
+            border: 1px solid var(--br);
+            border-radius: 18px;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(12px);
+        }
+
+        .cb {
+            background: rgba(59, 118, 246, 0.07);
+            border-color: var(--bb);
+        }
+
+        .cg {
+            background: rgba(16, 185, 129, 0.06);
+            border-color: rgba(16, 185, 129, 0.2);
+        }
+
+        .cgo {
+            background: rgba(234, 179, 8, 0.06);
+            border-color: rgba(234, 179, 8, 0.2);
+        }
+
+        .cr {
+            background: rgba(239, 68, 68, 0.06);
+            border-color: rgba(239, 68, 68, 0.2);
+        }
+
+        .cd {
+            background: rgba(3, 6, 15, 0.9);
+            border-color: rgba(255, 255, 255, 0.05);
+        }
+
+        /* Lists */
+        ul.l {
+            list-style: none;
+        }
+
+        ul.l li {
+            font-size: 1rem;
+            color: #94a3b8;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.8rem;
+            margin-bottom: 0.85rem;
+        }
+
+        ul.l li::before {
+            content: '';
+            display: block;
+            flex-shrink: 0;
+            width: 6px;
+            height: 6px;
+            background: var(--blue);
+            border-radius: 50%;
+            margin-top: 0.52rem;
+        }
+
+        ul.l.grn li::before {
+            background: var(--green);
+        }
+
+        ul.l.rd li::before {
+            background: var(--red);
+        }
+
+        ul.l.gld li::before {
+            background: var(--gold);
+        }
+
+        ul.l li strong {
+            color: #e2e8f0;
+        }
+
+        /* Grid */
+        .g2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2.5rem;
+        }
+
+        .g3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .g4 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+        }
+
+        /* Divider */
+        .dv {
+            height: 1px;
+            background: var(--br);
+            margin: 1.2rem 0;
+        }
+
+        /* Pill */
+        .p {
+            display: inline-block;
+            padding: 0.25rem 0.8rem;
+            border-radius: 99px;
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .pb {
+            background: var(--bd);
+            color: var(--blue);
+            border: 1px solid var(--bb);
+        }
+
+        .pg {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--green);
+            border: 1px solid rgba(16, 185, 129, 0.22);
+        }
+
+        .pr {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--red);
+            border: 1px solid rgba(239, 68, 68, 0.22);
+        }
+
+        /* Big number */
+        .num {
+            font-size: 3.5rem;
+            font-weight: 900;
+            line-height: 1;
+            letter-spacing: -0.03em;
+        }
+
+        /* Alert */
+        .al {
+            border-radius: 14px;
+            padding: 1.1rem 1.6rem;
+            display: flex;
+            gap: 0.9rem;
+            align-items: flex-start;
+        }
+
+        .alb {
+            background: rgba(59, 118, 246, 0.08);
+            border: 1px solid var(--bb);
+        }
+
+        .alg {
+            background: rgba(16, 185, 129, 0.08);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .alo {
+            background: rgba(234, 179, 8, 0.08);
+            border: 1px solid rgba(234, 179, 8, 0.2);
+        }
+
+        .alr {
+            background: rgba(239, 68, 68, 0.08);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+        }
+
+        .al p {
+            font-size: 0.97rem;
+            line-height: 1.55;
+        }
+
+        .ai {
+            font-size: 1.1rem;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        /* Check item */
+        .ck {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.85rem;
+            margin-bottom: 0.85rem;
+        }
+
+        .ckb {
+            flex-shrink: 0;
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(59, 118, 246, 0.35);
+            border-radius: 5px;
+            margin-top: 2px;
+        }
+
+        .ck p {
+            font-size: 0.97rem;
+            color: #94a3b8;
+        }
+
+        .ck p strong {
+            color: #e2e8f0;
+        }
+
+        /* Q card */
+        .qc {
+            border-left: 3px solid var(--blue);
+            padding-left: 1.4rem;
+            margin-bottom: 1.6rem;
+        }
+
+        .qc .q {
+            font-size: 0.9rem;
+            color: #64748b;
+            font-style: italic;
+            margin-bottom: 0.5rem;
+        }
+
+        .qc .a {
+            font-size: 0.97rem;
+            color: #cbd5e1;
+            line-height: 1.6;
+        }
+
+        .qc.gr {
+            border-color: var(--green);
+        }
+
+        .qc.rd {
+            border-color: var(--red);
+        }
+
+        /* Line accent */
+        .la {
+            height: 3px;
+            width: 40px;
+            border-radius: 2px;
+            margin-bottom: 1.1rem;
+            background: linear-gradient(90deg, var(--blue), transparent);
+        }
+
+        .lag {
+            background: linear-gradient(90deg, var(--green), transparent);
+        }
+
+        .lar {
+            background: linear-gradient(90deg, var(--red), transparent);
+        }
+
+        /* Nav */
+        .nav {
+            position: fixed;
+            right: 1.6rem;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            z-index: 100;
+        }
+
+        .nd {
+            width: 6px;
+            height: 6px;
+            border-radius: 3px;
+            background: rgba(255, 255, 255, 0.12);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .nd:hover,
+        .nd.active {
+            background: var(--blue);
+            box-shadow: 0 0 8px var(--blue);
+            height: 18px;
+        }
+
+        /* Timeline row */
+        .trow {
+            display: flex;
+            align-items: stretch;
+            gap: 0;
+        }
+
+        .tcell {
+            flex: 1;
+            padding: 1.5rem;
+            border-top: 2px solid var(--br);
+            position: relative;
+        }
+
+        .tcell::before {
+            content: '';
+            position: absolute;
+            top: -7px;
+            left: 1.5rem;
+            width: 10px;
+            height: 10px;
+            background: var(--blue);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--blue);
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="nav" id="nav"></nav>
+
+    <!-- ══ SLIDE 1 · COVER ══ -->
+    <section class="slide" id="s1"
+        style="background:radial-gradient(ellipse 80% 60% at 55% 45%,rgba(59,118,246,0.12) 0%,var(--bg) 70%);">
+        <div class="gl gl1"></div>
+        <div class="gl gl2"></div>
+        <div class="gbg"></div>
+        <div class="inner" style="display:flex; flex-direction:column; align-items:center; text-align:center;">
+
+            <!-- Apollo badge -->
+            <div style="display:flex; align-items:center; gap:0.9rem; margin-bottom:3.5rem;">
+                <div
+                    style="width:34px; height:34px; background:var(--bd); border:1px solid var(--bb); border-radius:8px; display:flex; align-items:center; justify-content:center;">
+                    <span style="font-weight:900; color:var(--blue); font-size:1rem;">A</span>
+                </div>
+                <span style="font-size:1rem; color:#64748b;">Apollo Health Ventures · Michelle Seywald</span>
+            </div>
+
+            <div class="tag"><span class="tdot"></span>Call Prep Guide</div>
+            <h1 class="lg" style="margin-bottom:1rem;">Be Ready.<br>Be Clear.</h1>
+            <p class="big" style="max-width:560px; margin-bottom:3rem;">
+                This deck gets you ready for the<br><span class="w">11:00 AM GMT call</span> — today.
+            </p>
+
+            <div class="g3" style="max-width:800px; width:100%;">
+                <div class="c cb" style="text-align:center; padding:1.5rem 2rem;">
+                    <div class="mn" style="color:var(--blue); margin-bottom:0.5rem;">Date</div>
+                    <div style="font-weight:800; color:#fff; font-size:1.1rem;">Mar 3, 2026</div>
+                </div>
+                <div class="c cg" style="text-align:center; padding:1.5rem 2rem;">
+                    <div class="mn" style="color:var(--green); margin-bottom:0.5rem;">Time</div>
+                    <div style="font-weight:800; color:#fff; font-size:1.1rem;">11:00 AM GMT</div>
+                </div>
+                <div class="c cd" style="text-align:center; padding:1.5rem 2rem;">
+                    <div class="mn" style="margin-bottom:0.5rem;">Her Email</div>
+                    <div style="font-weight:800; color:#fff; font-size:0.95rem;">seywald@apollo.vc</div>
+                </div>
+            </div>
+
+            <div class="al alo" style="margin-top:2.5rem; max-width:640px;">
+                <span class="ai">🎯</span>
+                <p style="color:#fde68a;"><strong style="color:var(--gold);">One Goal:</strong> Get a second meeting.
+                    You are NOT closing a deal today.</p>
+            </div>
+        </div>
+        <div class="ft"><span>Nilus Lab · Confidential</span><span class="ftd"></span><span>01 / 09</span></div>
+    </section>
+
+
+    <!-- ══ SLIDE 2 · CHECKLIST ══ -->
+    <section class="slide" id="s2" style="background:var(--bg);">
+        <div class="gl gl3" style="opacity:0.5;"></div>
+        <div class="inner">
+            <div class="tag"
+                style="background:rgba(16,185,129,0.1); color:var(--green); border-color:rgba(16,185,129,0.22);"><span
+                    class="tdot" style="background:var(--green);"></span>Do Before 10:45 AM</div>
+            <h1 style="font-size:4rem; margin-bottom:0.4rem;">Checklist</h1>
+            <p class="big" style="margin-bottom:2.5rem;">Quick and simple. Tick every box.</p>
+
+            <div class="g2" style="align-items:start;">
+                <div class="c cd" style="padding:2.5rem;">
+                    <div class="la lag"></div>
+                    <p class="mn" style="color:var(--green); margin-bottom:1.2rem;">Tech</p>
+                    <div class="ck">
+                        <div class="ckb"></div>
+                        <p><strong>Camera &amp; mic</strong> working</p>
+                    </div>
+                    <div class="ck">
+                        <div class="ckb"></div>
+                        <p><strong>Good internet</strong> confirmed</p>
+                    </div>
+                    <div class="ck">
+                        <div class="ckb"></div>
+                        <p><strong>Notifications off</strong> — phone &amp; laptop</p>
+                    </div>
+                    <div class="ck">
+                        <div class="ckb"></div>
+                        <p><strong>Good lighting</strong> — light facing you</p>
+                    </div>
+                    <div class="ck">
+                        <div class="ckb"></div>
+                        <p><strong>Clean background</strong></p>
+                    </div>
+                </div>
+
+                <div class="c cd" style="padding:2.5rem;">
+                    <div class="la"></div>
+                    <p class="mn" style="color:var(--blue); margin-bottom:1.2rem;">Open in Browser</p>
+                    <div class="ck">
+                        <div class="ckb"></div>
+                        <p><strong>APOLLO_INTRO_DECK.html</strong> — Tab 1</p>
+                    </div>
+                    <div class="ck">
+                        <div class="ckb"></div>
+                        <p><strong>www.niluslab.com</strong> — Tab 2</p>
+                    </div>
+                    <div class="ck">
+                        <div class="ckb"></div>
+                        <p><strong>Call link</strong> confirmed</p>
+                    </div>
+                    <div class="ck">
+                        <div class="ckb"></div>
+                        <p><strong>Water</strong> nearby</p>
+                    </div>
+                    <div class="ck">
+                        <div class="ckb"></div>
+                        <p><strong>Notepad + pen</strong> — write her questions</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="al alb" style="margin-top:2rem;">
+                <span class="ai">⏰</span>
+                <p style="color:#bfdbfe;"><strong style="color:var(--blue);">Timezone:</strong> Michelle is in GMT.
+                    11:00 AM GMT = 11:00 AM London time. Know your local time equivalent.</p>
+            </div>
+        </div>
+        <div class="ft"><span>Nilus Lab · Confidential</span><span class="ftd"></span><span>02 / 09</span></div>
+    </section>
+
+
+    <!-- ══ SLIDE 3 · AGENDA ══ -->
+    <section class="slide" id="s3" style="background:var(--sur);">
+        <div class="gl gl1" style="opacity:0.4;"></div>
+        <div class="inner">
+            <div class="tag"><span class="tdot"></span>The Call</div>
+            <h1 style="font-size:4rem; margin-bottom:0.4rem;">45-Min Plan</h1>
+            <p class="big" style="margin-bottom:3rem;">Stick to this. Move with purpose.</p>
+
+            <div class="g2" style="align-items:start;">
+                <!-- Timeline -->
+                <div style="display:flex; flex-direction:column; gap:1rem;">
+                    <div class="c cd" style="display:flex; align-items:center; gap:1.5rem; padding:1.2rem 1.8rem;">
+                        <div style="text-align:center; min-width:65px;">
+                            <div class="num b" style="font-size:2rem;">0–5</div>
+                            <div class="mn">min</div>
+                        </div>
+                        <div>
+                            <h3>Warm Hello</h3>
+                            <p style="font-size:0.9rem;">Thank her, quick intro about yourself</p>
+                        </div>
+                    </div>
+                    <div class="c cd" style="display:flex; align-items:center; gap:1.5rem; padding:1.2rem 1.8rem;">
+                        <div style="text-align:center; min-width:65px;">
+                            <div class="num b" style="font-size:2rem;">5–12</div>
+                            <div class="mn">min</div>
+                        </div>
+                        <div>
+                            <h3>The Problem</h3>
+                            <p style="font-size:0.9rem;">Why longevity science is slow &amp; expensive</p>
+                        </div>
+                    </div>
+                    <div class="c cb" style="display:flex; align-items:center; gap:1.5rem; padding:1.2rem 1.8rem;">
+                        <div style="text-align:center; min-width:65px;">
+                            <div class="num b" style="font-size:2rem;">12–22</div>
+                            <div class="mn">min</div>
+                        </div>
+                        <div>
+                            <h3>What We Built</h3>
+                            <p style="font-size:0.9rem;">Zenith v26.1 — what it does &amp; why it's different</p>
+                        </div>
+                    </div>
+                    <div class="c cd" style="display:flex; align-items:center; gap:1.5rem; padding:1.2rem 1.8rem;">
+                        <div style="text-align:center; min-width:65px;">
+                            <div class="num b" style="font-size:2rem;">22–30</div>
+                            <div class="mn">min</div>
+                        </div>
+                        <div>
+                            <h3>Proof It Works</h3>
+                            <p style="font-size:0.9rem;">DRP-Alpha-12 results, numbers, benchmarks</p>
+                        </div>
+                    </div>
+                    <div class="c cd" style="display:flex; align-items:center; gap:1.5rem; padding:1.2rem 1.8rem;">
+                        <div style="text-align:center; min-width:65px;">
+                            <div class="num b" style="font-size:2rem;">30–38</div>
+                            <div class="mn">min</div>
+                        </div>
+                        <div>
+                            <h3>Business &amp; Roadmap</h3>
+                            <p style="font-size:0.9rem;">How we make money, what $20M buys</p>
+                        </div>
+                    </div>
+                    <div class="c cg" style="display:flex; align-items:center; gap:1.5rem; padding:1.2rem 1.8rem;">
+                        <div style="text-align:center; min-width:65px;">
+                            <div class="num g" style="font-size:2rem;">38–45</div>
+                            <div class="mn">min</div>
+                        </div>
+                        <div>
+                            <h3 style="color:var(--green);">Her Questions + Next Step</h3>
+                            <p style="font-size:0.9rem;">Listen carefully — then ask for meeting #2</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="display:flex; flex-direction:column; gap:1.5rem;">
+                    <div class="c cb" style="padding:2.5rem;">
+                        <p class="mn" style="color:var(--blue); margin-bottom:1rem;">Your Opening Line</p>
+                        <p style="color:#e2e8f0; font-style:italic; font-size:1.05rem; line-height:1.7;">
+                            "Thanks so much Michelle. I'll keep this focused — I want to show you what we built and why
+                            the timing is right, then hear your thoughts. Does that work?"
+                        </p>
+                    </div>
+
+                    <div class="c cd" style="padding:2.5rem;">
+                        <p class="mn" style="margin-bottom:1rem;">Your Closing Line</p>
+                        <p style="color:#e2e8f0; font-style:italic; font-size:1.05rem; line-height:1.7;">
+                            "Would it make sense to schedule a technical session? I can walk your team through the
+                            engine live and share our full validation data."
+                        </p>
+                    </div>
+
+                    <div class="al alo">
+                        <span class="ai">💡</span>
+                        <p style="color:#fde68a; font-size:0.95rem;">Ask her a question in the first 5 minutes. Make it
+                            a conversation, not a lecture.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="ft"><span>Nilus Lab · Confidential</span><span class="ftd"></span><span>03 / 09</span></div>
+    </section>
+
+
+    <!-- ══ SLIDE 4 · 3 THINGS TO LAND ══ -->
+    <section class="slide" id="s4" style="background:var(--bg);">
+        <div class="gl"
+            style="top:50%; left:50%; transform:translate(-50%,-50%); width:600px; height:300px; background:rgba(59,118,246,0.07);">
+        </div>
+        <div class="inner">
+            <div class="tag"><span class="tdot"></span>Core Message</div>
+            <h1 style="font-size:4rem; margin-bottom:0.4rem;">3 Things to Land</h1>
+            <p class="big" style="margin-bottom:3rem;">If she understands these three things — it was a great call.</p>
+
+            <div class="g3">
+                <div class="c cb" style="padding:2.5rem;">
+                    <div class="num b" style="margin-bottom:1rem;">01</div>
+                    <div class="la"></div>
+                    <h2 style="font-size:1.3rem; margin-bottom:0.9rem;">The Problem<br>is Real</h2>
+                    <ul class="l">
+                        <li>Longevity research is <strong>slow and expensive</strong></li>
+                        <li>21 days to test one idea — most fail</li>
+                        <li>No software tool exists to map cells properly</li>
+                        <li>This is a <strong>platform gap</strong>, not a drug gap</li>
+                    </ul>
+                </div>
+
+                <div class="c"
+                    style="padding:2.5rem; background:rgba(59,118,246,0.1); border-color:rgba(59,118,246,0.3);">
+                    <div class="num b" style="margin-bottom:1rem;">02</div>
+                    <div class="la"></div>
+                    <h2 style="font-size:1.3rem; margin-bottom:0.9rem;">We Have<br>a Real Moat</h2>
+                    <ul class="l">
+                        <li><strong>150,000 real cell observations</strong> — unique dataset</li>
+                        <li>Maps <strong>5,000 genes</strong> at once — no one else does this</li>
+                        <li>Built-in safety system — stops cancer-causing mistakes</li>
+                        <li>Proven: cells reversed <strong>35 years younger</strong></li>
+                    </ul>
+                </div>
+
+                <div class="c cg" style="padding:2.5rem;">
+                    <div class="num g" style="margin-bottom:1rem;">03</div>
+                    <div class="la lag"></div>
+                    <h2 style="font-size:1.3rem; margin-bottom:0.9rem;">We're a<br>Platform, Not a Drug</h2>
+                    <ul class="l grn">
+                        <li>Think <strong>"iOS for biology"</strong> — every lab will use us</li>
+                        <li>We license the software, not sell one treatment</li>
+                        <li>Cuts discovery costs by <strong>90%</strong></li>
+                        <li>Scales to every disease area</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="al alb" style="margin-top:2.5rem;">
+                <span class="ai">🧭</span>
+                <p style="color:#bfdbfe;">If the conversation goes off track — come back to one of these three points.
+                </p>
+            </div>
+        </div>
+        <div class="ft"><span>Nilus Lab · Confidential</span><span class="ftd"></span><span>04 / 09</span></div>
+    </section>
+
+
+    <!-- ══ SLIDE 5 · Q&A PART 1 ══ -->
+    <section class="slide" id="s5" style="background:var(--sur);">
+        <div class="gl gl3" style="opacity:0.4;"></div>
+        <div class="inner">
+            <div class="tag"><span class="tdot"></span>Be Ready</div>
+            <h1 style="font-size:3.8rem; margin-bottom:0.4rem;">Questions She'll Ask<br><span class="b">— Part 1</span>
+            </h1>
+            <p class="big" style="margin-bottom:2.5rem;">Read these out loud. Know the answers.</p>
+
+            <div class="g2" style="align-items:start;">
+                <div>
+                    <div class="qc">
+                        <p class="q">❓ "What have you actually built?"</p>
+                        <p class="a">We have a live AI system — Zenith v26.1 with 285M parameters. It's fully tested. We
+                            also have an automated lab connection so the AI can drive physical experiments. We're past
+                            the prototype stage.</p>
+                    </div>
+                    <div class="qc">
+                        <p class="q">❓ "Have you tested this in real cells?"</p>
+                        <p class="a">Our current results are computer-based — all validated against 150,000 real cell
+                            samples. Physical lab validation is exactly what Series A funding unlocks. We're clear about
+                            where we are.</p>
+                    </div>
+                    <div class="qc">
+                        <p class="q">❓ "Who are your competitors?"</p>
+                        <p class="a">Altos Labs and Retro Bio are wet labs — they could actually become our customers.
+                            In the software layer, no one has our level of resolution or safety prediction. We're first.
+                        </p>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="c cr" style="padding:2rem; margin-bottom:1.5rem;">
+                        <div class="la lar"></div>
+                        <p class="mn" style="color:var(--red); margin-bottom:0.8rem;">⚠️ Important</p>
+                        <p style="color:#fca5a5; font-size:0.97rem; line-height:1.6;">
+                            On the "real cells" question — <strong style="color:#fff;">be honest.</strong>
+                            <br><br>
+                            Don't say you've done physical experiments if you haven't. VCs check everything. Say:
+                            <em>"Computer-validated, physical testing is the next funded step."</em>
+                            <br><br>
+                            This is the <strong style="color:#fff;">strong answer</strong>.
+                        </p>
+                    </div>
+
+                    <div class="c cd" style="padding:2rem;">
+                        <p class="mn" style="margin-bottom:0.8rem;">If She Pushes Back Hard</p>
+                        <p style="color:#cbd5e1; font-size:0.97rem; font-style:italic; line-height:1.6;">
+                            Say: <strong style="color:#fff;">"That's a fair point — here's how I think about
+                                it..."</strong>
+                            <br><br>
+                            Stay calm. Don't get defensive.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="ft"><span>Nilus Lab · Confidential</span><span class="ftd"></span><span>05 / 09</span></div>
+    </section>
+
+
+    <!-- ══ SLIDE 6 · Q&A PART 2 ══ -->
+    <section class="slide" id="s6" style="background:var(--bg);">
+        <div class="gl gl2" style="opacity:0.4;"></div>
+        <div class="inner">
+            <div class="tag"><span class="tdot"></span>More Questions</div>
+            <h1 style="font-size:3.8rem; margin-bottom:0.4rem;">Questions She'll Ask<br><span class="b">— Part 2</span>
+            </h1>
+            <p class="big" style="margin-bottom:2.5rem;">These will come too. Stay calm.</p>
+
+            <div class="g2" style="align-items:start;">
+                <div>
+                    <div class="qc">
+                        <p class="q">❓ "Do you have any revenue?"</p>
+                        <p class="a">Not yet — and we're honest about that. We're focused on building the technology
+                            first. Series A funding starts the commercial conversations with pharma partners.</p>
+                    </div>
+                    <div class="qc">
+                        <p class="q">❓ "Why raise money now?"</p>
+                        <p class="a">The longevity space is moving fast. The company that builds this software layer
+                            first wins. We have 12–18 months before the window gets smaller. Capital now means we stay
+                            ahead.</p>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="qc">
+                        <p class="q">❓ "Tell me about your team."</p>
+                        <p class="a">Be honest and specific. If the team is small: "We're lean by design — all money
+                            went into the model. Series A lets us hire the science team."</p>
+                    </div>
+                    <div class="qc">
+                        <p class="q">❓ "What do you want from Apollo beyond money?"</p>
+                        <p class="a">"Your connections. Apollo's portfolio can introduce us to pharma companies that
+                            would take years to reach cold. That network is worth as much as the capital."</p>
+                    </div>
+
+                    <div class="al alg" style="margin-top:0.5rem;">
+                        <span class="ai">✅</span>
+                        <p style="color:#a7f3d0; font-size:0.95rem;">If you don't know something — say so. <strong
+                                style="color:var(--green);">"I'll follow up with that."</strong> is a great answer. VCs
+                            respect honesty.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="ft"><span>Nilus Lab · Confidential</span><span class="ftd"></span><span>06 / 09</span></div>
+    </section>
+
+
+    <!-- ══ SLIDE 7 · DO & DON'T ══ -->
+    <section class="slide" id="s7" style="background:var(--sur);">
+        <div class="gl gl1" style="opacity:0.35;"></div>
+        <div class="inner">
+            <div class="tag"><span class="tdot"></span>Stay Sharp</div>
+            <h1 style="font-size:4rem; margin-bottom:0.4rem;">Do &amp; <span class="r">Don't</span></h1>
+            <p class="big" style="margin-bottom:3rem;">Simple rules for a great call.</p>
+
+            <div class="g2" style="align-items:start;">
+                <div class="c cg" style="padding:2.5rem;">
+                    <div class="la lag"></div>
+                    <p class="mn" style="color:var(--green); margin-bottom:1.2rem;">✅ DO</p>
+                    <ul class="l grn">
+                        <li><strong>Be honest</strong> — especially about what's tested and what isn't</li>
+                        <li><strong>Slow down</strong> — pause after each section, let her speak</li>
+                        <li><strong>Listen</strong> — write down what she says</li>
+                        <li><strong>Name Apollo</strong> — show you know who they are</li>
+                        <li><strong>End with a clear ask</strong> — meeting #2, specific and direct</li>
+                        <li><strong>Say "that's fair"</strong> if she challenges you</li>
+                    </ul>
+                </div>
+
+                <div class="c cr" style="padding:2.5rem;">
+                    <div class="la lar"></div>
+                    <p class="mn" style="color:var(--red); margin-bottom:1.2rem;">❌ DON'T</p>
+                    <ul class="l rd">
+                        <li><strong>Claim physical results</strong> you don't have</li>
+                        <li><strong>Use too much jargon</strong> without explaining it first</li>
+                        <li><strong>Talk about the 7B model</strong> as if it's built — it's a roadmap goal</li>
+                        <li><strong>Rush</strong> — slow is confident, fast is nervous</li>
+                        <li><strong>Get defensive</strong> when she pushes back</li>
+                        <li><strong>Leave without agreeing</strong> on a next step</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="al alo" style="margin-top:2.5rem;">
+                <span class="ai">🏆</span>
+                <p style="color:#fde68a;">She's watching <strong style="color:var(--gold);">you</strong> as much as the
+                    idea. Be honest, calm, and direct. That earns a second meeting.</p>
+            </div>
+        </div>
+        <div class="ft"><span>Nilus Lab · Confidential</span><span class="ftd"></span><span>07 / 09</span></div>
+    </section>
+
+
+    <!-- ══ SLIDE 8 · KEY NUMBERS ══ -->
+    <section class="slide" id="s8" style="background:var(--bg);">
+        <div class="gl"
+            style="top:50%; left:50%; transform:translate(-50%,-50%); width:600px; height:300px; background:rgba(59,118,246,0.07);">
+        </div>
+        <div class="inner">
+            <div class="tag"><span class="tdot"></span>Memorise These</div>
+            <h1 style="font-size:4rem; margin-bottom:0.4rem;">Key Numbers</h1>
+            <p class="big" style="margin-bottom:2.5rem;">Know them by heart. Don't hesitate when she asks.</p>
+
+            <div class="g4" style="margin-bottom:1.5rem;">
+                <div class="c cb" style="text-align:center; padding:2rem;">
+                    <div class="num b">285M</div>
+                    <div class="mn" style="margin-top:0.3rem; color:var(--blue);">Parameters</div>
+                    <p style="font-size:0.85rem; margin-top:0.4rem;">Zenith model size</p>
+                </div>
+                <div class="c cb" style="text-align:center; padding:2rem;">
+                    <div class="num b">150K</div>
+                    <div class="mn" style="margin-top:0.3rem; color:var(--blue);">Real Cells</div>
+                    <p style="font-size:0.85rem; margin-top:0.4rem;">Training dataset size</p>
+                </div>
+                <div class="c cb" style="text-align:center; padding:2rem;">
+                    <div class="num b">5,000</div>
+                    <div class="mn" style="margin-top:0.3rem; color:var(--blue);">Genes</div>
+                    <p style="font-size:0.85rem; margin-top:0.4rem;">Mapped at once</p>
+                </div>
+                <div class="c cb" style="text-align:center; padding:2rem;">
+                    <div class="num b">0.942</div>
+                    <div class="mn" style="margin-top:0.3rem; color:var(--blue);">R² Score</div>
+                    <p style="font-size:0.85rem; margin-top:0.4rem;">Benchmark accuracy</p>
+                </div>
+            </div>
+
+            <div class="g4">
+                <div class="c cg" style="text-align:center; padding:2rem;">
+                    <div class="num g">100%</div>
+                    <div class="mn" style="margin-top:0.3rem; color:var(--green);">Integrity</div>
+                    <p style="font-size:0.85rem; margin-top:0.4rem;">Genomic safety preserved</p>
+                </div>
+                <div class="c cg" style="text-align:center; padding:2rem;">
+                    <div class="num g">−35yr</div>
+                    <div class="mn" style="margin-top:0.3rem; color:var(--green);">BioAge Drop</div>
+                    <p style="font-size:0.85rem; margin-top:0.4rem;">DRP-Alpha-12 result</p>
+                </div>
+                <div class="c cgo" style="text-align:center; padding:2rem;">
+                    <div class="num go">$20M</div>
+                    <div class="mn" style="margin-top:0.3rem; color:var(--gold);">Series A</div>
+                    <p style="font-size:0.85rem; margin-top:0.4rem;">Capital we're raising</p>
+                </div>
+                <div class="c cgo" style="text-align:center; padding:2rem;">
+                    <div class="num go">$115M+</div>
+                    <div class="mn" style="margin-top:0.3rem; color:var(--gold);">Post-Money</div>
+                    <p style="font-size:0.85rem; margin-top:0.4rem;">Target valuation</p>
+                </div>
+            </div>
+        </div>
+        <div class="ft"><span>Nilus Lab · Confidential</span><span class="ftd"></span><span>08 / 09</span></div>
+    </section>
+
+
+    <!-- ══ SLIDE 9 · GAME DAY ══ -->
+    <section class="slide" id="s9"
+        style="background:radial-gradient(ellipse 70% 70% at 35% 50%,rgba(59,118,246,0.15) 0%,var(--bg) 65%);">
+        <div class="gl gl1" style="opacity:0.6;"></div>
+        <div class="gbg" style="opacity:0.35;"></div>
+
+        <div class="inner" style="display:flex; flex-direction:column; align-items:center; text-align:center;">
+            <div class="tag"
+                style="background:rgba(16,185,129,0.1); color:var(--green); border-color:rgba(16,185,129,0.22);">
+                <span class="tdot" style="background:var(--green);"></span>Today, 11:00 AM GMT
+            </div>
+
+            <h1 class="lg" style="margin-bottom:1.5rem;">You're Ready.</h1>
+            <p class="big" style="max-width:560px; margin-bottom:3.5rem;">
+                You've built something real.<br>Speak about it <span class="w">clearly and confidently.</span>
+            </p>
+
+            <div class="c cb" style="max-width:680px; width:100%; padding:2.5rem 4rem; margin-bottom:3rem;">
+                <p class="mn" style="color:var(--blue); margin-bottom:1rem; text-align:center;">End the call with this:
+                </p>
+                <p style="font-size:1.15rem; color:#fff; font-style:italic; line-height:1.7;">
+                    "Would it make sense to schedule a technical session? I can show your team the Zenith engine live
+                    and share our full validation data."
+                </p>
+            </div>
+
+            <div style="display:flex; gap:2.5rem; justify-content:center; flex-wrap:wrap; align-items:center;">
+                <div>
+                    <div class="mn" style="margin-bottom:0.4rem;">Her Email</div>
+                    <div style="font-weight:700; color:#fff; font-size:1rem;">seywald@apollo.vc</div>
+                </div>
+                <div style="width:1px; height:30px; background:var(--br);"></div>
+                <div>
+                    <div class="mn" style="margin-bottom:0.4rem;">Your Site</div>
+                    <div style="font-weight:700; color:var(--blue); font-size:1rem;">www.niluslab.com</div>
+                </div>
+                <div style="width:1px; height:30px; background:var(--br);"></div>
+                <div>
+                    <div class="mn" style="margin-bottom:0.4rem;">Engine</div>
+                    <div style="font-weight:700; color:#fff; font-size:1rem;">Zenith v26.1 · 285M</div>
+                </div>
+            </div>
+        </div>
+        <div class="ft"><span>Nilus Lab · Confidential · March 3, 2026</span><span class="ftd"></span><span>09 /
+                09</span></div>
+    </section>
+
+
+    <script>
+        const slides = document.querySelectorAll('.slide');
+        const nav = document.getElementById('nav');
+        const labels = ['Cover', 'Checklist', 'Agenda', '3 Things', 'Q&A 1', 'Q&A 2', 'Do & Don\'t', 'Numbers', 'Game Day'];
+        slides.forEach((_, i) => {
+            const d = document.createElement('div');
+            d.className = 'nd'; d.title = labels[i] || `Slide ${i + 1}`;
+            d.onclick = () => slides[i].scrollIntoView({ behavior: 'smooth' });
+            nav.appendChild(d);
+        });
+        const obs = new IntersectionObserver(entries => {
+            entries.forEach(e => {
+                if (e.isIntersecting) {
+                    const idx = [...slides].indexOf(e.target);
+                    document.querySelectorAll('.nd').forEach((d, i) => d.classList.toggle('active', i === idx));
+                }
+            });
+        }, { threshold: 0.5 });
+        slides.forEach(s => obs.observe(s));
+    </script>
+</body>
+
+</html>
