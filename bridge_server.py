@@ -764,6 +764,14 @@ async def get_whitepaper_path():
 async def get_3d_view():
     return FileResponse("3d_view.html")
 
+@app.get("/colony_microscopy_demo.html")
+async def get_microscopy():
+    return FileResponse("colony_microscopy_demo.html")
+
+@app.get("/microscopy")
+async def get_microscopy_path():
+    return FileResponse("colony_microscopy_demo.html")
+
 @app.get("/drp_validation_report.html")
 async def get_drp_report():
     return FileResponse("drp_validation_report.html")
