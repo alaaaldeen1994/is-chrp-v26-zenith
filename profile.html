@@ -844,27 +844,79 @@
 
         @media (max-width: 640px) {
             .hero-title {
-                font-size: 28px;
+                font-size: 26px;
             }
 
             .hero-label {
-                font-size: 10px;
+                font-size: 9px;
+                letter-spacing: 0.08em;
             }
 
             .hero {
                 height: auto;
-                padding: 4rem 5%;
+                padding: 3rem 5% 7rem;
+            }
+
+            .brand-headline {
+                font-size: 26px;
+            }
+
+            .brand-text {
+                font-size: 15px;
             }
 
             .btn-launch {
                 width: 100%;
                 justify-content: center;
                 padding: 1rem 1.5rem;
-                font-size: 14px;
+                font-size: 13px;
+            }
+
+            /* Hero console scrolls horizontally instead of clipping */
+            .hero-console {
+                flex-direction: row;
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                gap: 1.5rem;
+                padding: 1rem 1.25rem;
+                bottom: 1rem;
+                left: 5%;
+                right: 5%;
+                justify-content: flex-start;
+                scrollbar-width: none;
+            }
+
+            .hero-console::-webkit-scrollbar {
+                display: none;
+            }
+
+            .hud-segment {
+                flex-shrink: 0;
             }
 
             .hud-value {
-                font-size: 11px;
+                font-size: 12px;
+            }
+
+            /* Compact top status bar */
+            .pre-nav {
+                flex-direction: column;
+                gap: 4px;
+                font-size: 8px;
+                padding: 0.75rem 1rem;
+                text-align: center;
+            }
+
+            /* Nav collapses to a scrollable row on very small screens */
+            nav {
+                padding: 0.75rem 1rem;
+                gap: 0.75rem;
+            }
+
+            .nav-links {
+                gap: 0.5rem 1rem;
+                font-size: 12px;
             }
 
             .compliance-bar {
@@ -872,11 +924,20 @@
                 text-align: center;
                 gap: 0.75rem;
                 bottom: 1rem;
+                width: calc(100% - 2rem);
             }
 
             .modal-content {
-                padding: 2.5rem 1.5rem;
+                padding: 2rem 1.25rem;
                 border-radius: 16px;
+            }
+
+            .brand-section {
+                padding: 3rem 5%;
+            }
+
+            .capability-grid {
+                padding: 0 5% 4rem;
             }
         }
     </style>
