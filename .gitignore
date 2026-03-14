@@ -1,21 +1,26 @@
-__pycache__/
-*.pyc
-env/
-venv/
-.env
+# Internal drafts and decks
+APOLLO_*.html
+discovery_mockup.html
+trials.html
+*.json
+*.py
+*.ipynb
+*.txt
+*.bat
+sitemap.xml
+legal.html
+regulatory.html
+stress_*
+train_*
+validate_*
+verify_*
+audit_*
+seal_and_push.py
+
+# System items
 .DS_Store
-*.log
-
-# Prevent reassembled heavy files from bloating Git/Railway snapshots
-*.h5ad
-*.pt
-*.pth
-*.bin
-
-# Explicitly allow the required split parts for reassembly
-!*.h5ad.part*
-!*.pt.part*
-!*.pth.part*
-!*.bin.part*
-
-.gitattributes
+Thumbs.db
+node_modules/
+dist/
+build/
+.env
