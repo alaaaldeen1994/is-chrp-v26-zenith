@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Regulatory Strategy & Intended Use | Nilus Lab</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=JetBrains+Mono&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg: #050505;
+            --card-bg: rgba(20, 20, 20, 0.7);
+            --border: rgba(255, 255, 255, 0.1);
+            --accent: #3b82f6;
+            --emerald: #10b981;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: #f8fafc;
+            font-family: 'Outfit', sans-serif;
+            line-height: 1.6;
+        }
+
+        .glass {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+        }
+
+        .mono {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+        }
+
+        .roadmap-line {
+            position: relative;
+            padding-left: 2rem;
+            border-left: 2px solid var(--border);
+        }
+
+        .roadmap-dot {
+            position: absolute;
+            left: -7px;
+            top: 0;
+            width: 12px;
+            height: 12px;
+            background: var(--accent);
+            border-radius: 50%;
+            border: 2px solid var(--bg);
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #fff 0%, #94a3b8 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+</head>
+
+<body class="p-8 md:p-20 max-w-6xl mx-auto">
+
+    <!-- Header -->
+    <header class="mb-16">
+        <div class="flex items-center gap-4 mb-6">
+            <a href="index.html"
+                class="px-4 py-2 glass text-[10px] font-bold uppercase tracking-widest hover:bg-white/5 transition-all">←
+                Back to Platform</a>
+            <div
+                class="px-3 py-1 bg-blue-500/10 text-blue-400 border border-blue-500/20 text-[10px] font-bold uppercase tracking-widest rounded-full">
+                Regulatory Phase: Pre-Clinical</div>
+        </div>
+        <h1 class="text-5xl font-extrabold tracking-tight mb-4 gradient-text">Regulatory Strategy & <br>Intended Use
+            Statement</h1>
+        <p class="text-slate-400 max-w-2xl text-lg">Formalizing the boundaries between predictive manifold modeling and
+            clinical decision-making. Version 26.1 Build 0x771A.</p>
+    </header>
+
+    <div class="grid md:grid-cols-12 gap-12">
+        <!-- Main Content -->
+        <div class="md:col-span-8 space-y-12">
+
+            <!-- Section 1: Intended Use -->
+            <section class="glass p-10">
+                <h2 class="text-2xl font-bold mb-6 flex items-center gap-3">
+                    <span class="w-2 h-8 bg-blue-500 rounded-full"></span>
+                    Intended Use Statement
+                </h2>
+                <div class="space-y-6 text-slate-300">
+                    <p>
+                        The <span class="text-white font-semibold">Zenith Platform</span> is intended solely for <span
+                            class="text-blue-400">Computational Target Prioritization</span> and <span
+                            class="text-blue-400">In-Silico Protocol Optimization</span> in pre-clinical longevity
+                        research.
+                    </p>
+                    <div class="bg-white/5 p-6 rounded-xl border border-white/5">
+                        <p class="text-sm italic">
+                            "The system facilitates the identification of high-probability therapeutic targets by
+                            modeling transcriptomic trajectories using Neural Stochastic Differential Equations (Neural
+                            SDEs). It provides a decision-support framework to reduce cycle time in wet-lab validation."
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 2: Regulatory Boundary -->
+            <section class="glass p-10 border-amber-500/20">
+                <h2 class="text-2xl font-bold mb-6 flex items-center gap-3">
+                    <span class="w-2 h-8 bg-amber-500 rounded-full"></span>
+                    Regulatory Boundary (Scope)
+                </h2>
+                <div class="grid grid-cols-2 gap-8">
+                    <div>
+                        <h3 class="text-emerald-400 font-bold uppercase tracking-widest text-[10px] mb-4">In-Scope (RUO)
+                        </h3>
+                        <ul class="space-y-3 text-sm text-slate-400">
+                            <li class="flex gap-2"><span>•</span> Transcriptomic manifold mapping</li>
+                            <li class="flex gap-2"><span>•</span> Target prioritization scoring</li>
+                            <li class="flex gap-2"><span>•</span> In-silico synergy prediction</li>
+                            <li class="flex gap-2"><span>•</span> Reproducible run manifest generation</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="text-red-400 font-bold uppercase tracking-widest text-[10px] mb-4">Out-of-Scope
+                            (Non-Diagnostic)</h3>
+                        <ul class="space-y-3 text-sm text-slate-400">
+                            <li class="flex gap-2"><span>•</span> Direct patient diagnosis</li>
+                            <li class="flex gap-2"><span>•</span> Therapeutic prescription generation</li>
+                            <li class="flex gap-2"><span>•</span> SaMD Clinical Decision Support</li>
+                            <li class="flex gap-2"><span>•</span> Unvalidated clinical endpoints</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="mt-8 pt-8 border-t border-white/5">
+                    <p class="text-[10px] text-slate-500 uppercase font-mono tracking-tighter">
+                        Status: Research Use Only (RUO). Not for use in diagnostic or therapeutic procedures.
+                    </p>
+                </div>
+            </section>
+
+            <!-- Section 3: Evidence Roadmap -->
+            <section class="glass p-10">
+                <h2 class="text-2xl font-bold mb-10 flex items-center gap-3">
+                    <span class="w-2 h-8 bg-purple-500 rounded-full"></span>
+                    12-Month Evidence Roadmap
+                </h2>
+                <div class="space-y-12">
+                    <div class="roadmap-line">
+                        <div class="roadmap-dot"></div>
+                        <div class="text-xs text-blue-400 font-bold uppercase mb-1">Q1 2025: Technical Verification
+                        </div>
+                        <p class="text-white font-bold mb-1">Algorithm Stability Audit</p>
+                        <p class="text-sm text-slate-400">External audit of Neural SDE solver stability across 1,000+
+                            stochastic seeds. Alignment with HCA V3 benchmarks.</p>
+                    </div>
+                    <div class="roadmap-line">
+                        <div class="roadmap-dot" style="background: var(--border);"></div>
+                        <div class="text-xs text-slate-500 font-bold uppercase mb-1">Q2 2025: Analytical Validation
+                        </div>
+                        <p class="text-white font-bold mb-1">Retrospective Manifold Matching</p>
+                        <p class="text-sm text-slate-400">Publication of cross-dataset validation study comparing Zenith
+                            predictions to actual wet-lab outcomes from partner datasets.</p>
+                    </div>
+                    <div class="roadmap-line">
+                        <div class="roadmap-dot" style="background: var(--border);"></div>
+                        <div class="text-xs text-slate-500 font-bold uppercase mb-1">Q3-Q4 2025: Clinical Boundary
+                            Definition</div>
+                        <p class="text-white font-bold mb-1">Q-Submission Pre-consultation</p>
+                        <p class="text-sm text-slate-400">Engagement with regulatory bodies to define the Software as a
+                            Medical Device (SaMD) pathway for future diagnostic modules.</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Sidebar Details -->
+        <div class="md:col-span-4 space-y-6">
+            <div class="glass p-8">
+                <h3 class="text-xs font-black text-slate-500 uppercase tracking-[0.3em] mb-6">Institutional Compliance
+                </h3>
+                <div class="space-y-6">
+                    <div>
+                        <div class="text-[10px] font-bold text-blue-400 uppercase mb-2">Data Privacy</div>
+                        <p class="text-xs text-slate-400">GDPR/HIPAA compliant data ingestion layers. All training data
+                            is anonymized and source-verified.</p>
+                    </div>
+                    <div>
+                        <div class="text-[10px] font-bold text-blue-400 uppercase mb-2">Quality Management</div>
+                        <p class="text-xs text-slate-400">Initial ISO 13485 framework adoption for software development
+                            lifecycle (SDLC).</p>
+                    </div>
+                    <div class="pt-4 border-t border-white/5">
+                        <div class="text-[10px] font-bold text-emerald-400 uppercase mb-2">Review Status</div>
+                        <p class="text-xs text-slate-400">Internal Scientific Review Board (SRB) approved for Pilot
+                            Batch v26.1.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass p-8 bg-blue-500/5 border-blue-500/20">
+                <h3 class="text-xs font-black text-white uppercase tracking-[0.2em] mb-4">Diligence Ready</h3>
+                <p class="text-xs text-slate-400 mb-6 font-medium">Download the full regulatory package for
+                    institutional review.</p>
+                <button
+                    class="w-full py-3 bg-white text-black font-black text-[10px] uppercase tracking-widest hover:bg-slate-200 transition-all">
+                    Download Package (.PDF)
+                </button>
+            </div>
+
+            <div class="px-4">
+                <p class="text-[9px] text-slate-600 leading-relaxed italic">
+                    Note: This document reflects current internal policy and is subject to revision based on evolving
+                    regulatory frameworks for AI in biological research.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <footer class="mt-20 pt-10 border-t border-white/5 text-center">
+        <p class="text-[10px] text-slate-600 uppercase tracking-[0.4em]">Nilus Lab Regulatory & Compliance Division | ©
+            2025</p>
+    </footer>
+
+</body>
+
+</html>

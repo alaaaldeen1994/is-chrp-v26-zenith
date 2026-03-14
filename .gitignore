@@ -1,18 +1,21 @@
 # Internal drafts and decks (KEEP OFF GIT)
 APOLLO_*.html
 discovery_mockup.html
-trials.html
 AlphaFold_*.json
 *.ipynb
 *.bat
-legal.html
-regulatory.html
 stress_*
 train_*
 validate_*
 verify_*
 audit_*
 seal_and_push.py
+
+# Data files (Use part-files for Git)
+*.h5ad
+*.pt
+*.model
+*.weights
 
 # System items
 .DS_Store

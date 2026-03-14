@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- HIGH-QUALITY BRANDING FOR SEARCH ENGINES (Google/Bing) -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png">
+    <link rel="icon" type="image/png" sizes="180x180" href="/favicon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192x192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="/favicon-512x512.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <meta name="msapplication-TileImage" content="/favicon-180x180.png">
+
+    <title>Legal Center | Nilus Lab</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        body {
+            background-color: #020205;
+            color: #e2e8f0;
+            overflow-y: auto !important;
+            scroll-behavior: smooth;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 64px;
+            left: 0;
+            width: 280px;
+            height: calc(100vh - 64px);
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+            background: #050508;
+            padding: 32px;
+        }
+
+        .main-content {
+            margin-left: 280px;
+            padding: 40px 60px;
+            max-width: 1000px;
+        }
+
+        .nav-link {
+            display: block;
+            padding: 10px 16px;
+            color: #94a3b8;
+            font-size: 13px;
+            border-radius: 6px;
+            margin-bottom: 4px;
+            transition: all 0.2s;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 24px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .legal-text {
+            font-size: 13px;
+            line-height: 1.8;
+            color: #cbd5e1;
+            margin-bottom: 32px;
+        }
+
+        .legal-text h3 {
+            color: #fff;
+            font-weight: 600;
+            margin-top: 24px;
+            margin-bottom: 12px;
+            font-size: 16px;
+        }
+
+        .legal-text ul {
+            list-style-type: disc;
+            padding-left: 20px;
+            margin-bottom: 16px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- HEADER -->
+    <header
+        class="h-16 border-b border-white/10 bg-black/50 backdrop-blur-lg fixed top-0 w-full z-50 flex items-center justify-between px-6">
+        <div class="flex items-center gap-3">
+            <a href="index.html" class="flex items-center gap-3 hover:opacity-80 transition-opacity">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="text-slate-400">
+                    <path d="m15 18-6-6 6-6" />
+                </svg>
+                <div class="font-sans font-bold tracking-tight leading-none flex items-center">
+                    <span class="text-lg text-slate-100 tracking-tight mr-1.5">NILUS</span>
+                    <span
+                        class="text-lg bg-clip-text text-transparent bg-gradient-to-r from-teal-400 to-cyan-300">LAB</span>
+                </div>
+            </a>
+            <div class="h-6 w-px bg-white/20 mx-2"></div>
+            <span class="text-xs font-mono text-slate-500 uppercase tracking-widest">Legal & Privacy Center</span>
+        </div>
+    </header>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-6 px-4">Contents</div>
+        <nav>
+            <a href="#terms" class="nav-link">Terms of Service</a>
+            <a href="#privacy" class="nav-link">Privacy Policy</a>
+            <a href="#gdpr" class="nav-link">GDPR Compliance</a>
+            <a href="#data-usage" class="nav-link">Research Data Usage</a>
+        </nav>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content pt-24">
+
+        <!-- TERMS OF SERVICE -->
+        <section id="terms" class="mb-16">
+            <h1 class="section-title">Terms of Service</h1>
+            <div class="legal-text">
+                <p>Last Updated: January 15, 2026</p>
+                <h3>1. Acceptance of Terms</h3>
+                <p>By accessing and using the Zenith Ultra platform ("the Service"), you agree to be legally bound
+                    by these Terms of Service. If you do not agree to these terms, purely verify that you are not
+                    authorized to use the simulation tools provided.</p>
+
+                <h3>2. Licensing and SKU Tiers</h3>
+                <p>Nilus Lab provides tiered access to the Zenith Platform based on organization type and intended use:
+                </p>
+                <ul>
+                    <li><strong>Academic Tier</strong>: For non-commercial research by accredited institutions. Results
+                        must be published with attribution to Nilus Lab.</li>
+                    <li><strong>Biotech Pilot</strong>: Licensed for commercial target prioritization in early-stage
+                        (Pre-Series A) biotechnology firms. includes commercial use rights for identified targets.</li>
+                    <li><strong>Pharma Enterprise</strong>: Full commercial licensing for large-scale therapeutic
+                        discovery, includes dedicated compute compute nodes, technical diligence support, and custom
+                        model weights.</li>
+                </ul>
+
+                <h3>3. Limitation of Liability</h3>
+                <p>Nilus Lab provides simulations as a decision-support system. While we strive for high biological
+                    fidelity, results are computational predictions based on foundation models trained on the Human Cell
+                    Atlas. Users are responsible for independent wet-lab validation. Nilus Lab is not liable for
+                    clinical or investment decisions based on platform outputs.</p>
+            </div>
+        </section>
+
+        <!-- PRIVACY POLICY -->
+        <section id="privacy" class="mb-16">
+            <h1 class="section-title">Privacy Policy</h1>
+            <div class="legal-text">
+                <h3>1. Data Collection</h3>
+                <p>We collect minimal personal information necessary for authentication, specifically your email address
+                    and encrypted password hash via Firebase Authentication.</p>
+
+                <h3>2. Simulation Data</h3>
+                <p>Any parameters, gene sets, or protocol configurations you upload to the IS-CHRP platform remain your
+                    intellectual property. We do not use your private simulation inputs to train our global models
+                    without explicit opt-in consent.</p>
+
+                <h3>3. Telemetry</h3>
+                <p>We collect anonymous usage statistics (e.g., calculation times, error rates) to improve system
+                    stability and performance.</p>
+            </div>
+        </section>
+
+        <!-- GDPR -->
+        <section id="gdpr" class="mb-16">
+            <h1 class="section-title flex items-center gap-3">
+                GDPR Compliance
+                <span
+                    class="bg-emerald-500/10 text-emerald-400 text-[10px] px-2 py-1 rounded border border-emerald-500/20">EU
+                    CERTIFIED</span>
+            </h1>
+            <div class="legal-text">
+                <p>Nilus Lab is committed to compliance with the General Data Protection Regulation (GDPR). As a user,
+                    you have specific rights regarding your data.</p>
+
+                <h3>Your Right to be Forgotten</h3>
+                <p>You may request the complete deletion of your account and all associated simulation history at any
+                    time. To exercise this right, please contact our Data Protection Officer.</p>
+
+                <h3>Data Portability</h3>
+                <p>You have the right to request a full export of your personal data and simulation logs in a
+                    machine-readable format (JSON/CSV).</p>
+
+                <h3>Data Residency</h3>
+                <p>For EU citizens, all personal data is stored on servers located within the European Economic Area
+                    (EEA) or in jurisdictions deemed to have adequate data protection laws.</p>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        // Simple scroll spy for active link highlighting
+        const sections = document.querySelectorAll('section');
+        const navLinks = document.querySelectorAll('.nav-link');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (pageYOffset >= sectionTop - 150) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href').includes(current)) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
