@@ -785,19 +785,28 @@
         @media (max-width: 1024px) {
             nav {
                 padding: 1rem;
-                flex-wrap: wrap;
-                justify-content: center;
+                flex-direction: column;
+                gap: 1.5rem;
                 height: auto;
+                align-items: center;
+                text-align: center;
             }
 
             .nav-links {
                 gap: 1rem;
                 width: 100%;
                 justify-content: center;
+                flex-wrap: wrap;
+            }
+
+            .nav-item {
+                font-size: 12px;
+                padding: 0.5rem;
             }
 
             .hero-title {
-                font-size: 42px;
+                font-size: 36px;
+                padding: 0 1rem;
             }
 
             .hero-console {
