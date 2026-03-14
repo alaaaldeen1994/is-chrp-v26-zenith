@@ -308,10 +308,6 @@
                         class="h-7 px-3 bg-blue-600/20 border border-blue-500/50 text-[8px] text-blue-400 rounded flex items-center gap-1.5 hover:bg-blue-600/30 font-bold transition-all">
                         <i data-lucide="user" class="w-3 h-3"></i> PROFILE
                     </a>
-                    <button onclick="performLogout()"
-                        class="h-7 px-3 bg-red-900/30 border border-red-500/40 text-[8px] text-red-500 rounded flex items-center gap-1.5 hover:bg-red-600/40 transition-all font-black">
-                        <i data-lucide="log-out" class="w-3 h-3"></i> EXIT
-                    </button>
                 </div>
 
                 <div class="h-6 w-px bg-white/10 mx-2"></div>
@@ -333,6 +329,15 @@
                     onclick="BiosimUI.toggleDashboard()">
                     <i data-lucide="bar-chart-2" class="w-4 h-4"></i>
                 </button>
+
+                <div class="h-6 w-px bg-white/10 mx-2"></div>
+
+                <!-- EXIT AT THE END -->
+                <button onclick="performLogout()"
+                    class="h-7 px-3 bg-red-900/30 border border-red-500/40 text-[8px] text-red-500 rounded flex items-center gap-1.5 hover:bg-red-600/40 transition-all font-black">
+                    <i data-lucide="log-out" class="w-3 h-3"></i> EXIT
+                </button>
+            </div>
             </div>
         </div>
 
