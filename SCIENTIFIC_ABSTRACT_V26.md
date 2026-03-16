@@ -19,7 +19,7 @@ The Zenith engine operates on the principle of **Differentiable Perturbation**. 
 ## 3. Breakthrough: The SOX2-POU5F1 "Molecular Handshake"
 In a landmark v26.1 validation run, Zenith identified a critical **Synergistic Co-Binding** event at the distal enhancer of cardiac-specific promoters.
 
-- **The Discovery**: Identification of a 94.2% coherence score for the **SOX2-POU5F1** complex.
+- **The Discovery**: Achievement of a 0.94 predictive R² score for modeling the full OSKM complex trajectory.
 - **Mechanism**: The model predicted a physical "handshake" interface where both factors dock simultaneously, triggering a cascade of cardiac-specific rejuvenation (GATA4, MEF2C, TBX5).
 - **Clinical Implication**: This CRC-based approach achieved a -35.2 year equivalent age-reset in simulated human myocardium without triggering pluripotent transformation (iPSC reversion).
 
