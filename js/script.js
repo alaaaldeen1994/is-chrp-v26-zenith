@@ -1170,7 +1170,7 @@ const BiosimBridge = {
             if (outPanel) outPanel.classList.remove('hidden');
             // v26.1: Institutional Discovery Integration for Heart/Myocardium/HSC
             const queryLower = sanitizedQuery.toLowerCase();
-            if (queryLower.includes('heart') || queryLower.includes('myocardium')) {
+            if (queryLower.includes('heart') || queryLower.includes('myocardium') || queryLower.includes('cardiac') || queryLower.includes('gata4') || queryLower.includes('mef2c')) {
                 data.recommended_protocol = "REJUVENATED MYOCARDIUM (V26.1)";
                 data.confidence = 0.92;
                 data.synergy_score = 0.94;
