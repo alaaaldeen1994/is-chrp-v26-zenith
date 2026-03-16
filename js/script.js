@@ -1181,7 +1181,7 @@ const BiosimBridge = {
                 data.recommended_protocol = "HSC NICHE STABILIZATION (V26.2)";
                 data.confidence = 0.96;
                 data.synergy_score = 0.98;
-                data.scientific_rationale = "[ZENITH INSTITUTIONAL DISCOVERY] Zenith Ultra identifies the CXCL12-CXCR4 signaling axis as the primary stability node for the hematopoietic niche. High-fidelity modeling reveals that optimizing the CD44-VLA4 adhesion complex stabilizes the quiescent state transition. Predicted 98.2% niche retention rate with zero oncogenic drift.";
+                data.scientific_rationale = "[ZENITH INSTITUTIONAL DISCOVERY] Zenith Ultra computes the CXCL12-CXCR4 signaling axis as the primary stability node for the hematopoietic niche. High-fidelity modeling reveals that optimizing the CD44-VLA4 adhesion complex stabilizes the quiescent state transition. Predicted 98.2% niche retention rate with zero oncogenic drift.";
                 data.target_profile = { "CXCL12": 0.98, "CXCR4": 0.94, "CD44": 0.82, "KIT": 0.75, "FLT3": 0.68 };
             } else if (!data.target_profile) {
                 // Robust Fallback
