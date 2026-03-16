@@ -124,7 +124,7 @@ limiter = Limiter(key_func=get_remote_address)
 # Rate limit configurations
 RATE_LIMITS = {
     "auth": "5/minute",          # Login/signup attempts
-    "discovery": "20/minute",    # AI discovery requests  
+    "discovery": "20/minute",    # AI analysis requests  
     "simulation": "100/minute",  # Simulation steps
     "general": "60/minute"       # General API calls
 }

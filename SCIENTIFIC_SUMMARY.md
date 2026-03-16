@@ -31,7 +31,7 @@
 
 ## Slide 6: The "Operating System" Play
 *   **Platform as a Service:** Nilus Lab isn't just a drug company; it's the **Bio-iOS**.
-*   **Integration:** Designed to interface with lab automation (Opentrons) to close the loop between AI discovery and physical validation.
+*   **Integration:** Designed to interface with lab automation (Opentrons) to close the loop between AI analysis and physical validation.
 *   **Value:** Owning the "Governing Law" of cellular state-transitions.
 
 ## Slide 7: Roadmap – The Path to the 7 Billion Parameter (7B) Model

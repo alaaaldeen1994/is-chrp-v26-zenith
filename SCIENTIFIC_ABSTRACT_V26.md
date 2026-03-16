@@ -17,7 +17,7 @@ The Zenith engine operates on the principle of **Differentiable Perturbation**. 
 - **Manifold Divergence Audit**: A real-time auditing system that measures the entropic delta during intervention, ensuring the cell remains within safe "Partial Reprogramming" boundaries.
 
 ## 3. Execution: Modeling the OSKM Complex
-In a landmark v26.1 validation run, Zenith identified a critical **Synergistic Co-Binding** event at the distal enhancer of cardiac-specific promoters.
+In a landmark v26.1 validation run, Zenith computed a critical **Synergistic Co-Binding** event at the distal enhancer of cardiac-specific promoters.
 
 - **The Discovery**: Achievement of a 0.94 predictive R² score for modeling the full OSKM complex trajectory.
 - **Mechanism**: The model predicted a physical "handshake" interface where both factors dock simultaneously, triggering a cascade of cardiac-specific rejuvenation (GATA4, MEF2C, TBX5).
@@ -28,7 +28,7 @@ Nilus Lab has neutralized the "Discovery-to-Validation" latency by integrating:
 
 1. **Zenith Ultra-HD (5K) Model**: A unified inference engine optimized for 32 vCPU HPC environments.
 2. **Vision Bridge Overlay**: Multi-modal integration allowing the model to "see" and analyze live microscopic morphology via GPT-4o vision.
-3. **Opentrons Robotic Bridge (v2.27)**: Direct export of Python-based protocols for **Opentrons Flex** robots, automating the delivery of identified factor cocktails with sub-microliter precision.
+3. **Opentrons Robotic Bridge (v2.27)**: Direct export of Python-based protocols for **Opentrons Flex** robots, automating the delivery of computed factor cocktails with sub-microliter precision.
 
 ## 5. Institutional Outlook
 Zenith v26.1 is currently positioned as the primary "Operating System" for the next generation of longevity science. We are seeking institutions and laboratories (e.g., Altos Labs, Retro Bio) to collaborate on the large-scale physical validation of Zenith-predicted complexes.

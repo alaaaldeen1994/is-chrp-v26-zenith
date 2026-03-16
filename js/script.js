@@ -1533,7 +1533,7 @@ def run(protocol: protocol_api.ProtocolContext):
                 }
             }
 
-            BiosimUI.notify('Discovery', 'Optimal Protocol Identified', 'suc');
+            BiosimUI.notify('Discovery', 'Optimal Protocol Computed', 'suc');
 
         } catch (e) {
             console.error(e);
