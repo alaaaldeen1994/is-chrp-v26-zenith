@@ -1223,7 +1223,7 @@ const BiosimBridge = {
                     <div class="w-full bg-slate-800 h-1 rounded-full overflow-hidden">
                         <div class="bg-purple-500 h-full shadow-[0_0_8px_rgba(139,92,246,0.6)]" style="width: ${width}%"></div>
                     </div>
-                    <div class="mt-1 text-[6px] text-slate-500 uppercase tracking-tighter">Verified Cooperative Complex: SOX2+OCT4</div>
+                    <div class="mt-1 text-[6px] text-slate-500 uppercase tracking-tighter">Verified Complex: OSKM (OCT4, SOX2, KLF4, MYC)</div>
                 `;
             }
 

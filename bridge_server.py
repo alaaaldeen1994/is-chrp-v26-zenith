@@ -1611,7 +1611,7 @@ async def discover_hybrid(req: HybridDiscoveryRequest, request: Request):
         if max_sim > 0.85:
             rationale += f"Optimization converged on a state resembling {best_protocol} signaling."
         else:
-            rationale += "The Zenith Ultra-HD (5K) model has identified a novel trajectory unique to this semantic target."
+            rationale += "The Zenith Ultra-HD (5K) model has computed an optimized trajectory for this semantic target."
 
         return DiscoveryResult(
             recommended_protocol=best_protocol,
