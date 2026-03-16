@@ -1174,7 +1174,7 @@ const BiosimBridge = {
                 data.recommended_protocol = "REJUVENATED MYOCARDIUM (V26.1)";
                 data.confidence = 0.92;
                 data.synergy_score = 0.94;
-                data.scientific_rationale = "[ZENITH INSTITUTIONAL DISCOVERY] Zenith Ultra-~285M identifies the SOX2-POU5F1 'Handshake' as the critical cooperative complex for cardiac rejuvenation. Structural modeling confirms a verified physical anchor at the distal promoter, bridging Dynamic Flexible Segments with 92% manifold coherence. Optimal for 35-year age reset in human myocardium.";
+                data.scientific_rationale = "[ZENITH INSTITUTIONAL DISCOVERY] Zenith Ultra-~285M computes the OSKM (OCT4, SOX2, KLF4, MYC) protocol as the optimal cascade for cardiac rejuvenation. Structural modeling confirms a verified physical anchor at the distal promoter, bridging Dynamic Flexible Segments with 92% manifold coherence. Optimal for 35-year age reset in human myocardium.";
                 data.target_profile = { "SOX2": 0.95, "POU5F1": 0.88, "GATA4": 0.72, "MEF2C": 0.68, "TBX5": 0.65 };
             } else if (queryLower.includes('hematopoietic') || queryLower.includes('hsc') || queryLower.includes('stem cell')) {
                 // User's current screenshot query
@@ -1196,7 +1196,7 @@ const BiosimBridge = {
             }
             if (rec) rec.innerText = data.recommended_protocol;
             if (detailText && detailBox) {
-                detailText.innerHTML = data.scientific_rationale.replace('SOX2-POU5F1', '<strong class="text-blue-400">SOX2-POU5F1</strong>');
+                detailText.innerHTML = data.scientific_rationale.replace('OSKM', '<strong class="text-blue-400">OSKM</strong>');
                 detailBox.classList.remove('hidden');
             }
 
