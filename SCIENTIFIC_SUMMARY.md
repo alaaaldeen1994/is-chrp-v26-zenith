@@ -1,5 +1,5 @@
 # 🧪 Nilus Lab | Zenith v26.1: The Operating System for Human Rejuvenation
-**Target Recipients:** ARCH Venture Partners, Starbloom Capital, Age1
+**Target Recipients:** Longevity Research Partners, Strategic Investors
 **Classification:** Confidential Institutional Strategy
 
 ---
