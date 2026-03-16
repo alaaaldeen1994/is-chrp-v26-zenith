@@ -11,7 +11,7 @@ async def run_comparison():
     tests = [
         {"query": "Induce pluripotency using Yamanaka factors", "expected": "OSKM"},
         {"query": "Differentiate into functional cardiomyocytes", "expected": "DIRECT_CARDIO"},
-        {"query": "Create a cell that is both a neuron and a muscle cell", "expected": "UNCATEGORIZED PROTOCOL"}
+        {"query": "Create a cell that is both a neuron and a muscle cell", "expected": "NOVEL BIO-DESIGN"}
     ]
     
     results = []
@@ -52,8 +52,8 @@ async def run_comparison():
             score = np.dot(pos_ideal, proto_vec) / (np.linalg.norm(pos_ideal) * np.linalg.norm(proto_vec) + 1e-9)
             match_scores[name] = score
 
-        best = max(match_scores, key=match_scores.get) if any(match_scores.values()) else "UNCATEGORIZED PROTOCOL"
-        if match_scores.get(best, 0) < 0.05: best = "UNCATEGORIZED PROTOCOL"
+        best = max(match_scores, key=match_scores.get) if any(match_scores.values()) else "NOVEL BIO-DESIGN"
+        if match_scores.get(best, 0) < 0.05: best = "NOVEL BIO-DESIGN"
         
         print(f"  |-> Identified Protocol: {best} (Confidence: {match_scores.get(best, 0):.2f})")
         

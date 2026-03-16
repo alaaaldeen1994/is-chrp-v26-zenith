@@ -1603,7 +1603,7 @@ async def discover_hybrid(req: HybridDiscoveryRequest, request: Request):
         # v28: Novelty Enforcement (Section 19: Semantic Divergence)
         # If the match isn't overwhelmingly strong (>85%), treat it as a Novel Discovery
         if max_sim < 0.85:
-            best_protocol = "UNCATEGORIZED PROTOCOL"
+            best_protocol = "NOVEL BIO-DESIGN"
 
         confidence = max_sim if max_sim > 0.85 else (0.5 + np.max(ideal_vector)*0.4)
         
