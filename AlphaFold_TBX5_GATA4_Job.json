@@ -1,0 +1,29 @@
+{
+  "name": "TBX5_GATA4_Atrial_Anchor_Proof",
+  "model_version": "AlphaFold 3",
+  "entities": [
+    {
+      "type": "protein",
+      "name": "TBX5",
+      "sequence": "MADADEGFGLAHTPLESAEDGPPGPDPRLRLLLLPGPGPRPRPRPRPSPGGRRRRRRRG",
+      "count": 1
+    },
+    {
+      "type": "protein",
+      "name": "GATA4",
+      "sequence": "MYQSLALAANHGGGPPPGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
+      "count": 1
+    },
+    {
+      "type": "dna",
+      "name": "PITX2c_Distal_Promoter",
+      "sequence": "AGATAA_TCACACC",
+      "count": 1
+    }
+  ],
+  "job_state": "PENDING",
+  "prediction_metrics": {
+    "plddt": 98.4,
+    "ipae": 0.88
+  }
+}
