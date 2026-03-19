@@ -365,7 +365,9 @@ _base_symbols = [
     # 80-89: SIGNALING MODULE 1
     "EGFR", "FGFR1", "TGFBR1", "BMPR2", "NOTCH1", "WNT1", "SHH", "LIFR", "IFNGR1", "IL6R",
     # 90-99: HOUSEKEEPING V1
-    "ACTB", "TUBB", "LMNA", "LMNB1", "HSP90AA1", "CANX", "PDIK1L", "B2M", "PPIA", "RPL13A"
+    "ACTB", "TUBB", "LMNA", "LMNB1", "HSP90AA1", "CANX", "PDIK1L", "B2M", "PPIA", "RPL13A",
+    # 100-109: MATURATION / METABOLIC (V26.1 Expansion)
+    "PPARGC1A", "PPARA", "RXRA", "CPT1B", "ACADM", "OXCT1", "HADHB", "UCP3", "KCNJ2", "FABP3"
 ]
 
 # Systematically expand to 5,000 genes using real nomenclature patterns for Reprogramming & Aging
@@ -1583,7 +1585,8 @@ async def discover_hybrid(req: HybridDiscoveryRequest, request: Request):
             'DIRECT_NEURO':  [20, 21, 22, 23],
             'DIRECT_CARDIO': [13, 14, 15, 16],
             'DIRECT_ENDO':   [30, 31, 32, 33],
-            'MPTR':          [74, 75, 0, 1]
+            'MPTR':          [74, 75, 0, 1],
+            'VENTRICULAR_MATURATION': [100, 101, 103, 108, 15, 16] 
         }
         
         best_protocol = "NOVEL_DESIGN"
@@ -1909,6 +1912,7 @@ async def discover_protocol(req: DiscoveryRequest):
         "MPTR_PARTIAL": [0, 1, 4],                     # Altos Vision: Osk (No c-Myc high dose) - Rejuvenation
         "DIRECT_NEURO": list(range(20, 30)),           
         "DIRECT_CARDIO": list(range(10, 20)),
+        "MATURATION": [100, 101, 103, 108, 15, 16]
     }
 
     # 1.5 SEMANTIC PARSING LAYER (GPT-4o)
@@ -1922,7 +1926,7 @@ async def discover_protocol(req: DiscoveryRequest):
             completion = client.chat.completions.create(
                 model="gpt-4o",
                 messages=[
-                    {"role": "system", "content": "You are a Biological Vector Parser. Extract the target genes or cell type from the user's request. Return a JSON with 'target_genes': [list of gene symbols] and 'protocol_name': 'short_name'. Supported genes: OCT4, SOX2, KLF4, MYC, LIN28, NANOG, GATA4, TBX5, MEF2C, NEUROD2, PAX6, TH, MAP2, SYP, TNNT2, MYH7, VIM, SIRT1, FOXO3, TP53. If a gene is not in this list, map it to the closest supported one or ignore."},
+                    {"role": "system", "content": "You are a Biological Vector Parser. Extract the target genes or cell type from the user's request. Return a JSON with 'target_genes': [list of gene symbols] and 'protocol_name': 'short_name'. Supported genes: OCT4, SOX2, KLF4, MYC, LIN28, NANOG, GATA4, TBX5, NKX2-5, MEF2C, NEUROD2, PAX6, TH, MAP2, SYP, TNNT2, MYH7, MYH6, VIM, SIRT1, FOXO3, TP53, PPARGC1A, CPT1B, KCNJ2, FABP3. If a gene is not in this list, map it to the closest supported one or ignore."},
                     {"role": "user", "content": req.target_type}
                 ],
                 response_format={"type": "json_object"}
@@ -1936,8 +1940,9 @@ async def discover_protocol(req: DiscoveryRequest):
             # In a real app, this would use the full GENE_MAP
             gene_map = {
                 "OCT4": 0, "SOX2": 1, "NANOG": 2, "LIN28": 3, "KLF4": 4, "MYC": 5,
-                "GATA4": 10, "TBX5": 11, "MEF2C": 12, "TNNT2": 13, "MYH7": 14,
+                "GATA4": 10, "TBX5": 11, "MEF2C": 12, "TNNT2": 13, "MYH7": 14, "MYH6": 16,
                 "NEUROD2": 20, "PAX6": 21, "TH": 22, "MAP2": 23, "SYP": 24,
+                "PPARGC1A": 100, "CPT1B": 103, "KCNJ2": 108, "FABP3": 109,
                 "SIRT1": 70, "FOXO3": 71, "TP53": 99
             }
             
