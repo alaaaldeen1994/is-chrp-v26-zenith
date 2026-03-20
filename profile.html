@@ -50,9 +50,11 @@
     }
     </script>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.160.0/three.min.js"></script>
     <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@400;500;600;700;800&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap"
         rel="stylesheet">
+    <link rel="stylesheet" href="css/profile_minimal.css">
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         :root {
@@ -943,7 +945,7 @@
     </style>
 </head>
 
-<body>
+<body class="light-mode-profile">
 
     <!-- LOGIN MODAL -->
     <div class="modal-overlay" id="login-modal">
@@ -1106,37 +1108,47 @@
         </div>
     </nav>
 
-    <header class="hero">
-        <div class="hero-bg">
-            <video autoplay muted loop playsinline class="hero-video">
-                <source src="https://ik.imagekit.io/mgjimrrit/istockphoto-2189882078-640_adpp_is.mp4" type="video/mp4">
-            </video>
-            <div class="hero-overlay"></div>
-        </div>
+    <div id="dna-animation-container"></div>
 
-        <div class="hero-content relative">
+    <header class="agency-hero">
+        <div class="agency-hero-content">
+            <!-- Institutional Badge -->
+            <div class="agency-label">ZENITH FOUNDATION • v26.1</div>
 
             <!-- Main Title Section -->
             <div class="mb-12">
-                <h1 class="text-7xl font-black text-slate-900 tracking-tighter mb-4"
-                    style="font-family: 'Outfit', sans-serif;">
-                    Zenith <span
-                        class="text-transparent bg-clip-text bg-gradient-to-br from-blue-700 via-blue-600 to-teal-400">Ultra-~285M</span>
+                <h1 class="agency-title">
+                    Zenith <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-teal-400">Ultra-~285M</span>
                 </h1>
-                <p class="text-xl font-bold text-slate-400 uppercase tracking-[0.5em] mb-4">Neural Parameter Mainframe
-                </p>
+                <p class="text-xl font-bold text-slate-400 uppercase tracking-[0.5em] mb-4">Neural Parameter Mainframe</p>
             </div>
 
-            <!-- Narrative Hook -->
-            <p class="text-xl text-slate-600 max-w-2xl mx-auto leading-relaxed font-semibold mb-12">
-                The world’s first generative engine for <span class="text-teal-400">Cellular Reprogramming</span>.
-                Simulating high-fidelity <span class="text-teal-400 italic tracking-wide">Yamanaka Factor</span>
+            <!-- Narrative Hook (Zero-Loss) -->
+            <p class="agency-subtitle">
+                The world’s first generative engine for <span class="serif-accent">Cellular Reprogramming</span>.
+                Simulating high-fidelity <span class="serif-accent">Yamanaka Factor</span>
                 trajectories to reverse biological aging at the cellular level.
             </p>
 
+            <!-- Floating Stats (Mapping HUD to Glass Cards) -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto mb-12">
+                <div class="glass-stat-card">
+                    <div class="stat-label">Mapped Cells (HCA)</div>
+                    <div class="stat-value">150,000+</div>
+                </div>
+                <div class="glass-stat-card">
+                    <div class="stat-label">Model Fidelity</div>
+                    <div class="stat-value">99.8%</div>
+                </div>
+                <div class="glass-stat-card">
+                    <div class="stat-label">System State</div>
+                    <div class="stat-value text-emerald-500">OPTIMAL</div>
+                </div>
+            </div>
+
+            <!-- Action Area -->
             <div class="flex justify-center">
-                <button onclick="checkAuthAndRedirect('index.html')"
-                    class="btn-launch shadow-2xl shadow-blue-500/10 scale-105 hover:shadow-blue-500/30 transition-all duration-500 px-10 py-5">
+                <button onclick="checkAuthAndRedirect('index.html')" class="btn-agency-primary">
                     Open Simulation Lab
                     <i data-lucide="terminal" class="w-5 h-5 ml-2"></i>
                 </button>
@@ -1598,6 +1610,12 @@
 
     <!-- SCRIPTS -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
+    <!-- Project Scripts -->
+    <script src="js/firebase_config.js"></script>
+    <script src="js/profile_dna.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <script src="js/firebase_config.js"></script>
     <!-- GLOBAL STATUS FOOTER -->
