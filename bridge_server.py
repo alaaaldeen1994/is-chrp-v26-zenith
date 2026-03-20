@@ -367,7 +367,9 @@ _base_symbols = [
     # 90-99: HOUSEKEEPING V1
     "ACTB", "TUBB", "LMNA", "LMNB1", "HSP90AA1", "CANX", "PDIK1L", "B2M", "PPIA", "RPL13A",
     # 100-109: MATURATION / METABOLIC (V26.1 Expansion)
-    "PPARGC1A", "PPARA", "RXRA", "CPT1B", "ACADM", "OXCT1", "HADHB", "UCP3", "KCNJ2", "FABP3"
+    "PPARGC1A", "PPARA", "RXRA", "CPT1B", "ACADM", "OXCT1", "HADHB", "UCP3", "KCNJ2", "FABP3",
+    # 110-119: EPIGENETIC CLOCK (HORVATH/ALTOS LABS PRECISION)
+    "ELOVL2", "FHL2", "ASPA", "EDARADD", "C1orf132", "KLF14", "TRIM59", "CDH23", "NHLRC1", "SCGN"
 ]
 
 # Systematically expand to 5,000 genes using real nomenclature patterns for Reprogramming & Aging
@@ -1491,8 +1493,9 @@ async def get_target_vector_from_query(query: str, api_key: Optional[str] = None
             f"3. Provide a brief 1-sentence scientific rationale for these choices.\n"
             f"4. For each of the top 5 genes, identify the exact amino acid residue range (e.g. 1-200) representing the primary functional domain (from UniProt) for this specific task.\n"
             f"5. Identify the primary 12-20 bp DNA binding motif (e.g. GGGGTCACGGTC) that anchors this specific transcription factor complex to its promoter.\n"
-            f"6. Estimate the predicted reduction in biological DNA methylation age (in years) if this protocol is perfectly implemented.\n"
-            f"7. Return ONLY a JSON object like: {{\"genes\": {{\"GENENAME\": weight, ...}}, \"rationale\": \"...\", \"audit\": {{\"GENENAME\": \"1-200\", ...}}, \"dna_motif\": \"...\", \"age_reduction\": 15.0}}"
+            f"6. Cross-reference your results with established epigenetic aging clocks (Horvath/GrimAge). If this is a rejuvenation task, you MUST include at least one primary marker (e.g. ELOVL2, FHL2, or ASPA) in your top findings to represent the epigenetic audit.\n"
+            f"7. Estimate the predicted reduction in biological DNA methylation age (in years) if this protocol is perfectly implemented.\n"
+            f"8. Return ONLY a JSON object like: {{\"genes\": {{\"GENENAME\": weight, ...}}, \"rationale\": \"...\", \"audit\": {{\"GENENAME\": \"1-200\", ...}}, \"dna_motif\": \"...\", \"age_reduction\": 15.0}}"
         )
         
         response = await client.chat.completions.create(
