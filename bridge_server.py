@@ -958,6 +958,7 @@ class DiscoveryResult(BaseModel):
     custom_vector: Optional[List[float]] = None
     target_profile: Optional[Dict[str, float]] = None # NEW: Scientific Verification Profile
     structural_audit: Optional[Dict[str, str]] = None # NEW: AA residue coordinates (no-mistake audit)
+    dna_motif_target: Optional[str] = "GGGGTCACGGTC" # NEW: The 12-20bp DNA binder (Master Hook)
 
 class ReportRequest(BaseModel):
     session_id: str
@@ -1488,7 +1489,8 @@ async def get_target_vector_from_query(query: str, api_key: Optional[str] = None
             f"2. Assign each gene an intensity weight from 0.0 to 1.0.\n"
             f"3. Provide a brief 1-sentence scientific rationale for these choices.\n"
             f"4. For each of the top 5 genes, identify the exact amino acid residue range (e.g. 1-200) representing the primary functional domain (from UniProt) for this specific task.\n"
-            f"5. Return ONLY a JSON object like: {{\"genes\": {{\"GENENAME\": weight, ...}}, \"rationale\": \"...\", \"audit\": {{\"GENENAME\": \"1-200\", ...}}}}"
+            f"5. Identify the primary 12-20 bp DNA binding motif (e.g. GGGGTCACGGTC) that anchors this specific transcription factor complex to its promoter.\n"
+            f"6. Return ONLY a JSON object like: {{\"genes\": {{\"GENENAME\": weight, ...}}, \"rationale\": \"...\", \"audit\": {{\"GENENAME\": \"1-200\", ...}}, \"dna_motif\": \"...\"}}"
         )
         
         response = await client.chat.completions.create(
@@ -1505,6 +1507,7 @@ async def get_target_vector_from_query(query: str, api_key: Optional[str] = None
         gene_data = data.get("genes", {})
         explanation = data.get("rationale", "Semantic mapping successful.")
         audit_data = data.get("audit", {}) # The "No-Mistake" Structural Audit
+        dna_motif = data.get("dna_motif", "GGGGTCACGGTC") # The "No-Mistake" DNA Hook
         
         target_vec = torch.zeros(len(GENE_SYMBOLS))
         filtered_gene_data = {}
@@ -1515,7 +1518,7 @@ async def get_target_vector_from_query(query: str, api_key: Optional[str] = None
                 target_vec[idx] = float(weight)
                 filtered_gene_data[g_upper] = float(weight)
         
-        return target_vec, explanation, filtered_gene_data, audit_data
+        return target_vec, explanation, filtered_gene_data, audit_data, dna_motif
     except Exception as e:
         import traceback
         error_type = type(e).__name__
@@ -1536,7 +1539,7 @@ async def discover_hybrid(req: HybridDiscoveryRequest, request: Request):
     """
     try:
         # 1. Translate Natural Language to Biological Coordinates
-        target_vec, gpt_rationale, gpt_gene_data, audit_data = await get_target_vector_from_query(req.target_query, req.api_key)
+        target_vec, gpt_rationale, gpt_gene_data, audit_data, dna_motif = await get_target_vector_from_query(req.target_query, req.api_key)
         target_vec = target_vec.to(dtype=torch.float32)
         
         current_vec = torch.tensor(req.current_genes, dtype=torch.float32) # Full 5000-dim from v26.4
@@ -1620,7 +1623,8 @@ async def discover_hybrid(req: HybridDiscoveryRequest, request: Request):
             synergy_score=0.92,
             custom_vector=ideal_vector.tolist(),
             target_profile=gpt_gene_data,
-            structural_audit=audit_data
+            structural_audit=audit_data,
+            dna_motif_target=dna_motif
         )
     except Exception as e:
         import traceback

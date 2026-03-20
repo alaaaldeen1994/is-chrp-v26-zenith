@@ -1178,7 +1178,10 @@ const BiosimBridge = {
                 conf.innerText = `${percentage.toFixed(1)}% QUALITY`;
                 conf.className = 'text-[8px] bg-purple-600 text-white px-1.5 py-0.5 rounded';
             }
-            if (rec) rec.innerText = data.recommended_protocol;
+            if (rec) {
+                const dnaLine = data.dna_motif_target ? `<span class="ml-2 px-1 text-[7px] bg-slate-800 text-purple-400 border border-purple-500/30 rounded font-mono select-all">DNA: ${data.dna_motif_target}</span>` : "";
+                rec.innerHTML = `${data.recommended_protocol}${dnaLine}`;
+            }
             if (detailText && detailBox) {
                 detailText.innerHTML = data.scientific_rationale.replace('OSKM', '<strong class="text-blue-400">OSKM</strong>');
                 detailBox.classList.remove('hidden');
