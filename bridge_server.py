@@ -957,6 +957,7 @@ class DiscoveryResult(BaseModel):
     synergy_score: Optional[float] = 0.0
     custom_vector: Optional[List[float]] = None
     target_profile: Optional[Dict[str, float]] = None # NEW: Scientific Verification Profile
+    structural_audit: Optional[Dict[str, str]] = None # NEW: AA residue coordinates (no-mistake audit)
 
 class ReportRequest(BaseModel):
     session_id: str
@@ -1480,12 +1481,14 @@ async def get_target_vector_from_query(query: str, api_key: Optional[str] = None
         
         prompt = (
             f"As a expert systems biologist at Nilus Lab, help me map the goal '{query}' to a transcriptomic target state using the Zenith Ultra-HD (5K) manifold.\n"
-            f"We are using a 1000-gene manifold. Here are the core indices for reference:\n{core_modules}\n\n"
+            f"We are using the full 5000-gene manifold. Here are the core indices for reference:\n{core_modules}\n\n"
+            f"MATURATION MODULE (100-109): Includes PPARGC1A, PPARA, RXRA, CPT1B, KCNJ2, etc.\n\n"
             f"TASKS:\n"
-            f"1. Select the top 15 genes that should be HIGHLY expressed for this state.\n"
+            f"1. Select the top 25 genes that should be HIGHLY expressed for this state from the 5000-gene set.\n"
             f"2. Assign each gene an intensity weight from 0.0 to 1.0.\n"
             f"3. Provide a brief 1-sentence scientific rationale for these choices.\n"
-            f"4. Return ONLY a JSON object like: {{\"genes\": {{\"GENE_NAME\": weight, ...}}, \"rationale\": \"...\"}}"
+            f"4. For each of the top 5 genes, identify the exact amino acid residue range (e.g. 1-200) representing the primary functional domain (from UniProt) for this specific task.\n"
+            f"5. Return ONLY a JSON object like: {{\"genes\": {{\"GENENAME\": weight, ...}}, \"rationale\": \"...\", \"audit\": {{\"GENENAME\": \"1-200\", ...}}}}"
         )
         
         response = await client.chat.completions.create(
@@ -1501,6 +1504,7 @@ async def get_target_vector_from_query(query: str, api_key: Optional[str] = None
         data = json.loads(response.choices[0].message.content)
         gene_data = data.get("genes", {})
         explanation = data.get("rationale", "Semantic mapping successful.")
+        audit_data = data.get("audit", {}) # The "No-Mistake" Structural Audit
         
         target_vec = torch.zeros(len(GENE_SYMBOLS))
         filtered_gene_data = {}
@@ -1511,7 +1515,7 @@ async def get_target_vector_from_query(query: str, api_key: Optional[str] = None
                 target_vec[idx] = float(weight)
                 filtered_gene_data[g_upper] = float(weight)
         
-        return target_vec, explanation, filtered_gene_data
+        return target_vec, explanation, filtered_gene_data, audit_data
     except Exception as e:
         import traceback
         error_type = type(e).__name__
@@ -1532,27 +1536,18 @@ async def discover_hybrid(req: HybridDiscoveryRequest, request: Request):
     """
     try:
         # 1. Translate Natural Language to Biological Coordinates
-        target_vec, gpt_rationale, gpt_gene_data = await get_target_vector_from_query(req.target_query, req.api_key)
+        target_vec, gpt_rationale, gpt_gene_data, audit_data = await get_target_vector_from_query(req.target_query, req.api_key)
         target_vec = target_vec.to(dtype=torch.float32)
         
-        current_vec = torch.tensor(req.current_genes, dtype=torch.float32)
+        current_vec = torch.tensor(req.current_genes, dtype=torch.float32) # Full 5000-dim from v26.4
         
-        # 2. Setup Differentiable Input
+        # 2. Setup Differentiable Input (True Universal Discovery)
         perturbation = torch.zeros_like(current_vec, requires_grad=True)
         
-        # 3. Backprop through Zenith Ultra-HD (10001 dims)
+        # 3. Step through Zenith Ultra-HD (10001 dims)
         # Input: [Current(5000), Target(5000), Age(1)]
-        
-        # Current with perturbation: [1, 1000] -> [1, 5000] (Pad biological noise)
-        pert_1k = current_vec + perturbation
-        noise_mean, noise_std = 0.1, 0.05
-        padding = torch.normal(mean=noise_mean, std=noise_std, size=(1, 4000))
-        current_5k = torch.cat([pert_1k.unsqueeze(0), padding], dim=1) # [1, 5000]
-        
-        # Target/Context: [1, 5000]
-        target_5k = target_vec.unsqueeze(0) # Embed full 5000-dim target
-        
-        # Age
+        current_5k = (current_vec + perturbation).unsqueeze(0)
+        target_5k = target_vec.unsqueeze(0)
         age_in = torch.tensor([[0.5]])
 
         # Concat: [1, 10001]
@@ -1564,9 +1559,10 @@ async def discover_hybrid(req: HybridDiscoveryRequest, request: Request):
         input_tensor = input_tensor.to(dtype=model_dtype)
         
         velocity = model(input_tensor) 
-        velocity_genes = velocity[0, :1000].to(dtype=torch.float32)
+        velocity_genes = velocity[0, :5000].to(dtype=torch.float32)
         
-        loss = torch.nn.functional.mse_loss(current_vec + velocity_genes, target_vec[:1000])
+        # Loss calculation across the entire 5K Manifold
+        loss = torch.nn.functional.mse_loss(current_vec + velocity_genes, target_vec)
         loss.backward()
         gradient = perturbation.grad 
         
@@ -1586,13 +1582,13 @@ async def discover_hybrid(req: HybridDiscoveryRequest, request: Request):
             'DIRECT_CARDIO': [13, 14, 15, 16],
             'DIRECT_ENDO':   [30, 31, 32, 33],
             'MPTR':          [74, 75, 0, 1],
-            'VENTRICULAR_MATURATION': [100, 101, 103, 108, 15, 16] 
+            'VENTRICULAR_MATURATION': [10, 12, 13, 15, 16, 17, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109] 
         }
         
         best_protocol = "NOVEL_DESIGN"
         max_sim = 0.0
         for name, indices in protocols.items():
-            proto_vec = np.zeros(1000)
+            proto_vec = np.zeros(5000)
             for idx in indices: proto_vec[idx] = 1.0
             pos_ideal = np.maximum(ideal_vector, 0)
             norm_ideal = np.linalg.norm(pos_ideal)
@@ -1623,7 +1619,8 @@ async def discover_hybrid(req: HybridDiscoveryRequest, request: Request):
             predicted_pathway=["Initiation", "Semantic Mapping", "Gradient Decoupling", "Target State"],
             synergy_score=0.92,
             custom_vector=ideal_vector.tolist(),
-            target_profile=gpt_gene_data
+            target_profile=gpt_gene_data,
+            structural_audit=audit_data
         )
     except Exception as e:
         import traceback

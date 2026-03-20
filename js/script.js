@@ -68,24 +68,24 @@ const CONFIG = {
         const prefixes = ["ZNF", "KRT", "RPL", "RPS", "SLC", "WNT", "HOX", "PTP", "CYP", "ADAM"];
         prefixes.forEach(prefix => {
             for (let i = 1; i <= 91; i++) {
-                if (genes.length < 1000) {
+                if (genes.length < 5000) {
                     const sym = `${prefix}${i}`;
                     if (!genes.includes(sym)) genes.push(sym);
                 }
             }
         });
-        while (genes.length < 1000) genes.push(`G_EXT_${genes.length}`);
-        return genes.slice(0, 1000);
+        while (genes.length < 5000) genes.push(`G_EXT_${genes.length}`);
+        return genes.slice(0, 5000);
     })(),
 
-    // 1000x1000 GRN Matrix (Sparse)
-    GRN: Array.from({ length: 1000 }, () => new Float32Array(1000).fill(0))
+    // 5000x5000 GRN Matrix (Sparse)
+    GRN: Array.from({ length: 5000 }, () => new Float32Array(5000).fill(0))
 };
 
 // Initialize GRN with some structure
 (function initGRN() {
     // Self-excitation for stability
-    for (let i = 0; i < 1000; i++) CONFIG.GRN[i][i] = 0.8;
+    for (let i = 0; i < 5000; i++) CONFIG.GRN[i][i] = 0.8;
 
     // OSKM Cross-Regulation (The Core Circuit)
     const core = [0, 1, 2, 4, 5]; // OCT4, SOX2, NANOG, KLF4, MYC
@@ -116,9 +116,9 @@ class Agent {
         };
         this.vel = { x: 0, y: 0 };
         this.type = 'SOMATIC'; // Start as fibroblasts
-        this.genes = new Float32Array(1000);
-        this.proteins = new Float32Array(1000);   // PH9
-        this.chromatin = new Float32Array(1000);  // PH9
+        this.genes = new Float32Array(5000);
+        this.proteins = new Float32Array(5000);   // PH9
+        this.chromatin = new Float32Array(5000);  // PH9
         this.bioAge = 1.0; // Starts old (Somatic)
         this.health = 1.0; // 0.0 - 1.0
         this.dnaDamage = 0.0;
@@ -133,7 +133,7 @@ class Agent {
 
     initGenes() {
         // Initialize as SOMATIC (Low OSKM, High differentiation markers)
-        for (let i = 0; i < 1000; i++) {
+        for (let i = 0; i < 5000; i++) {
             const base = CONFIG.geneInit.base + (seededRandom() - 0.5) * CONFIG.geneInit.range;
             this.genes[i] = Math.max(0, base);
             this.proteins[i] = this.genes[i]; // Start synced
@@ -885,12 +885,12 @@ const BiosimBridge = {
                     payload.burdens.push(a.dnaDamage || 0.0);
 
                     const neighbors = BiosimEngine.spatialHash.getNeighbors(a);
-                    let context = new Float32Array(1000);
+                    let context = new Float32Array(5000);
                     if (neighbors.length > 0) {
                         neighbors.forEach(n => {
-                            for (let g = 0; g < 1000; g++) context[g] += n.proteins[g];
+                            for (let g = 0; g < 5000; g++) context[g] += n.proteins[g];
                         });
-                        for (let g = 0; g < 1000; g++) context[g] /= neighbors.length;
+                        for (let g = 0; g < 5000; g++) context[g] /= neighbors.length;
                     } else {
                         context.set(a.proteins);
                     }
@@ -1124,11 +1124,11 @@ const BiosimBridge = {
             return;
         }
 
-        const avgGenes = new Float32Array(1000);
+        const avgGenes = new Float32Array(5000);
         for (const a of agents) {
-            for (let i = 0; i < 1000; i++) avgGenes[i] += a.genes[i];
+            for (let i = 0; i < 5000; i++) avgGenes[i] += a.genes[i];
         }
-        for (let i = 0; i < 1000; i++) avgGenes[i] /= agents.length;
+        for (let i = 0; i < 5000; i++) avgGenes[i] /= agents.length;
 
         try {
             // XSS Protection: Sanitize user input
@@ -1168,45 +1168,9 @@ const BiosimBridge = {
             const synContainer = document.getElementById('synergy-container');
 
             if (outPanel) outPanel.classList.remove('hidden');
-            // v26.1: Institutional Discovery Integration for Heart/Myocardium/HSC
-            const queryLower = sanitizedQuery.toLowerCase();
-            if (queryLower.includes('heart') || queryLower.includes('myocardium') || queryLower.includes('cardiac') || queryLower.includes('gata4') || queryLower.includes('mef2c') || queryLower.includes('cardiomyocyte') || queryLower.includes('maturation') || queryLower.includes('ppar')) {
-                data.recommended_protocol = "REJUVENATED MYOCARDIUM (V26.1)";
-                data.confidence = 0.92;
-                data.synergy_score = 0.94;
-                // Master Experiment Verification: Atrial Cardiomyocyte Protection
-                // The SOX2-POU5F1 handshake is a generic example; TBX5-GATA4 is the TRUE synergistic anchor for atrial identity.
-                if (queryLower.includes('atrial') || (queryLower.includes('heart') && queryLower.includes('35 years'))) {
-                    data.finding = 'TBX5-GATA4 Synergistic Anchor';
-                    data.scientific_rationale = '[ZENITH INSTITUTIONAL DISCOVERY] Zenith identifies a critical synergistic anchor between TBX5 and GATA4 at the PITX2c distal promoter. This complex prevents tachycardia-induced downregulation of CACNA1C and maintains atrial identity with 97.8% ESI stability. Optimal for -35.2 year age reset.';
-                    data.age_reset = '-35.2 Years';
-                    data.esi = 97.8;
-                    data.target_profile = { "GATA4": 0.95, "TBX5": 0.92, "MEF2C": 0.88, "NPPA": 0.82 }; // Uses available genes
-                    data.plddt = 98.4;
-                    data.structural_proof = 'distal_promoter_anchor';
-                } else if (queryLower.includes('maturation') || queryLower.includes('ppar')) {
-                    data.recommended_protocol = "VENTRICULAR MATURATION (V26.3)";
-                    data.finding = 'PGC-1α Maturation Axis';
-                    data.scientific_rationale = '[ZENITH INSTITUTIONAL DISCOVERY] Zenith identifies the PGC-1α (PPARGC1A) axis as the primary driver for adult metabolic maturation. Activation of CPT1B and FABP3 triggers the shift to fatty acid oxidation, while KCNJ2 stabilization ensures electrophysiological maturation and HCN4 pacemaker suppression (Adult Phenotype).';
-                    data.target_profile = { "PPARGC1A": 0.96, "KCNJ2": 0.94, "CPT1B": 0.89, "MYH7": 0.82, "MYH6": 0.78 };
-                    data.esi = 99.2;
-                    data.plddt = 96.5;
-                } else {
-                    // Fallback for general cardiac queries if not specifically atrial/35 years
-                    data.scientific_rationale = "[ZENITH INSTITUTIONAL DISCOVERY] Zenith Ultra-~285M computes the OSKM (OCT4, SOX2, KLF4, MYC) protocol as the optimal cascade for cardiac rejuvenation. Structural modeling confirms a verified physical anchor at the distal promoter, bridging Dynamic Flexible Segments with 92% manifold coherence. Optimal for 35-year age reset in human myocardium.";
-                    data.target_profile = { "SOX2": 0.95, "POU5F1": 0.88, "GATA4": 0.72, "MEF2C": 0.68, "TBX5": 0.65 };
-                }
-            } else if (queryLower.includes('hematopoietic') || queryLower.includes('hsc') || queryLower.includes('stem cell')) {
-                // User's current screenshot query
-                data.recommended_protocol = "HSC NICHE STABILIZATION (V26.2)";
-                data.confidence = 0.96;
-                data.synergy_score = 0.98;
-                data.scientific_rationale = "[ZENITH INSTITUTIONAL DISCOVERY] Zenith Ultra computes the CXCL12-CXCR4 signaling axis as the primary stability node for the hematopoietic niche. High-fidelity modeling reveals that optimizing the CD44-VLA4 adhesion complex stabilizes the quiescent state transition. Predicted 98.2% niche retention rate with zero oncogenic drift.";
-                data.target_profile = { "CXCL12": 0.98, "CXCR4": 0.94, "CD44": 0.82, "KIT": 0.75, "FLT3": 0.68 };
-            } else if (!data.target_profile) {
-                // Robust Fallback
-                data.target_profile = { "OCT4": 0.90, "SOX2": 0.85, "NANOG": 0.80 };
-            }
+            // Zenit Institutional Discovery (5K Manifold)
+            // No manual overrides: Results are derived directly from differentiable simulation.
+            this.lastDiscovery = { ...data, target_query: query };
 
             if (conf) {
                 // Fix: Convert 0.0-1.0 fraction to 0-100 percentage
@@ -1225,12 +1189,15 @@ const BiosimBridge = {
             if (profileContainer && data.target_profile) {
                 profileContainer.innerHTML = Object.entries(data.target_profile)
                     .sort((a, b) => b[1] - a[1]) // Sort by intensity
-                    .map(([gene, weight]) => `
+                    .map(([gene, weight]) => {
+                        const auditRange = data.structural_audit && data.structural_audit[gene] ? ` (${data.structural_audit[gene]})` : "";
+                        return `
                         <div class="flex items-center gap-1 bg-purple-600/20 px-1.5 py-0.5 rounded border border-purple-500/20 group/gene transition-all hover:bg-purple-600/40">
-                            <span class="text-[7px] text-white font-mono">${gene}</span>
+                            <span class="text-[7px] text-white font-mono">${gene}${auditRange}</span>
                             <span class="text-[6px] text-purple-400 font-bold">${Math.round(weight * 100)}%</span>
                         </div>
-                    `).join('');
+                        `;
+                    }).join('');
             }
 
             if (synContainer && data.synergy_score !== undefined) {
@@ -1404,11 +1371,11 @@ def run(protocol: protocol_api.ProtocolContext):
             return;
         }
 
-        const avgGenes = new Float32Array(1000);
+        const avgGenes = new Float32Array(5000);
         for (const a of agents) {
-            for (let i = 0; i < 1000; i++) avgGenes[i] += a.genes[i];
+            for (let i = 0; i < 5000; i++) avgGenes[i] += a.genes[i];
         }
-        for (let i = 0; i < 1000; i++) avgGenes[i] /= agents.length;
+        for (let i = 0; i < 5000; i++) avgGenes[i] /= agents.length;
 
         try {
             const response = await fetch(`${this.endpoint}/discover_protocol`, {
