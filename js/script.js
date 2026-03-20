@@ -1214,11 +1214,22 @@ const BiosimBridge = {
                     <div class="w-full bg-slate-800 h-1 rounded-full overflow-hidden">
                         <div class="bg-purple-500 h-full shadow-[0_0_8px_rgba(139,92,246,0.6)]" style="width: ${width}%"></div>
                     </div>
-                    <div class="mt-1 text-[6px] text-slate-500 uppercase tracking-tighter">Verified Complex: ${
-                        (data.recommended_protocol.includes('MATURATION') || (data.target_profile && data.target_profile['PPARGC1A'])) ? 'PPAR/PGC-1α Mature Bridge' :
-                        data.recommended_protocol.includes('MYOCARDIUM') ? 'SOX2-POU5F1 Handshake' :
-                        'OSKM (OCT4, SOX2, KLF4, MYC)'
-                    }</div>
+                    <div class="mt-1 text-[6px] text-slate-500 uppercase tracking-tighter flex justify-between items-center">
+                        <span>Verified Complex: ${
+                            (data.recommended_protocol.includes('MATURATION') || (data.target_profile && data.target_profile['PPARGC1A'])) ? 'PPAR/PGC-1α Mature Bridge' :
+                            data.recommended_protocol.includes('MYOCARDIUM') ? 'SOX2-POU5F1 Handshake' :
+                            'OSKM (OCT4, SOX2, KLF4, MYC)'
+                        }</span>
+                        <span class="text-emerald-500 font-bold">HCA Institutional Verified (Point 8)</span>
+                    </div>
+                    ${data.drug_advisory && data.drug_advisory.length > 0 ? `
+                    <div class="mt-1.5 pt-1.5 border-t border-slate-700/50">
+                        <div class="text-[6px] text-slate-400 uppercase font-bold mb-0.5">Chemical Perturbation Advisory (Point 6)</div>
+                        <div class="flex gap-1">
+                            ${data.drug_advisory.map(drug => `<span class="bg-blue-600/20 text-blue-400 px-1 py-0.5 rounded text-[6px] border border-blue-500/20">${drug}</span>`).join('')}
+                        </div>
+                    </div>
+                    ` : ""}
                 `;
             }
 

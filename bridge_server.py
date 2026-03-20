@@ -962,6 +962,7 @@ class DiscoveryResult(BaseModel):
     structural_audit: Optional[Dict[str, str]] = None # NEW: AA residue coordinates (no-mistake audit)
     dna_motif_target: Optional[str] = "GGGGTCACGGTC" # NEW: The 12-20bp DNA binder (Master Hook)
     epigenetic_age_reduction: Optional[float] = 0.0 # NEW: Horvath Clock years reduction (Altos Labs style)
+    drug_advisory: Optional[List[str]] = None # NEW: Small-molecule pharmaceutical candidates (Point 6)
 
 class ReportRequest(BaseModel):
     session_id: str
@@ -1495,7 +1496,8 @@ async def get_target_vector_from_query(query: str, api_key: Optional[str] = None
             f"5. Identify the primary 12-20 bp DNA binding motif (e.g. GGGGTCACGGTC) that anchors this specific transcription factor complex to its promoter.\n"
             f"6. Cross-reference your results with established epigenetic aging clocks (Horvath/GrimAge). If this is a rejuvenation task, you MUST include at least one primary marker (e.g. ELOVL2, FHL2, or ASPA) in your top findings to represent the epigenetic audit.\n"
             f"7. Estimate the predicted reduction in biological DNA methylation age (in years) if this protocol is perfectly implemented.\n"
-            f"8. Return ONLY a JSON object like: {{\"genes\": {{\"GENENAME\": weight, ...}}, \"rationale\": \"...\", \"audit\": {{\"GENENAME\": \"1-200\", ...}}, \"dna_motif\": \"...\", \"age_reduction\": 15.0}}"
+            f"8. Identify 2-3 small-molecule drug candidates (e.g. Metformin, Rapamycin, SRT1720) that can mimic or enhance this specific 5,000-gene transcriptomic shift (Point 6: Drug-Gene Interaction).\n"
+            f"9. Return ONLY a JSON object like: {{\"genes\": {{\"GENENAME\": weight, ...}}, \"rationale\": \"...\", \"audit\": {{\"GENENAME\": \"1-200\", ...}}, \"dna_motif\": \"...\", \"age_reduction\": 15.0, \"drugs\": [\"Metformin\", \"...\"]}}"
         )
         
         response = await client.chat.completions.create(
@@ -1514,6 +1516,7 @@ async def get_target_vector_from_query(query: str, api_key: Optional[str] = None
         audit_data = data.get("audit", {}) # The "No-Mistake" Structural Audit
         dna_motif = data.get("dna_motif", "GGGGTCACGGTC") # The "No-Mistake" DNA Hook
         age_reduction = float(data.get("age_reduction", 0.0)) # The "Altos Lab" Longevity Metric
+        drugs = data.get("drugs", []) # The "Point 6" Drug Pipeline
         
         target_vec = torch.zeros(len(GENE_SYMBOLS))
         filtered_gene_data = {}
@@ -1524,7 +1527,7 @@ async def get_target_vector_from_query(query: str, api_key: Optional[str] = None
                 target_vec[idx] = float(weight)
                 filtered_gene_data[g_upper] = float(weight)
         
-        return target_vec, explanation, filtered_gene_data, audit_data, dna_motif, age_reduction
+        return target_vec, explanation, filtered_gene_data, audit_data, dna_motif, age_reduction, drugs
     except Exception as e:
         import traceback
         error_type = type(e).__name__
@@ -1545,7 +1548,7 @@ async def discover_hybrid(req: HybridDiscoveryRequest, request: Request):
     """
     try:
         # 1. Translate Natural Language to Biological Coordinates
-        target_vec, gpt_rationale, gpt_gene_data, audit_data, dna_motif, age_reduction = await get_target_vector_from_query(req.target_query, req.api_key)
+        target_vec, gpt_rationale, gpt_gene_data, audit_data, dna_motif, age_reduction, drugs = await get_target_vector_from_query(req.target_query, req.api_key)
         target_vec = target_vec.to(dtype=torch.float32)
         
         current_vec = torch.tensor(req.current_genes, dtype=torch.float32) # Full 5000-dim from v26.4
@@ -1631,7 +1634,8 @@ async def discover_hybrid(req: HybridDiscoveryRequest, request: Request):
             target_profile=gpt_gene_data,
             structural_audit=audit_data,
             dna_motif_target=dna_motif,
-            epigenetic_age_reduction=age_reduction
+            epigenetic_age_reduction=age_reduction,
+            drug_advisory=drugs
         )
     except Exception as e:
         import traceback
