@@ -1,6 +1,6 @@
 /**
- * NilusLab Zenith v26.1 - Profile 'Elite' DNA Helix
- * High-fidelity 3D Volumetric Helix with Medical-Grade Shading
+ * NilusLab Zenith v26.1 - Profile 'Elite' DNA Helix (DIAGONAL FIX)
+ * Diagonal orientation (Above-Left to Below-Right) with reduced size.
  */
 
 class ProfileDNARenderer {
@@ -13,7 +13,7 @@ class ProfileDNARenderer {
         this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
 
         this.init();
-        this.createEliteHelix();
+        this.createEliteDiagonalHelix();
         this.animate();
 
         window.addEventListener('resize', () => this.onResize());
@@ -30,65 +30,62 @@ class ProfileDNARenderer {
         const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
         this.scene.add(ambientLight);
 
-        const spotLight = new THREE.SpotLight(0xffffff, 1.5);
-        spotLight.position.set(20, 40, 50);
-        this.scene.add(spotLight);
-
-        const pointLight1 = new THREE.PointLight(0x3b82f6, 0.8); // Nilus Blue Glow
-        pointLight1.position.set(-20, 10, 10);
+        const pointLight1 = new THREE.PointLight(0x3b82f6, 1.2); // Intense Blue Glow
+        pointLight1.position.set(-20, 20, 10);
         this.scene.add(pointLight1);
 
-        const pointLight2 = new THREE.PointLight(0x2dd4bf, 0.5); // Teal Glow
-        pointLight2.position.set(20, -10, 10);
+        const pointLight2 = new THREE.PointLight(0x2dd4bf, 0.8); // Teal Accent
+        pointLight2.position.set(20, -20, 10);
         this.scene.add(pointLight2);
     }
 
-    createEliteHelix() {
-        const strandGeometry = new THREE.SphereGeometry(0.35, 32, 32); // Larger, smoother spheres
+    createEliteDiagonalHelix() {
+        const sphereSize = 0.28; // Reduced Size
+        const helixRadius = 2.8; // Reduced Radius
+        const ySpacing = 0.38;   // Tightened Spacing
+        const twist = 0.4;
+
+        const strandGeometry = new THREE.SphereGeometry(sphereSize, 32, 32);
         const strandMaterial = new THREE.MeshStandardMaterial({
             color: 0xffffff,
-            roughness: 0.05,
-            metalness: 0.1,
+            roughness: 0.1,
+            metalness: 0.2,
             emissive: 0xffffff,
-            emissiveIntensity: 0.1
+            emissiveIntensity: 0.05
         });
 
         const barMaterial = new THREE.MeshStandardMaterial({
             color: 0xffffff,
-            roughness: 0.2,
-            metalness: 0.1,
+            roughness: 0.3,
             transparent: true,
-            opacity: 0.4
+            opacity: 0.3
         });
 
         this.helixGroup = new THREE.Group();
 
         const numPoints = 80;
-        const radius = 4;
-        const twist = 0.35;
-        const ySpacing = 0.45;
 
         for (let i = 0; i < numPoints; i++) {
             const angle = i * twist;
             const y = (i - numPoints / 2) * ySpacing;
 
-            // Strand 1 (Sine Helix)
-            const x1 = Math.cos(angle) * radius;
-            const z1 = Math.sin(angle) * radius;
+            // Strand 1
+            const x1 = Math.cos(angle) * helixRadius;
+            const z1 = Math.sin(angle) * helixRadius;
             const sphere1 = new THREE.Mesh(strandGeometry, strandMaterial);
             sphere1.position.set(x1, y, z1);
             this.helixGroup.add(sphere1);
 
-            // Strand 2 (Offset Helix)
-            const x2 = Math.cos(angle + Math.PI) * radius;
-            const z2 = Math.sin(angle + Math.PI) * radius;
+            // Strand 2
+            const x2 = Math.cos(angle + Math.PI) * helixRadius;
+            const z2 = Math.sin(angle + Math.PI) * helixRadius;
             const sphere2 = new THREE.Mesh(strandGeometry, strandMaterial);
             sphere2.position.set(x2, y, z2);
             this.helixGroup.add(sphere2);
 
-            // High-Quality Connecting Bars
+            // Connecting Bars
             if (i % 3 === 0) {
-                const barGeometry = new THREE.CylinderGeometry(0.1, 0.1, radius * 2);
+                const barGeometry = new THREE.CylinderGeometry(0.08, 0.08, helixRadius * 2);
                 const bar = new THREE.Mesh(barGeometry, barMaterial);
                 bar.position.set(0, y, 0);
                 bar.rotation.z = Math.PI / 2;
@@ -98,7 +95,10 @@ class ProfileDNARenderer {
         }
 
         this.scene.add(this.helixGroup);
-        this.helixGroup.rotation.z = Math.PI / 8; // Slight diagonal tilt for 'Agency' aesthetic
+
+        // DIAGONAL ROTATION (AS REQUESTED: Above-Left to Below-Right)
+        this.helixGroup.rotation.z = -Math.PI / 4.8; // -38 degrees tilt
+        this.helixGroup.position.set(-2, 1, 0);     // Subtle offset for framing
     }
 
     onResize() {
@@ -111,7 +111,7 @@ class ProfileDNARenderer {
     animate() {
         requestAnimationFrame(() => this.animate());
         if (this.helixGroup) {
-            this.helixGroup.rotation.y += 0.006; // Slow premium rotation
+            this.helixGroup.rotation.y += 0.007; // Slow constant rotation
         }
         this.renderer.render(this.scene, this.camera);
     }
