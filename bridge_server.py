@@ -959,6 +959,7 @@ class DiscoveryResult(BaseModel):
     target_profile: Optional[Dict[str, float]] = None # NEW: Scientific Verification Profile
     structural_audit: Optional[Dict[str, str]] = None # NEW: AA residue coordinates (no-mistake audit)
     dna_motif_target: Optional[str] = "GGGGTCACGGTC" # NEW: The 12-20bp DNA binder (Master Hook)
+    epigenetic_age_reduction: Optional[float] = 0.0 # NEW: Horvath Clock years reduction (Altos Labs style)
 
 class ReportRequest(BaseModel):
     session_id: str
@@ -1490,7 +1491,8 @@ async def get_target_vector_from_query(query: str, api_key: Optional[str] = None
             f"3. Provide a brief 1-sentence scientific rationale for these choices.\n"
             f"4. For each of the top 5 genes, identify the exact amino acid residue range (e.g. 1-200) representing the primary functional domain (from UniProt) for this specific task.\n"
             f"5. Identify the primary 12-20 bp DNA binding motif (e.g. GGGGTCACGGTC) that anchors this specific transcription factor complex to its promoter.\n"
-            f"6. Return ONLY a JSON object like: {{\"genes\": {{\"GENENAME\": weight, ...}}, \"rationale\": \"...\", \"audit\": {{\"GENENAME\": \"1-200\", ...}}, \"dna_motif\": \"...\"}}"
+            f"6. Estimate the predicted reduction in biological DNA methylation age (in years) if this protocol is perfectly implemented.\n"
+            f"7. Return ONLY a JSON object like: {{\"genes\": {{\"GENENAME\": weight, ...}}, \"rationale\": \"...\", \"audit\": {{\"GENENAME\": \"1-200\", ...}}, \"dna_motif\": \"...\", \"age_reduction\": 15.0}}"
         )
         
         response = await client.chat.completions.create(
@@ -1508,6 +1510,7 @@ async def get_target_vector_from_query(query: str, api_key: Optional[str] = None
         explanation = data.get("rationale", "Semantic mapping successful.")
         audit_data = data.get("audit", {}) # The "No-Mistake" Structural Audit
         dna_motif = data.get("dna_motif", "GGGGTCACGGTC") # The "No-Mistake" DNA Hook
+        age_reduction = float(data.get("age_reduction", 0.0)) # The "Altos Lab" Longevity Metric
         
         target_vec = torch.zeros(len(GENE_SYMBOLS))
         filtered_gene_data = {}
@@ -1518,7 +1521,7 @@ async def get_target_vector_from_query(query: str, api_key: Optional[str] = None
                 target_vec[idx] = float(weight)
                 filtered_gene_data[g_upper] = float(weight)
         
-        return target_vec, explanation, filtered_gene_data, audit_data, dna_motif
+        return target_vec, explanation, filtered_gene_data, audit_data, dna_motif, age_reduction
     except Exception as e:
         import traceback
         error_type = type(e).__name__
@@ -1539,7 +1542,7 @@ async def discover_hybrid(req: HybridDiscoveryRequest, request: Request):
     """
     try:
         # 1. Translate Natural Language to Biological Coordinates
-        target_vec, gpt_rationale, gpt_gene_data, audit_data, dna_motif = await get_target_vector_from_query(req.target_query, req.api_key)
+        target_vec, gpt_rationale, gpt_gene_data, audit_data, dna_motif, age_reduction = await get_target_vector_from_query(req.target_query, req.api_key)
         target_vec = target_vec.to(dtype=torch.float32)
         
         current_vec = torch.tensor(req.current_genes, dtype=torch.float32) # Full 5000-dim from v26.4
@@ -1624,7 +1627,8 @@ async def discover_hybrid(req: HybridDiscoveryRequest, request: Request):
             custom_vector=ideal_vector.tolist(),
             target_profile=gpt_gene_data,
             structural_audit=audit_data,
-            dna_motif_target=dna_motif
+            dna_motif_target=dna_motif,
+            epigenetic_age_reduction=age_reduction
         )
     except Exception as e:
         import traceback

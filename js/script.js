@@ -1175,8 +1175,9 @@ const BiosimBridge = {
             if (conf) {
                 // Fix: Convert 0.0-1.0 fraction to 0-100 percentage
                 const percentage = data.confidence > 1.0 ? data.confidence : data.confidence * 100;
-                conf.innerText = `${percentage.toFixed(1)}% QUALITY`;
-                conf.className = 'text-[8px] bg-purple-600 text-white px-1.5 py-0.5 rounded';
+                const ageText = data.epigenetic_age_reduction > 0 ? `<span class="ml-1 bg-emerald-600 text-white px-1.5 py-0.5 rounded">-${data.epigenetic_age_reduction.toFixed(1)} YEARS</span>` : "";
+                conf.innerHTML = `<span>${percentage.toFixed(1)}% QUALITY</span>${ageText}`;
+                conf.className = 'text-[8px] flex items-center gap-1';
             }
             if (rec) {
                 const dnaLine = data.dna_motif_target ? `<span class="ml-2 px-1 text-[7px] bg-slate-800 text-purple-400 border border-purple-500/30 rounded font-mono select-all">DNA: ${data.dna_motif_target}</span>` : "";
