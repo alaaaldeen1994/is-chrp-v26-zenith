@@ -58,9 +58,8 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         :root {
-            --primary: #3b82f6;
-            /* Research Blue */
-            --primary-hover: #2563eb;
+            --primary: #0f172a; /* Naval Black */
+            --primary-hover: #1e293b;
             --text-dark: #0f172a;
             --text-muted: #64748b;
             --bg-light: #ffffff;
@@ -72,40 +71,37 @@
             background-color: var(--bg-light);
             color: var(--text-dark);
             overflow-x: hidden;
+            letter-spacing: -0.01em;
         }
 
-        h1,
-        h2,
-        h3,
-        .nav-item {
+        h1, h2, h3, .nav-item {
             font-family: 'Outfit', sans-serif;
         }
 
         /* --- GLOBAL STATUS FOOTER --- */
         .pre-nav {
-            background: #0f172a;
-            padding: 1rem 2rem;
+            background: #ffffff;
+            padding: 0.75rem 2rem;
             display: flex;
-            justify-content: space-between;
+            justify-content: flex-end;
             align-items: center;
             font-size: 10px;
-            font-weight: 700;
+            font-weight: 800;
             color: #94a3b8;
             text-transform: uppercase;
-            letter-spacing: 0.15em;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            letter-spacing: 0.25em;
+            border-bottom: 1px solid #f1f5f9;
         }
 
         .pre-nav span {
-            color: #fff;
-            margin-left: 4px;
+            color: #0f172a;
+            margin-left: 8px;
         }
 
         /* --- MAIN NAVIGATION --- */
         nav {
             background: #ffffff;
-            border-bottom: 1px solid var(--nav-border);
-            padding: 1rem 2rem;
+            padding: 1.5rem 4rem;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -117,188 +113,139 @@
         .nav-links {
             display: flex;
             align-items: center;
-            gap: 2rem;
-            flex-wrap: wrap;
-            justify-content: center;
+            gap: 3rem;
         }
 
         .nav-item {
-            font-size: 14px;
-            font-weight: 500;
-            color: #475569;
-            transition: color 0.2s ease;
-            position: relative;
+            font-size: 13px;
+            font-weight: 600;
+            color: #94a3b8;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
         }
 
-        .nav-item:hover {
-            color: var(--primary);
+        .nav-item:hover, .nav-item.active {
+            color: #0f172a;
         }
 
-        .nav-item.active {
-            color: var(--primary);
-            font-weight: 700;
-        }
-
-        /* --- HERO BANNER --- */
+        /* --- HERO BANNER (Clinical Design) --- */
         .hero {
             position: relative;
-            background: #fff;
-            height: 480px;
-            overflow: hidden;
+            background: #ffffff;
+            height: 90vh;
             display: flex;
             align-items: center;
-            padding: 0 10%;
-            color: #1e293b;
+            justify-content: center;
+            text-align: center;
+            overflow: hidden;
         }
 
         .hero-bg {
             position: absolute;
             inset: 0;
             z-index: 1;
-            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .hero-video {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transform: translate(-50%, -50%);
+            width: 120%;
+            height: 120%;
+            object-fit: contain;
+            opacity: 0.9;
         }
 
         .hero-overlay {
             position: absolute;
             inset: 0;
-            background: linear-gradient(90deg, rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0.4) 100%);
+            background: radial-gradient(circle at center, transparent 0%, rgba(255,255,255,0.4) 100%);
             z-index: 2;
         }
 
         .hero-content {
             position: relative;
             z-index: 10;
-            max-width: 900px;
-            margin: 0 auto;
-            text-align: center;
-        }
-
-        .hero-label {
-            font-size: 14px;
-            font-weight: 700;
-            margin-bottom: 0.75rem;
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
-            color: var(--primary);
+            max-width: 1000px;
+            padding: 0 2rem;
         }
 
         .hero-title {
-            font-size: 64px;
+            font-size: 84px;
             font-weight: 900;
-            line-height: 1.1;
-            margin-bottom: 1.5rem;
-            letter-spacing: -0.03em;
+            line-height: 0.95;
+            margin-bottom: 2.5rem;
+            letter-spacing: -0.04em;
             color: #0f172a;
         }
 
-        .hero-console {
-            position: absolute;
-            bottom: 3rem;
-            left: 10%;
-            right: 10%;
-            z-index: 20;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(15, 23, 42, 0.1);
-            padding: 1.25rem 2.5rem;
-            border-radius: 16px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
-            animation: slideUpHUD 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        @keyframes slideUpHUD {
-            from {
-                transform: translateY(20px);
-                opacity: 0;
-            }
-
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-
-        .hud-segment {
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-        }
-
-        .hud-label {
-            font-size: 9px;
-            font-weight: 700;
+        .hero-description {
+            font-size: 18px;
             color: #64748b;
-            text-transform: uppercase;
-            letter-spacing: 0.15em;
-        }
-
-        .hud-value {
-            font-size: 14px;
-            font-weight: 800;
-            color: #0f172a;
-        }
-
-        .bio-pulse {
-            width: 8px;
-            height: 8px;
-            background: #2dd4bf;
-            border-radius: 50%;
-            display: inline-block;
-            box-shadow: 0 0 10px rgba(45, 212, 191, 0.5);
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0% {
-                transform: scale(1);
-                opacity: 1;
-            }
-
-            50% {
-                transform: scale(1.5);
-                opacity: 0.5;
-            }
-
-            100% {
-                transform: scale(1);
-                opacity: 1;
-            }
+            max-width: 600px;
+            margin: 0 auto 3rem;
+            line-height: 1.6;
+            font-weight: 500;
         }
 
         .btn-launch {
-            background-color: var(--primary);
-            color: #fff;
+            background-color: #0f172a;
+            color: #ffffff;
             padding: 1.25rem 3rem;
-            border-radius: 8px;
-            /* Professional sharp edges with slight rounding */
-            font-size: 16px;
+            border-radius: 999px;
+            font-size: 14px;
             font-weight: 800;
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
             display: inline-flex;
             align-items: center;
             gap: 12px;
             text-transform: uppercase;
-            letter-spacing: 0.05em;
+            letter-spacing: 0.1em;
         }
 
         .btn-launch:hover {
-            background-color: var(--primary-hover);
-            transform: translateY(-2px);
-            box-shadow: 0 20px 40px rgba(59, 130, 246, 0.3);
+            background-color: #334155;
+            transform: scale(1.05);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
         }
+
+        .pause-icon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100px;
+            height: 100px;
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(10px);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 5;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            pointer-events: none;
+        }
+
+        /* --- CONSOLE HUD (Refined) --- */
+        .hero-console {
+            position: absolute;
+            bottom: 4rem;
+            right: 4rem;
+            z-index: 20;
+            text-align: right;
+            max-width: 300px;
+        }
+
+        .hud-value {
+            font-size: 14px;
+            font-weight: 600;
+            color: #64748b;
+            line-height: 1.8;
+            letter-spacing: 0.02em;
+        }
+
 
         /* --- BRANDING SECTION --- */
         .brand-section {
@@ -1030,192 +977,94 @@
 
 
 
-    <!-- MAIN NAVIGATION -->
+    <!-- Main Navigation (Clinical Monochrome) -->
     <nav>
-        <div class="flex items-center gap-6">
-            <div class="flex items-center gap-3">
-                <!-- DNA Icon matching simulation (Lucide - Restored) -->
-                <div class="w-10 h-10 bg-slate-900 rounded-lg flex items-center justify-center">
-                    <i data-lucide="dna" class="w-6 h-6 text-teal-400"></i>
-                </div>
-                <!-- Text matching simulation gradient -->
-                <div class="font-sans font-bold tracking-tight leading-none flex items-center">
-                    <span class="text-xl text-slate-800 tracking-tight mr-1">NILUS</span>
-                    <span
-                        class="text-xl bg-clip-text text-transparent bg-gradient-to-r from-teal-400 to-cyan-300">LAB</span>
-                </div>
-            </div>
-            <div class="h-8 w-px bg-slate-200 mx-4"></div>
+        <div class="flex items-center gap-12">
+            <svg class="w-8 h-8 text-slate-900" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
             <div class="nav-links">
-                <a href="#" class="nav-item active">Zenith Mainframe</a>
-
-                <!-- NEW: INSTITUTIONAL DROPDOWN -->
-                <div class="nav-dropdown">
-                    <div class="nav-item dropdown-trigger">
-                        Institutional Diligence <i data-lucide="chevron-down" class="w-3 h-3"></i>
-                    </div>
-                    <div class="dropdown-menu">
-                        <a href="evidence.html" class="dropdown-item">
-                            <i data-lucide="shield-check" class="text-teal-400"></i>
-                            Evidence Registry
-                        </a>
-                        <a href="regulatory.html" class="dropdown-item">
-                            <i data-lucide="scale" class="text-teal-400"></i>
-                            Regulatory Statement
-                        </a>
-                        <a href="pilot_dashboard.html" class="dropdown-item">
-                            <i data-lucide="layout-dashboard" class="text-teal-400"></i>
-                            Pilot Dashboard
-                        </a>
-                        <a href="v26_clinical_report.html" class="dropdown-item">
-                            <i data-lucide="file-text" class="text-teal-400"></i>
-                            Clinical Dossier
-                        </a>
-                    </div>
-                </div>
-
-                <a href="technical_catalog.html" class="nav-item">Foundation Catalog</a>
-                <a href="trials.html" class="nav-item">Virtual Trials</a>
+                <a href="index.html" class="nav-item">Home</a>
+                <a href="technical_catalog.html" class="nav-item">Solutions</a>
+                <a href="evidence.html" class="nav-item">Technology</a>
+                <a href="whitepaper.html" class="nav-item">Documentation</a>
             </div>
         </div>
-        <div class="flex items-center gap-4">
-            <div class="flex items-center gap-2 px-4 py-2 bg-slate-50 rounded-full border border-slate-100 mr-2">
-                <span class="bio-pulse"></span>
-                <p class="text-[9px] font-bold text-slate-500 uppercase tracking-widest">Live HCA Feed: 150k+ Cells</p>
-            </div>
-
-            <div class="h-6 w-px bg-slate-200 mx-2"></div>
-            <!-- Show when NOT logged in -->
-            <div id="auth-signed-out" class="hidden">
-                <button onclick="openLoginModal()"
-                    class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-lg font-bold text-sm transition-all flex items-center gap-2">
-                    <i data-lucide="log-in" class="w-4 h-4"></i>
-                    Sign In
-                </button>
-            </div>
-
-            <!-- Show when logged in -->
-            <div id="auth-signed-in" class="hidden flex items-center gap-8">
-                <div class="text-right">
-                    <p class="text-[9px] text-slate-400 font-bold uppercase tracking-widest">Principal Investigator</p>
-                    <p class="text-[13px] font-black text-slate-800" id="profile-name">—</p>
-                </div>
-                <i data-lucide="bell" class="w-5 h-5 text-slate-400 cursor-pointer"></i>
-                <i data-lucide="help-circle" class="w-5 h-5 text-slate-400 cursor-pointer"></i>
-                <button onclick="performLogout()"
-                    class="text-[13px] font-black text-teal-400 hover:text-teal-300 transition-colors uppercase tracking-[0.1em]">Exit</button>
-            </div>
-        </div>
+        <button onclick="openLoginModal()" class="text-[11px] font-black text-white bg-slate-900 px-8 py-3.5 rounded-full uppercase tracking-widest hover:bg-slate-800 transition-all">Get Started</button>
     </nav>
 
-    <!-- DNA ANIMATION FOCAL DIVISION (DIAGONAL 3D) -->
-    <div id="dna-animation-container" class="absolute inset-0 z-0 pointer-events-none opacity-80 mix-blend-screen"></div>
-
-    <header class="agency-hero">
-        <div class="agency-hero-content">
-            <!-- Institutional Badge -->
-            <div class="agency-label">ZENITH FOUNDATION • v26.1</div>
-
-            <!-- Main Title Section (Mockup Scale) -->
-            <div class="mb-12">
-                <h1 class="agency-title">
-                    Zenith <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 via-blue-500 to-teal-400">Ultra-~285M</span>
-                </h1>
-                <p class="text-xl font-bold text-slate-400 uppercase tracking-[0.5em] mb-4">Neural Parameter Mainframe</p>
+    <!-- Hero Section (9.webm Integration) -->
+    <section class="hero">
+        <div class="hero-bg">
+            <video class="hero-video" autoplay loop muted playsinline>
+                <source src="9.webm" type="video/webm">
+            </video>
+            <div class="pause-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-white opacity-50"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
             </div>
-
-            <!-- Narrative Hook (Agency Tone) -->
-            <p class="agency-subtitle">
-                The world’s first generative engine for <span class="serif-accent">Cellular Reprogramming</span>.
-                Simulating high-fidelity <span class="serif-accent">Yamanaka Factor</span>
-                trajectories to reverse biological aging at the cellular level.
-            </p>
-
-            <!-- Floating Stats (Glassmorphism 2.0) -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto mb-16">
-                <div class="glass-stat-card">
-                    <div class="stat-label">Mapped Cells (HCA)</div>
-                    <div class="stat-value">150,000+</div>
-                </div>
-                <div class="glass-stat-card">
-                    <div class="stat-label">Model Fidelity</div>
-                    <div class="stat-value">99.8%</div>
-                </div>
-                <div class="glass-stat-card">
-                    <div class="stat-label">System State</div>
-                    <div class="stat-value text-teal-500">OPTIMAL</div>
-                </div>
-            </div>
-
-            <!-- Action Area (Agency Button) -->
-            <div class="flex justify-center">
-                <button onclick="checkAuthAndRedirect('index.html')" class="btn-agency-primary">
-                    Open Simulation Lab
-                    <i data-lucide="terminal" class="w-5 h-5 ml-2"></i>
+        </div>
+        <div class="hero-overlay"></div>
+        
+        <div class="hero-content">
+            <h1 class="hero-title">Smarter Clinical <br>Operations Start Here</h1>
+            <p class="hero-description">We help research teams plan, manage, and deliver clinical 
+                trials with clarity, control, and measurable results via Zenith v26.1.</p>
+            <div class="flex flex-col items-center gap-6">
+                <button class="btn-launch" onclick="openLoginModal()">
+                    Request a Consultation
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
                 </button>
             </div>
         </div>
-    </header>
 
-    <!-- FOUNDATION DISCOVERY SECTION -->
-    <section class="py-32 bg-white border-y border-slate-50">
-        <div class="max-w-5xl mx-auto text-center px-6">
-            <span class="text-[10px] font-black text-blue-600 uppercase tracking-[0.6em] mb-6 block">Foundation
-                Intelligence</span>
-            <h2 class="text-6xl font-black text-slate-900 mb-10 tracking-tight leading-[1.1]"
-                style="font-family: 'Outfit', sans-serif;">
-                Mapping the <span class="italic text-slate-300">Complexity</span> of <br>Biological Rejuvenation.
-            </h2>
-            <p class="text-2xl text-slate-500 leading-relaxed max-w-4xl mx-auto font-medium">
-                Zenith is a proprietary AI framework engineered for <strong>simulating full-state cellular reprogramming
-                    (OSKM)</strong>.
-                Our mainframe models high-dimensional <span class="text-blue-600 font-bold">Yamanaka Factor</span>
-                trajectories to identify the precise
-                molecular triggers needed to navigate complex biological transitions.
-            </p>
+        <!-- HUD Bottom Bar -->
+        <div class="hero-console">
+            <div class="hud-value">A streamlined system designed to help medical teams move faster, reduce risk, and improve outcomes.</div>
         </div>
+    </section>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            <!-- Feature 1: Simulation Lab -->
-            <div
-                class="bg-white border-2 border-slate-100 rounded-2xl p-8 hover:border-blue-400 hover:shadow-2xl transition-all duration-300 group">
-                <div
-                    class="w-16 h-16 bg-teal-50 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-teal-400 transition-colors">
-                    <i data-lucide="microscope" class="w-8 h-8 text-teal-400 group-hover:text-white"></i>
+
+    <!-- FOUNDATION DISCOVERY SECTION (Clinical Minimalist) -->
+    <section class="py-40 bg-white">
+        <div class="max-w-7xl mx-auto px-12">
+            <div class="grid lg:grid-cols-2 gap-24 items-end mb-32">
+                <div>
+                    <span class="text-[11px] font-black text-slate-400 uppercase tracking-[0.4em] mb-8 block">Project Scope</span>
+                    <h2 class="text-6xl font-black text-slate-900 leading-[1.05] tracking-tight">A streamlined system <br>for medical teams.</h2>
                 </div>
-                <h3 class="text-2xl font-bold text-slate-900 mb-4" style="font-family: 'Outfit', sans-serif;">Simulation
-                    Lab</h3>
-                <p class="text-slate-600 leading-relaxed mb-6">
-                    Real-time visualization of cellular dynamics. Watch thousands of cells transition between states
-                    (iPSCs, neurons, tumors) as they respond to reprogramming protocols.
-                </p>
-                <button onclick="checkAuthAndRedirect('index.html')"
-                    class="inline-flex items-center gap-2 text-blue-600 font-bold text-sm hover:gap-4 transition-all cursor-pointer bg-transparent border-none p-0">
-                    Launch Lab <i data-lucide="arrow-right" class="w-4 h-4"></i>
-                </button>
+                <div>
+                    <p class="text-xl text-slate-500 leading-relaxed font-medium">
+                        Zenith v26.1 provides the architectural foundation for precision clinical navigation. 
+                        By leveraging ~285M parameters, we help teams move faster, reduce risk, and improve outcomes.
+                    </p>
+                </div>
             </div>
 
-            <!-- Feature 2: Evidence Registry -->
-            <div
-                class="bg-white border-2 border-slate-100 rounded-2xl p-8 hover:border-emerald-400 hover:shadow-2xl transition-all duration-300 group">
-                <div
-                    class="w-16 h-16 bg-emerald-100 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-emerald-600 transition-colors">
-                    <i data-lucide="shield-check" class="w-8 h-8 text-emerald-600 group-hover:text-white"></i>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-16">
+                <!-- Solution 1 -->
+                <div class="group cursor-pointer">
+                    <div class="text-[10px] font-black text-slate-300 uppercase tracking-widest mb-6">01 / DISCOVERY</div>
+                    <h3 class="text-2xl font-black text-slate-900 mb-4">Precision Manifolds</h3>
+                    <p class="text-slate-500 leading-relaxed mb-8">Access high-definition single-cell baselines to benchmark clinical trajectories with 99.8% fidelity.</p>
+                    <div class="w-12 h-px bg-slate-200 group-hover:w-full group-hover:bg-slate-900 transition-all duration-500"></div>
                 </div>
-                <h3 class="text-2xl font-bold text-slate-900 mb-4" style="font-family: 'Outfit', sans-serif;">Evidence
-                    Registry</h3>
-                <p class="text-slate-600 leading-relaxed mb-6">
-                    Access the foundational evidence spine. Audited SOTA benchmarks, Pearson correlations, and dataset
-                    provenance for Zenith v26.1.
-                </p>
-                <button onclick="window.open('evidence.html', '_blank')"
-                    class="inline-flex items-center gap-2 text-emerald-600 font-bold text-sm hover:gap-4 transition-all cursor-pointer bg-transparent border-none p-0">
-                    View Registry <i data-lucide="arrow-right" class="w-4 h-4"></i>
-                </button>
-            </div>
 
-            <!-- Feature 3: Partnership Dashboard -->
-            <div
+                <!-- Solution 2 -->
+                <div class="group cursor-pointer">
+                    <div class="text-[10px] font-black text-slate-300 uppercase tracking-widest mb-6">02 / COMPLIANCE</div>
+                    <h3 class="text-2xl font-black text-slate-900 mb-4">Evidence Registry</h3>
+                    <p class="text-slate-500 leading-relaxed mb-8">Full provenance tracking for research use only (RUO) applications, ensuring institutional-grade audit trails.</p>
+                    <div class="w-12 h-px bg-slate-200 group-hover:w-full group-hover:bg-slate-900 transition-all duration-500"></div>
+                </div>
+
+                <!-- Solution 3 -->
+                <div class="group cursor-pointer">
+                    <div class="text-[10px] font-black text-slate-300 uppercase tracking-widest mb-6">03 / EXECUTION</div>
+                    <h3 class="text-2xl font-black text-slate-900 mb-4">Simulation Lab</h3>
+                    <p class="text-slate-500 leading-relaxed mb-8">Deploy virtual trials to plan and manage complex reprogramming protocols with clarity and control.</p>
+                    <div class="w-12 h-px bg-slate-200 group-hover:w-full group-hover:bg-slate-900 transition-all duration-500"></div>
+                </div>
+            </div>
+        </div>
+    </section>
                 class="bg-white border-2 border-slate-100 rounded-2xl p-8 hover:border-purple-400 hover:shadow-2xl transition-all duration-300 group">
                 <div
                     class="w-16 h-16 bg-purple-100 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-purple-600 transition-colors">
@@ -1619,31 +1468,22 @@
     <script src="js/profile_dna.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <script src="js/firebase_config.js"></script>
-    <!-- GLOBAL STATUS FOOTER -->
-    <div class="pre-nav">
-        <div class="flex gap-8">
-            <p>Resolution: <span>5,000 Genes</span></p>
-            <p>Architecture: <span>Ultra-5600 Manifold</span></p>
-        </div>
-        <div class="flex gap-6 items-center">
-            <div class="flex items-center gap-3 px-3 py-1 bg-white/5 rounded border border-white/10 mr-4">
-                <span class="relative flex h-1.5 w-1.5">
-                    <span
-                        class="animate-ping absolute inline-flex h-full w-full rounded-full bg-teal-400 opacity-75"></span>
-                    <span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-teal-500"></span>
-                </span>
-                <p class="text-[8px] font-black text-slate-300 uppercase tracking-[0.1em]">Engine: <span
-                        class="text-teal-400">Active</span> // Yamanaka_OSKM_v26.1</p>
+    <!-- FINAL STATUS FOOTER (Clinical Minimalist) -->
+    <footer class="py-24 bg-white border-t border-slate-50">
+        <div class="max-w-7xl mx-auto px-12 flex flex-col md:flex-row justify-between items-center gap-12">
+            <div class="flex items-center gap-4">
+                <svg class="w-6 h-6 text-slate-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                <div class="text-[10px] font-black text-slate-300 uppercase tracking-[0.5em]">Nilus Lab Institutional | RUO v26.1</div>
             </div>
-            <p class="flex items-center gap-2">
-                <span class="w-2 h-2 bg-teal-400 rounded-full"></span>
-                System: <span>Stable Node</span>
-            </p>
-            <div class="h-3 w-px bg-slate-700"></div>
-            <p id="clock" class="text-white">--:--:--</p>
+            <div class="flex gap-12 text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                <span>Not a Medical Device</span>
+                <span>No Clinical Claims</span>
+                <span>© 2026 Zenith Foundation</span>
+            </div>
         </div>
-    </div>
+    </footer>
 
+    <script src="js/firebase_config.js"></script>
     <script>
         lucide.createIcons();
 
@@ -1656,30 +1496,13 @@
         setInterval(updateClock, 1000);
         updateClock();
 
-        // Public page - show different UI based on auth state
         firebase.auth().onAuthStateChanged((user) => {
-            const signedIn = document.getElementById('auth-signed-in');
-            const signedOut = document.getElementById('auth-signed-out');
-
             if (user) {
-                // User is logged in
-                signedIn.classList.remove('hidden');
-                signedIn.classList.add('flex');
-                signedOut.classList.add('hidden');
-
                 const nameEl = document.getElementById('profile-name');
                 const fullPrefix = user.email.split('@')[0];
                 const displayName = fullPrefix.split(/[\._]/)[0].toUpperCase();
-                if (nameEl) {
-                    nameEl.innerText = displayName;
-                }
-            } else {
-                // User is NOT logged in
-                signedIn.classList.add('hidden');
-                signedOut.classList.remove('hidden');
+                if (nameEl) nameEl.innerText = displayName;
             }
-
-            lucide.createIcons(); // Re-render icons after UI change
         });
 
         function checkAuthAndRedirect(url) {
@@ -1687,19 +1510,15 @@
             if (user) {
                 window.location.href = url;
             } else {
-                // Open login modal instead of redirecting
                 openLoginModal();
             }
         }
 
         function performLogout() {
             firebase.auth().signOut().then(() => {
-                window.location.reload(); // Reload to show signed-out state
+                window.location.reload();
             });
         }
-
-        // Modal control
-        let isLoginMode = true;
 
         function openLoginModal() {
             document.getElementById('login-modal').classList.add('active');
@@ -1713,33 +1532,16 @@
         }
 
         function toggleAuthMode() {
-            isLoginMode = !isLoginMode;
+            // Simplified toggle for this minimalist design
             const title = document.getElementById('modal-title');
-            const subtitle = document.getElementById('modal-subtitle');
-            const btnText = document.getElementById('modal-btn-text');
-            const toggleText = document.getElementById('modal-toggle-text');
-            const toggleBtn = document.getElementById('modal-toggle-btn');
-            const confirmContainer = document.getElementById('modal-confirm-container');
-            const confirmInput = document.getElementById('modal-confirm-password');
-
-            if (isLoginMode) {
-                title.innerText = 'Welcome Back';
-                subtitle.innerText = 'Sign in to access simulation tools';
-                btnText.innerText = 'Sign In';
-                toggleText.innerText = 'New to Nilus Lab?';
-                toggleBtn.innerText = 'Create Account';
-                confirmContainer.classList.add('hidden');
-                confirmInput.removeAttribute('required');
-            } else {
+            const submitBtn = document.getElementById('modal-submit-btn');
+            if (title.innerText === 'Welcome Back') {
                 title.innerText = 'Create Account';
-                subtitle.innerText = 'Join the research platform';
-                btnText.innerText = 'Sign Up';
-                toggleText.innerText = 'Already have an account?';
-                toggleBtn.innerText = 'Sign In';
-                confirmContainer.classList.remove('hidden');
-                confirmInput.setAttribute('required', 'true');
+                submitBtn.innerText = 'Sign Up';
+            } else {
+                title.innerText = 'Welcome Back';
+                submitBtn.innerText = 'Sign In';
             }
-            document.getElementById('modal-error').classList.add('hidden');
         }
 
         async function handleAuthModal(e) {
@@ -1747,86 +1549,28 @@
             const email = document.getElementById('modal-email').value;
             const password = document.getElementById('modal-password').value;
             const submitBtn = document.getElementById('modal-submit-btn');
-            const errorDiv = document.getElementById('modal-error');
-            const errorText = document.getElementById('modal-error-text');
-
-            if (!isLoginMode) {
-                const confirmPassword = document.getElementById('modal-confirm-password').value;
-                if (password !== confirmPassword) {
-                    errorText.innerText = 'Passwords do not match';
-                    errorDiv.classList.remove('hidden');
-                    return;
-                }
-            }
-
-            // Loading state
-            const originalContent = submitBtn.innerHTML;
-            submitBtn.innerHTML = '<i class="animate-spin w-5 h-5" data-lucide="loader-2"></i> Processing...';
-            submitBtn.disabled = true;
-            errorDiv.classList.add('hidden');
-            lucide.createIcons();
-
+            
             try {
-                if (isLoginMode) {
-                    await firebase.auth().signInWithEmailAndPassword(email, password);
-                } else {
-                    await firebase.auth().createUserWithEmailAndPassword(email, password);
-                }
-
-                // Success
-                submitBtn.innerHTML = '<i data-lucide="check" class="w-5 h-5"></i> Success!';
-                lucide.createIcons();
-
-                setTimeout(() => {
-                    closeLoginModal();
-                    window.location.reload(); // Stay on profile page, just refresh to show signed-in state
-                }, 800);
-
+                await firebase.auth().signInWithEmailAndPassword(email, password);
+                window.location.reload();
             } catch (error) {
-                console.error('Auth error:', error);
-                submitBtn.innerHTML = originalContent;
-                submitBtn.disabled = false;
-                errorText.innerText = parseAuthError(error.code);
+                const errorDiv = document.getElementById('modal-error');
+                const errorText = document.getElementById('modal-error-text');
+                errorText.innerText = 'Authentication failed. Please check your credentials.';
                 errorDiv.classList.remove('hidden');
-                lucide.createIcons();
             }
         }
 
-        // Google Sign-In
         async function signInWithGoogle() {
             const provider = new firebase.auth.GoogleAuthProvider();
-            const errorDiv = document.getElementById('modal-error');
-            const errorText = document.getElementById('modal-error-text');
-
             try {
                 await firebase.auth().signInWithPopup(provider);
-                // Success - auth state change will trigger reload
-                closeLoginModal();
-                setTimeout(() => {
-                    window.location.reload();
-                }, 500);
+                window.location.reload();
             } catch (error) {
-                console.error('Google sign-in error:', error);
-                errorText.innerText = error.code === 'auth/popup-closed-by-user'
-                    ? 'Sign-in cancelled'
-                    : 'Google sign-in failed. Please try again.';
-                errorDiv.classList.remove('hidden');
+                console.error(error);
             }
         }
 
-
-        function parseAuthError(code) {
-            switch (code) {
-                case 'auth/invalid-email': return 'Invalid email address';
-                case 'auth/user-not-found': return 'No account found with this email';
-                case 'auth/wrong-password': return 'Incorrect password';
-                case 'auth/email-already-in-use': return 'Email already registered';
-                case 'auth/weak-password': return 'Password must be at least 6 characters';
-                default: return 'Authentication failed. Please try again.';
-            }
-        }
-
-        // Close modal on outside click
         document.getElementById('login-modal').addEventListener('click', function (e) {
             if (e.target === this) {
                 closeLoginModal();
@@ -1834,5 +1578,4 @@
         });
     </script>
 </body>
-
 </html>
