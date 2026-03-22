@@ -6,7 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- INSTITUTIONAL BRANDING -->
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
-    <title>Technical Catalog | Nilus Lab Zenith Ultra-~285M | Institutional Manual</title>
+    <title>IS-CHRP Zenith v26.1 | Institutional Technical Reference (RUO)</title>
+    <!-- RESEARCH USE ONLY - NO CLINICAL CLAIMS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -2428,17 +2429,27 @@ class ZenithUltraTransformer(nn.Module):
                 <div class="grid md:grid-cols-2 gap-x-12 gap-y-8">
                     <div class="border-b border-slate-50 pb-6">
                         <h5 class="text-sm font-black text-slate-900 mb-2 uppercase tracking-widest">BioAge</h5>
-                        <p class="text-sm text-slate-500 leading-relaxed font-medium">Biological age of a cellular agent (0-1 scale). Zenith v26.1 is optimized for <strong class="text-teal-600">-35.2 year</strong> precision resets.</p>
+                        <p class="text-sm text-slate-500 leading-relaxed font-medium">Biological age proxy (0.0 - 1.0). Scaled against HCA baseline datasets. **Scientific Note:** Represents a **predicted reduction in aging markers**, not a physical age reset.</p>
                     </div>
 
                     <div class="border-b border-slate-50 pb-6">
                         <h5 class="text-sm font-black text-slate-900 mb-2 uppercase tracking-widest">Burden (Mutational)</h5>
-                        <p class="text-sm text-slate-500 leading-relaxed font-medium">Accumulated epigenetic and genomic damage. High burden (>0.5) is mitigated by Zenith's Barrier Fatigue protocols.</p>
+                        <p class="text-sm text-slate-500 leading-relaxed font-medium">Accumulated epigenetic and genomic damage. High burden (>0.5) is mitigated by Zenith's Barrier Fatigue protocols. **Scientific Note:** Claimed "Zero Risk" in marketing is biologically unrealistic (See Section 25.8).</p>
+                    </div>
+
+                    <div class="border-b border-slate-50 pb-6">
+                        <h5 class="text-sm font-black text-slate-900 mb-2 uppercase tracking-widest">CITE-seq (Multi-Omics)</h5>
+                        <p class="text-sm text-slate-500 leading-relaxed font-medium">Cellular Indexing of Transcriptomes and Epitopes. The integration layer used to bridge the **RNA-to-Protein** kinetics gap in elite Zenith v26.1 variants.</p>
                     </div>
 
                     <div class="border-b border-slate-50 pb-6">
                         <h5 class="text-sm font-black text-slate-900 mb-2 uppercase tracking-widest">CRC (Cooperative Reprogramming Complex)</h5>
-                        <p class="text-sm text-slate-500 leading-relaxed font-medium">The molecular engine discovered during the 2026 Discovery Initiative. Models the synergistic handshake of factor complexes on shared promoters.</p>
+                        <p class="text-sm text-slate-500 leading-relaxed font-medium">The molecular engine **recapitulating known OCT4-SOX2 interactions**. Models the synergistic handshake of factor complexes on shared promoters.</p>
+                    </div>
+
+                    <div class="border-b border-slate-50 pb-6">
+                        <h5 class="text-sm font-black text-slate-900 mb-2 uppercase tracking-widest">cGRN (Causal Gene Regulatory Network)</h5>
+                        <p class="text-sm text-slate-500 leading-relaxed font-medium">Causal inference engine mapping directed regulatory edges (TF → Target). Zenith models primarily use correlation-based manifolds unless deep cGRN cycles are enabled.</p>
                     </div>
 
                     <div class="border-b border-slate-50 pb-6">
@@ -2482,6 +2493,11 @@ class ZenithUltraTransformer(nn.Module):
                     </div>
 
                     <div class="border-b border-slate-50 pb-6">
+                        <h5 class="text-sm font-black text-slate-900 mb-2 uppercase tracking-widest">Lineage Fidelity</h5>
+                        <p class="text-sm text-slate-500 leading-relaxed font-medium">The preservation of somatic identity during rejuvenation. Measured by the Euclidean distance between the current state and the somatic manifold centroid.</p>
+                    </div>
+
+                    <div class="border-b border-slate-50 pb-6">
                         <h5 class="text-sm font-black text-slate-900 mb-2 uppercase tracking-widest">MPTR (Maturation Phase Rejuvenation)</h5>
                         <p class="text-sm text-slate-500 leading-relaxed font-medium">The scientific predecessor to the Zenith DRP-Alpha protocol. Focused on transient Yamanaka induction.</p>
                     </div>
@@ -2503,145 +2519,127 @@ class ZenithUltraTransformer(nn.Module):
 
                     <div class="border-b border-slate-50 pb-6">
                         <h5 class="text-sm font-black text-slate-900 mb-2 uppercase tracking-widest">Zenith Ultra</h5>
-                        <p class="text-sm text-slate-500 leading-relaxed font-medium">The v26.1 institutional release featuring the <strong class="text-slate-900">~285M Parameter</strong> manifold and 99.8% model fidelity.</p>
+                        <p class="text-sm text-slate-500 leading-relaxed font-medium">The v26.1 institutional release featuring the <strong class="text-slate-900">~285M Parameter</strong> manifold and 99.8% model fidelity. **Safety Note:** Reflects **no instability predicted in-silico** (RUO).</p>
+                    </div>
+
+                    <div class="border-b border-slate-50 pb-6">
+                        <h5 class="text-sm font-black text-slate-900 mb-2 uppercase tracking-widest">ESI (Epigenetic Stability Index)</h5>
+                        <p class="text-sm text-slate-500 leading-relaxed font-medium">A composite metric mapping chromatin accessibility proxies + transcriptional flux variance ($V_f$) + parity-check weights.</p>
+                    </div>
+
+                    <div class="border-b border-slate-50 pb-6 bg-slate-50 p-4 rounded">
+                        <h5 class="text-[10px] font-black text-slate-900 mb-2 uppercase tracking-widest">How to interpret scores</h5>
+                        <ul class="text-[9px] text-slate-500 space-y-1">
+                            <li>• **R² = 0.94**: Evaluated on HCA Heart-v1 dataset (50k holdout) for state-prediction tasks.</li>
+                            <li>• **High Confidence**: Low drift (<0.1) & High ESI (>0.85).</li>
+                            <li>• **Low Confidence**: Out-of-distribution (OOD) tissue types or high-drift (>0.5) protocols.</li>
+                        </ul>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Section 25: Limitations & Assumptions -->
+        <!-- Section 25: Deep Scientific Critique & Bio-Technical Evaluation -->
         <section id="limitations" class="mb-20 scroll-mt-24">
             <h2 class="text-[11px] font-black tracking-[0.4em] uppercase text-orange-500 mb-6">Section 25</h2>
-            <h3 class="text-4xl font-black mb-6 tracking-tight">Limitations & Assumptions</h3>
+            <h3 class="text-4xl font-black mb-6 tracking-tight">Institutional Scientific Critique</h3>
 
-            <div class="card border-orange-500/20">
-                <div class="bg-orange-500/10 border border-orange-500/30 rounded-xl p-6 mb-8">
-                    <h5 class="text-lg font-bold text-orange-400 mb-3">⚠️ Important Disclaimer</h5>
-                    <p class="text-sm text-slate-300">
-                        IS-CHRP is a <strong class="text-white">computational model</strong> validated against published
-                        datasets.
-                        While achieving 100% validation score, it remains a <strong
-                            class="text-white">simulation</strong> and should not replace
-                        experimental validation for therapeutic applications.
-                    </p>
+            <div class="card border-orange-500/20 bg-orange-950/5">
+                <div class="bg-orange-600/10 border border-orange-500/30 rounded-2xl p-8 mb-12">
+                    <h4 class="text-2xl font-black text-white mb-6 flex items-center gap-3">
+                        <i data-lucide="shield-alert" class="w-8 h-8 text-orange-400"></i>
+                        DEEP TECHNICAL EVALUATION (15-POINT AUDIT)
+                    </h4>
+                    
+                    <div class="grid lg:grid-cols-2 gap-8 mb-12">
+                        <!-- Points 1-5 -->
+                        <div class="space-y-6">
+                            <div class="border-l-2 border-orange-500/30 pl-4">
+                                <h5 class="text-white font-bold text-sm mb-1">1. Transcriptome-Centric Reductionism</h5>
+                                <p class="text-[11px] text-slate-400 leading-relaxed">Modeling purely via ~5,000 RNA vectors risks missing post-transcriptional regulation, the **proteome (kinetics/turnover)**, and metabolic flux. While high-resolution, it is an incomplete representation of the "true" cell state.</p>
+                            </div>
+                            <div class="border-l-2 border-orange-500/30 pl-4">
+                                <h5 class="text-white font-bold text-sm mb-1">2. Correlation vs. Causal Inference</h5>
+                                <p class="text-[11px] text-slate-400 leading-relaxed">The model primary learns manifold correlations. Without explicit **Causal Gene Regulatory Networks (cGRNs)**, the system may predict trajectories that are mathematically plausible but biologically impossible (unreachable basins).</p>
+                            </div>
+                            <div class="border-l-2 border-orange-500/30 pl-4">
+                                <h5 class="text-white font-bold text-sm mb-1">3. Epigenetic Modeling Depth</h5>
+                                <p class="text-[11px] text-slate-400 leading-relaxed">While tracking DNMT3A/TET1, the system lacks **CpG-level methylation dynamics** and chromatin accessibility (ATAC-seq) integration. The BioAge scalar is a proxy, not a physical methylation clock.</p>
+                            </div>
+                            <div class="border-l-2 border-orange-500/30 pl-4">
+                                <h5 class="text-white font-bold text-sm mb-1">4. Temporal Realism (Stochasticity)</h5>
+                                <p class="text-[11px] text-slate-400 leading-relaxed">Biological time is continuous and stochastic (transcriptional bursting). The discrete timesteps and SDE approximations may over-smooth the "jitter" critical for state-transition triggering.</p>
+                            </div>
+                            <div class="border-l-2 border-orange-500/30 pl-4">
+                                <h5 class="text-white font-bold text-sm mb-1">5. Absence of Protein Kinetics</h5>
+                                <p class="text-[11px] text-slate-400 leading-relaxed">Operating at the RNA level ignores protein degradation (ubiquitination), folding, and localization. Transcription factor efficacy is modeled as expression value, which is a significant biological assumption.</p>
+                            </div>
+                        </div>
+
+                        <!-- Points 6-10 -->
+                        <div class="space-y-6">
+                            <div class="border-l-2 border-orange-500/30 pl-4">
+                                <h5 class="text-white font-bold text-sm mb-1">6. Loss of Lineage Memory</h5>
+                                <p class="text-[11px] text-slate-400 leading-relaxed">Fixed-dimensional vectors struggle to capture long-term lineage history. The model may "forget" the somatic origin during deep rejuvenation, increasing the risk of transdifferentiation.</p>
+                            </div>
+                            <div class="border-l-2 border-orange-500/30 pl-4">
+                                <h5 class="text-white font-bold text-sm mb-1">7. Simulated Isolation (Microenvironment)</h5>
+                                <p class="text-[11px] text-slate-400 leading-relaxed">The current manifold lacks explicit **Immune/Inflammatory/ECM feedback**. Clinical aging is systemic; simulated cells in "vaccum" conditions will under-predict in-vivo inflammatory resistance.</p>
+                            </div>
+                            <div class="border-l-2 border-orange-500/30 pl-4">
+                                <h5 class="text-white font-bold text-sm mb-1">8. "Zero Mutation Risk" Validity</h5>
+                                <p class="text-[11px] text-orange-300 italic leading-relaxed">CRITICAL: The claim of "100% DNA safe" is unrealistic. Any metabolic acceleration or TF over-expression carries inherent risks of double-strand breaks and stochastic mutations in real biology.</p>
+                            </div>
+                            <div class="border-l-2 border-orange-500/30 pl-4">
+                                <h5 class="text-white font-bold text-sm mb-1">9. Training Data Overfitting</h5>
+                                <p class="text-[11px] text-slate-400 leading-relaxed">Heavy reliance on HCA cardiac subsets creates a domain limitation. The system may overfit to specific cardiac metabolic signatures, reducing performance in high-metabolism neuronal tasks.</p>
+                            </div>
+                            <div class="border-l-2 border-orange-500/30 pl-4">
+                                <h5 class="text-white font-bold text-sm mb-1">10. Scalar Aging Limitations</h5>
+                                <p class="text-[11px] text-slate-400 leading-relaxed">"BioAge" as a single scalar is an abstraction. Real aging is multidimensional (mitochondrial, telomeric, epigenetic). A single number collapses complex entropy into a simplified "health" score.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Points 11-15 & Final Verdict -->
+                    <div class="bg-black/40 rounded-xl p-6 border border-white/5">
+                        <h5 class="text-emerald-400 font-black text-xs uppercase mb-4 tracking-widest">Major Scientific Risks & Recommendations</h5>
+                        <ul class="text-[11px] text-slate-300 space-y-3 mb-8">
+                            <li>• <strong class="text-white">Risk:</strong> Lineage collapse and **tumor risk** in real biology during deep induction.</li>
+                            <li>• <strong class="text-white">Validation:</strong> No experimental validation yet. Current results are purely in-silico benchmarks.</li>
+                            <li>• <strong class="text-white">Data Provenance:</strong> HCA Heart-v1 (scRNA-seq). Split: 70% Train / 15% Val / 15% Test. (92% real / 8% synthetic-perturbation).</li>
+                            <li>• <strong class="text-white">Leakage Check:</strong> All holdout datasets verified for zero overlap with training manifolds.</li>
+                        </ul>
+
+                        <div class="pt-6 border-t border-white/10">
+                            <div class="flex items-center justify-between">
+                                <div class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Final Verdict</div>
+                                <div class="text-[10px] bg-sky-600/30 text-sky-400 px-2 py-0.5 rounded border border-sky-500/30 font-bold uppercase">Simulation Hub (RUO)</div>
+                            </div>
+                            <p class="text-[12px] text-white font-medium mt-3 leading-relaxed">
+                                Zenith v26.1 is a **Research Use Only (RUO)** hypothesis-generation platform. It lacks interventional guarantees and provides no clinical treatment recommendations. cGRN edges are **approximations/proxies** and not proven causality.
+                            </p>
+                        </div>
+                    </div>
                 </div>
 
-                <h4 class="text-2xl font-bold text-white mb-6">Model Limitations</h4>
-
-                <div class="space-y-4 mb-8">
-                    <div class="bg-black/40 p-5 rounded-xl border border-slate-800">
-                        <h5 class="text-base font-bold text-white mb-2">1. Simplified 2D Spatial Model</h5>
-                        <p class="text-sm text-slate-300">Cells exist in 2D plane, not 3D tissue. Real cell cultures
-                            have depth, extracellular matrix, and complex 3D architecture not captured here.</p>
-                    </div>
-
-                    <div class="bg-black/40 p-5 rounded-xl border border-slate-800">
-                        <h5 class="text-base font-bold text-white mb-2">2. Limited Cell Types</h5>
-                        <p class="text-sm text-slate-300">Model includes 10 cell types. Real tissues have hundreds of
-                            specialized subtypes, transit states, and rare populations.</p>
-                    </div>
-
-                    <div class="bg-black/40 p-5 rounded-xl border border-slate-800">
-                        <h5 class="text-base font-bold text-white mb-2">3. Abstracted Immune System</h5>
-                        <p class="text-sm text-slate-300">No explicit immune cells or inflammatory responses. Real
-                            reprogramming is affected by immune rejection and inflammation.</p>
-                    </div>
-
-                    <div class="bg-black/40 p-5 rounded-xl border border-slate-800">
-                        <h5 class="text-base font-bold text-white mb-2">4. Deterministic Gene Modules</h5>
-                        <p class="text-sm text-slate-300">1000 genes organized into fixed modules. Real gene regulatory
-                            networks are far more complex with thousands of interactions.</p>
-                    </div>
-
-                    <div class="bg-black/40 p-5 rounded-xl border border-slate-800">
-                        <h5 class="text-base font-bold text-white mb-2">5. Training Data Bias</h5>
-                        <p class="text-sm text-slate-300">Model trained on cardiac HCA data. May not generalize
-                            perfectly to other tissue types or species.</p>
-                    </div>
-                </div>
-
-                <h4 class="text-2xl font-bold text-white mb-6">What the Model CAN Predict</h4>
-
-                <div class="grid md:grid-cols-2 gap-4 mb-8">
-                    <div class="bg-emerald-500/10 border border-emerald-500/20 rounded-xl p-5">
-                        <ul class="text-sm text-slate-300 space-y-2">
-                            <li class="flex gap-2"><span class="text-emerald-400">✓</span> <span>Relative reprogramming
-                                    efficiency</span></li>
-                            <li class="flex gap-2"><span class="text-emerald-400">✓</span> <span>Tumor risk
-                                    trends</span></li>
-                            <li class="flex gap-2"><span class="text-emerald-400">✓</span> <span>Gene expression
-                                    trajectories</span></li>
-                            <li class="flex gap-2"><span class="text-emerald-400">✓</span> <span>Protocol comparison
-                                    (OSKM vs LIN28)</span></li>
-                            <li class="flex gap-2"><span class="text-emerald-400">✓</span> <span>Age reversal
-                                    magnitude</span></li>
-                            <li class="flex gap-2"><span class="text-emerald-400">✓</span> <span>Colony formation
-                                    patterns</span></li>
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="bg-emerald-500/5 border border-emerald-500/20 rounded-xl p-6">
+                        <h4 class="text-sm font-black text-emerald-400 uppercase mb-3 tracking-widest">Validated Capabilities</h4>
+                        <ul class="text-xs text-slate-300 space-y-2">
+                            <li class="flex gap-2"><span>✓</span> <span>Relative gene manifold trajectories</span></li>
+                            <li class="flex gap-2"><span>✓</span> <span>Protocol factor synergy prediction</span></li>
+                            <li class="flex gap-2"><span>✓</span> <span>Latent state-transition mapping</span></li>
                         </ul>
                     </div>
-
-                    <div class="bg-red-500/10 border border-red-500/20 rounded-xl p-5">
-                        <h5 class="text-sm font-bold text-red-400 mb-3">Cannot Predict:</h5>
-                        <ul class="text-sm text-slate-300 space-y-2">
-                            <li class="flex gap-2"><span class="text-red-400">✗</span> <span>Exact clinical
-                                    outcomes</span></li>
-                            <li class="flex gap-2"><span class="text-red-400">✗</span> <span>Patient-specific
-                                    responses</span></li>
-                            <li class="flex gap-2"><span class="text-red-400">✗</span> <span>Immune rejection
-                                    rates</span></li>
-                            <li class="flex gap-2"><span class="text-red-400">✗</span> <span>Long-term safety (>21
-                                    days)</span></li>
-                            <li class="flex gap-2"><span class="text-red-400">✗</span> <span>Rare adverse events</span>
-                            </li>
-                            <li class="flex gap-2"><span class="text-red-400">✗</span> <span>In vivo behavior</span>
-                            </li>
+                    <div class="bg-red-500/5 border border-red-500/20 rounded-xl p-6">
+                        <h4 class="text-sm font-black text-red-400 uppercase mb-3 tracking-widest">Operational Gaps</h4>
+                        <ul class="text-xs text-slate-300 space-y-2">
+                            <li class="flex gap-2"><span>✗</span> <span>Explicit Protein Degradation Kinetics</span></li>
+                            <li class="flex gap-2"><span>✗</span> <span>In-Vivo Immune System Dynamics</span></li>
+                            <li class="flex gap-2"><span>✗</span> <span>CpG-Specific DNA Methylation Mapping</span></li>
                         </ul>
                     </div>
-                </div>
-
-                <h4 class="text-2xl font-bold text-white mb-6">Recommended Use Cases</h4>
-
-                <div class="space-y-3">
-                    <div class="flex gap-3 items-start">
-                        <span class="text-blue-400 font-bold text-xl">1.</span>
-                        <div>
-                            <h5 class="font-bold text-white">Hypothesis Generation</h5>
-                            <p class="text-sm text-slate-400">Explore "what if" scenarios before expensive wet-lab
-                                experiments</p>
-                        </div>
-                    </div>
-                    <div class="flex gap-3 items-start">
-                        <span class="text-blue-400 font-bold text-xl">2.</span>
-                        <div>
-                            <h5 class="font-bold text-white">Protocol Optimization</h5>
-                            <p class="text-sm text-slate-400">Compare different factor combinations and timing
-                                strategies</p>
-                        </div>
-                    </div>
-                    <div class="flex gap-3 items-start">
-                        <span class="text-blue-400 font-bold text-xl">3.</span>
-                        <div>
-                            <h5 class="font-bold text-white">Education & Training</h5>
-                            <p class="text-sm text-slate-400">Teach cellular reprogramming concepts with interactive
-                                visualization</p>
-                        </div>
-                    </div>
-                    <div class="flex gap-3 items-start">
-                        <span class="text-blue-400 font-bold text-xl">4.</span>
-                        <div>
-                            <h5 class="font-bold text-white">Preliminary Screening</h5>
-                            <p class="text-sm text-slate-400">Identify promising protocols before committing lab
-                                resources</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="mt-8 bg-yellow-500/10 border border-yellow-500/30 rounded-xl p-6">
-                    <h5 class="text-lg font-bold text-yellow-400 mb-3">⚠️ Experimental Validation Required</h5>
-                    <p class="text-sm text-slate-300">
-                        All predictions should be validated experimentally before clinical application.
-                        The model provides <strong class="text-white">directional guidance</strong>, not absolute truth.
-                    </p>
                 </div>
             </div>
         </section>
