@@ -140,6 +140,24 @@
             border-bottom: 1px solid #f1f5f9;
         }
 
+        /* Full-page fixed DNA video background */
+        .page-dna-bg {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 55%;
+            height: 100vh;
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.12;
+        }
+
+        .page-dna-bg video {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
         .hero-bg {
             position: absolute;
             top: 0;
@@ -170,9 +188,49 @@
         .hero-content {
             position: relative;
             z-index: 10;
-            max-width: 640px;
+            max-width: 700px;
             padding: 0 0 0 10%;
             text-align: left;
+        }
+
+        /* Institutional Diligence Dropdown */
+        .inst-diligence-wrapper {
+            position: relative;
+        }
+
+        .inst-dropdown {
+            display: none;
+            position: absolute;
+            top: calc(100% + 12px);
+            left: 0;
+            background: white;
+            border: 1px solid #f1f5f9;
+            border-radius: 16px;
+            padding: 8px;
+            min-width: 220px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+            z-index: 9999;
+        }
+
+        .inst-diligence-wrapper:hover .inst-dropdown {
+            display: block;
+        }
+
+        .inst-dropdown a {
+            display: block;
+            padding: 10px 16px;
+            font-size: 12px;
+            font-weight: 700;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            border-radius: 10px;
+            transition: all 0.2s;
+        }
+
+        .inst-dropdown a:hover {
+            background: #f8fafc;
+            color: #0f172a;
         }
 
 
@@ -992,12 +1050,21 @@
             
             <div class="flex items-center gap-10">
                 <a href="index.html" class="text-[12px] font-bold text-blue-600 uppercase tracking-wide">Zenith Mainframe</a>
-                <div class="flex items-center gap-1.5 cursor-pointer">
-                    <span class="text-[12px] font-bold text-slate-500 uppercase tracking-wide">Institutional Diligence</span>
+                
+                <!-- Institutional Diligence with working dropdown -->
+                <div class="inst-diligence-wrapper flex items-center gap-1.5 cursor-pointer">
+                    <span class="text-[12px] font-bold text-slate-500 uppercase tracking-wide hover:text-slate-900 transition-colors">Institutional Diligence</span>
                     <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-400"></i>
+                    <div class="inst-dropdown">
+                        <a href="evidence.html">Evidence Registry</a>
+                        <a href="whitepaper.html">Research Whitepaper</a>
+                        <a href="regulatory.html">Regulatory Statement</a>
+                        <a href="v26_clinical_report.html">Clinical Report v26.1</a>
+                    </div>
                 </div>
-                <a href="technical_catalog.html" class="text-[12px] font-bold text-slate-500 uppercase tracking-wide">Foundation Catalog</a>
-                <a href="virtual_trials.html" class="text-[12px] font-bold text-slate-500 uppercase tracking-wide">Virtual Trials</a>
+
+                <a href="technical_catalog.html" class="text-[12px] font-bold text-slate-500 uppercase tracking-wide hover:text-slate-900 transition-colors">Foundation Catalog</a>
+                <a href="trials.html" class="text-[12px] font-bold text-slate-500 uppercase tracking-wide hover:text-slate-900 transition-colors">Virtual Trials</a>
             </div>
         </div>
 
@@ -1012,7 +1079,7 @@
         </div>
     </nav>
 
-    <!-- Hero Section (DNA Animation - Right Layout) -->
+    <!-- Hero Section -->
     <section class="hero">
         <div class="hero-bg">
             <video class="hero-video" id="profile-dna-video" autoplay loop muted playsinline preload="auto">
@@ -1028,17 +1095,17 @@
         
         <div class="hero-content">
             <span class="text-[11px] font-black text-slate-400 uppercase tracking-[0.5em] mb-8 block">Neural Parameter Mainframe</span>
-            <h1 class="text-8xl font-black text-slate-900 leading-[0.95] tracking-tighter mb-8">
-                Zenith <span class="text-blue-600">Ultra-</span>
+            <h1 class="font-black text-slate-900 leading-none tracking-tighter mb-8 whitespace-nowrap" style="font-size: clamp(36px, 6vw, 80px);">
+                Zenith Ultra-~285M
             </h1>
-            <p class="text-xl text-slate-500 leading-relaxed max-w-xl font-medium mb-12">
-                The world's first generative engine for <span class="text-emerald-500 font-bold">Cellular Reprogramming</span>. Simulating high-fidelity <span class="italic text-emerald-500">Yamanaka Factor</span> trajectories to reverse biological aging at the cellular level.
+            <p class="text-lg text-slate-500 leading-relaxed max-w-xl font-medium mb-12">
+                The world's first generative engine for <span class="font-bold text-slate-900">Cellular Reprogramming</span>. Simulating high-fidelity <span class="italic font-semibold text-slate-700">Yamanaka Factor</span> trajectories to reverse biological aging at the cellular level.
             </p>
             <div class="flex items-center gap-6">
-                <button class="bg-slate-900 hover:bg-slate-800 text-white px-10 py-4 rounded-2xl text-[13px] font-black uppercase tracking-widest flex items-center gap-3 shadow-xl transition-all transform hover:-translate-y-0.5" onclick="openLoginModal()">
+                <a href="index.html" class="bg-slate-900 hover:bg-slate-800 text-white px-10 py-4 rounded-2xl text-[13px] font-black uppercase tracking-widest flex items-center gap-3 shadow-xl transition-all transform hover:-translate-y-0.5">
                     Open Simulation Lab
                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-                </button>
+                </a>
             </div>
         </div>
 
