@@ -1102,7 +1102,7 @@
                 The world's first generative engine for <span class="font-bold text-slate-900">Cellular Reprogramming</span>. Simulating high-fidelity <span class="italic font-semibold text-slate-700">Yamanaka Factor</span> trajectories to reverse biological aging at the cellular level.
             </p>
             <div class="flex items-center gap-6">
-                <a href="index.html" class="bg-slate-900 hover:bg-slate-800 text-white px-10 py-4 rounded-2xl text-[13px] font-black uppercase tracking-widest flex items-center gap-3 shadow-xl transition-all transform hover:-translate-y-0.5">
+                <a href="javascript:void(0)" onclick="checkAuthAndRedirect('index.html')" class="bg-slate-900 hover:bg-slate-800 text-white px-10 py-4 rounded-2xl text-[13px] font-black uppercase tracking-widest flex items-center gap-3 shadow-xl transition-all transform hover:-translate-y-0.5">
                     Open Simulation Lab
                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
                 </a>
@@ -1533,7 +1533,6 @@
         }
         setInterval(updateClock, 1000);
         updateClock();
-
         firebase.auth().onAuthStateChanged((user) => {
             if (user) {
                 const nameEl = document.getElementById('profile-name');
@@ -1543,11 +1542,15 @@
             }
         });
 
+        // Track where to redirect after successful login
+        let _redirectAfterLogin = 'index.html';
+
         function checkAuthAndRedirect(url) {
             const user = firebase.auth().currentUser;
             if (user) {
                 window.location.href = url;
             } else {
+                _redirectAfterLogin = url;
                 openLoginModal();
             }
         }
@@ -1570,7 +1573,6 @@
         }
 
         function toggleAuthMode() {
-            // Simplified toggle for this minimalist design
             const title = document.getElementById('modal-title');
             const submitBtn = document.getElementById('modal-submit-btn');
             if (title.innerText === 'Welcome Back') {
@@ -1587,11 +1589,16 @@
             const email = document.getElementById('modal-email').value;
             const password = document.getElementById('modal-password').value;
             const submitBtn = document.getElementById('modal-submit-btn');
+            submitBtn.disabled = true;
+            submitBtn.innerText = 'Signing In...';
             
             try {
                 await firebase.auth().signInWithEmailAndPassword(email, password);
-                window.location.reload();
+                // Redirect to the intended page after sign-in
+                window.location.href = _redirectAfterLogin;
             } catch (error) {
+                submitBtn.disabled = false;
+                submitBtn.innerText = 'Sign In';
                 const errorDiv = document.getElementById('modal-error');
                 const errorText = document.getElementById('modal-error-text');
                 errorText.innerText = 'Authentication failed. Please check your credentials.';
@@ -1603,7 +1610,7 @@
             const provider = new firebase.auth.GoogleAuthProvider();
             try {
                 await firebase.auth().signInWithPopup(provider);
-                window.location.reload();
+                window.location.href = _redirectAfterLogin;
             } catch (error) {
                 console.error(error);
             }

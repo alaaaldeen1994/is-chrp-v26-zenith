@@ -9,7 +9,34 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nilus Lab Zenith Ultra-~285M | Institutional Manual (RUO)</title>
     <!-- RESEARCH USE ONLY - NO CLINICAL CLAIMS -->
-    <!-- HIGH-QUALITY BRANDING FOR SEARCH ENGINES (Google/Bing) -->
+
+    <!-- ===== AUTH GUARD: Requires login. Redirects unauthenticated users to profile.html ===== -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script>
+        (function() {
+            const firebaseConfig = {
+                apiKey: "AIzaSyAE_gVH5df3GNZzamxKTTA5VhADSVo7Rv8",
+                authDomain: "nilus-lab.firebaseapp.com",
+                projectId: "nilus-lab",
+                storageBucket: "nilus-lab.firebasestorage.app",
+                messagingSenderId: "848627146995",
+                appId: "1:848627146995:web:eb962314ffbcf8c030d786"
+            };
+            if (!firebase.apps.length) {
+                firebase.initializeApp(firebaseConfig);
+            }
+            firebase.auth().onAuthStateChanged(function(user) {
+                if (!user) {
+                    // Not signed in — redirect back to the public portal
+                    window.location.replace('profile.html');
+                }
+            });
+        })();
+    </script>
+    <!-- ===== END AUTH GUARD ===== -->
+
+
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
