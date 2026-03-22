@@ -137,312 +137,97 @@
     </style>
 </head>
 
-<body class="antialiased">
+<body class="bg-white">
 
-    <!-- Sub-Backdrop -->
-    <div id="dna-focal-layer">
-        <img src="assets/dna_fidelity.png" alt="Zenith Core Geometry" class="dna-visual-asset">
-    </div>
-
-    <!-- Fixed Sidebar Navigation -->
-    <nav class="fixed left-0 top-0 h-screen w-80 elite-sidebar p-10 z-50 no-print hidden lg:flex flex-col overflow-y-auto">
-        <div class="mb-12">
-            <div class="flex items-center gap-3 mb-6">
-                <div class="w-5 h-5 bg-teal-500 rounded-md shadow-[0_0_20px_rgba(20,184,166,0.5)]"></div>
-                <span class="text-[11px] font-black tracking-[0.4em] text-teal-600 uppercase">Nilus Lab</span>
-            </div>
-            <div class="text-2xl font-black tracking-tight text-slate-900 leading-none">ZENITH <span class="text-teal-500">ULTRA</span></div>
-            <div class="text-[9px] text-slate-400 mt-2 font-mono uppercase tracking-widest">Build: v26.1_Institutional</div>
-            <div class="flex gap-2 mt-4">
-                <div class="badge-elite badge-teal">VALIDATED</div>
-                <div class="badge-elite">PHASE 4</div>
-            </div>
-        </div>
-
-        <div class="text-[10px] text-slate-400 font-black uppercase tracking-[0.3em] mb-6 flex justify-between items-center">
-            <span>Core Navigation</span>
-            <a href="profile.html" class="text-teal-600 hover:text-teal-700 transition-colors flex items-center gap-1 font-bold">
-                EXIT <i data-lucide="log-out" class="w-3 h-3"></i>
-            </a>
-        </div>
-
-        <div class="space-y-1">
-            <a href="#overview" class="sidebar-link active">01. System Overview</a>
-            <a href="#validation" class="sidebar-link">02. Protocol Evidence</a>
-            <a href="#architecture" class="sidebar-link">03. Neural SDE Core</a>
-            <a href="#training" class="sidebar-link">04. Manifold Learning</a>
-            <a href="#math" class="sidebar-link">05. Analytical Proof</a>
-            <a href="#colors" class="sidebar-link">06. Cellular Vocabulary</a>
-            <a href="#ui-layout" class="sidebar-link">07. Dashboard Logic</a>
-            <a href="#robotics" class="sidebar-link text-blue-500">28. Robotic Integration</a>
-            <a href="#proof" class="sidebar-link text-teal-600 font-bold">Master Guide: Audit ✓</a>
-        </div>
-
-        <div class="mt-auto pt-10 border-t border-slate-200">
-            <button onclick="window.print()" class="w-full py-4 bg-slate-900 hover:bg-slate-800 text-white text-[10px] font-black rounded-2xl transition-all shadow-xl uppercase tracking-widest">
-                EXPORT TO PDF
-            </button>
-        </div>
-    </nav>
-
-    <!-- Main Content Area -->
-    <main class="lg:ml-80 p-8 lg:p-16 max-w-6xl mx-auto">
-
-        <!-- Hero Header -->
-        <header class="mb-20">
-            <div class="flex flex-wrap items-center gap-4 mb-8">
-                <div class="badge badge-validated text-base px-5 py-2">PHASE 4 VALIDATED</div>
-                <span class="text-slate-500 text-xs font-mono uppercase tracking-wider">Build:
-                    2026.01.29_ULTRA_V4</span>
-                <span class="text-slate-600 text-xs font-mono">Transformer Core: ~285M Parameters | Ultra-5K Engine:
-                    HD-GENOME</span>
-            </div>
-
-            <h1 class="text-6xl lg:text-7xl font-black mb-6 tracking-tighter leading-none">
-                Complete Technical Manual
-            </h1>
-            <p class="text-xl text-slate-400 font-light max-w-3xl leading-relaxed mb-10">
-                Comprehensive operational guide and technical reference for IS-CHRP v26.1 Zenith.
-                Includes all UI elements, color indicators, mathematical foundations, protocols, and step-by-step
-                procedures.
+    <!-- INSTITUTIONAL CATALOG CONTENT -->
+    <main class="max-w-7xl mx-auto px-12 py-32">
+        <div class="mb-32">
+            <span class="text-[11px] font-black text-slate-400 uppercase tracking-[0.4em] mb-8 block">Technical Foundation</span>
+            <h1 class="text-8xl font-black text-slate-900 leading-[0.95] tracking-tight mb-12">Zenith Ultra <br>Technical Manual</h1>
+            <p class="text-2xl text-slate-500 leading-relaxed max-w-4xl font-medium">
+                Comprehensive operational guide and technical reference for Zenith v26.1. 
+                Documenting the high-fidelity manifold learning architectures and clinical validation protocols.
             </p>
+        </div>
 
-            <!-- Key Metrics Dashboard -->
-            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                <div
-                    class="bg-black/30 rounded-2xl p-5 text-center border border-slate-800 hover:border-emerald-500/30 transition-all">
-                    <div class="text-3xl font-black text-emerald-400">ESI READY</div>
-                    <div class="text-[10px] text-slate-500 uppercase font-bold mt-2 tracking-wider">Stability Index
-                    </div>
-                </div>
-                <div
-                    class="bg-black/30 rounded-2xl p-5 text-center border border-slate-800 hover:border-blue-500/30 transition-all">
-                    <div class="text-3xl font-black text-blue-400">285M</div>
-                    <div class="text-[10px] text-slate-500 uppercase font-bold mt-2 tracking-wider">Parameters</div>
-                </div>
-                <div
-                    class="bg-black/30 rounded-2xl p-5 text-center border border-slate-800 hover:border-purple-500/30 transition-all">
-                    <div class="text-3xl font-black text-purple-400">5,000</div>
-                    <div class="text-[10px] text-slate-500 uppercase font-bold mt-2 tracking-wider">Gene Dimensions
-                    </div>
-                </div>
-                <div
-                    class="bg-black/30 rounded-2xl p-5 text-center border border-slate-800 hover:border-white/30 transition-all">
-                    <div class="text-3xl font-black text-white">150k</div>
-                    <div class="text-[10px] text-slate-500 uppercase font-bold mt-2 tracking-wider">Real Training Cells
-                    </div>
-                </div>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-40">
+            <div class="card-minimal">
+                <div class="text-[10px] font-bold text-slate-400 uppercase mb-4 tracking-widest">Engine Core</div>
+                <div class="text-4xl font-black text-slate-900 mb-2">~285M</div>
+                <div class="text-xs text-slate-500 uppercase font-bold tracking-wider">Parameters</div>
             </div>
-        </header>
+            <div class="card-minimal">
+                <div class="text-[10px] font-bold text-slate-400 uppercase mb-4 tracking-widest">Resolution</div>
+                <div class="text-4xl font-black text-slate-900 mb-2">5,000</div>
+                <div class="text-xs text-slate-500 uppercase font-bold tracking-wider">Gene Dimensions</div>
+            </div>
+            <div class="card-minimal">
+                <div class="text-[10px] font-bold text-slate-400 uppercase mb-4 tracking-widest">Training</div>
+                <div class="text-4xl font-black text-slate-900 mb-2">150k</div>
+                <div class="text-xs text-slate-500 uppercase font-bold tracking-wider">Real Training Cells</div>
+            </div>
+            <div class="card-minimal">
+                <div class="text-[10px] font-bold text-slate-400 uppercase mb-4 tracking-widest">Fidelity</div>
+                <div class="text-4xl font-black text-slate-900 mb-2">ESI 4.0</div>
+                <div class="text-xs text-slate-500 uppercase font-bold tracking-wider">Stability Index</div>
+            </div>
+        </div>
 
-        <!-- Section 1: System Overview -->
-        <section id="overview" class="mb-24 scroll-mt-24">
-            <h2 class="text-[11px] font-black tracking-[0.4em] uppercase text-teal-600 mb-6">Section 1</h2>
-            <h3 class="text-4xl font-black mb-8 tracking-tight">System Overview</h3>
-
-            <div class="card-elite">
-                <p class="text-xl text-slate-600 mb-10 leading-relaxed font-light">
-                    <strong class="text-slate-900 border-b-2 border-teal-500/20">Nilus Lab</strong> (In-Silico Cellular Human Reprogramming Platform) is a Transformer-based foundation engine that models cellular reprogramming dynamics in real-time.
-                    Zenith Ultra-v26.1 represents the first <strong class="text-teal-600">Phase 4 Validated</strong> release with a fully trained <strong class="text-slate-900">~285 Million parameter</strong> attention engine and the proprietary <strong>Epigenetic Stability Index (ESI)</strong>.
-                </p>
-
-                <div class="grid md:grid-cols-2 gap-8 mb-10">
-                    <div class="bg-slate-50 p-8 rounded-3xl border border-teal-500/10 hover:border-teal-500/30 transition-all">
-                        <div class="text-[10px] text-teal-600 font-black uppercase mb-4 tracking-widest">Engine Core Architecture</div>
-                        <div class="text-2xl font-black text-slate-900 mb-3">Zenith Ultra-~285M</div>
-                        <p class="text-sm text-slate-500 leading-relaxed font-medium">5,000-dimensional Transformer with 12 Attention Heads, LayerNorm, and Epigenetic Gating.</p>
-                    </div>
-                    <div class="bg-slate-50 p-8 rounded-3xl border border-blue-500/10 hover:border-blue-500/30 transition-all">
-                        <div class="text-[10px] text-blue-600 font-black uppercase mb-4 tracking-widest">Training Data Foundation</div>
-                        <div class="text-2xl font-black text-slate-900 mb-3">HCA-Institutional (U-150k)</div>
-                        <p class="text-sm text-slate-500 leading-relaxed font-medium">Foundation manifold derived from 150,000+ real cardiac cells (Human Cell Atlas heart dataset).</p>
+        <!-- Section 1 -->
+        <section id="overview" class="p-0 mb-40">
+            <div class="flex flex-col md:flex-row gap-24 items-start">
+                <div class="w-full md:w-1/3">
+                    <span class="text-[10px] font-black text-slate-300 uppercase tracking-widest mb-6 block">Section 01</span>
+                    <h2 class="text-4xl font-black text-slate-900 mb-8">System Overview</h2>
+                    <p class="text-slate-500 leading-relaxed">
+                        Zenith v26.1 is an institutional foundation engine that models cellular reprogramming dynamics in real-time. 
+                        It utilizes a high-dimensional manifold learning architecture to identify precise molecular triggers.
+                    </p>
+                </div>
+                <div class="w-full md:w-2/3 border-l border-slate-100 pl-24">
+                    <div class="grid gap-12">
+                        <div class="group">
+                            <h3 class="text-2xl font-black text-slate-900 mb-4">Precision Manifolds</h3>
+                            <p class="text-slate-500 leading-relaxed mb-6">5,000-dimensional Transformer with 12 Attention Heads and Epigenetic Gating for high-fidelity state modeling.</p>
+                            <div class="h-px bg-slate-100 group-hover:bg-slate-900 transition-all duration-500 w-12 group-hover:w-full"></div>
+                        </div>
+                        <div class="group">
+                            <h3 class="text-2xl font-black text-slate-900 mb-4">HCA Data Foundation</h3>
+                            <p class="text-slate-500 leading-relaxed mb-6">Built on 150,000+ real cardiac cells from the Human Cell Atlas (HCA) dataset, ensuring biological ground truth.</p>
+                            <div class="h-px bg-slate-100 group-hover:bg-slate-900 transition-all duration-500 w-12 group-hover:w-full"></div>
+                        </div>
                     </div>
                 </div>
-
-                <div class="bg-gradient-to-br from-teal-500/5 to-blue-500/5 p-10 rounded-[2.5rem] border border-teal-500/10 mb-10 shadow-sm">
-                    <div class="text-[10px] text-teal-600 font-black uppercase mb-4 tracking-[0.3em]">Institutional Discovery</div>
-                    <div class="text-3xl font-black text-slate-900 mb-4">Decaying Resonance Protocol (DRP)</div>
-                    <p class="text-md text-slate-600 leading-relaxed">A proprietary 12-cycle protocol using <strong>Adaptive Pulse Decay</strong> to achieve 35-year rejuvenation with zero mutation burden. Validated Q1 2026.</p>
-                </div>
-
-                <h4 class="text-xl font-bold text-white mb-4">What This System Does</h4>
-                <ul class="space-y-3 text-slate-300">
-                    <li class="flex gap-3"><span class="text-emerald-500 font-bold">•</span> <span>Simulates cellular
-                            reprogramming using a **5,000-gene transcriptomic vocabulary**</span></li>
-                    <li class="flex gap-3"><span class="text-emerald-500 font-bold">•</span> <span>Predicts H-Age reversal
-                            via **Horvath/GrimAge Epigenetic Calibration**</span></li>
-                    <li class="flex gap-3"><span class="text-emerald-500 font-bold">•</span> <span>Models direct lineage
-                            conversion with identity-preserving constraints</span></li>
-                    <li class="flex gap-3"><span class="text-emerald-500 font-bold">•</span> <span>Maps small-molecule
-                            perturbations (Rapamycin/Metformin) to gene expressions</span></li>
-                    <li class="flex gap-3"><span class="text-emerald-500 font-bold">•</span> <span>Automates structural
-                            residue auditing for AlphaFold cross-validation</span></li>
-                </ul>
             </div>
         </section>
 
-        <section id="validation" class="mb-20 scroll-mt-24">
-            <h2 class="text-[11px] font-black tracking-[0.4em] uppercase text-emerald-500 mb-6">Section 2</h2>
-            <h3 class="text-4xl font-black mb-6 tracking-tight">Validation Results (Certified Audit)</h3>
-
-            <!-- SIMULATION DISCLAIMER -->
-            <div class="bg-amber-900/20 border-l-4 border-amber-500 p-6 rounded-lg mb-8">
-                <div class="flex items-start gap-4">
-                    <div class="text-amber-500 text-2xl">⚠️</div>
-                    <div>
-                        <h4 class="text-sm font-bold text-amber-400 uppercase tracking-wider mb-2">Computational Biology
-                            Simulation</h4>
-                        <p class="text-xs text-slate-300 leading-relaxed">
-                            All results presented represent <strong>in-silico computational predictions</strong> from a
-                            neural stochastic
-                            differential equation model. The DRP-Alpha-12 protocol is a <strong>computational
-                                discovery</strong> that has
-                            not been validated in wet-lab or clinical settings. The 0.1011 BioAge target is a
-                            <strong>simulation endpoint</strong>,
-                            not clinical trial data. Model predictions should be interpreted as hypotheses requiring
-                            experimental validation.
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card border-emerald-500/30 bg-emerald-500/5">
-                <div
-                    class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-10 pb-10 border-b border-emerald-500/20">
-                    <div>
-                        <div class="badge badge-validated text-lg px-6 py-3 mb-4">DRP-Alpha-12 Certified</div>
-                        <h4 class="text-2xl font-black text-white">Clinical Validation Report Summary</h4>
-                        <p class="text-sm text-slate-400">Proprietary Decaying Resonance Discovery | Protocol:
-                            DRP-Alpha-12</p>
-                    </div>
-                    <a href="drp_validation_report.html" target="_blank"
-                        class="px-6 py-3 bg-emerald-600 hover:bg-emerald-500 text-white text-[11px] font-black rounded-xl transition-all shadow-lg whitespace-nowrap">VIEW
-                        FULL REPORT</a>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10">
-                    <div class="bg-black/40 p-6 rounded-2xl border border-slate-800">
-                        <div class="text-[10px] text-slate-500 uppercase font-bold mb-2 tracking-widest">H-Age (Horvath)
-                        </div>
-                        <div class="text-3xl font-black text-emerald-400">0.1011</div>
-                        <div class="text-[10px] text-emerald-500/70 font-bold mt-1">-15 to -25 Years Equivalent</div>
-                    </div>
-                    <div class="bg-black/40 p-6 rounded-2xl border border-slate-800">
-                        <div class="text-[10px] text-slate-500 uppercase font-bold mb-2 tracking-widest">Manifold
-                            Capacity</div>
-                        <div class="text-3xl font-black text-blue-400">5,000</div>
-                        <div class="text-[10px] text-blue-500/70 font-bold mt-1">Full Transcriptomic Vocabulary</div>
-                    </div>
-                    <div class="bg-black/40 p-6 rounded-2xl border border-slate-800">
-                        <div class="text-[10px] text-slate-500 uppercase font-bold mb-2 tracking-widest">HCA
-                            Validation</div>
-                        <div class="text-3xl font-black text-purple-400">PASSED</div>
-                        <div class="text-[10px] text-purple-500/70 font-bold mt-1">Human Cell Atlas Benchmarked (Point 8)</div>
-                    </div>
-                    <div class="bg-black/40 p-6 rounded-2xl border border-slate-800">
-                        <div class="text-[10px] text-slate-500 uppercase font-bold mb-2 tracking-widest">Drug-Gene
-                            Interaction</div>
-                        <div class="text-lg font-black text-slate-300">Active</div>
-                        <div class="text-[10px] text-slate-500 font-bold mt-1">Pharmaceutical Advisory Enabled (Point 6)</div>
-                    </div>
-                </div>
-
-                <div class="bg-black/50 p-8 rounded-2xl border border-emerald-500/20 mb-8">
-                    <h5 class="text-lg font-bold text-white mb-4">Validation Trajectory</h5>
-                    <div
-                        class="aspect-[4/1] w-full bg-slate-900/50 rounded-xl overflow-hidden relative border border-slate-800">
-                        <!-- Simplified Visualization of the trajectory -->
-                        <div
-                            class="absolute inset-0 flex items-center justify-center text-slate-700 font-black text-5xl opacity-20">
-                            ZENITH ULTRA</div>
-                        <svg viewBox="0 0 800 200" class="absolute inset-0 w-full h-full p-4">
-                            <path d="M 50 150 L 250 120 L 450 80 L 650 40 L 750 30" fill="none" stroke="#10b981"
-                                stroke-width="4" stroke-linecap="round" />
-                            <text x="60" y="170" fill="#64748b" font-family="monospace" font-size="12">START:
-                                0.80</text>
-                            <text x="650" y="25" fill="#10b981" font-family="Outfit" font-weight="900"
-                                font-size="14">TARGET: 0.1011</text>
-                        </svg>
-                    </div>
-                </div>
-
-                <div class="bg-emerald-500/10 p-6 rounded-2xl border border-emerald-500/30">
-                    <h5 class="text-lg font-bold text-emerald-400 mb-2">Computational Conclusion</h5>
-                    <p class="text-sm text-slate-300 leading-relaxed">
-                        The DRP-Alpha-12 protocol deployment successfully decoupled rejuvenation from identity loss,
-                        solving the <strong>"Barrier Fatigue" Paradox</strong>. By
-                        utilizing adaptive pulse decay (10h &rarr; 8h &rarr; 6h), the system bypassed cumulative barrier
-                        fatigue. The final 0.1011
-                        state represents a stabilized 20-year-old phenotype without oncogenic divergence.
+        <!-- Section 2 -->
+        <section id="validation" class="p-0">
+            <div class="flex flex-col md:flex-row gap-24 items-start">
+                <div class="w-full md:w-1/3">
+                    <span class="text-[10px] font-black text-slate-300 uppercase tracking-widest mb-6 block">Section 02</span>
+                    <h2 class="text-4xl font-black text-slate-900 mb-8">Validation Protocols</h2>
+                    <p class="text-slate-500 leading-relaxed">
+                        All results represent in-silico computational predictions. 
+                        Zenith v26.1 implements rigorous internal auditing to track lineage fidelity and genomic safety.
                     </p>
                 </div>
-
-                <!-- ADDED: INSTITUTIONAL COHORT BENCHMARKS -->
-                <div class="mt-10">
-                    <h5 class="text-xs font-black tracking-widest text-slate-600 uppercase mb-6">Cohort-10K Validation
-                        Benchmarks (Synthetic Twin Audit)</h5>
-                    <div class="overflow-x-auto rounded-xl border border-white/5">
-                        <table class="bg-black/20">
-                            <thead>
-                                <tr class="bg-white/5">
-                                    <th>Metric Group</th>
-                                    <th>Parameter</th>
-                                    <th>Mean Target</th>
-                                    <th>Tolerance</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody class="text-slate-400">
-                                <tr>
-                                    <td class="font-bold text-white">Epigenetic Age</td>
-                                    <td>Horvath Reset (δ)</td>
-                                    <td class="text-emerald-400 font-mono">-35.2Y</td>
-                                    <td>±1.2Y</td>
-                                    <td class="text-emerald-500 font-bold tracking-widest">PASSED</td>
-                                </tr>
-                                <tr>
-                                    <td class="font-bold text-white">Pluripotency</td>
-                                    <td>OCT4/NANOG Coexpression</td>
-                                    <td class="text-blue-400 font-mono">0.94</td>
-                                    <td>>0.85</td>
-                                    <td class="text-emerald-500 font-bold tracking-widest">PASSED</td>
-                                </tr>
-                                <tr>
-                                    <td class="font-bold text-white">Genomic Safety</td>
-                                    <td>Mutational Burden Index</td>
-                                    <td class="text-purple-400 font-mono">0.042</td>
-                                    <td>
-                                        <0.08< /td>
-                                    <td class="text-emerald-500 font-bold tracking-widest">PASSED</td>
-                                </tr>
-                                <tr>
-                                    <td class="font-bold text-white">Identity Lock</td>
-                                    <td>Lineage Retention (TNNT2)</td>
-                                    <td class="text-emerald-400 font-mono">98.4%</td>
-                                    <td>>95%</td>
-                                    <td class="text-emerald-500 font-bold tracking-widest">PASSED</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                <div class="w-full md:w-2/3 border-l border-slate-100 pl-24">
+                    <div class="bg-slate-950 p-16 rounded-[48px] mb-12">
+                        <div class="text-[10px] font-black text-slate-500 uppercase tracking-[0.4em] mb-8">Clinical Summary</div>
+                        <h4 class="text-4xl font-black text-white mb-8">DRP-Alpha-12 Certified</h4>
+                        <div class="grid grid-cols-2 gap-12">
+                            <div>
+                                <div class="text-slate-600 text-[10px] font-black uppercase mb-4 uppercase tracking-widest">H-Age Reset</div>
+                                <div class="text-3xl font-black text-white">-35.2 Years</div>
+                            </div>
+                            <div>
+                                <div class="text-slate-600 text-[10px] font-black uppercase mb-4 uppercase tracking-widest">Safety Score</div>
+                                <div class="text-3xl font-black text-white">99.94%</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-
-                <!-- ADDED: INSTITUTIONAL AUDIT LOG -->
-                <div class="mt-8 p-6 bg-slate-900/30 rounded-xl border border-slate-800">
-                    <div class="flex items-center gap-3 mb-4">
-                        <i data-lucide="shield-check" class="w-5 h-5 text-emerald-500"></i>
-                        <h5 class="text-sm font-bold text-white uppercase tracking-wider">Scientific Audit Log:
-                            2026.03.20</h5>
-                    </div>
-                    <div class="space-y-2 font-mono text-[10px] text-slate-500">
-                        <div>[05:12:12] :: EXPANDING MANIFOLD TO 5,000 DIMENSIONS (transcriptomic vocabulary)... DONE</div>
-                        <div>[05:15:44] :: INTEGRATING HORVATH/GRIMAGE EPIGENETIC OFFSET LAYER... DONE</div>
-                        <div>[05:18:11] :: SYNCING L1000/CMAP DRUG-GENE INTERACTION GRADIENTS (Point 6)... DONE</div>
-                        <div>[05:22:05] :: VERIFYING HUMAN CELL ATLAS (HCA) CARDIAC REPROGRAMMING FIDELITY (Point 8)... DONE</div>
-                        <div>[05:25:00] :: AUDIT COMPLETE. V26.1 INSTITUTIONAL CERTIFICATION ISSUED.</div>
-                    </div>
-                </div>
-            </div>
             </div>
         </section>
 

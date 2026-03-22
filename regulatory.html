@@ -9,22 +9,21 @@
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;500;600;700;800;900&family=JetBrains+Mono&display=swap" rel="stylesheet">
     <style>
         :root {
-            --zenith-teal: #0d9488;
-            --zenith-blue: #2563eb;
-            --card-elite: rgba(255, 255, 255, 0.85);
-            --border-elite: rgba(13, 148, 136, 0.12);
+            --zenith-black: #0f172a;
+            --zenith-gray: #64748b;
         }
 
         body {
+            font-family: 'Inter', sans-serif;
             background-color: #ffffff;
-            color: #0f172a;
+            color: var(--zenith-black);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1, h2, h3, h4 {
             font-family: 'Outfit', sans-serif;
-            line-height: 1.8;
-            background-image: 
-                radial-gradient(circle at 100% 0%, rgba(13, 148, 136, 0.05) 0%, transparent 40%),
-                radial-gradient(circle at 0% 100%, rgba(37, 99, 235, 0.05) 0%, transparent 40%);
-            background-attachment: fixed;
-            min-height: 100vh;
         }
 
         .card-elite {

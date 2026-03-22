@@ -6,53 +6,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>About Nilus Lab | Zenith v26.1 Institutional</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;500;600;700;800;900&family=JetBrains+Mono&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Outfit:wght@200;300;400;500;600;700;800;900&family=JetBrains+Mono&display=swap" rel="stylesheet">
     <style>
         :root {
-            --zenith-teal: #0d9488;
-            --zenith-blue: #2563eb;
-            --card-elite: rgba(255, 255, 255, 0.8);
-            --border-elite: rgba(13, 148, 136, 0.1);
+            --zenith-black: #0f172a;
+            --zenith-gray: #64748b;
         }
 
         body {
+            font-family: 'Inter', sans-serif;
             background-color: #ffffff;
-            color: #0f172a;
+            color: var(--zenith-black);
+            line-height: 1.6;
+        }
+
+        h1, h2, h3, h4 {
             font-family: 'Outfit', sans-serif;
-            line-height: 1.8;
-            background-image: 
-                radial-gradient(circle at 100% 0%, rgba(13, 148, 136, 0.05) 0%, transparent 40%),
-                radial-gradient(circle at 0% 100%, rgba(37, 99, 235, 0.05) 0%, transparent 40%);
-            background-attachment: fixed;
-            min-height: 100vh;
-        }
-
-        .card-elite {
-            background: var(--card-elite);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--border-elite);
-            border-radius: 2.5rem;
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.02);
-            padding: 3.5rem;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .card-elite:hover {
-            border-color: rgba(13, 148, 136, 0.3);
-            transform: translateY(-2px);
-            box-shadow: 0 12px 40px rgba(13, 148, 136, 0.05);
-        }
-
-        .exit-btn {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            background: white;
-            padding: 10px 24px;
-            border-radius: 999px;
-            border: 1px solid #e2e8f0;
-            font-size: 11px;
+            letter-spacing: -0.01em;
             font-weight: 900;
+        }
+
+        .header-minimal {
+            border-bottom: 1px solid #f1f5f9;
+            padding: 2.5rem 5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             letter-spacing: 2px;
             text-transform: uppercase;
             color: #ef4444;
