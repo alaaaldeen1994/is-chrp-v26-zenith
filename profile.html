@@ -1586,7 +1586,7 @@
         });
 
         // Track where to redirect after successful login
-        let _redirectAfterLogin = 'index.html';
+        let _redirectAfterLogin = null;
 
         function checkAuthAndRedirect(url) {
             const user = firebase.auth().currentUser;
@@ -1594,7 +1594,7 @@
                 window.location.href = url;
             } else {
                 _redirectAfterLogin = url;
-                openLoginModal();
+                openLoginModal(false);
             }
         }
 
@@ -1604,7 +1604,8 @@
             });
         }
 
-        function openLoginModal() {
+        function openLoginModal(resetRedirect = true) {
+            if (resetRedirect) _redirectAfterLogin = null;
             document.getElementById('login-modal').classList.add('active');
             lucide.createIcons();
         }
@@ -1649,8 +1650,12 @@
                     // Sign In Flow
                     await firebase.auth().signInWithEmailAndPassword(email, password);
                 }
-                // Redirect to the intended page after success
-                window.location.href = _redirectAfterLogin;
+                // Redirect to the intended page after success or simply close modal
+                if (_redirectAfterLogin) {
+                    window.location.href = _redirectAfterLogin;
+                } else {
+                    closeLoginModal();
+                }
             } catch (error) {
                 submitBtn.disabled = false;
                 submitBtn.innerText = originalBtnText;
@@ -1676,7 +1681,11 @@
             const provider = new firebase.auth.GoogleAuthProvider();
             try {
                 await firebase.auth().signInWithPopup(provider);
-                window.location.href = _redirectAfterLogin;
+                if (_redirectAfterLogin) {
+                    window.location.href = _redirectAfterLogin;
+                } else {
+                    closeLoginModal();
+                }
             } catch (error) {
                 console.error(error);
             }
