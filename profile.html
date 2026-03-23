@@ -1100,9 +1100,20 @@
                 <span class="w-2 h-2 bg-slate-400 rounded-full animate-pulse"></span>
                 <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">LIVE HCA FEED: 150K+ CELLS</span>
             </div>
-            <button onclick="openLoginModal()" class="bg-slate-900 hover:bg-slate-800 text-white px-8 py-3 rounded-full text-[12px] font-black uppercase tracking-widest flex items-center gap-3 transition-all">
-                <i data-lucide="log-in" class="w-4 h-4"></i> Sign In
-            </button>
+            <div id="auth-btn-login">
+                <button onclick="openLoginModal()" class="bg-slate-900 hover:bg-slate-800 text-white px-8 py-3 rounded-full text-[12px] font-black uppercase tracking-widest flex items-center gap-3 transition-all">
+                    <i data-lucide="log-in" class="w-4 h-4"></i> Sign In
+                </button>
+            </div>
+            <div id="auth-user-status" class="hidden flex items-center gap-6">
+                <div class="flex items-center gap-3 px-4 py-2 bg-slate-50 border border-slate-100 rounded-full">
+                    <div class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
+                    <span id="profile-name" class="text-[10px] font-black text-slate-900 uppercase tracking-widest">RESEARCHER</span>
+                </div>
+                <button onclick="performLogout()" class="text-[10px] font-black text-slate-400 hover:text-rose-600 uppercase tracking-widest transition-colors flex items-center gap-2">
+                    <i data-lucide="log-out" class="w-3.5 h-3.5"></i> Sign Out
+                </button>
+            </div>
         </div>
     </nav>
 
@@ -1544,11 +1555,20 @@
         setInterval(updateClock, 1000);
         updateClock();
         firebase.auth().onAuthStateChanged((user) => {
+            const loginBtn = document.getElementById('auth-btn-login');
+            const userStatus = document.getElementById('auth-user-status');
+            const nameEl = document.getElementById('profile-name');
+
             if (user) {
-                const nameEl = document.getElementById('profile-name');
+                if (loginBtn) loginBtn.classList.add('hidden');
+                if (userStatus) userStatus.classList.remove('hidden');
+                
                 const fullPrefix = user.email.split('@')[0];
                 const displayName = fullPrefix.split(/[\._]/)[0].toUpperCase();
                 if (nameEl) nameEl.innerText = displayName;
+            } else {
+                if (loginBtn) loginBtn.classList.remove('hidden');
+                if (userStatus) userStatus.classList.add('hidden');
             }
         });
 
