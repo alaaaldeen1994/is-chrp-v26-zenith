@@ -23,9 +23,9 @@ function toggleMode() {
         subtitle.innerText = "Sign in to access your simulation dashboard.";
         btnText.innerText = "Sign In";
         toggleLink.innerText = "Create Account";
-        submitBtn.classList.replace('bg-emerald-600', 'bg-blue-600');
-        submitBtn.classList.replace('hover:bg-emerald-500', 'hover:bg-blue-500');
-        submitBtn.classList.replace('shadow-emerald-600/20', 'shadow-blue-600/20');
+        submitBtn.classList.replace('bg-slate-900', 'bg-slate-900');
+        submitBtn.classList.replace('hover:bg-slate-800', 'hover:bg-slate-800');
+        submitBtn.classList.replace('shadow-slate-900/20', 'shadow-slate-900/20');
         confirmPassContainer.classList.add('hidden');
         document.getElementById('confirm-password').removeAttribute('required');
     } else {
@@ -34,9 +34,9 @@ function toggleMode() {
         btnText.innerText = "Sign Up";
         toggleLink.innerText = "Back to Login";
         // Change button color to indicate creation
-        submitBtn.classList.replace('bg-blue-600', 'bg-emerald-600');
-        submitBtn.classList.replace('hover:bg-blue-500', 'hover:bg-emerald-500');
-        submitBtn.classList.replace('shadow-blue-600/20', 'shadow-emerald-600/20');
+        submitBtn.classList.replace('bg-slate-900', 'bg-slate-900');
+        submitBtn.classList.replace('hover:bg-slate-800', 'hover:bg-slate-800');
+        submitBtn.classList.replace('shadow-slate-900/20', 'shadow-slate-900/20');
         confirmPassContainer.classList.remove('hidden');
         document.getElementById('confirm-password').setAttribute('required', 'true');
 
@@ -79,7 +79,7 @@ async function handleAuth(e) {
 
         // Success Animation before Redirect
         submitBtn.innerHTML = `<i data-lucide="check" class="w-5 h-5"></i> ACCESS GRANTED`;
-        submitBtn.classList.replace('bg-blue-600', 'bg-emerald-500');
+        submitBtn.classList.replace('bg-slate-900', 'bg-slate-800');
         lucide.createIcons();
 
         setTimeout(() => {
