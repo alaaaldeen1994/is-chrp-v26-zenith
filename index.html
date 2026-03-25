@@ -13,12 +13,14 @@
     <!-- ===== AUTH GUARD: Requires login. Redirects unauthenticated users to profile.html ===== -->
     <style>
         /* Hide content until authenticated to prevent leakage */
-        body { display: none !important; }
+        body {
+            display: none !important;
+        }
     </style>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <script>
-        (function() {
+        (function () {
             const firebaseConfig = {
                 apiKey: "AIzaSyAE_gVH5df3GNZzamxKTTA5VhADSVo7Rv8",
                 authDomain: "nilus-lab.firebaseapp.com",
@@ -27,13 +29,13 @@
                 messagingSenderId: "848627146995",
                 appId: "1:848627146995:web:eb962314ffbcf8c030d786"
             };
-            
+
             // Initialize immediately in head for speed
             if (!firebase.apps.length) {
                 firebase.initializeApp(firebaseConfig);
             }
 
-            firebase.auth().onAuthStateChanged(function(user) {
+            firebase.auth().onAuthStateChanged(function (user) {
                 if (user) {
                     // Authenticated - reveal content
                     document.documentElement.style.display = 'block'; // Ensure html is visible
@@ -1207,7 +1209,8 @@
 
                 <!-- GENOMIC EXPLORER -->
                 <div class="mb-4">
-                    <span class="text-[9px] font-bold text-slate-500 uppercase">Zenith v26.1: Kilo-Genome Explorer</span>
+                    <span class="text-[9px] font-bold text-slate-500 uppercase">Zenith v26.1: Kilo-Genome
+                        Explorer</span>
 
                     <div class="mt-2 mb-2">
                         <input type="text" id="gene-search" placeholder="Search 1,000 genes..."

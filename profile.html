@@ -63,7 +63,8 @@
             box-sizing: border-box;
         }
 
-        html, body {
+        html,
+        body {
             margin: 0;
             padding: 0;
             width: 100%;
@@ -79,7 +80,8 @@
 
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #ffffff; /* Unified White Background */
+            background-color: #ffffff;
+            /* Unified White Background */
             color: var(--text-dark);
             overflow-x: hidden;
             letter-spacing: -0.01em;
@@ -87,7 +89,10 @@
             box-shadow: none !important;
         }
 
-        h1, h2, h3, .nav-item {
+        h1,
+        h2,
+        h3,
+        .nav-item {
             font-family: 'Outfit', sans-serif;
         }
 
@@ -113,7 +118,8 @@
         /* --- MAIN NAVIGATION --- */
         nav {
             background: #ffffff;
-            padding: 2rem 5%; /* Higher fidelity padding */
+            padding: 2rem 5%;
+            /* Higher fidelity padding */
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -137,7 +143,8 @@
             letter-spacing: 0.1em;
         }
 
-        .nav-item:hover, .nav-item.active {
+        .nav-item:hover,
+        .nav-item.active {
             color: #0f172a;
         }
 
@@ -173,7 +180,8 @@
             width: 100%;
             height: 100%;
             object-fit: contain;
-            transform: scale(0.9) translate(3%, 6%); /* Shifted right and down */
+            transform: scale(0.9) translate(3%, 6%);
+            /* Shifted right and down */
             opacity: 0.90;
             mix-blend-mode: multiply;
             /* Feather the edges to hide hard borders/artifacts */
@@ -197,9 +205,11 @@
             position: relative;
             z-index: 10;
             max-width: 700px;
-            padding: 0 0 10% 5%; /* Reduced left padding from 10% to 5% to move it left */
+            padding: 0 0 10% 5%;
+            /* Reduced left padding from 10% to 5% to move it left */
             text-align: left;
-            margin-top: -12vh; /* Shift text higher as requested */
+            margin-top: -12vh;
+            /* Shift text higher as requested */
         }
 
         /* Institutional Diligence Dropdown */
@@ -217,7 +227,7 @@
             border-radius: 16px;
             padding: 8px;
             min-width: 220px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
             z-index: 9999;
         }
 
@@ -244,7 +254,8 @@
 
 
         .hero-title {
-            font-size: 42px; /* Halved from 84px */
+            font-size: 42px;
+            /* Halved from 84px */
             font-weight: 900;
             line-height: 1.1;
             margin-bottom: 1.5rem;
@@ -279,7 +290,7 @@
         .btn-launch:hover {
             background-color: #334155;
             transform: scale(1.05);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
         }
 
         .pause-icon {
@@ -809,7 +820,7 @@
         /* --- MOBILE RESPONSIVENESS FIXES --- */
         @media (max-width: 1024px) {
             nav {
-                padding: 1rem;
+                padding: 1rem 5% !important;
                 flex-direction: column;
                 gap: 1.5rem;
                 height: auto;
@@ -818,73 +829,104 @@
             }
 
             .nav-links {
-                gap: 1rem;
+                gap: 1.5rem;
                 width: 100%;
                 justify-content: center;
                 flex-wrap: wrap;
             }
 
             .nav-item {
-                font-size: 12px;
-                padding: 0.5rem;
+                font-size: 11px;
+                padding: 0.25rem 0.5rem;
+            }
+
+            .hero {
+                min-height: auto;
+                padding: 4rem 5% 6rem;
+                align-items: flex-start;
+            }
+
+            .hero-content {
+                max-width: 100%;
+                padding: 0;
+                text-align: center;
+                margin-top: 5vh;
             }
 
             .hero-title {
-                font-size: 36px;
-                padding: 0 1rem;
+                font-size: 32px !important;
+                white-space: normal !important;
+                line-height: 1.2;
+            }
+
+            .hero-description {
+                font-size: 16px;
+                margin: 0 auto 2.5rem;
             }
 
             .hero-console {
-                flex-direction: column;
-                gap: 1rem;
-                bottom: 1.5rem;
-                padding: 1.5rem;
+                position: relative;
+                bottom: auto;
+                right: auto;
+                margin-top: 3rem;
+                width: 100%;
                 text-align: center;
+                max-width: 100%;
             }
 
             .brand-section {
                 flex-direction: column;
                 text-align: center;
-                padding: 4rem 10%;
-                gap: 3rem;
+                padding: 4rem 5%;
+                gap: 4rem;
             }
 
             .brand-visual {
                 width: 100%;
+                max-width: 280px;
+                margin: 0 auto;
                 display: flex;
                 justify-content: center;
             }
 
+            .zenith-cipher {
+                width: 240px;
+                height: 240px;
+            }
+
+            .brand-headline {
+                font-size: 32px;
+            }
+
             .capability-grid {
                 grid-template-columns: 1fr;
-                gap: 2rem;
+                gap: 2.5rem;
+                padding: 0 5% 6rem;
             }
 
             .platform-status {
                 flex-direction: column;
-                gap: 1.5rem;
+                gap: 2.5rem;
                 text-align: center;
+                padding-bottom: 3rem;
             }
         }
 
         @media (max-width: 640px) {
             .hero-title {
-                font-size: 26px;
+                font-size: 28px !important;
             }
 
-            .hero-label {
-                font-size: 9px;
-                letter-spacing: 0.08em;
+            .btn-launch {
+                width: 100%;
+                justify-content: center;
+                padding: 1.25rem 2rem;
             }
 
-            .hero {
-                height: auto;
-                padding: 3rem 5% 7rem;
+            .status-metric p {
+                font-size: 32px;
             }
-
-            .brand-headline {
-                font-size: 26px;
-            }
+        }
 
             .brand-text {
                 font-size: 15px;
@@ -956,13 +998,17 @@
                 padding: 2rem 1.25rem;
                 border-radius: 16px;
             }
-
             .brand-section {
-                padding: 3rem 5%;
+                padding: 4rem 5%;
             }
 
             .capability-grid {
-                padding: 0 5% 4rem;
+                padding: 0 5% 6rem;
+            }
+
+            .nav-logo-svg {
+                width: 24px !important;
+                height: 24px !important;
             }
         }
     </style>
@@ -972,8 +1018,11 @@
     <!-- GLOBAL DNA BACKGROUND -->
     <div class="global-dna-bg">
         <video class="hero-video" id="profile-dna-video" autoplay loop muted playsinline preload="auto">
-            <source src="https://image2url.com/r2/default/videos/1774175182617-df127516-8f0a-431d-b5ed-2efaab4b65e1.webm" type="video/webm">
-            <source src="https://image2url.com/r2/default/videos/1774164717701-7555ce11-6f8d-4d90-b3b7-0bbc17382789.mp4" type="video/mp4">
+            <source
+                src="https://image2url.com/r2/default/videos/1774175182617-df127516-8f0a-431d-b5ed-2efaab4b65e1.webm"
+                type="video/webm">
+            <source src="https://image2url.com/r2/default/videos/1774164717701-7555ce11-6f8d-4d90-b3b7-0bbc17382789.mp4"
+                type="video/mp4">
         </video>
         <script>
             const v = document.getElementById('profile-dna-video');
@@ -1068,19 +1117,27 @@
 
 
     <!-- Institutional Header (Production Original Items) -->
-    <nav class="border-b border-slate-100 px-12 py-6 flex items-center justify-between sticky top-0 bg-white/95 backdrop-blur-md z-[1000]">
+    <nav
+        class="border-b border-slate-100 px-6 md:px-12 py-4 md:py-6 flex flex-col md:flex-row items-center justify-between sticky top-0 bg-white/95 backdrop-blur-md z-[1000] gap-6 md:gap-0">
         <div class="flex items-center gap-12">
             <div class="flex items-center gap-3">
-                <svg class="w-7 h-7 text-teal-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-                <span class="text-lg font-black tracking-tight text-slate-900 uppercase">NILUS<span class="text-teal-400">LAB</span></span>
+                <svg class="nav-logo-svg text-teal-400 flex-shrink-0" style="width: 28px; height: 28px;" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+                </svg>
+                <span class="text-lg font-black tracking-tight text-slate-900 uppercase">NILUS<span
+                        class="text-teal-400">LAB</span></span>
             </div>
-            
-            <div class="flex items-center gap-10">
-                <a href="index.html" class="text-[12px] font-bold text-slate-900 uppercase tracking-wide">Zenith Mainframe</a>
-                
+
+            <div class="flex flex-wrap items-center justify-center md:justify-start gap-4 md:gap-10">
+                <a href="index.html" class="text-[12px] font-bold text-slate-900 uppercase tracking-wide">Zenith
+                    Mainframe</a>
+
                 <!-- Institutional Diligence with working dropdown -->
                 <div class="inst-diligence-wrapper flex items-center gap-1.5 cursor-pointer">
-                    <span class="text-[12px] font-bold text-slate-500 uppercase tracking-wide hover:text-slate-900 transition-colors">Institutional Diligence</span>
+                    <span
+                        class="text-[12px] font-bold text-slate-500 uppercase tracking-wide hover:text-slate-900 transition-colors">Institutional
+                        Diligence</span>
                     <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-400"></i>
                     <div class="inst-dropdown">
                         <a href="evidence.html">Evidence Registry</a>
@@ -1090,27 +1147,35 @@
                     </div>
                 </div>
 
-                <a href="technical_catalog.html" class="text-[12px] font-bold text-slate-500 uppercase tracking-wide hover:text-slate-900 transition-colors">Foundation Catalog</a>
-                <a href="trials.html" class="text-[12px] font-bold text-slate-500 uppercase tracking-wide hover:text-slate-900 transition-colors">Virtual Trials</a>
+                <a href="technical_catalog.html"
+                    class="text-[12px] font-bold text-slate-500 uppercase tracking-wide hover:text-slate-900 transition-colors">Foundation
+                    Catalog</a>
+                <a href="trials.html"
+                    class="text-[12px] font-bold text-slate-500 uppercase tracking-wide hover:text-slate-900 transition-colors">Virtual
+                    Trials</a>
             </div>
         </div>
 
-        <div class="flex items-center gap-8">
+        <div class="flex flex-col md:flex-row items-center gap-4 md:gap-8">
             <div class="bg-slate-50 border border-slate-100 px-4 py-2 rounded-full flex items-center gap-3">
                 <span class="w-2 h-2 bg-slate-400 rounded-full animate-pulse"></span>
-                <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">LIVE HCA FEED: 150K+ CELLS</span>
+                <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest text-center">LIVE HCA FEED: 150K+
+                    CELLS</span>
             </div>
-            <div id="auth-btn-login">
-                <button onclick="openLoginModal()" class="bg-slate-900 hover:bg-slate-800 text-white px-8 py-3 rounded-full text-[12px] font-black uppercase tracking-widest flex items-center gap-3 transition-all">
+            <div id="auth-btn-login" class="w-full md:w-auto">
+                <button onclick="openLoginModal()"
+                    class="w-full md:w-auto bg-slate-900 hover:bg-slate-800 text-white px-8 py-3 rounded-full text-[12px] font-black uppercase tracking-widest flex items-center justify-center gap-3 transition-all">
                     <i data-lucide="log-in" class="w-4 h-4"></i> Sign In
                 </button>
             </div>
-            <div id="auth-user-status" class="hidden flex items-center gap-6">
+            <div id="auth-user-status" class="hidden flex flex-col md:flex-row items-center gap-4 md:gap-6">
                 <div class="flex items-center gap-3 px-4 py-2 bg-slate-50 border border-slate-100 rounded-full">
                     <div class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
-                    <span id="profile-name" class="text-[10px] font-black text-slate-900 uppercase tracking-widest">RESEARCHER</span>
+                    <span id="profile-name"
+                        class="text-[10px] font-black text-slate-900 uppercase tracking-widest">RESEARCHER</span>
                 </div>
-                <button onclick="performLogout()" class="text-[10px] font-black text-slate-400 hover:text-rose-600 uppercase tracking-widest transition-colors flex items-center gap-2">
+                <button onclick="performLogout()"
+                    class="text-[10px] font-black text-slate-400 hover:text-rose-600 uppercase tracking-widest transition-colors flex items-center gap-2">
                     <i data-lucide="log-out" class="w-3.5 h-3.5"></i> Sign Out
                 </button>
             </div>
@@ -1119,20 +1184,30 @@
 
     <!-- Hero Section -->
     <section class="hero bg-transparent">
-        
+
         <div class="hero-content">
-            <span class="text-[11px] font-black text-slate-400 uppercase tracking-[0.5em] mb-8 block">Neural Parameter Mainframe</span>
-            <h1 class="font-black text-slate-900 leading-none tracking-tighter mb-8 whitespace-nowrap" style="font-size: clamp(24px, 3vw, 42px);">
+            <span class="text-[11px] font-black text-slate-400 uppercase tracking-[0.5em] mb-8 block">Neural Parameter
+                Mainframe</span>
+            <h1 class="font-black text-slate-900 leading-none tracking-tighter mb-8 md:whitespace-nowrap"
+                style="font-size: clamp(28px, 5vw, 42px);">
                 Zenith Ultra-~285M
             </h1>
             <p class="text-lg text-slate-500 leading-relaxed max-w-xl font-medium mb-12">
-                The world's first generative engine for <span class="font-bold text-slate-900">Cellular Reprogramming</span>. Simulating high-fidelity <span class="italic font-semibold text-slate-700">Yamanaka Factor</span> trajectories to reverse biological aging at the cellular level.
+                The world's first generative engine for <span class="font-bold text-slate-900">Cellular
+                    Reprogramming</span>. Simulating high-fidelity <span
+                    class="italic font-semibold text-slate-700">Yamanaka Factor</span> trajectories to reverse
+                biological aging at the cellular level.
             </p>
-            <div class="flex items-center gap-6">
-                <a href="javascript:void(0)" onclick="checkAuthAndRedirect('index.html')" class="bg-slate-900 hover:bg-slate-800 text-white px-10 py-5 rounded-full text-[13px] font-black uppercase tracking-widest flex items-center gap-3 shadow-xl transition-all transform hover:-translate-y-0.5">
+            <div class="flex flex-col md:flex-row items-center justify-center md:justify-start gap-6">
+                <a href="javascript:void(0)" onclick="checkAuthAndRedirect('index.html')"
+                    class="bg-slate-900 hover:bg-slate-800 text-white px-10 py-5 rounded-full text-[13px] font-black uppercase tracking-widest flex items-center gap-3 shadow-xl transition-all transform hover:-translate-y-0.5">
                     Open Simulation Lab
                     <div class="w-6 h-6 bg-white rounded-full flex items-center justify-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                            stroke="black" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M5 12h14" />
+                            <path d="m12 5 7 7-7 7" />
+                        </svg>
                     </div>
                 </a>
             </div>
@@ -1144,8 +1219,8 @@
     <!-- STATS STRIP (285M moved here) -->
     <section class="bg-transparent py-16">
         <div class="max-w-7xl mx-auto px-12">
-            <div class="flex flex-wrap items-center gap-0 divide-x divide-slate-100">
-                <div class="px-12 py-4 first:pl-0">
+            <div class="flex flex-col md:flex-row items-center gap-0 divide-y md:divide-y-0 md:divide-x divide-slate-100">
+                <div class="px-6 md:px-12 py-8 md:py-4 first:pt-0 md:first:pl-0 w-full md:w-auto text-center md:text-left">
                     <p class="text-5xl font-black text-slate-900 tracking-tighter mb-1">~285M</p>
                     <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">Neural Parameters</p>
                 </div>
@@ -1171,12 +1246,14 @@
         <div class="max-w-7xl mx-auto px-12">
             <div class="grid lg:grid-cols-2 gap-24 items-end mb-32">
                 <div>
-                    <span class="text-[11px] font-black text-slate-400 uppercase tracking-[0.4em] mb-8 block">Project Scope</span>
-                    <h2 class="text-6xl font-black text-slate-900 leading-[1.05] tracking-tight">A streamlined system <br>for medical teams.</h2>
+                    <span class="text-[11px] font-black text-slate-400 uppercase tracking-[0.4em] mb-8 block">Project
+                        Scope</span>
+                    <h2 class="text-6xl font-black text-slate-900 leading-[1.05] tracking-tight">A streamlined system
+                        <br>for medical teams.</h2>
                 </div>
                 <div>
                     <p class="text-xl text-slate-500 leading-relaxed font-medium">
-                        Zenith v26.1 provides the architectural foundation for precision clinical navigation. 
+                        Zenith v26.1 provides the architectural foundation for precision clinical navigation.
                         By leveraging ~285M parameters, we help teams move faster, reduce risk, and improve outcomes.
                     </p>
                 </div>
@@ -1185,504 +1262,571 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-16">
                 <!-- Solution 1 -->
                 <div class="group cursor-pointer">
-                    <div class="font-black uppercase tracking-[0.3em] mb-6" style="color: #000 !important; font-size: 13px;">01 / DISCOVERY</div>
+                    <div class="font-black uppercase tracking-[0.3em] mb-6"
+                        style="color: #000 !important; font-size: 13px;">01 / DISCOVERY</div>
                     <h3 class="text-2xl font-black text-slate-900 mb-4">Precision Manifolds</h3>
-                    <p class="text-slate-500 leading-relaxed mb-8">Access high-definition single-cell baselines to benchmark clinical trajectories with 99.8% fidelity.</p>
-                    <div class="w-12 h-px bg-slate-200 group-hover:w-full group-hover:bg-slate-900 transition-all duration-500"></div>
+                    <p class="text-slate-500 leading-relaxed mb-8">Access high-definition single-cell baselines to
+                        benchmark clinical trajectories with 99.8% fidelity.</p>
+                    <div
+                        class="w-12 h-px bg-slate-200 group-hover:w-full group-hover:bg-slate-900 transition-all duration-500">
+                    </div>
                 </div>
 
                 <!-- Solution 2 -->
                 <div class="group cursor-pointer">
-                    <div class="font-black uppercase tracking-[0.3em] mb-6" style="color: #000 !important; font-size: 13px;">02 / COMPLIANCE</div>
+                    <div class="font-black uppercase tracking-[0.3em] mb-6"
+                        style="color: #000 !important; font-size: 13px;">02 / COMPLIANCE</div>
                     <h3 class="text-2xl font-black text-slate-900 mb-4">Evidence Registry</h3>
-                    <p class="text-slate-500 leading-relaxed mb-8">Full provenance tracking for research use only (RUO) applications, ensuring institutional-grade audit trails.</p>
-                    <div class="w-12 h-px bg-slate-200 group-hover:w-full group-hover:bg-slate-900 transition-all duration-500"></div>
+                    <p class="text-slate-500 leading-relaxed mb-8">Full provenance tracking for research use only (RUO)
+                        applications, ensuring institutional-grade audit trails.</p>
+                    <div
+                        class="w-12 h-px bg-slate-200 group-hover:w-full group-hover:bg-slate-900 transition-all duration-500">
+                    </div>
                 </div>
 
                 <!-- Solution 3 -->
                 <div class="group cursor-pointer">
-                    <div class="font-black uppercase tracking-[0.3em] mb-6" style="color: #000 !important; font-size: 13px;">03 / EXECUTION</div>
+                    <div class="font-black uppercase tracking-[0.3em] mb-6"
+                        style="color: #000 !important; font-size: 13px;">03 / EXECUTION</div>
                     <h3 class="text-2xl font-black text-slate-900 mb-4">Simulation Lab</h3>
-                    <p class="text-slate-500 leading-relaxed mb-8">Deploy virtual trials to plan and manage complex reprogramming protocols with clarity and control.</p>
-                    <div class="w-12 h-px bg-slate-200 group-hover:w-full group-hover:bg-slate-900 transition-all duration-500"></div>
-                </div>
-            </div>
-        </div>
-
-    <!-- PLATFORM CAPABILITIES SECTION -->
-    <section class="py-32 bg-transparent">
-        <div class="max-w-7xl mx-auto px-12">
-            <div class="mb-24">
-                <span class="text-[10px] font-black text-slate-300 uppercase tracking-widest mb-6 block">Platform Modules</span>
-                <h2 class="text-5xl font-black text-slate-900 tracking-tight">Everything your<br>team needs.</h2>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-10 mb-10">
-                <div class="bg-transparent shadow-xl border border-slate-100/30">
-                    <div class="w-16 h-16 bg-slate-50 rounded-2xl flex items-center justify-center mb-10 group-hover:bg-slate-900 transition-colors duration-500">
-                        <i data-lucide="layout-dashboard" class="w-8 h-8 text-slate-900 group-hover:text-white"></i>
-                    </div>
-                    <h3 class="text-2xl font-black text-slate-900 mb-6">Pilot Dashboard</h3>
-                    <p class="text-slate-500 leading-relaxed mb-10 font-medium">
-                        Real-time tracking of Pilot Funnels, Partnership KPIs, and Risk Registers for Enterprise diligence and investor review.
-                    </p>
-                    <button onclick="window.open('pilot_dashboard.html', '_blank')" class="inline-flex items-center gap-4 text-slate-900 font-extrabold text-[11px] uppercase tracking-widest hover:gap-8 transition-all">
-                        Access Dashboard <i data-lucide="arrow-right" class="w-4 h-4"></i>
-                    </button>
-                </div>
-
-                <div class="bg-slate-50 border-2 border-transparent rounded-[40px] p-12 hover:bg-slate-100 transition-all duration-500 group flex flex-col">
-                    <div class="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mb-10 group-hover:bg-slate-900 transition-colors duration-500 shadow-sm">
-                        <i data-lucide="activity" class="w-8 h-8 text-slate-900 group-hover:text-white"></i>
-                    </div>
-                    <h3 class="text-2xl font-black text-slate-900 mb-6">Virtual Trials</h3>
-                    <p class="text-slate-500 leading-relaxed mb-10 font-medium">
-                        Run high-throughput clinical trials on digital cohorts. Test longevity interventions across diverse populations.
-                    </p>
-                    <button onclick="checkAuthAndRedirect('trials.html')" class="inline-flex items-center gap-4 text-slate-900 font-extrabold text-[11px] uppercase tracking-widest hover:gap-8 transition-all mt-auto">
-                        Launch Trials <i data-lucide="arrow-right" class="w-4 h-4"></i>
-                    </button>
-                </div>
-
-                <div class="bg-white/10 border border-slate-100/30">
-                    <div class="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mb-10 group-hover:bg-slate-900 transition-colors duration-500 shadow-sm">
-                        <i data-lucide="scale" class="w-8 h-8 text-slate-900 group-hover:text-white"></i>
-                    </div>
-                    <h3 class="text-2xl font-black text-slate-900 mb-6">Regulatory Statement</h3>
-                    <p class="text-slate-500 leading-relaxed mb-10 font-medium">
-                        Formal Intended Use Statement and 12-Month Evidence Generation Roadmap for institutional compliance.
-                    </p>
-                    <button onclick="window.open('regulatory.html', '_blank')" class="inline-flex items-center gap-4 text-slate-900 font-extrabold text-[11px] uppercase tracking-widest hover:gap-8 transition-all mt-auto">
-                        Read Statement <i data-lucide="arrow-right" class="w-4 h-4"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </section>
-
-
-    <!-- CORE CAPABILITY VISUAL -->
-    <section class="max-w-7xl mx-auto px-6 py-24">
-        <div
-            class="relative rounded-3xl overflow-hidden shadow-2xl border border-slate-100 min-h-[600px] flex items-center p-12 md:p-24 bg-white/50 backdrop-blur-sm">
-            <!-- Scientific Lab Background Image -->
-            <img src="assets/zenith_lab.jpg" alt="Zenith Lab Infrastructure"
-                class="absolute inset-0 w-full h-full object-cover opacity-100 transition-transform duration-1000 hover:scale-105">
-
-            <div class="absolute inset-0 bg-gradient-to-r from-white via-white/80 to-white/20"></div>
-
-            <div class="relative z-10 max-w-2xl">
-                <span
-                    class="inline-block px-4 py-1.5 bg-slate-100 border border-slate-200 text-slate-900 text-[10px] font-black uppercase tracking-[0.3em] rounded-full mb-8">
-                    Foundation Intelligence
-                </span>
-                <h2 class="text-6xl font-black text-slate-900 mb-8 leading-[1.1]"
-                    style="font-family: 'Outfit', sans-serif;">
-                    Propelling Life Science with <br>
-                    <span class="bg-clip-text text-transparent bg-gradient-to-r from-slate-900 to-slate-500">Generative
-                        Trajectory Modeling.</span>
-                </h2>
-                <p class="text-xl text-slate-600 font-medium leading-relaxed mb-12">
-                    The Zenith Mainframe delivers high-precision modeling for cellular longevity and reprogramming. By
-                    mapping thousands of gene dimensions, we provide the computational evidence needed to reverse
-                    biological aging.
-                </p>
-
-                <div class="flex gap-16">
-                    <div>
-                        <p class="text-4xl font-black text-slate-900 mb-2">99.8%</p>
-                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">Model Fidelity</p>
-                    </div>
-                    <div class="w-px h-12 bg-slate-200"></div>
-                    <div>
-                        <p class="text-4xl font-black text-slate-900 mb-2">32 vCPUs</p>
-                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">Compute Velocity</p>
+                    <p class="text-slate-500 leading-relaxed mb-8">Deploy virtual trials to plan and manage complex
+                        reprogramming protocols with clarity and control.</p>
+                    <div
+                        class="w-12 h-px bg-slate-200 group-hover:w-full group-hover:bg-slate-900 transition-all duration-500">
                     </div>
                 </div>
             </div>
         </div>
-    </section>
 
-    <!-- ATOMIC-LEVEL STRUCTURAL EVIDENCE (New Elite Section) -->
-    <section class="max-w-7xl mx-auto px-6 py-24 border-t border-slate-50 bg-transparent">
-        <div class="text-center mb-20">
-            <span class="text-xs font-black text-slate-900 uppercase tracking-[0.5em] mb-4 block">Validation Phase
-                II</span>
-            <h2 class="text-5xl font-black text-slate-900 mb-6" style="font-family: 'Outfit', sans-serif;">Atomic-Level
-                Structural Evidence</h2>
-            <p class="text-xl text-slate-500 max-w-3xl mx-auto font-medium">
-                Zenith bridges the gap between <strong>predictive logic</strong> and <strong>physical reality</strong>.
-                We validate our generative trajectories through proprietary structural modeling of the DNA-protein
-                interface.
-            </p>
-        </div>
+        <!-- PLATFORM CAPABILITIES SECTION -->
+        <section class="py-32 bg-transparent">
+            <div class="max-w-7xl mx-auto px-12">
+                <div class="mb-24">
+                    <span class="text-[10px] font-black text-slate-300 uppercase tracking-widest mb-6 block">Platform
+                        Modules</span>
+                    <h2 class="text-5xl font-black text-slate-900 tracking-tight">Everything your<br>team needs.</h2>
+                </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-stretch">
-            <!-- Left: Neural Generative Logic (Zenith) -->
-            <div class="bg-slate-50 rounded-3xl p-10 border border-slate-100 flex flex-col justify-between">
-                <div>
-                    <div class="flex items-center gap-3 mb-6">
-                        <div class="p-2 bg-slate-900 rounded-lg">
-                            <i data-lucide="brain-circuit" class="w-6 h-6 text-white"></i>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-10 mb-10">
+                    <div class="bg-transparent shadow-xl border border-slate-100/30">
+                        <div
+                            class="w-16 h-16 bg-slate-50 rounded-2xl flex items-center justify-center mb-10 group-hover:bg-slate-900 transition-colors duration-500">
+                            <i data-lucide="layout-dashboard" class="w-8 h-8 text-slate-900 group-hover:text-white"></i>
                         </div>
-                        <h3 class="text-2xl font-bold text-slate-900">Neural Generative Logic</h3>
+                        <h3 class="text-2xl font-black text-slate-900 mb-6">Pilot Dashboard</h3>
+                        <p class="text-slate-500 leading-relaxed mb-10 font-medium">
+                            Real-time tracking of Pilot Funnels, Partnership KPIs, and Risk Registers for Enterprise
+                            diligence and investor review.
+                        </p>
+                        <button onclick="window.open('pilot_dashboard.html', '_blank')"
+                            class="inline-flex items-center gap-4 text-slate-900 font-extrabold text-[11px] uppercase tracking-widest hover:gap-8 transition-all">
+                            Access Dashboard <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </button>
                     </div>
-                    <p class="text-slate-600 mb-8 leading-relaxed">
-                        The Zenith **Kinetic Confidence Map** (PAE) validates the high-certainty DNA-Binding Domain
-                        (DBD). This digital fingerprint confirms exactly where the protein logic locks, and where it
-                        remains flexible for signaling.
-                    </p>
-                </div>
-                <!-- Zenith Kinetic Confidence Plot -->
-                <div class="img-container-elite h-[450px] relative group overflow-hidden bg-white mt-auto">
-                    <img src="assets/sox2_kinetic_confidence.png" alt="Zenith Kinetic Confidence Plot" class="img-elite">
-                    <div class="absolute inset-0 bg-gradient-to-br from-slate-50/10 to-transparent pointer-events-none"></div>
-                    <div class="absolute bottom-6 left-6 right-6 bg-white/95 backdrop-blur-md px-6 py-4 rounded-2xl border border-blue-50 text-center opacity-0 group-hover:opacity-100 transition-all duration-500 shadow-xl translate-y-4 group-hover:translate-y-0">
-                        <p class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-900">Kinetic Confidence Map: SOX2_Ref_26.1</p>
+
+                    <div
+                        class="bg-slate-50 border-2 border-transparent rounded-[40px] p-12 hover:bg-slate-100 transition-all duration-500 group flex flex-col">
+                        <div
+                            class="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mb-10 group-hover:bg-slate-900 transition-colors duration-500 shadow-sm">
+                            <i data-lucide="activity" class="w-8 h-8 text-slate-900 group-hover:text-white"></i>
+                        </div>
+                        <h3 class="text-2xl font-black text-slate-900 mb-6">Virtual Trials</h3>
+                        <p class="text-slate-500 leading-relaxed mb-10 font-medium">
+                            Run high-throughput clinical trials on digital cohorts. Test longevity interventions across
+                            diverse populations.
+                        </p>
+                        <button onclick="checkAuthAndRedirect('trials.html')"
+                            class="inline-flex items-center gap-4 text-slate-900 font-extrabold text-[11px] uppercase tracking-widest hover:gap-8 transition-all mt-auto">
+                            Launch Trials <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+
+                    <div class="bg-white/10 border border-slate-100/30">
+                        <div
+                            class="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mb-10 group-hover:bg-slate-900 transition-colors duration-500 shadow-sm">
+                            <i data-lucide="scale" class="w-8 h-8 text-slate-900 group-hover:text-white"></i>
+                        </div>
+                        <h3 class="text-2xl font-black text-slate-900 mb-6">Regulatory Statement</h3>
+                        <p class="text-slate-500 leading-relaxed mb-10 font-medium">
+                            Formal Intended Use Statement and 12-Month Evidence Generation Roadmap for institutional
+                            compliance.
+                        </p>
+                        <button onclick="window.open('regulatory.html', '_blank')"
+                            class="inline-flex items-center gap-4 text-slate-900 font-extrabold text-[11px] uppercase tracking-widest hover:gap-8 transition-all mt-auto">
+                            Read Statement <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </button>
                     </div>
                 </div>
             </div>
+        </section>
 
-            <!-- Right: Physical Anchor (Verified Interaction) -->
+
+        <!-- CORE CAPABILITY VISUAL -->
+        <section class="max-w-7xl mx-auto px-6 py-24">
             <div
-                class="bg-slate-900 rounded-3xl p-10 border border-white/5 flex flex-col justify-between text-white overflow-hidden relative shadow-2xl">
-                <div class="absolute top-0 right-0 w-64 h-64 bg-slate-100 blur-[100px] pointer-events-none"></div>
-                <div>
-                    <div class="flex items-center gap-3 mb-6">
-                        <div class="p-2 bg-slate-100 rounded-lg">
-                            <i data-lucide="microscope" class="w-6 h-6 text-slate-900"></i>
-                        </div>
-                        <h3 class="text-2xl font-bold">Verified Physical Anchor</h3>
-                    </div>
-                    <p class="text-slate-400 mb-8 leading-relaxed">
-                        Proprietary modeling confirms a <strong>High-Affinity Bind Site</strong>. The 3D assembly
-                        identifies the rigid <strong>DNA-Binding Anchor</strong>, while Zenith accurately predicts the
-                        role of the <strong>Dynamic Flexible Segments</strong> in the signaling trajectory.
+                class="relative rounded-3xl overflow-hidden shadow-2xl border border-slate-100 min-h-[600px] flex items-center p-12 md:p-24 bg-white/50 backdrop-blur-sm">
+                <!-- Scientific Lab Background Image -->
+                <img src="assets/zenith_lab.jpg" alt="Zenith Lab Infrastructure"
+                    class="absolute inset-0 w-full h-full object-cover opacity-100 transition-transform duration-1000 hover:scale-105">
+
+                <div class="absolute inset-0 bg-gradient-to-r from-white via-white/80 to-white/20"></div>
+
+                <div class="relative z-10 max-w-2xl">
+                    <span
+                        class="inline-block px-4 py-1.5 bg-slate-100 border border-slate-200 text-slate-900 text-[10px] font-black uppercase tracking-[0.3em] rounded-full mb-8">
+                        Foundation Intelligence
+                    </span>
+                    <h2 class="text-6xl font-black text-slate-900 mb-8 leading-[1.1]"
+                        style="font-family: 'Outfit', sans-serif;">
+                        Propelling Life Science with <br>
+                        <span
+                            class="bg-clip-text text-transparent bg-gradient-to-r from-slate-900 to-slate-500">Generative
+                            Trajectory Modeling.</span>
+                    </h2>
+                    <p class="text-xl text-slate-600 font-medium leading-relaxed mb-12">
+                        The Zenith Mainframe delivers high-precision modeling for cellular longevity and reprogramming.
+                        By
+                        mapping thousands of gene dimensions, we provide the computational evidence needed to reverse
+                        biological aging.
                     </p>
-                </div>
-                <!-- Verified Structural Assembly Image -->
-                <div class="img-container-elite h-[450px] border-white/10 group bg-black relative shadow-2xl mt-auto">
-                    <img src="assets/sox2_structural_bound.png" alt="SOX2 DNA Anchor Validation" class="img-elite opacity-90">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none"></div>
-                    <div class="absolute bottom-6 left-6 right-6 bg-slate-900/95 backdrop-blur-md px-6 py-4 rounded-2xl border border-white/10 text-center opacity-0 group-hover:opacity-100 transition-all duration-500 shadow-xl translate-y-4 group-hover:translate-y-0">
-                        <p class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">Physical Anchor Analysis: PDB_VALID_04</p>
+
+                    <div class="flex gap-16">
+                        <div>
+                            <p class="text-4xl font-black text-slate-900 mb-2">99.8%</p>
+                            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">Model Fidelity
+                            </p>
+                        </div>
+                        <div class="w-px h-12 bg-slate-200"></div>
+                        <div>
+                            <p class="text-4xl font-black text-slate-900 mb-2">32 vCPUs</p>
+                            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em]">Compute Velocity
+                            </p>
+                        </div>
                     </div>
                 </div>
+            </div>
+        </section>
+
+        <!-- ATOMIC-LEVEL STRUCTURAL EVIDENCE (New Elite Section) -->
+        <section class="max-w-7xl mx-auto px-6 py-24 border-t border-slate-50 bg-transparent">
+            <div class="text-center mb-20">
+                <span class="text-xs font-black text-slate-900 uppercase tracking-[0.5em] mb-4 block">Validation Phase
+                    II</span>
+                <h2 class="text-5xl font-black text-slate-900 mb-6" style="font-family: 'Outfit', sans-serif;">
+                    Atomic-Level
+                    Structural Evidence</h2>
+                <p class="text-xl text-slate-500 max-w-3xl mx-auto font-medium">
+                    Zenith bridges the gap between <strong>predictive logic</strong> and <strong>physical
+                        reality</strong>.
+                    We validate our generative trajectories through proprietary structural modeling of the DNA-protein
+                    interface.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-stretch">
+                <!-- Left: Neural Generative Logic (Zenith) -->
+                <div class="bg-slate-50 rounded-3xl p-10 border border-slate-100 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center gap-3 mb-6">
+                            <div class="p-2 bg-slate-900 rounded-lg">
+                                <i data-lucide="brain-circuit" class="w-6 h-6 text-white"></i>
+                            </div>
+                            <h3 class="text-2xl font-bold text-slate-900">Neural Generative Logic</h3>
+                        </div>
+                        <p class="text-slate-600 mb-8 leading-relaxed">
+                            The Zenith **Kinetic Confidence Map** (PAE) validates the high-certainty DNA-Binding Domain
+                            (DBD). This digital fingerprint confirms exactly where the protein logic locks, and where it
+                            remains flexible for signaling.
+                        </p>
+                    </div>
+                    <!-- Zenith Kinetic Confidence Plot -->
+                    <div class="img-container-elite h-[450px] relative group overflow-hidden bg-white mt-auto">
+                        <img src="assets/sox2_kinetic_confidence.png" alt="Zenith Kinetic Confidence Plot"
+                            class="img-elite">
+                        <div
+                            class="absolute inset-0 bg-gradient-to-br from-slate-50/10 to-transparent pointer-events-none">
+                        </div>
+                        <div
+                            class="absolute bottom-6 left-6 right-6 bg-white/95 backdrop-blur-md px-6 py-4 rounded-2xl border border-blue-50 text-center opacity-0 group-hover:opacity-100 transition-all duration-500 shadow-xl translate-y-4 group-hover:translate-y-0">
+                            <p class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-900">Kinetic
+                                Confidence Map: SOX2_Ref_26.1</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right: Physical Anchor (Verified Interaction) -->
+                <div
+                    class="bg-slate-900 rounded-3xl p-10 border border-white/5 flex flex-col justify-between text-white overflow-hidden relative shadow-2xl">
+                    <div class="absolute top-0 right-0 w-64 h-64 bg-slate-100 blur-[100px] pointer-events-none"></div>
+                    <div>
+                        <div class="flex items-center gap-3 mb-6">
+                            <div class="p-2 bg-slate-100 rounded-lg">
+                                <i data-lucide="microscope" class="w-6 h-6 text-slate-900"></i>
+                            </div>
+                            <h3 class="text-2xl font-bold">Verified Physical Anchor</h3>
+                        </div>
+                        <p class="text-slate-400 mb-8 leading-relaxed">
+                            Proprietary modeling confirms a <strong>High-Affinity Bind Site</strong>. The 3D assembly
+                            identifies the rigid <strong>DNA-Binding Anchor</strong>, while Zenith accurately predicts
+                            the
+                            role of the <strong>Dynamic Flexible Segments</strong> in the signaling trajectory.
+                        </p>
+                    </div>
+                    <!-- Verified Structural Assembly Image -->
+                    <div
+                        class="img-container-elite h-[450px] border-white/10 group bg-black relative shadow-2xl mt-auto">
+                        <img src="assets/sox2_structural_bound.png" alt="SOX2 DNA Anchor Validation"
+                            class="img-elite opacity-90">
+                        <div
+                            class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none">
+                        </div>
+                        <div
+                            class="absolute bottom-6 left-6 right-6 bg-slate-900/95 backdrop-blur-md px-6 py-4 rounded-2xl border border-white/10 text-center opacity-0 group-hover:opacity-100 transition-all duration-500 shadow-xl translate-y-4 group-hover:translate-y-0">
+                            <p class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">Physical Anchor
+                                Analysis: PDB_VALID_04</p>
+                        </div>
+                    </div>
                     <div
                         class="absolute bottom-4 left-4 right-4 bg-black/60 backdrop-blur-md p-3 rounded-lg border border-white/10 text-center opacity-0 group-hover:opacity-100 transition-opacity shadow-2xl">
                         <p class="text-[10px] font-black uppercase tracking-widest text-slate-400">Atomic Validation:
-                            POU5F1_SOX2_v26.1</p>
+                            TBX5_GATA4_v26.1</p>
                     </div>
                 </div>
             </div>
-        </div>
+            </div>
 
-                <strong>Standard of Excellence:</strong> While Zenith models the systemic logic and high-entropy
-                <strong>Dynamic Flexible Segments</strong>, all structural anchors are cross-verified against
-                <strong>industry-standard predictive folding models</strong> (including Google DeepMind’s AlphaFold 3
-                architecture) to ensure a peak atomic resolution of 0.1Å.
-    </section>
+            <strong>Standard of Excellence:</strong> While Zenith models the systemic logic and high-entropy
+            <strong>Dynamic Flexible Segments</strong>, all structural anchors are cross-verified against
+            <strong>industry-standard predictive folding models</strong> (including Google DeepMind’s AlphaFold 3
+            architecture) to ensure a peak atomic resolution of 0.1Å.
+        </section>
 
-    <!-- PHASE III: SYNERGISTIC FUNCTIONAL DISCOVERY (Master Class) -->
-    <section class="max-w-7xl mx-auto px-6 py-24 border-t border-slate-50 bg-slate-900/5 rounded-[3rem] my-12">
-        <div class="text-center mb-20">
-            <span class="text-xs font-black text-slate-900 uppercase tracking-[0.5em] mb-4 block">Validation Phase
-                III</span>
-            <h2 class="text-5xl font-black text-slate-900 mb-6" style="font-family: 'Outfit', sans-serif;">Synergistic
-                Functional Discovery</h2>
-            <p class="text-xl text-slate-500 max-w-3xl mx-auto font-medium">
-                Zenith Ultra-~285M transcends single-gene analysis. We identify <strong>Cooperative Reprogramming
-                    Complexes (CRC)</strong>—the molecular teams that physically assemble to force state-transitions.
-            </p>
-            <div class="mt-8 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
-                <div class="bg-white p-4 rounded-xl border border-slate-100 shadow-sm">
-                    <div class="text-[10px] text-slate-400 font-bold uppercase mb-1">Neural Parameters</div>
-                    <div class="text-2xl font-black text-slate-900">285M</div>
-                </div>
-                <div class="bg-white p-4 rounded-xl border border-slate-100 shadow-sm">
-                    <div class="text-[10px] text-slate-400 font-bold uppercase mb-1">Gene Vocabulary</div>
-                    <div class="text-2xl font-black text-slate-900">5,000</div>
-                </div>
-                <div class="bg-white p-4 rounded-xl border border-slate-100 shadow-sm">
-                    <div class="text-[10px] text-slate-400 font-bold uppercase mb-1">HCA Mapped Cells</div>
-                    <div class="text-2xl font-black text-slate-900">150k</div>
-                </div>
-                <div class="bg-white p-4 rounded-xl border border-slate-100 shadow-sm">
-                    <div class="text-[10px] text-slate-400 font-bold uppercase mb-1">Inference Threads</div>
-                    <div class="text-2xl font-black text-slate-900">32</div>
+        <!-- PHASE III: SYNERGISTIC FUNCTIONAL DISCOVERY (Master Class) -->
+        <section class="max-w-7xl mx-auto px-6 py-24 border-t border-slate-50 bg-slate-900/5 rounded-[3rem] my-12">
+            <div class="text-center mb-20">
+                <span class="text-xs font-black text-slate-900 uppercase tracking-[0.5em] mb-4 block">Validation Phase
+                    III</span>
+                <h2 class="text-5xl font-black text-slate-900 mb-6" style="font-family: 'Outfit', sans-serif;">
+                    Synergistic
+                    Functional Discovery</h2>
+                <p class="text-xl text-slate-500 max-w-3xl mx-auto font-medium">
+                    Zenith Ultra-~285M transcends single-gene analysis. We identify <strong>Cooperative Reprogramming
+                        Complexes (CRC)</strong>—the molecular teams that physically assemble to force
+                    state-transitions.
+                </p>
+                <div class="mt-8 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
+                    <div class="bg-white p-4 rounded-xl border border-slate-100 shadow-sm">
+                        <div class="text-[10px] text-slate-400 font-bold uppercase mb-1">Neural Parameters</div>
+                        <div class="text-2xl font-black text-slate-900">285M</div>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl border border-slate-100 shadow-sm">
+                        <div class="text-[10px] text-slate-400 font-bold uppercase mb-1">Gene Vocabulary</div>
+                        <div class="text-2xl font-black text-slate-900">5,000</div>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl border border-slate-100 shadow-sm">
+                        <div class="text-[10px] text-slate-400 font-bold uppercase mb-1">HCA Mapped Cells</div>
+                        <div class="text-2xl font-black text-slate-900">150k</div>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl border border-slate-100 shadow-sm">
+                        <div class="text-[10px] text-slate-400 font-bold uppercase mb-1">Inference Threads</div>
+                        <div class="text-2xl font-black text-slate-900">32</div>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-stretch">
-            <!-- Left: Synergy Confidence (The Handshake) -->
-            <div class="bg-white rounded-3xl p-10 border border-slate-100 flex flex-col justify-between shadow-xl">
-                <div>
-                    <div class="flex items-center gap-3 mb-6">
-                        <div class="p-2 bg-slate-900 rounded-lg">
-                            <i data-lucide="users" class="w-6 h-6 text-white"></i>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-stretch">
+                <!-- Left: Synergy Confidence (The Handshake) -->
+                <div class="bg-white rounded-3xl p-10 border border-slate-100 flex flex-col justify-between shadow-xl">
+                    <div>
+                        <div class="flex items-center gap-3 mb-6">
+                            <div class="p-2 bg-slate-900 rounded-lg">
+                                <i data-lucide="users" class="w-6 h-6 text-white"></i>
+                            </div>
+                            <h3 class="text-2xl font-bold text-slate-900">Synergy Confidence Map</h3>
                         </div>
-                        <h3 class="text-2xl font-bold text-slate-900">Synergy Confidence Map</h3>
+                        <p class="text-slate-600 mb-8 leading-relaxed">
+                            The <strong>OSKM Network</strong>. Zenith models the optimal application
+                            certainty between reprogramming factors. The off-diagonal green nodes validate the physical
+                            cooperation between these master regulators.
+                        </p>
                     </div>
-                    <p class="text-slate-600 mb-8 leading-relaxed">
-                        The <strong>OSKM Network</strong>. Zenith models the optimal application
-                        certainty between reprogramming factors. The off-diagonal green nodes validate the physical
-                        cooperation between these master regulators.
-                    </p>
-                </div>
-                <!-- Synergy Confidence Image -->
-                <div class="img-container-elite h-[450px] relative group overflow-hidden bg-white mt-auto">
-                    <img src="assets/synergy_confidence_map.png" alt="Zenith Synergy Confidence Map" class="img-elite">
-                    <div class="absolute inset-0 bg-gradient-to-br from-slate-50/10 to-transparent pointer-events-none"></div>
-                    <div class="absolute bottom-6 left-6 right-6 bg-white/95 backdrop-blur-md px-6 py-4 rounded-2xl border border-blue-50 text-center opacity-0 group-hover:opacity-100 transition-all duration-500 shadow-xl translate-y-4 group-hover:translate-y-0">
-                        <p class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-900">Complex ID: CRC_SOX_OCT_92</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Right: Synergistic Assembly (The Result) -->
-            <div
-                class="bg-slate-900 rounded-3xl p-10 border border-white/5 flex flex-col justify-between text-white overflow-hidden relative shadow-2xl">
-                <div class="absolute top-0 right-0 w-96 h-96 bg-slate-400/10 blur-[120px] pointer-events-none"></div>
-                <div>
-                    <div class="flex items-center gap-3 mb-6">
-                        <div class="p-2 bg-slate-900 rounded-lg">
-                            <i data-lucide="layers" class="w-6 h-6 text-slate-900"></i>
+                    <!-- Synergy Confidence Image -->
+                    <div class="img-container-elite h-[450px] relative group overflow-hidden bg-white mt-auto">
+                        <img src="assets/synergy_confidence_map.png" alt="Zenith Synergy Confidence Map"
+                            class="img-elite">
+                        <div
+                            class="absolute inset-0 bg-gradient-to-br from-slate-50/10 to-transparent pointer-events-none">
                         </div>
-                        <h3 class="text-2xl font-bold">Synergistic Functional Assembly</h3>
-                    </div>
-                    <p class="text-slate-400 mb-8 leading-relaxed">
-                        Validation of the <strong>Dual-Anchor Interface</strong>. The proteins sit side-by-side on the
-                        same DNA promoter, physically establishing the "Molecular Machine" Zenith selected for
-                        high-fidelity cardiac rejuvenation.
-                    </p>
-                </div>
-                <!-- Synergistic Assembly Image -->
-                <div class="img-container-elite h-[350px] border-white/10 group bg-black relative shadow-2xl mt-auto">
-                    <img src="assets/synergy_complex_bound.png" alt="Synergistic Assembly Discovery" class="img-elite opacity-90">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none"></div>
-                    <div class="absolute bottom-6 left-6 right-6 bg-slate-900/95 backdrop-blur-md px-6 py-4 rounded-2xl border border-white/10 text-center opacity-0 group-hover:opacity-100 transition-all duration-500 shadow-xl translate-y-4 group-hover:translate-y-0">
-                        <p class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">Validated Cooperative Model: V26.1_FINAL</p>
+                        <div
+                            class="absolute bottom-6 left-6 right-6 bg-white/95 backdrop-blur-md px-6 py-4 rounded-2xl border border-blue-50 text-center opacity-0 group-hover:opacity-100 transition-all duration-500 shadow-xl translate-y-4 group-hover:translate-y-0">
+                            <p class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-900">Complex ID:
+                                CRC_SOX_OCT_92</p>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
 
-        <div class="mt-16 text-center">
-            <p class="text-[10px] font-black text-slate-300 uppercase tracking-[0.8em]">System State: Verified Synergy
-            </p>
-        </div>
-    </section>
-
-    <!-- CORE CAPABILITIES -->
-    <section class="capability-grid">
-        <div class="capability-card">
-            <i data-lucide="target" class="w-12 h-12"></i>
-            <h3>Target Identification</h3>
-            <p>Advanced algorithmic screening to pinpoint high-value genomic targets for specific therapeutic
-                interventions and state induction.</p>
-        </div>
-        <div class="capability-card">
-            <i data-lucide="workflow" class="w-12 h-12"></i>
-            <h3>Generative Dynamics</h3>
-            <p>Utilizing proprietary Attention manifolds to model continuous trajectories of cell fate conversion and
-                aging-related cellular drift.</p>
-        </div>
-        <div class="capability-card">
-            <i data-lucide="shield-alert" class="w-12 h-12"></i>
-            <h3>Safety Hardening</h3>
-            <p>Comprehensive monitoring systems designed to detect and mitigate oncogenic risk factors during
-                reprogramming cycles.</p>
-        </div>
-    </section>
-
-    <!-- PLATFORM STATUS FOOTER -->
-    <!-- PLATFORM STATUS FOOTER (Clinical Minimalist) -->
-    <footer class="py-32 bg-transparent border-t border-slate-100">
-        <div class="max-w-7xl mx-auto px-12">
-            <div class="grid grid-cols-2 lg:grid-cols-4 gap-12 mb-32 pb-32 border-b border-slate-50">
-                <div class="status-metric">
-                    <h4 class="text-[10px] font-black text-slate-300 uppercase tracking-[0.3em] mb-4">System Health</h4>
-                    <p class="text-3xl font-black text-slate-900">Optimal</p>
-                </div>
-                <div class="status-metric">
-                    <h4 class="text-[10px] font-black text-slate-300 uppercase tracking-[0.3em] mb-4">Neural Core</h4>
-                    <p class="text-3xl font-black text-slate-900">Zenith v26.1</p>
-                </div>
-                <div class="status-metric">
-                    <h4 class="text-[10px] font-black text-slate-300 uppercase tracking-[0.3em] mb-4">Data Integrity</h4>
-                    <p class="text-3xl font-black text-slate-900">Encrypted</p>
-                </div>
-                <div class="status-metric">
-                    <h4 class="text-[10px] font-black text-slate-300 uppercase tracking-[0.3em] mb-4">Cluster Latency</h4>
-                    <p class="text-3xl font-black text-slate-900">0.02ms</p>
+                <!-- Right: Synergistic Assembly (The Result) -->
+                <div
+                    class="bg-slate-900 rounded-3xl p-10 border border-white/5 flex flex-col justify-between text-white overflow-hidden relative shadow-2xl">
+                    <div class="absolute top-0 right-0 w-96 h-96 bg-slate-400/10 blur-[120px] pointer-events-none">
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-3 mb-6">
+                            <div class="p-2 bg-slate-900 rounded-lg">
+                                <i data-lucide="layers" class="w-6 h-6 text-slate-900"></i>
+                            </div>
+                            <h3 class="text-2xl font-bold">Synergistic Functional Assembly</h3>
+                        </div>
+                        <p class="text-slate-400 mb-8 leading-relaxed">
+                            Validation of the <strong>Dual-Anchor Interface</strong>. The proteins sit side-by-side on
+                            the
+                            same DNA promoter, physically establishing the "Molecular Machine" Zenith selected for
+                            high-fidelity cardiac rejuvenation.
+                        </p>
+                    </div>
+                    <!-- Synergistic Assembly Image -->
+                    <div
+                        class="img-container-elite h-[350px] border-white/10 group bg-black relative shadow-2xl mt-auto">
+                        <img src="assets/synergy_complex_bound.png" alt="Synergistic Assembly Discovery"
+                            class="img-elite opacity-90">
+                        <div
+                            class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none">
+                        </div>
+                        <div
+                            class="absolute bottom-6 left-6 right-6 bg-slate-900/95 backdrop-blur-md px-6 py-4 rounded-2xl border border-white/10 text-center opacity-0 group-hover:opacity-100 transition-all duration-500 shadow-xl translate-y-4 group-hover:translate-y-0">
+                            <p class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">Validated
+                                TBX5_GATA4 Complex_FINAL</p>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <div class="flex flex-col md:flex-row justify-between items-center gap-12">
-                <div class="flex items-center gap-4">
-                    <svg class="w-6 h-6 text-slate-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-                    <div class="text-[10px] font-black text-slate-300 uppercase tracking-[0.5em]">Nilus Lab Institutional | RUO v26.1</div>
+            <div class="mt-16 text-center">
+                <p class="text-[10px] font-black text-slate-300 uppercase tracking-[0.8em]">System State: Verified
+                    Synergy
+                </p>
+            </div>
+        </section>
+
+        <!-- CORE CAPABILITIES -->
+        <section class="capability-grid">
+            <div class="capability-card">
+                <i data-lucide="target" class="w-12 h-12"></i>
+                <h3>Target Identification</h3>
+                <p>Advanced algorithmic screening to pinpoint high-value genomic targets for specific therapeutic
+                    interventions and state induction.</p>
+            </div>
+            <div class="capability-card">
+                <i data-lucide="workflow" class="w-12 h-12"></i>
+                <h3>Generative Dynamics</h3>
+                <p>Utilizing proprietary Attention manifolds to model continuous trajectories of cell fate conversion
+                    and
+                    aging-related cellular drift.</p>
+            </div>
+            <div class="capability-card">
+                <i data-lucide="shield-alert" class="w-12 h-12"></i>
+                <h3>Safety Hardening</h3>
+                <p>Comprehensive monitoring systems designed to detect and mitigate oncogenic risk factors during
+                    reprogramming cycles.</p>
+            </div>
+        </section>
+
+        <!-- PLATFORM STATUS FOOTER -->
+        <!-- PLATFORM STATUS FOOTER (Clinical Minimalist) -->
+        <footer class="py-32 bg-transparent border-t border-slate-100">
+            <div class="max-w-7xl mx-auto px-12">
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-12 mb-32 pb-32 border-b border-slate-50">
+                    <div class="status-metric">
+                        <h4 class="text-[10px] font-black text-slate-300 uppercase tracking-[0.3em] mb-4">System Health
+                        </h4>
+                        <p class="text-3xl font-black text-slate-900">Optimal</p>
+                    </div>
+                    <div class="status-metric">
+                        <h4 class="text-[10px] font-black text-slate-300 uppercase tracking-[0.3em] mb-4">Neural Core
+                        </h4>
+                        <p class="text-3xl font-black text-slate-900">Zenith v26.1</p>
+                    </div>
+                    <div class="status-metric">
+                        <h4 class="text-[10px] font-black text-slate-300 uppercase tracking-[0.3em] mb-4">Data Integrity
+                        </h4>
+                        <p class="text-3xl font-black text-slate-900">Encrypted</p>
+                    </div>
+                    <div class="status-metric">
+                        <h4 class="text-[10px] font-black text-slate-300 uppercase tracking-[0.3em] mb-4">Cluster
+                            Latency</h4>
+                        <p class="text-3xl font-black text-slate-900">0.02ms</p>
+                    </div>
                 </div>
-                <div class="flex gap-12 text-[10px] font-black text-slate-400 uppercase tracking-widest">
-                    <a href="about.html" class="hover:text-slate-900 transition-colors">Lab Ops</a>
-                    <a href="regulatory.html" class="hover:text-slate-900 transition-colors">Compliance</a>
-                    <a href="contact.html" class="hover:text-slate-900 transition-colors">Contact Node</a>
-                    <span class="text-slate-200">|</span>
-                    <span>© 2026 Zenith Foundation</span>
+
+                <div class="flex flex-col md:flex-row justify-between items-center gap-12 text-center md:text-left">
+                    <div class="flex flex-col md:flex-row items-center gap-4">
+                        <svg class="nav-logo-svg text-slate-300" style="width: 24px; height: 24px;" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+                        </svg>
+                        <div class="text-[10px] font-black text-slate-300 uppercase tracking-[0.5em]">Nilus Lab
+                            Institutional | RUO v26.1</div>
+                    </div>
+                    <div class="flex flex-wrap justify-center gap-8 md:gap-12 text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                        <a href="about.html" class="hover:text-slate-900 transition-colors">Lab Ops</a>
+                        <a href="regulatory.html" class="hover:text-slate-900 transition-colors">Compliance</a>
+                        <a href="contact.html" class="hover:text-slate-900 transition-colors">Contact Node</a>
+                        <span class="hidden md:inline text-slate-200">|</span>
+                        <span>© 2026 Zenith Foundation</span>
+                    </div>
                 </div>
             </div>
-        </div>
-    </footer>
+        </footer>
 
-    <!-- SCRIPTS -->
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-    <script src="js/firebase_config.js"></script>
-    <script src="js/profile_dna.js"></script>
+        <!-- SCRIPTS -->
+        <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+        <script src="js/firebase_config.js"></script>
+        <script src="js/profile_dna.js"></script>
 
-    <script src="js/firebase_config.js"></script>
-    <script>
-        lucide.createIcons();
-
-        function updateClock() {
-            const now = new Date();
-            const timeStr = now.toTimeString().split(' ')[0];
-            const clockEl = document.getElementById('clock');
-            if (clockEl) clockEl.innerText = timeStr;
-        }
-        setInterval(updateClock, 1000);
-        updateClock();
-        firebase.auth().onAuthStateChanged((user) => {
-            const loginBtn = document.getElementById('auth-btn-login');
-            const userStatus = document.getElementById('auth-user-status');
-            const nameEl = document.getElementById('profile-name');
-
-            if (user) {
-                if (loginBtn) loginBtn.classList.add('hidden');
-                if (userStatus) userStatus.classList.remove('hidden');
-                
-                const fullPrefix = user.email.split('@')[0];
-                const displayName = fullPrefix.split(/[\._]/)[0].toUpperCase();
-                if (nameEl) nameEl.innerText = displayName;
-            } else {
-                if (loginBtn) loginBtn.classList.remove('hidden');
-                if (userStatus) userStatus.classList.add('hidden');
-            }
-        });
-
-        // Track where to redirect after successful login
-        let _redirectAfterLogin = null;
-
-        function checkAuthAndRedirect(url) {
-            const user = firebase.auth().currentUser;
-            if (user) {
-                window.location.href = url;
-            } else {
-                _redirectAfterLogin = url;
-                openLoginModal(false);
-            }
-        }
-
-        function performLogout() {
-            firebase.auth().signOut().then(() => {
-                window.location.reload();
-            });
-        }
-
-        function openLoginModal(resetRedirect = true) {
-            if (resetRedirect) _redirectAfterLogin = null;
-            document.getElementById('login-modal').classList.add('active');
+        <script src="js/firebase_config.js"></script>
+        <script>
             lucide.createIcons();
-        }
 
-        function closeLoginModal() {
-            document.getElementById('login-modal').classList.remove('active');
-            document.getElementById('auth-form-modal').reset();
-            document.getElementById('modal-error').classList.add('hidden');
-        }
-
-        function toggleAuthMode() {
-            const title = document.getElementById('modal-title');
-            const submitBtn = document.getElementById('modal-submit-btn');
-            if (title.innerText === 'Welcome Back') {
-                title.innerText = 'Create Account';
-                submitBtn.innerText = 'Sign Up';
-            } else {
-                title.innerText = 'Welcome Back';
-                submitBtn.innerText = 'Sign In';
+            function updateClock() {
+                const now = new Date();
+                const timeStr = now.toTimeString().split(' ')[0];
+                const clockEl = document.getElementById('clock');
+                if (clockEl) clockEl.innerText = timeStr;
             }
-        }
+            setInterval(updateClock, 1000);
+            updateClock();
+            firebase.auth().onAuthStateChanged((user) => {
+                const loginBtn = document.getElementById('auth-btn-login');
+                const userStatus = document.getElementById('auth-user-status');
+                const nameEl = document.getElementById('profile-name');
 
-        async function handleAuthModal(e) {
-            e.preventDefault();
-            const email = document.getElementById('modal-email').value;
-            const password = document.getElementById('modal-password').value;
-            const submitBtn = document.getElementById('modal-submit-btn');
-            const title = document.getElementById('modal-title').innerText;
-            const errorDiv = document.getElementById('modal-error');
-            const errorText = document.getElementById('modal-error-text');
+                if (user) {
+                    if (loginBtn) loginBtn.classList.add('hidden');
+                    if (userStatus) userStatus.classList.remove('hidden');
 
-            submitBtn.disabled = true;
-            const originalBtnText = submitBtn.innerText;
-            submitBtn.innerText = 'Processing...';
-            errorDiv.classList.add('hidden');
-            
-            try {
-                if (title === 'Create Account') {
-                    // Sign Up Flow
-                    await firebase.auth().createUserWithEmailAndPassword(email, password);
+                    const fullPrefix = user.email.split('@')[0];
+                    const displayName = fullPrefix.split(/[\._]/)[0].toUpperCase();
+                    if (nameEl) nameEl.innerText = displayName;
                 } else {
-                    // Sign In Flow
-                    await firebase.auth().signInWithEmailAndPassword(email, password);
+                    if (loginBtn) loginBtn.classList.remove('hidden');
+                    if (userStatus) userStatus.classList.add('hidden');
                 }
-                // Redirect to the intended page after success or simply close modal
-                if (_redirectAfterLogin) {
-                    window.location.href = _redirectAfterLogin;
+            });
+
+            // Track where to redirect after successful login
+            let _redirectAfterLogin = null;
+
+            function checkAuthAndRedirect(url) {
+                const user = firebase.auth().currentUser;
+                if (user) {
+                    window.location.href = url;
                 } else {
+                    _redirectAfterLogin = url;
+                    openLoginModal(false);
+                }
+            }
+
+            function performLogout() {
+                firebase.auth().signOut().then(() => {
+                    window.location.reload();
+                });
+            }
+
+            function openLoginModal(resetRedirect = true) {
+                if (resetRedirect) _redirectAfterLogin = null;
+                document.getElementById('login-modal').classList.add('active');
+                lucide.createIcons();
+            }
+
+            function closeLoginModal() {
+                document.getElementById('login-modal').classList.remove('active');
+                document.getElementById('auth-form-modal').reset();
+                document.getElementById('modal-error').classList.add('hidden');
+            }
+
+            function toggleAuthMode() {
+                const title = document.getElementById('modal-title');
+                const submitBtn = document.getElementById('modal-submit-btn');
+                if (title.innerText === 'Welcome Back') {
+                    title.innerText = 'Create Account';
+                    submitBtn.innerText = 'Sign Up';
+                } else {
+                    title.innerText = 'Welcome Back';
+                    submitBtn.innerText = 'Sign In';
+                }
+            }
+
+            async function handleAuthModal(e) {
+                e.preventDefault();
+                const email = document.getElementById('modal-email').value;
+                const password = document.getElementById('modal-password').value;
+                const submitBtn = document.getElementById('modal-submit-btn');
+                const title = document.getElementById('modal-title').innerText;
+                const errorDiv = document.getElementById('modal-error');
+                const errorText = document.getElementById('modal-error-text');
+
+                submitBtn.disabled = true;
+                const originalBtnText = submitBtn.innerText;
+                submitBtn.innerText = 'Processing...';
+                errorDiv.classList.add('hidden');
+
+                try {
+                    if (title === 'Create Account') {
+                        // Sign Up Flow
+                        await firebase.auth().createUserWithEmailAndPassword(email, password);
+                    } else {
+                        // Sign In Flow
+                        await firebase.auth().signInWithEmailAndPassword(email, password);
+                    }
+                    // Redirect to the intended page after success or simply close modal
+                    if (_redirectAfterLogin) {
+                        window.location.href = _redirectAfterLogin;
+                    } else {
+                        closeLoginModal();
+                    }
+                } catch (error) {
+                    submitBtn.disabled = false;
+                    submitBtn.innerText = originalBtnText;
+
+                    let message = 'Authentication failed. Please try again.';
+                    if (error.code === 'auth/email-already-in-use') {
+                        message = 'This email is already registered. Please Sign In instead.';
+                    } else if (error.code === 'auth/invalid-email') {
+                        message = 'Please enter a valid email address.';
+                    } else if (error.code === 'auth/weak-password') {
+                        message = 'Password should be at least 6 characters.';
+                    } else if (error.code === 'auth/wrong-password' || error.code === 'auth/user-not-found') {
+                        message = 'Invalid email or password. Please check your credentials.';
+                    }
+
+                    errorText.innerText = message;
+                    errorDiv.classList.remove('hidden');
+                    console.error("Auth Error:", error.code, error.message);
+                }
+            }
+
+            async function signInWithGoogle() {
+                const provider = new firebase.auth.GoogleAuthProvider();
+                try {
+                    await firebase.auth().signInWithPopup(provider);
+                    if (_redirectAfterLogin) {
+                        window.location.href = _redirectAfterLogin;
+                    } else {
+                        closeLoginModal();
+                    }
+                } catch (error) {
+                    console.error(error);
+                }
+            }
+
+            document.getElementById('login-modal').addEventListener('click', function (e) {
+                if (e.target === this) {
                     closeLoginModal();
                 }
-            } catch (error) {
-                submitBtn.disabled = false;
-                submitBtn.innerText = originalBtnText;
-                
-                let message = 'Authentication failed. Please try again.';
-                if (error.code === 'auth/email-already-in-use') {
-                    message = 'This email is already registered. Please Sign In instead.';
-                } else if (error.code === 'auth/invalid-email') {
-                    message = 'Please enter a valid email address.';
-                } else if (error.code === 'auth/weak-password') {
-                    message = 'Password should be at least 6 characters.';
-                } else if (error.code === 'auth/wrong-password' || error.code === 'auth/user-not-found') {
-                    message = 'Invalid email or password. Please check your credentials.';
-                }
-                
-                errorText.innerText = message;
-                errorDiv.classList.remove('hidden');
-                console.error("Auth Error:", error.code, error.message);
-            }
-        }
-
-        async function signInWithGoogle() {
-            const provider = new firebase.auth.GoogleAuthProvider();
-            try {
-                await firebase.auth().signInWithPopup(provider);
-                if (_redirectAfterLogin) {
-                    window.location.href = _redirectAfterLogin;
-                } else {
-                    closeLoginModal();
-                }
-            } catch (error) {
-                console.error(error);
-            }
-        }
-
-        document.getElementById('login-modal').addEventListener('click', function (e) {
-            if (e.target === this) {
-                closeLoginModal();
-            }
-        });
-    </script>
+            });
+        </script>
 </body>
+
 </html>
