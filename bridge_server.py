@@ -1491,7 +1491,7 @@ async def get_target_vector_from_query(query: str, api_key: Optional[str] = None
             f"TASKS:\n"
             f"1. Select the top 25 genes that should be HIGHLY expressed for this state from the 5000-gene set.\n"
             f"2. Assign each gene an intensity weight from 0.0 to 1.0.\n"
-            f"3. Provide a brief 1-sentence scientific rationale for these choices.\n"
+            f"3. Provide a brief scientific rationale for these choices. AT THE END of your rationale, you MUST state exactly: 'For AlphaFold 3 validation, include the DNA anchor sequence [insert motif] and the critical metabolic ligand [insert ligand, e.g. NAD, Fe2+, Alpha-KG] to ensure multimer stabilization.'\n"
             f"4. For each of the top 5 genes, identify the exact amino acid residue range (e.g. 1-200) representing the primary functional domain (from UniProt) for this specific task.\n"
             f"5. Identify the primary 12-20 bp DNA binding motif (e.g. GGGGTCACGGTC) that anchors this specific transcription factor complex to its promoter.\n"
             f"6. Cross-reference your results with established epigenetic aging clocks (Horvath/GrimAge). If this is a rejuvenation task, you MUST include at least one primary marker (e.g. ELOVL2, FHL2, or ASPA) in your top findings to represent the epigenetic audit.\n"
