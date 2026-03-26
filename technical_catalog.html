@@ -126,25 +126,45 @@
             color: var(--accent-teal);
         }
 
-        /* Diagonal DNA Backdrop Logic */
-        #dna-focal-layer {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            opacity: 0.08;
-            /* Ultra-subtle institutional backdrop */
-            pointer-events: none;
+        /* Institutional Diligence Dropdown (Clarity Fix) */
+        .inst-diligence-wrapper {
+            position: relative;
         }
 
-        .dna-visual-asset {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            transform: rotate(-35deg) scale(1.4);
-            filter: grayscale(1);
+        .inst-dropdown {
+            display: none;
+            position: absolute;
+            top: 100%; /* No gap to prevent hover loss */
+            left: 0;
+            background: #0f172a;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 16px;
+            padding: 12px 8px 8px;
+            min-width: 240px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            z-index: 9999;
+        }
+
+        .inst-diligence-wrapper:hover .inst-dropdown {
+            display: block;
+        }
+
+        .inst-dropdown a {
+            display: block;
+            padding: 10px 16px;
+            font-size: 11px;
+            font-weight: 700;
+            color: #cbd5e1;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            border-radius: 10px;
+            transition: all 0.2s;
+            text-decoration: none;
+        }
+
+        .inst-dropdown a:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
         }
     </style>
 </head>
@@ -165,16 +185,24 @@
             </div>
             <div class="flex items-center gap-10">
                 <a href="index.html"
-                    class="text-[12px] font-bold text-slate-500 uppercase tracking-wide hover:text-blue-600">Zenith
+                    class="text-[12px] font-bold text-slate-100 uppercase tracking-wide hover:text-blue-400">Zenith
                     Mainframe</a>
                 <a href="technical_catalog.html"
-                    class="text-[12px] font-bold text-blue-600 uppercase tracking-wide">Foundation Catalog</a>
-                <a href="evidence.html"
-                    class="text-[12px] font-bold text-slate-500 uppercase tracking-wide hover:text-blue-600">Evidence
-                    Registry</a>
-                <a href="whitepaper.html"
-                    class="text-[12px] font-bold text-slate-500 uppercase tracking-wide hover:text-blue-600">Research
-                    Whitepaper</a>
+                    class="text-[12px] font-bold text-blue-400 uppercase tracking-wide">Foundation Catalog</a>
+                
+                <!-- Institutional Diligence with working dropdown -->
+                <div class="inst-diligence-wrapper flex items-center gap-1.5 cursor-pointer">
+                    <span
+                        class="text-[12px] font-bold text-slate-100 uppercase tracking-wide hover:text-blue-400 transition-colors">Institutional
+                        Diligence</span>
+                    <svg class="w-3.5 h-3.5 text-slate-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                    <div class="inst-dropdown">
+                        <a href="evidence.html">Evidence Registry</a>
+                        <a href="whitepaper.html">Research Whitepaper</a>
+                        <a href="regulatory.html">Regulatory Statement</a>
+                        <a href="v26_clinical_report.html">Clinical Report v26.1</a>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="flex items-center gap-8">

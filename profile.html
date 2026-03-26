@@ -220,14 +220,14 @@
         .inst-dropdown {
             display: none;
             position: absolute;
-            top: calc(100% + 12px);
+            top: 100%; /* Eliminated gap to prevent hover loss */
             left: 0;
             background: white;
             border: 1px solid #f1f5f9;
             border-radius: 16px;
-            padding: 8px;
-            min-width: 220px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+            padding: 12px 8px 8px; /* Added top padding for visual spacing */
+            min-width: 240px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
             z-index: 9999;
         }
 
