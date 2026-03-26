@@ -80,9 +80,9 @@
 
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #ffffff;
-            /* Unified White Background */
-            color: var(--text-dark);
+            background-color: #020617;
+            /* Unified Obsidian Background */
+            color: #f8fafc;
             overflow-x: hidden;
             letter-spacing: -0.01em;
             border: none !important;
@@ -98,26 +98,27 @@
 
         /* --- GLOBAL STATUS FOOTER --- */
         .pre-nav {
-            background: #ffffff;
+            background: #020617;
             padding: 0.75rem 2rem;
             display: flex;
             justify-content: flex-end;
             align-items: center;
             font-size: 10px;
             font-weight: 800;
-            color: #94a3b8;
+            color: #64748b;
             text-transform: uppercase;
             letter-spacing: 0.25em;
         }
 
         .pre-nav span {
-            color: #0f172a;
+            color: #cbd5e1;
             margin-left: 8px;
         }
 
         /* --- MAIN NAVIGATION --- */
         nav {
-            background: #ffffff;
+            background: rgba(2, 6, 23, 0.8);
+            backdrop-filter: blur(20px);
             padding: 2rem 5%;
             /* Higher fidelity padding */
             display: flex;
@@ -126,6 +127,7 @@
             position: sticky;
             top: 0;
             z-index: 1000;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
         }
 
         .nav-links {
@@ -145,7 +147,7 @@
 
         .nav-item:hover,
         .nav-item.active {
-            color: #0f172a;
+            color: #f8fafc;
         }
 
         /* --- HERO BANNER (Clinical Design - Left Layout) --- */
@@ -171,7 +173,7 @@
             align-items: center;
             justify-content: center;
             overflow: hidden;
-            background: #ffffff;
+            background: #020617;
             width: 100%;
             height: 100%;
         }
@@ -182,8 +184,8 @@
             object-fit: contain;
             transform: scale(0.9) translate(3%, 6%);
             /* Shifted right and down */
-            opacity: 0.90;
-            mix-blend-mode: multiply;
+            opacity: 1.0;
+            mix-blend-mode: screen;
             /* Feather the edges to hide hard borders/artifacts */
             -webkit-mask-image: radial-gradient(circle at center, black 60%, transparent 95%);
             mask-image: radial-gradient(circle at center, black 60%, transparent 95%);
@@ -222,12 +224,12 @@
             position: absolute;
             top: 100%; /* Eliminated gap to prevent hover loss */
             left: 0;
-            background: white;
-            border: 1px solid #f1f5f9;
+            background: #0f172a;
+            border: 1px solid rgba(255,255,255,0.1);
             border-radius: 16px;
             padding: 12px 8px 8px; /* Added top padding for visual spacing */
             min-width: 240px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
             z-index: 9999;
         }
 
@@ -1014,7 +1016,7 @@
     </style>
 </head>
 
-<body class="light-mode-profile">
+<body class="dark-mode-profile">
     <!-- GLOBAL DNA BACKGROUND -->
     <div class="global-dna-bg">
         <video class="hero-video" id="profile-dna-video" autoplay loop muted playsinline preload="auto">
@@ -1118,7 +1120,7 @@
 
     <!-- Institutional Header (Production Original Items) -->
     <nav
-        class="border-b border-slate-100 px-6 md:px-12 py-4 md:py-6 flex flex-col md:flex-row items-center justify-between sticky top-0 bg-white/95 backdrop-blur-md z-[1000] gap-6 md:gap-0">
+        class="border-b border-slate-100 px-6 md:px-12 py-4 md:py-6 flex flex-col md:flex-row items-center justify-between sticky top-0 bg-[#0f172a]/95 backdrop-blur-md z-[1000] gap-6 md:gap-0">
         <div class="flex items-center gap-12">
             <div class="flex items-center gap-3">
                 <svg class="nav-logo-svg text-teal-400 flex-shrink-0" style="width: 28px; height: 28px;"
@@ -1204,7 +1206,7 @@
                 <a href="javascript:void(0)" onclick="checkAuthAndRedirect('index.html')"
                     class="bg-slate-900 hover:bg-slate-800 text-white px-10 py-5 rounded-full text-[13px] font-black uppercase tracking-widest flex items-center gap-3 shadow-xl transition-all transform hover:-translate-y-0.5">
                     Open Simulation Lab
-                    <div class="w-6 h-6 bg-white rounded-full flex items-center justify-center">
+                    <div class="w-6 h-6 bg-[#0f172a] rounded-full flex items-center justify-center">
                         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
                             stroke="black" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M5 12h14" />
@@ -1332,7 +1334,7 @@
                     <div
                         class="bg-slate-50 border-2 border-transparent rounded-[40px] p-12 hover:bg-slate-100 transition-all duration-500 group flex flex-col">
                         <div
-                            class="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mb-10 group-hover:bg-slate-900 transition-colors duration-500 shadow-sm">
+                            class="w-16 h-16 bg-[#0f172a] rounded-2xl flex items-center justify-center mb-10 group-hover:bg-slate-900 transition-colors duration-500 shadow-sm">
                             <i data-lucide="activity" class="w-8 h-8 text-slate-900 group-hover:text-white"></i>
                         </div>
                         <h3 class="text-2xl font-black text-slate-900 mb-6">Virtual Trials</h3>
@@ -1346,9 +1348,9 @@
                         </button>
                     </div>
 
-                    <div class="bg-white/10 border border-slate-100/30">
+                    <div class="bg-[#0f172a]/10 border border-slate-100/30">
                         <div
-                            class="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mb-10 group-hover:bg-slate-900 transition-colors duration-500 shadow-sm">
+                            class="w-16 h-16 bg-[#0f172a] rounded-2xl flex items-center justify-center mb-10 group-hover:bg-slate-900 transition-colors duration-500 shadow-sm">
                             <i data-lucide="scale" class="w-8 h-8 text-slate-900 group-hover:text-white"></i>
                         </div>
                         <h3 class="text-2xl font-black text-slate-900 mb-6">Regulatory Statement</h3>
@@ -1369,7 +1371,7 @@
         <!-- CORE CAPABILITY VISUAL -->
         <section class="max-w-7xl mx-auto px-6 py-24">
             <div
-                class="relative rounded-3xl overflow-hidden shadow-2xl border border-slate-100 min-h-[600px] flex items-center p-12 md:p-24 bg-white/50 backdrop-blur-sm">
+                class="relative rounded-3xl overflow-hidden shadow-2xl border border-slate-100 min-h-[600px] flex items-center p-12 md:p-24 bg-[#0f172a]/50 backdrop-blur-sm">
                 <!-- Scientific Lab Background Image -->
                 <img src="assets/zenith_lab.jpg" alt="Zenith Lab Infrastructure"
                     class="absolute inset-0 w-full h-full object-cover opacity-100 transition-transform duration-1000 hover:scale-105">
@@ -1469,7 +1471,7 @@
                             class="w-full h-full object-contain">
                     </div>
                         <div
-                            class="absolute bottom-6 left-6 right-6 bg-white/95 backdrop-blur-md px-6 py-4 rounded-2xl border border-blue-50 text-center opacity-0 group-hover:opacity-100 transition-all duration-500 shadow-xl translate-y-4 group-hover:translate-y-0">
+                            class="absolute bottom-6 left-6 right-6 bg-[#0f172a]/95 backdrop-blur-md px-6 py-4 rounded-2xl border border-blue-50 text-center opacity-0 group-hover:opacity-100 transition-all duration-500 shadow-xl translate-y-4 group-hover:translate-y-0">
                     <p class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-900">Kinetic
                         Confidence Map: Lysosomal_Biogenesis_Engine</p>
                         </div>
@@ -1534,19 +1536,19 @@
                     state-transitions.
                 </p>
                 <div class="mt-8 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
-                    <div class="bg-white p-4 rounded-xl border border-slate-100 shadow-sm">
+                    <div class="bg-[#0f172a] p-4 rounded-xl border border-slate-100 shadow-sm">
                         <div class="text-[10px] text-slate-400 font-bold uppercase mb-1">Neural Parameters</div>
                         <div class="text-2xl font-black text-slate-900">285M</div>
                     </div>
-                    <div class="bg-white p-4 rounded-xl border border-slate-100 shadow-sm">
+                    <div class="bg-[#0f172a] p-4 rounded-xl border border-slate-100 shadow-sm">
                         <div class="text-[10px] text-slate-400 font-bold uppercase mb-1">Gene Vocabulary</div>
                         <div class="text-2xl font-black text-slate-900">5,000</div>
                     </div>
-                    <div class="bg-white p-4 rounded-xl border border-slate-100 shadow-sm">
+                    <div class="bg-[#0f172a] p-4 rounded-xl border border-slate-100 shadow-sm">
                         <div class="text-[10px] text-slate-400 font-bold uppercase mb-1">HCA Mapped Cells</div>
                         <div class="text-2xl font-black text-slate-900">150k</div>
                     </div>
-                    <div class="bg-white p-4 rounded-xl border border-slate-100 shadow-sm">
+                    <div class="bg-[#0f172a] p-4 rounded-xl border border-slate-100 shadow-sm">
                         <div class="text-[10px] text-slate-400 font-bold uppercase mb-1">Inference Threads</div>
                         <div class="text-2xl font-black text-slate-900">32</div>
                     </div>
@@ -1555,7 +1557,7 @@
 
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-stretch">
                 <!-- Left: Synergy Confidence (The Handshake) -->
-                <div class="bg-white rounded-3xl p-10 border border-slate-100 flex flex-col justify-between shadow-xl">
+                <div class="bg-[#0f172a] rounded-3xl p-10 border border-slate-100 flex flex-col justify-between shadow-xl">
                     <div>
                         <div class="flex items-center gap-3 mb-6">
                             <div class="p-2 bg-slate-900 rounded-lg">
@@ -1578,7 +1580,7 @@
                             class="w-full h-full object-contain">
                     </div>
                         <div
-                            class="absolute bottom-6 left-6 right-6 bg-white/95 backdrop-blur-md px-6 py-4 rounded-2xl border border-blue-50 text-center opacity-0 group-hover:opacity-100 transition-all duration-500 shadow-xl translate-y-4 group-hover:translate-y-0">
+                            class="absolute bottom-6 left-6 right-6 bg-[#0f172a]/95 backdrop-blur-md px-6 py-4 rounded-2xl border border-blue-50 text-center opacity-0 group-hover:opacity-100 transition-all duration-500 shadow-xl translate-y-4 group-hover:translate-y-0">
                             <p class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-900">Complex ID:
                                 CRC_OSK_VEGFA_92%</p>
                         </div>
@@ -1764,7 +1766,7 @@
                 </p>
             </div>
 
-            <div class="bg-white border border-slate-200 rounded-3xl p-10 shadow-2xl relative overflow-hidden">
+            <div class="bg-[#0f172a] border border-slate-200 rounded-3xl p-10 shadow-2xl relative overflow-hidden">
                 <div class="absolute top-0 right-0 w-64 h-64 bg-purple-500/5 blur-[80px] pointer-events-none"></div>
 
                 <h3 class="text-xl font-black text-slate-900 mb-8 uppercase tracking-[0.2em]">Cooperative
