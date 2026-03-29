@@ -1,6 +1,6 @@
 [
  {
-  "name": "BHAA_GOLD_MOTIF",
+  "name": "BHAA_PLATINUM_TRIO",
   "modelSeeds": [
    "1"
   ],
@@ -18,14 +18,20 @@
     }
    },
    {
-    "dnaSequence": {
-     "sequence": "TGCACTATGCAAATAACCTTTGTTCTGTCCG",
+    "proteinChain": {
+     "sequence": "MMLTPPSSPLELMPPGSCMPEEPKPKRGRRSWPRKRTATHTCDYAGCGKTYTKSSHLKAHLRTHTGEKPYHCDWDGCGWKFARSDELTRHYRKHTGHRPFQCQKCDRAFSRSDHLALHMKRHF",
      "count": 1
     }
    },
    {
     "dnaSequence": {
-     "sequence": "CGGACAGAACAAAGGTTATTTGCATAGTGCA",
+     "sequence": "CCGGGCGCTATGCAAATAACCTTTGTTCTGT",
+     "count": 1
+    }
+   },
+   {
+    "dnaSequence": {
+     "sequence": "ACAGAACAAAGGTTATTTGCATAGCGCCGGT",
      "count": 1
     }
    }
