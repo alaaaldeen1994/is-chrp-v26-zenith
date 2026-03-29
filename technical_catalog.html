@@ -1831,12 +1831,12 @@
                             <h4 class="text-xl font-bold text-white">31bp Z-Pillar DNA Anchor</h4>
                         </div>
                         <p class="text-sm text-slate-400 mb-6 leading-relaxed">
-                            A proprietary institutional sequence (`CCTGTGACTGTGGGGTTC...`) designed to stabilize the 
+                            A proprietary institutional sequence (`GGGTCACGGTC...`) designed to stabilize the 
                             DNA-protein interface during predictive folding. The Z-Pillar acts as a structural reference 
                             point for AlphaFold 3, ensuring that the predicted binding energy remains below -12.0 kcal/mol.
                         </p>
                         <div class="bg-black/40 p-4 rounded-xl border border-white/5 font-mono text-[10px] text-teal-400">
-                            SEQ: CCTGTGACTGTGGGGTTCACGCTCCCGGGTG
+                            SEQ: GGGTCACGGTC
                         </div>
                     </div>
 
@@ -1854,9 +1854,9 @@
                             DNA anchor.
                         </p>
                         <div class="grid grid-cols-2 gap-4">
-                            <div class="bg-blue-900/10 p-3 rounded-xl border border-blue-500/20 text-center">
-                                <div class="text-[8px] text-slate-500 font-bold uppercase mb-1">Target ipTM</div>
-                                <div class="text-xl font-black text-blue-400">> 0.60</div>
+                            <div class="bg-purple-900/10 p-3 rounded-xl border border-purple-500/20 text-center">
+                                <div class="text-[8px] text-slate-500 font-bold uppercase mb-1">Manifold Score</div>
+                                <div class="text-xl font-black text-purple-400">92%</div>
                             </div>
                             <div class="bg-emerald-900/10 p-3 rounded-xl border border-emerald-500/20 text-center">
                                 <div class="text-[8px] text-slate-500 font-bold uppercase mb-1">Atomic Res</div>
@@ -1868,9 +1868,8 @@
 
                 <h4 class="text-2xl font-bold text-white mb-6">Gold Standard: Cardiac Maturation Protocol</h4>
                 <p class="text-sm text-slate-400 mb-10 max-w-3xl leading-relaxed">
-                    The showcase protocol for v26.1 focuses on the **Electrophysiological Maturation** of adult cardiocytes. 
-                    This protocol optimizes the transition from glycolysis to fatty acid oxidation as the primary metabolic gate 
-                    for rhythm stability and adult-like functionality.
+                    The showcase protocol for v26.1 focuses on the **Electrophysiological Maturation** of human iPSC-cardiocytes. 
+                    This protocol optimizes the transition from fetal glycolysis to adult fatty acid oxidation, suppressing pacemaker signals via high-weight manifold targeting.
                 </p>
 
                 <div class="overflow-x-auto bg-black/40 rounded-2xl p-6 border border-slate-800 shadow-xl mb-10">
@@ -1886,17 +1885,27 @@
                             <tr class="border-b border-white/5">
                                 <td class="py-6 font-black text-teal-400 uppercase text-sm tracking-tight">PPARGC1A</td>
                                 <td class="py-6 font-mono text-white">95% (Critical)</td>
-                                <td class="py-6 text-slate-300 leading-relaxed">Master Mitochondrial Switch; initiates metabolic exit from fetal glycolysis.</td>
+                                <td class="py-6 text-slate-300 leading-relaxed">Master Metabolic Switch; Mitochondrial Biogenesis.</td>
                             </tr>
                             <tr class="border-b border-white/5">
-                                <td class="py-6 font-black text-teal-400 uppercase text-sm tracking-tight">HCN4 (Repression)</td>
-                                <td class="py-6 font-mono text-white">82% (High)</td>
-                                <td class="py-6 text-slate-300 leading-relaxed">Suppression of Pacemaker-like hyper-excitability; stabilizes adult resting potential.</td>
+                                <td class="py-6 font-black text-teal-400 uppercase text-sm tracking-tight">PPARA</td>
+                                <td class="py-6 font-mono text-white">92% (High)</td>
+                                <td class="py-6 text-slate-300 leading-relaxed">Fatty Acid Metabolism Regulator.</td>
+                            </tr>
+                            <tr class="border-b border-white/5">
+                                <td class="py-6 font-black text-teal-400 uppercase text-sm tracking-tight">CPT1B</td>
+                                <td class="py-6 font-mono text-white">90% (High)</td>
+                                <td class="py-6 text-slate-300 leading-relaxed">Rate-limiting enzyme for mitochondrial fatty acid transport.</td>
+                            </tr>
+                            <tr class="border-b border-white/5">
+                                <td class="py-6 font-black text-teal-400 uppercase text-sm tracking-tight">RXRA</td>
+                                <td class="py-6 font-mono text-white">88% (Standard)</td>
+                                <td class="py-6 text-slate-300 leading-relaxed">Heterodimer partner for PPARA.</td>
                             </tr>
                             <tr>
-                                <td class="py-6 font-black text-slate-400 uppercase text-sm tracking-tight">CPT1A / CPT2</td>
-                                <td class="py-6 font-mono text-white">75% (Synergistic)</td>
-                                <td class="py-6 text-slate-300 leading-relaxed">Fatty Acid Transport Facilitation; ensures high-energy ATP flux in mature cells.</td>
+                                <td class="py-6 font-black text-teal-400 uppercase text-sm tracking-tight">KCNJ2 (Kir2.1)</td>
+                                <td class="py-6 font-mono text-white">85% (Standard)</td>
+                                <td class="py-6 text-slate-300 leading-relaxed">Stabilization of Resting Potential; K+ handling.</td>
                             </tr>
                         </tbody>
                     </table>
