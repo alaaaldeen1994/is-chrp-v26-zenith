@@ -1,6 +1,6 @@
 [
  {
-  "name": "BHAA_REFINED_CORE",
+  "name": "BHAA_GOLD_MOTIF",
   "modelSeeds": [
    "1"
   ],
@@ -19,13 +19,13 @@
    },
    {
     "dnaSequence": {
-     "sequence": "GGGTCACGGTCATTCGTAGCCGTAGGCTACC",
+     "sequence": "TGCACTATGCAAATAACCTTTGTTCTGTCCG",
      "count": 1
     }
    },
    {
     "dnaSequence": {
-     "sequence": "GGTAGCCTACGGCTACGAATGACCGTGACCC",
+     "sequence": "CGGACAGAACAAAGGTTATTTGCATAGTGCA",
      "count": 1
     }
    }
