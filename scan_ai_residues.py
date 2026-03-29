@@ -328,6 +328,7 @@ def scan_document(
         "boilerplate": "medium",
         "fabrication_markers": "medium",
         "placeholders": "low",
+        "zenith_reprogramming": "high",
     }
 
     # Track counts per sentence index for hotspots

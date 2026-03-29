@@ -1,0 +1,28 @@
+[
+    {
+        "name": "Zenith_Cardiac_Anchor_Handshake",
+        "model_version": "AlphaFold 3",
+        "entities": [
+            {
+                "type": "dna",
+                "name": "Zenith_Z_Pillar_Anchor",
+                "sequence": "CCTGTGACTGTGGGGTTCACGCTCCCGGGTG",
+                "count": 1
+            },
+            {
+                "type": "protein",
+                "name": "TBX5",
+                "sequence": "KVFLHERELWLKFHEVGTEMIITKAGRRMFPSYKVKVTGLNPKTKYILLMDIVPADDHRYKFADNKWSVTGKAEPAMPGRLYVHPDSPATGAHWMRQLVSFQKLKLTNNHLDPFGHIILNSMHKYQPRLHIVKADENNGFGSKNTAFCTHVFPETAFIAVTSYQNHKITQLKIENNPFAKGFRGSDDMELHRMSRMQSKEYPVVPRSTVRQKVASNHSPFSSESRALSTSSNLGSQYQCENGVSGPSQDLLPPPNPYPLPQEHSQIYHCTKRKEEECSTTDHPYKKPYMETSPSEEDSFYRSSYPQQQGLGAS",
+                "count": 1
+            },
+            {
+                "type": "protein",
+                "name": "GATA4",
+                "sequence": "NPAARHPNLDMFDDFSEGRECVNCGAMSTPLWRRDGTGHYLCNACGLYHKMNGINRPLIKPQRRLSASRRVGLSCANCQTTTTTLWRRNAEGEPVCNACGLYMKLHGVPRPLAMRKEGIQTRKRKPKNLNKSKTPAAPSGSESLPPASGAS",
+                "count": 1
+            }
+        ],
+        "zenith_verification_id": "Z-DISCOVERY-52434",
+        "institutional_compliance": "IS-v26.1"
+    }
+]

@@ -1,0 +1,40 @@
+[
+    {
+        "name": "Zenith_Institutional_Hybrid_Discovery_v26",
+        "sequences": [
+            {
+                "dnaSequence": {
+                    "sequence": "CCTGTGACTGTGGGGTTCACGCTCCCGGGTG",
+                    "count": 1
+                }
+            },
+            {
+                "proteinChain": {
+                    "sequence": "GNSTAAAAGGNQKNSPDRVKRPMNAFMVWSRGQRRKMAQENPKMHNSEISKRLGAEWKLLSETEKRPFIDEAKRLRALHMKEHPDYKYRPRRKTKTLMKKDKYTLPGGLLAPG",
+                    "count": 1
+                }
+            },
+            {
+                "proteinChain": {
+                    "sequence": "TPGAVKLEKEKLEQNPEESQDIKALQKELEQFAKLLKQKRITLGYTQADVGLTLGVLFGKVFSQTTICRFEALQLSFKNMCKLRPLLQKWVEEADNNENLQEICKAETLVQARKRKRTSIENRVRGNLENLFLQCPKPTLQQISHIAQQLGLEKDVVRVWFCNRRQKGKRSSSDYAQREDFEAAGS",
+                    "count": 1
+                }
+            },
+            {
+                "proteinChain": {
+                    "sequence": "KVFLHERELWLKFHEVGTEMIITKAGRRMFPSYKVKVTGLNPKTKYILLMDIVPADDHRYKFADNKWSVTGKAEPAMPGRLYVHPDSPATGAHWMRQLVSFQKLKLTNNHLDPFGHIILNSMHKYQPRLHIVKADENNGFGSKNTAFCTHVFPETAFIAVTSYQNHKITQLKIENNPFAKGFRGSDDMELHRMSRMQSKEYPVVPRSTVRQKVASNHSPFSSESRALSTSSNLGSQYQCENGVSGPSQDLLPPPNPYPLPQEHSQIYHCTKRKEEECSTTDHPYKKPYMETSPSEEDSFYRSSYPQQQGLGAS",
+                    "count": 1
+                }
+            },
+            {
+                "proteinChain": {
+                    "sequence": "NPAARHPNLDMFDDFSEGRECVNCGAMSTPLWRRDGTGHYLCNACGLYHKMNGINRPLIKPQRRLSASRRVGLSCANCQTTTTTLWRRNAEGEPVCNACGLYMKLHGVPRPLAMRKEGIQTRKRKPKNLNKSKTPAAPSGSESLPPASGAS",
+                    "count": 1
+                }
+            }
+        ],
+        "model_version": "AlphaFold 3",
+        "zenith_verification_id": "Z-DISCOVERY-52838",
+        "institutional_compliance": "IS-v26.1"
+    }
+]
