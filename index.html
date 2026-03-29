@@ -280,7 +280,6 @@
                         <span
                             class="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse shadow-[0_0_8px_#10b981]"></span>
                         <span class="text-[8px] font-black text-emerald-400 uppercase tracking-widest">VALIDATED</span>
-                        <span class="text-[8px] font-black text-emerald-400 uppercase tracking-widest">(YAMANAKA)</span>
                     </div>
                 </div>
             </div>
@@ -449,6 +448,8 @@
                     </div>
                     <div id="factor-list">OCT4, SOX2, KLF4, c-MYC</div>
                 </div>
+
+
 
                 <div class="control-group">
                     <span class="control-label">2. Perturbations</span>
@@ -1133,13 +1134,26 @@
 
                     <div id="synergy-container" class="mt-2 text-[8px] border-t border-purple-500/10 pt-1"></div>
 
-                    <!-- ROBOTIC BRIDGE (Opentrons Export) -->
-                    <div class="mt-3">
-                        <button onclick="BiosimBridge.exportOpentronsScript()"
-                            class="w-full bg-blue-600/20 hover:bg-blue-600/40 text-blue-400 border border-blue-500/30 text-[8px] font-black py-2 rounded flex items-center justify-center gap-1.5 transition-all group/robot">
-                            <i data-lucide="cpu" class="w-3 h-3 group-hover/robot:scale-110 transition-transform"></i>
-                            GENERATE OPENTRONS SCRIPT
+                    <!-- ZENITH v26.1: INSTITUTIONAL EXPORT SUITE -->
+                    <div class="mt-4 flex flex-col gap-2">
+                        <button onclick="BiosimBridge.exportAlphaFoldManifest()"
+                            class="w-full bg-teal-600/20 hover:bg-teal-600/40 text-teal-400 border border-teal-500/30 text-[8px] font-black py-2.5 rounded flex items-center justify-center gap-1.5 transition-all group/af3">
+                            <i data-lucide="file-code" class="w-3.5 h-3.5 group-hover/af3:scale-110 transition-transform"></i>
+                            EXTRACT AF3 MANIFEST (.JSON)
                         </button>
+                        
+                        <div class="flex gap-2">
+                            <button onclick="BiosimBridge.injectDiscoveryIntoSim()"
+                                class="flex-1 bg-purple-600/20 hover:bg-purple-600/40 text-purple-400 border border-purple-500/30 text-[8px] font-black py-2 rounded flex items-center justify-center gap-1.5 transition-all group/sim">
+                                <i data-lucide="play" class="w-3 h-3 group-hover/sim:translate-x-0.5 transition-transform"></i>
+                                ACTIVATE IN SIM
+                            </button>
+                            <button onclick="BiosimBridge.exportOpentronsScript()"
+                                class="flex-1 bg-blue-600/20 hover:bg-blue-600/40 text-blue-400 border border-blue-500/30 text-[8px] font-black py-2 rounded flex items-center justify-center gap-1.5 transition-all">
+                                <i data-lucide="cpu" class="w-3 h-3"></i>
+                                ROBOTIC
+                            </button>
+                        </div>
                     </div>
                 </div>
 

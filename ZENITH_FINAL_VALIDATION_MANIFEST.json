@@ -1,0 +1,135 @@
+[
+    {
+        "name": "Zenith_Discovery_Output",
+        "sequences": [
+            {
+                "dnaSequence": {
+                    "sequence": "CCTGTGACTGTGGGGTTCACGCTCCCGGGTG",
+                    "count": 1
+                }
+            },
+            {
+                "proteinChain": {
+                    "sequence": "MVDTESPLCPLSPLEAGDLESPLSEEFLQEMGNIQEISQSIGEDSSGSFGFTEYQYLGSCPGSDGSVITDTLSPASSPSSVTYPVVPGSVDESPSGALNIECRICGDKASGYHYGVHACEGCKGFFRRTIRLKLVYDKCDRSCKIQKKNRNKCQYCRFHKCLSVGMSHNAIRFGRMPRSEKAKLKAEILTCEHDIEDSETADLKSLAKRIYEAYLKNFNMNKVKARVILSGKASNNPPFVIHDMETLCMAEKTLVAKLVANGIQNKEAEVRIFHCCQCTSVETVTELTEFAKAIPGFANLDLNDQVTLLKYGVYEAIFAMLSSVMNKDGMLVAYGNGFITREFLKSLRKPFCDIMEPKFDFAMKFNALELDDSDISLFVAAIICCGDRPGLLNVGHIEKMQEGIVHVLRLHLQSNHPDDIFLFPKLLQKMADLRQLVTEHAQLVQIIKKTESDAALHPLLQEIYRDMY",
+                    "count": 1
+                }
+            },
+            {
+                "proteinChain": {
+                    "sequence": "MAEAHQAVAFQFTVTPDGIDLRLSHEALRQIYLSGLHSWKKKFIRFKNGIITGVYPASPSSWLIVVVGVMTTMYAKIDPSLGIIAKINRTLETANCMSSQTKNVVSGVLFGTGLWVALIVTMRYSLKVLLSYHGWMFTEHGKMSRATKIWMGMVKIFSGRKPMLYSFQTSLPRLPVPAVKDTVNRYLQSVRPLMKEEDFKRMTALAQDFAVGLGPRLQWYLKLKSWWATNYVSDWWEEYIYLRGRGPLMVNSNYYAMDLLYILPTHIQAARAGNAIHAILLYRRKLDREEIKPIRLLGSTIPLCSAQWERMFNTSRIPGEETDTIQHMRDSKHIVVYHRGRYFKVWLYHDGRLLKPREMEQQMQRILDNTSEPQPGEARLAALTAGDRVPWARCRQAYFGRGKNKQSLDAVEKAAFFVTLDETEEGYRSEDPDTSMDSYAKSLLHGRCYDRWFDKSFTFVVFKNGKMGLNAEHSWADAPIVAHLWEYVMSIDSLQLGYAEDGHCKGDINPNIPYPTRLQWDIPGECQEVIETSLNTANLLANDVDFHSFPFVAFGKGIIKKCRTSPDAFVQLALQLAHYKDMGKFCLTYEASMTRLFREGRTETVRSCTTESCDFVRAMVDPAQTVEQRLKLFKLASEKHQHMYRLAMTGSGIDRHLFCLYVVSKYLAVESPFLKEVLSEPWRLSTSQTPQQQVELFDLENNPEYVSSGGGFGPVADDGYGVSYILVGENLINFHISSKFSCPETDSHRFGRHLKEAMTDIITLFGLSSNSKK",
+                    "count": 1
+                }
+            },
+            {
+                "proteinChain": {
+                    "sequence": "MVPRLLLRAWPRGPAVGPGAPSRPLSAGSGPGQYLQRSIVPTMHYQDSLPRLPIPKLEDTIRRYLSAQKPLLNDGQFRKTEQFCKSFENGIGKELHEQLVALDKQNKHTSYISGPWFDMYLSARDSVVLNFNPFMAFNPDPKSEYNDQLTRATNMTVSAIRFLKTLRAGLLEPEVFHLNPAKSDTITFKRLIRFVPSSLSWYGAYLVNAYPLDMSQYFRLFNSTRLPKPSRDELFTDDKARHLLVLRKGNFYIFDVLDQDGNIVSPSEIQAHLKYILSDSSPAPEFPLAYLTSENRDIWAELRQKLMSSGNEESLRKVDSAVFCLCLDDFPIKDLVHLSHNMLHGDGTNRWFDKSFNLIIAKDGSTAVHFEHSWGDGVAVLRFFNEVFKDSTQTPAVTPQSQPATTDSTVTVQKLNFELTDALKTGITAAKEKFDATMKTLTIDCVQFQRGGKEFLKKQKLSPDAVAQLAFQMAFLRQYGQTVATYESCSTAAFKHGRTETIRPASVYTKRCSEAFVREPSRHSAGELQQMMVECSKYHGQLTKEAAMGQGFDRHLFALRHLAAAKGIILPELYLDPAYGQINHNVLSTSTLSSPAVNLGGFAPVVSDGFGVGYAVHDNWIGCNVSSYPGRNAREFLQCVEKALEDMFDALEGKSIKS",
+                    "count": 1
+                }
+            },
+            {
+                "proteinChain": {
+                    "sequence": "MDKLPPSMRKRLYSLPQQVGAKAWIMDEEEDAEEEGAGGRQDPSRRSIRLRPLPSPSPSAAAGGTESRSSALGAADSEGPARGAGKSSTNGDCRRFRGSLASLGSRGGGSGGTGSGSSHGHLHDSAEERRLIAEGDASPGEDRTPPGLAAEPERPGASAQPAASPPPPQQPPQPASASCEQPSVDTAIKVEGGAAAGDQILPEAEVRLGQAGFMQRQFGAMLQPGVNKFSLRMFGSQKAVEREQERVKSAGFWIIHPYSDFRFYWDLTMLLLMVGNLIIIPVGITFFKDENTTPWIVFNVVSDTFFLIDLVLNFRTGIVVEDNTEIILDPQRIKMKYLKSWFMVDFISSIPVDYIFLIVETRIDSEVYKTARALRIVRFTKILSLLRLLRLSRLIRYIHQWEEIFHMTYDLASAVVRIVNLIGMMLLLCHWDGCLQFLVPMLQDFPDDCWVSINNMVNNSWGKQYSYALFKAMSHMLCIGYGRQAPVGMSDVWLTMLSMIVGATCYAMFIGHATALIQSLDSSRRQYQEKYKQVEQYMSFHKLPPDTRQRIHDYYEHRYQGKMFDEESILGELSEPLREEIINFNCRKLVASMPLFANADPNFVTSMLTKLRFEVFQPGDYIIREGTIGKKMYFIQHGVVSVLTKGNKETKLADGSYFGEICLLTRGRRTASVRADTYCRLYSLSVDNFNEVLEEYPMMRRAFETVALDRLDRIGKKNSILLHKVQHDLNSGVFNYQENEIIQQIVQHDREMAHCAHRVQAAASATPTPTPVIWTPLIQAPLQAAAATTSVAIALTHHPRLPAAIFRPPPGSGLGNLGAGQTPRHLKRLQSLIPSALGSASPASSPSQVDTPSSSSFHIQQLAGFSAPAGLSPLLPSSSSSPPPGACGSPSAPTPSAGVAATTIAGFGHFHKALGGSLSSSDSPLLTPLQPGARSPQAAQPSPAPPGARGGLGLPEHFLPPPPSSRSPSSSPGQLGQPPGELSLGLATGPLSTPETPPRQPEPPSLVAGASGGASPVGFTPRGGLSPPGHSPGPPRTFPSAPPRASGSHGSLLLPPASSPPPPQVPQRRGTPPLTPGRLTQDLKLISASQPALPQDGAQTLRRASPHSSGESMAAFPLFPRAGGGSGGSGSSGGLGPPGRPYGAIPGQHVTLPRKTSSGSLPPPLSLFGARATSSGGPPLTAGPQREPGARPEPVRSKLPSNL",
+                    "count": 1
+                }
+            }
+        ],
+        "model_version": "AlphaFold 3",
+        "zenith_ptm_audit": {
+            "PPARA": [],
+            "CPT1A": [
+                {
+                    "elite_pos": 2,
+                    "type": "N-acetylalanine"
+                },
+                {
+                    "elite_pos": 282,
+                    "type": "3'-nitrotyrosine"
+                },
+                {
+                    "elite_pos": 588,
+                    "type": "Phosphothreonine"
+                },
+                {
+                    "elite_pos": 589,
+                    "type": "3'-nitrotyrosine"
+                },
+                {
+                    "elite_pos": 604,
+                    "type": "Phosphothreonine"
+                },
+                {
+                    "elite_pos": 741,
+                    "type": "Phosphoserine"
+                },
+                {
+                    "elite_pos": 747,
+                    "type": "Phosphoserine"
+                }
+            ],
+            "CPT2": [
+                {
+                    "elite_pos": 69,
+                    "type": "N6-succinyllysine"
+                },
+                {
+                    "elite_pos": 79,
+                    "type": "N6-acetyllysine"
+                },
+                {
+                    "elite_pos": 85,
+                    "type": "N6-succinyllysine"
+                },
+                {
+                    "elite_pos": 239,
+                    "type": "N6-acetyllysine; alternate"
+                },
+                {
+                    "elite_pos": 239,
+                    "type": "N6-succinyllysine; alternate"
+                },
+                {
+                    "elite_pos": 305,
+                    "type": "N6-acetyllysine"
+                },
+                {
+                    "elite_pos": 424,
+                    "type": "N6-succinyllysine"
+                },
+                {
+                    "elite_pos": 439,
+                    "type": "N6-succinyllysine"
+                },
+                {
+                    "elite_pos": 510,
+                    "type": "N6-acetyllysine; alternate"
+                },
+                {
+                    "elite_pos": 510,
+                    "type": "N6-succinyllysine; alternate"
+                },
+                {
+                    "elite_pos": 544,
+                    "type": "N6-acetyllysine; alternate"
+                },
+                {
+                    "elite_pos": 544,
+                    "type": "N6-succinyllysine; alternate"
+                }
+            ],
+            "HCN4": [
+                {
+                    "elite_pos": 138,
+                    "type": "Phosphoserine"
+                },
+                {
+                    "elite_pos": 1105,
+                    "type": "Phosphoserine"
+                },
+                {
+                    "elite_pos": 1108,
+                    "type": "Phosphoserine"
+                }
+            ]
+        }
+    }
+]

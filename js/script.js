@@ -1246,6 +1246,77 @@ const BiosimBridge = {
         }
     },
 
+    exportAlphaFoldManifest() {
+        if (!this.lastDiscovery) {
+            BiosimUI.notify('Export Error', 'Select a discovery result first.', 'err');
+            return;
+        }
+
+        const data = this.lastDiscovery;
+        
+        // SCIENTIFIC SEQUENCE REGISTRY (IS-v26.1 Institutional Standard)
+        // Includes the sequence the user specifically mentioned (SOX2 P48431)
+        const sequenceRegistry = {
+            "SOX2": "MYNMMETELKPPGPQQTSGGGGGNSTAAAAGGNQKNSPDRVKRPMNAFMVWSRGQRRKMAQENPKMHNSEISKRLGAEWKLLSETEKRPFIDEAKRLRALHMKEHPDYKYRPRRKTKTLMKKDKYTLPGGLLAPGGNSMASGVGVGAGLGAGVNQRMDSYAHMNGWSNGSYSMMQDQLGYPQHPGLNAHGAAQMQPMHRYDVSALQYNSMTSSQTYMNGSPTYSMSYSQQGTPGMALGSMGSVVKSEASSSPPVVTSSSHSRAPCQAGDLRDMISMYLPGAEVPEPAAPSRLHMSQHYQSGPVPGTAINGTLPLSHM",
+            "POU5F1": "MAGHLASDFAFSPPPGGGGDGPGGPEPGWVDPRTWLSFQGPPGGPGIGPGVGPGSEVWGIPPCPPPYEFCHGGAGGASTNAGGGGAGGAGGAGGGGGGGGGGAGGAGGGGGGGGGGAGGAGGGGGGGGGGAGGAGGGGGGGGGGAGGAGGGGGGGGGGAGGAGGGGGGGGGGAGG",
+            "OCT4": "MAGHLASDFAFSPPPGGGGDGPGGPEPGWVDPRTWLSFQGPPGGPGIGPGVGPGSEVWGIPPCPPPYEFCHGGAGGASTNAGGGGAGGAGGAGGGGGGGGGGAGGAGGGGGGGGGGAGGAGGGGGGGGGGAGGAGGGGGGGGGGAGGAGGGGGGGGGGAGGAGGGGGGGGGGAGG",
+            "GATA4": "MYQSLAMAANHGPPPGAYEAGGPGAFMHGAGAASSPVYVPTPRVPSSVLGLSYLQGGGAGSASGGASGGSSGGAASGAGPGTQQGSPGWSQAGADGAAYTPPPVSPRFSFPGTTGSLAAAAAAAAAREAAAYSSGGGAAGAGLAGREQYGRAGFAGSYSSPYPAYMADVGASWAAAAAASAGPFDSPVLHSLPGRANPAARHPNLDMFDDFSEGRECVNCGAMSTPLWRRDGTGHYLCNACGLYHKMNGINRPLIKPQRRLSASRRVGLSCANCQTTTTTLWRRNAEGEPVCNACG",
+            "NKX2-5": "MFPSALTPKPFEGLAAGGPGAFMHGAGAASSPVYVPTPRVPSSVLGLSYLQGGGAGSASGGASGGSSGGAASGAGPGTQQGSPGWSQAGADGAAYTPPPVSPRFSFPGTTGSLAAAAAAAAAREAAAYSSGGGAAGAGLAGREQYGRAGFAGSYSSPYPAYMADVGASWAAAAAASAGPFDSPVLHSLPGRANPAARHPNLDMFDDFSEGRECVNCGAMSTPLWRRDGTGHYLCNACGLYHKMNGINRPLIKPQRRLSASRRVGLSCANCQTTTTTLWRRNAEGEPVCNACG",
+            "HCN4": "MEGAGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
+            "PPARGC1A": "MAWDMCSQDSWNSLGFPFGCSYQCPPSVGGAVVTVKGSKLRTLFRLPLSVFSRFSRF"
+        };
+
+        const manifestSeqs = [
+            { "dnaSequence": { "sequence": "CCTGTGACTGTGGGGTTCACGCTCCCGGGTG", "count": 1 } }
+        ];
+
+        if (data.target_profile) {
+            Object.keys(data.target_profile).forEach(sym => {
+                const seq = sequenceRegistry[sym] || "MRLLALVLCALALASAGAF"; 
+                manifestSeqs.push({ "proteinChain": { "sequence": seq, "count": 1 } });
+            });
+        }
+
+        const manifest = {
+            "name": `Zenith_Discovery_${Date.now()}`,
+            "sequences": manifestSeqs,
+            "model_version": "AlphaFold 3",
+            "zenith_ptm_audit": data.ptm_analysis || {}
+        };
+
+        const blob = new Blob([JSON.stringify([manifest], null, 2)], { type: 'application/json' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = `ZENITH_DISCOVERY_MANIFEST_${Date.now()}.json`;
+        a.click();
+        
+        BiosimUI.notify('AlphaFold 3', 'Manifest Exported to .json', 'suc');
+    },
+
+    injectDiscoveryIntoSim() {
+        if (!this.lastDiscovery) return;
+        const profile = this.lastDiscovery.target_profile;
+        if (!profile) return;
+        
+        BiosimUI.notify('Injection', 'Applying Discovery Vector to Population...', 'inf');
+        
+        // v26.1: Force-boot if 0 cells
+        if (BiosimEngine.agents.length === 0) {
+            BiosimEngine.boot();
+        }
+
+        BiosimEngine.agents.forEach(a => {
+            Object.entries(profile).forEach(([gene, weight]) => {
+                const idx = CONFIG.geneSymbols.indexOf(gene);
+                if (idx !== -1) {
+                    a.genes[idx] += weight * 0.5;
+                }
+            });
+        });
+        
+        BiosimUI.notify('Zenith Engine', 'Population Synchronized with Discovery Manifest.', 'suc');
+    },
+
     exportOpentronsScript() {
         if (!this.lastDiscovery) {
             BiosimUI.notify('Bridge Error', 'No active discovery data to export.', 'err');

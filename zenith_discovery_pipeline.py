@@ -1,19 +1,15 @@
 """
 zenith_discovery_pipeline.py
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-IS-v26.1 - COMPLETE INSTITUTIONAL DISCOVERY WORKFLOW (High-Res Edition).
-- [Gene Engine] -> [Zenith-AI] -> [UniProt JSON] -> [PTM Mapping] -> [DHL Refinement] -> [AF3 Manifest]
-
-Features:
-- Automated Fetching of Post-Translational Modifications (PTM).
-- Structural Elite-Slice Mapping of Phosphorylation, Acetylation, etc.
-- Multi-Stage Discovery Logic.
+IS-v26.1 - FULL INSTITUTIONAL DISCOVERY WORKFLOW (Hybrid Intuition Edition).
+[Scientific Prompt] -> [Zenith-AI Parsing] -> [UniProt JSON] -> [PTM Mapping] -> [DHL Refinement] -> [AF3 Manifest]
 
 Author: Antigravity AI
 Date: 2026-03-29
 """
 
 import os
+import sys
 import json
 import time
 import requests
@@ -27,14 +23,21 @@ load_dotenv()
 openai_client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 class ZenithDiscoveryEngine:
-    """Zenith v26.1 Senior Institutional Engine (Full High-Res Edition)."""
+    """Zenith v26.1 Senior Institutional Engine (Hybrid Intuition Edition)."""
     
     def __init__(self):
         self.institutional_seed = 2142086823
         self.z_pillar_dna = "CCTGTGACTGTGGGGTTCACGCTCCCGGGTG" # 31bp
         self.linker_extension = 15
         
-        # Core domain registry (Hardcoded for maximum handshake security)
+        # Hardcoded Accession Registry
+        self.uniprot_registry = {
+            "SOX2": "P48431",
+            "OCT4": "Q01860",
+            "POU5F1": "Q01860"
+        }
+        
+        # Hardcoded Domain Knowledge
         self.isl = {
             "GATA4": {"s": 212, "e": 332, "fam": "Zinc-Finger"},
             "NKX2.5": {"s": 138, "e": 203, "fam": "Homeodomain"},
@@ -47,195 +50,144 @@ class ZenithDiscoveryEngine:
         }
 
     # ============================================================
-    # STAGE 1: GENE ENGINE (IDENTIFY FACTORS)
+    # STAGE 0: PROMPT INTERPRETATION
     # ============================================================
-    def discover_factors_from_engine(self) -> List[Dict]:
-        """Simulates the Zenith v26.1 Gene Engine identifying rejuvenation drivers."""
-        print("🧬 Stage 1: Zenith v26.1 Gene Engine scanning cell-state manifold...")
-        discovery_candidates = [
-            {"symbol": "OCT4", "impact_score": 0.98, "cluster": "Pluripotency"},
-            {"symbol": "SOX2", "impact_score": 0.97, "cluster": "Pluripotency"},
-            {"symbol": "GATA4", "impact_score": 0.91, "cluster": "Cardiac Anchor"},
-            {"symbol": "TBX5", "impact_score": 0.89, "cluster": "Cardiac Anchor"}
-        ]
-        return discovery_candidates
-
-    # ============================================================
-    # STAGE 2: ZENITH-AI (OPENAI MAPPING)
-    # ============================================================
-    def map_to_uniprot_accession(self, factor_symbol: str) -> Optional[str]:
-        """Uses OpenAI to semantically map factor symbols to UniProt Accession IDs."""
-        print(f"🧠 Stage 2: Zenith-AI (OpenAI) mapping '{factor_symbol}'...")
+    def parse_factors_from_prompt(self, prompt: str) -> List[str]:
+        """Uses Zenith-AI (OpenAI) to extract target protein symbols."""
+        print(f"🧬 Stage 0: Zenith-AI parsing scientific intent...")
         try:
-            prompt = f"Identify the primary Human UniProt Accession ID for the transcription factor: {factor_symbol}. Return ONLY the 6-character Accession ID, no other text."
+            ai_prompt = (
+                "Identify the top 5 Human gene symbols (e.g. PPARGC1A, HCN4) "
+                "from this objective: '" + prompt + "'. Return ONLY a comma-separated list."
+            )
             response = openai_client.chat.completions.create(
                 model="gpt-4o",
-                messages=[{"role": "user", "content": prompt}],
+                messages=[{"role": "user", "content": ai_prompt}],
+                max_tokens=30,
+                temperature=0.0
+            )
+            symbols = response.choices[0].message.content.strip().replace(" ", "").split(",")
+            return [s.upper() for s in symbols if s]
+        except Exception as e:
+            print(f"  ❌ AI Parsing Error: {e}")
+            return []
+
+    # ============================================================
+    # STAGE 2: ZENITH-AI (OPENAI ID MAPPING)
+    # ============================================================
+    def map_to_uniprot_accession(self, factor_symbol: str) -> Optional[str]:
+        """Uses AI to identify the correct UniProt Accession."""
+        if factor_symbol in self.uniprot_registry:
+            return self.uniprot_registry[factor_symbol]
+            
+        print(f"🧠 Stage 2: Mapping '{factor_symbol}' to UniProt Accession...")
+        try:
+            response = openai_client.chat.completions.create(
+                model="gpt-4o",
+                messages=[{"role": "user", "content": f"Human UniProt Accession for gene {factor_symbol}. Return only the ID (e.g. P48431)."}],
+                max_tokens=20,
                 temperature=0.0
             )
             accession = response.choices[0].message.content.strip()
-            if re.match(r"^[A-Z0-9]{6}$", accession):
-                return accession
+            # Clean up potential markdown or junk
+            accession = re.search(r"([A-Z0-9]{6,10})", accession)
+            if accession:
+                return accession.group(1)
         except Exception as e:
-            print(f"  ❌ OpenAI Mapping Error: {e}")
+            print(f"  ❌ AI Mapping Error for {factor_symbol}: {e}")
         return None
 
     # ============================================================
-    # STAGE 3: UNIPROT FETCH (PTM & FEATURES)
+    # STAGE 3: UNIPROT FETCH
     # ============================================================
     def fetch_full_biological_data(self, factor_symbol: str, accession: str) -> Optional[Dict]:
-        """Fetches sequence and PTM sites using UniProt's JSON API."""
+        """Fetches sequence and PTM sites using UniProt."""
         url = f"https://rest.uniprot.org/uniprotkb/{accession}.json"
         try:
-            print(f"🌐 Stage 3: Fetching High-Res Data for {factor_symbol} ({accession})...")
+            print(f"🌐 Stage 3: Fetching Data for {factor_symbol} ({accession})...")
             response = requests.get(url, timeout=15)
             if response.status_code == 200:
                 data = response.json()
-                
-                # Extract Sequence
                 sequence = data.get("sequence", {}).get("value")
-                
-                # Extract PTM Features (Modified Residues)
-                ptms = []
-                features = data.get("features", [])
-                for f in features:
-                    if f.get("type") == "Modified residue":
-                        ptms.append({
-                            "description": f.get("description", "Unknown-PTM"),
-                            "pos": f.get("location", {}).get("start", {}).get("value"),
-                            "raw_text": f.get("description")
-                        })
-                
-                return {
-                    "id": factor_symbol,
-                    "accession": accession,
-                    "sequence": sequence,
-                    "ptms": ptms
-                }
-        except Exception as e:
-            print(f"  ❌ Retrieval Error: {e}")
+                ptms = [
+                    {"description": f.get("description", "Unknown-PTM"), "pos": f.get("location", {}).get("start", {}).get("value")}
+                    for f in data.get("features", []) if f.get("type") == "Modified residue"
+                ]
+                return {"id": factor_symbol, "accession": accession, "sequence": sequence, "ptms": ptms}
+        except Exception:
+            pass
         return None
 
     # ============================================================
-    # STAGE 4: DHL REFINEMENT & PTM MAPPING
+    # STAGE 4: REFINEMENT
     # ============================================================
     def apply_elite_refinement(self, bio_data: Dict) -> Optional[Dict]:
-        """Applies DHL (+15/-15) and maps PTM sites to the new elite coordinates."""
+        """Applies DHL (+15/-15) and maps PTMs."""
         factor = bio_data['id']
         sequence = bio_data['sequence']
-        ptms = bio_data['ptms']
         
+        # Check registry or use full sequence
         reg = self.isl.get(factor)
         if not reg:
-            reg = {"s": 1, "e": len(sequence), "fam": "Full-Scan"}
+            reg = {"s": 1, "e": len(sequence), "fam": "FullProtein"}
             
-        # Coordinates
         s_elite = max(0, reg['s'] - self.linker_extension - 1)
         e_elite = min(len(sequence), reg['e'] + self.linker_extension)
         elite_seq = sequence[s_elite:e_elite]
         
-        # Map PTMs to Elite Space (1-indexed for final manifest awareness)
-        mapped_ptms = []
-        for p in ptms:
-            # Check if PTM is within the elite slice
-            if s_elite < p['pos'] <= e_elite:
-                mapped_ptms.append({
-                    "elite_pos": p['pos'] - s_elite,
-                    "type": p['description'],
-                    "warning": "Critical structural variant detected in elite domain."
-                })
+        mapped_ptms = [
+            {"elite_pos": p['pos'] - s_elite, "type": p['description']}
+            for p in bio_data['ptms'] if s_elite < p['pos'] <= e_elite
+        ]
                 
-        return {
-            "id": factor,
-            "domain": reg['fam'],
-            "elite_sequence": elite_seq,
-            "elite_len": len(elite_seq),
-            "mapped_ptms": mapped_ptms,
-            "protocol": "IS-v26.1 (High-Res DHL)"
-        }
+        return {"id": factor, "domain": reg['fam'], "elite_sequence": elite_seq, "elite_len": len(elite_seq), "ptms": mapped_ptms}
 
     # ============================================================
     # STAGE 5: BUNDLING
     # ============================================================
-    def generate_discovery_report(self, results: List[Dict]) -> List[Dict]:
-        """Creates the official AlphaFold 3 manifest with PTM awareness metadata."""
-        print("📁 Stage 5: Generating High-Res AlphaFold 3 Discovery Manifest...")
-        
-        manifest_sequences = [
-            {"dnaSequence": {"sequence": self.z_pillar_dna, "count": 1}}
-        ]
-        
-        report_log = []
+    def generate_manifest(self, results: List[Dict]) -> List[Dict]:
+        """Creates the AF3 discovery manifest."""
+        manifest_seqs = [{"dnaSequence": {"sequence": self.z_pillar_dna, "count": 1}}]
         for res in results:
-            manifest_sequences.append({
-                "proteinChain": {
-                    "sequence": res['elite_sequence'],
-                    "count": 1
-                }
-            })
-            report_log.append({
-                "factor": res['id'],
-                "ptm_detected": len(res['mapped_ptms']) > 0,
-                "ptm_details": res['mapped_ptms']
-            })
+            manifest_seqs.append({"proteinChain": {"sequence": res['elite_sequence'], "count": 1}})
             
-        manifest = [{
-            "name": f"Zenith_HighRes_Discovery_{int(time.time())}",
-            "sequences": manifest_sequences,
+        return [{
+            "name": f"Zenith_Discovery_Output",
+            "sequences": manifest_seqs,
             "model_version": "AlphaFold 3",
-            "metadata": {"institutional_audit_ptm": report_log}
+            "zenith_ptm_audit": {res['id']: res['ptms'] for res in results}
         }]
-        return manifest
 
-def run_pipeline():
+def main():
+    default_prompt = "Zenith v26.1: Structural Rejuvenation"
+    user_prompt = sys.argv[1] if len(sys.argv) > 1 else default_prompt
+    
     print(f"\n{'='*60}")
-    print("🚀 ZENITH v26.1 - HIGH-RESOLUTION DISCOVERY TOOL")
-    print("   GENE ENGINE -> ZENITH-AI -> PTM ANALYTICS -> AF3 Ready")
+    print("🚀 ZENITH v26.1 - INTUITIVE HYBRID DISCOVERY")
     print(f"{'='*60}\n")
     
     engine = ZenithDiscoveryEngine()
-    
-    # 1. engine Discovery
-    candidates = engine.discover_factors_from_engine()
+    symbols = engine.parse_factors_from_prompt(user_prompt)
+    print(f"  🔎 Discovered candidates: {', '.join(symbols)}")
     
     refined_batch = []
-    
-    for cand in candidates:
-        acc = engine.map_to_uniprot_accession(cand['symbol'])
-        if not acc: continue
-        
-        # High-Res Pull
-        bio_data = engine.fetch_full_biological_data(cand['symbol'], acc)
-        if not bio_data: continue
-        
-        # Elite Refinement
-        refined = engine.apply_elite_refinement(bio_data)
-        if refined:
-            status = "✅ PTM DETECTED" if refined['mapped_ptms'] else "✅"
-            print(f"  {status} {refined['id']:6} | Domain: {refined['domain']:12} | Elite: {refined['elite_len']}aa")
-            refined_batch.append(refined)
-            
-    # 5. Manifest
+    for sym in symbols:
+        acc = engine.map_to_uniprot_accession(sym)
+        if acc:
+            bio = engine.fetch_full_biological_data(sym, acc)
+            if bio:
+                refined = engine.apply_elite_refinement(bio)
+                if refined:
+                    print(f"  ✅ {refined['id']:8} | ID: {acc:6} | PTMs: {len(refined['ptms'])}")
+                    refined_batch.append(refined)
+
     if refined_batch:
-        final_manifest = engine.generate_discovery_report(refined_batch)
-        
-        output_path = "ZENITH_HIGH_RES_DISCOVERY.json"
-        with open(output_path, "w") as f:
-            json.dump(final_manifest, f, indent=4)
-            
-        print(f"\n{'='*60}")
-        print("✨ DISCOVERY REPORT COMPLETE")
-        print(f"   SAVED TO: {output_path}")
-        print(f"{'='*60}\n")
-        
-        # Snippet
-        print("--- HIGH-RES DISCOVERY AUDIT (PTM SITES) ---")
-        for res in refined_batch:
-            if res['mapped_ptms']:
-                print(f"[{res['id']}] Active PTM sites in Elite Domain:")
-                for p in res['mapped_ptms']:
-                    print(f"  - Position {p['elite_pos']}: {p['type']}")
-        print("--------------------------------------------")
+        manifest = engine.generate_manifest(refined_batch)
+        with open("ZENITH_FINAL_VALIDATION_MANIFEST.json", "w") as f:
+            json.dump(manifest, f, indent=4)
+        print(f"\n✨ COMPLETE: ZENITH_FINAL_VALIDATION_MANIFEST.json created.")
+    else:
+        print("\n❌ Error: No factors were successfully processed.")
 
 if __name__ == "__main__":
-    run_pipeline()
+    main()

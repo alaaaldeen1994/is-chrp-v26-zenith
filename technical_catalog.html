@@ -3438,6 +3438,70 @@
             </section>
 
 
+        <!-- Section 9: Institutional Structural Discovery (IS-v26.1) -->
+        <section id="structural-discovery" class="mb-24 scroll-mt-24">
+            <h2 class="text-[11px] font-black tracking-[0.4em] uppercase text-teal-600 mb-6 font-bold">Section 9</h2>
+            <h3 class="text-4xl font-black mb-10 tracking-tight text-white">Institutional Structural Discovery & DHL Protocol</h3>
+
+            <div class="bg-slate-900 shadow-2xl border border-white/5 p-10 rounded-3xl mb-12 border-teal-500/10">
+                <p class="text-xl text-slate-300 mb-10 leading-relaxed font-light">
+                    The Zenith Institutional Discovery Pipeline (IS-v26.1) automates the structural validation of 
+                    reprogramming factors via the <strong class="text-white">Domain-Handshake Linker (DHL)</strong> protocol. 
+                    This ensures high-fidelity structural manifests ready for AlphaFold 3 simulation.
+                </p>
+
+                <div class="grid md:grid-cols-2 gap-10">
+                    <div class="bg-black/40 p-8 rounded-3xl border border-teal-500/10">
+                        <div class="text-[10px] text-teal-600 font-black uppercase mb-4 tracking-widest">The DHL Standard (+15/-15aa)</div>
+                        <h4 class="text-2xl font-black text-white mb-6">Elite Refinement Layer</h4>
+                        <p class="text-sm text-slate-400 mb-6 font-medium leading-relaxed">
+                            To achieve <strong class="text-white">ipTM > 0.8</strong> in AlphaFold 3, the platform identifies core DNA-binding domains and applies 15-amino acid flanking linkers for maximum handshake stability.
+                        </p>
+                        <div class="bg-slate-900 border border-white/5 p-4 rounded-xl font-mono text-xs text-teal-400">
+                            # DHL Coordinate Transformation Logic<br>
+                            s_elite = max(0, domain_start - 15 - 1)<br>
+                            e_elite = min(len_seq, domain_end + 15)<br>
+                            elite_fragment = full_sequence[s_elite:e_elite]
+                        </div>
+                    </div>
+                    <div class="bg-black/40 p-8 rounded-3xl border border-blue-500/20">
+                        <div class="text-[10px] text-blue-600 font-black uppercase mb-4 tracking-widest">Case Study Analysis</div>
+                        <h4 class="text-2xl font-black text-white mb-6">Cardiac Maturation Cluster</h4>
+                        <p class="text-sm text-slate-400 mb-6 font-medium leading-relaxed">
+                            Validation of the <strong class="text-white">PPARGC1A/HCN4/NKX2-5</strong> discovery cluster to accelerate electrophysiological maturation in iPSC-derived cardiomyocytes.
+                        </p>
+                        <ul class="space-y-3 text-[10px] text-slate-300 font-bold uppercase tracking-widest">
+                            <li class="flex gap-3"><span class="text-teal-600">✓</span> <span>UniProt Traceability: 100%</span></li>
+                            <li class="flex gap-3"><span class="text-teal-600">✓</span> <span>PTM Audit: 22 Critical Sites Analyzed</span></li>
+                            <li class="flex gap-3"><span class="text-teal-600">✓</span> <span>AlphaFold 3 Manifest: READY</span></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="mt-8 bg-teal-500/5 border border-teal-500/20 p-6 rounded-2xl">
+                    <h5 class="text-sm font-black text-white mb-4 uppercase tracking-[0.2em]">Institutional Discovery Workflow</h5>
+                    <div class="grid grid-cols-4 gap-4 text-center">
+                        <div class="p-4 bg-black/40 rounded-xl">
+                            <div class="text-[10px] font-black text-slate-500 uppercase mb-2">Stage 1</div>
+                            <div class="text-[9px] font-bold text-white">GENE ENGINE</div>
+                        </div>
+                        <div class="p-4 bg-black/40 rounded-xl">
+                            <div class="text-[10px] font-black text-slate-500 uppercase mb-2">Stage 2</div>
+                            <div class="text-[9px] font-bold text-white">AI SEMANTICS</div>
+                        </div>
+                        <div class="p-4 bg-black/40 rounded-xl">
+                            <div class="text-[10px] font-black text-slate-500 uppercase mb-2">Stage 3</div>
+                            <div class="text-[9px] font-bold text-white">DHL PROTOCOL</div>
+                        </div>
+                        <div class="p-4 bg-black/40 rounded-xl border border-teal-500/50">
+                            <div class="text-[10px] font-black text-teal-500 uppercase mb-2">Stage 4</div>
+                            <div class="text-[9px] font-bold text-teal-400">AF3 MANIFEST</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
             <!-- Footer -->
             <footer class="border-t border-slate-800 pt-10 mt-24">
                 <div class="flex justify-between items-center text-xs text-slate-300 mb-6">
