@@ -1230,17 +1230,26 @@ const BiosimBridge = {
             const profileContainer = document.getElementById('discovery-target-profile');
             if (profileContainer && data.target_profile) {
                 profileContainer.innerHTML = Object.entries(data.target_profile)
-                    .sort((a, b) => b[1] - a[1]) // Sort by intensity
+                    .sort((a, b) => b[1] - a[1])
                     .map(([gene, weight]) => {
-                        const auditRange = data.structural_audit && data.structural_audit[gene] ? ` (${data.structural_audit[gene]})` : "";
+                        const pct = Math.round(weight * 100);
+                        const auditRange = data.structural_audit && data.structural_audit[gene] ? data.structural_audit[gene] : '';
+                        const barColor = pct >= 85 ? '#6366f1' : pct >= 65 ? '#a855f7' : '#475569';
+                        const textColor = pct >= 85 ? 'text-indigo-300' : pct >= 65 ? 'text-purple-300' : 'text-slate-400';
                         return `
-                        <div class="flex items-center gap-1 bg-purple-600/20 px-1.5 py-0.5 rounded border border-purple-500/20 group/gene transition-all hover:bg-purple-600/40">
-                            <span class="text-[7px] text-white font-mono">${gene}${auditRange}</span>
-                            <span class="text-[6px] text-purple-400 font-bold">${Math.round(weight * 100)}%</span>
-                        </div>
-                        `;
+                        <div class="bg-white/3 border border-white/8 rounded-lg p-2 hover:border-indigo-500/40 hover:bg-indigo-950/30 transition-all cursor-default group/gene">
+                            <div class="flex justify-between items-baseline mb-1">
+                                <span class="text-[8px] text-white font-black font-mono tracking-tight">${gene}</span>
+                                <span class="text-[7px] font-bold ${textColor}">${pct}%</span>
+                            </div>
+                            ${auditRange ? `<span class="text-[6px] text-slate-500 font-mono">${auditRange}</span>` : ''}
+                            <div class="w-full bg-slate-800/80 h-0.5 rounded-full overflow-hidden mt-1">
+                                <div class="h-full rounded-full transition-all duration-500" style="width:${pct}%; background:${barColor}; box-shadow: 0 0 6px ${barColor}80;"></div>
+                            </div>
+                        </div>`;
                     }).join('');
             }
+
 
             if (synContainer && data.synergy_score !== undefined) {
                 const width = Math.floor(data.synergy_score * 100);
