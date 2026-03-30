@@ -1398,6 +1398,23 @@ const BiosimBridge = {
         BiosimUI.terminalLog(`[ZENITH v26.1] Institutional Manifest Generated Dynamically.`);
     },
 
+    copyAllProteins() {
+        if (!this.lastDiscovery || !this.lastDiscovery.target_profile) {
+            BiosimUI.notify('Copy Error', 'Run a discovery first.', 'err');
+            return;
+        }
+        const lines = Object.entries(this.lastDiscovery.target_profile)
+            .sort((a, b) => b[1] - a[1])
+            .map(([gene, w]) => `${gene} (${Math.round(w * 100)}%)`);
+        const text = lines.join(', ');
+        navigator.clipboard.writeText(text).then(() => {
+            BiosimUI.notify('Copied!', `${lines.length} proteins copied to clipboard`, 'suc');
+            BiosimUI.terminalLog(`[ZENITH] Copied ${lines.length} proteins: ${text}`);
+        }).catch(() => {
+            BiosimUI.notify('Copy Error', 'Clipboard unavailable.', 'err');
+        });
+    },
+
     injectDiscoveryIntoSim() {
         if (!this.lastDiscovery) return;
         const profile = this.lastDiscovery.target_profile;
