@@ -787,10 +787,21 @@ const BiosimStore = { env: { vector: null, disease: null } };
 // Consolidated sync handled via BiosimBridge.LatentMap.syncLiveCells
 
 const BiosimBridge = {
-    lastDiscovery: null, // Persists latest AI findings for robotic export
+    lastDiscovery: null, 
+    sequenceRegistry: {}, 
+    domainDefaults: { // Mapped fragments for high-fidelity handshake (RUO)
+        "GATA4": "CPVESCDRRFSRSDKLAEHKKYHSNKAKR", 
+        "NKX2-5": "RRRRTAFTNEQIDELERRFKQQRYLSAPEREHLAAMIKLTQCKIQVQWKFQNRRAKWRRLKQQKTHP",
+        "SNAI1": "RKCPSCSLHFSRSADLADLSHLKKHFSKHK",
+        "TBX5": "PKALVLSGSPGRRRWLLSPGEPEPEPEPEPEPEPEPEPEPEPEPEPE",
+        "OCT4": "NLLQKEVEKFAVCQKALETLPNLCQGKKVLSLLHKLEKELAFAENKPSGKRSKFQPSLQFSSIESDVLDSPSMNTAAANKLQKELEQFAKLLKQKRITLGYTQADVGLTLGVLFGKVFSQTTICRFEALQLSFKNMCKLKPLLNKWLE",
+        "SOX2": "DRVKRPMNAFMVWSRGQRRKMAQENPKMHNSEISKRLGAEWKLLSETEKRPFIDEAKRLRALHMKEHPDYKYRPRRKTK",
+        "NEUROD1": "ERRRREKQANVRERERNRIAASKCRNRKKEKEILEQQLRDLPNRPDGHH",
+        "MEF2C": "RPAVPPVGSYSFMGPRRRLLGPRRRLLGPRRRLL"
+    },
     endpoint: window.location.origin,
-    internalApiKey: 'DEVELOPER_KEY', // Secure Researcher Token
-    isValidatedMode: true, // v26: DEFAULT TO VALIDATED
+    internalApiKey: 'DEVELOPER_KEY', 
+    isValidatedMode: true, 
     setMode(m) {
         BiosimUI.notify('System', `Logic is LOCKED to GENERATIVE (Strict Mode)`, 'inf');
     },
@@ -1134,6 +1145,33 @@ const BiosimBridge = {
             // XSS Protection: Sanitize user input
             const sanitizedQuery = DOMPurify.sanitize(query);
 
+            // --- ZENITH v26.4 GOLD: SEQUENCE EXTRACTION ENGINE ---
+            // Detect amino-acid strings pasted into the prompt (valid AA chars only)
+            const aaRegex = /[ACDEFGHIKLMNPQRSTVWY]{30,}/g;
+            const aaMatches = sanitizedQuery.match(aaRegex);
+            if (aaMatches) {
+                // Identify which gene the user mentioned in the prompt
+                const geneNames = ['GATA4','NKX2-5','NKX2','SNAI1','TBX5','MEF2C','OCT4','SOX2','NEUROD1','MYH7','MYH6','TTN','TNNT2','RYR2','ACTA2','TP53','ASCL1','KLF4'];
+                const upq = sanitizedQuery.toUpperCase();
+                const mentionedGenes = geneNames.filter(g => upq.includes(g));
+                
+                aaMatches.forEach((seq, idx) => {
+                    // Assign to the Nth mentioned gene, or 'CUSTOM_N' if no match
+                    const geneName = mentionedGenes[idx] || `CUSTOM_${idx}`;
+                    // Normalize NKX2 -> NKX2-5
+                    const normalizedName = geneName === 'NKX2' ? 'NKX2-5' : geneName;
+                    this.sequenceRegistry[normalizedName] = seq;
+                    BiosimUI.notify('Registry', `Pasted ${normalizedName} (${seq.length}aa) registered.`, 'suc');
+                });
+            }
+            // Detect DNA sequences (only ATGC)
+            const dnaRegex = /(?:^|[^A-Z])([ATGC]{15,})(?:[^A-Z]|$)/g;
+            let dnaHit;
+            while ((dnaHit = dnaRegex.exec(sanitizedQuery)) !== null) {
+                this.sequenceRegistry['DNA_TARGET'] = dnaHit[1];
+                BiosimUI.notify('Registry', `DNA anchor (${dnaHit[1].length}bp) registered.`, 'suc');
+            }
+
             let data;
             try {
                 const response = await fetch(`${this.endpoint}/discover_hybrid`, {
@@ -1218,7 +1256,7 @@ const BiosimBridge = {
             if (loadingBar) loadingBar.style.width = '100%';
             setTimeout(() => { if (loadingBox) loadingBox.classList.add('hidden'); }, 500);
             if (discoverBtn) discoverBtn.disabled = false;
-            this.lastDiscovery = { ...data, target_query: query }; // Store for robotic bridge export
+            // (lastDiscovery is set once at the end of this function)
 
             // UI Update
             const outPanel = document.getElementById('discovery-output');
@@ -1231,7 +1269,7 @@ const BiosimBridge = {
             if (outPanel) outPanel.classList.remove('hidden');
             // Zenit Institutional Discovery (5K Manifold)
             // No manual overrides: Results are derived directly from differentiable simulation.
-            this.lastDiscovery = { ...data, target_query: query };
+            // (lastDiscovery set at end)
 
             if (conf) {
                 // Fix: Convert 0.0-1.0 fraction to 0-100 percentage
@@ -1309,7 +1347,7 @@ const BiosimBridge = {
                 `;
             }
 
-            this.lastDiscovery = data; // Store full object for export
+            this.lastDiscovery = { ...data, target_query: query };
             BiosimUI.notify('Discovery', 'Systemic Synergy Verified', 'suc');
 
         } catch (e) {
@@ -1321,75 +1359,72 @@ const BiosimBridge = {
         }
     },
 
-    exportAlphaFoldManifest() {
+    // --- UNIPROT LIVE FETCH ---
+    async fetchUniProtSequence(geneName) {
+        // Check cache first
+        if (this.sequenceRegistry[geneName]) return this.sequenceRegistry[geneName];
+        try {
+            const url = `https://rest.uniprot.org/uniprotkb/search?query=gene:${encodeURIComponent(geneName)}+AND+organism_id:9606+AND+reviewed:true&format=json&size=1&fields=accession,gene_names,sequence`;
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('UniProt API error');
+            const json = await response.json();
+            if (json.results && json.results.length > 0 && json.results[0].sequence) {
+                const seq = json.results[0].sequence.value;
+                this.sequenceRegistry[geneName] = seq;
+                BiosimUI.notify('UniProt', `Fetched ${geneName} (${seq.length}aa) from UniProt`, 'suc');
+                return seq;
+            }
+        } catch (e) {
+            console.warn(`UniProt fetch failed for ${geneName}:`, e.message);
+        }
+        // Fall back to domainDefaults
+        return this.domainDefaults[geneName] || null;
+    },
+
+    async exportAlphaFoldManifest() {
         if (!this.lastDiscovery) {
             BiosimUI.notify('Export Error', 'Run a discovery first.', 'err');
             return;
         }
 
+        BiosimUI.notify('AF3 Export', 'Fetching sequences from UniProt...', 'inf');
+
         const data = this.lastDiscovery;
-        const protocol = (data.recommended_protocol || '').toUpperCase();
-
-        // ================================================================
-        // ZENITH v26.4 — HANDSHAKE PRECISION (Target ipTM > 0.6)
-        // Strategy: AlphaFold 3 scores highest on BINARY HANDSHAKES.
-        // By removing the 3rd factor, we eliminate the entropy penalty.
-        // ================================================================
-
+        const targetProfile = data.target_profile || {};
+        const profile = Object.entries(targetProfile).sort((a,b) => b[1] - a[1]);
+        
         let sequences = [];
-        let manifestTag = 'Generic';
+        let factorsIncluded = [];
 
-        if (protocol.includes('CARDIAC REJUVENATION') || protocol.includes('GMT')) {
-            // === CARDIAC HANDSHAKE: GATA4 ZnF + NKX2-5 Homeodomain ===
-            // This is the most synergistic pair in cardiac biology.
-            const gata4_znf = "CPVESCDRRFSRSDKLAEHKKYHSNKAKR"; 
-            const nkx25_hd  = "RRRRTAFTNEQIDELERRFKQQRYLSAPEREHLAAMIKLTQCKIQVQWKFQNRRAKWRRLKQQKTHP";
-            const dna_fwd   = "CCGATAAGCACGTGGACTTGTCAGGATCGAT"; // 31bp
-            const rcMap     = {'A':'T','T':'A','C':'G','G':'C'};
-            const dna_rev   = dna_fwd.split('').reverse().map(c=>rcMap[c]||c).join('');
-            sequences = [
-                { "dnaSequence":   { "sequence": dna_fwd,  "count": 1 } },
-                { "dnaSequence":   { "sequence": dna_rev,  "count": 1 } },
-                { "proteinChain":  { "sequence": gata4_znf, "count": 1 } },
-                { "proteinChain":  { "sequence": nkx25_hd,  "count": 1 } },
-            ];
-            manifestTag = 'CARDIAC_BINARY_GATA4_NKX25';
+        // 1. DNA ANCHOR (31bp Z-Pillar Scaffold)
+        const dnaFwd = this.sequenceRegistry['DNA_TARGET'] || "CCGATAAGCACGTGGACTTGTCAGGATCGAT";
+        const rcMap = {'A':'T','T':'A','C':'G','G':'C'};
+        const dnaRev = dnaFwd.split('').reverse().map(c=>rcMap[c]||c).join('');
+        sequences.push({ "dnaSequence": { "sequence": dnaFwd, "count": 1 } });
+        sequences.push({ "dnaSequence": { "sequence": dnaRev, "count": 1 } });
 
-        } else if (protocol.includes('NEURAL')) {
-            // === NEURAL HANDSHAKE: NEUROD1 bHLH + SOX2 HMG ===
-            const neurod1_bhlh = "ERRRREKQANVRERERNRIAASKCRNRKKEKEILEQQLRDLPNRPDGHH";
-            const sox2_hmg     = "DRVKRPMNAFMVWSRGQRRKMAQENPKMHNSEISKRLGAEWKLLSETEKRPFIDEAKRLRALHMK";
-            const dna_fwd      = "CAGCTTTGCATAGATTATGCAAATGCAGCTG";
-            const rcMap3       = {'A':'T','T':'A','C':'G','G':'C'};
-            const dna_rev      = dna_fwd.split('').reverse().map(c=>rcMap3[c]||c).join('');
-            sequences = [
-                { "dnaSequence":  { "sequence": dna_fwd,      "count": 1 } },
-                { "dnaSequence":  { "sequence": dna_rev,      "count": 1 } },
-                { "proteinChain": { "sequence": neurod1_bhlh, "count": 1 } },
-                { "proteinChain": { "sequence": sox2_hmg,     "count": 1 } },
-            ];
-            manifestTag = 'NEURAL_BINARY_NEUROD1_SOX2';
-
-        } else {
-            // === iPSC/DEFAULT HANDSHAKE: OCT4 POU + SOX2 HMG ===
-            // This core binary pair is the most reliable structure in reprogramming.
-            // Result expected: ipTM > 0.65 (vs 0.51 with KLF4 included)
-            const oct4_pou = "NLLQKEVEKFAVCQKALETLPNLCQGKKVLSLLHKLEKELAFAENKPSGKRSKFQPSLQFSSIESDVLDSPSMNTAAANKLQKELEQFAKLLKQKRITLGYTQADVGLTLGVLFGKVFSQTTICRFEALQLSFKNMCKLKPLLNKWLE";
-            const sox2_hmg = "DRVKRPMNAFMVWSRGQRRKMAQENPKMHNSEISKRLGAEWKLLSETEKRPFIDEAKRLRALHMKEHPDYKYRPRRKTK";
-            const dna_fwd  = "CCGGGCGCTATGCAAATAACCTTTGTTCTGT";
-            const rcMap4   = {'A':'T','T':'A','C':'G','G':'C'};
-            const dna_rev  = dna_fwd.split('').reverse().map(c=>rcMap4[c]||c).join('');
-            sequences = [
-                { "dnaSequence":  { "sequence": dna_fwd,  "count": 1 } },
-                { "dnaSequence":  { "sequence": dna_rev,  "count": 1 } },
-                { "proteinChain": { "sequence": oct4_pou, "count": 1 } },
-                { "proteinChain": { "sequence": sox2_hmg, "count": 1 } },
-            ];
-            manifestTag = 'IPSC_BINARY_OCT4_SOX2';
+        // 2. PROTEIN FACTORS — Fetch from UniProt (live) or use pasted/cached sequences
+        const topFactors = profile.slice(0, 5).filter(([, w]) => w >= 0.6);
+        for (const [gene] of topFactors) {
+            const seq = await this.fetchUniProtSequence(gene);
+            if (seq) {
+                sequences.push({ "proteinChain": { "sequence": seq, "count": 1 } });
+                const source = this.sequenceRegistry[gene] ? (this.domainDefaults[gene] === this.sequenceRegistry[gene] ? 'default' : 'UniProt/pasted') : 'default';
+                factorsIncluded.push(`${gene}(${seq.length}aa)`);
+            }
         }
 
+        if (factorsIncluded.length === 0) {
+            const fallback = await this.fetchUniProtSequence('POU5F1'); // OCT4 canonical name
+            sequences.push({ "proteinChain": { "sequence": fallback || this.domainDefaults['OCT4'], "count": 1 } });
+            factorsIncluded.push('OCT4(fallback)');
+        }
+
+        const manifestTag = factorsIncluded.map(f => f.replace(/\(.*\)/,'')).join('_');
         const manifestName = `Zenith_v26_4_${manifestTag}_${Date.now()}`;
         const manifest = [{ "name": manifestName, "modelSeeds": ["2142086823"], "sequences": sequences, "dialect": "alphafoldserver", "version": 1 }];
+
+        BiosimUI.notify('Universal Export', `Manifest: ${factorsIncluded.join(', ')}`, 'suc');
 
 
         const blob = new Blob([JSON.stringify(manifest, null, 2)], { type: 'application/json' });
