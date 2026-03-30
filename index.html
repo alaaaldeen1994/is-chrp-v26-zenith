@@ -1053,18 +1053,15 @@
         </div>
         <!-- ANALYTICS PANEL (NOW ON LEFT) -->
 
-        <div class="panel lg:grid-row-2 lg:grid-col-3" style="border-left: 1px solid #222; overflow-y: auto !important; padding-bottom: 24px;">
-            <!-- ZENITH ULTRA-HD DISCOVERY SUITE: INSTITUTIONAL v26.1 (RIGHT PANEL) -->
-            <div class="p-4 bg-indigo-950/20 border-b border-indigo-500/30 relative overflow-hidden group">
-                <div class="absolute top-0 right-0 w-32 h-32 bg-indigo-500/5 blur-[40px] pointer-events-none"></div>
-                
-                <div class="text-[10px] font-black text-indigo-400 mb-4 flex items-center justify-between">
-                    <div class="flex items-center gap-2 tracking-widest">
-                        <i data-lucide="zap" class="w-3.5 h-3.5 text-indigo-400"></i> AI PROTOCOL DISCOVERY
-                        <span class="text-[7px] bg-indigo-500/20 px-1.5 py-0.5 rounded text-indigo-300 font-black border border-indigo-500/30">ZENITH-ULTRA-5K</span>
-                    </div>
-                    <div id="discovery-status-dot" class="w-2 h-2 rounded-full bg-indigo-500 animate-pulse shadow-[0_0_8px_#6366f1]"></div>
-                </div>
+        <div class="panel lg:grid-row-2 lg:grid-col-3" style="border-left: 1px solid #222;">
+            <div class="panel-header">
+                <span class="panel-title"><i data-lucide="zap" class="w-3.5 h-3.5"></i> AI PROTOCOL DISCOVERY <span class="text-[7px] bg-indigo-500/20 px-1.5 py-0.5 rounded text-indigo-300 font-black border border-indigo-500/30 ml-2">ZENITH-ULTRA-5K</span></span>
+                <div id="discovery-status-dot" class="w-1.5 h-1.5 rounded-full bg-indigo-500 shadow-[0_0_8px_#6366f1]"></div>
+            </div>
+            
+            <div class="scroll-container thin-scrollbar-v2">
+                <!-- ZENITH ULTRA-HD DISCOVERY SUITE: INSTITUTIONAL v26.4 GOLD (RIGHT PANEL) -->
+                <div class="p-1 bg-indigo-950/10 mb-4 relative overflow-hidden group">
 
                 <!-- NEURAL HYBRID TARGETING -->
                 <div class="space-y-2 mb-4">
@@ -1162,12 +1159,11 @@
                     onclick="BiosimBridge.LatentMap.toggleAtlas()">TOGGLE ATLAS</button>
             </div>
 
-            <!-- CLINICAL ANALYTICS -->
-            <div class="px-4 pt-3 pb-1 border-t border-white/5 flex items-center gap-2">
-                <i data-lucide="bar-chart-2" class="w-3.5 h-3.5 text-emerald-400"></i>
-                <span class="text-[9px] font-black text-emerald-400 uppercase tracking-widest">Clinical Analytics</span>
-            </div>
-            <div class="scroll-container">
+                <!-- CLINICAL ANALYTICS -->
+                <div class="pt-5 pb-2 border-t border-white/5 flex items-center gap-2">
+                    <i data-lucide="bar-chart-2" class="w-3.5 h-3.5 text-emerald-400"></i>
+                    <span class="text-[9px] font-black text-emerald-400 uppercase tracking-widest">Clinical Analytics</span>
+                </div>
                 <!-- POPULATION CHART -->
                 <div class="mb-4 bg-black border border-dim p-3 rounded">
                     <span class="text-[9px] font-bold text-slate-500 uppercase">Population Count (Current)</span>
@@ -1242,8 +1238,9 @@
                 </div>
             </div>
 
-            <div class="flex-none p-4 mt-auto border-t border-dim bg-black/40">
-                <a href="/docs" target="_blank" class="text-[8px] text-blue-500 hover:underline">Troubleshoot: Open API Documentation</a>
+                <div class="mt-8 pt-4 border-t border-dim bg-black/40">
+                    <a href="/docs" target="_blank" class="text-[8px] text-blue-500 hover:underline">Troubleshoot: Open API Documentation</a>
+                </div>
             </div>
         </div>
 
@@ -1294,8 +1291,8 @@
     </div>
     </div>
 
-    <script src="js/script.js?v=20260128-v15"></script>
-    <!-- v26.1 VISION BRIDGE OVERLAY -->
+    <script src="js/script.js?v=20260330-v26.4-GOLD"></script>
+    <!-- v26.4 GOLD VISION BRIDGE OVERLAY -->
     <div id="vision-overlay"
         class="fixed inset-0 bg-black/80 backdrop-blur-md z-[2000] hidden flex items-center justify-center">
         <div
@@ -1455,7 +1452,7 @@
             <div>
                 <h1 style="font-size: 24px; font-weight: 800; color: white; margin-bottom: 4px;">Longitudinal Longevity
                     Analysis (RUO)</h1>
-                <p style="color: #64748b; font-size: 13px;">Patient Digital Twin (Predicted): Kagawea-Sim v26.1 |
+                <p style="color: #64748b; font-size: 13px;">Patient Digital Twin (Predicted): Zenith-Sim v26.4 GOLD |
                     Clinical Profile: #4922-A (Research Use Only)</p>
             </div>
             <div style="display: flex; gap: 10px;">
