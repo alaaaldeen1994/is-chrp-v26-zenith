@@ -47,7 +47,7 @@ const CONFIG = {
         TRANSIT_NEU: { h: 180, s: 100, l: 50 },  // NEON CYAN
         ENDO: { h: 145, s: 90, l: 55 },         // EMERALD GREEN
         TUMOR: { h: 0, s: 100, l: 50 },         // DANGER RED (Pure)
-        DEATH: { h: 0, s: 0, l: 20 }            // ASH GRAY
+        DEATH: { h: 215, s: 10, l: 35 }         // STABLE ASH (Visibility Adjusted for v26.4)
     },
 
     // 1000 Gene Symbols (Generated or loaded)
@@ -625,158 +625,173 @@ const BiosimEngine = {
     },
 
     loop() {
-        // Physics & Logic
-        // Simple N^2 repulsion for this demo (optimized with grid in full version)
-        const w = this.canvas.width;
-        const h = this.canvas.height;
-        const aspect = w / h;
+        try {
+            // Physics & Logic
+            // Simple N^2 repulsion for this demo (optimized with grid in full version)
+            const w = this.canvas.width;
+            const h = this.canvas.height;
+            if (w === 0 || h === 0) {
+                requestAnimationFrame(() => this.loop());
+                return;
+            }
+            const aspect = w / h;
 
-        // 1. Rebuild Spatial Hash
-        this.spatialHash.clear();
-        for (let i = 0; i < this.agents.length; i++) {
-            this.spatialHash.insert(this.agents[i]);
-        }
+            // v26.4: Auto-Reseed if population is cleared
+            if (this.agents.length === 0 && this.frame > 0) {
+                console.warn("[System] Population Cleared. Auto-Reseeding...");
+                this.boot();
+            }
 
-        // 2. Physics & Logic (O(N) with Spatial Hash)
-        for (let i = 0; i < this.agents.length; i++) {
-            const A = this.agents[i];
-            A.tick({
-                vector: BiosimStore.env.vector,
-                disease: BiosimStore.env.disease,
-                spatialHash: this.spatialHash
+            // 1. Rebuild Spatial Hash
+            this.spatialHash.clear();
+            for (let i = 0; i < this.agents.length; i++) {
+                this.spatialHash.insert(this.agents[i]);
+            }
+
+            // 2. Physics & Logic (O(N) with Spatial Hash)
+            for (let i = 0; i < this.agents.length; i++) {
+                const A = this.agents[i];
+                A.tick({
+                    vector: BiosimStore.env.vector,
+                    disease: BiosimStore.env.disease,
+                    spatialHash: this.spatialHash
+                });
+
+
+                // Optimized collision check
+                const neighbors = this.spatialHash.getNeighbors(A);
+                for (let j = 0; j < neighbors.length; j++) {
+                    const B = neighbors[j];
+
+                    // Prevent double-counting by checking ID (optional but cleaner)
+                    if (A.id > B.id) continue;
+
+                    const dx = A.pos.x - B.pos.x;
+                    const dy = (A.pos.y - B.pos.y) / aspect;
+                    const distSq = dx * dx + dy * dy;
+                    const minDist = 0.02;
+
+                    if (distSq < minDist * minDist && distSq > 0) {
+                        const dist = Math.sqrt(distSq);
+                        const force = (minDist - dist) / dist * 0.005;
+                        const fx = dx * force;
+                        const fy = dy * force;
+
+                        A.vel.x += fx; A.vel.y += fy;
+                        B.vel.x -= fx; B.vel.y -= fy;
+
+                        // v26.1: ADHESION FORCES (Section 10.5)
+                        // If same type and very close, reduce relative velocity to 'bind' them
+                        if (A.type === B.type && A.type !== 'SOMATIC' && A.type !== 'DEATH') {
+                            const damping = 0.05;
+                            A.vel.x -= (A.vel.x - B.vel.x) * damping;
+                            A.vel.y -= (A.vel.y - B.vel.y) * damping;
+                        }
+                    }
+
+                    // v26.1: PARACRINE ATTRACTION (Chemotaxis - Section 10.5)
+                    // Pull toward same-type neighbors to form colonies
+                    if (A.type === B.type && A.type !== 'SOMATIC' && distSq < 0.005) {
+                        const attract = 0.00005;
+                        A.vel.x -= (A.pos.x - B.pos.x) * attract;
+                        A.vel.y -= (A.pos.y - B.pos.y) * attract;
+                    }
+
+                    // v27: ORGANOID CLUSTERING (Tissue Cohesion Logic)
+                    // If cohesion is active, apply strong short-range attraction to same-type cells
+                    if (CONFIG.cohesion > 0 && A.type === B.type && A.type !== 'SOMATIC') {
+                        // Check distance again (since 'dist' variable from above block might be out of scope or not calc)
+                        // We reuse distSq from line 640
+                        const distCheck = Math.sqrt(distSq);
+
+                        if (distCheck > 0) {
+                            // Stronger pull for structured types
+                            let cohesionStrength = CONFIG.cohesion;
+                            if (A.type === 'CARDIO' || A.type === 'NEURO') cohesionStrength *= 2.0;
+
+                            const dxNorm = dx / distCheck;
+                            const dyNorm = dy / distCheck;
+
+                            // Force vector towards neighbor
+                            A.vel.x -= dxNorm * cohesionStrength * 0.001;
+                            A.vel.y -= dyNorm * cohesionStrength * 0.001;
+                        }
+                    }
+                }
+            }
+
+            // Render
+            this.ctx.fillStyle = '#101010'; // v26: Darker lab environment
+            this.ctx.fillRect(0, 0, w, h);
+
+            // v26: Draw GNN Signaling Connections
+            BiosimRenderer.drawGNNConnections(this.ctx, this.agents, w, h);
+
+            // PH12: Malignancy Heatmap
+            BiosimRenderer.drawHeatmap(this.ctx, this.agents, w, h);
+
+            const scale = Math.min(w, h);
+            // v27: Reduce cell size multiplier for high-density (2000 cells)
+            this.agents.forEach(a => {
+                BiosimRenderer.drawCell(this.ctx, a, a.pos.x * w, a.pos.y * h, scale * 0.007); // Reduced from 0.015
             });
 
+            // v26: Batch-sync state to Generative Backend every 60 frames (Reduce network flooding)
+            if (this.frame % 60 === 0 && BiosimBridge.biosimMode === 'GENERATIVE') {
+                BiosimBridge.syncStateBatch(this.agents);
+            }
 
-            // Optimized collision check
-            const neighbors = this.spatialHash.getNeighbors(A);
-            for (let j = 0; j < neighbors.length; j++) {
-                const B = neighbors[j];
+            // PH11: Longitudinal History Capture
+            BiosimHistory.capture(this.agents, this.frame);
 
-                // Prevent double-counting by checking ID (optional but cleaner)
-                if (A.id > B.id) continue;
+            this.frame++;
 
-                const dx = A.pos.x - B.pos.x;
-                const dy = (A.pos.y - B.pos.y) / aspect;
-                const distSq = dx * dx + dy * dy;
-                const minDist = 0.02;
+            requestAnimationFrame(() => this.loop());
 
-                if (distSq < minDist * minDist && distSq > 0) {
-                    const dist = Math.sqrt(distSq);
-                    const force = (minDist - dist) / dist * 0.005;
-                    const fx = dx * force;
-                    const fy = dy * force;
+            // UI Sync (lazy, every 30 frames)
+            if (this.frame % 30 === 0) {
+                BiosimBridge.updateCharts();
+                // Sync Dashboard if visible
+                if (BiosimBridge.LatentMap.viewMode === 'MICROSCOPE') {
+                    BiosimBridge.LatentMap.syncAgents(BiosimEngine.agents);
+                }
 
-                    A.vel.x += fx; A.vel.y += fy;
-                    B.vel.x -= fx; B.vel.y -= fy;
+                // BACKEND SYNC: Send cell state to server for 3D view synchronization
+                if (this.frame % 120 === 0 && BiosimBridge.LatentMap && BiosimBridge.LatentMap.syncLiveCells) {
+                    BiosimBridge.LatentMap.syncLiveCells(this.agents, this.frame);
+                }
 
-                    // v26.1: ADHESION FORCES (Section 10.5)
-                    // If same type and very close, reduce relative velocity to 'bind' them
-                    if (A.type === B.type && A.type !== 'SOMATIC' && A.type !== 'DEATH') {
-                        const damping = 0.05;
-                        A.vel.x -= (A.vel.x - B.vel.x) * damping;
-                        A.vel.y -= (A.vel.y - B.vel.y) * damping;
+                // v26 HUD Telemetry Update (Section 14 & 22)
+                const lastSnapshot = BiosimHistory.snapshots[BiosimHistory.snapshots.length - 1];
+                if (lastSnapshot) {
+                    const epiEl = document.getElementById('hud-epi');
+                    const dnaEl = document.getElementById('hud-dna');
+
+                    if (epiEl) {
+                        const ent = lastSnapshot.entropy;
+                        epiEl.innerText = ent.toFixed(3);
+                        // Color code Section 22: <0.4 Emerald, <0.6 Yellow, >0.6 Red
+                        epiEl.style.color = ent < 0.4 ? '#10b981' : (ent < 0.6 ? '#facc15' : '#ef4444');
                     }
-                }
 
-                // v26.1: PARACRINE ATTRACTION (Chemotaxis - Section 10.5)
-                // Pull toward same-type neighbors to form colonies
-                if (A.type === B.type && A.type !== 'SOMATIC' && distSq < 0.005) {
-                    const attract = 0.00005;
-                    A.vel.x -= (A.pos.x - B.pos.x) * attract;
-                    A.vel.y -= (A.pos.y - B.pos.y) * attract;
-                }
+                    if (dnaEl) {
+                        const stability = (lastSnapshot.avgHealth * 100).toFixed(1);
+                        dnaEl.innerText = stability + '%';
+                        // Color code Section 22: >90% Emerald, >80% Yellow, <80% Red
+                        dnaEl.style.color = stability > 90 ? '#10b981' : (stability > 80 ? '#facc15' : '#ef4444');
 
-                // v27: ORGANOID CLUSTERING (Tissue Cohesion Logic)
-                // If cohesion is active, apply strong short-range attraction to same-type cells
-                if (CONFIG.cohesion > 0 && A.type === B.type && A.type !== 'SOMATIC') {
-                    // Check distance again (since 'dist' variable from above block might be out of scope or not calc)
-                    // We reuse distSq from line 640
-                    const distCheck = Math.sqrt(distSq);
+                        if (stability < 80) BiosimUI.showSidebarAlert(`CRITICAL: Genomic Stability at ${stability}%`);
+                    }
 
-                    if (distCheck > 0) {
-                        // Stronger pull for structured types
-                        let cohesionStrength = CONFIG.cohesion;
-                        if (A.type === 'CARDIO' || A.type === 'NEURO') cohesionStrength *= 2.0;
-
-                        const dxNorm = dx / distCheck;
-                        const dyNorm = dy / distCheck;
-
-                        // Force vector towards neighbor
-                        A.vel.x -= dxNorm * cohesionStrength * 0.001;
-                        A.vel.y -= dyNorm * cohesionStrength * 0.001;
+                    if (lastSnapshot.populations.TUMOR > 0) {
+                        const tCount = lastSnapshot.populations.TUMOR;
+                        BiosimUI.showSidebarAlert(`ONCOGENIC ALERT: ${tCount} Malignant Transformations detected.`);
                     }
                 }
             }
-        }
-
-        // Render
-        this.ctx.fillStyle = '#101010'; // v26: Darker lab environment
-        this.ctx.fillRect(0, 0, w, h);
-
-        // v26: Draw GNN Signaling Connections
-        BiosimRenderer.drawGNNConnections(this.ctx, this.agents, w, h);
-
-        // PH12: Malignancy Heatmap
-        BiosimRenderer.drawHeatmap(this.ctx, this.agents, w, h);
-
-        const scale = Math.min(w, h);
-        // v27: Reduce cell size multiplier for high-density (2000 cells)
-        this.agents.forEach(a => {
-            BiosimRenderer.drawCell(this.ctx, a, a.pos.x * w, a.pos.y * h, scale * 0.007); // Reduced from 0.015
-        });
-
-        // v26: Batch-sync state to Generative Backend every 60 frames (Reduce network flooding)
-        if (this.frame % 60 === 0 && BiosimBridge.biosimMode === 'GENERATIVE') {
-            BiosimBridge.syncStateBatch(this.agents);
-        }
-
-        // PH11: Longitudinal History Capture
-        BiosimHistory.capture(this.agents, this.frame);
-
-        this.frame++;
-
-        requestAnimationFrame(() => this.loop());
-
-        // UI Sync (lazy, every 30 frames)
-        if (this.frame % 30 === 0) {
-            BiosimBridge.updateCharts();
-            // Sync Dashboard if visible
-            if (BiosimBridge.LatentMap.viewMode === 'MICROSCOPE') {
-                BiosimBridge.LatentMap.syncAgents(BiosimEngine.agents);
-            }
-
-            // BACKEND SYNC: Send cell state to server for 3D view synchronization
-            if (this.frame % 120 === 0) {
-                BiosimBridge.LatentMap.syncLiveCells(this.agents, this.frame);
-            }
-
-            // v26 HUD Telemetry Update (Section 14 & 22)
-            const lastSnapshot = BiosimHistory.snapshots[BiosimHistory.snapshots.length - 1];
-            if (lastSnapshot) {
-                const epiEl = document.getElementById('hud-epi');
-                const dnaEl = document.getElementById('hud-dna');
-
-                if (epiEl) {
-                    const ent = lastSnapshot.entropy;
-                    epiEl.innerText = ent.toFixed(3);
-                    // Color code Section 22: <0.4 Emerald, <0.6 Yellow, >0.6 Red
-                    epiEl.style.color = ent < 0.4 ? '#10b981' : (ent < 0.6 ? '#facc15' : '#ef4444');
-                }
-
-                if (dnaEl) {
-                    const stability = (lastSnapshot.avgHealth * 100).toFixed(1);
-                    dnaEl.innerText = stability + '%';
-                    // Color code Section 22: >90% Emerald, >80% Yellow, <80% Red
-                    dnaEl.style.color = stability > 90 ? '#10b981' : (stability > 80 ? '#facc15' : '#ef4444');
-
-                    if (stability < 80) BiosimUI.showSidebarAlert(`CRITICAL: Genomic Stability at ${stability}%`);
-                }
-
-                if (lastSnapshot.populations.TUMOR > 0) {
-                    const tCount = lastSnapshot.populations.TUMOR;
-                    BiosimUI.showSidebarAlert(`ONCOGENIC ALERT: ${tCount} Malignant Transformations detected.`);
-                }
-            }
+        } catch (e) {
+            console.error("[System] Simulation Loop Recovered from Exception:", e);
+            requestAnimationFrame(() => this.loop());
         }
     }
 };
@@ -1916,6 +1931,7 @@ def run(protocol: protocol_api.ProtocolContext):
         bgFilaments: [],
         mParams: { radius: 320, green: 0.9, blue: 0.7, red: 0.8 },
         isLiveSyncing: false,
+        running3D: false,
 
         toggleView(mode) {
             this.viewMode = mode;
@@ -1956,6 +1972,14 @@ def run(protocol: protocol_api.ProtocolContext):
                 // FORCE DASHBOARD RELOAD - FIX CHART VISIBILITY
                 setTimeout(() => BiosimBridge.updateCharts(), 100);
             }
+
+            if (mode === '3D') {
+                this.running3D = true;
+                if (this.scene) this.animate3D();
+            } else {
+                this.running3D = false;
+            }
+
             if (window.BiosimUI) BiosimUI.notify('View', `Switched to ${mode}`, 'suc');
         },
 
@@ -2084,6 +2108,7 @@ def run(protocol: protocol_api.ProtocolContext):
             }
 
             this.animate3D();
+            this.running3D = true;
             console.log('✅ Zenith: Tri-Layer Render Engine Initialized');
         },
 
@@ -3662,5 +3687,12 @@ const VisionBridge = {
 };
 
 // Initialize on load
-window.addEventListener('load', VisionBridge.init);
+window.addEventListener('load', () => {
+    if (typeof BiosimEngine !== 'undefined') {
+        BiosimEngine.init();
+    }
+    if (typeof VisionBridge !== 'undefined') {
+        VisionBridge.init();
+    }
+});
 
