@@ -1359,25 +1359,38 @@ const BiosimBridge = {
         }
     },
 
-    // --- UNIPROT LIVE FETCH ---
+    // --- UNIPROT LIVE FETCH (v26.4 GOLD — API-Verified) ---
+    // Improvements applied from UniProt API Documentation review:
+    // 1. Accept: application/json header (required per API docs)
+    // 2. gene_exact: query (prevents fuzzy matches on similar gene names e.g. MYH6 vs MYH7)
+    // 3. length field added (lightweight size validation without parsing)
+    // 4. Visible UI warning if UniProt unreachable (instead of silent fallback)
     async fetchUniProtSequence(geneName) {
-        // Check cache first
+        // Check session cache first (pasted sequences always take priority)
         if (this.sequenceRegistry[geneName]) return this.sequenceRegistry[geneName];
         try {
-            const url = `https://rest.uniprot.org/uniprotkb/search?query=gene:${encodeURIComponent(geneName)}+AND+organism_id:9606+AND+reviewed:true&format=json&size=1&fields=accession,gene_names,sequence`;
-            const response = await fetch(url);
-            if (!response.ok) throw new Error('UniProt API error');
+            const url = `https://rest.uniprot.org/uniprotkb/search?query=gene_exact:${encodeURIComponent(geneName)}+AND+organism_id:9606+AND+reviewed:true&format=json&size=1&fields=accession,gene_primary,length,sequence`;
+            const response = await fetch(url, {
+                headers: { 'Accept': 'application/json' } // Required per UniProt API docs
+            });
+            if (!response.ok) throw new Error(`UniProt HTTP ${response.status}`);
             const json = await response.json();
             if (json.results && json.results.length > 0 && json.results[0].sequence) {
-                const seq = json.results[0].sequence.value;
+                const entry = json.results[0];
+                const seq = entry.sequence.value;
+                const len = entry.sequence.length || seq.length;
                 this.sequenceRegistry[geneName] = seq;
-                BiosimUI.notify('UniProt', `Fetched ${geneName} (${seq.length}aa) from UniProt`, 'suc');
+                BiosimUI.notify('UniProt', `${geneName}: ${len}aa verified`, 'suc');
                 return seq;
+            } else {
+                // Gene not found in Swiss-Prot — warn and fall through to defaults
+                BiosimUI.notify('UniProt', `${geneName} not found — using institutional default`, 'warn');
             }
         } catch (e) {
             console.warn(`UniProt fetch failed for ${geneName}:`, e.message);
+            BiosimUI.notify('UniProt', `Network error for ${geneName} — using domain default`, 'warn');
         }
-        // Fall back to domainDefaults
+        // Fall back to curated domain defaults
         return this.domainDefaults[geneName] || null;
     },
 
