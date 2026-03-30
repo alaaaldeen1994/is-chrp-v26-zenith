@@ -1111,12 +1111,12 @@ const BiosimBridge = {
         const loadingBar = document.getElementById('loading-bar');
         const outputPanel = document.getElementById('discovery-output');
         const discoverBtn = document.getElementById('btn-discover');
+        const query = queryEl ? queryEl.value : "Unknown";
 
         if (!queryEl || !queryEl.value) {
             BiosimUI.notify('Input Error', 'Please define a research goal first.', 'err');
             return;
         }
-        const query = queryEl.value;
 
         BiosimUI.notify('Research', `Initializing Zenith-GPT Hybrid Discovery...`, 'inf');
 
@@ -1125,7 +1125,7 @@ const BiosimBridge = {
         if (outputPanel) outputPanel.classList.add('hidden');
         if (discoverBtn) discoverBtn.disabled = true;
 
-        const loadingText = loadingBox.querySelector('div:last-child');
+        const loadingText = loadingBox ? loadingBox.querySelector('div:last-child') : null;
         if (loadingBar) loadingBar.style.width = '0%';
         let progress = 0;
         const interval = setInterval(() => {
@@ -1271,98 +1271,9 @@ const BiosimBridge = {
             if (loadingBar) loadingBar.style.width = '100%';
             setTimeout(() => { if (loadingBox) loadingBox.classList.add('hidden'); }, 500);
             if (discoverBtn) discoverBtn.disabled = false;
-            // (lastDiscovery is set once at the end of this function)
-
-            // UI Update
-            const outPanel = document.getElementById('discovery-output');
-            const conf = document.getElementById('discovery-conf');
-            const rec = document.getElementById('discovery-rec');
-            const detailText = document.getElementById('discovery-detail-text');
-            const detailBox = document.getElementById('discovery-output-text');
-            const synContainer = document.getElementById('synergy-container');
-
-            if (outPanel) outPanel.classList.remove('hidden');
-            // Zenit Institutional Discovery (5K Manifold)
-            // No manual overrides: Results are derived directly from differentiable simulation.
-            // (lastDiscovery set at end)
-
-            if (conf) {
-                // Fix: Convert 0.0-1.0 fraction to 0-100 percentage
-                const percentage = data.confidence > 1.0 ? data.confidence : data.confidence * 100;
-                const ageText = data.epigenetic_age_reduction > 0 ? `<span class="ml-1 bg-emerald-600 text-white px-1.5 py-0.5 rounded">-${data.epigenetic_age_reduction.toFixed(1)} YEARS</span>` : "";
-                conf.innerHTML = `<span>${percentage.toFixed(1)}% QUALITY</span>${ageText}`;
-                conf.className = 'text-[8px] flex items-center gap-1';
-            }
-            if (rec) {
-                const dnaLine = data.dna_motif_target ? `<span class="ml-2 px-1 text-[7px] bg-slate-800 text-purple-400 border border-purple-500/30 rounded font-mono select-all">DNA: ${data.dna_motif_target}</span>` : "";
-                rec.innerHTML = `${data.recommended_protocol}${dnaLine}`;
-            }
-            if (detailText && detailBox) {
-                detailText.innerHTML = data.scientific_rationale.replace('OSKM', '<strong class="text-blue-400">OSKM</strong>');
-                detailBox.classList.remove('hidden');
-            }
-
-            // Populate Target Signature Profile (Scientific Rigor)
-            const profileContainer = document.getElementById('discovery-target-profile');
-            if (profileContainer && data.target_profile) {
-                profileContainer.innerHTML = Object.entries(data.target_profile)
-                    .sort((a, b) => b[1] - a[1])
-                    .map(([gene, weight]) => {
-                        const pct = Math.round(weight * 100);
-                        const auditRange = data.structural_audit && data.structural_audit[gene] ? data.structural_audit[gene] : '';
-                        const barColor = pct >= 85 ? '#6366f1' : pct >= 65 ? '#a855f7' : '#475569';
-                        const scoreColor = pct >= 85 ? '#a5b4fc' : pct >= 65 ? '#d8b4fe' : '#64748b';
-                        return `<div style="display:flex;align-items:center;gap:4px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:6px;padding:4px 6px;transition:all 0.2s" onmouseover="this.style.borderColor='rgba(99,102,241,0.3)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.07)'">
-                            <div style="flex:1;min-width:0">
-                                <div style="display:flex;justify-content:space-between;align-items:center">
-                                    <span style="font-size:8px;color:#fff;font-family:monospace;font-weight:700">${gene}${auditRange ? ' <span style="font-size:6px;color:#475569">'+auditRange+'</span>' : ''}</span>
-                                    <span style="font-size:7px;font-weight:700;color:${scoreColor};margin-left:4px;flex-shrink:0">${pct}%</span>
-                                </div>
-                                <div style="width:100%;background:rgba(30,41,59,0.8);height:2px;border-radius:2px;margin-top:3px">
-                                    <div style="width:${pct}%;background:${barColor};height:100%;border-radius:2px"></div>
-                                </div>
-                            </div>
-                            <button onclick="navigator.clipboard.writeText('${gene}').then(()=>BiosimUI.notify('Copied','${gene}','suc'))" title="Copy ${gene}"
-                                style="flex-shrink:0;opacity:0.4;transition:opacity 0.2s;background:none;border:none;cursor:pointer;color:#94a3b8;padding:2px"
-                                onmouseover="this.style.opacity='1';this.style.color='#818cf8'" onmouseout="this.style.opacity='0.4';this.style.color='#94a3b8'">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-                            </button>
-                        </div>`;
-                    }).join('');
-            }
-
-
-            if (synContainer && data.synergy_score !== undefined) {
-                const width = Math.floor(data.synergy_score * 100);
-                synContainer.innerHTML = `
-                    <div class="flex justify-between items-center text-[7px] text-purple-300 font-bold uppercase mb-1">
-                        <span>Hybrid Manifold Score</span>
-                        <span>${width}%</span>
-                    </div>
-                    <div class="w-full bg-slate-800 h-1 rounded-full overflow-hidden">
-                        <div class="bg-purple-500 h-full shadow-[0_0_8px_rgba(139,92,246,0.6)]" style="width: ${width}%"></div>
-                    </div>
-                    <div class="mt-1 text-[6px] text-slate-500 uppercase tracking-tighter flex justify-between items-center">
-                        <span>Verified Complex: ${
-                            query.toUpperCase().includes('OSK') && !query.toUpperCase().includes('OSKM') ? '<span class="text-rose-400">OSK (OCT4, SOX2, KLF4) [MYC EXCLUDED]</span>' :
-                            (data.recommended_protocol.includes('MATURATION') || (data.target_profile && data.target_profile['PPARGC1A'])) ? 'Z-Move Rejuvenation Manifold' :
-                            data.recommended_protocol.includes('MYOCARDIUM') ? 'GATA4-SNAI1-NKX2.5 Handshake' :
-                            'Zenith-~285.4M GOLD Discovery'
-                        }</span>
-                        <span class="text-emerald-500 font-bold">HCA Institutional Verified (v26.4)</span>
-                    </div>
-                    ${data.drug_advisory && data.drug_advisory.length > 0 ? `
-                    <div class="mt-1.5 pt-1.5 border-t border-slate-700/50">
-                        <div class="text-[6px] text-slate-400 uppercase font-bold mb-0.5">Chemical Perturbation Advisory (Point 6)</div>
-                        <div class="flex gap-1">
-                            ${data.drug_advisory.map(drug => `<span class="bg-blue-600/20 text-blue-400 px-1 py-0.5 rounded text-[6px] border border-blue-500/20">${drug}</span>`).join('')}
-                        </div>
-                    </div>
-                    ` : ""}
-                `;
-            }
 
             this.lastDiscovery = { ...data, target_query: query };
+            this.renderDiscoveryResult(this.lastDiscovery);
             BiosimUI.notify('Discovery', 'Systemic Synergy Verified', 'suc');
 
         } catch (e) {
@@ -1372,6 +1283,115 @@ const BiosimBridge = {
             if (discoverBtn) discoverBtn.disabled = false;
             BiosimUI.notify('Discovery Error', e.message, 'err');
         }
+    },
+
+    removeDiscoveryFactor(gene) {
+        if (!this.lastDiscovery || !this.lastDiscovery.target_profile) return;
+        delete this.lastDiscovery.target_profile[gene];
+        this.renderDiscoveryResult(this.lastDiscovery);
+        BiosimUI.notify('Factor Removed', `${gene} pruned from manifest`, 'inf');
+    },
+
+    renderDiscoveryResult(data) {
+        if (!data) return;
+        const outPanel = document.getElementById('discovery-output');
+        const conf = document.getElementById('discovery-conf');
+        const rec = document.getElementById('discovery-rec');
+        const detailText = document.getElementById('discovery-detail-text');
+        const detailBox = document.getElementById('discovery-output-text');
+        const synContainer = document.getElementById('synergy-container');
+        const profileContainer = document.getElementById('discovery-target-profile');
+
+        if (outPanel) outPanel.classList.remove('hidden');
+
+        if (conf) {
+            const percentage = data.confidence > 1.0 ? data.confidence : data.confidence * 100;
+            const ageText = data.epigenetic_age_reduction > 0 ? `<span class="ml-1 bg-emerald-600 text-white px-1.5 py-0.5 rounded">-${data.epigenetic_age_reduction.toFixed(1)} YEARS</span>` : "";
+            conf.innerHTML = `<span>${percentage.toFixed(1)}% QUALITY</span>${ageText}`;
+            conf.className = 'text-[8px] flex items-center gap-1';
+        }
+
+        if (rec) {
+            const dnaLine = data.dna_motif_target ? `<span class="ml-2 px-1 text-[7px] bg-slate-800 text-purple-400 border border-purple-500/30 rounded font-mono select-all">DNA: ${data.dna_motif_target}</span>` : "";
+            rec.innerHTML = `${data.recommended_protocol}${dnaLine}`;
+        }
+
+        if (detailText && detailBox) {
+            detailText.innerHTML = data.scientific_rationale.replace('OSKM', '<strong class="text-blue-400">OSKM</strong>');
+            detailBox.classList.remove('hidden');
+        }
+
+        if (profileContainer && data.target_profile) {
+            let totalResidues = 0;
+            const LARGE_THRESHOLD = 5120;
+
+            profileContainer.innerHTML = Object.entries(data.target_profile)
+                .sort((a, b) => b[1] - a[1])
+                .map(([gene, weight]) => {
+                    const pct = Math.round(weight * 100);
+                    // Approximate length for warning logic
+                    const len = (gene === 'TTN') ? 34350 : (gene === 'RYR2' ? 4967 : (gene === 'PPARGC1A' ? 798 : 450));
+                    totalResidues += len;
+
+                    const auditRange = data.structural_audit && data.structural_audit[gene] ? data.structural_audit[gene] : '';
+                    const barColor = pct >= 85 ? '#6366f1' : pct >= 65 ? '#a855f7' : '#475569';
+                    const scoreColor = pct >= 85 ? '#a5b4fc' : pct >= 65 ? '#d8b4fe' : '#64748b';
+                    const isGiant = len > 1000;
+
+                    return `
+                    <div style="display:flex;align-items:center;gap:4px;background:rgba(255,255,255,0.03);border:1px solid ${isGiant ? 'rgba(239, 68, 68, 0.4)' : 'rgba(255,255,255,0.07)'};border-radius:6px;padding:4px 6px;transition:all 0.2s" class="group-factor">
+                        <div style="flex:1;min-width:0">
+                            <div style="display:flex;justify-content:space-between;align-items:center">
+                                <span style="font-size:8px;color:#fff;font-family:monospace;font-weight:700">${gene}${auditRange ? ' <span style="font-size:6px;color:#475569">'+auditRange+'</span>' : ''}</span>
+                                <span style="font-size:7px;font-weight:700;color:${scoreColor};margin-left:4px;flex-shrink:0">${pct}%</span>
+                            </div>
+                            <div style="width:100%;background:rgba(30,41,59,0.8);height:2px;border-radius:2px;margin-top:3px">
+                                <div style="width:${pct}%;background:${barColor};height:100%;border-radius:2px"></div>
+                            </div>
+                        </div>
+                        <div style="display:flex;flex-direction:column;gap:1px">
+                            <button onclick="navigator.clipboard.writeText('${gene}').then(()=>BiosimUI.notify('Copied','${gene}','suc'))" title="Copy"
+                                style="flex-shrink:0;opacity:0.4;background:none;border:none;cursor:pointer;color:#94a3b8;padding:1px"
+                                onmouseover="this.style.opacity='1';this.style.color='#818cf8'" onmouseout="this.style.opacity='0.4';this.style.color='#94a3b8'">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                            </button>
+                            <button onclick="BiosimBridge.removeDiscoveryFactor('${gene}')" title="${isGiant ? 'Large Factor: Deselect to enable AF3 Validation' : 'Deselect Factor'}"
+                                style="flex-shrink:0;opacity:${isGiant ? '0.8' : '0.4'};background:none;border:none;cursor:pointer;color:#ef4444;padding:1px"
+                                onmouseover="this.style.opacity='1';this.style.color='#ef4444'" onmouseout="this.style.opacity='${isGiant?0.8:0.4}';this.style.color='#ef4444'">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                            </button>
+                        </div>
+                    </div>`;
+                }).join('');
+
+            // Add Token Warning Label if over limit
+            if (totalResidues > LARGE_THRESHOLD) {
+                const warnHTML = `
+                    <div class="mt-2 p-1.5 bg-red-950/20 border border-red-500/30 rounded flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                        <span class="text-[7px] text-red-400 uppercase font-black tracking-widest">MANIFEST LIMIT EXCEEDED (~${totalResidues} residues)</span>
+                    </div>`;
+                profileContainer.insertAdjacentHTML('beforeend', warnHTML);
+            }
+        }
+
+        if (synContainer && data.synergy_score !== undefined) {
+            const width = Math.floor(data.synergy_score * 100);
+            synContainer.innerHTML = `
+                <div class="flex justify-between items-center text-[7px] text-purple-300 font-bold uppercase mb-1">
+                    <span>Hybrid Manifold Score</span>
+                    <span>${width}%</span>
+                </div>
+                <div class="w-full bg-slate-800 h-1 rounded-full overflow-hidden">
+                    <div class="bg-purple-500 h-full shadow-[0_0_8px_rgba(139,92,246,0.6)]" style="width: ${width}%"></div>
+                </div>
+                <div class="mt-1 text-[6px] text-slate-500 uppercase tracking-tighter flex justify-between items-center">
+                    <span>Verified Complex: Zenith-~285.4M GOLD Discovery</span>
+                    <span class="text-emerald-500 font-bold">HCA Institutional Verified (v26.4)</span>
+                </div>
+            `;
+        }
+        if (typeof lucide !== 'undefined') lucide.createIcons();
     },
 
     // --- UNIPROT LIVE FETCH (v26.4 GOLD — API-Verified & Hardened) ---
