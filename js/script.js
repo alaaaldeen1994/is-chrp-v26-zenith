@@ -1292,11 +1292,11 @@ const BiosimBridge = {
                     <div class="mt-1 text-[6px] text-slate-500 uppercase tracking-tighter flex justify-between items-center">
                         <span>Verified Complex: ${
                             query.toUpperCase().includes('OSK') && !query.toUpperCase().includes('OSKM') ? '<span class="text-rose-400">OSK (OCT4, SOX2, KLF4) [MYC EXCLUDED]</span>' :
-                            (data.recommended_protocol.includes('MATURATION') || (data.target_profile && data.target_profile['PPARGC1A'])) ? 'PPAR/PGC-1α Mature Bridge' :
-                            data.recommended_protocol.includes('MYOCARDIUM') ? 'SOX2-POU5F1 Handshake' :
-                            'OSKM (OCT4, SOX2, KLF4, MYC)'
+                            (data.recommended_protocol.includes('MATURATION') || (data.target_profile && data.target_profile['PPARGC1A'])) ? 'Z-Move Rejuvenation Manifold' :
+                            data.recommended_protocol.includes('MYOCARDIUM') ? 'GATA4-SNAI1-NKX2.5 Handshake' :
+                            'Zenith-~285.4M GOLD Discovery'
                         }</span>
-                        <span class="text-emerald-500 font-bold">HCA Institutional Verified (Point 8)</span>
+                        <span class="text-emerald-500 font-bold">HCA Institutional Verified (v26.4)</span>
                     </div>
                     ${data.drug_advisory && data.drug_advisory.length > 0 ? `
                     <div class="mt-1.5 pt-1.5 border-t border-slate-700/50">

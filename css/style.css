@@ -1019,13 +1019,20 @@ button {
 
 /* Smooth appearance */
 @keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
 
-    to {
-        opacity: 1;
-    }
+.thin-scrollbar-v2::-webkit-scrollbar {
+    width: 3px;
+}
+.thin-scrollbar-v2::-webkit-scrollbar-track {
+    background: rgba(30, 41, 59, 0.4);
+    border-radius: 10px;
+}
+.thin-scrollbar-v2::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #6366f1 0%, #475569 100%);
+    border-radius: 10px;
 }
 
 /* Microscopy brightness reduction - 50% less bright */
