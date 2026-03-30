@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -302,8 +302,15 @@
 
                 <div class="header-stat border-l border-white/10 pl-6 shrink-0 hidden md:block">
                     <span class="text-slate-500 text-[7px] font-black uppercase tracking-widest">Session</span>
-                    <span class="text-white text-[10px] font-mono font-bold">#4</span>
+                    <span id="session-id-display" class="text-white text-[10px] font-mono font-bold">#----</span>
                 </div>
+                <script>
+                    (function() {
+                        var sid = sessionStorage.getItem('zenith_sid');
+                        if (!sid) { sid = '#' + Math.random().toString(36).substring(2,6).toUpperCase(); sessionStorage.setItem('zenith_sid', sid); }
+                        document.getElementById('session-id-display').textContent = sid;
+                    })();
+                </script>
 
                 <div id="backend-status-badge"
                     class="header-stat border-l border-white/10 pl-6 shrink-0 hidden lg:block">

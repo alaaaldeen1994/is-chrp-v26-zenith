@@ -1235,17 +1235,22 @@ const BiosimBridge = {
                         const pct = Math.round(weight * 100);
                         const auditRange = data.structural_audit && data.structural_audit[gene] ? data.structural_audit[gene] : '';
                         const barColor = pct >= 85 ? '#6366f1' : pct >= 65 ? '#a855f7' : '#475569';
-                        const textColor = pct >= 85 ? 'text-indigo-300' : pct >= 65 ? 'text-purple-300' : 'text-slate-400';
-                        return `
-                        <div class="bg-white/3 border border-white/8 rounded-lg p-2 hover:border-indigo-500/40 hover:bg-indigo-950/30 transition-all cursor-default group/gene">
-                            <div class="flex justify-between items-baseline mb-1">
-                                <span class="text-[8px] text-white font-black font-mono tracking-tight">${gene}</span>
-                                <span class="text-[7px] font-bold ${textColor}">${pct}%</span>
+                        const scoreColor = pct >= 85 ? '#a5b4fc' : pct >= 65 ? '#d8b4fe' : '#64748b';
+                        return `<div style="display:flex;align-items:center;gap:4px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:6px;padding:4px 6px;transition:all 0.2s" onmouseover="this.style.borderColor='rgba(99,102,241,0.3)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.07)'">
+                            <div style="flex:1;min-width:0">
+                                <div style="display:flex;justify-content:space-between;align-items:center">
+                                    <span style="font-size:8px;color:#fff;font-family:monospace;font-weight:700">${gene}${auditRange ? ' <span style="font-size:6px;color:#475569">'+auditRange+'</span>' : ''}</span>
+                                    <span style="font-size:7px;font-weight:700;color:${scoreColor};margin-left:4px;flex-shrink:0">${pct}%</span>
+                                </div>
+                                <div style="width:100%;background:rgba(30,41,59,0.8);height:2px;border-radius:2px;margin-top:3px">
+                                    <div style="width:${pct}%;background:${barColor};height:100%;border-radius:2px"></div>
+                                </div>
                             </div>
-                            ${auditRange ? `<span class="text-[6px] text-slate-500 font-mono">${auditRange}</span>` : ''}
-                            <div class="w-full bg-slate-800/80 h-0.5 rounded-full overflow-hidden mt-1">
-                                <div class="h-full rounded-full transition-all duration-500" style="width:${pct}%; background:${barColor}; box-shadow: 0 0 6px ${barColor}80;"></div>
-                            </div>
+                            <button onclick="navigator.clipboard.writeText('${gene}').then(()=>BiosimUI.notify('Copied','${gene}','suc'))" title="Copy ${gene}"
+                                style="flex-shrink:0;opacity:0.4;transition:opacity 0.2s;background:none;border:none;cursor:pointer;color:#94a3b8;padding:2px"
+                                onmouseover="this.style.opacity='1';this.style.color='#818cf8'" onmouseout="this.style.opacity='0.4';this.style.color='#94a3b8'">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                            </button>
                         </div>`;
                     }).join('');
             }
