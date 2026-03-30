@@ -787,8 +787,8 @@ const BiosimStore = { env: { vector: null, disease: null } };
 // Consolidated sync handled via BiosimBridge.LatentMap.syncLiveCells
 
 const BiosimBridge = {
-    lastDiscovery: null, 
     sequenceRegistry: {}, 
+    accessionRegistry: {}, 
     domainDefaults: { // Mapped fragments for high-fidelity handshake (RUO)
         "GATA4": "CPVESCDRRFSRSDKLAEHKKYHSNKAKR", 
         "NKX2-5": "RRRRTAFTNEQIDELERRFKQQRYLSAPEREHLAAMIKLTQCKIQVQWKFQNRRAKWRRLKQQKTHP",
@@ -1388,8 +1388,10 @@ const BiosimBridge = {
                     const entry = json.results[0];
                     const seq = entry.sequence.value;
                     const len = entry.sequence.length || seq.length;
+                    const acc = entry.primaryAccession || "Unknown";
                     this.sequenceRegistry[geneName] = seq;
-                    BiosimUI.notify('UniProt', `${geneName} Verified (${len}aa)`, 'suc');
+                    this.accessionRegistry[geneName] = acc;
+                    BiosimUI.notify('UniProt', `${geneName} Verified: ${acc} (${len}aa)`, 'suc');
                     return seq;
                 } else {
                     BiosimUI.notify('UniProt', `${geneName} not found in Swiss-Prot`, 'warn');
@@ -1436,18 +1438,20 @@ const BiosimBridge = {
             const seq = await this.fetchUniProtSequence(gene);
             if (seq) {
                 sequences.push({ "proteinChain": { "sequence": seq, "count": 1 } });
-                const source = this.sequenceRegistry[gene] ? (this.domainDefaults[gene] === this.sequenceRegistry[gene] ? 'default' : 'UniProt/pasted') : 'default';
-                factorsIncluded.push(`${gene}(${seq.length}aa)`);
+                const acc = this.accessionRegistry[gene] || "Default";
+                factorsIncluded.push(`${gene}_${acc}`);
             }
         }
 
         if (factorsIncluded.length === 0) {
             const fallback = await this.fetchUniProtSequence('POU5F1'); // OCT4 canonical name
-            sequences.push({ "proteinChain": { "sequence": fallback || this.domainDefaults['OCT4'], "count": 1 } });
-            factorsIncluded.push('OCT4(fallback)');
+            const seq = fallback || this.domainDefaults['OCT4'];
+            sequences.push({ "proteinChain": { "sequence": seq, "count": 1 } });
+            const acc = this.accessionRegistry['POU5F1'] || "Q01860";
+            factorsIncluded.push(`OCT4_${acc}`);
         }
 
-        const manifestTag = factorsIncluded.map(f => f.replace(/\(.*\)/,'')).join('_');
+        const manifestTag = factorsIncluded.join('__');
         const manifestName = `Zenith_v26_4_${manifestTag}_${Date.now()}`;
         const manifest = [{ "name": manifestName, "modelSeeds": ["2142086823"], "sequences": sequences, "dialect": "alphafoldserver", "version": 1 }];
 
