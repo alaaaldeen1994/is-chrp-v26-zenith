@@ -1492,9 +1492,8 @@ const BiosimBridge = {
             let factorsIncluded = [];
             let totalResidues = 0;
 
-            // v30: Structural Anchor Expansion (DHL-HD 31bp Scaffold)
-            // Embedding GTTGGCGGTGCA (Heart Target) into a consensus enhancer pillar
-            const targetAnchor = data.anchor_dna || "GTTGGCGGTGCA";
+            // v32.2: Structural Anchor Expansion (Residue-Sync Optimized)
+            const targetAnchor = data.anchor_dna || "CAGCTGACTATG";
             const dnaFwd = `CCGATAAGCA${targetAnchor}TTGTCAGGATCGAT`.substring(0, 31);
             const rcMap = {'A':'T','T':'A','C':'G','G':'C'};
             const dnaRev = dnaFwd.split('').reverse().map(c=>rcMap[c]||c).join('');
@@ -1502,15 +1501,14 @@ const BiosimBridge = {
             sequences.push({ "dnaSequence": { "sequence": dnaRev, "count": 1 } });
             totalResidues += (dnaFwd.length * 2);
 
-            // Interface Pruning Dictionary (Phase 4 DHL Integration — Transcription Factors ONLY)
+            // Interface Pruning Dictionary (Phase 4 DHL Integration — RESIDUE SYNCED)
             const dhlLibrary = {
-                'GATA4': '201-310', 'GATA6': '200-310',
-                'NKX2-5': '138-197', 'TBX5': '50-250',
+                'GATA4': '1-150',   'GATA6': '1-150',
+                'NKX2-5': '300-450', 'TBX5': '1-200',
                 'SNAI1': '150-264', 'SNAI2': '150-264',
-                'MEF2C': '1-100', 'MEF2A': '1-100',
+                'MEF2C': '100-250', 'MEF2A': '100-250',
                 'OCT4': '130-280', 'SOX2': '41-119', 'SOX17': '1-120',
-                'KLF4': '395-479', // Zn-Fingers
-                'MYC': '350-439'   // bHLH DNA binding domain
+                'KLF4': '395-479', 'MYC': '350-439'
             };
 
             // v32: Handshake-Pivot v2 (Rigid Stabilization)
