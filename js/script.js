@@ -1505,12 +1505,28 @@ const BiosimBridge = {
         // 2. PROTEIN FACTORS — Fetch from UniProt (live) or use pasted/cached sequences
         const topFactors = profile.slice(0, 5).filter(([, w]) => w >= 0.6);
         for (const [gene] of topFactors) {
-            const seq = await this.fetchUniProtSequence(gene);
+            let seq = await this.fetchUniProtSequence(gene);
             if (seq) {
-                sequences.push({ "proteinChain": { "sequence": seq, "count": 1 } });
+                // v28 DOMAIN PRUNING: Use the structural audit to slice the functional domain
+                const auditRange = data.structural_audit && data.structural_audit[gene] ? data.structural_audit[gene] : null;
+                let parsedSeq = seq;
+                
+                if (auditRange) {
+                    const match = auditRange.match(/(\d+)-(\d+)/);
+                    if (match) {
+                        const start = Math.max(0, parseInt(match[1]) - 1);
+                        const end = Math.min(seq.length, parseInt(match[2]));
+                        if (start < end) {
+                            parsedSeq = seq.substring(start, end);
+                            BiosimUI.terminalLog(`[PRUNED] ${gene}: Sliced domain ${auditRange} (Length: ${parsedSeq.length})`);
+                        }
+                    }
+                }
+
+                sequences.push({ "proteinChain": { "sequence": parsedSeq, "count": 1 } });
                 const acc = this.accessionRegistry[gene] || "Default";
                 factorsIncluded.push(`${gene}_${acc}`);
-                totalResidues += seq.length;
+                totalResidues += parsedSeq.length;
             }
         }
 
