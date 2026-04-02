@@ -1567,7 +1567,7 @@ async def get_target_vector_from_query(query: str, api_key: Optional[str] = None
         print(f"Hybrid Semantic Translation Error [{error_type}]: {error_msg}")
         # Log full traceback for deep debugging of connection issues
         # traceback.print_exc() 
-        return torch.tensor([0.5]*10 + [0.0]*(len(GENE_SYMBOLS)-10), dtype=torch.float32), f"Translation Error ({error_type}): {error_msg}", {}
+        return torch.tensor([0.5]*10 + [0.0]*(len(GENE_SYMBOLS)-10), dtype=torch.float32), f"Translation Error ({error_type}): {error_msg}", {}, {}, "GGGGTCACGGTC", 0.0, []
 
 @app.post("/discover_hybrid", response_model=DiscoveryResult)
 @limiter.limit(RATE_LIMITS["discovery"])
