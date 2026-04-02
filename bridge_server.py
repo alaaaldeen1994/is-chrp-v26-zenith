@@ -2292,7 +2292,7 @@ async def startup_event():
             
             if size_mb > 100:
                 # Load weights
-                drift_model.load_state_dict(torch.load(TRAINED_DRIFTMLP_PATH, map_location='cpu'))
+                drift_model.load_state_dict(torch.load(TRAINED_DRIFTMLP_PATH, map_location='cpu', weights_only=False))
                 print("🌟 STATUS: ZENITH V28 (102M) WEIGHTS LOADED SUCCESSFULLY")
             else:
                 print("⚠️ STATUS: MODEL FILE TOO SMALL - LIKELY CORRUPT/POINTER")
