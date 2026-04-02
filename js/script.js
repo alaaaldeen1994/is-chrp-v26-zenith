@@ -1514,22 +1514,71 @@ const BiosimBridge = {
                 'RXRA': '130-210'     // DBD (Zinc Fingers)
             };
 
-            // 2. PROTEIN FACTORS — Full-Length Multimer Restore (v32.7 Gold)
+            // 2. PROTEIN FACTORS — Domain Handshake Linker (DHL) Pipeline (v32.8)
             const structuralPool = Object.entries(this.lastDiscovery.target_profile || {}).sort((a,b) => b[1]-a[1]);
+            const Z_LINKER = "GGGGSGGGGSGGGGS"; // 15aa flexible Z-Linker
+            let fusedSequence = "";
+
             for (const [gene] of structuralPool.slice(0, 5)) {
                 let seq = await this.fetchUniProtSequence(gene);
                 if (seq) {
                     let parsedSeq = String(seq);
-                    sequences.push({ 
-                        "proteinChain": { 
-                            "sequence": parsedSeq,
-                            "count": 1
-                        } 
-                    });
+                    
+                    // Domain Pruning (DHL constraint)
+                    const range = dhlLibrary[gene === 'POU5F1' ? 'OCT4' : gene] || dhlLibrary[gene];
+                    if (range) {
+                        const match = range.match(/(\d+)-(\d+)/);
+                        if (match) {
+                            parsedSeq = parsedSeq.substring(parseInt(match[1])-1, Math.min(parseInt(match[2]), parsedSeq.length));
+                        }
+                    } else if (parsedSeq.length > 300) {
+                        // Emergency length constraint for unmapped factors
+                        const center = Math.floor(parsedSeq.length / 2);
+                        const start = Math.max(0, center - 150);
+                        parsedSeq = parsedSeq.substring(start, start + 300);
+                    }
+
+                    if (fusedSequence.length > 0) {
+                        fusedSequence += Z_LINKER;
+                    }
+                    fusedSequence += parsedSeq;
+                    
                     const acc = this.accessionRegistry[gene] || "Default";
                     factorsIncluded.push(`${gene}_${acc}`);
-                    totalResidues += parsedSeq.length;
                 }
+            }
+
+            if (factorsIncluded.length === 0) {
+                // v31: OSKM Foundation Fallback Pool
+                const foundationPool = ['POU5F1', 'SOX2', 'KLF4', 'MYC'];
+                for (const gene of foundationPool) {
+                    const fallback = await this.fetchUniProtSequence(gene);
+                    if (fallback) {
+                        let parsedSeq = String(fallback);
+                        const range = dhlLibrary[gene === 'POU5F1' ? 'OCT4' : gene];
+                        if (range) {
+                             const match = range.match(/(\d+)-(\d+)/);
+                             if (match) parsedSeq = parsedSeq.substring(parseInt(match[1])-1, Math.min(parseInt(match[2]), parsedSeq.length));
+                        }
+
+                        if (fusedSequence.length > 0) {
+                            fusedSequence += Z_LINKER;
+                        }
+                        fusedSequence += parsedSeq;
+                        factorsIncluded.push(`${gene}_Fallback`);
+                    }
+                }
+            }
+
+            // Inject the unified multimer into the manifest
+            if (fusedSequence.length > 0) {
+                sequences.push({ 
+                    "proteinChain": { 
+                        "sequence": fusedSequence,
+                        "count": 1
+                    } 
+                });
+                totalResidues += fusedSequence.length;
             }
 
             // 3. ION STABILIZATION (Zinc HD)
@@ -1538,32 +1587,13 @@ const BiosimBridge = {
             // --- MANIFEST PRE-FLIGHT VALIDATION (Public AF3 Limit: 5120) ---
             const AF3_LIMIT = 5120;
             if (totalResidues > AF3_LIMIT) {
-                const msg = `CRITICAL: Manifest (${totalResidues}AA) exceeds Server limits. Trimming lower-priority factors...`;
+                const msg = `CRITICAL: Manifest (${totalResidues}AA) exceeds Server limits. Trimming padding...`;
                 BiosimUI.notify('Token Error', msg, 'err');
-                // Prune tails if over limit (Emergency v29 logic)
-                while (totalResidues > AF3_LIMIT && sequences.length > 3) {
-                     const removed = sequences.pop();
-                     if (removed.proteinChain) totalResidues -= removed.proteinChain.sequence.length;
-                }
+                // Trim trailing sequence to respect hard limits
+                const overage = totalResidues - AF3_LIMIT;
+                sequences[2].proteinChain.sequence = sequences[2].proteinChain.sequence.slice(0, -overage);
             }
 
-            if (factorsIncluded.length === 0) {
-                // v31: OSKM Foundation Fallback Pool (Oct4, Sox2, Klf4, Myc)
-                const foundationPool = ['POU5F1', 'SOX2', 'KLF4', 'MYC'];
-                for (const gene of foundationPool) {
-                    const fallback = await this.fetchUniProtSequence(gene);
-                    if (fallback) {
-                        let seq = String(fallback);
-                        const range = dhlLibrary[gene === 'POU5F1' ? 'OCT4' : gene];
-                        if (range) {
-                             const match = range.match(/(\d+)-(\d+)/);
-                             seq = seq.substring(parseInt(match[1])-1, parseInt(match[2]));
-                        }
-                        sequences.push({ "proteinChain": { "sequence": seq, "count": 1 } });
-                        factorsIncluded.push(`${gene}_Fallback`);
-                    }
-                }
-            }
 
             const manifestTag = factorsIncluded.join('__');
             let manifestName = `Zenith_v29_${manifestTag}_${Date.now()}`;
