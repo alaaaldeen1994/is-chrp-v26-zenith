@@ -369,7 +369,12 @@ _base_symbols = [
     # 100-109: MATURATION / METABOLIC (V26.1 Expansion)
     "PPARGC1A", "PPARA", "RXRA", "CPT1B", "ACADM", "OXCT1", "HADHB", "UCP3", "KCNJ2", "FABP3",
     # 110-119: EPIGENETIC CLOCK (HORVATH/ALTOS LABS PRECISION)
-    "ELOVL2", "FHL2", "ASPA", "EDARADD", "C1orf132", "KLF14", "TRIM59", "CDH23", "NHLRC1", "SCGN"
+    "ELOVL2", "FHL2", "ASPA", "EDARADD", "C1orf132", "KLF14", "TRIM59", "CDH23", "NHLRC1", "SCGN",
+    # 120-139: EXTENDED RESEARCH MODULE (v26.4 GOLD)
+    "PPP3CA", "PPP3CB", "NFATC1", "NFATC2", "PLN", "CASQ2", "ATP2A2", "RYR2", "MYL2", "MYL7",
+    "SYP", "DLG4", "GRIN1", "GRIN2B", "SYNJ1", "STX1A", "SNAP25", "VAMP2", "SYN1", "GAP43",
+    "SIRT1", "SIRT2", "SIRT3", "SIRT4", "SIRT5", "SIRT6", "SIRT7", "FOXO3", "FOXO1", "FOXO4",
+    "HDAC1", "HDAC2", "HDAC3", "HDAC4", "HDAC5", "HDAC6", "HDAC7", "HDAC8", "HDAC9"
 ]
 
 # Systematically expand to 5,000 genes using real nomenclature patterns for Reprogramming & Aging
@@ -1489,7 +1494,15 @@ async def get_target_vector_from_query(query: str, api_key: Optional[str] = None
             f"If the goal is a greeting (e.g. 'HI', 'HELLO') or unrelated to biology, you MUST return a JSON with {{\"status\": \"greeting\", \"rationale\": \"Hello! I am the Zenith Assistant. How can I help you today? Please enter a biological goal, such as 'Rejuvenate cardiac cells' or 'Directly convert somatic cells to neurons'.\"}}\n\n"
             f"Otherwise, proceed with the task below:\n\n"
             f"TASKS:\n"
-            f"1. Select the top 25 genes that should be HIGHLY expressed for this state from the 5000-gene set. Return ONLY a JSON like: {{\"genes\": {{\"GENENAME\": weight, ...}}, \"rationale\": \"...\", \"audit\": {{\"GENENAME\": \"1-200\", ...}}, \"dna_motif\": \"...\", \"age_reduction\": 15.0, \"drugs\": [\"Metformin\", \"...\"], \"status\": \"success\"}}"
+            f"1. Select the top 25 genes (even if they are secondary markers) that should be HIGHLY expressed for this state from the 5000-gene set to provide a comprehensive transcriptomic footprint.\n"
+            f"2. Assign each gene an intensity weight from 0.0 to 1.0.\n"
+            f"3. Provide a brief scientific rationale for these choices. AT THE END of your rationale, you MUST state exactly: 'For AlphaFold 3 validation, include the DNA anchor sequence [insert motif] and the critical metabolic ligand [insert ligand, e.g. NAD, Fe2+, Alpha-KG] to ensure multimer stabilization.'\n"
+            f"4. For each of the top 5 genes (THE PRIMARY FACTORS), identify the exact amino acid residue range (e.g. 1-200) representing the primary functional domain (from UniProt) for this specific task.\n"
+            f"5. Identify the primary 12-20 bp DNA binding motif (e.g. GGGGTCACGGTC) that anchors this specific transcription factor complex to its promoter.\n"
+            f"6. Cross-reference your results with established epigenetic aging clocks (Horvath/GrimAge). If this is a rejuvenation task, you MUST include at least one primary marker (e.g. ELOVL2, FHL2, or ASPA) in your top findings to represent the epigenetic audit.\n"
+            f"7. Estimate the predicted reduction in biological DNA methylation age (in years) if this protocol is perfectly implemented.\n"
+            f"8. Identify 2-3 small-molecule drug candidates (e.g. Metformin, Rapamycin, SRT1720) that can mimic or enhance this specific 5,000-gene transcriptomic shift (Point 6: Drug-Gene Interaction).\n"
+            f"9. Return ONLY a JSON object like: {{\"genes\": {{\"GENENAME\": weight, ...}}, \"rationale\": \"...\", \"audit\": {{\"GENENAME\": \"1-200\", ...}}, \"dna_motif\": \"...\", \"age_reduction\": 15.0, \"drugs\": [\"Metformin\", \"...\"], \"status\": \"success\"}}"
         )
         
         response = await client.chat.completions.create(
