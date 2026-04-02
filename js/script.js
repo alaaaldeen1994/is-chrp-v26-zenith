@@ -1492,22 +1492,33 @@ const BiosimBridge = {
             let factorsIncluded = [];
             let totalResidues = 0;
 
-            // 1. DNA ANCHOR (31bp Z-Pillar Scaffold — Native Duplex)
-            const dnaFwd = this.sequenceRegistry['DNA_TARGET'] || "CCGATAAGCACGTGGACTTGTCAGGATCGAT";
+            // 1. DNA ANCHOR (GTTGGCGGTGCA — Target for Heart Lineage)
+            const dnaFwd = data.anchor_dna || "GTTGGCGGTGCA";
             const rcMap = {'A':'T','T':'A','C':'G','G':'C'};
             const dnaRev = dnaFwd.split('').reverse().map(c=>rcMap[c]||c).join('');
             sequences.push({ "dnaSequence": { "sequence": dnaFwd, "count": 1 } });
             sequences.push({ "dnaSequence": { "sequence": dnaRev, "count": 1 } });
             totalResidues += (dnaFwd.length * 2);
 
+            // Interface Pruning Dictionary (Phase 4 DHL Integration)
+            const dhlLibrary = {
+                'GATA4': '201-310', // Zn-Fingers (C-Terminal)
+                'NKX2-5': '138-197', // Homeobox
+                'SNAI1': '150-264', // Zn-Fingers
+                'TBX5': '50-250',   // T-Box
+                'MEF2C': '1-100',   // MADS-box
+                'MYH6': '1-200'     // Head domain
+            };
+
             // 2. PROTEIN FACTORS — Fetch from UniProt
-            const topFactors = profile.slice(0, 5).filter(([, w]) => w >= 0.6);
-            let idCounter = 67; // Start at 'C' (after A, B DNA)
+            const topFactors = profile.slice(0, 7).filter(([, w]) => w >= 0.4);
             for (const [gene] of topFactors) {
                 let seq = await this.fetchUniProtSequence(gene);
                 if (seq) {
-                    const auditRange = data.structural_audit && data.structural_audit[gene] ? data.structural_audit[gene] : null;
                     let parsedSeq = String(seq);
+                    
+                    // v29: Smart DHL Pruning to stay under 5120 and boost interface signal
+                    const auditRange = data.structural_audit && data.structural_audit[gene] ? data.structural_audit[gene] : dhlLibrary[gene];
                     
                     if (auditRange) {
                         const match = String(auditRange).match(/(\d+)-(\d+)/);
@@ -1516,12 +1527,11 @@ const BiosimBridge = {
                             const end = Math.min(parsedSeq.length, parseInt(match[2]));
                             if (start < end) {
                                 parsedSeq = parsedSeq.substring(start, end);
-                                BiosimUI.logTerminal(`[PRUNED] ${gene}: Sliced domain ${auditRange} (Length: ${parsedSeq.length})`);
+                                BiosimUI.logTerminal(`[DHL-PRUNE] ${gene}: Slicing interaction domain ${auditRange} (Length: ${parsedSeq.length})`);
                             }
                         }
                     }
 
-                    const chainID = String.fromCharCode(idCounter++);
                     sequences.push({ 
                         "proteinChain": { 
                             "sequence": parsedSeq,
@@ -1534,12 +1544,16 @@ const BiosimBridge = {
                 }
             }
 
-            // --- MANIFEST PRE-FLIGHT VALIDATION ---
+            // --- MANIFEST PRE-FLIGHT VALIDATION (Public AF3 Limit: 5120) ---
             const AF3_LIMIT = 5120;
             if (totalResidues > AF3_LIMIT) {
-                const msg = `WARNING: Manifest (${totalResidues} residues) exceeds public AF3 limits.`;
-                BiosimUI.notify('Token Warning', msg, 'warn');
-                BiosimUI.logTerminal(`[AF3 WARNING] Manifest length (${totalResidues}) exceeds public tier limits.`);
+                const msg = `CRITICAL: Manifest (${totalResidues}AA) exceeds Server limits. Trimming lower-priority factors...`;
+                BiosimUI.notify('Token Error', msg, 'err');
+                // Prune tails if over limit (Emergency v29 logic)
+                while (totalResidues > AF3_LIMIT && sequences.length > 3) {
+                     const removed = sequences.pop();
+                     if (removed.proteinChain) totalResidues -= removed.proteinChain.sequence.length;
+                }
             }
 
             if (factorsIncluded.length === 0) {
@@ -1570,7 +1584,7 @@ const BiosimBridge = {
             a.download = `${manifestName}.json`;
             document.body.appendChild(a); a.click(); document.body.removeChild(a);
 
-            const nProteins = sequences.filter(s => s.protein).length;
+            const nProteins = sequences.filter(s => s.proteinChain).length;
             const nLigands = sequences.filter(s => s.ligand).length;
             BiosimUI.notify('AF3 Native Exported', `${nProteins} Protein(s) + ${nLigands} Ligand(s)`, 'suc');
             BiosimUI.logTerminal(`--- [RST] ZENITH v28 NATIVE RESEARCH SUMMARY ---`);
