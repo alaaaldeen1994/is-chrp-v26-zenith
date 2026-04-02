@@ -709,6 +709,16 @@ async def get_favicon():
     return Response(status_code=404)
 
 
+@app.get("/health")
+async def health_check():
+    """Zenith System Heartbeat: Verifies model and API health"""
+    return {
+        "status": "online",
+        "timestamp": time.time(),
+        "model_loaded": drift_model is not None,
+        "mode": model_mode
+    }
+
 @app.get("/")
 async def get_landing():
     return FileResponse("profile.html")

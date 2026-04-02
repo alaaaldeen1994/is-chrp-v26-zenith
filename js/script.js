@@ -1515,6 +1515,7 @@ const BiosimBridge = {
             };
 
             // 2. PROTEIN FACTORS — Full-Length Multimer Restore (v32.7 Gold)
+            const structuralPool = Object.entries(this.lastDiscovery.target_profile || {}).sort((a,b) => b[1]-a[1]);
             for (const [gene] of structuralPool.slice(0, 5)) {
                 let seq = await this.fetchUniProtSequence(gene);
                 if (seq) {
@@ -1979,6 +1980,20 @@ def run(protocol: protocol_api.ProtocolContext):
                     modeEl.classList.remove('hidden');
                 }
 
+                // Update New Real-time Heartbeat Badge (Footer)
+                const footerDot = document.getElementById('backend-dot');
+                const footerText = document.getElementById('backend-text');
+                if (footerDot && footerText) {
+                    footerDot.style.backgroundColor = '#10b981'; // Green
+                    footerText.innerText = '10/10 ACTIVE';
+                    footerText.style.color = '#10b981';
+                }
+
+                if (discDot) discDot.style.backgroundColor = '#10b981';
+                
+                // Track backend lateness
+                this.lastSuccessfulPing = Date.now();
+
                 // Update Badge Glow
                 badge.style.borderColor = 'rgba(16, 185, 129, 0.3)';
                 badge.style.background = 'rgba(16, 185, 129, 0.05)';
@@ -2024,6 +2039,15 @@ def run(protocol: protocol_api.ProtocolContext):
                 }
                 badge.style.borderColor = 'rgba(239, 68, 68, 0.3)';
                 badge.style.background = 'rgba(239, 68, 68, 0.05)';
+            }
+
+            // Update New Real-time Heartbeat Badge (Footer) - Critical for User Visibility
+            const footerDot = document.getElementById('backend-dot');
+            const footerText = document.getElementById('backend-text');
+            if (footerDot && footerText) {
+                footerDot.style.backgroundColor = '#ef4444'; // Red
+                footerText.innerText = 'RECONNECTING...';
+                footerText.style.color = '#ef4444';
             }
 
             if (discDot) {
