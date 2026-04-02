@@ -1542,13 +1542,24 @@ const BiosimBridge = {
                 const ccdMap = { 'NAD': 'NAD', 'FE2+': 'FE2', 'FE': 'FE', 'CA2+': 'CA', 'CA': 'CA', 'MG2+': 'MG', 'MG': 'MG', 'ALPHA-KG': 'AKG', 'ATP': 'ATP', 'ADP': 'ADP' };
                 const ccd = ccdMap[ligandRaw.toUpperCase()] || ligandRaw.split(' ')[0].toUpperCase().substring(0, 3);
                 
-                sequences.push({ 
-                    "ligand": { 
-                        "ligand": ccd,
-                        "count": 1
-                    } 
-                });
-                BiosimUI.logTerminal(`[STABILIZER] Injected Metabolic Ligand: ${ccd} (Source: ${ligandRaw})`);
+                // v28 NATIVE ALPHA-FOLD SERVER DIALECT: Ion vs Ligand distinction
+                const ions = ['FE', 'FE2', 'CA', 'MG', 'ZN', 'MN', 'NA', 'K'];
+                if (ions.includes(ccd)) {
+                    sequences.push({ 
+                        "ion": { 
+                            "ion": ccd, 
+                            "count": 1 
+                        } 
+                    });
+                } else {
+                    sequences.push({ 
+                        "ligand": { 
+                            "ligand": `CCD_${ccd}`, 
+                            "count": 1 
+                        } 
+                    });
+                }
+                BiosimUI.logTerminal(`[STABILIZER] Injected Metabolic Factor: ${ccd} (Source: ${ligandRaw})`);
             }
 
             // --- MANIFEST PRE-FLIGHT VALIDATION ---
