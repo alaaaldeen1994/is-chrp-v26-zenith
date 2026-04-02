@@ -1517,10 +1517,10 @@ const BiosimBridge = {
         // --- MANIFEST PRE-FLIGHT VALIDATION (v26.4 GOLD) ---
         const AF3_LIMIT = 5120;
         if (totalResidues > AF3_LIMIT) {
-            const msg = `MANIFEST LIMIT EXCEEDED: ${totalResidues} residues detected. AlphaFold Server limit is 5120.\nPlease remove the largest factors (e.g. RYR2) via the dashboard before exporting.`;
-            BiosimUI.notify('Export Blocked', msg, 'err');
-            BiosimUI.terminalLog(`[AF3 ERROR] Manifest too large (${totalResidues} residues). Pruning required.`);
-            return;
+            const msg = `WARNING: Manifest (${totalResidues} residues) exceeds public AF3 limits. You may need to use a private AlphaFold instance or prune the sequence.`;
+            BiosimUI.notify('Token Warning', msg, 'warn');
+            BiosimUI.terminalLog(`[AF3 WARNING] Manifest too large (${totalResidues} residues) for public server. Extraction permitted for local runs.`);
+            // Removed the "return;" to allow the user to extract the JSON anyway
         }
 
         if (factorsIncluded.length === 0) {
