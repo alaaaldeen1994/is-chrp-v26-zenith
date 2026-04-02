@@ -1492,26 +1492,34 @@ const BiosimBridge = {
             let factorsIncluded = [];
             let totalResidues = 0;
 
-            // 1. DNA ANCHOR (GTTGGCGGTGCA — Target for Heart Lineage)
-            const dnaFwd = data.anchor_dna || "GTTGGCGGTGCA";
+            // v30: Structural Anchor Expansion (DHL-HD 31bp Scaffold)
+            // Embedding GTTGGCGGTGCA (Heart Target) into a consensus enhancer pillar
+            const targetAnchor = data.anchor_dna || "GTTGGCGGTGCA";
+            const dnaFwd = `CCGATAAGCA_${targetAnchor}_TTGTCAGGATCGAT`.substring(0, 31);
             const rcMap = {'A':'T','T':'A','C':'G','G':'C'};
             const dnaRev = dnaFwd.split('').reverse().map(c=>rcMap[c]||c).join('');
             sequences.push({ "dnaSequence": { "sequence": dnaFwd, "count": 1 } });
             sequences.push({ "dnaSequence": { "sequence": dnaRev, "count": 1 } });
             totalResidues += (dnaFwd.length * 2);
 
-            // Interface Pruning Dictionary (Phase 4 DHL Integration)
+            // Interface Pruning Dictionary (Phase 4 DHL Integration — Transcription Factors ONLY)
             const dhlLibrary = {
-                'GATA4': '201-310', // Zn-Fingers (C-Terminal)
-                'NKX2-5': '138-197', // Homeobox
-                'SNAI1': '150-264', // Zn-Fingers
-                'TBX5': '50-250',   // T-Box
-                'MEF2C': '1-100',   // MADS-box
-                'MYH6': '1-200'     // Head domain
+                'GATA4': '201-310', 'GATA6': '200-310',
+                'NKX2-5': '138-197', 'TBX5': '50-250',
+                'SNAI1': '150-264', 'SNAI2': '150-264',
+                'MEF2C': '1-100', 'MEF2A': '1-100',
+                'OCT4': '130-280', 'SOX2': '41-119', 'SOX17': '1-120'
             };
 
-            // 2. PROTEIN FACTORS — Fetch from UniProt
-            const topFactors = profile.slice(0, 7).filter(([, w]) => w >= 0.4);
+            // 2. PROTEIN FACTORS — Selective Filtering (Phase 5 Signal-to-Noise Optimization)
+            // v30: Only export factors that ARE in the dhlLibrary (Transcription Factors)
+            const structuralPool = profile.filter(([gene]) => dhlLibrary[gene]);
+            const topFactors = structuralPool.slice(0, 4); 
+            
+            if (topFactors.length === 0) {
+                 BiosimUI.logTerminal("[ZENITH] No structural TFs detected in top profile. Fallback to OCT4.");
+            }
+            
             for (const [gene] of topFactors) {
                 let seq = await this.fetchUniProtSequence(gene);
                 if (seq) {
