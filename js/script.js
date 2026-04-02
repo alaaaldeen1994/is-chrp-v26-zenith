@@ -1495,7 +1495,7 @@ const BiosimBridge = {
             // v30: Structural Anchor Expansion (DHL-HD 31bp Scaffold)
             // Embedding GTTGGCGGTGCA (Heart Target) into a consensus enhancer pillar
             const targetAnchor = data.anchor_dna || "GTTGGCGGTGCA";
-            const dnaFwd = `CCGATAAGCA_${targetAnchor}_TTGTCAGGATCGAT`.substring(0, 31);
+            const dnaFwd = `CCGATAAGCA${targetAnchor}TTGTCAGGATCGAT`.substring(0, 31);
             const rcMap = {'A':'T','T':'A','C':'G','G':'C'};
             const dnaRev = dnaFwd.split('').reverse().map(c=>rcMap[c]||c).join('');
             sequences.push({ "dnaSequence": { "sequence": dnaFwd, "count": 1 } });
