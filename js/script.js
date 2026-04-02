@@ -1348,8 +1348,14 @@ const BiosimBridge = {
                 .sort((a, b) => b[1] - a[1])
                 .map(([gene, weight]) => {
                     const pct = Math.round(weight * 100);
-                    // Approximate length for warning logic
-                    const len = (gene === 'TTN') ? 34350 : (gene === 'RYR2' ? 4967 : (gene === 'PPARGC1A' ? 798 : 450));
+                    // More accurate length proxy based on actual human protein size averages if unknown
+                    const rMap = {
+                        'TTN': 34350, 'RYR2': 4967, 'MYH6': 1935, 'MYH7': 1935, 'TNNT2': 298, 'GATA4': 442,
+                        'NKX2-5': 324, 'TBX5': 518, 'MEF2C': 473, 'POU5F1': 360, 'OCT4': 360, 'SOX2': 317,
+                        'NANOG': 305, 'KLF4': 479, 'MYC': 439, 'LIN28A': 209, 'PPARGC1A': 798, 'CPT1B': 772,
+                        'NEUROD1': 356, 'ASCL1': 236, 'PPP3CA': 511, 'NFATC1': 716, 'CASQ2': 399
+                    };
+                    const len = rMap[gene] || 450;
                     totalResidues += len;
 
                     const auditRange = data.structural_audit && data.structural_audit[gene] ? data.structural_audit[gene] : '';
