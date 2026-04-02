@@ -1564,15 +1564,6 @@ const BiosimBridge = {
                 }
             }
 
-            // 3. METABOLIC ANCHOR (Alpha-KG Catalyst)
-            sequences.push({ 
-                "ligand": { 
-                    "ligand": "CCD_AKG", 
-                    "count": 1 
-                } 
-            });
-            BiosimUI.logTerminal(`[DHL-HD] Injected Metabolic Pivot: Alpha-KG`);
-
             // --- MANIFEST PRE-FLIGHT VALIDATION (Public AF3 Limit: 5120) ---
             const AF3_LIMIT = 5120;
             if (totalResidues > AF3_LIMIT) {
