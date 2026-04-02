@@ -1496,8 +1496,8 @@ const BiosimBridge = {
             const dnaFwd = this.sequenceRegistry['DNA_TARGET'] || "CCGATAAGCACGTGGACTTGTCAGGATCGAT";
             const rcMap = {'A':'T','T':'A','C':'G','G':'C'};
             const dnaRev = dnaFwd.split('').reverse().map(c=>rcMap[c]||c).join('');
-            sequences.push({ "dnaChain": { "id": "A", "sequence": dnaFwd } });
-            sequences.push({ "dnaChain": { "id": "B", "sequence": dnaRev } });
+            sequences.push({ "dnaSequence": { "sequence": dnaFwd, "count": 1 } });
+            sequences.push({ "dnaSequence": { "sequence": dnaRev, "count": 1 } });
             totalResidues += (dnaFwd.length * 2);
 
             // 2. PROTEIN FACTORS — Fetch from UniProt
@@ -1524,9 +1524,8 @@ const BiosimBridge = {
                     const chainID = String.fromCharCode(idCounter++);
                     sequences.push({ 
                         "proteinChain": { 
-                            "id": chainID,
                             "sequence": parsedSeq,
-                            "description": `Zenith v28 Reprogramming Factor: ${gene}`
+                            "count": 1
                         } 
                     });
                     const acc = this.accessionRegistry[gene] || "Default";
@@ -1545,9 +1544,8 @@ const BiosimBridge = {
                 
                 sequences.push({ 
                     "ligand": { 
-                        "id": String.fromCharCode(idCounter++), 
-                        "ccdCodes": [ccd],
-                        "description": `Stabilizing Ligand: ${ligandRaw}`
+                        "ligand": ccd,
+                        "count": 1
                     } 
                 });
                 BiosimUI.logTerminal(`[STABILIZER] Injected Metabolic Ligand: ${ccd} (Source: ${ligandRaw})`);
@@ -1564,7 +1562,7 @@ const BiosimBridge = {
             if (factorsIncluded.length === 0) {
                 const fallback = await this.fetchUniProtSequence('POU5F1');
                 const seq = fallback ? String(fallback) : String(this.domainDefaults['OCT4']);
-                sequences.push({ "proteinChain": { "id": "Z", "sequence": seq, "description": "OCT4 Fallback" } });
+                sequences.push({ "proteinChain": { "sequence": seq, "count": 1 } });
                 const acc = this.accessionRegistry['POU5F1'] || "Q01860";
                 factorsIncluded.push(`OCT4_${acc}`);
             }
