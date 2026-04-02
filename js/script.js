@@ -1496,8 +1496,8 @@ const BiosimBridge = {
             const dnaFwd = this.sequenceRegistry['DNA_TARGET'] || "CCGATAAGCACGTGGACTTGTCAGGATCGAT";
             const rcMap = {'A':'T','T':'A','C':'G','G':'C'};
             const dnaRev = dnaFwd.split('').reverse().map(c=>rcMap[c]||c).join('');
-            sequences.push({ "dna": { "id": "A", "sequence": dnaFwd } });
-            sequences.push({ "dna": { "id": "B", "sequence": dnaRev } });
+            sequences.push({ "dnaChain": { "sequence": dnaFwd } });
+            sequences.push({ "dnaChain": { "sequence": dnaRev } });
             totalResidues += (dnaFwd.length * 2);
 
             // 2. PROTEIN FACTORS — Fetch from UniProt
@@ -1523,8 +1523,7 @@ const BiosimBridge = {
 
                     const chainID = String.fromCharCode(idCounter++);
                     sequences.push({ 
-                        "protein": { 
-                            "id": chainID, 
+                        "proteinChain": { 
                             "sequence": parsedSeq,
                             "description": `Zenith v28 Reprogramming Factor: ${gene}`
                         } 
@@ -1564,7 +1563,7 @@ const BiosimBridge = {
             if (factorsIncluded.length === 0) {
                 const fallback = await this.fetchUniProtSequence('POU5F1');
                 const seq = fallback ? String(fallback) : String(this.domainDefaults['OCT4']);
-                sequences.push({ "protein": { "id": "Z", "sequence": seq, "description": "OCT4 Fallback" } });
+                sequences.push({ "proteinChain": { "sequence": seq, "description": "OCT4 Fallback" } });
                 const acc = this.accessionRegistry['POU5F1'] || "Q01860";
                 factorsIncluded.push(`OCT4_${acc}`);
             }
