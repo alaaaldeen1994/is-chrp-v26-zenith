@@ -1471,102 +1471,97 @@ const BiosimBridge = {
     },
 
     async exportAlphaFoldManifest() {
-        if (!this.lastDiscovery) {
-            BiosimUI.notify('Export Error', 'Run a discovery first.', 'err');
-            return;
-        }
+        try {
+            if (!this.lastDiscovery) {
+                BiosimUI.notify('Export Error', 'Run a discovery first.', 'err');
+                return;
+            }
 
-        BiosimUI.notify('AF3 Export', 'Fetching sequences from UniProt...', 'inf');
+            BiosimUI.notify('AF3 Export', 'Fetching sequences from UniProt...', 'inf');
 
-        const data = this.lastDiscovery;
-        const targetProfile = data.target_profile || {};
-        const profile = Object.entries(targetProfile).sort((a,b) => b[1] - a[1]);
-        
-        let sequences = [];
-        let factorsIncluded = [];
-        let totalResidues = 0;
+            const data = this.lastDiscovery;
+            const targetProfile = data.target_profile || {};
+            const profile = Object.entries(targetProfile).sort((a,b) => b[1] - a[1]);
+            
+            let sequences = [];
+            let factorsIncluded = [];
+            let totalResidues = 0;
 
-        // Residue Length Map (Approximate for v26 Evaluation)
-        const residueMap = {
-            'TTN': 34350, 'RYR2': 4967, 'MYH6': 1935, 'MYH7': 1935, 'TNNT2': 298, 'GATA4': 442,
-            'NKX2-5': 324, 'TBX5': 518, 'MEF2C': 473, 'POU5F1': 360, 'OCT4': 360, 'SOX2': 317,
-            'NANOG': 305, 'KLF4': 479, 'MYC': 439, 'LIN28A': 209, 'PPARGC1A': 798, 'CPT1B': 772,
-            'NEUROD1': 356, 'ASCL1': 236
-        };
+            // 1. DNA ANCHOR (31bp Z-Pillar Scaffold)
+            const dnaFwd = this.sequenceRegistry['DNA_TARGET'] || "CCGATAAGCACGTGGACTTGTCAGGATCGAT";
+            const rcMap = {'A':'T','T':'A','C':'G','G':'C'};
+            const dnaRev = dnaFwd.split('').reverse().map(c=>rcMap[c]||c).join('');
+            sequences.push({ "dnaSequence": { "sequence": dnaFwd, "count": 1 } });
+            sequences.push({ "dnaSequence": { "sequence": dnaRev, "count": 1 } });
+            totalResidues += (dnaFwd.length * 2);
 
-        // 1. DNA ANCHOR (31bp Z-Pillar Scaffold)
-        const dnaFwd = this.sequenceRegistry['DNA_TARGET'] || "CCGATAAGCACGTGGACTTGTCAGGATCGAT";
-        const rcMap = {'A':'T','T':'A','C':'G','G':'C'};
-        const dnaRev = dnaFwd.split('').reverse().map(c=>rcMap[c]||c).join('');
-        sequences.push({ "dnaSequence": { "sequence": dnaFwd, "count": 1 } });
-        sequences.push({ "dnaSequence": { "sequence": dnaRev, "count": 1 } });
-        totalResidues += (dnaFwd.length * 2); // dsDNA (approx)
-
-        // 2. PROTEIN FACTORS — Fetch from UniProt (live) or use pasted/cached sequences
-        const topFactors = profile.slice(0, 5).filter(([, w]) => w >= 0.6);
-        for (const [gene] of topFactors) {
-            let seq = await this.fetchUniProtSequence(gene);
-            if (seq) {
-                // v28 DOMAIN PRUNING: Use the structural audit to slice the functional domain
-                const auditRange = data.structural_audit && data.structural_audit[gene] ? data.structural_audit[gene] : null;
-                let parsedSeq = seq;
-                
-                if (auditRange) {
-                    const match = auditRange.match(/(\d+)-(\d+)/);
-                    if (match) {
-                        const start = Math.max(0, parseInt(match[1]) - 1);
-                        const end = Math.min(seq.length, parseInt(match[2]));
-                        if (start < end) {
-                            parsedSeq = seq.substring(start, end);
-                            BiosimUI.terminalLog(`[PRUNED] ${gene}: Sliced domain ${auditRange} (Length: ${parsedSeq.length})`);
+            // 2. PROTEIN FACTORS — Fetch from UniProt
+            const topFactors = profile.slice(0, 5).filter(([, w]) => w >= 0.6);
+            for (const [gene] of topFactors) {
+                let seq = await this.fetchUniProtSequence(gene);
+                if (seq) {
+                    const auditRange = data.structural_audit && data.structural_audit[gene] ? data.structural_audit[gene] : null;
+                    let parsedSeq = String(seq);
+                    
+                    if (auditRange) {
+                        const match = String(auditRange).match(/(\d+)-(\d+)/);
+                        if (match) {
+                            const start = Math.max(0, parseInt(match[1]) - 1);
+                            const end = Math.min(parsedSeq.length, parseInt(match[2]));
+                            if (start < end) {
+                                parsedSeq = parsedSeq.substring(start, end);
+                                BiosimUI.terminalLog(`[PRUNED] ${gene}: Sliced domain ${auditRange} (Length: ${parsedSeq.length})`);
+                            }
                         }
                     }
+
+                    sequences.push({ "proteinChain": { "sequence": parsedSeq, "count": 1 } });
+                    const acc = this.accessionRegistry[gene] || "Default";
+                    factorsIncluded.push(`${gene}_${acc}`);
+                    totalResidues += parsedSeq.length;
                 }
-
-                sequences.push({ "proteinChain": { "sequence": parsedSeq, "count": 1 } });
-                const acc = this.accessionRegistry[gene] || "Default";
-                factorsIncluded.push(`${gene}_${acc}`);
-                totalResidues += parsedSeq.length;
             }
+
+            // --- MANIFEST PRE-FLIGHT VALIDATION (v26.4 GOLD) ---
+            const AF3_LIMIT = 5120;
+            if (totalResidues > AF3_LIMIT) {
+                const msg = `WARNING: Manifest (${totalResidues} residues) exceeds public AF3 limits.`;
+                BiosimUI.notify('Token Warning', msg, 'warn');
+                BiosimUI.terminalLog(`[AF3 WARNING] Manifest too large (${totalResidues} residues) for public server. Extraction permitted for local runs.`);
+            }
+
+            if (factorsIncluded.length === 0) {
+                const fallback = await this.fetchUniProtSequence('POU5F1');
+                const seq = fallback ? String(fallback) : String(this.domainDefaults['OCT4']);
+                sequences.push({ "proteinChain": { "sequence": seq, "count": 1 } });
+                const acc = this.accessionRegistry['POU5F1'] || "Q01860";
+                factorsIncluded.push(`OCT4_${acc}`);
+            }
+
+            const manifestTag = factorsIncluded.join('__');
+            const manifestName = `Zenith_v26_4_${manifestTag}_${Date.now()}`;
+            const manifest = [{ "name": manifestName, "modelSeeds": ["2142086823"], "sequences": sequences, "dialect": "alphafoldserver", "version": 1 }];
+
+            BiosimUI.notify('Universal Export', `Manifest: ${factorsIncluded.join(', ')}`, 'suc');
+
+            const blob = new Blob([JSON.stringify(manifest, null, 2)], { type: 'application/json' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = `${manifestName}.json`;
+            document.body.appendChild(a); a.click(); document.body.removeChild(a);
+
+            const nProteins = sequences.filter(s => s.proteinChain).reduce((t, s) => t + (s.proteinChain.count||1), 0);
+            BiosimUI.notify('AF3 Manifest Exported', `${nProteins} protein chains + dsDNA (v26.4)`, 'suc');
+            BiosimUI.terminalLog(`--- [RST] ZENITH v26.4 GOLD RESEARCH SUMMARY ---`);
+            BiosimUI.terminalLog(`PROTOCOL: ${data.recommended_protocol}`);
+            BiosimUI.terminalLog(`MANIFEST: ${manifestTag}`);
+            BiosimUI.terminalLog(`CHAINS: ${sequences.length} total (${nProteins} protein + 2 DNA)`);
+            BiosimUI.terminalLog(`[ZENITH v26.4] High-Confidence GOLD Manifest Generated.`);
+        } catch (error) {
+            console.error("AlphaFold Export Error: ", error);
+            BiosimUI.notify('Export Error', error.message, 'err');
+            BiosimUI.terminalLog(`[CRITICAL] Export crashed: ${error.message}`);
         }
-
-        // --- MANIFEST PRE-FLIGHT VALIDATION (v26.4 GOLD) ---
-        const AF3_LIMIT = 5120;
-        if (totalResidues > AF3_LIMIT) {
-            const msg = `WARNING: Manifest (${totalResidues} residues) exceeds public AF3 limits. You may need to use a private AlphaFold instance or prune the sequence.`;
-            BiosimUI.notify('Token Warning', msg, 'warn');
-            BiosimUI.terminalLog(`[AF3 WARNING] Manifest too large (${totalResidues} residues) for public server. Extraction permitted for local runs.`);
-            // Removed the "return;" to allow the user to extract the JSON anyway
-        }
-
-        if (factorsIncluded.length === 0) {
-            const fallback = await this.fetchUniProtSequence('POU5F1'); // OCT4 canonical name
-            const seq = fallback || this.domainDefaults['OCT4'];
-            sequences.push({ "proteinChain": { "sequence": seq, "count": 1 } });
-            const acc = this.accessionRegistry['POU5F1'] || "Q01860";
-            factorsIncluded.push(`OCT4_${acc}`);
-        }
-
-        const manifestTag = factorsIncluded.join('__');
-        const manifestName = `Zenith_v26_4_${manifestTag}_${Date.now()}`;
-        const manifest = [{ "name": manifestName, "modelSeeds": ["2142086823"], "sequences": sequences, "dialect": "alphafoldserver", "version": 1 }];
-
-        BiosimUI.notify('Universal Export', `Manifest: ${factorsIncluded.join(', ')}`, 'suc');
-
-
-        const blob = new Blob([JSON.stringify(manifest, null, 2)], { type: 'application/json' });
-        const a = document.createElement('a');
-        a.href = URL.createObjectURL(blob);
-        a.download = `${manifestName}.json`;
-        document.body.appendChild(a); a.click(); document.body.removeChild(a);
-
-        const nProteins = sequences.filter(s => s.proteinChain).reduce((t, s) => t + (s.proteinChain.count||1), 0);
-        BiosimUI.notify('AF3 Manifest Exported', `${nProteins} protein chains + dsDNA (v26.4)`, 'suc');
-        BiosimUI.terminalLog(`--- [RST] ZENITH v26.4 GOLD RESEARCH SUMMARY ---`);
-        BiosimUI.terminalLog(`PROTOCOL: ${data.recommended_protocol}`);
-        BiosimUI.terminalLog(`MANIFEST: ${manifestTag}`);
-        BiosimUI.terminalLog(`CHAINS: ${sequences.length} total (${nProteins} protein + 2 DNA)`);
-        BiosimUI.terminalLog(`[ZENITH v26.4] High-Confidence GOLD Manifest Generated.`);
     },
 
 
