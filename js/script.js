@@ -1564,7 +1564,7 @@ const BiosimBridge = {
             if (factorsIncluded.length === 0) {
                 const fallback = await this.fetchUniProtSequence('POU5F1');
                 const seq = fallback ? String(fallback) : String(this.domainDefaults['OCT4']);
-                sequences.push({ "proteinChain": { "sequence": seq, "description": "OCT4 Fallback" } });
+                sequences.push({ "proteinChain": { "id": "Z", "sequence": seq, "description": "OCT4 Fallback" } });
                 const acc = this.accessionRegistry['POU5F1'] || "Q01860";
                 factorsIncluded.push(`OCT4_${acc}`);
             }
