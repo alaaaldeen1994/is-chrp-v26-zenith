@@ -1204,8 +1204,17 @@ const BiosimBridge = {
                         knockouts: BiosimLab.activeKnockouts
                     })
                 });
-                if (response.ok) data = await response.json();
+                if (response.ok) {
+                    data = await response.json();
+                } else if (response.status === 400) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.detail || "Invalid Research Query");
+                }
             } catch (e) {
+                if (e.message.includes("Research Query") || e.message.includes("valid research query")) {
+                    // Propagate the specific validation error
+                    throw e; 
+                }
                 console.warn("Zenith Remote Engine Offline. Activating Local Fallback Manifold (v26.1).");
             }
 

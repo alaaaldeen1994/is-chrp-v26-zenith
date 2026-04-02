@@ -1486,18 +1486,10 @@ async def get_target_vector_from_query(query: str, api_key: Optional[str] = None
         
         prompt = (
             f"As a expert systems biologist at Nilus Lab, help me map the goal '{query}' to a transcriptomic target state using the Zenith Ultra-HD (5K) manifold.\n"
-            f"We are using the full 5000-gene manifold. Here are the core indices for reference:\n{core_modules}\n\n"
-            f"MATURATION MODULE (100-109): Includes PPARGC1A, PPARA, RXRA, CPT1B, KCNJ2, etc.\n\n"
+            f"If the goal is a greeting (e.g. 'HI', 'HELLO') or unrelated to biology, you MUST return a JSON with {{\"status\": \"greeting\", \"rationale\": \"Hello! I am the Zenith Assistant. How can I help you today? Please enter a biological goal, such as 'Rejuvenate cardiac cells' or 'Directly convert somatic cells to neurons'.\"}}\n\n"
+            f"Otherwise, proceed with the task below:\n\n"
             f"TASKS:\n"
-            f"1. Select the top 25 genes that should be HIGHLY expressed for this state from the 5000-gene set.\n"
-            f"2. Assign each gene an intensity weight from 0.0 to 1.0.\n"
-            f"3. Provide a brief scientific rationale for these choices. AT THE END of your rationale, you MUST state exactly: 'For AlphaFold 3 validation, include the DNA anchor sequence [insert motif] and the critical metabolic ligand [insert ligand, e.g. NAD, Fe2+, Alpha-KG] to ensure multimer stabilization.'\n"
-            f"4. For each of the top 5 genes, identify the exact amino acid residue range (e.g. 1-200) representing the primary functional domain (from UniProt) for this specific task.\n"
-            f"5. Identify the primary 12-20 bp DNA binding motif (e.g. GGGGTCACGGTC) that anchors this specific transcription factor complex to its promoter.\n"
-            f"6. Cross-reference your results with established epigenetic aging clocks (Horvath/GrimAge). If this is a rejuvenation task, you MUST include at least one primary marker (e.g. ELOVL2, FHL2, or ASPA) in your top findings to represent the epigenetic audit.\n"
-            f"7. Estimate the predicted reduction in biological DNA methylation age (in years) if this protocol is perfectly implemented.\n"
-            f"8. Identify 2-3 small-molecule drug candidates (e.g. Metformin, Rapamycin, SRT1720) that can mimic or enhance this specific 5,000-gene transcriptomic shift (Point 6: Drug-Gene Interaction).\n"
-            f"9. Return ONLY a JSON object like: {{\"genes\": {{\"GENENAME\": weight, ...}}, \"rationale\": \"...\", \"audit\": {{\"GENENAME\": \"1-200\", ...}}, \"dna_motif\": \"...\", \"age_reduction\": 15.0, \"drugs\": [\"Metformin\", \"...\"]}}"
+            f"1. Select the top 25 genes that should be HIGHLY expressed for this state from the 5000-gene set. Return ONLY a JSON like: {{\"genes\": {{\"GENENAME\": weight, ...}}, \"rationale\": \"...\", \"audit\": {{\"GENENAME\": \"1-200\", ...}}, \"dna_motif\": \"...\", \"age_reduction\": 15.0, \"drugs\": [\"Metformin\", \"...\"], \"status\": \"success\"}}"
         )
         
         response = await client.chat.completions.create(
@@ -1511,6 +1503,11 @@ async def get_target_vector_from_query(query: str, api_key: Optional[str] = None
         
         import json
         data = json.loads(response.choices[0].message.content)
+        
+        if data.get("status") == "greeting" or data.get("error"):
+            # Return a special greeting signal
+            return torch.zeros(len(GENE_SYMBOLS)), data.get("rationale", data.get("error", "How can I help you?")), {}, {}, "", 0.0, []
+
         gene_data = data.get("genes", {})
         explanation = data.get("rationale", "Semantic mapping successful.")
         audit_data = data.get("audit", {}) # The "No-Mistake" Structural Audit
@@ -1613,10 +1610,15 @@ async def discover_hybrid(req: HybridDiscoveryRequest, request: Request):
 
         # v28: Novelty Enforcement (Section 19: Semantic Divergence)
         # If the match isn't overwhelmingly strong (>85%), treat it as a Novel Discovery
-        if max_sim < 0.85:
+        # EXCEPTION: If the GPT engine returned a greeting/help message, label as Assistant
+        if "Zenith Assistant" in gpt_rationale:
+            best_protocol = "ZENITH ASSISTANT"
+            confidence = 100.0
+        elif max_sim < 0.85:
             best_protocol = "NOVEL BIO-DESIGN"
 
         confidence = max_sim if max_sim > 0.85 else (0.5 + np.max(ideal_vector)*0.4)
+        if "Zenith Assistant" in gpt_rationale: confidence = 100.0
         
         rationale = f"[ZENITH HYBRID ENGINE] {gpt_rationale} "
         if max_sim > 0.85:
