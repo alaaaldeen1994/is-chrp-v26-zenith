@@ -1330,7 +1330,17 @@ const BiosimBridge = {
             detailBox.classList.remove('hidden');
         }
 
-        if (profileContainer && data.target_profile) {
+        // v28 CUSTOM: If this is the ZENITH ASSISTANT, hide the gene manifest and score to keep it clean.
+        const isAssistant = data.recommended_protocol === "ZENITH ASSISTANT";
+        const actionGrid = outPanel ? outPanel.querySelector('.flex.gap-1') : null;
+        const profileHeader = outPanel ? outPanel.querySelector('.flex.justify-between.items-center.mb-1') : null;
+
+        if (actionGrid) actionGrid.style.display = isAssistant ? 'none' : 'flex';
+        if (profileHeader) profileHeader.style.display = isAssistant ? 'none' : 'flex';
+        if (profileContainer) profileContainer.style.display = isAssistant ? 'none' : 'grid';
+        if (synContainer) synContainer.style.display = isAssistant ? 'none' : 'block';
+
+        if (profileContainer && data.target_profile && !isAssistant) {
             let totalResidues = 0;
             const LARGE_THRESHOLD = 5120;
 
