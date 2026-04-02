@@ -1508,7 +1508,9 @@ const BiosimBridge = {
                 'NKX2-5': '138-197', 'TBX5': '50-250',
                 'SNAI1': '150-264', 'SNAI2': '150-264',
                 'MEF2C': '1-100', 'MEF2A': '1-100',
-                'OCT4': '130-280', 'SOX2': '41-119', 'SOX17': '1-120'
+                'OCT4': '130-280', 'SOX2': '41-119', 'SOX17': '1-120',
+                'KLF4': '395-479', // Zn-Fingers
+                'MYC': '350-439'   // bHLH DNA binding domain
             };
 
             // 2. DOMAIN-HANDSHAKE FUSION (DHL v31 Consolidation Protocol)
@@ -1576,11 +1578,21 @@ const BiosimBridge = {
             }
 
             if (factorsIncluded.length === 0) {
-                const fallback = await this.fetchUniProtSequence('POU5F1');
-                const seq = fallback ? String(fallback) : String(this.domainDefaults['OCT4']);
-                sequences.push({ "proteinChain": { "sequence": seq, "count": 1 } });
-                const acc = this.accessionRegistry['POU5F1'] || "Q01860";
-                factorsIncluded.push(`OCT4_${acc}`);
+                // v31: OSKM Foundation Fallback Pool (Oct4, Sox2, Klf4, Myc)
+                const foundationPool = ['POU5F1', 'SOX2', 'KLF4', 'MYC'];
+                for (const gene of foundationPool) {
+                    const fallback = await this.fetchUniProtSequence(gene);
+                    if (fallback) {
+                        let seq = String(fallback);
+                        const range = dhlLibrary[gene === 'POU5F1' ? 'OCT4' : gene];
+                        if (range) {
+                             const match = range.match(/(\d+)-(\d+)/);
+                             seq = seq.substring(parseInt(match[1])-1, parseInt(match[2]));
+                        }
+                        sequences.push({ "proteinChain": { "sequence": seq, "count": 1 } });
+                        factorsIncluded.push(`${gene}_Fallback`);
+                    }
+                }
             }
 
             const manifestTag = factorsIncluded.join('__');
