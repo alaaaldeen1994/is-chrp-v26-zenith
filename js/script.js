@@ -1565,7 +1565,14 @@ const BiosimBridge = {
             }
 
             const manifestTag = factorsIncluded.join('__');
-            const manifestName = `Zenith_v28_Native_${manifestTag}_${Date.now()}`;
+            let manifestName = `Zenith_v29_${manifestTag}_${Date.now()}`;
+            // v29.6: Truncate to 99 characters to comply with AlphaFold Server limits
+            if (manifestName.length > 99) {
+                manifestName = manifestName.substring(0, 85) + "_" + Date.now();
+            }
+            if (manifestName.length > 99) {
+                manifestName = manifestName.substring(0, 99);
+            }
             
             // Standard Native Dialect Format (Validated for AlphaFold Server Upload)
             const manifest = [{
