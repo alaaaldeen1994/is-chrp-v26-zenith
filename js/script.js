@@ -1534,34 +1534,6 @@ const BiosimBridge = {
                 }
             }
 
-            // 3. METABOLIC LIGANDS & IONS (v28 Native AF3 Integration)
-            const rationale = data.scientific_rationale || "";
-            const ligMatch = rationale.match(/metabolic ligand (.*?) to ensure/i);
-            if (ligMatch && ligMatch[1]) {
-                const ligandRaw = ligMatch[1].trim();
-                const ccdMap = { 'NAD': 'NAD', 'FE2+': 'FE2', 'FE': 'FE', 'CA2+': 'CA', 'CA': 'CA', 'MG2+': 'MG', 'MG': 'MG', 'ALPHA-KG': 'AKG', 'ATP': 'ATP', 'ADP': 'ADP' };
-                const ccd = ccdMap[ligandRaw.toUpperCase()] || ligandRaw.split(' ')[0].toUpperCase().substring(0, 3);
-                
-                // v28 NATIVE ALPHA-FOLD SERVER DIALECT: Ion vs Ligand distinction
-                const ions = ['FE', 'FE2', 'CA', 'MG', 'ZN', 'MN', 'NA', 'K'];
-                if (ions.includes(ccd)) {
-                    sequences.push({ 
-                        "ion": { 
-                            "ion": ccd, 
-                            "count": 1 
-                        } 
-                    });
-                } else {
-                    sequences.push({ 
-                        "ligand": { 
-                            "ligand": `CCD_${ccd}`, 
-                            "count": 1 
-                        } 
-                    });
-                }
-                BiosimUI.logTerminal(`[STABILIZER] Injected Metabolic Factor: ${ccd} (Source: ${ligandRaw})`);
-            }
-
             // --- MANIFEST PRE-FLIGHT VALIDATION ---
             const AF3_LIMIT = 5120;
             if (totalResidues > AF3_LIMIT) {
@@ -1581,16 +1553,16 @@ const BiosimBridge = {
             const manifestTag = factorsIncluded.join('__');
             const manifestName = `Zenith_v28_Native_${manifestTag}_${Date.now()}`;
             
-            // Standard Native Dialect Format (Wrapped in Array for AlphaFold Server Upload)
+            // Standard Native Dialect Format (Validated for AlphaFold Server Upload)
             const manifest = [{
                 "name": manifestName,
-                "modelSeeds": [2142086823],
+                "modelSeeds": ["2142086823"],
                 "sequences": sequences,
-                "dialect": "alphafold3",
+                "dialect": "alphafoldserver",
                 "version": 1
             }];
 
-            BiosimUI.notify('Native Export', `Unified AF3 Manifest Generated`, 'suc');
+            BiosimUI.notify('Native Export', `AlphaFold Server JSON Generated`, 'suc');
 
             const blob = new Blob([JSON.stringify(manifest, null, 2)], { type: 'application/json' });
             const a = document.createElement('a');
