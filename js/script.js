@@ -1487,7 +1487,7 @@ const BiosimBridge = {
             let factorsIncluded = [];
             let totalResidues = 0;
 
-            // 1. DNA ANCHOR (31bp Z-Pillar Scaffold)
+            // 1. DNA ANCHOR (31bp Z-Pillar Scaffold — Native Duplex)
             const dnaFwd = this.sequenceRegistry['DNA_TARGET'] || "CCGATAAGCACGTGGACTTGTCAGGATCGAT";
             const rcMap = {'A':'T','T':'A','C':'G','G':'C'};
             const dnaRev = dnaFwd.split('').reverse().map(c=>rcMap[c]||c).join('');
@@ -1497,7 +1497,7 @@ const BiosimBridge = {
 
             // 2. PROTEIN FACTORS — Fetch from UniProt
             const topFactors = profile.slice(0, 5).filter(([, w]) => w >= 0.6);
-            let idCounter = 67; // Start at 'C'
+            let idCounter = 67; // Start at 'C' (after A, B DNA)
             for (const [gene] of topFactors) {
                 let seq = await this.fetchUniProtSequence(gene);
                 if (seq) {
@@ -1516,7 +1516,14 @@ const BiosimBridge = {
                         }
                     }
 
-                    sequences.push({ "protein": { "id": String.fromCharCode(idCounter++), "sequence": parsedSeq } });
+                    const chainID = String.fromCharCode(idCounter++);
+                    sequences.push({ 
+                        "protein": { 
+                            "id": chainID, 
+                            "sequence": parsedSeq,
+                            "description": `Zenith v28 Reprogramming Factor: ${gene}`
+                        } 
+                    });
                     const acc = this.accessionRegistry[gene] || "Default";
                     factorsIncluded.push(`${gene}_${acc}`);
                     totalResidues += parsedSeq.length;
@@ -1524,30 +1531,35 @@ const BiosimBridge = {
             }
 
             // 3. METABOLIC LIGANDS & IONS (v28 Native AF3 Integration)
-            // Extract from rationale: "and the critical metabolic ligand [LIG] to ensure"
             const rationale = data.scientific_rationale || "";
             const ligMatch = rationale.match(/metabolic ligand (.*?) to ensure/i);
             if (ligMatch && ligMatch[1]) {
                 const ligandRaw = ligMatch[1].trim();
-                // Map common strings to CCD codes if possible
                 const ccdMap = { 'NAD': 'NAD', 'FE2+': 'FE2', 'FE': 'FE', 'CA2+': 'CA', 'CA': 'CA', 'MG2+': 'MG', 'MG': 'MG', 'ALPHA-KG': 'AKG', 'ATP': 'ATP', 'ADP': 'ADP' };
                 const ccd = ccdMap[ligandRaw.toUpperCase()] || ligandRaw.split(' ')[0].toUpperCase().substring(0, 3);
-                sequences.push({ "ligand": { "id": String.fromCharCode(idCounter++), "ccdCodes": [ccd] } });
+                
+                sequences.push({ 
+                    "ligand": { 
+                        "id": String.fromCharCode(idCounter++), 
+                        "ccdCodes": [ccd],
+                        "description": `Stabilizing Ligand: ${ligandRaw}`
+                    } 
+                });
                 BiosimUI.logTerminal(`[STABILIZER] Injected Metabolic Ligand: ${ccd} (Source: ${ligandRaw})`);
             }
 
-            // --- MANIFEST PRE-FLIGHT VALIDATION (v26.4 GOLD) ---
+            // --- MANIFEST PRE-FLIGHT VALIDATION ---
             const AF3_LIMIT = 5120;
             if (totalResidues > AF3_LIMIT) {
                 const msg = `WARNING: Manifest (${totalResidues} residues) exceeds public AF3 limits.`;
                 BiosimUI.notify('Token Warning', msg, 'warn');
-                BiosimUI.logTerminal(`[AF3 WARNING] Manifest too large (${totalResidues} residues) for public server. Extraction permitted for local runs.`);
+                BiosimUI.logTerminal(`[AF3 WARNING] Manifest length (${totalResidues}) exceeds public tier limits.`);
             }
 
             if (factorsIncluded.length === 0) {
                 const fallback = await this.fetchUniProtSequence('POU5F1');
                 const seq = fallback ? String(fallback) : String(this.domainDefaults['OCT4']);
-                sequences.push({ "protein": { "id": "Z", "sequence": seq } });
+                sequences.push({ "protein": { "id": "Z", "sequence": seq, "description": "OCT4 Fallback" } });
                 const acc = this.accessionRegistry['POU5F1'] || "Q01860";
                 factorsIncluded.push(`OCT4_${acc}`);
             }
@@ -1555,16 +1567,16 @@ const BiosimBridge = {
             const manifestTag = factorsIncluded.join('__');
             const manifestName = `Zenith_v28_Native_${manifestTag}_${Date.now()}`;
             
-            // Native format is NOT a list at top level
+            // Standard Native Dialect Format
             const manifest = {
                 "name": manifestName,
                 "modelSeeds": [2142086823],
                 "sequences": sequences,
                 "dialect": "alphafold3",
-                "version": 2
+                "version": 1
             };
 
-            BiosimUI.notify('Universal Native Export', `Manifest: ${factorsIncluded.join(', ')}`, 'suc');
+            BiosimUI.notify('Native Export', `Unified AF3 Manifest Generated`, 'suc');
 
             const blob = new Blob([JSON.stringify(manifest, null, 2)], { type: 'application/json' });
             const a = document.createElement('a');
@@ -1574,12 +1586,11 @@ const BiosimBridge = {
 
             const nProteins = sequences.filter(s => s.protein).length;
             const nLigands = sequences.filter(s => s.ligand).length;
-            BiosimUI.notify('AF3 Native Manifest Exported', `${nProteins} Protein(s) + ${nLigands} Ligand(s) (v28)`, 'suc');
+            BiosimUI.notify('AF3 Native Exported', `${nProteins} Protein(s) + ${nLigands} Ligand(s)`, 'suc');
             BiosimUI.logTerminal(`--- [RST] ZENITH v28 NATIVE RESEARCH SUMMARY ---`);
-            BiosimUI.logTerminal(`PROTOCOL: ${data.recommended_protocol}`);
-            BiosimUI.logTerminal(`NATIVE DIALECT: alphafold3 (v2)`);
-            BiosimUI.logTerminal(`STABILIZERS: ${nLigands} metabolic ligands injected`);
-            BiosimUI.logTerminal(`[ZENITH v28] High-Fidelity NATIVE Manifest Generated.`);
+            BiosimUI.logTerminal(`NATIVE DIALECT: alphafold3 (v1)`);
+            BiosimUI.logTerminal(`ENTITIES: ${sequences.length} total chains`);
+            BiosimUI.logTerminal(`[ZENITH v28] Native DeepMind Format Verified.`);
         } catch (error) {
             console.error("AlphaFold Export Error: ", error);
             BiosimUI.notify('Export Error', error.message, 'err');
