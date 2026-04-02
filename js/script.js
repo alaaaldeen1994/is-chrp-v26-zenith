@@ -1510,7 +1510,7 @@ const BiosimBridge = {
                             const end = Math.min(parsedSeq.length, parseInt(match[2]));
                             if (start < end) {
                                 parsedSeq = parsedSeq.substring(start, end);
-                                BiosimUI.terminalLog(`[PRUNED] ${gene}: Sliced domain ${auditRange} (Length: ${parsedSeq.length})`);
+                                BiosimUI.logTerminal(`[PRUNED] ${gene}: Sliced domain ${auditRange} (Length: ${parsedSeq.length})`);
                             }
                         }
                     }
@@ -1527,7 +1527,7 @@ const BiosimBridge = {
             if (totalResidues > AF3_LIMIT) {
                 const msg = `WARNING: Manifest (${totalResidues} residues) exceeds public AF3 limits.`;
                 BiosimUI.notify('Token Warning', msg, 'warn');
-                BiosimUI.terminalLog(`[AF3 WARNING] Manifest too large (${totalResidues} residues) for public server. Extraction permitted for local runs.`);
+                BiosimUI.logTerminal(`[AF3 WARNING] Manifest too large (${totalResidues} residues) for public server. Extraction permitted for local runs.`);
             }
 
             if (factorsIncluded.length === 0) {
@@ -1552,15 +1552,15 @@ const BiosimBridge = {
 
             const nProteins = sequences.filter(s => s.proteinChain).reduce((t, s) => t + (s.proteinChain.count||1), 0);
             BiosimUI.notify('AF3 Manifest Exported', `${nProteins} protein chains + dsDNA (v26.4)`, 'suc');
-            BiosimUI.terminalLog(`--- [RST] ZENITH v26.4 GOLD RESEARCH SUMMARY ---`);
-            BiosimUI.terminalLog(`PROTOCOL: ${data.recommended_protocol}`);
-            BiosimUI.terminalLog(`MANIFEST: ${manifestTag}`);
-            BiosimUI.terminalLog(`CHAINS: ${sequences.length} total (${nProteins} protein + 2 DNA)`);
-            BiosimUI.terminalLog(`[ZENITH v26.4] High-Confidence GOLD Manifest Generated.`);
+            BiosimUI.logTerminal(`--- [RST] ZENITH v26.4 GOLD RESEARCH SUMMARY ---`);
+            BiosimUI.logTerminal(`PROTOCOL: ${data.recommended_protocol}`);
+            BiosimUI.logTerminal(`MANIFEST: ${manifestTag}`);
+            BiosimUI.logTerminal(`CHAINS: ${sequences.length} total (${nProteins} protein + 2 DNA)`);
+            BiosimUI.logTerminal(`[ZENITH v26.4] High-Confidence GOLD Manifest Generated.`);
         } catch (error) {
             console.error("AlphaFold Export Error: ", error);
             BiosimUI.notify('Export Error', error.message, 'err');
-            BiosimUI.terminalLog(`[CRITICAL] Export crashed: ${error.message}`);
+            BiosimUI.logTerminal(`[CRITICAL] Export crashed: ${error.message}`);
         }
     },
 
@@ -1576,7 +1576,7 @@ const BiosimBridge = {
         const text = lines.join(', ');
         navigator.clipboard.writeText(text).then(() => {
             BiosimUI.notify('Copied!', `${lines.length} proteins copied to clipboard`, 'suc');
-            BiosimUI.terminalLog(`[ZENITH] Copied ${lines.length} proteins: ${text}`);
+            BiosimUI.logTerminal(`[ZENITH] Copied ${lines.length} proteins: ${text}`);
         }).catch(() => {
             BiosimUI.notify('Copy Error', 'Clipboard unavailable.', 'err');
         });
