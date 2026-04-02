@@ -1496,8 +1496,8 @@ const BiosimBridge = {
             const dnaFwd = this.sequenceRegistry['DNA_TARGET'] || "CCGATAAGCACGTGGACTTGTCAGGATCGAT";
             const rcMap = {'A':'T','T':'A','C':'G','G':'C'};
             const dnaRev = dnaFwd.split('').reverse().map(c=>rcMap[c]||c).join('');
-            sequences.push({ "dnaChain": { "sequence": dnaFwd } });
-            sequences.push({ "dnaChain": { "sequence": dnaRev } });
+            sequences.push({ "dnaChain": { "id": "A", "sequence": dnaFwd } });
+            sequences.push({ "dnaChain": { "id": "B", "sequence": dnaRev } });
             totalResidues += (dnaFwd.length * 2);
 
             // 2. PROTEIN FACTORS — Fetch from UniProt
@@ -1524,6 +1524,7 @@ const BiosimBridge = {
                     const chainID = String.fromCharCode(idCounter++);
                     sequences.push({ 
                         "proteinChain": { 
+                            "id": chainID,
                             "sequence": parsedSeq,
                             "description": `Zenith v28 Reprogramming Factor: ${gene}`
                         } 
