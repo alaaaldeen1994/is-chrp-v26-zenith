@@ -1513,11 +1513,10 @@ const BiosimBridge = {
                 'MYC': '350-439'   // bHLH DNA binding domain
             };
 
-            // 2. DOMAIN-HANDSHAKE FUSION (DHL v31 Consolidation Protocol)
-            // v31: Fusing the top 3 factors into ONE chain with 15aa Z-Linkers to force complex formation
+            // v32: Handshake-Pivot v2 (Rigid Stabilization)
             const structuralPool = profile.filter(([gene]) => dhlLibrary[gene]);
             const topConsensus = structuralPool.slice(0, 3);
-            const Z_LINKER = "GGGGSGGGGSGGGGS"; 
+            const Z_LINKER = "EAAAKEAAAKEAAAK"; // Rigid Helix Linker to force orientation
             
             let fusionSeq = "";
             for (let i = 0; i < topConsensus.length; i++) {
@@ -1564,6 +1563,15 @@ const BiosimBridge = {
                     totalResidues += parsedSeq.length;
                 }
             }
+
+            // 3. METABOLIC ANCHOR (Alpha-KG Catalyst)
+            sequences.push({ 
+                "ligand": { 
+                    "ligand": "CCD_AKG", 
+                    "count": 1 
+                } 
+            });
+            BiosimUI.logTerminal(`[DHL-HD] Injected Metabolic Pivot: Alpha-KG`);
 
             // --- MANIFEST PRE-FLIGHT VALIDATION (Public AF3 Limit: 5120) ---
             const AF3_LIMIT = 5120;
