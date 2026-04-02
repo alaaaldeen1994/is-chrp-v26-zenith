@@ -1514,56 +1514,25 @@ const BiosimBridge = {
                 'RXRA': '130-210'     // DBD (Zinc Fingers)
             };
 
-            // v32: Handshake-Pivot v2 (Rigid Stabilization)
-            const structuralPool = profile.filter(([gene]) => dhlLibrary[gene]);
-            const topConsensus = structuralPool.slice(0, 3);
-            const Z_LINKER = "EAAAKEAAAKEAAAK"; // Rigid Helix Linker to force orientation
-            
-            let fusionSeq = "";
-            for (let i = 0; i < topConsensus.length; i++) {
-                const gene = topConsensus[i][0];
+            // 2. PROTEIN FACTORS — Full-Length Multimer Restore (v32.7 Gold)
+            for (const [gene] of structuralPool.slice(0, 5)) {
                 let seq = await this.fetchUniProtSequence(gene);
                 if (seq) {
                     let parsedSeq = String(seq);
-                    const range = dhlLibrary[gene];
-                    const match = range.match(/(\d+)-(\d+)/);
-                    if (match) {
-                        const sPrev = Math.max(0, parseInt(match[1]) - 1);
-                        const ePrev = Math.min(parsedSeq.length, parseInt(match[2]));
-                        parsedSeq = parsedSeq.substring(sPrev, ePrev);
-                        BiosimUI.logTerminal(`[DHL-FUSION] Added ${gene} domain (${parsedSeq.length}aa)`);
-                    }
-                    fusionSeq += (i > 0 ? Z_LINKER : "") + parsedSeq;
+                    sequences.push({ 
+                        "proteinChain": { 
+                            "sequence": parsedSeq,
+                            "count": 1
+                        } 
+                    });
                     const acc = this.accessionRegistry[gene] || "Default";
                     factorsIncluded.push(`${gene}_${acc}`);
-                }
-            }
-
-            if (fusionSeq.length > 0) {
-                sequences.push({ 
-                    "proteinChain": { 
-                        "sequence": fusionSeq,
-                        "count": 1
-                    } 
-                });
-                totalResidues += fusionSeq.length;
-            }
-
-            // Fallback for non-TF drivers (e.g. MEF2C, TBX5 if not in top 3)
-            const remainingPool = structuralPool.slice(3, 5);
-            for (const [gene] of remainingPool) {
-                let seq = await this.fetchUniProtSequence(gene);
-                if (seq) {
-                    let parsedSeq = String(seq);
-                    const range = dhlLibrary[gene];
-                    const match = range.match(/(\d+)-(\d+)/);
-                    if (match) {
-                        parsedSeq = parsedSeq.substring(parseInt(match[1])-1, parseInt(match[2]));
-                    }
-                    sequences.push({ "proteinChain": { "sequence": parsedSeq, "count": 1 } });
                     totalResidues += parsedSeq.length;
                 }
             }
+
+            // 3. ION STABILIZATION (Zinc HD)
+            sequences.push({ "ion": { "ion": "ZN", "count": 4 } });
 
             // --- MANIFEST PRE-FLIGHT VALIDATION (Public AF3 Limit: 5120) ---
             const AF3_LIMIT = 5120;
