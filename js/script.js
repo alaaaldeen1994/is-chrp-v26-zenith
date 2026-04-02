@@ -732,9 +732,14 @@ const BiosimEngine = {
 
             const scale = Math.min(w, h);
             // v27: Reduce cell size multiplier for high-density (2000 cells)
+            // v28 FIX: Scale increased from 0.007 to 0.012 for better visibility on high-res displays
             this.agents.forEach(a => {
-                BiosimRenderer.drawCell(this.ctx, a, a.pos.x * w, a.pos.y * h, scale * 0.007); // Reduced from 0.015
+                BiosimRenderer.drawCell(this.ctx, a, a.pos.x * w, a.pos.y * h, scale * 0.012); 
             });
+
+            // v28 FIX: Update 3D Cell Count UI
+            const count3d = document.getElementById('3d-cell-count');
+            if (count3d) count3d.innerText = this.agents.length;
 
             // v26: Batch-sync state to Generative Backend every 60 frames (Reduce network flooding)
             if (this.frame % 60 === 0 && BiosimBridge.biosimMode === 'GENERATIVE') {
@@ -2118,7 +2123,8 @@ def run(protocol: protocol_api.ProtocolContext):
         },
 
         init3D() {
-            const container = document.getElementById('three-container');
+            // v28 FIX: Unified container ID (3d-container vs three-container)
+            const container = document.getElementById('3d-container');
             if (!container) return;
 
             // --- 1. ENGINE INITIALIZATION ---
@@ -3533,7 +3539,7 @@ const BiosimLab = {
 
 // --- MAIN INIT ---
 window.addEventListener('load', () => {
-    BiosimEngine.init();
+    // BiosimEngine.init(); // MOVED TO END of script.js for clean sequence
 
     // Load saved API Key
     // Backend handles Auth automatically now
@@ -3798,8 +3804,10 @@ const VisionBridge = {
 
 // Initialize on load
 window.addEventListener('load', () => {
-    if (typeof BiosimEngine !== 'undefined') {
+    // v28: Single-pass initialization sequence
+    if (typeof BiosimEngine !== 'undefined' && !BiosimEngine.isInitialized) {
         BiosimEngine.init();
+        BiosimEngine.isInitialized = true;
     }
     if (typeof VisionBridge !== 'undefined') {
         VisionBridge.init();

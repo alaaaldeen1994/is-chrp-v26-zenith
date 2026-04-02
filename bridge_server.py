@@ -713,6 +713,28 @@ async def get_favicon():
 async def get_landing():
     return FileResponse("profile.html")
 
+@app.post("/api/v27/sync_cell_states")
+async def sync_cell_states(payload: dict):
+    # v27 Synchronizer: Receives thousands of agents and returns inferred manifold coordinates
+    # Used for real-time 3D latent map synchronization
+    try:
+        # Simulate high-speed coordinate inference (MOCK for now, but valid schema)
+        positions = payload.get("positions", [])
+        manifold = []
+        for i in range(0, len(positions), 2):
+            x, y = positions[i], positions[i+1]
+            # Simple projective map for latency simulation
+            z = np.sin(x*10) * np.cos(y*10)
+            manifold.extend([x, y, z])
+
+        return {
+            "status": "synchronized",
+            "manifold": manifold,
+            "latency_ms": 12
+        }
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
+
 @app.get("/index.html")
 async def get_simulation():
     return FileResponse("index.html")
