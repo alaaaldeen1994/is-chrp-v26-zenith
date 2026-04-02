@@ -1572,14 +1572,14 @@ const BiosimBridge = {
             const manifestTag = factorsIncluded.join('__');
             const manifestName = `Zenith_v28_Native_${manifestTag}_${Date.now()}`;
             
-            // Standard Native Dialect Format
-            const manifest = {
+            // Standard Native Dialect Format (Wrapped in Array for AlphaFold Server Upload)
+            const manifest = [{
                 "name": manifestName,
                 "modelSeeds": [2142086823],
                 "sequences": sequences,
                 "dialect": "alphafold3",
                 "version": 1
-            };
+            }];
 
             BiosimUI.notify('Native Export', `Unified AF3 Manifest Generated`, 'suc');
 
