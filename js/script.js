@@ -1511,43 +1511,54 @@ const BiosimBridge = {
                 'OCT4': '130-280', 'SOX2': '41-119', 'SOX17': '1-120'
             };
 
-            // 2. PROTEIN FACTORS — Selective Filtering (Phase 5 Signal-to-Noise Optimization)
-            // v30: Only export factors that ARE in the dhlLibrary (Transcription Factors)
+            // 2. DOMAIN-HANDSHAKE FUSION (DHL v31 Consolidation Protocol)
+            // v31: Fusing the top 3 factors into ONE chain with 15aa Z-Linkers to force complex formation
             const structuralPool = profile.filter(([gene]) => dhlLibrary[gene]);
-            const topFactors = structuralPool.slice(0, 4); 
+            const topConsensus = structuralPool.slice(0, 3);
+            const Z_LINKER = "GGGGSGGGGSGGGGS"; 
             
-            if (topFactors.length === 0) {
-                 BiosimUI.logTerminal("[ZENITH] No structural TFs detected in top profile. Fallback to OCT4.");
-            }
-            
-            for (const [gene] of topFactors) {
+            let fusionSeq = "";
+            for (let i = 0; i < topConsensus.length; i++) {
+                const gene = topConsensus[i][0];
                 let seq = await this.fetchUniProtSequence(gene);
                 if (seq) {
                     let parsedSeq = String(seq);
-                    
-                    // v29: Smart DHL Pruning to stay under 5120 and boost interface signal
-                    const auditRange = data.structural_audit && data.structural_audit[gene] ? data.structural_audit[gene] : dhlLibrary[gene];
-                    
-                    if (auditRange) {
-                        const match = String(auditRange).match(/(\d+)-(\d+)/);
-                        if (match) {
-                            const start = Math.max(0, parseInt(match[1]) - 1);
-                            const end = Math.min(parsedSeq.length, parseInt(match[2]));
-                            if (start < end) {
-                                parsedSeq = parsedSeq.substring(start, end);
-                                BiosimUI.logTerminal(`[DHL-PRUNE] ${gene}: Slicing interaction domain ${auditRange} (Length: ${parsedSeq.length})`);
-                            }
-                        }
+                    const range = dhlLibrary[gene];
+                    const match = range.match(/(\d+)-(\d+)/);
+                    if (match) {
+                        const sPrev = Math.max(0, parseInt(match[1]) - 1);
+                        const ePrev = Math.min(parsedSeq.length, parseInt(match[2]));
+                        parsedSeq = parsedSeq.substring(sPrev, ePrev);
+                        BiosimUI.logTerminal(`[DHL-FUSION] Added ${gene} domain (${parsedSeq.length}aa)`);
                     }
-
-                    sequences.push({ 
-                        "proteinChain": { 
-                            "sequence": parsedSeq,
-                            "count": 1
-                        } 
-                    });
+                    fusionSeq += (i > 0 ? Z_LINKER : "") + parsedSeq;
                     const acc = this.accessionRegistry[gene] || "Default";
                     factorsIncluded.push(`${gene}_${acc}`);
+                }
+            }
+
+            if (fusionSeq.length > 0) {
+                sequences.push({ 
+                    "proteinChain": { 
+                        "sequence": fusionSeq,
+                        "count": 1
+                    } 
+                });
+                totalResidues += fusionSeq.length;
+            }
+
+            // Fallback for non-TF drivers (e.g. MEF2C, TBX5 if not in top 3)
+            const remainingPool = structuralPool.slice(3, 5);
+            for (const [gene] of remainingPool) {
+                let seq = await this.fetchUniProtSequence(gene);
+                if (seq) {
+                    let parsedSeq = String(seq);
+                    const range = dhlLibrary[gene];
+                    const match = range.match(/(\d+)-(\d+)/);
+                    if (match) {
+                        parsedSeq = parsedSeq.substring(parseInt(match[1])-1, parseInt(match[2]));
+                    }
+                    sequences.push({ "proteinChain": { "sequence": parsedSeq, "count": 1 } });
                     totalResidues += parsedSeq.length;
                 }
             }
