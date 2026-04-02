@@ -1609,16 +1609,26 @@ async def discover_hybrid(req: HybridDiscoveryRequest, request: Request):
                     best_protocol = name
 
         # v28: Novelty Enforcement (Section 19: Semantic Divergence)
-        # If the match isn't overwhelmingly strong (>85%), treat it as a Novel Discovery
-        # EXCEPTION: If the GPT engine returned a greeting/help message, label as Assistant
         if "Zenith Assistant" in gpt_rationale:
-            best_protocol = "ZENITH ASSISTANT"
-            confidence = 100.0
-        elif max_sim < 0.85:
+            return DiscoveryResult(
+                recommended_protocol="ZENITH ASSISTANT",
+                confidence=100.0,
+                scientific_rationale=f"[ZENITH SYSTEM] {gpt_rationale}",
+                predicted_pathway=["Interface Active"],
+                synergy_score=0.0,
+                custom_vector=None,
+                target_profile=None,
+                structural_audit=None,
+                dna_motif_target=None,
+                epigenetic_age_reduction=0.0,
+                drug_advisory=None
+            )
+
+        # If the match isn't overwhelmingly strong (>85%), treat it as a Novel Discovery
+        if max_sim < 0.85:
             best_protocol = "NOVEL BIO-DESIGN"
 
         confidence = max_sim if max_sim > 0.85 else (0.5 + np.max(ideal_vector)*0.4)
-        if "Zenith Assistant" in gpt_rationale: confidence = 100.0
         
         rationale = f"[ZENITH HYBRID ENGINE] {gpt_rationale} "
         if max_sim > 0.85:
