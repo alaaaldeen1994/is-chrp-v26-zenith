@@ -1508,7 +1508,10 @@ const BiosimBridge = {
                 'SNAI1': '150-264', 'SNAI2': '150-264',
                 'MEF2C': '100-250', 'MEF2A': '100-250',
                 'OCT4': '130-280', 'SOX2': '41-119', 'SOX17': '1-120',
-                'KLF4': '395-479', 'MYC': '350-439'
+                'KLF4': '395-479', 'MYC': '350-439',
+                'PPARGC1A': '1-180', // N-terminal Activation Domain
+                'PPARA': '100-200',   // DBD (Zinc Fingers)
+                'RXRA': '130-210'     // DBD (Zinc Fingers)
             };
 
             // v32: Handshake-Pivot v2 (Rigid Stabilization)
