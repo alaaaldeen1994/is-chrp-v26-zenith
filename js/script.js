@@ -1478,6 +1478,15 @@ const BiosimBridge = {
         
         let sequences = [];
         let factorsIncluded = [];
+        let totalResidues = 0;
+
+        // Residue Length Map (Approximate for v26 Evaluation)
+        const residueMap = {
+            'TTN': 34350, 'RYR2': 4967, 'MYH6': 1935, 'MYH7': 1935, 'TNNT2': 298, 'GATA4': 442,
+            'NKX2-5': 324, 'TBX5': 518, 'MEF2C': 473, 'POU5F1': 360, 'OCT4': 360, 'SOX2': 317,
+            'NANOG': 305, 'KLF4': 479, 'MYC': 439, 'LIN28A': 209, 'PPARGC1A': 798, 'CPT1B': 772,
+            'NEUROD1': 356, 'ASCL1': 236
+        };
 
         // 1. DNA ANCHOR (31bp Z-Pillar Scaffold)
         const dnaFwd = this.sequenceRegistry['DNA_TARGET'] || "CCGATAAGCACGTGGACTTGTCAGGATCGAT";
@@ -1485,6 +1494,7 @@ const BiosimBridge = {
         const dnaRev = dnaFwd.split('').reverse().map(c=>rcMap[c]||c).join('');
         sequences.push({ "dnaSequence": { "sequence": dnaFwd, "count": 1 } });
         sequences.push({ "dnaSequence": { "sequence": dnaRev, "count": 1 } });
+        totalResidues += (dnaFwd.length * 2); // dsDNA (approx)
 
         // 2. PROTEIN FACTORS — Fetch from UniProt (live) or use pasted/cached sequences
         const topFactors = profile.slice(0, 5).filter(([, w]) => w >= 0.6);
@@ -1494,7 +1504,17 @@ const BiosimBridge = {
                 sequences.push({ "proteinChain": { "sequence": seq, "count": 1 } });
                 const acc = this.accessionRegistry[gene] || "Default";
                 factorsIncluded.push(`${gene}_${acc}`);
+                totalResidues += seq.length;
             }
+        }
+
+        // --- MANIFEST PRE-FLIGHT VALIDATION (v26.4 GOLD) ---
+        const AF3_LIMIT = 5120;
+        if (totalResidues > AF3_LIMIT) {
+            const msg = `MANIFEST LIMIT EXCEEDED: ${totalResidues} residues detected. AlphaFold Server limit is 5120.\nPlease remove the largest factors (e.g. RYR2) via the dashboard before exporting.`;
+            BiosimUI.notify('Export Blocked', msg, 'err');
+            BiosimUI.terminalLog(`[AF3 ERROR] Manifest too large (${totalResidues} residues). Pruning required.`);
+            return;
         }
 
         if (factorsIncluded.length === 0) {
