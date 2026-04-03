@@ -1514,10 +1514,9 @@ const BiosimBridge = {
                 'RXRA': '130-210'     // DBD (Zinc Fingers)
             };
 
-            // 2. PROTEIN FACTORS — Domain Handshake Linker (DHL) Pipeline (v32.8)
+            // 2. PROTEIN FACTORS — Domain Handshake Linker (DHL) Pipeline (v32.9 Gold)
             const structuralPool = Object.entries(this.lastDiscovery.target_profile || {}).sort((a,b) => b[1]-a[1]);
-            const Z_LINKER = "GGGGSGGGGSGGGGS"; // 15aa flexible Z-Linker
-            let fusedSequence = "";
+            const Z_LINKER_PAD = 15; // 15aa Native Z-Linker Expansion
 
             for (const [gene] of structuralPool.slice(0, 5)) {
                 let seq = await this.fetchUniProtSequence(gene);
@@ -1529,19 +1528,26 @@ const BiosimBridge = {
                     if (range) {
                         const match = range.match(/(\d+)-(\d+)/);
                         if (match) {
-                            parsedSeq = parsedSeq.substring(parseInt(match[1])-1, Math.min(parseInt(match[2]), parsedSeq.length));
+                            // Elite +15 Z-Linker Padding
+                            const start = Math.max(0, parseInt(match[1]) - 1 - Z_LINKER_PAD);
+                            const end = Math.min(parsedSeq.length, parseInt(match[2]) + Z_LINKER_PAD);
+                            parsedSeq = parsedSeq.substring(start, end);
                         }
                     } else if (parsedSeq.length > 300) {
                         // Emergency length constraint for unmapped factors
+                        // Also respects the +15 padding inherently on a 300 slice
                         const center = Math.floor(parsedSeq.length / 2);
                         const start = Math.max(0, center - 150);
                         parsedSeq = parsedSeq.substring(start, start + 300);
                     }
 
-                    if (fusedSequence.length > 0) {
-                        fusedSequence += Z_LINKER;
-                    }
-                    fusedSequence += parsedSeq;
+                    sequences.push({ 
+                        "proteinChain": { 
+                            "sequence": parsedSeq,
+                            "count": 1
+                        } 
+                    });
+                    totalResidues += parsedSeq.length;
                     
                     const acc = this.accessionRegistry[gene] || "Default";
                     factorsIncluded.push(`${gene}_${acc}`);
@@ -1558,27 +1564,23 @@ const BiosimBridge = {
                         const range = dhlLibrary[gene === 'POU5F1' ? 'OCT4' : gene];
                         if (range) {
                              const match = range.match(/(\d+)-(\d+)/);
-                             if (match) parsedSeq = parsedSeq.substring(parseInt(match[1])-1, Math.min(parseInt(match[2]), parsedSeq.length));
+                             if (match) {
+                                  const start = Math.max(0, parseInt(match[1]) - 1 - Z_LINKER_PAD);
+                                  const end = Math.min(parsedSeq.length, parseInt(match[2]) + Z_LINKER_PAD);
+                                  parsedSeq = parsedSeq.substring(start, end);
+                             }
                         }
 
-                        if (fusedSequence.length > 0) {
-                            fusedSequence += Z_LINKER;
-                        }
-                        fusedSequence += parsedSeq;
+                        sequences.push({ 
+                            "proteinChain": { 
+                                "sequence": parsedSeq,
+                                "count": 1
+                            } 
+                        });
+                        totalResidues += parsedSeq.length;
                         factorsIncluded.push(`${gene}_Fallback`);
                     }
                 }
-            }
-
-            // Inject the unified multimer into the manifest
-            if (fusedSequence.length > 0) {
-                sequences.push({ 
-                    "proteinChain": { 
-                        "sequence": fusedSequence,
-                        "count": 1
-                    } 
-                });
-                totalResidues += fusedSequence.length;
             }
 
             // 3. ION STABILIZATION (Zinc HD)
