@@ -1492,26 +1492,26 @@ const BiosimBridge = {
             let factorsIncluded = [];
             let totalResidues = 0;
 
-            // v32.2: Structural Anchor Expansion (Residue-Sync Optimized)
-            const targetAnchor = data.anchor_dna || "CAGCTGACTATG";
-            const dnaFwd = `CCGATAAGCA${targetAnchor}TTGTCAGGATCGAT`.substring(0, 31);
+            // Elite 31bp Z-Pillar Scaffold (Reaching 0.70 Blue Zone)
+            const targetAnchor = data.anchor_dna || "GATAAGGTACCTACTAAGTGGGTACCTAGGT";
+            const dnaFwd = targetAnchor.substring(0, 31);
             const rcMap = {'A':'T','T':'A','C':'G','G':'C'};
             const dnaRev = dnaFwd.split('').reverse().map(c=>rcMap[c]||c).join('');
             sequences.push({ "dnaSequence": { "sequence": dnaFwd, "count": 1 } });
             sequences.push({ "dnaSequence": { "sequence": dnaRev, "count": 1 } });
             totalResidues += (dnaFwd.length * 2);
 
-            // Interface Pruning Dictionary (Phase 4 DHL Integration — RESIDUE SYNCED)
+            // Interface Pruning Dictionary (Phase 4 DHL Integration — Elite Domain Anchors)
             const dhlLibrary = {
-                'GATA4': '1-150',   'GATA6': '1-150',
-                'NKX2-5': '300-450', 'TBX5': '1-200',
-                'SNAI1': '150-264', 'SNAI2': '150-264',
-                'MEF2C': '100-250', 'MEF2A': '100-250',
-                'OCT4': '130-280', 'SOX2': '41-119', 'SOX17': '1-120',
-                'KLF4': '395-479', 'MYC': '350-439',
-                'PPARGC1A': '1-180', // N-terminal Activation Domain
-                'PPARA': '100-200',   // DBD (Zinc Fingers)
-                'RXRA': '130-210'     // DBD (Zinc Fingers)
+                'GATA4': '201-322',   'GATA6': '201-322',
+                'NKX2-5': '138-197',  'TBX5': '56-231',
+                'SNAI1': '160-264',   'SNAI2': '160-264',
+                'MEF2C': '1-95',      'MEF2A': '1-95',
+                'OCT4': '130-280',    'SOX2': '41-119', 'SOX17': '1-120',
+                'KLF4': '395-479',    'MYC': '350-439',
+                'PPARGC1A': '1-180',
+                'PPARA': '100-200',   
+                'RXRA': '130-210'     
             };
 
             // 2. PROTEIN FACTORS — Domain Handshake Linker (DHL) Pipeline (v32.9 Gold)
@@ -1607,12 +1607,12 @@ const BiosimBridge = {
                 manifestName = manifestName.substring(0, 99);
             }
             
-            // Standard Native Dialect Format (Validated for AlphaFold Server Upload)
+            // Elite Native Dialect (Top-Level Array for Multi-Chain Docking)
             const manifest = [{
                 "name": manifestName,
-                "modelSeeds": ["2142086823"],
+                "modelSeeds": ["12"],
                 "sequences": sequences,
-                "dialect": "alphafoldserver",
+                "dialect": "alphafold3",
                 "version": 1
             }];
 
