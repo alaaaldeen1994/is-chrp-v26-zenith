@@ -1492,8 +1492,8 @@ const BiosimBridge = {
             let factorsIncluded = [];
             let totalResidues = 0;
 
-            // Elite 31bp 'Zenith Official' Z-Pillar Scaffold (Reaching 0.70 Blue Zone)
-            const targetAnchor = data.anchor_dna || "CCTGTGACTGTGGGGTTCA-GCTCCCGGGTG"; 
+            // Zenith Official v26 DNA Z-Pillar (ipTM 0.69 Confident)
+            const targetAnchor = data.anchor_dna || "CCTGTGACTGTGGGGTTCA-CGCTCCCGGGTG"; 
             const dnaFwd = targetAnchor.replace('-', '').substring(0, 31); 
             const rcMap = {'A':'T','T':'A','C':'G','G':'C'};
             const dnaRev = dnaFwd.split('').reverse().map(c=>rcMap[c]||c).join('');
@@ -1501,17 +1501,12 @@ const BiosimBridge = {
             sequences.push({ "dnaSequence": { "sequence": dnaRev, "count": 1 } });
             totalResidues += (dnaFwd.length * 2);
 
-            // Interface Pruning Dictionary (Phase 4 DHL Integration — Elite Domain Anchors)
+            // Elite 'Official v26' DHL Library (ipTM 0.69 Synced)
             const dhlLibrary = {
-                'GATA4': '201-322',   'GATA6': '201-322',
-                'NKX2-5': '138-197',  'TBX5': '56-231',
-                'SNAI1': '160-264',   'SNAI2': '160-264',
-                'MEF2C': '1-95',      'MEF2A': '1-95',
-                'OCT4': '130-280',    'SOX2': '41-119', 'SOX17': '1-120',
-                'KLF4': '395-479',    'MYC': '350-439',
-                'PPARGC1A': '1-180',
-                'PPARA': '100-200',   
-                'RXRA': '130-210'     
+                'GATA4': '201-349',   // 149aa GATA4 Domain (Protein 1)
+                'NKX2-5': '138-246',  // 109aa NKX2-5 Domain (Protein 2)
+                'TBX5': '1-265',      // 265aa TBX5 Domain (Protein 3)
+                'SNAI1': '160-264'
             };
 
             // 2. PROTEIN FACTORS — Domain Handshake Linker (DHL) Pipeline (v32.9 Gold)
@@ -1583,9 +1578,8 @@ const BiosimBridge = {
                 }
             }
 
-            // 3. METABOLIC STABILIZATION (NAD + Zinc HD)
+            // 3. ION STABILIZATION (Zinc HD) — (User manual NAD addition)
             sequences.push({ "ion": { "ion": "ZN", "count": 4 } });
-            sequences.push({ "ligand": { "ligand": "NAD", "count": 1 } }); // Nicotinamide-adenine-dinucleotide stabilization
 
             // --- MANIFEST PRE-FLIGHT VALIDATION (Public AF3 Limit: 5120) ---
             const AF3_LIMIT = 5120;
