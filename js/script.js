@@ -2786,6 +2786,53 @@ def run(protocol: protocol_api.ProtocolContext):
 };
 
 const BiosimUI = {
+    downloadSimulationData() {
+        const counts = {};
+        agents.forEach(a => counts[a.type] = (counts[a.type] || 0) + 1);
+        let entropy = 0;
+        for (const v of Object.values(counts)) {
+            const p = v / agents.length;
+            if (p > 0) entropy -= p * Math.log2(p);
+        }
+        
+        let avgAge = 0, avgHealth = 0;
+        if (agents.length > 0) {
+            avgAge = agents.reduce((a, b) => a + b.bioAge, 0) / agents.length;
+            avgHealth = agents.reduce((a, b) => a + b.health, 0) / agents.length;
+        }
+
+        const data = {
+            timestamp: new Date().toISOString(),
+            version: "v26.4_ZENITH_GOLD",
+            build_id: "2026.04.05_VALIDATED",
+            population: agents.length,
+            cells: agents.map(cell => ({
+                id: cell.id,
+                type: cell.type,
+                position: [Number(cell.pos.x.toFixed(3)), Number(cell.pos.y.toFixed(3))],
+                genes: Array.from(cell.genes).map(g => Number(g.toFixed(4))),
+                health: Number(cell.health.toFixed(3)),
+                age: Number(cell.bioAge.toFixed(3)),
+                burden: Number(cell.dnaDamage.toFixed(4)),
+                primary_marker: (typeof BiosimBridge !== 'undefined' && BiosimBridge.identifyPrimaryMarker) ? BiosimBridge.identifyPrimaryMarker(cell.genes) : "UNKNOWN"
+            })),
+            telemetry: {
+                entropy: Number(entropy.toFixed(3)),
+                average_age: Number(avgAge.toFixed(3)),
+                average_health: Number(avgHealth.toFixed(3)),
+                drift_magnitude: window.lastDriftMagnitude ? Number(window.lastDriftMagnitude.toFixed(4)) : 0.0
+            }
+        };
+
+        const blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = `Zenith_Simulation_Export_${Date.now()}.json`;
+        a.click();
+
+        this.notify('System', 'Simulation JSON Data Exported Successfully.', 'suc');
+    },
+
     notify(h, m, t) {
         const el = document.getElementById('toast-feed');
         const div = document.createElement('div');

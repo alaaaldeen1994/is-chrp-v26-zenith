@@ -1165,9 +1165,14 @@
             </div>
 
                 <!-- CLINICAL ANALYTICS -->
-                <div class="pt-5 pb-2 border-t border-white/5 flex items-center gap-2">
-                    <i data-lucide="bar-chart-2" class="w-3.5 h-3.5 text-emerald-400"></i>
-                    <span class="text-[9px] font-black text-emerald-400 uppercase tracking-widest">Clinical Analytics</span>
+                <div class="pt-5 pb-2 border-t border-white/5 flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <i data-lucide="bar-chart-2" class="w-3.5 h-3.5 text-emerald-400"></i>
+                        <span class="text-[9px] font-black text-emerald-400 uppercase tracking-widest">Clinical Analytics</span>
+                    </div>
+                    <button onclick="BiosimUI.downloadSimulationData()" class="flex items-center gap-1 px-2 py-0.5 bg-emerald-900/30 border border-emerald-500/30 text-[8px] text-emerald-400 rounded hover:bg-emerald-500/20 transition-all font-bold group">
+                        <i data-lucide="download" class="w-2.5 h-2.5 group-hover:animate-bounce"></i> DOWNLOAD DATA
+                    </button>
                 </div>
                 <!-- POPULATION CHART -->
                 <div class="mb-4 bg-black border border-dim p-3 rounded">
