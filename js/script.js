@@ -1505,12 +1505,13 @@ const BiosimBridge = {
             const dhlLibrary = {
                 'GATA4': '201-349',   'GATA6': '201-349',
                 'NKX2-5': '138-246',  'TBX5': '60-324',
-                'SNAI1': '160-264',   'SNAI2': '160-264',
+                'SNAI1': '150-264',   'SNAI2': '155-264',
                 'MEF2C': '1-95',      'MEF2A': '1-95',
-                'OCT4': '130-280',    'SOX2': '41-140',   'SOX17': '1-120',
-                'KLF4': '395-479',    'MYC': '350-439',
-                'NANOG': '150-250',   'MYOD1': '100-240', 'ASCL1': '150-280',
-                'HNF4A': '120-220',   'FOXA2': '160-260'
+                'OCT4': '138-285',    'SOX2': '41-120',   'SOX17': '1-120',
+                'KLF4': '395-485',    'MYC': '350-439',
+                'NANOG': '150-250',   'MYOD1': '100-244', 'ASCL1': '150-280',
+                'HNF4A': '120-220',   'FOXA2': '160-260',
+                'VEGFA': '27-191'     // Mature core ONLY (Excluded from DNA docking)
             };
 
             // 2. PROTEIN FACTORS — Domain Handshake Linker (DHL) Pipeline (v32.9 Gold)
@@ -1520,6 +1521,12 @@ const BiosimBridge = {
             for (const [gene] of structuralPool.slice(0, 5)) {
                 let seq = await this.fetchUniProtSequence(gene);
                 if (seq) {
+                    // Filter-Out Signaling Molecules (Interference Prevention)
+                    const signalingBlocklist = ["VEGFA", "VEGFB", "VEGFC", "VEGFD", "IGF1", "FGF2", "HGF", "PDGFA", "PDGFB"];
+                    if (signalingBlocklist.includes(gene.toUpperCase()) || signalingBlocklist.includes((gene === 'POU5F1' ? 'OCT4' : gene).toUpperCase())) {
+                        console.info(`[Handshake] Skipping signaling factor: ${gene} — preventing structural interference.`);
+                        continue; 
+                    }
                     let parsedSeq = String(seq);
                     
                     // Domain Pruning (DHL constraint)
