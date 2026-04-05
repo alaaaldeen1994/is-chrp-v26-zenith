@@ -1505,13 +1505,13 @@ HIGH_FIDELITY_FACTORS = [
     "SNAI1", "MYOD1", "ASCL1", "NEUROG2", "NANOG", "OCT4"
 ]
 
-def identify_most_relevant_factors(attribution_map, top_n=4):
-    """Only returns factors with Very High (pLDDT > 90) docking potential."""
+def identify_most_relevant_factors(attribution_map, top_n=2):
+    """Only returns top 2 factors with Very High (pLDDT > 90) docking potential to avoid structural clashes."""
     elite_results = {
         k: v for k, v in attribution_map.items() 
         if k in HIGH_FIDELITY_FACTORS
     }
-    # Return Top N results only as a dictionary
+    # Return Target Dimer (Handshake) only natively
     return dict(sorted(elite_results.items(), key=lambda x: x[1], reverse=True)[:top_n])
 
 

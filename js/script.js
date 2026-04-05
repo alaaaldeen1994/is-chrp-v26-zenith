@@ -1532,9 +1532,10 @@ const BiosimBridge = {
             let factorsIncluded = [];
             let totalResidues = 0;
 
-            // Zenith Official v26 'Z-Pillar' Scaffold (Permanent Structural Buffer)
-            const targetAnchor = data.anchor_dna || "CCTGTGACTGTGGGGTTCA-CGCTCCCGGGTG"; 
-            const dnaFwd = targetAnchor.replace('-', '').substring(0, 31); 
+            // Zenith Official v26 'Z-Pillar' Scaffold + Dynamic Motif Injection
+            // We use the specific GPT-identified motif, defaulting to a strong minimal anchor if absent.
+            const targetAnchor = data.dna_motif_target || "CCTGTGACTGTGGGGTTCA-CGCTCCCGGGTG"; 
+            const dnaFwd = targetAnchor.replace('-', '').padEnd(31, 'CCTGTGACTGTGGGGTTCA').substring(0, 31); 
             const rcMap = {'A':'T','T':'A','C':'G','G':'C'};
             const dnaRev = dnaFwd.split('').reverse().map(c=>rcMap[c]||c).join('');
             sequences.push({ "dnaSequence": { "sequence": dnaFwd, "count": 1 } });
@@ -1554,11 +1555,13 @@ const BiosimBridge = {
                 'VEGFA': '27-191'     // Mature core ONLY (Excluded from DNA docking)
             };
 
-            // 2. PROTEIN FACTORS — Domain Handshake Linker (DHL) Pipeline (v32.9 Gold)
+            // 2. PROTEIN FACTORS — Domain Handshake Linker (DHL) Pipeline (v33 Gold)
+            // CRITICAL FIX: Limit to EXACTLY Top 2 Factors to prevent AF3 structural clash (ipTM collapse).
+            // A 31bp DNA strand can realistically only coordinate a Dimer 'Handshake'.
             const structuralPool = Object.entries(this.lastDiscovery.target_profile || {}).sort((a,b) => b[1]-a[1]);
             const Z_LINKER_PAD = 15; // 15aa Native Z-Linker Expansion
 
-            for (const [gene] of structuralPool.slice(0, 5)) {
+            for (const [gene] of structuralPool.slice(0, 2)) {
                 let seq = await this.fetchUniProtSequence(gene);
                 if (seq) {
                     // Filter-Out Signaling Molecules (Interference Prevention)
