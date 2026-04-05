@@ -1505,13 +1505,16 @@ HIGH_FIDELITY_FACTORS = [
     "SNAI1", "MYOD1", "ASCL1", "NEUROG2", "NANOG", "OCT4"
 ]
 
-def identify_most_relevant_factors(attribution_map, top_n=2):
-    """Only returns top 2 factors with Very High (pLDDT > 90) docking potential to avoid structural clashes."""
+def identify_most_relevant_factors(attribution_map, top_n=12):
+    """
+    v26.4 UPGRADE: Returns full transcriptomic complexity (Top 12) for UI accuracy.
+    Note: The JS frontend will further prune this list for AlphaFold structural validation.
+    """
     elite_results = {
         k: v for k, v in attribution_map.items() 
         if k in HIGH_FIDELITY_FACTORS
     }
-    # Return Target Dimer (Handshake) only natively
+    # Return Expanded Profile for UI fidelity
     return dict(sorted(elite_results.items(), key=lambda x: x[1], reverse=True)[:top_n])
 
 
