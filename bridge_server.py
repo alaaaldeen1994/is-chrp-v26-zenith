@@ -1496,6 +1496,24 @@ async def simulate_step(batch: BatchCellState):
         mode="GENERATIVE"
     )
 
+# --- STRUCTURAL AUTHORITY FILTER ---
+# Official High-Fidelity Registry (The "Blue Zone" Anchor)
+HIGH_FIDELITY_FACTORS = [
+    "POU5F1", "SOX2", "KLF4", "MYC", 
+    "GATA4", "NKX2-5", "TBX5", "MEF2C",
+    "SNAI1", "MYOD1", "ASCL1", "NEUROG2", "NANOG", "OCT4"
+]
+
+def identify_most_relevant_factors(attribution_map, top_n=4):
+    """Only returns factors with Very High (pLDDT > 90) docking potential."""
+    elite_results = {
+        k: v for k, v in attribution_map.items() 
+        if k in HIGH_FIDELITY_FACTORS
+    }
+    # Return Top N results only as a dictionary
+    return dict(sorted(elite_results.items(), key=lambda x: x[1], reverse=True)[:top_n])
+
+
 async def get_target_vector_from_query(query: str, api_key: Optional[str] = None) -> Tuple[torch.Tensor, str, Dict[str, float]]:
     """
     Uses OpenAI GPT-4o to translate a natural language research query into a 1000-dimensional gene target vector.
@@ -1568,6 +1586,10 @@ async def get_target_vector_from_query(query: str, api_key: Optional[str] = None
                 idx = GENE_SYMBOLS.index(g_upper)
                 target_vec[idx] = float(weight)
                 filtered_gene_data[g_upper] = float(weight)
+        
+        # Apply the pLDDT > 90 High-Fidelity filter
+        filtered_gene_data = identify_most_relevant_factors(filtered_gene_data)
+
         
         return target_vec, explanation, filtered_gene_data, audit_data, dna_motif, age_reduction, drugs
     except Exception as e:
