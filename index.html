@@ -1111,6 +1111,26 @@
                         </div>
                     </div>
 
+                    <!-- ALPHAFOLD 3 CONFIDENCE METRICS BLOCK (NEW) -->
+                    <div id="af3-metrics-panel" class="hidden grid grid-cols-4 gap-1 mt-2">
+                        <div class="bg-black/30 border border-slate-700/40 p-1.5 rounded text-center">
+                            <div class="text-[6px] text-slate-500 font-black uppercase mb-0.5">pLDDT (Atom)</div>
+                            <div class="text-[9px] text-emerald-400 font-mono font-bold" id="metric-plddt">--</div>
+                        </div>
+                        <div class="bg-black/30 border border-slate-700/40 p-1.5 rounded text-center">
+                            <div class="text-[6px] text-slate-500 font-black uppercase mb-0.5" title="Predicted Aligned Error">PAE</div>
+                            <div class="text-[9px] text-blue-400 font-mono font-bold" id="metric-pae">--</div>
+                        </div>
+                        <div class="bg-black/30 border border-slate-700/40 p-1.5 rounded text-center">
+                            <div class="text-[6px] text-slate-500 font-black uppercase mb-0.5">pTM Score</div>
+                            <div class="text-[9px] text-purple-400 font-mono font-bold" id="metric-ptm">--</div>
+                        </div>
+                        <div class="bg-black/30 border border-slate-700/40 p-1.5 rounded text-center">
+                            <div class="text-[6px] text-slate-500 font-black uppercase mb-0.5" title="Interface pTM">ipTM</div>
+                            <div class="text-[9px] text-teal-400 font-mono font-bold" id="metric-iptm">--</div>
+                        </div>
+                    </div>
+
                     <!-- ZENITH ASSISTANT / RATIONALE TEXT -->
                     <div id="discovery-output-text" class="hidden mt-2 p-3 bg-indigo-500/5 border border-indigo-500/20 rounded-xl">
                         <div id="discovery-detail-text" class="text-[10px] text-indigo-100 leading-relaxed italic"></div>
