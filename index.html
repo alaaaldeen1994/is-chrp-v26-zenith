@@ -1184,15 +1184,16 @@
                     onclick="BiosimBridge.LatentMap.toggleAtlas()">TOGGLE ATLAS</button>
             </div>
 
-                <!-- CLINICAL ANALYTICS -->
-                <div class="pt-5 pb-2 border-t border-white/5 flex items-center justify-between">
+                <div class="pt-5 pb-2 border-t border-white/5 flex items-center justify-between group">
                     <div class="flex items-center gap-2">
-                        <i data-lucide="bar-chart-2" class="w-3.5 h-3.5 text-emerald-400"></i>
-                        <span class="text-[9px] font-black text-emerald-400 uppercase tracking-widest">Clinical Analytics</span>
+                        <i data-lucide="bar-chart-2" class="w-3.5 h-3.5 text-emerald-400 group-hover:rotate-12 transition-transform"></i>
+                        <span class="text-[9px] font-black text-emerald-400 uppercase tracking-widest">Clinical Analytics & HD GRN</span>
                     </div>
-                    <button onclick="BiosimUI.downloadSimulationData()" class="flex items-center gap-1 px-2 py-0.5 bg-emerald-900/30 border border-emerald-500/30 text-[8px] text-emerald-400 rounded hover:bg-emerald-500/20 transition-all font-bold group">
-                        <i data-lucide="download" class="w-2.5 h-2.5 group-hover:animate-bounce"></i> DOWNLOAD DATA
-                    </button>
+                    <div class="flex gap-1">
+                        <button onclick="BiosimUI.downloadSimulationData()" class="flex items-center gap-1 px-2 py-0.5 bg-emerald-900/30 border border-emerald-500/30 text-[8px] text-emerald-400 rounded hover:bg-emerald-500/20 transition-all font-bold group/btn">
+                            <i data-lucide="download" class="w-2.5 h-2.5 group-hover/btn:animate-bounce"></i> DOWNLOAD DATA
+                        </button>
+                    </div>
                 </div>
                 <!-- POPULATION CHART -->
                 <div class="mb-4 bg-black border border-dim p-3 rounded">
@@ -1249,20 +1250,18 @@
 
                 <!-- GENOMIC EXPLORER -->
                 <div class="mb-4">
-                    <span class="text-[9px] font-bold text-slate-500 uppercase">Zenith v26.4 GOLD: Kilo-Genome
-                        Explorer</span>
+                    <span class="text-[9px] font-bold text-slate-500 uppercase">Zenith v26.4 GOLD: Ultra-HD (5K) Genome Explorer</span>
 
                     <div class="mt-2 mb-2">
-                        <input type="text" id="gene-search" placeholder="Search 1,000 genes..."
+                        <input type="text" id="gene-search" placeholder="Search 5,000 genes..."
                             class="w-full bg-black/60 border border-dim rounded px-2 py-1 text-[10px] text-blue-300 focus:outline-none focus:border-blue-500/50"
                             oninput="BiosimUI.initGeneGrid(this.value)">
                     </div>
 
-                    <div id="gene-grid-container"
-                        class="overflow-y-auto max-h-64 pr-1 border border-dim rounded-lg bg-black/40">
+                    <div id="gene-grid-container" class="overflow-y-auto max-h-72 pr-1 border border-dim rounded-lg bg-black/40">
                         <div id="gene-grid" class="gene-matrix p-2"
-                            style="grid-template-columns: repeat(5, 1fr); gap: 4px;">
-                            <!-- Dynamically populated -->
+                            style="display: grid; grid-template-columns: repeat(10, 1fr); gap: 2px;">
+                            <!-- Dynamically populated 5,000 nodes -->
                         </div>
                     </div>
                 </div>

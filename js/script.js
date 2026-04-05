@@ -2898,26 +2898,24 @@ const BiosimUI = {
         const search = filter.toUpperCase();
         let count = 0;
 
-        // Enhanced Gene Grid: Show top 500 genes (Kilo-Genome Explorer)
+        // Enhanced Gene Grid: Show all 5,000 genes (Ultra-HD Explore)
         CONFIG.geneSymbols.forEach((sym, i) => {
             if (search && !sym.includes(search)) return;
-            if (count > 500 && !search) return;
-
+            // Native truncation removed to allow full 5000 discovery
+            
             const node = document.createElement('div');
-            node.className = 'gene-node group transition-all duration-300 hover:scale-110';
+            // Zenith v26.4: Extremely dense 10-column layout
+            node.className = 'w-full aspect-square border border-white/5 bg-black/40 flex items-center justify-center text-[5px] text-slate-500 font-mono transition-all duration-300 hover:scale-125 hover:z-10 cursor-pointer overflow-hidden';
             node.id = `g${i}`;
-
-            node.innerHTML = `
-                <div class="text-[6px] text-slate-500 font-mono mb-0.5 opacity-50">#${i.toString().padStart(3, '0')}</div>
-                <div class="truncate">${sym.substring(0, 6)}</div>
-            `;
-            node.title = `${sym} (Index: ${i})`;
+            node.innerText = sym.substring(0, 4);
+            node.title = `${sym} (#${i})`;
+            
             grid.appendChild(node);
             count++;
         });
 
         if (count === 0) {
-            grid.innerHTML = '<div class="col-span-12 text-[8px] text-slate-600 italic p-2">No genes matching search.</div>';
+            grid.innerHTML = '<div class="col-span-12 text-[8px] text-slate-600 italic p-2">No genes found.</div>';
         }
     },
 
