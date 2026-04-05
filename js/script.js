@@ -1534,8 +1534,22 @@ const BiosimBridge = {
 
             // Zenith Official v26 'Z-Pillar' Scaffold + Dynamic Motif Injection
             // We use the specific GPT-identified motif, defaulting to a strong minimal anchor if absent.
-            const targetAnchor = data.dna_motif_target || "CCTGTGACTGTGGGGTTCA-CGCTCCCGGGTG"; 
-            const dnaFwd = targetAnchor.replace('-', '').padEnd(31, 'CCTGTGACTGTGGGGTTCA').substring(0, 31); 
+            let targetAnchor = data.dna_motif_target || "CCTGTGACTGTGGGGTTCA-CGCTCCCGGGTG"; 
+            targetAnchor = targetAnchor.replace('-', '');
+
+            // OCT4/SOX2 Empirical Override for >0.8 ipTM (PDB: 1O4X)
+            const pKeys = Object.keys(data.target_profile || {});
+            if (pKeys.includes("POU5F1") && pKeys.includes("SOX2")) {
+                targetAnchor = "CTTTGTTATGCAAAT"; // Absolute Canonical Heterodimer Motif
+            }
+            
+            // CRITICAL FIX FOR >0.70 ipTM: The motif must be perfectly centered on at least a 35bp helix
+            // so neither protein in the Handshake complex falls off the physical edge of the DNA wire.
+            const totalLen = 35;
+            const padLeft = Math.max(0, Math.floor((totalLen - targetAnchor.length) / 2));
+            const padRight = Math.max(0, totalLen - targetAnchor.length - padLeft);
+            const dnaFwd = "CCTGTGACTGTGGGGTTCA".substring(0, padLeft) + targetAnchor + "CGCTCCCGGGTGACTGTGG".substring(0, padRight);
+
             const rcMap = {'A':'T','T':'A','C':'G','G':'C'};
             const dnaRev = dnaFwd.split('').reverse().map(c=>rcMap[c]||c).join('');
             sequences.push({ "dnaSequence": { "sequence": dnaFwd, "count": 1 } });
