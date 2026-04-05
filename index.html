@@ -284,8 +284,6 @@
                         <i data-lucide="dna" class="w-5 h-5 text-teal-400"></i>
                         <div class="font-sans font-bold tracking-tighter flex items-center uppercase text-slate-100">
                             <span class="text-lg mr-1">NILUS <span class="text-teal-400 ml-1">LAB</span></span>
-                            <span
-                                class="px-1.5 py-0.5 bg-blue-500/20 border border-blue-500/50 text-blue-400 text-[8px] rounded uppercase font-black">PRO</span>
                         </div>
                     </div>
 
@@ -1294,23 +1292,25 @@
             </button>
         </div>
 
-        <div id="logs-container" style="display: none;" class="px-4 pb-6">
-            <div class="bg-black/40 border border-slate-800 rounded-lg p-3 h-44 overflow-hidden flex flex-col mb-5 shadow-inner">
-                <div class="text-[9px] font-black text-slate-500 mb-2 border-b border-white/5 pb-1.5 flex justify-between tracking-widest uppercase">
-                    <span>System Protocol Log</span>
-                    <i data-lucide="terminal" class="w-3 h-3 text-slate-600"></i>
+        <div id="logs-container" style="display: none;" class="px-4 pb-4">
+            <div class="flex gap-3 h-52">
+                <div class="flex-1 bg-black/40 border border-slate-800 rounded-lg p-2.5 overflow-hidden flex flex-col shadow-inner">
+                    <div class="text-[8px] font-black text-slate-500 mb-2 border-b border-white/5 pb-1 flex justify-between tracking-widest uppercase">
+                        <span>System Protocol</span>
+                        <i data-lucide="terminal" class="w-2.5 h-2.5 text-slate-600"></i>
+                    </div>
+                    <div id="terminal-output" class="overflow-y-auto flex-1 custom-scrollbar pr-2 font-mono text-[8px] leading-relaxed">
+                        <div class="log-line text-emerald-500/80"><span>> Zenith Kernel Initialized...</span></div>
+                    </div>
                 </div>
-                <div id="terminal-output" class="overflow-y-auto flex-1 custom-scrollbar pr-2 font-mono text-[9px] leading-relaxed">
-                    <div class="log-line text-emerald-500/80"><span>> Zenith Kernel Initialized...</span></div>
-                </div>
-            </div>
 
-            <div class="bg-indigo-950/10 border border-indigo-500/20 rounded-lg p-3 h-52 overflow-hidden flex flex-col shadow-inner">
-                <div class="text-[9px] font-black text-indigo-400 mb-2 border-b border-indigo-500/20 pb-1.5 flex justify-between tracking-widest uppercase">
-                    <span>Clinical Discovery History</span>
-                    <i data-lucide="database" class="w-3 h-3 text-indigo-500"></i>
-                </div>
-                <div id="research-log" class="overflow-y-auto flex-1 custom-scrollbar pr-2 font-mono text-[9px] leading-relaxed">
+                <div class="flex-1 bg-indigo-950/10 border border-indigo-500/20 rounded-lg p-2.5 overflow-hidden flex flex-col shadow-inner">
+                    <div class="text-[8px] font-black text-indigo-400 mb-2 border-b border-indigo-500/20 pb-1 flex justify-between tracking-widest uppercase">
+                        <span>Clinical Log</span>
+                        <i data-lucide="database" class="w-2.5 h-2.5 text-indigo-500"></i>
+                    </div>
+                    <div id="research-log" class="overflow-y-auto flex-1 custom-scrollbar pr-2 font-mono text-[8px] leading-relaxed">
+                    </div>
                 </div>
             </div>
         </div>
