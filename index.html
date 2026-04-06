@@ -177,20 +177,21 @@
             z-index: 4;
         }
 
-        /* CUSTOM INSTITUTIONAL SCROLLBAR */
+        /* INSTITUTIONAL SCROLLBAR (ALPHAFOLD 3 STANDARD) */
         .custom-scrollbar::-webkit-scrollbar {
-            width: 3px;
+            width: 10px;
         }
         .custom-scrollbar::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 10px;
+            background: #0f172a; /* Slate-900 */
+            border-radius: 4px;
         }
         .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: rgba(99, 102, 241, 0.4); /* Indigo glow */
-            border-radius: 10px;
+            background: #475569; /* Slate-600 */
+            border: 2px solid #0f172a; /* Creates padding effect */
+            border-radius: 6px;
         }
         .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-            background: rgba(99, 102, 241, 0.7);
+            background: #64748b; /* Slate-500 highlight */
         }
     </style>
 </head>
