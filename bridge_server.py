@@ -1660,9 +1660,8 @@ async def generate_af3_manifest(req: dict):
         raw_factors = req.get("factors") or ["POU5F1", "SOX2"]
         target_dna = req.get("dna_motif") or "CTTTGTTATGCAAAT"
         
-        # 1. Structural Pruning: Ensure we only include high-affinity structural anchors
-        # Factors outside the blue-zone HIGH_FIDELITY_FACTORS are excluded to prevent ipTM decay (0.32 failure)
-        factors = [f for f in raw_factors if f in HIGH_FIDELITY_FACTORS]
+        # 1. Structural Validation: Pass discovery factors to physical D2H fetch
+        factors = [f.strip().upper() for f in raw_factors]
         if not factors: factors = ["POU5F1", "SOX2"] # Final safety fallback
         
         # 2. Sequential Precision Fetch

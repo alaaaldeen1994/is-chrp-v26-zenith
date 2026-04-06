@@ -1312,7 +1312,7 @@ const BiosimBridge = {
         const conf = document.getElementById('discovery-conf');
         const rec = document.getElementById('discovery-rec');
         const detailText = document.getElementById('discovery-detail-text');
-        const detailBox = document.getElementById('discovery-output-text');
+        const detailBox = document.getElementById('discovery-terminal');
         const synContainer = document.getElementById('synergy-container');
         const profileContainer = document.getElementById('discovery-target-profile');
 

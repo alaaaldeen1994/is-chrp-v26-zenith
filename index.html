@@ -1096,9 +1096,23 @@
                     </div>
                 </div>
 
-                <!-- ZENITH ASSISTANT / RATIONALE TEXT (MOVED UP FOR VISIBILITY) -->
-                <div id="discovery-output-text" class="hidden mt-4 p-3.5 bg-indigo-500/5 border border-indigo-500/20 rounded-xl shadow-inner">
-                    <div id="discovery-detail-text" class="text-[10px] text-indigo-100 leading-relaxed italic"></div>
+                <!-- ZENITH DISCOVERY TERMINAL (FIXED POSITION / HIGH-CONTRAST) -->
+                <div id="discovery-terminal" class="hidden mt-8 mb-6 p-6 bg-black/80 border-2 border-indigo-500/50 rounded-3xl shadow-[0_0_40px_rgba(99,102,241,0.2)] backdrop-blur-3xl min-h-[160px] relative overflow-hidden group/term">
+                    <!-- HEADER PILL -->
+                    <div class="absolute top-0 right-8 px-4 py-1 bg-indigo-500/20 border-x border-b border-indigo-500/40 rounded-b-xl text-[7px] text-indigo-400 font-black tracking-[0.2em] uppercase">SYSTEM.RATIONALE_D2H</div>
+                    
+                    <div id="discovery-detail-text" class="text-[12px] text-indigo-50 leading-relaxed italic font-medium drop-shadow-sm"></div>
+                    
+                    <!-- ATTACHED LATENT CONTROLS -->
+                    <div id="latent-layer-strip" class="mt-6 pt-4 border-t border-white/10 flex items-center justify-between">
+                        <div class="flex items-center gap-2">
+                            <div class="w-1.5 h-1.5 rounded-full bg-purple-500 animate-pulse shadow-[0_0_8px_#a855f7]"></div>
+                            <span class="text-[7.5px] text-purple-300 uppercase tracking-[0.15em] font-black">Latent Exploratory Layer</span>
+                        </div>
+                        <button
+                            class="bg-blue-600/30 text-blue-400 border border-blue-500/50 text-[7px] px-3 py-1.5 rounded-full hover:bg-blue-600/50 transition-all font-black uppercase tracking-tighter"
+                            onclick="BiosimBridge.LatentMap.toggleAtlas()">TOGGLE ATLAS</button>
+                    </div>
                 </div>
 
                 <!-- DISCOVERY OUTPUT (ZENITH HIGH-FIDELITY) -->
@@ -1176,23 +1190,12 @@
             </div>
 
 
-            <!-- CLINICAL SCROLL CONTAINER (NEW: 100% ZOOM OPTIMIZATION) -->
-            <div class="flex-1 overflow-y-auto custom-scrollbar px-4 pb-20">
-                <!-- LATENT LAYER ATTACHMENT (MOVED) -->
-                <div class="flex items-center justify-between py-2 mb-2 border-b border-purple-500/5 bg-purple-950/5 rounded-lg px-2">
-                    <div class="flex items-center gap-1.5">
-                        <i data-lucide="layers" class="w-2.5 h-2.5 text-purple-400"></i>
-                        <span class="text-[7.5px] text-purple-300 uppercase tracking-widest font-bold">Latent Exploratory Layer</span>
-                    </div>
-                    <button
-                        class="bg-blue-600/10 text-blue-400 border border-blue-500/30 text-[6.5px] px-2 py-0.5 rounded hover:bg-blue-600/20 transition-all font-bold"
-                        onclick="BiosimBridge.LatentMap.toggleAtlas()">TOGGLE ATLAS</button>
-                </div>
-
-                <div class="pt-2 pb-2 border-t border-white/5 flex items-center justify-between group">
-                    <div class="flex items-center gap-2">
-                        <i data-lucide="bar-chart-2" class="w-3.5 h-3.5 text-emerald-400 group-hover:rotate-12 transition-transform"></i>
-                        <span class="text-[9px] font-black text-emerald-400 uppercase tracking-widest">Clinical Analytics & HD GRN</span>
+            <!-- CLINICAL ANALYTICS (DEEP SCROLL / MAX SEPARATION) -->
+            <div class="flex-1 overflow-y-auto custom-scrollbar px-4 pb-64 mt-24 border-t border-white/10 pt-10 bg-gradient-to-b from-black/40 to-transparent">
+                <div class="mb-6 flex items-center justify-between group">
+                    <div class="flex items-center gap-2.5">
+                        <i data-lucide="bar-chart-2" class="w-4 h-4 text-emerald-400 group-hover:rotate-12 transition-transform"></i>
+                        <span class="text-[10px] font-black text-emerald-400 uppercase tracking-[0.2em]">Clinical Analytics & HD GRN</span>
                     </div>
                     <div class="flex gap-1">
                         <button onclick="BiosimUI.downloadSimulationData()" class="flex items-center gap-1 px-2 py-0.5 bg-emerald-900/30 border border-emerald-500/30 text-[8px] text-emerald-400 rounded hover:bg-emerald-500/20 transition-all font-bold group/btn">
