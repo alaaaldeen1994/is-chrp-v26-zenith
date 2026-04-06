@@ -1138,12 +1138,25 @@ const BiosimBridge = {
             if (progress > 92) progress = 92;
             if (loadingBar) loadingBar.style.width = `${progress}%`;
 
-            // Dynamic loading messages
-            if (loadingText) {
-                if (progress < 30) loadingText.innerText = "Zenith Hybrid: Semantic Analysis...";
-                else if (progress < 60) loadingText.innerText = "Zenith-102M: Manifold Gradient Calc...";
-                else if (progress < 85) loadingText.innerText = "Extracting Novel Vector Trajectory...";
-                else loadingText.innerText = "Finalizing Bio-Discovery Protocol...";
+            const statusEl = document.getElementById('loading-status-text');
+            const percentEl = document.getElementById('loading-percent');
+            if (percentEl) percentEl.innerText = `${progress.toFixed(2)}%`;
+            if (statusEl) {
+                const phases = [
+                    "INITIALIZING MANIFOLD...",
+                    "ANALYZING TRAJECTORY...",
+                    "STRUCTURAL VALIDATION (AF3)...",
+                    "MAPPING MOTIF: CTTTGTTATG...",
+                    "EXTRACTING TRANSCRIPTION FACTORS...",
+                    "CALCULATING SYNERGY GRADIENT...",
+                    "VERIFYING PLDDT THRESHOLDS...",
+                    "SYNTHESIZING ZENITH OUTPUT...",
+                    "FINALIZING HD PROTOCOL...",
+                    "AUTHORIZING MANIFOLD...",
+                    "GENERATING CLINICAL INSIGHTS..."
+                ];
+                const phaseIdx = Math.floor((progress / 100) * phases.length);
+                statusEl.innerHTML = `<span class="w-1 h-1 bg-indigo-500 rounded-full animate-ping"></span> ${phases[Math.min(phaseIdx, phases.length - 1)]}`;
             }
         }, 300);
 
@@ -1283,7 +1296,9 @@ const BiosimBridge = {
 
             clearInterval(interval);
             if (loadingBar) loadingBar.style.width = '100%';
-            setTimeout(() => { if (loadingBox) loadingBox.classList.add('hidden'); }, 500);
+            const percentElFinal = document.getElementById('loading-percent');
+            if (percentElFinal) percentElFinal.innerText = "100.00%";
+            setTimeout(() => { if (loadingBox) loadingBox.classList.add('hidden'); }, 800);
             if (discoverBtn) discoverBtn.disabled = false;
 
             this.lastDiscovery = { ...data, target_query: query };
