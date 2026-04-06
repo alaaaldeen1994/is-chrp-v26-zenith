@@ -1417,7 +1417,10 @@ const BiosimBridge = {
                     <div style="display:flex;align-items:center;gap:4px;background:rgba(255,255,255,0.03);border:1px solid ${isGiant ? 'rgba(239, 68, 68, 0.4)' : 'rgba(255,255,255,0.07)'};border-radius:6px;padding:4px 6px;transition:all 0.2s" class="group-factor">
                         <div style="flex:1;min-width:0">
                             <div style="display:flex;justify-content:space-between;align-items:center">
-                                <span style="font-size:8px;color:#fff;font-family:monospace;font-weight:700">${gene}${auditRange ? ' <span style="font-size:6px;color:#475569">'+auditRange+'</span>' : ''}</span>
+                                <div style="display:flex;align-items:center;gap:3px">
+                                    <div style="width:3px;height:3px;border-radius:full;background:#10b981;box-shadow:0 0 4px #10b981;animation:pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite"></div>
+                                    <span style="font-size:8px;color:#fff;font-family:monospace;font-weight:700">${gene}${auditRange ? ' <span style="font-size:6px;color:#475569">'+auditRange+'</span>' : ''}</span>
+                                </div>
                                 <span style="font-size:7px;font-weight:700;color:${scoreColor};margin-left:4px;flex-shrink:0">${pct}%</span>
                             </div>
                             <div style="width:100%;background:rgba(30,41,59,0.8);height:2px;border-radius:2px;margin-top:3px">
