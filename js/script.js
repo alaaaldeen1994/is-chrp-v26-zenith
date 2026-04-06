@@ -1333,6 +1333,11 @@ const BiosimBridge = {
         if (detailText && detailBox) {
             detailText.innerHTML = data.scientific_rationale.replace('OSKM', '<strong class="text-blue-400">OSKM</strong>');
             detailBox.classList.remove('hidden');
+            
+            // AUTOMATE LATENT ATLAS (Professional Mode)
+            if (typeof BiosimBridge.LatentMap !== 'undefined' && BiosimBridge.LatentMap.toggleAtlas) {
+                BiosimBridge.LatentMap.toggleAtlas(true);
+            }
         }
 
         // Display AF3 Confidence Metrics
