@@ -1052,15 +1052,13 @@
         </div>
         <!-- ANALYTICS PANEL (NOW ON LEFT) -->
 
-        <div class="panel lg:grid-row-2 lg:grid-col-3" style="border-left: 1px solid #222;">
-            <div class="panel-header">
+        <div class="panel lg:grid-row-2 lg:grid-col-3 flex flex-col h-full" style="border-left: 1px solid #222;">
+            <div class="panel-header border-b border-indigo-500/10 flex-shrink-0">
                 <span class="panel-title"><i data-lucide="zap" class="w-3.5 h-3.5"></i> AI PROTOCOL DISCOVERY <span class="text-[7px] bg-indigo-500/20 px-1.5 py-0.5 rounded text-indigo-300 font-black border border-indigo-500/30 ml-2">ZENITH-ULTRA-5K</span></span>
                 <div id="discovery-status-dot" class="w-1.5 h-1.5 rounded-full bg-indigo-500 shadow-[0_0_8px_#6366f1]"></div>
             </div>
             
-            <div class="flex-1 overflow-y-auto custom-scrollbar p-1">
-                <!-- ZENITH ULTRA-HD DISCOVERY SUITE: INSTITUTIONAL v26.4 GOLD (RIGHT PANEL) -->
-                <div class="p-1 bg-indigo-950/5 mb-4 relative overflow-hidden group rounded-xl">
+            <div class="flex-shrink-0 p-1 bg-indigo-950/10 border-b border-white/5 relative group">
  
                 <div class="space-y-2 mb-4 px-2">
                     <div class="flex items-center justify-between">
@@ -1086,7 +1084,10 @@
                         <i data-lucide="sparkles" class="w-4 h-4"></i> INITIATE HYBRID DISCOVERY
                     </button>
                 </div>
+            </div> <!-- End Pinned Trigger Section -->
 
+            <!-- SCROLLABLE DISCOVERY RESULTS & ANALYTICS -->
+            <div class="flex-1 overflow-y-auto custom-scrollbar p-1">
                 <!-- ZENITH GOLD DISCOVERY: HIGH-FIDELITY PROGRESSOR -->
                 <div id="discovery-loading" class="hidden my-4 p-5 bg-indigo-950/30 border border-indigo-500/20 rounded-2xl animation-fade-in shadow-2xl relative overflow-hidden">
                     <!-- Progress Bar -->
