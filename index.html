@@ -1061,12 +1061,11 @@
                 <!-- ZENITH ULTRA-HD DISCOVERY SUITE: INSTITUTIONAL v26.4 GOLD (RIGHT PANEL) -->
                 <div class="p-1 bg-indigo-950/5 mb-4 relative overflow-hidden group rounded-xl">
  
-                 <!-- NEURAL HYBRID TARGETING -->        <!-- NEURAL HYBRID TARGETING -->
-                <div class="space-y-2 mb-4">
+                <div class="space-y-2 mb-4 px-2">
                     <div class="flex items-center justify-between">
                         <span class="text-[8px] text-indigo-300 font-bold uppercase tracking-tighter">Semantic Target</span>
                          <div class="flex items-center gap-1">
-                              <span class="text-[7px] text-indigo-500 italic">ZENITH GOLD MANIFOLD</span>
+                              <span class="text-[6px] text-indigo-500 italic uppercase">Zenith-102M Generic Manifold</span>
                          </div>
                     </div>
                     <div class="relative group/text">
@@ -1079,11 +1078,13 @@
                     </div>
                 </div>
 
-                <button id="btn-discover"
-                    class="bg-indigo-600 hover:bg-indigo-500 text-white text-[10px] font-black w-full py-3.5 rounded-xl transition-all flex items-center justify-center gap-2 shadow-lg shadow-indigo-500/20 active:scale-[0.98]"
-                    onclick="BiosimBridge.discoverHybridProtocol(this)">
-                    <i data-lucide="sparkles" class="w-4 h-4"></i> INITIATE HYBRID DISCOVERY
-                </button>
+                <div id="btn-discover-container" class="px-2">
+                    <button id="btn-discover"
+                        class="bg-indigo-600 hover:bg-indigo-500 text-white text-[10px] font-black w-full py-4 rounded-xl transition-all flex items-center justify-center gap-2 shadow-lg shadow-indigo-500/20 active:scale-[0.98] mb-6"
+                        onclick="BiosimBridge.discoverHybridProtocol(this)">
+                        <i data-lucide="sparkles" class="w-4 h-4"></i> INITIATE HYBRID DISCOVERY
+                    </button>
+                </div>
 
                 <!-- LOADING INDICATOR -->
                 <div id="discovery-loading" class="hidden my-4 p-4 bg-indigo-950/40 border border-indigo-500/20 rounded-xl animation-fade-in">
@@ -1096,36 +1097,25 @@
                     </div>
                 </div>
 
-                <!-- ZENITH DISCOVERY TERMINAL (FIXED POSITION / HIGH-CONTRAST) -->
-                <div id="discovery-terminal" class="hidden mt-8 mb-6 p-6 bg-black/80 border-2 border-indigo-500/50 rounded-3xl shadow-[0_0_40px_rgba(99,102,241,0.2)] backdrop-blur-3xl min-h-[160px] relative overflow-hidden group/term">
-                    <!-- HEADER PILL -->
-                    <div class="absolute top-0 right-8 px-4 py-1 bg-indigo-500/20 border-x border-b border-indigo-500/40 rounded-b-xl text-[7px] text-indigo-400 font-black tracking-[0.2em] uppercase">SYSTEM.RATIONALE_D2H</div>
-                    
-                    <div id="discovery-detail-text" class="text-[12px] text-indigo-50 leading-relaxed italic font-medium drop-shadow-sm"></div>
-                    
-                    <!-- ATTACHED LATENT CONTROLS -->
-                    <div id="latent-layer-strip" class="mt-6 pt-4 border-t border-white/10 flex items-center justify-between">
-                        <div class="flex items-center gap-2">
-                            <div class="w-1.5 h-1.5 rounded-full bg-purple-500 animate-pulse shadow-[0_0_8px_#a855f7]"></div>
-                            <span class="text-[7.5px] text-purple-300 uppercase tracking-[0.15em] font-black">Latent Exploratory Layer</span>
-                        </div>
-                        <button
-                            class="bg-blue-600/30 text-blue-400 border border-blue-500/50 text-[7px] px-3 py-1.5 rounded-full hover:bg-blue-600/50 transition-all font-black uppercase tracking-tighter"
-                            onclick="BiosimBridge.LatentMap.toggleAtlas()">TOGGLE ATLAS</button>
+                <!-- ZENITH DISCOVERY SUITE (CONSOLIDATED) -->
+                <div id="discovery-output" class="hidden mt-3 space-y-4 animation-fade-in">
+                    <!-- RATIONALE TERMINAL (INTEGRATED) -->
+                    <div id="discovery-terminal" class="p-4 bg-black/60 border border-indigo-500/30 rounded-2xl shadow-xl backdrop-blur-xl">
+                        <div class="text-[7px] text-indigo-400 font-black uppercase tracking-[0.2em] mb-2 opacity-60">System.Rationale_D2H</div>
+                        <div id="discovery-detail-text" class="text-[11px] text-indigo-50 leading-relaxed italic font-medium"></div>
                     </div>
-                </div>
 
-                <!-- DISCOVERY OUTPUT (ZENITH HIGH-FIDELITY) -->
-                <div id="discovery-output" class="hidden mt-3 space-y-3 animation-fade-in">
-                    <div class="flex justify-between items-start">
+                    <!-- PROTOCOL HEADER -->
+                    <div class="flex justify-between items-start bg-white/5 p-3 rounded-xl border border-white/5">
                         <div class="flex flex-col gap-1">
                             <span class="text-[7px] text-slate-500 font-bold uppercase tracking-widest">Protocol Identified</span>
-                            <div class="text-[11px] text-white font-black tracking-tight" id="discovery-rec">--</div>
+                            <div class="text-[12px] text-white font-black tracking-tight" id="discovery-rec">--</div>
                         </div>
                         <div id="discovery-conf" class="text-right">
                              <div class="text-[6px] text-slate-500 font-black uppercase mb-0.5">Quality</div>
-                             <div class="text-[10px] text-teal-400 font-black tracking-widest">--</div>
+                             <div class="text-[11px] text-teal-400 font-black tracking-widest leading-none">--</div>
                         </div>
+                    </div>
                     </div>
 
                     <!-- ALPHAFOLD 3 CONFIDENCE METRICS BLOCK (NEW) -->
@@ -1183,7 +1173,18 @@
                         </div>
                     </div>
 
-                    <div id="synergy-container" class="border-t border-white/8 pt-1">
+                    <!-- LATENT LAYER STRIP (INTEGRATED) -->
+                    <div id="latent-layer-strip" class="flex items-center justify-between py-3 px-4 bg-purple-950/20 border border-purple-500/20 rounded-xl">
+                        <div class="flex items-center gap-2">
+                            <div class="w-1.5 h-1.5 rounded-full bg-purple-500 animate-pulse shadow-[0_0_8px_#a855f7]"></div>
+                            <span class="text-[7.5px] text-purple-300 uppercase tracking-[0.15em] font-black">Latent Exploratory Layer</span>
+                        </div>
+                        <button
+                            class="text-[7px] text-blue-400 border border-blue-500/30 px-3 py-1 rounded-full hover:bg-blue-600/20 transition-all font-black uppercase tracking-tighter"
+                            onclick="BiosimBridge.LatentMap.toggleAtlas()">TOGGLE ATLAS</button>
+                    </div>
+
+                    <div id="synergy-container" class="border-t border-white/5 pt-1">
                     </div>
                 </div>
                 </div>
