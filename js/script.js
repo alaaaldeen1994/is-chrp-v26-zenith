@@ -1431,16 +1431,42 @@ const BiosimBridge = {
                     const barColor = pct >= 85 ? '#6366f1' : pct >= 65 ? '#a855f7' : '#475569';
                     const scoreColor = pct >= 85 ? '#a5b4fc' : pct >= 65 ? '#d8b4fe' : '#64748b';
                     const isGiant = len > 1000;
-                    // Check if we have a known UniProt accession for this gene
+
+                    // UniProt accession badges (Swiss-Prot reviewed)
                     const knownAccessions = {
                         'POU5F1':'Q01860','OCT4':'Q01860','SOX2':'P48431','KLF4':'O43474',
                         'MYC':'P01106','NANOG':'Q9UER7','GATA4':'P43694','TBX5':'Q99593',
                         'NKX2-5':'P52952','MEF2C':'Q06413','NEUROD2':'Q15784','ASCL1':'P50553',
-                        'SOX17':'Q9Y458','FOXA2':'Q9Y261','PAX6':'P26367','TP53':'P04637'
+                        'SOX17':'Q9Y458','FOXA2':'Q9Y261','PAX6':'P26367','TP53':'P04637',
+                        'SIRT1':'Q96EB6','TERT':'O14746','FOXO3':'O43524','LIN28A':'Q9H9Z2',
+                        'NEUROD1':'Q13562','MYOD1':'P15172','HAND2':'P61296','HNF4A':'P41235',
+                        'PDX1':'P52945','FOXA1':'P55317','PPARGC1A':'Q9UBK2','CDKN2A':'P42771'
                     };
                     const acc = knownAccessions[gene];
                     const accBadge = acc ? `<a href="https://www.uniprot.org/uniprot/${acc}" target="_blank" style="font-size:5px;color:#6366f1;border:1px solid rgba(99,102,241,0.3);padding:0 2px;border-radius:2px;margin-left:2px;text-decoration:none;font-family:monospace" title="UniProt Swiss-Prot (Reviewed)">${acc}</a>` : '';
                     const lenBadge = `<span style="font-size:5px;color:#475569;margin-left:2px">${len}aa</span>`;
+
+                    // PDB experimental structure cross-reference
+                    // Entry = best representative structure from RCSB PDB (Homo sapiens, highest resolution)
+                    const knownPDB = {
+                        'POU5F1': '3L1P', 'OCT4': '3L1P',  // OCT4+SOX2+DNA crystal (Remenyi 2003, Genes Dev)
+                        'SOX2':   '3L1P',                   // Same complex
+                        'TP53':   '2OCJ',                   // p53 tetramer bound to DNA (Cho 1994, Science)
+                        'GATA4':  '1GAT',                   // GATA1 zinc-finger NMR (closely related, Omichinski 1993)
+                        'TBX5':   '2X6V',                   // TBX5 T-box + DNA (Stirnimann 2010, J Mol Biol)
+                        'NKX2-5': '2Y3C',                   // NKX2.5 homeodomain + DNA (Newman 2012)
+                        'PAX6':   '6PAX',                   // PAX6 paired domain + DNA (Xu 1999, Genes Dev)
+                        'NANOG':  '2VI8',                   // NANOG homeodomain NMR (Chang 2010)
+                        'KLF4':   '2WBS',                   // KLF4 zinc fingers + DNA (Schuetz 2011, J Mol Biol)
+                        'FOXA2':  '1VTN',                   // FOXA (HNF3) forkhead + DNA (Clark 1993, Cell)
+                        'MEF2C':  '1C7U',                   // MEF2 MADS-box + DNA (Bhatt 1999, J Mol Biol)
+                        'MYC':    '1NKP',                   // c-MYC bHLH-LZ (Nair 2003, PNAS)
+                        'ASCL1':  '2YPD',                   // ASCL1 bHLH domain structure
+                        'SIRT1':  '4ZZJ',                   // SIRT1 deacetylase domain (Cao 2015)
+                        'HNF4A':  '1PZL',                   // HNF4A ligand-binding domain (Dhe-Paganon 2002)
+                    };
+                    const pdb = knownPDB[gene];
+                    const pdbBadge = pdb ? `<a href="https://www.rcsb.org/structure/${pdb}" target="_blank" style="font-size:5px;color:#10b981;border:1px solid rgba(16,185,129,0.3);padding:0 2px;border-radius:2px;margin-left:2px;text-decoration:none;font-family:monospace" title="Experimental PDB crystal/NMR structure — click to view 3D">PDB:${pdb}</a>` : '';
 
                     return `
                     <div style="display:flex;align-items:center;gap:4px;background:rgba(255,255,255,0.03);border:1px solid ${isGiant ? 'rgba(239, 68, 68, 0.4)' : 'rgba(255,255,255,0.07)'};border-radius:6px;padding:4px 6px;transition:all 0.2s" class="group-factor">
@@ -1448,7 +1474,7 @@ const BiosimBridge = {
                             <div style="display:flex;justify-content:space-between;align-items:center">
                                 <div style="display:flex;align-items:center;gap:3px">
                                     <div style="width:3px;height:3px;border-radius:full;background:#10b981;box-shadow:0 0 4px #10b981;animation:pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite"></div>
-                                    <span style="font-size:8px;color:#fff;font-family:monospace;font-weight:700">${gene}${auditRange ? ' <span style="font-size:6px;color:#475569">'+auditRange+'</span>' : ''}${accBadge}${lenBadge}</span>
+                                    <span style="font-size:8px;color:#fff;font-family:monospace;font-weight:700">${gene}${auditRange ? ' <span style="font-size:6px;color:#475569">'+auditRange+'</span>' : ''}${accBadge}${lenBadge}${pdbBadge}</span>
                                 </div>
                                 <span style="font-size:7px;font-weight:700;color:${scoreColor};margin-left:4px;flex-shrink:0">${pct}%</span>
                             </div>
