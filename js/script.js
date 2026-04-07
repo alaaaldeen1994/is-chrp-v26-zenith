@@ -1590,7 +1590,7 @@ const BiosimBridge = {
             const targetProfile = data.target_profile || {};
             const profile = Object.entries(targetProfile).sort((a,b) => b[1] - a[1]);
             
-            let sequences = []; let allProteinStrings = []; let allProteinStrings = [];
+            let sequences = []; let allProteinStrings = []; let allProteinStrings = []; let allProteinStrings = [];
             let factorsIncluded = [];
             let totalResidues = 0;
 
@@ -1733,7 +1733,7 @@ const BiosimBridge = {
             }
             
             // Zenith Universal Structural Authority (ipTM 0.70+ Confident Standard)
-            if (allProteinStrings.length > 0) { const fused = allProteinStrings.join("GGGGSGGGGSGGGGSGGGGS"); sequences.push({ "protein": { "id": "A", "sequence": fused } }); } const manifest = [{
+            if (allProteinStrings.length > 0) { const fused = allProteinStrings.join("GGGGSGGGGSGGGGSGGGGS"); sequences.push({ "protein": { "id": "A", "sequence": fused } }); } if (allProteinStrings.length > 0) { const fused = allProteinStrings.join("GGGGSGGGGSGGGGSGGGGS"); sequences.push({ "protein": { "id": "A", "sequence": fused } }); totalResidues = fused.length; } const manifest = [{
                 "name": manifestName,
                 "modelSeeds": ["2142086823"], 
                 "sequences": sequences,
