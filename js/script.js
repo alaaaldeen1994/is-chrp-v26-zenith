@@ -1666,12 +1666,7 @@ const BiosimBridge = {
                         parsedSeq = parsedSeq.substring(start, start + 300);
                     }
 
-                    sequences.push({ 
-                        "proteinChain": { 
-                            "sequence": parsedSeq,
-                            "count": 1
-                        } 
-                    });
+                    allProteinStrings.push(parsedSeq);
                     totalResidues += parsedSeq.length;
                     
                     const acc = this.accessionRegistry[gene] || "Default";
@@ -1733,7 +1728,7 @@ const BiosimBridge = {
             }
             
             // Zenith Universal Structural Authority (ipTM 0.70+ Confident Standard)
-            if (allProteinStrings.length > 0) { const fused = allProteinStrings.join("GGGGSGGGGSGGGGSGGGGS"); sequences.push({ "protein": { "id": "A", "sequence": fused } }); } if (allProteinStrings.length > 0) { const fused = allProteinStrings.join("GGGGSGGGGSGGGGSGGGGS"); sequences.push({ "protein": { "id": "A", "sequence": fused } }); totalResidues = fused.length; } const manifest = [{
+            if (allProteinStrings.length > 0) { const fused = allProteinStrings.join("GGGGSGGGGSGGGGSGGGGS"); sequences.push({ "protein": { "id": "A", "sequence": fused } }); } if (allProteinStrings.length > 0) { const fused = allProteinStrings.join("GGGGSGGGGSGGGGSGGGGS"); sequences.push({ "protein": { "id": "A", "sequence": fused } }); totalResidues = fused.length; } if (allProteinStrings.length > 0) { const fused = allProteinStrings.join("GGGGSGGGGSGGGGSGGGGS"); sequences.push({ "protein": { "id": "A", "sequence": fused } }); totalResidues = fused.length; } const manifest = [{
                 "name": manifestName,
                 "modelSeeds": ["2142086823"], 
                 "sequences": sequences,
