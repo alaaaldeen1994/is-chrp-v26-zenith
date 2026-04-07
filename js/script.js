@@ -1679,7 +1679,7 @@ const BiosimBridge = {
                 }
             }
 
-            if (factorsIncluded.length === 0) {
+            if (allProteinStrings.length > 0) { const fused = allProteinStrings.join("GGGGSGGGGSGGGGSGGGGS"); sequences.push({ "protein": { "sequence": fused, "id": "A" } }); totalResidues = fused.length; } if (factorsIncluded.length === 0) {
                 // v31: OSKM Foundation Fallback Pool
                 const foundationPool = ['POU5F1', 'SOX2', 'KLF4', 'MYC'];
                 for (const gene of foundationPool) {
