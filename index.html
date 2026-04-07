@@ -1116,8 +1116,16 @@
                 <!-- ZENITH DISCOVERY SUITE (CONSOLIDATED) -->
                 <div id="discovery-output" class="hidden mt-3 space-y-4 animation-fade-in">
                     <!-- RATIONALE TERMINAL (INTEGRATED) -->
-                    <div id="discovery-terminal" class="p-4 bg-black/60 border border-indigo-500/30 rounded-2xl shadow-xl backdrop-blur-xl">
-                        <div class="text-[7px] text-indigo-400 font-black uppercase tracking-[0.2em] mb-2 opacity-60">System.Rationale_D2H</div>
+                    <div id="discovery-terminal" class="p-4 bg-black/60 border border-indigo-500/30 rounded-2xl shadow-xl backdrop-blur-xl relative group/terminal">
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="text-[7px] text-indigo-400 font-black uppercase tracking-[0.2em] opacity-60">System.Rationale_D2H</div>
+                            <button id="copy-rationale-btn"
+                                onclick="(function(){const t=document.getElementById('discovery-detail-text');if(!t||!t.innerText.trim())return;navigator.clipboard.writeText(t.innerText).then(()=>{const b=document.getElementById('copy-rationale-btn');const orig=b.innerHTML;b.innerHTML='<span style=\'color:#34d399;font-size:7px;font-weight:900;\'>✓ COPIED</span>';setTimeout(()=>{b.innerHTML=orig;},1500);})})()"
+                                class="flex items-center gap-0.5 text-[6px] text-indigo-400/60 border border-indigo-500/20 bg-indigo-900/10 px-1.5 py-0.5 rounded hover:bg-indigo-500/20 hover:text-indigo-300 transition-all font-black uppercase tracking-tighter opacity-0 group-hover/terminal:opacity-100">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                                COPY
+                            </button>
+                        </div>
                         <div id="discovery-detail-text" class="text-[11px] text-indigo-50 leading-relaxed italic font-medium"></div>
                     </div>
 
