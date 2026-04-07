@@ -1590,7 +1590,7 @@ const BiosimBridge = {
             const targetProfile = data.target_profile || {};
             const profile = Object.entries(targetProfile).sort((a,b) => b[1] - a[1]);
             
-            let sequences = [];
+            let sequences = []; let allProteinStrings = [];
             let factorsIncluded = [];
             let totalResidues = 0;
 
@@ -1679,7 +1679,7 @@ const BiosimBridge = {
                 }
             }
 
-            if (allProteinStrings.length > 0) { const fused = allProteinStrings.join("GGGGSGGGGSGGGGSGGGGS"); sequences.push({ "protein": { "sequence": fused, "id": "A" } }); totalResidues = fused.length; } if (factorsIncluded.length === 0) {
+             if (allProteinStrings.length > 0) { const fused = allProteinStrings.join("GGGGSGGGGSGGGGSGGGGS"); sequences.push({ "protein": { "id": "A", "sequence": fused } }); totalResidues = fused.length; } if (factorsIncluded.length === 0) {
                 // v31: OSKM Foundation Fallback Pool
                 const foundationPool = ['POU5F1', 'SOX2', 'KLF4', 'MYC'];
                 for (const gene of foundationPool) {
