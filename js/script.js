@@ -1590,7 +1590,7 @@ const BiosimBridge = {
             const targetProfile = data.target_profile || {};
             const profile = Object.entries(targetProfile).sort((a,b) => b[1] - a[1]);
             
-            let sequences = []; let allProteinStrings = [];
+            let sequences = []; let allProteinStrings = []; let allProteinStrings = [];
             let factorsIncluded = [];
             let totalResidues = 0;
 
@@ -1679,7 +1679,7 @@ const BiosimBridge = {
                 }
             }
 
-             if (allProteinStrings.length > 0) { const fused = allProteinStrings.join("GGGGSGGGGSGGGGSGGGGS"); sequences.push({ "protein": { "id": "A", "sequence": fused } }); totalResidues = fused.length; } if (factorsIncluded.length === 0) {
+              if (factorsIncluded.length === 0) {
                 // v31: OSKM Foundation Fallback Pool
                 const foundationPool = ['POU5F1', 'SOX2', 'KLF4', 'MYC'];
                 for (const gene of foundationPool) {
@@ -1733,7 +1733,7 @@ const BiosimBridge = {
             }
             
             // Zenith Universal Structural Authority (ipTM 0.70+ Confident Standard)
-            const manifest = [{
+            if (allProteinStrings.length > 0) { const fused = allProteinStrings.join("GGGGSGGGGSGGGGSGGGGS"); sequences.push({ "protein": { "id": "A", "sequence": fused } }); } const manifest = [{
                 "name": manifestName,
                 "modelSeeds": ["2142086823"], 
                 "sequences": sequences,
