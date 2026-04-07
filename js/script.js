@@ -1336,7 +1336,7 @@ const BiosimBridge = {
         if (conf) {
             const percentage = data.confidence > 1.0 ? data.confidence : data.confidence * 100;
             const ageText = data.epigenetic_age_reduction > 0 ? `<span class="ml-1 bg-emerald-600 text-white px-1.5 py-0.5 rounded">-${data.epigenetic_age_reduction.toFixed(1)} YEARS</span>` : "";
-            conf.innerHTML = `<span>${percentage.toFixed(1)}% QUALITY</span>${ageText}`;
+            conf.innerHTML = `<span>${percentage.toFixed(1)}% MANIFOLD ALIGNMENT</span>${ageText}`;
             conf.className = 'text-[8px] flex items-center gap-1';
         }
 
@@ -1355,44 +1355,34 @@ const BiosimBridge = {
             }
         }
 
-        // Display AF3 Confidence Metrics
+        // Display AF3 Structural Validation Guide
         const af3Panel = document.getElementById('af3-metrics-panel');
         if (af3Panel && data.recommended_protocol !== "ZENITH ASSISTANT") {
             af3Panel.classList.remove('hidden');
-            
-            // Extract Metrics from backend Zenith Ultra-HD evaluation
-            let plddt = 90.0, pae = 5.0, ptm = 0.85, iptm = 0.80;
+            // If real metrics come back from the server (after user uploads AF3 results), display them
             if (data.af3_metrics) {
-                plddt = data.af3_metrics.pLDDT || plddt;
-                pae = data.af3_metrics.PAE || pae;
-                ptm = data.af3_metrics.pTM || ptm;
-                iptm = data.af3_metrics.ipTM || iptm;
-            } else {
-                // Fallback to simulated mapping if backend hasn't populated mapping yet
-                const baseQuality = (data.confidence > 1.0 ? data.confidence : data.confidence * 100);
-                plddt = Math.min(98.5, baseQuality + (Math.random() * 5));
-                pae = Math.max(1.2, 15.0 - (baseQuality * 0.1) + (Math.random() * 4));
-                ptm = Math.min(0.95, (baseQuality / 100) * 0.9 + 0.1);
-                iptm = Math.min(0.92, (baseQuality / 100) * 0.85 + 0.15);
+                const plddt = data.af3_metrics.pLDDT;
+                const pae = data.af3_metrics.PAE;
+                const ptm = data.af3_metrics.pTM;
+                const iptm = data.af3_metrics.ipTM;
+                const plddtEl = document.getElementById('metric-plddt');
+                if (plddtEl && plddt) {
+                    plddtEl.innerText = plddt.toFixed(1);
+                    plddtEl.className = plddt > 90 ? "text-[9px] text-blue-400 font-mono font-bold" : plddt > 70 ? "text-[9px] text-teal-400 font-mono font-bold" : "text-[9px] text-yellow-400 font-mono font-bold";
+                }
+                const paeEl = document.getElementById('metric-pae');
+                if (paeEl && pae) paeEl.innerText = pae.toFixed(1) + "Å";
+                const ptmEl = document.getElementById('metric-ptm');
+                if (ptmEl && ptm) ptmEl.innerText = ptm.toFixed(3);
+                const iptmEl = document.getElementById('metric-iptm');
+                if (iptmEl && iptm) {
+                    iptmEl.innerText = iptm.toFixed(3);
+                    iptmEl.className = iptm > 0.8 ? "text-[9px] text-blue-400 font-mono font-bold" : iptm > 0.6 ? "text-[9px] text-yellow-500 font-mono font-bold" : "text-[9px] text-red-400 font-mono font-bold";
+                }
             }
-
-            const plddtEl = document.getElementById('metric-plddt');
-            plddtEl.innerText = plddt.toFixed(1);
-            if (plddt > 90) plddtEl.className = "text-[9px] text-blue-400 font-mono font-bold";
-            else if (plddt > 70) plddtEl.className = "text-[9px] text-teal-400 font-mono font-bold";
-            else if (plddt > 50) plddtEl.className = "text-[9px] text-yellow-400 font-mono font-bold";
-            else plddtEl.className = "text-[9px] text-orange-500 font-mono font-bold";
-
-            document.getElementById('metric-pae').innerText = pae.toFixed(1) + "Å";
-            document.getElementById('metric-ptm').innerText = ptm.toFixed(2);
-            
-            const iptmEl = document.getElementById('metric-iptm');
-            iptmEl.innerText = iptm.toFixed(2);
-            if (iptm > 0.8) iptmEl.className = "text-[9px] text-blue-400 font-mono font-bold"; 
-            else if (iptm > 0.6) iptmEl.className = "text-[9px] text-yellow-500 font-mono font-bold"; 
-            else iptmEl.className = "text-[9px] text-red-400 font-mono font-bold"; 
+            // If no real metrics: the panel shows the AF3 submission guide (set in HTML)
         } else if (af3Panel) {
-             af3Panel.classList.add('hidden');
+            af3Panel.classList.add('hidden');
         }
 
         // v28 CUSTOM: If this is the ZENITH ASSISTANT, hide the gene manifest and score to keep it clean.
@@ -1407,26 +1397,39 @@ const BiosimBridge = {
 
         if (profileContainer && data.target_profile && !isAssistant) {
             let totalResidues = 0;
-            const LARGE_THRESHOLD = 5120;
+            const LARGE_THRESHOLD = 2000; // AlphaFold 3 hard limit per chain
+
+            // Known exact lengths (UniProt canonical, Homo sapiens)
+            const verifiedLengths = {
+                'POU5F1': 360, 'OCT4': 360, 'SOX2': 317, 'KLF4': 479, 'MYC': 439,
+                'NANOG': 305, 'LIN28A': 209, 'GATA4': 442, 'TBX5': 518, 'NKX2-5': 324,
+                'MEF2C': 473, 'NEUROD2': 366, 'ASCL1': 236, 'SOX17': 414, 'FOXA2': 458,
+                'PAX6': 422, 'TP53': 393, 'TERT': 1132, 'SIRT1': 747, 'FOXO3': 673,
+                'TNNT2': 298, 'MYH6': 1939, 'MYH7': 1935, 'PPARGC1A': 798, 'CPT1B': 772,
+                'NEUROD1': 356, 'KCNJ2': 433, 'FABP3': 133, 'TTN': 34350, 'RYR2': 4967
+            };
 
             profileContainer.innerHTML = Object.entries(data.target_profile)
                 .sort((a, b) => b[1] - a[1])
                 .map(([gene, weight]) => {
                     const pct = Math.round(weight * 100);
-                    // More accurate length proxy based on actual human protein size averages if unknown
-                    const rMap = {
-                        'TTN': 34350, 'RYR2': 4967, 'MYH6': 1935, 'MYH7': 1935, 'TNNT2': 298, 'GATA4': 442,
-                        'NKX2-5': 324, 'TBX5': 518, 'MEF2C': 473, 'POU5F1': 360, 'OCT4': 360, 'SOX2': 317,
-                        'NANOG': 305, 'KLF4': 479, 'MYC': 439, 'LIN28A': 209, 'PPARGC1A': 798, 'CPT1B': 772,
-                        'NEUROD1': 356, 'ASCL1': 236, 'PPP3CA': 511, 'NFATC1': 716, 'CASQ2': 399
-                    };
-                    const len = rMap[gene] || 450;
+                    const len = verifiedLengths[gene] || 450; // 450 is the human proteome median
                     totalResidues += len;
 
                     const auditRange = data.structural_audit && data.structural_audit[gene] ? data.structural_audit[gene] : '';
                     const barColor = pct >= 85 ? '#6366f1' : pct >= 65 ? '#a855f7' : '#475569';
                     const scoreColor = pct >= 85 ? '#a5b4fc' : pct >= 65 ? '#d8b4fe' : '#64748b';
                     const isGiant = len > 1000;
+                    // Check if we have a known UniProt accession for this gene
+                    const knownAccessions = {
+                        'POU5F1':'Q01860','OCT4':'Q01860','SOX2':'P48431','KLF4':'O43474',
+                        'MYC':'P01106','NANOG':'Q9UER7','GATA4':'P43694','TBX5':'Q99593',
+                        'NKX2-5':'P52952','MEF2C':'Q06413','NEUROD2':'Q15784','ASCL1':'P50553',
+                        'SOX17':'Q9Y458','FOXA2':'Q9Y261','PAX6':'P26367','TP53':'P04637'
+                    };
+                    const acc = knownAccessions[gene];
+                    const accBadge = acc ? `<a href="https://www.uniprot.org/uniprot/${acc}" target="_blank" style="font-size:5px;color:#6366f1;border:1px solid rgba(99,102,241,0.3);padding:0 2px;border-radius:2px;margin-left:2px;text-decoration:none;font-family:monospace" title="UniProt Swiss-Prot (Reviewed)">${acc}</a>` : '';
+                    const lenBadge = `<span style="font-size:5px;color:#475569;margin-left:2px">${len}aa</span>`;
 
                     return `
                     <div style="display:flex;align-items:center;gap:4px;background:rgba(255,255,255,0.03);border:1px solid ${isGiant ? 'rgba(239, 68, 68, 0.4)' : 'rgba(255,255,255,0.07)'};border-radius:6px;padding:4px 6px;transition:all 0.2s" class="group-factor">
@@ -1434,7 +1437,7 @@ const BiosimBridge = {
                             <div style="display:flex;justify-content:space-between;align-items:center">
                                 <div style="display:flex;align-items:center;gap:3px">
                                     <div style="width:3px;height:3px;border-radius:full;background:#10b981;box-shadow:0 0 4px #10b981;animation:pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite"></div>
-                                    <span style="font-size:8px;color:#fff;font-family:monospace;font-weight:700">${gene}${auditRange ? ' <span style="font-size:6px;color:#475569">'+auditRange+'</span>' : ''}</span>
+                                    <span style="font-size:8px;color:#fff;font-family:monospace;font-weight:700">${gene}${auditRange ? ' <span style="font-size:6px;color:#475569">'+auditRange+'</span>' : ''}${accBadge}${lenBadge}</span>
                                 </div>
                                 <span style="font-size:7px;font-weight:700;color:${scoreColor};margin-left:4px;flex-shrink:0">${pct}%</span>
                             </div>
@@ -1448,7 +1451,7 @@ const BiosimBridge = {
                                 onmouseover="this.style.opacity='1';this.style.color='#818cf8'" onmouseout="this.style.opacity='0.4';this.style.color='#94a3b8'">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
                             </button>
-                            <button onclick="BiosimBridge.removeDiscoveryFactor('${gene}')" title="${isGiant ? 'Large Factor: Deselect to enable AF3 Validation' : 'Deselect Factor'}"
+                            <button onclick="BiosimBridge.removeDiscoveryFactor('${gene}')" title="${isGiant ? 'Large Factor: Exceeds AF3 2000aa limit — Deselect to enable validation' : 'Deselect Factor'}"
                                 style="flex-shrink:0;opacity:${isGiant ? '0.8' : '0.4'};background:none;border:none;cursor:pointer;color:#ef4444;padding:1px"
                                 onmouseover="this.style.opacity='1';this.style.color='#ef4444'" onmouseout="this.style.opacity='${isGiant?0.8:0.4}';this.style.color='#ef4444'">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
@@ -1457,12 +1460,11 @@ const BiosimBridge = {
                     </div>`;
                 }).join('');
 
-            // Add Token Warning Label if over limit
             if (totalResidues > LARGE_THRESHOLD) {
                 const warnHTML = `
                     <div class="mt-2 p-1.5 bg-red-950/20 border border-red-500/30 rounded flex items-center gap-2">
                         <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-                        <span class="text-[7px] text-red-400 uppercase font-black tracking-widest">MANIFEST LIMIT EXCEEDED (~${totalResidues} residues)</span>
+                        <span class="text-[7px] text-red-400 uppercase font-black tracking-widest">AF3 LIMIT EXCEEDED — Fused chain ~${totalResidues}aa exceeds the 2,000aa AlphaFold 3 limit. Deselect large factors (marked red) or use domain-only sequences.</span>
                     </div>`;
                 profileContainer.insertAdjacentHTML('beforeend', warnHTML);
             }
@@ -1472,15 +1474,15 @@ const BiosimBridge = {
             const width = Math.floor(data.synergy_score * 100);
             synContainer.innerHTML = `
                 <div class="flex justify-between items-center text-[7px] text-purple-300 font-bold uppercase mb-1">
-                    <span>Hybrid Manifold Score</span>
+                    <span>Protocol Cosine Alignment</span>
                     <span>${width}%</span>
                 </div>
                 <div class="w-full bg-slate-800 h-1 rounded-full overflow-hidden">
                     <div class="bg-purple-500 h-full shadow-[0_0_8px_rgba(139,92,246,0.6)]" style="width: ${width}%"></div>
                 </div>
                 <div class="mt-1 text-[6px] text-slate-500 uppercase tracking-tighter flex justify-between items-center">
-                    <span>Verified Complex: Zenith-~285.4M GOLD Discovery</span>
-                    <span class="text-emerald-500 font-bold">HCA Institutional Verified (v26.4)</span>
+                    <span>Cosine similarity: gradient vector ↔ canonical protocol manifold</span>
+                    <span class="${width >= 60 ? 'text-emerald-500' : 'text-yellow-500'} font-bold">${width >= 85 ? 'CANONICAL MATCH' : width >= 50 ? 'NOVEL BIO-DESIGN' : 'LOW SIGNAL'}</span>
                 </div>
             `;
         }
@@ -2106,6 +2108,150 @@ const BiosimBridge = {
             }
         } finally {
             this.isHealthChecking = false;
+        }
+    },
+
+    // === UNIPROT LIVE LOOKUP MODULE ===
+    UniProtLookup: {
+        async search() {
+            const input = document.getElementById('gene-search-input');
+            const gene = (input?.value || '').trim().toUpperCase();
+            if (!gene) { BiosimUI.notify('Gene Lookup', 'Enter a gene symbol first', 'warn'); return; }
+
+            const resultEl  = document.getElementById('gene-lookup-result');
+            const errorEl   = document.getElementById('gene-lookup-error');
+            const loadingEl = document.getElementById('gene-lookup-loading');
+            if (resultEl)  resultEl.classList.add('hidden');
+            if (errorEl)   errorEl.classList.add('hidden');
+            if (loadingEl) loadingEl.classList.remove('hidden');
+
+            try {
+                // Primary: use our backend endpoint which applies 3-tier UniProt strategy
+                let data = null;
+                try {
+                    const r = await fetch(`/api/uniprot-lookup?gene=${encodeURIComponent(gene)}`);
+                    if (r.ok) data = await r.json();
+                } catch (_) {}
+
+                // Fallback: direct UniProt REST API (if backend unreachable)
+                if (!data) {
+                    const r = await fetch(
+                        `https://rest.uniprot.org/uniprotkb/search?query=gene_exact:${encodeURIComponent(gene)}+AND+organism_id:9606+AND+reviewed:true&fields=sequence,accession,protein_name,cc_function,cc_subcellular_location,ft_domain&format=json&size=1`,
+                        { headers: { 'Accept': 'application/json' } }
+                    );
+                    if (r.ok) {
+                        const raw = await r.json();
+                        const e = (raw.results || [])[0];
+                        if (e) {
+                            const acc = e.primaryAccession;
+                            const names = e.proteinDescription || {};
+                            const rec = names.recommendedName || {};
+                            let func = null, loc = null;
+                            for (const c of e.comments || []) {
+                                if (c.commentType === 'FUNCTION' && !func) func = (c.texts || [])[0]?.value || null;
+                                if (c.commentType === 'SUBCELLULAR LOCATION' && !loc) loc = c.subcellularLocations?.[0]?.location?.value || null;
+                            }
+                            const domains = (e.features || []).filter(f => ['Domain','DNA binding','Zinc finger'].includes(f.type)).slice(0,4);
+                            data = {
+                                gene, accession: acc,
+                                protein_name: rec.fullName?.value || null,
+                                sequence_length: e.sequence?.length || null,
+                                function: func, subcellular_location: loc,
+                                domains: domains.map(d => ({ type: d.type, description: d.description || '' })),
+                                source: 'Swiss-Prot (Direct)',
+                                uniprot_url: `https://www.uniprot.org/uniprot/${acc}`
+                            };
+                        }
+                    }
+                }
+
+                if (loadingEl) loadingEl.classList.add('hidden');
+
+                if (!data || !data.accession) {
+                    if (errorEl) { errorEl.textContent = `No reviewed UniProt entry found for "${gene}" (Homo sapiens).`; errorEl.classList.remove('hidden'); }
+                    return;
+                }
+
+                // Render result
+                document.getElementById('glr-gene').textContent     = data.gene;
+                const accLink = document.getElementById('glr-acc-link');
+                accLink.textContent = data.accession;
+                accLink.href = data.uniprot_url || `https://www.uniprot.org/uniprot/${data.accession}`;
+                document.getElementById('glr-len').textContent      = data.sequence_length ? `${data.sequence_length} aa` : '';
+                document.getElementById('glr-name').textContent     = data.protein_name || '';
+                document.getElementById('glr-loc').textContent      = data.subcellular_location ? `📍 ${data.subcellular_location}` : '';
+                document.getElementById('glr-func').textContent     = data.function || '';
+                document.getElementById('glr-source').textContent   = data.source || 'Swiss-Prot';
+
+                // Domain badges
+                const domEl = document.getElementById('glr-domains');
+                domEl.innerHTML = (data.domains || []).map(d =>
+                    `<span style="font-size:6px;background:rgba(99,102,241,0.15);border:1px solid rgba(99,102,241,0.3);color:#a5b4fc;padding:1px 4px;border-radius:3px">${d.type}${d.description ? ': '+d.description : ''}</span>`
+                ).join('');
+
+                if (resultEl) resultEl.classList.remove('hidden');
+                BiosimUI.notify('UniProt', `${data.gene} → ${data.accession} (${data.sequence_length}aa)`, 'suc');
+
+            } catch (e) {
+                if (loadingEl) loadingEl.classList.add('hidden');
+                if (errorEl) { errorEl.textContent = `Lookup failed: ${e.message}`; errorEl.classList.remove('hidden'); }
+                BiosimUI.notify('UniProt', `Lookup failed for ${gene}`, 'err');
+            }
+        }
+    },
+
+    // === AF3 REAL RESULT UPLOADER ===
+    AF3Upload: {
+        applyRealMetrics() {
+            const plddt = parseFloat(document.getElementById('af3-in-plddt')?.value);
+            const pae   = parseFloat(document.getElementById('af3-in-pae')?.value);
+            const ptm   = parseFloat(document.getElementById('af3-in-ptm')?.value);
+            const iptm  = parseFloat(document.getElementById('af3-in-iptm')?.value);
+
+            // Scientific range validation
+            const errors = [];
+            if (!isNaN(plddt) && (plddt < 0 || plddt > 100)) errors.push('pLDDT must be 0-100');
+            if (!isNaN(pae)   && (pae   < 0 || pae   > 30))  errors.push('PAE must be 0-30Å');
+            if (!isNaN(ptm)   && (ptm   < 0 || ptm   > 1))   errors.push('pTM must be 0-1');
+            if (!isNaN(iptm)  && (iptm  < 0 || iptm  > 1))   errors.push('ipTM must be 0-1');
+            if ([plddt, pae, ptm, iptm].every(isNaN)) { BiosimUI.notify('AF3 Upload', 'Enter at least one metric', 'warn'); return; }
+            if (errors.length) { BiosimUI.notify('AF3 Validation', errors.join(' | '), 'err'); return; }
+
+            // Inject real metrics into the AF3 panel
+            const af3Panel = document.getElementById('af3-metrics-panel');
+            if (af3Panel) af3Panel.classList.remove('hidden');
+
+            if (!isNaN(plddt)) {
+                const el = document.getElementById('metric-plddt');
+                if (el) {
+                    el.innerText = plddt.toFixed(1);
+                    el.className = plddt > 90 ? 'text-[9px] text-blue-400 font-mono font-bold' : plddt > 70 ? 'text-[9px] text-teal-400 font-mono font-bold' : 'text-[9px] text-yellow-400 font-mono font-bold';
+                }
+            }
+            if (!isNaN(pae)) {
+                const el = document.getElementById('metric-pae');
+                if (el) el.innerText = pae.toFixed(1) + 'Å';
+            }
+            if (!isNaN(ptm)) {
+                const el = document.getElementById('metric-ptm');
+                if (el) el.innerText = ptm.toFixed(3);
+            }
+            if (!isNaN(iptm)) {
+                const el = document.getElementById('metric-iptm');
+                if (el) {
+                    el.innerText = iptm.toFixed(3);
+                    el.className = iptm > 0.8 ? 'text-[9px] text-blue-400 font-mono font-bold' : iptm > 0.6 ? 'text-[9px] text-yellow-500 font-mono font-bold' : 'text-[9px] text-red-400 font-mono font-bold';
+                }
+            }
+
+            // Store in lastDiscovery for export context
+            if (BiosimBridge.lastDiscovery) {
+                BiosimBridge.lastDiscovery.af3_metrics = { pLDDT: plddt, PAE: pae, pTM: ptm, ipTM: iptm };
+            }
+
+            const iptmDisplay = !isNaN(iptm) ? ` | ipTM: ${iptm.toFixed(3)}` : '';
+            const quality = !isNaN(iptm) ? (iptm >= 0.8 ? '✅ HIGH CONFIDENCE' : iptm >= 0.6 ? '⚠️ MODERATE' : '❌ LOW') : '';
+            BiosimUI.notify('AF3 Uploaded', `Real metrics applied${iptmDisplay} ${quality}`, 'suc');
         }
     },
 
