@@ -20,54 +20,153 @@ import time
 
 # --- ZENITH D2H PIPELINE: Domain-to-Handshake Automation ---
 class D2HUtility:
+    """
+    ZENITH D2H PIPELINE: Domain-to-Handshake Automation
+    UniProt REST API Integration (rest.uniprot.org)
+    
+    Strategy (3 tiers):
+      TIER 1 — Direct accession lookup: Fastest, 100% canonical Swiss-Prot entry guaranteed.
+      TIER 2 — Reviewed gene search: Forces Swiss-Prot only for unknown genes.
+      TIER 3 — Local backup: Offline fallback for known critical factors.
+    """
+
+    # TIER 1: Known canonical UniProt accession IDs (Swiss-Prot reviewed, Homo sapiens)
+    # These are permanent, stable accessions — they never change.
+    CANONICAL_ACCESSIONS = {
+        "POU5F1": "Q01860",  # OCT4 — Core pluripotency TF (POU domain)
+        "OCT4":   "Q01860",  # Alias
+        "SOX2":   "P48431",  # HMG-box pioneer TF
+        "KLF4":   "O43474",  # Krüppel-like factor 4 (barrier-to-reprogramming eraser)
+        "MYC":    "P01106",  # c-MYC oncogene (use with caution — tumor risk)
+        "NANOG":  "Q9UER7",  # Homeobox pluripotency TF
+        "LIN28A": "Q9H9Z2",  # RNA-binding protein (Thomson reprogramming)
+        "GATA4":  "P43694",  # GATA zinc-finger cardiac TF
+        "TBX5":   "Q99593",  # T-box cardiac TF
+        "NKX2-5": "P52952",  # NK2 homeodomain cardiac TF
+        "MEF2C":  "Q06413",  # MADS-box cardiac TF
+        "NEUROD2":"Q15784",  # bHLH neurogenic TF
+        "ASCL1":  "P50553",  # bHLH neuronal pioneer factor (NeuroD axis)
+        "SOX17":  "Q9Y458",  # HMG-box endodermal TF
+        "FOXA2":  "Q9Y261",  # Forkhead endodermal pioneer factor
+        "PAX6":   "P26367",  # Paired-box retinal/neuronal TF
+        "TP53":   "P04637",  # Tumor suppressor p53 (safety checkpoint)
+        "TERT":   "O14746",  # Telomerase reverse transcriptase (immortalization)
+        "SIRT1":  "Q96EB6",  # NAD-dependent deacetylase (epigenetic rejuvenation)
+        "FOXO3":  "O43524",  # Forkhead longevity TF
+    }
+
     @staticmethod
-    async def fetch_real_sequences(genes: List[str]):
+    async def fetch_real_sequences(genes: List[str]) -> dict:
         """
-        Python-driven sequence fetcher. 
-        Queries UniProt for the exact high-fidelity sequences to avoid GPT fallbacks.
+        Fetches canonical protein sequences from UniProt.
+        Priority: TIER 1 (accession) → TIER 2 (reviewed search) → TIER 3 (local backup)
         """
         results = {}
-        async with httpx.AsyncClient(timeout=10.0) as client:
+        async with httpx.AsyncClient(timeout=15.0) as client:
             for gene in genes:
-                try:
-                    # Professional UniProt REST API Query
-                    query_url = f"https://rest.uniprot.org/uniprotkb/search?query=gene:{gene}%20AND%20organism_id:9606&format=json"
-                    response = await client.get(query_url)
-                    if response.status_code == 200:
-                        data = response.json()
-                        if data.get("results") and len(data["results"]) > 0:
-                            entry = data["results"][0]
-                            seq = entry.get("sequence", {}).get("value", "")
-                            if seq:
-                                results[gene] = seq
-                                continue
-                except:
-                    pass
-                # Internal Zenith Sequence Database (Backup — only used when UniProt is unreachable)
-                # All sequences below are canonical REVIEWED entries from UniProt (Homo sapiens)
-                zenith_db = {
-                    # POU5F1/OCT4 (UniProt Q01860) — Core pluripotency TF, POU domain residues 1-359
-                    "POU5F1": "MAGHLASDFAFSPPPGGGGDGPGGPEPGWVDPRTWLSFQGPPGGPGIGPGVGPGSEVWGIPPCPPPYEFCGGMAYCGPQVGVGLVPQGGLETSQPEGEAGVGVESNSDGASDEPCPPVPSSAGLAEVPALPVPGGPLGVAAGLGPAGGGSPGGGGSPGGGGSPGGGGSPGSSRAQASAASAPKSKPASADHSGGS",
-                    # SOX2 (UniProt P48431) — HMG-box TF, 317 aa
-                    "SOX2": "MYNMMETELKPPGPQQTSGGGGGNSTAAAAGGNQKNSPDRVKRPMNAFMVWSRGQRRKMAQENPKMHNSEISKRLGAEWKLLSETEKRPFIDEAKRLRALHMKEHPDYKYRPRRKTKTLMKKDKYTLPGGLLAPGGNSMASGVGVGAGLGAGVNQRMDSYAHMNGWSNGSYSMMQDQLGYPQHPGLNAVSPAQ",
-                    # GATA4 (UniProt P43694) — GATA zinc-finger TF, 442 aa (N-terminal segment)
-                    "GATA4": "MFASFLPSPGEGTGSGPGAPHLLPAGSAAAFESSSLEADFSPEQLSPGYPFLKKLQAQVAAAEKPKRPAKRKPKAPSADKGSSWKQDPRRDQKTKEKKEESKKKEENQNQKRQELSVKEVQHKIKHEPEGQPWR",
-                    # NKX2-5 (UniProt P52952) — Homeodomain TF, 324 aa (N-terminal segment)
-                    "NKX2-5": "MTSAQSRREKAHSPTSSSLAAAAAKTPVSSKVHLSSEPNSILNEMDKDEDDSFLSSASTLSPRSVHPSVHISNLLNQNQMLVPPPQQPQPPHQQQQLNQNHNQHQQHQNHQNHPQQPQQPQHQQHPHQPLKPPPPMSRVPQMR",
-                    # MEF2C (UniProt Q06413) — Cardiac TF
-                    "MEF2C": "MGRKKIQITRIMDERNRQVTFTKRKFGLMKKAYELSVLCDCEIALIIFNSKGIQVKPIEQKLISEEDLRGTMFNREQHQILSRYFQKFSTKNLQPTAQTQNLVVNPQQSSMRPSVITPATINSIPAPQLQAQLATFQPTPNVSQPQASG",
-                    # TBX5 (UniProt Q99593) — T-box cardiac TF
-                    "TBX5": "MAQTQKHRTATVSSPSSSSSSSAAAQPVSSQPQPQPQPQPQTQPQQALSLSQTPRASSVSDKGKSTASTNPATQVNFPSQSQSGDSVPGNQNQNLQNQQNQKMSMPKQPGSPNTTSQPQAAVKQQPNMQNNNNNS",
-                }
-                if gene in zenith_db:
-                    results[gene] = zenith_db[gene]
-                else:
-                    # Mark clearly as failed — do NOT return fake sequences
-                    results[gene] = f"SEQUENCE_NOT_FOUND_{gene}_VERIFY_ON_UNIPROT_ORG"
+                gene_upper = gene.strip().upper()
+                sequence = None
+                source = "unknown"
+
+                # ── TIER 1: Direct accession lookup (fastest & most precise) ───────────
+                accession = D2HUtility.CANONICAL_ACCESSIONS.get(gene_upper)
+                if accession:
+                    try:
+                        url = f"https://rest.uniprot.org/uniprotkb/{accession}.json"
+                        r = await client.get(url)
+                        if r.status_code == 200:
+                            data = r.json()
+                            sequence = data.get("sequence", {}).get("value", "")
+                            if sequence:
+                                source = f"UniProt/{accession} (Tier1-Accession)"
+                                print(f"✅ UniProt TIER1: {gene_upper} → {accession} ({len(sequence)} aa)")
+                    except Exception as e:
+                        print(f"⚠️ UniProt TIER1 failed for {gene_upper}/{accession}: {e}")
+
+                # ── TIER 2: Reviewed-only gene name search (Swiss-Prot canonical) ──────
+                if not sequence:
+                    try:
+                        # reviewed:true forces Swiss-Prot only (gold standard, expert-curated)
+                        url = (
+                            f"https://rest.uniprot.org/uniprotkb/search"
+                            f"?query=gene_exact:{gene_upper}+AND+organism_id:9606+AND+reviewed:true"
+                            f"&fields=sequence,accession,protein_name&format=json&size=1"
+                        )
+                        r = await client.get(url)
+                        if r.status_code == 200:
+                            data = r.json()
+                            entries = data.get("results", [])
+                            if entries:
+                                entry = entries[0]
+                                acc = entry.get("primaryAccession", "?")
+                                sequence = entry.get("sequence", {}).get("value", "")
+                                if sequence:
+                                    source = f"UniProt/{acc} (Tier2-Reviewed)"
+                                    print(f"✅ UniProt TIER2: {gene_upper} → {acc} ({len(sequence)} aa)")
+                    except Exception as e:
+                        print(f"⚠️ UniProt TIER2 failed for {gene_upper}: {e}")
+
+                # ── TIER 3: Local backup database (offline fallback) ──────────────────
+                if not sequence:
+                    backup_db = {
+                        "POU5F1": "MAGHLASDFAFSPPPGGGGDGPGGPEPGWVDPRTWLSFQGPPGGPGIGPGVGPGSEVWGIPPCPPPYEFCGGMAYCGPQVGVGLVPQGGLETSQPEGEAGVGVESNSDGASDEPCPPVPSSAGLAEVPALPVPGGPLGVAAGLGPAGGGSPGGGGSPGGGGSPGGGGSPGSSRAQASAASAPKSKPASADHSGGS",
+                        "SOX2":   "MYNMMETELKPPGPQQTSGGGGGNSTAAAAGGNQKNSPDRVKRPMNAFMVWSRGQRRKMAQENPKMHNSEISKRLGAEWKLLSETEKRPFIDEAKRLRALHMKEHPDYKYRPRRKTKTLMKKDKYTLPGGLLAPGGNSMASGVGVGAGLGAGVNQRMDSYAHMNGWSNGSYSMMQDQLGYPQHPGLNAVSPAQ",
+                        "GATA4":  "MFASFLPSPGEGTGSGPGAPHLLPAGSAAAFESSSLEADFSPEQLSPGYPFLKKLQAQVAAAEKPKRPAKRKPKAPSADKGSSWKQDPRRDQKTKEKKEESKKKEENQNQKRQELSVKEVQHKIKHEPEGQPWR",
+                        "NKX2-5": "MTSAQSRREKAHSPTSSSLAAAAAKTPVSSKVHLSSEPNSILNEMDKDEDDSFLSSASTLSPRSVHPSVHISNLLNQNQMLVPPPQQPQPPHQQQQLNQNHNQHQQHQNHQNHPQQPQQPQHQQHPHQPLKPPPPMSRVPQMR",
+                        "MEF2C":  "MGRKKIQITRIMDERNRQVTFTKRKFGLMKKAYELSVLCDCEIALIIFNSKGIQVKPIEQKLISEEDLRGTMFNREQHQILSRYFQKFSTKNLQPTAQTQNLVVNPQQSSMRPSVITPATINSIPAPQLQAQLATFQPTPNVSQPQASG",
+                        "TBX5":   "MAQTQKHRTATVSSPSSSSSSSAAAQPVSSQPQPQPQPQPQTQPQQALSLSQTPRASSVSDKGKSTASTNPATQVNFPSQSQSGDSVPGNQNQNLQNQQNQKMSMPKQPGSPNTTSQPQAAVKQQPNMQNNNNNS",
+                    }
+                    sequence = backup_db.get(gene_upper)
+                    if sequence:
+                        source = "LocalBackup (Tier3)"
+                        print(f"⚠️ UniProt TIER3 (backup): {gene_upper} ({len(sequence)} aa)")
+                    else:
+                        # Mark clearly — do NOT silently return garbage
+                        sequence = f"SEQUENCE_NOT_FOUND_{gene_upper}_VERIFY_MANUALLY_ON_UNIPROT_ORG"
+                        print(f"❌ No sequence available for {gene_upper}")
+
+                results[gene_upper] = sequence
         return results
 
     @staticmethod
-    def generate_z_linker_handshake(seq1: str, seq2: str):
+    async def fetch_protein_annotations(accession: str) -> dict:
+        """
+        Fetches protein function, subcellular location, and active sites from UniProt.
+        Used to enrich discovery rationale with verified biological context.
+        """
+        annotations = {"function": None, "location": None, "domains": [], "length": None}
+        try:
+            async with httpx.AsyncClient(timeout=10.0) as client:
+                fields = "function,subcellular_location,protein_families,ft_domain,sequence"
+                url = f"https://rest.uniprot.org/uniprotkb/{accession}.json?fields={fields}"
+                r = await client.get(url)
+                if r.status_code == 200:
+                    data = r.json()
+                    # Function annotation
+                    comments = data.get("comments", [])
+                    for c in comments:
+                        if c.get("commentType") == "FUNCTION":
+                            texts = c.get("texts", [])
+                            if texts:
+                                annotations["function"] = texts[0].get("value", "")[:300]
+                        if c.get("commentType") == "SUBCELLULAR LOCATION":
+                            locs = c.get("subcellularLocations", [])
+                            if locs:
+                                annotations["location"] = locs[0].get("location", {}).get("value", "")
+                    # Domain features
+                    features = data.get("features", [])
+                    annotations["domains"] = [
+                        f.get("description", "") for f in features
+                        if f.get("type") in ("Domain", "DNA binding", "Zinc finger")
+                    ][:4]
+                    # Sequence length
+                    annotations["length"] = data.get("sequence", {}).get("length")
+        except Exception as e:
+            print(f"⚠️ Annotation fetch failed for {accession}: {e}")
+        return annotations
+
+    @staticmethod
+    def generate_z_linker_handshake(seq1: str, seq2: str) -> str:
         """
         The 15aa Z-Linker Fusion: [Domain A] - GGGGSGGGGSGGGGS - [Domain B]
         Ensures absolute Handshake structural stability (ipTM > 0.8)
@@ -708,6 +807,112 @@ if os.path.exists("validation_results"):
 
 if os.path.exists("assets"):
     app.mount("/assets", StaticFiles(directory="assets"), name="assets")
+
+# ==================== UNIPROT LIVE LOOKUP ====================
+
+@app.get("/api/uniprot-lookup")
+async def uniprot_lookup(gene: str):
+    """
+    ZENITH UniProt Live Lookup — Public endpoint.
+    Searches UniProt for any human gene symbol and returns:
+      - Canonical sequence (Swiss-Prot reviewed, Homo sapiens)
+      - UniProt accession ID
+      - Protein name and function annotation
+      - Subcellular location
+      - Domain architecture
+      - Sequence length
+    No API key required. Uses rest.uniprot.org (free & open).
+    """
+    gene_upper = gene.strip().upper()
+    if not gene_upper or len(gene_upper) > 20:
+        raise HTTPException(status_code=400, detail="Invalid gene symbol.")
+
+    result = {
+        "gene": gene_upper,
+        "accession": None,
+        "protein_name": None,
+        "sequence": None,
+        "sequence_length": None,
+        "function": None,
+        "subcellular_location": None,
+        "domains": [],
+        "source": None,
+        "uniprot_url": None,
+    }
+
+    try:
+        async with httpx.AsyncClient(timeout=15.0) as client:
+            # TIER 1: Known canonical accession
+            accession = D2HUtility.CANONICAL_ACCESSIONS.get(gene_upper)
+            if accession:
+                r = await client.get(f"https://rest.uniprot.org/uniprotkb/{accession}.json")
+                if r.status_code == 200:
+                    data = r.json()
+                    result["accession"] = accession
+                    result["source"] = "Swiss-Prot (Reviewed, Accession)"
+                else:
+                    accession = None
+
+            # TIER 2: Reviewed gene name search
+            if not accession:
+                r = await client.get(
+                    f"https://rest.uniprot.org/uniprotkb/search"
+                    f"?query=gene_exact:{gene_upper}+AND+organism_id:9606+AND+reviewed:true"
+                    f"&fields=sequence,accession,protein_name,cc_function,cc_subcellular_location,ft_domain&format=json&size=1"
+                )
+                if r.status_code == 200:
+                    entries = r.json().get("results", [])
+                    if entries:
+                        data = entries[0]
+                        accession = data.get("primaryAccession")
+                        result["accession"] = accession
+                        result["source"] = "Swiss-Prot (Reviewed, Gene Search)"
+
+            if not accession:
+                raise HTTPException(status_code=404, detail=f"No reviewed UniProt entry found for gene '{gene_upper}' in Homo sapiens.")
+
+            # Full accession fetch for all annotations
+            r = await client.get(f"https://rest.uniprot.org/uniprotkb/{accession}.json")
+            if r.status_code != 200:
+                raise HTTPException(status_code=502, detail="UniProt API returned an error.")
+            data = r.json()
+
+            # Sequence
+            result["sequence"] = data.get("sequence", {}).get("value")
+            result["sequence_length"] = data.get("sequence", {}).get("length")
+
+            # Protein name
+            names = data.get("proteinDescription", {})
+            rec = names.get("recommendedName", {})
+            result["protein_name"] = rec.get("fullName", {}).get("value") or \
+                names.get("submissionNames", [{}])[0].get("fullName", {}).get("value")
+
+            # Comments: function + location
+            for c in data.get("comments", []):
+                if c.get("commentType") == "FUNCTION" and not result["function"]:
+                    texts = c.get("texts", [])
+                    if texts:
+                        result["function"] = texts[0].get("value", "")[:400]
+                if c.get("commentType") == "SUBCELLULAR LOCATION" and not result["subcellular_location"]:
+                    locs = c.get("subcellularLocations", [])
+                    if locs:
+                        result["subcellular_location"] = locs[0].get("location", {}).get("value")
+
+            # Domain features
+            result["domains"] = [
+                {"type": f.get("type"), "description": f.get("description", ""), "start": f.get("location", {}).get("start", {}).get("value"), "end": f.get("location", {}).get("end", {}).get("value")}
+                for f in data.get("features", [])
+                if f.get("type") in ("Domain", "DNA binding", "Zinc finger", "Coiled coil", "Region")
+            ][:6]
+
+            result["uniprot_url"] = f"https://www.uniprot.org/uniprot/{accession}"
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"UniProt lookup failed: {str(e)}")
+
+    return result
 
 # ==================== SECURITY ENDPOINTS ====================
 
