@@ -1141,24 +1141,38 @@
                         </div>
                     </div>
 
-                    <!-- ALPHAFOLD 3 CONFIDENCE METRICS BLOCK (NEW) -->
-                    <div id="af3-metrics-panel" class="hidden grid grid-cols-4 gap-1 mt-2">
-                        <div class="bg-black/30 border border-slate-700/40 p-1.5 rounded text-center">
-                            <div class="text-[6px] text-slate-500 font-black uppercase mb-0.5">pLDDT (Atom)</div>
-                            <div class="text-[9px] text-emerald-400 font-mono font-bold" id="metric-plddt">--</div>
+                    <!-- AF3 STRUCTURAL VALIDATION GUIDE -->
+                    <div id="af3-metrics-panel" class="hidden mt-2 p-3 bg-slate-950/60 border border-slate-700/40 rounded-xl">
+                        <div class="text-[7px] text-slate-500 font-black uppercase tracking-widest mb-2 flex items-center gap-1.5">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                            AlphaFold 3 Structural Validation
                         </div>
-                        <div class="bg-black/30 border border-slate-700/40 p-1.5 rounded text-center">
-                            <div class="text-[6px] text-slate-500 font-black uppercase mb-0.5" title="Predicted Aligned Error">PAE</div>
-                            <div class="text-[9px] text-blue-400 font-mono font-bold" id="metric-pae">--</div>
+                        <p class="text-[8px] text-slate-400 leading-relaxed mb-2">
+                            pLDDT, PAE, pTM and ipTM scores are produced exclusively by the AlphaFold 3 server.
+                            Extract the JSON manifest below and submit it to get real structural confidence metrics.
+                        </p>
+                        <div class="grid grid-cols-4 gap-1">
+                            <div class="bg-black/30 border border-slate-700/30 p-1.5 rounded text-center">
+                                <div class="text-[6px] text-slate-500 font-black uppercase mb-0.5">pLDDT</div>
+                                <div class="text-[9px] text-slate-600 font-mono font-bold" id="metric-plddt">AF3</div>
+                            </div>
+                            <div class="bg-black/30 border border-slate-700/30 p-1.5 rounded text-center">
+                                <div class="text-[6px] text-slate-500 font-black uppercase mb-0.5">PAE</div>
+                                <div class="text-[9px] text-slate-600 font-mono font-bold" id="metric-pae">AF3</div>
+                            </div>
+                            <div class="bg-black/30 border border-slate-700/30 p-1.5 rounded text-center">
+                                <div class="text-[6px] text-slate-500 font-black uppercase mb-0.5">pTM</div>
+                                <div class="text-[9px] text-slate-600 font-mono font-bold" id="metric-ptm">AF3</div>
+                            </div>
+                            <div class="bg-black/30 border border-slate-700/30 p-1.5 rounded text-center">
+                                <div class="text-[6px] text-slate-500 font-black uppercase mb-0.5">ipTM</div>
+                                <div class="text-[9px] text-slate-600 font-mono font-bold" id="metric-iptm">AF3</div>
+                            </div>
                         </div>
-                        <div class="bg-black/30 border border-slate-700/40 p-1.5 rounded text-center">
-                            <div class="text-[6px] text-slate-500 font-black uppercase mb-0.5">pTM Score</div>
-                            <div class="text-[9px] text-purple-400 font-mono font-bold" id="metric-ptm">--</div>
-                        </div>
-                        <div class="bg-black/30 border border-slate-700/40 p-1.5 rounded text-center">
-                            <div class="text-[6px] text-slate-500 font-black uppercase mb-0.5" title="Interface pTM">ipTM</div>
-                            <div class="text-[9px] text-teal-400 font-mono font-bold" id="metric-iptm">--</div>
-                        </div>
+                        <a href="https://alphafoldserver.com" target="_blank" class="mt-2 flex items-center justify-center gap-1 w-full py-1.5 bg-indigo-900/20 border border-indigo-500/30 rounded text-[7px] text-indigo-400 hover:bg-indigo-500/20 transition-all font-black uppercase tracking-widest">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                            Submit Manifest → alphafoldserver.com
+                        </a>
                     </div>
 
 
