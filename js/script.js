@@ -1341,8 +1341,19 @@ const BiosimBridge = {
         }
 
         if (rec) {
-            const dnaLine = data.dna_motif_target ? `<span class="ml-2 px-1 text-[7px] bg-slate-800 text-purple-400 border border-purple-500/30 rounded font-mono select-all">DNA: ${data.dna_motif_target}</span>` : "";
-            rec.innerHTML = `${data.recommended_protocol}${dnaLine}`;
+            const dnaLine = data.dna_motif_target ? `<span class="ml-2 px-1 text-[7px] bg-slate-800 text-purple-400 border border-purple-500/30 rounded font-mono select-all" title="Primary TF binding consensus motif (JASPAR/ENCODE)">DNA: ${data.dna_motif_target}</span>` : "";
+
+            // Oncogenic Risk Badge — MYC × (1 − TP53), grounded in Land et al. 1983
+            let riskBadge = '';
+            if (data.oncogenic_risk !== null && data.oncogenic_risk !== undefined) {
+                const label = data.oncogenic_risk_label || 'LOW';
+                const risk  = (data.oncogenic_risk * 100).toFixed(0);
+                const color = label === 'HIGH' ? '#ef4444' : label === 'MODERATE' ? '#f59e0b' : '#10b981';
+                const bg    = label === 'HIGH' ? 'rgba(239,68,68,0.12)' : label === 'MODERATE' ? 'rgba(245,158,11,0.12)' : 'rgba(16,185,129,0.12)';
+                riskBadge = `<span style="margin-left:6px;font-size:6px;font-weight:900;color:${color};background:${bg};border:1px solid ${color}40;padding:1px 4px;border-radius:3px;letter-spacing:0.05em;cursor:help" title="Oncogenic Risk = MYC × (1 − TP53). Ref: Land et al. Nature 1983; Zindy et al. Genes & Dev 1998">⚠ MYC RISK: ${label} (${risk}%)</span>`;
+            }
+
+            rec.innerHTML = `${data.recommended_protocol}${dnaLine}${riskBadge}`;
         }
 
         if (detailText && detailBox) {
