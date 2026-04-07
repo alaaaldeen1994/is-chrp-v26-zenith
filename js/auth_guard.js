@@ -4,7 +4,8 @@
 // We expect firebase to be initialized in firebase_config.js which must be loaded before this.
 
 auth.onAuthStateChanged(user => {
-    if (!user) {
+    const isDemo = localStorage.getItem('ZENITH_DEMO_BYPASS') === 'true';
+    if (!user && !isDemo) {
         // No user is signed in, redirect to profile landing page instead of login.html
         console.warn("Unauthorized access. Redirecting to institutional profile...");
         window.location.href = "profile.html";

@@ -810,6 +810,14 @@ if os.path.exists("validation_results"):
 if os.path.exists("assets"):
     app.mount("/assets", StaticFiles(directory="assets"), name="assets")
 
+@app.get("/", response_class=HTMLResponse)
+async def serve_index():
+    return FileResponse("index.html")
+
+@app.get("/profile", response_class=HTMLResponse)
+async def serve_profile():
+    return FileResponse("profile.html")
+
 # ==================== UNIPROT LIVE LOOKUP ====================
 
 @app.get("/api/uniprot-lookup")
