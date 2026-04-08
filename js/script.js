@@ -1576,7 +1576,7 @@ const BiosimBridge = {
 
             this.renderer.domElement.addEventListener('click', (event) => {
                 if (this.viewMode !== '3D') return;
-                const rect = this.renderer.domElement.getBoundingClientRect();
+                const rect = this.renderer.domElement.getBoundingClientRect(); });
     async exportAlphaFoldManifest() {
         try {
             if (!this.lastDiscovery) {
@@ -1616,3 +1616,5 @@ const BiosimBridge = {
         }
     }
 }
+
+};
