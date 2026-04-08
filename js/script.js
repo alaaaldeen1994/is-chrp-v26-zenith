@@ -1738,24 +1738,20 @@ const BiosimBridge = {
 
             const jsonStr = JSON.stringify(manifest, null, 2);
             
-            // Fail-safe: Copy to clipboard first
+            // Fail-safe: Copy to clipboard
             try {
                 navigator.clipboard.writeText(jsonStr);
-                BiosimUI.notify('CLIPBOARD', 'Manifest copied as backup!', 'suc');
-            } catch(e) { /* ignore clipboard errors in non-secure contexts */ }
+                BiosimUI.notify('COPIED', 'JSON manifest copied to clipboard!', 'suc');
+            } catch(e) {}
 
-            // Triple-Force Download
-            const blob = new Blob([jsonStr], { type: 'application/octet-stream' });
-            const url = URL.createObjectURL(blob);
+            // The Zero-Block Data URI (Forces filename in all browsers)
+            const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(jsonStr);
             const a = document.createElement('a');
-            a.href = url;
+            a.href = dataUri;
             a.download = `${manifestName}.json`;
             document.body.appendChild(a);
             a.click();
-            setTimeout(() => {
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
-            }, 100);
+            document.body.removeChild(a);
 
             const nProteins = sequences.filter(s => s.proteinChain).length;
             const nLigands = sequences.filter(s => s.ligand).length;
