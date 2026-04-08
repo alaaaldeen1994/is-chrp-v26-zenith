@@ -1577,7 +1577,7 @@ const BiosimBridge = {
         return this.domainDefaults[geneName] || null;
     },
 
-    async exportAlphaFoldManifest() {
+    async exportAlphaFoldManifest() { let allProteinStrings = [];
         try {
             if (!this.lastDiscovery) {
                 BiosimUI.notify('Export Error', 'Run a discovery first.', 'err');
