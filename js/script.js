@@ -1728,25 +1728,38 @@ const BiosimBridge = {
             }
             
             // Zenith Universal Structural Authority (ipTM 0.70+ Confident Standard)
-            if (allProteinStrings.length > 0) { const fused = allProteinStrings.join("GGGGSGGGGSGGGGSGGGGS"); sequences.push({ "protein": { "id": "A", "sequence": fused } }); totalResidues = fused.length; } const manifest = [{
+                        const manifest = [{
                 "name": manifestName,
                 "modelSeeds": ["2142086823"], 
-                "sequences": sequences,
-                "dialect": "alphafold3",
-                "version": 1
+                "sequences": sequences
             }];
 
             BiosimUI.notify('Native Export', `AlphaFold Server JSON Generated`, 'suc');
 
-            const blob = new Blob([JSON.stringify(manifest, null, 2)], { type: 'application/json' });
+            const jsonStr = JSON.stringify(manifest, null, 2);
+            
+            // Fail-safe: Copy to clipboard first
+            try {
+                navigator.clipboard.writeText(jsonStr);
+                BiosimUI.notify('CLIPBOARD', 'Manifest copied as backup!', 'suc');
+            } catch(e) { /* ignore clipboard errors in non-secure contexts */ }
+
+            // Triple-Force Download
+            const blob = new Blob([jsonStr], { type: 'application/octet-stream' });
+            const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
-            a.href = URL.createObjectURL(blob);
+            a.href = url;
             a.download = `${manifestName}.json`;
-            document.body.appendChild(a); a.click(); document.body.removeChild(a);
+            document.body.appendChild(a);
+            a.click();
+            setTimeout(() => {
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }, 100);
 
             const nProteins = sequences.filter(s => s.proteinChain).length;
             const nLigands = sequences.filter(s => s.ligand).length;
-            BiosimUI.notify('AF3 Native Exported', `${nProteins} Protein(s) + ${nLigands} Ligand(s)`, 'suc');
+            BiosimUI.notify('SUCCESS', 'JSON Manifest Downloaded', 'suc');
             BiosimUI.logTerminal(`--- [RST] ZENITH v28 NATIVE RESEARCH SUMMARY ---`);
             BiosimUI.logTerminal(`NATIVE DIALECT: alphafold3 (v1)`);
             BiosimUI.logTerminal(`ENTITIES: ${sequences.length} total chains`);
