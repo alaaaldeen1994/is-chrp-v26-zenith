@@ -1744,11 +1744,14 @@ const BiosimBridge = {
                 BiosimUI.notify('COPIED', 'JSON manifest copied to clipboard!', 'suc');
             } catch(e) {}
 
+            // Simplified Short Name (Prevents Browser Safe-Filter)
+            const backupFileName = `zenith_af3.json`;
+
             // The Zero-Block Data URI (Forces filename in all browsers)
             const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(jsonStr);
             const a = document.createElement('a');
             a.href = dataUri;
-            a.download = `${manifestName}.json`;
+            a.download = backupFileName;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
