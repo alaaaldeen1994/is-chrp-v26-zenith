@@ -1759,7 +1759,7 @@ const BiosimBridge = {
             const nProteins = sequences.filter(s => s.proteinChain).length;
             const nLigands = sequences.filter(s => s.ligand).length;
             BiosimUI.notify('SUCCESS', 'JSON Manifest Downloaded', 'suc');
-            BiosimUI.logTerminal(`--- [RST] ZENITH v28 NATIVE RESEARCH SUMMARY ---`);
+            BiosimUI.logTerminal(`--- [JSON CODE START] ---`); BiosimUI.logTerminal(jsonStr); BiosimUI.logTerminal(`--- [JSON CODE END] ---`);
             BiosimUI.logTerminal(`NATIVE DIALECT: alphafold3 (v1)`);
             BiosimUI.logTerminal(`ENTITIES: ${sequences.length} total chains`);
             BiosimUI.logTerminal(`[ZENITH v28] Native DeepMind Format Verified.`);
