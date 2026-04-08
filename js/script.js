@@ -873,7 +873,11 @@ const BiosimBridge = {
         const blob = new Blob([JSON.stringify(manifest, null, 2)], { type: 'application/json' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
-        const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(manifest, null, 2)); a.href = dataUri;
+                    const jsonStr = JSON.stringify(manifest, null, 2);
+            navigator.clipboard.writeText(jsonStr).then(() => {
+                BiosimUI.notify('COPIED', 'JSON manifest copied to clipboard!', 'suc');
+            });
+            const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(jsonStr);charset=utf-8,' + encodeURIComponent(JSON.stringify(manifest, null, 2)); a.href = dataUri;
         a.download = `nilus_manifest_run_${window.simulationRunCount}.json`;
         document.body.appendChild(a);
         a.click();
@@ -1823,7 +1827,11 @@ const BiosimBridge = {
             const blob = new Blob([script], { type: 'text/x-python' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
-            const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(manifest, null, 2)); a.href = dataUri;
+                        const jsonStr = JSON.stringify(manifest, null, 2);
+            navigator.clipboard.writeText(jsonStr).then(() => {
+                BiosimUI.notify('COPIED', 'JSON manifest copied to clipboard!', 'suc');
+            });
+            const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(jsonStr);charset=utf-8,' + encodeURIComponent(JSON.stringify(manifest, null, 2)); a.href = dataUri;
             a.download = filename;
             document.body.appendChild(a);
             a.click();
@@ -1870,7 +1878,11 @@ const BiosimBridge = {
             const blob = await response.blob();
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement('a');
-            const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(manifest, null, 2)); a.href = dataUri;
+                        const jsonStr = JSON.stringify(manifest, null, 2);
+            navigator.clipboard.writeText(jsonStr).then(() => {
+                BiosimUI.notify('COPIED', 'JSON manifest copied to clipboard!', 'suc');
+            });
+            const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(jsonStr);charset=utf-8,' + encodeURIComponent(JSON.stringify(manifest, null, 2)); a.href = dataUri;
             a.download = `IS-CHRP_Clinical_Report_${Date.now()}.pdf`;
             document.body.appendChild(a);
             a.click();
@@ -3473,7 +3485,11 @@ const BiosimIO = {
         const blob = new Blob([header + rows], { type: 'text/csv' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
-        const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(manifest, null, 2)); a.href = dataUri;
+                    const jsonStr = JSON.stringify(manifest, null, 2);
+            navigator.clipboard.writeText(jsonStr).then(() => {
+                BiosimUI.notify('COPIED', 'JSON manifest copied to clipboard!', 'suc');
+            });
+            const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(jsonStr);charset=utf-8,' + encodeURIComponent(JSON.stringify(manifest, null, 2)); a.href = dataUri;
         a.download = `IS-CHRP_Data_${Date.now()}.csv`;
         a.click();
     }
