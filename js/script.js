@@ -1590,7 +1590,7 @@ const BiosimBridge = {
             const targetProfile = data.target_profile || {};
             const profile = Object.entries(targetProfile).sort((a,b) => b[1] - a[1]);
             
-            let sequences = []; let allProteinStrings = []; let allProteinStrings = []; let allProteinStrings = [];
+            let sequences = []; // duplicate removed // FIXED // duplicate removed
             let factorsIncluded = [];
             let totalResidues = 0;
 
