@@ -1014,7 +1014,16 @@
 </head>
 
 <body class="light-mode-profile">
-    <!-- No background video -->
+    <!-- GLOBAL DNA BACKGROUND (RESTORED LOCALLY) -->
+    <div class="global-dna-bg">
+        <video class="hero-video" id="profile-dna-video" autoplay loop muted playsinline preload="auto">
+            <source src="9.mp4" type="video/mp4">
+        </video>
+        <script>
+            const v = document.getElementById('profile-dna-video');
+            if (v) v.oncanplay = () => v.play().catch(e => console.error("Playback failed:", e));
+        </script>
+    </div>
 
     <!-- Water Glass Frame - soft frosted edge overlay -->
     <div class="glass-frame"></div>
@@ -1167,14 +1176,8 @@
     </nav>
 
     <!-- Hero Section -->
+    <!-- Hero Section -->
     <section class="hero bg-transparent">
-        
-        <!-- Video Hero Animation (9.mp4) -->
-        <div style="position: absolute; top: -10%; right: 0; width: 55%; height: 120%; pointer-events: none; z-index: 1; display:flex; justify-content:center; align-items:center;">
-            <video autoplay loop muted playsinline style="height: 100%; object-fit: contain; transform: scale(1.1);">
-                <source src="9.mp4" type="video/mp4">
-            </video>
-        </div>
 
         <div class="hero-content">
             <span class="text-[11px] font-black text-slate-400 uppercase tracking-[0.5em] mb-8 block">Neural Parameter
