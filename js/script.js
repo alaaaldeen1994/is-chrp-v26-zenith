@@ -1629,6 +1629,7 @@ const BiosimBridge = {
                 'KLF4': '395-485',    'MYC': '350-439',
                 'NANOG': '150-250',   'MYOD1': '100-244', 'ASCL1': '150-280',
                 'HNF4A': '120-220',   'FOXA2': '160-260',
+                'FOXO3': '156-242',   'SIRT1': '244-495', 'TP53': '94-292', // Sarkar 2020 Factors
                 'VEGFA': '27-191'     // Mature core ONLY (Excluded from DNA docking)
             };
 
