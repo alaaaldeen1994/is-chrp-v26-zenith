@@ -1706,16 +1706,25 @@ const BiosimBridge = {
             // 3. ION STABILIZATION (Zinc HD) — (User manual NAD addition)
             sequences.push({ "ion": { "ion": "ZN", "count": 4 } });
 
+            // Zenith Universal Structural Authority (ipTM 0.70+ Confident Standard)
+            if (allProteinStrings.length > 0 && factorsIncluded.length > 0) {
+                const fused = allProteinStrings.join("GGGGSGGGGSGGGGSGGGGS");
+                sequences.push({ "proteinChain": { "sequence": fused, "count": 1 } });
+            }
+
             // --- MANIFEST PRE-FLIGHT VALIDATION (Public AF3 Limit: 5120) ---
             const AF3_LIMIT = 5120;
             if (totalResidues > AF3_LIMIT) {
                 const msg = `CRITICAL: Manifest (${totalResidues}AA) exceeds Server limits. Trimming padding...`;
                 BiosimUI.notify('Token Error', msg, 'err');
                 // Trim trailing sequence to respect hard limits
-                const overage = totalResidues - AF3_LIMIT;
-                sequences[2].proteinChain.sequence = sequences[2].proteinChain.sequence.slice(0, -overage);
+                const overage = Math.floor(totalResidues - AF3_LIMIT);
+                const proteinEntry = sequences.find(s => s.proteinChain);
+                if (proteinEntry && proteinEntry.proteinChain && proteinEntry.proteinChain.sequence) {
+                    const currentSeq = proteinEntry.proteinChain.sequence;
+                    proteinEntry.proteinChain.sequence = currentSeq.slice(0, Math.max(10, currentSeq.length - overage));
+                }
             }
-
 
             const manifestTag = factorsIncluded.join('__');
             let manifestName = `Zenith_v29_${manifestTag}_${Date.now()}`;
@@ -1727,8 +1736,7 @@ const BiosimBridge = {
                 manifestName = manifestName.substring(0, 99);
             }
             
-            // Zenith Universal Structural Authority (ipTM 0.70+ Confident Standard)
-                        const manifest = [{
+            const manifest = [{
                 "name": manifestName,
                 "modelSeeds": ["2142086823"], 
                 "sequences": sequences
