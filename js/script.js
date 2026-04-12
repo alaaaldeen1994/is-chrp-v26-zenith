@@ -1597,8 +1597,9 @@ const BiosimBridge = {
             // Zenith Official v26 'Z-Pillar' Scaffold + Dynamic Motif Injection
             // We use the specific GPT-identified motif, defaulting to a strong minimal anchor if absent.
             let targetAnchor = data.dna_motif_target || "CCTGTGACTGTGGGGTTCA-CGCTCCCGGGTG"; 
-            targetAnchor = targetAnchor.replace('-', '');
-
+            targetAnchor = targetAnchor.replace(/-/g, '').toUpperCase();
+            // CRITICAL FIX: AlphaFold 3 strictly requires ACGT. Scrub IUPAC degenerate codes (R, Y, M, N, etc.)
+            targetAnchor = targetAnchor.replace(/[^ACGT]/g, 'A');
             // OCT4/SOX2 Empirical Override for >0.8 ipTM (PDB: 1O4X)
             const pKeys = Object.keys(data.target_profile || {});
             if (pKeys.includes("POU5F1") && pKeys.includes("SOX2")) {
