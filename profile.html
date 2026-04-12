@@ -165,28 +165,23 @@
             left: 0;
             right: 0;
             bottom: 0;
-            z-index: -1;
+            z-index: -999;
             pointer-events: none;
             display: flex;
             align-items: center;
             justify-content: center;
             overflow: hidden;
-            background: #ffffff;
-            width: 100%;
-            height: 100%;
+            background: #ffffff; /* This is the base color under the video */
+            width: 100vw;
+            height: 100vh;
         }
 
         .hero-video {
             width: 100%;
             height: 100%;
-            object-fit: contain;
-            transform: scale(0.9) translate(3%, 6%);
-            /* Shifted right and down */
-            opacity: 0.90;
-            mix-blend-mode: multiply;
-            /* Feather the edges to hide hard borders/artifacts */
-            -webkit-mask-image: radial-gradient(circle at center, black 60%, transparent 95%);
-            mask-image: radial-gradient(circle at center, black 60%, transparent 95%);
+            object-fit: cover; /* Forces the video to fill the screen like previously */
+            opacity: 1;
+            filter: brightness(1.02); /* Crisp white look */
         }
 
         /* Water glass frame overlay - soft frosted edge treatment */
