@@ -1009,11 +1009,20 @@
 </head>
 
 <body class="light-mode-profile">
-    <!-- GLOBAL DNA BACKGROUND (CLOUD RESTORED) -->
+    <!-- GLOBAL DNA BACKGROUND (RESTORED / CACHE-BUSTED) -->
     <div class="global-dna-bg">
-        <iframe src="https://embed.screenapp.io/app/v/GVbqufJimj?embed=true&autoplay=true&loop=true&background=true" 
-                style="width: 100vw; height: 100vh; border: none; transform: scale(1.3);" 
-                allow="autoplay; fullscreen"></iframe>
+        <video class="hero-video" id="profile-dna-video" autoplay loop muted playsinline preload="auto">
+            <source src="zenith_dna.mp4?v=1" type="video/mp4">
+        </video>
+        <script>
+            const v = document.getElementById('profile-dna-video');
+            if (v) {
+                v.play().catch(e => {
+                    console.warn("Autoplay blocked, attempting interaction play.");
+                    document.body.addEventListener('click', () => v.play(), {once: true});
+                });
+            }
+        </script>
     </div>
 
     <!-- Water Glass Frame - soft frosted edge overlay -->
