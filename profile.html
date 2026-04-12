@@ -1169,8 +1169,13 @@
     <!-- Hero Section -->
     <section class="hero bg-transparent">
         
-        <!-- 3D DNA Canvas Container -->
-        <div id="dna-animation-container" style="position: absolute; top: 0; right: 0; width: 60%; height: 100%; pointer-events: none; z-index: 1;"></div>
+        <!-- Video Hero Animation (9.mp4) -->
+        <div style="position: absolute; top: -10%; right: 0; width: 55%; height: 120%; pointer-events: none; z-index: 1; display:flex; justify-content:center; align-items:center;">
+            <video autoplay loop muted playsinline style="height: 100%; object-fit: contain; transform: scale(1.1);">
+                <source src="https://image2url.com/r2/default/videos/1774175182617-df127516-8f0a-431d-b5ed-2efaab4b65e1.webm" type="video/webm">
+                <source src="https://image2url.com/r2/default/videos/1774164717701-7555ce11-6f8d-4d90-b3b7-0bbc17382789.mp4" type="video/mp4">
+            </video>
+        </div>
 
         <div class="hero-content">
             <span class="text-[11px] font-black text-slate-400 uppercase tracking-[0.5em] mb-8 block">Neural Parameter
@@ -1609,9 +1614,6 @@
         <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
         <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
         <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-        <script src="js/firebase_config.js"></script>
-        <script src="js/profile_dna.js"></script>
-
         <script src="js/firebase_config.js"></script>
         <script>
             lucide.createIcons();
