@@ -1711,7 +1711,9 @@ const BiosimBridge = {
 
             // Zenith Universal Structural Authority (ipTM 0.80+ High Fidelity Standard)
             if (allProteinStrings.length > 0 && factorsIncluded.length > 0) {
-                const fused = allProteinStrings.join("GGGGSGGGGSGGGGSGGGGSGGGPGEAAAKEAAAKGGGGS");
+                // EXTREME FIX: Flexible linkers (GGGGS) cause poor ipTM because the domains flop independently.
+                // A rigid, 15-amino-acid helical spacer (EAAAKx3) forces a locked geometry, solving the PAE matrix collapse.
+                const fused = allProteinStrings.join("EAAAKEAAAKEAAAK");
                 sequences.push({ "proteinChain": { "sequence": fused, "count": 1 } });
             }
 
