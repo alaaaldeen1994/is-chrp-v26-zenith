@@ -212,10 +212,13 @@
         .hero-video {
             width: 100%;
             height: 100%;
-            object-fit: cover; /* UNIFIED BACKGROUND ARCHITECTURE */
-            transform: scale(1.15) translate(15vw, 5vh); /* Immersive, unified background - no cuts */
+            object-fit: cover;
+            mix-blend-mode: darken; /* MATHEMATICAL HARMONY: Makes the video's white background disappear */
+            -webkit-mask-image: radial-gradient(circle at center, black 60%, transparent 95%);
+            mask-image: radial-gradient(circle at center, black 60%, transparent 95%);
+            transform: scale(0.85) translate(15vw, 5vh); /* Elegant, professional scale */
             opacity: 1;
-            filter: contrast(1.05) brightness(1.05); /* Crisp white look */
+            filter: contrast(1.1) brightness(1.05); /* Pushes background to pure white for perfect blend */
         }
 
         .hero-overlay {
