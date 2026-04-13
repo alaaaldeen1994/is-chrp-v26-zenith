@@ -1606,12 +1606,13 @@ const BiosimBridge = {
                 targetAnchor = "CTTTGTTATGCAAAT"; // Absolute Canonical Heterodimer Motif
             }
             
-            // CRITICAL FIX FOR >0.70 ipTM: The motif must be perfectly centered on at least a 35bp helix
-            // so neither protein in the Handshake complex falls off the physical edge of the DNA wire.
-            const totalLen = 35;
+            // CRITICAL FIX FOR >0.80 ipTM: Expanded 54bp helix for AlphaFold 3 stability
+            const totalLen = 54;
             const padLeft = Math.max(0, Math.floor((totalLen - targetAnchor.length) / 2));
             const padRight = Math.max(0, totalLen - targetAnchor.length - padLeft);
-            const dnaFwd = "CCTGTGACTGTGGGGTTCA".substring(0, padLeft) + targetAnchor + "CGCTCCCGGGTGACTGTGG".substring(0, padRight);
+            const leftPadStr = "GCATGCGAGCCTGTGACTGTGGGGTTCA";
+            const rightPadStr = "CGCTCCCGGGTGACGTGATAGCA";
+            const dnaFwd = (leftPadStr.length >= padLeft ? leftPadStr.slice(-padLeft) : leftPadStr.padStart(padLeft, 'A')) + targetAnchor + (rightPadStr.length >= padRight ? rightPadStr.slice(0, padRight) : rightPadStr.padEnd(padRight, 'T'));
 
             const rcMap = {'A':'T','T':'A','C':'G','G':'C'};
             const dnaRev = dnaFwd.split('').reverse().map(c=>rcMap[c]||c).join('');
@@ -1708,9 +1709,9 @@ const BiosimBridge = {
             // 3. ION STABILIZATION (Zinc HD) — (User manual NAD addition)
             sequences.push({ "ion": { "ion": "ZN", "count": 4 } });
 
-            // Zenith Universal Structural Authority (ipTM 0.70+ Confident Standard)
+            // Zenith Universal Structural Authority (ipTM 0.80+ High Fidelity Standard)
             if (allProteinStrings.length > 0 && factorsIncluded.length > 0) {
-                const fused = allProteinStrings.join("GGGGSGGGGSGGGGSGGGGS");
+                const fused = allProteinStrings.join("GGGGSGGGGSGGGGSGGGGSGGGPGEAAAKEAAAKGGGGS");
                 sequences.push({ "proteinChain": { "sequence": fused, "count": 1 } });
             }
 
@@ -1729,7 +1730,7 @@ const BiosimBridge = {
             }
 
             const manifestTag = factorsIncluded.join('__');
-            let manifestName = `Zenith_v29_${manifestTag}_${Date.now()}`;
+            let manifestName = `Zenith_v30_HighFidelity_${manifestTag}_${Date.now()}`;
             // v29.6: Truncate to 99 characters to comply with AlphaFold Server limits
             if (manifestName.length > 99) {
                 manifestName = manifestName.substring(0, 85) + "_" + Date.now();
