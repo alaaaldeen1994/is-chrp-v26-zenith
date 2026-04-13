@@ -1011,19 +1011,9 @@
 <body class="light-mode-profile">
     <!-- GLOBAL DNA BACKGROUND (RESTORED / CACHE-BUSTED) -->
     <div class="global-dna-bg">
-        <video class="hero-video" id="profile-dna-video" autoplay loop muted playsinline preload="auto">
-            <source src="/zenith_dna.mp4?v=1" type="video/mp4">
-            <source src="https://raw.githubusercontent.com/alaaaldeen1994/is-chrp-v26-zenith/main/zenith_dna.mp4" type="video/mp4">
-        </video>
-        <script>
-            const v = document.getElementById('profile-dna-video');
-            if (v) {
-                v.play().catch(e => {
-                    console.warn("Autoplay blocked, attempting interaction play.");
-                    document.body.addEventListener('click', () => v.play(), {once: true});
-                });
-            }
-        </script>
+        <iframe src="https://embed.screenapp.io/app/v/Tn5hE7-ht6?embed=true&autoplay=true&loop=true&background=true" 
+                style="width: 100vw; height: 100vh; border: none; transform: scale(1.3);" 
+                allow="autoplay; fullscreen"></iframe>
     </div>
 
     <!-- Water Glass Frame - soft frosted edge overlay -->
