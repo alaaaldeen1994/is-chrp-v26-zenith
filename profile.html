@@ -1047,6 +1047,37 @@
             width: 24px !important;
             height: 24px !important;
         }
+        /* --- MOBILE CALIBRATION (Clinical Precision) --- */
+        @media (max-width: 768px) {
+            .hero {
+                min-height: 80vh;
+                align-items: flex-start;
+                padding-top: 60px;
+            }
+
+            .hero-content {
+                padding: 0 6% 10% 6% !important;
+                text-align: center;
+                max-width: 100%;
+            }
+
+            .hero-video {
+                transform: scale(0.75) translate(0, 18vh) !important; /* Elegant mobile scaling and centering */
+                object-fit: contain !important;
+                filter: brightness(1.02);
+            }
+
+            .hero h1 {
+                font-size: 38px !important;
+                line-height: 1.1;
+                margin-bottom: 2rem;
+            }
+
+            .hero p {
+                font-size: 14px !important;
+                margin-bottom: 2.5rem;
+            }
+        }
     </style>
 </head>
 
