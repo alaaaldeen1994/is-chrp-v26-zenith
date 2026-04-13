@@ -1016,12 +1016,24 @@
 </head>
 
 <body class="light-mode-profile">
-    <!-- GLOBAL DNA BACKGROUND (JSDELIVR NATIVE VIDEO) -->
+    <!-- GLOBAL DNA BACKGROUND (BULLETPROOF LOCAL CASCADE) -->
     <div class="global-dna-bg">
         <video class="hero-video" id="profile-dna-video" autoplay loop muted playsinline preload="auto">
-            <source src="https://cdn.jsdelivr.net/gh/alaaaldeen1994/is-chrp-v26-zenith@main/zenith_dna.mp4" type="video/mp4">
+            <source src="zenith_dna.mp4?v=2" type="video/mp4">
+            <source src="/zenith_dna.mp4?v=2" type="video/mp4">
+            <source src="assets/9.mp4" type="video/mp4">
+            <source src="/assets/9.mp4" type="video/mp4">
         </video>
         <div class="hero-overlay"></div>
+        <script>
+            const v = document.getElementById('profile-dna-video');
+            if (v) {
+                v.play().catch(e => {
+                    console.warn("Autoplay blocked, attempting interaction play.");
+                    document.body.addEventListener('click', () => v.play(), {once: true});
+                });
+            }
+        </script>
     </div>
 
     <!-- Water Glass Frame - soft frosted edge overlay -->
