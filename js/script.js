@@ -1636,9 +1636,13 @@ const BiosimBridge = {
 
             // 2. PROTEIN FACTORS — Domain Handshake Linker (DHL) Pipeline (v33 Gold)
             // CRITICAL FIX: Limit to EXACTLY Top 2 Factors to prevent AF3 structural clash (ipTM collapse).
-            // A 31bp DNA strand can realistically only coordinate a Dimer 'Handshake'.
+            // A 35bp DNA strand can realistically only coordinate a Dimer 'Handshake'.
             const structuralPool = Object.entries(this.lastDiscovery.target_profile || {}).sort((a,b) => b[1]-a[1]);
-            const Z_LINKER_PAD = 15; // 15aa Native Z-Linker Expansion
+            
+            // ELITE REVELATION: We must set padding to 0. 
+            // Previous 15aa padding added native unstructured 'floppy tails' to the ends of the domains,
+            // which connected to our rigid EAAAK anchor, rendering it useless (creating the red noodles in AF3).
+            const Z_LINKER_PAD = 0; 
 
             for (const [gene] of structuralPool.slice(0, 2)) {
                 let seq = await this.fetchUniProtSequence(gene);
@@ -1656,7 +1660,7 @@ const BiosimBridge = {
                     if (range) {
                         const match = range.match(/(\d+)-(\d+)/);
                         if (match) {
-                            // Elite +15 Z-Linker Padding
+                            // Direct fusion with ZERO floppy native tails
                             const start = Math.max(0, parseInt(match[1]) - 1 - Z_LINKER_PAD);
                             const end = Math.min(parsedSeq.length, parseInt(match[2]) + Z_LINKER_PAD);
                             parsedSeq = parsedSeq.substring(start, end);
