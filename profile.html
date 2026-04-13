@@ -165,7 +165,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            z-index: -999;
+            z-index: 0;
             pointer-events: none;
             display: flex;
             align-items: center;
@@ -1012,7 +1012,8 @@
     <!-- GLOBAL DNA BACKGROUND (RESTORED / CACHE-BUSTED) -->
     <div class="global-dna-bg">
         <video class="hero-video" id="profile-dna-video" autoplay loop muted playsinline preload="auto">
-            <source src="zenith_dna.mp4?v=1" type="video/mp4">
+            <source src="/zenith_dna.mp4?v=1" type="video/mp4">
+            <source src="https://raw.githubusercontent.com/alaaaldeen1994/is-chrp-v26-zenith/main/zenith_dna.mp4" type="video/mp4">
         </video>
         <script>
             const v = document.getElementById('profile-dna-video');
