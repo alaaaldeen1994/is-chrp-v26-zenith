@@ -1715,12 +1715,8 @@ const BiosimBridge = {
 
             // Zenith Universal Structural Authority (ipTM 0.80+ High Fidelity Standard)
             if (allProteinStrings.length > 0 && factorsIncluded.length > 0) {
-                // EXTREME FIX: Restoring the powerful, rigid 15aa helical scaffold (EAAAKx3) as requested.
-                // THE PROBLEM: Enzymes like SIRT1 don't bind DNA, so they 'float', killing the ipTM score.
-                // THE SOLUTION: We attach an undeniable 'DNA Anchor' (The elite KLF4 Zinc Finger domain) 
-                // to the very end of the sequence. This grabs the remaining DNA and locks the entire structure!
-                const KLF4_DNA_ANCHOR = "TCDYAGCGKTYTKSSHLKAHLRTHTGEKPYHCDWDGCGWKFARSDELTRHYRKHTGHRPFQCQKCDRAFS";
-                const fused = allProteinStrings.join("EAAAKEAAAKEAAAK") + "EAAAK" + KLF4_DNA_ANCHOR;
+                // Return to the rigorous, clean EAAAKx3 structural scaffold.
+                const fused = allProteinStrings.join("EAAAKEAAAKEAAAK");
                 sequences.push({ "proteinChain": { "sequence": fused, "count": 1 } });
             }
 
