@@ -1012,93 +1012,104 @@
             text-align: center;
         }
 
-        /* Nav collapses to a scrollable row on very small screens */
+        /* --- MOBILE OVERHAUL (Professional App-Like Excellence) --- */
         @media (max-width: 768px) {
-            nav {
-                padding: 0.75rem 1rem !important;
-                flex-wrap: nowrap !important; 
-                justify-content: space-between !important;
-                gap: 0.5rem !important;
-                width: 100% !important;
-                box-sizing: border-box !important;
-                overflow: hidden !important;
+            /* Global Force */
+            html, body {
+                overflow-x: hidden !important;
+                width: 100vw !important;
             }
 
-            .nav-links {
-                display: none !important; /* Hide heavy links on mobile */
+            /* Nav: Hide everything but Logo and Sign In */
+            nav {
+                padding: 0.75rem 1.25rem !important;
+                height: 70px !important;
+                justify-content: space-between !important;
             }
-            
-            /* Hide the pulse badge on mobile to save space */
+            /* Target the middle nav-links div AND any other flex children that shouldn't be there */
+            .nav-links, 
+            nav > div:first-child > div:nth-child(2),
             nav .bg-slate-50.border.border-slate-100 {
                 display: none !important;
             }
-
-            .compliance-bar {
-                flex-direction: column;
-                text-align: center;
-                gap: 0.75rem;
-                bottom: 1rem;
-                width: calc(100% - 2rem);
+            
+            nav .flex.items-center.gap-8 {
+                gap: 0 !important;
             }
 
-            .hero {
-                min-height: 80vh;
-                align-items: flex-start;
-                padding-top: 5vh;
-                width: 100% !important;
-            }
-
-            .hero-content {
-                padding: 0 5% !important;
-                text-align: center;
-                margin-top: 35vh; /* Pushes content below the DNA model */
-                max-width: 100%;
+            /* Sections */
+            section {
+                padding-left: 1.5rem !important;
+                padding-right: 1.5rem !important;
                 width: 100% !important;
                 box-sizing: border-box !important;
             }
-            
-            .hero-content a {
+
+            .hero {
+                min-height: 70vh !important;
+                padding-top: 10vh !important;
+                text-align: center !important;
+            }
+
+            .hero-content {
+                padding: 0 !important;
+                margin-top: 25vh !important;
+                text-align: center !important;
                 width: 100% !important;
-                justify-content: center;
-                margin: 0 auto;
             }
 
             .hero-video {
-                transform: scale(0.6) translate(0, -12vh) !important; 
-                object-fit: contain !important;
-                filter: brightness(1.02);
+                transform: scale(0.55) translate(0, -15vh) !important;
+                opacity: 0.8 !important;
             }
 
-            .hero h1 {
+            /* Responsive Typography - FIXING THE MASSIVE TEXT */
+            h1, .text-6xl {
                 font-size: 32px !important;
-                line-height: 1.1;
-                margin-bottom: 1rem;
-                word-wrap: break-word;
-            }
-
-            .hero p {
-                font-size: 14px !important;
-                line-height: 1.6;
-                margin-bottom: 2rem;
+                line-height: 1.1 !important;
+                letter-spacing: -0.02em !important;
             }
             
-            /* Stat grid - make it two columns on mobile for better use of space */
-            .bg-transparent .max-w-7xl + section + section, 
-            .bg-transparent .divide-slate-100 {
-                flex-direction: column !important;
-                align-items: center !important;
+            h2 {
+                font-size: 28px !important;
+                line-height: 1.2 !important;
             }
             
-            .bg-transparent .flex-col.md\:flex-row {
-                flex-direction: column !important;
-                width: 100% !important;
+            p, .text-lg, .text-xl {
+                font-size: 15px !important;
+                line-height: 1.6 !important;
             }
 
-            .bg-transparent .px-12, .bg-transparent .px-6 {
-                padding: 2rem 1rem !important;
-                border: none !important;
+            /* Buttons */
+            .hero-content a {
+                padding: 1rem 2rem !important;
                 width: 100% !important;
-                text-align: center !important;
+                max-width: 300px;
+                margin: 0 auto !important;
+            }
+
+            /* Feature Grids */
+            .grid {
+                grid-template-columns: 1fr !important;
+                gap: 2rem !important;
+            }
+
+            .py-40, .py-32, .py-16 {
+                padding-top: 4rem !important;
+                padding-bottom: 4rem !important;
+            }
+
+            /* Stats Section */
+            .divide-x, .divide-y {
+                display: none !important;
+            }
+            
+            .flex-col.md\:flex-row {
+                gap: 2rem !important;
+            }
+            
+            .text-5xl {
+                font-size: 32px !important;
             }
         }
     </style>
