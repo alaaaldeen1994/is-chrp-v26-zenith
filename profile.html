@@ -158,22 +158,16 @@
             overflow: hidden;
         }
 
-        /* Global fixed DNA video background */
-        .global-dna-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            z-index: 0;
+        /* Constrained DNA video background */
+        .hero-bg {
+            position: absolute;
+            inset: 0;
+            z-index: -1;
             pointer-events: none;
             display: flex;
             align-items: center;
             justify-content: center;
             overflow: hidden;
-            background: #ffffff; /* This is the base color under the video */
-            width: 100vw;
-            height: 100vh;
         }
 
         .hero-video {
@@ -1016,25 +1010,6 @@
 </head>
 
 <body class="light-mode-profile">
-    <!-- GLOBAL DNA BACKGROUND (BULLETPROOF LOCAL CASCADE) -->
-    <div class="global-dna-bg">
-        <video class="hero-video" id="profile-dna-video" autoplay loop muted playsinline preload="auto">
-            <source src="zenith_dna.mp4?v=2" type="video/mp4">
-            <source src="/zenith_dna.mp4?v=2" type="video/mp4">
-            <source src="assets/9.mp4" type="video/mp4">
-            <source src="/assets/9.mp4" type="video/mp4">
-        </video>
-        <div class="hero-overlay"></div>
-        <script>
-            const v = document.getElementById('profile-dna-video');
-            if (v) {
-                v.play().catch(e => {
-                    console.warn("Autoplay blocked, attempting interaction play.");
-                    document.body.addEventListener('click', () => v.play(), {once: true});
-                });
-            }
-        </script>
-    </div>
 
     <!-- Water Glass Frame - soft frosted edge overlay -->
     <div class="glass-frame"></div>
@@ -1189,6 +1164,25 @@
     <!-- Hero Section -->
     <!-- Hero Section -->
     <section class="hero bg-transparent relative z-10">
+        <!-- CONTAINED DNA BACKGROUND (BULLETPROOF LOCAL CASCADE) -->
+        <div class="hero-bg">
+            <video class="hero-video" id="profile-dna-video" autoplay loop muted playsinline preload="auto">
+                <source src="zenith_dna.mp4?v=2" type="video/mp4">
+                <source src="/zenith_dna.mp4?v=2" type="video/mp4">
+                <source src="assets/9.mp4" type="video/mp4">
+                <source src="/assets/9.mp4" type="video/mp4">
+            </video>
+            <div class="hero-overlay"></div>
+            <script>
+                const v_local = document.getElementById('profile-dna-video');
+                if (v_local) {
+                    v_local.play().catch(e => {
+                        console.warn("Autoplay blocked, attempting interaction play.");
+                        document.body.addEventListener('click', () => v_local.play(), {once: true});
+                    });
+                }
+            </script>
+        </div>
 
         <div class="hero-content">
             <span class="text-[11px] font-black text-slate-400 uppercase tracking-[0.5em] mb-8 block">Neural Parameter
