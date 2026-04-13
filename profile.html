@@ -179,7 +179,7 @@
         .hero-video {
             width: 100%;
             height: 100%;
-            object-fit: cover; /* Forces the video to fill the screen like previously */
+            object-fit: contain; /* PERFECT ZOOM LEVEL */
             opacity: 1;
             filter: contrast(1.05) brightness(1.05); /* Crisp white look */
         }
@@ -209,8 +209,7 @@
             max-width: 750px;
             padding: 0 0 10% 5%;
             text-align: left;
-            margin-top: 0;
-            padding-top: 4vh; /* Provide a gentle downward push */
+            margin-top: -12vh;
         }
 
         /* Institutional Diligence Dropdown */
