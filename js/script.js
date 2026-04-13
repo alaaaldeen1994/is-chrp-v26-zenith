@@ -734,7 +734,7 @@ const BiosimEngine = {
             // v27: Reduce cell size multiplier for high-density (2000 cells)
             // v28 FIX: Scale increased from 0.007 to 0.012 for better visibility on high-res displays
             this.agents.forEach(a => {
-                BiosimRenderer.drawCell(this.ctx, a, a.pos.x * w, a.pos.y * h, scale * 0.012); 
+                BiosimRenderer.drawCell(this.ctx, a, a.pos.x * w, a.pos.y * h, scale * 0.012);
             });
 
             // v28 FIX: Update 3D Cell Count UI
@@ -807,10 +807,10 @@ const BiosimStore = { env: { vector: null, disease: null } };
 // Consolidated sync handled via BiosimBridge.LatentMap.syncLiveCells
 
 const BiosimBridge = {
-    sequenceRegistry: {}, 
-    accessionRegistry: {}, 
+    sequenceRegistry: {},
+    accessionRegistry: {},
     domainDefaults: { // Mapped fragments for high-fidelity handshake (RUO)
-        "GATA4": "CPVESCDRRFSRSDKLAEHKKYHSNKAKR", 
+        "GATA4": "CPVESCDRRFSRSDKLAEHKKYHSNKAKR",
         "NKX2-5": "RRRRTAFTNEQIDELERRFKQQRYLSAPEREHLAAMIKLTQCKIQVQWKFQNRRAKWRRLKQQKTHP",
         "SNAI1": "RKCPSCSLHFSRSADLADLSHLKKHFSKHK",
         "TBX5": "PKALVLSGSPGRRRWLLSPGEPEPEPEPEPEPEPEPEPEPEPEPEPE",
@@ -820,8 +820,8 @@ const BiosimBridge = {
         "MEF2C": "RPAVPPVGSYSFMGPRRRLLGPRRRLLGPRRRLL"
     },
     endpoint: window.location.origin,
-    internalApiKey: 'DEVELOPER_KEY', 
-    isValidatedMode: true, 
+    internalApiKey: 'DEVELOPER_KEY',
+    isValidatedMode: true,
     setMode(m) {
         BiosimUI.notify('System', `Logic is LOCKED to GENERATIVE (Strict Mode)`, 'inf');
     },
@@ -1184,10 +1184,10 @@ const BiosimBridge = {
             const aaMatches = sanitizedQuery.match(aaRegex);
             if (aaMatches) {
                 // Identify which gene the user mentioned in the prompt
-                const geneNames = ['GATA4','NKX2-5','NKX2','SNAI1','TBX5','MEF2C','OCT4','SOX2','NEUROD1','MYH7','MYH6','TTN','TNNT2','RYR2','ACTA2','TP53','ASCL1','KLF4'];
+                const geneNames = ['GATA4', 'NKX2-5', 'NKX2', 'SNAI1', 'TBX5', 'MEF2C', 'OCT4', 'SOX2', 'NEUROD1', 'MYH7', 'MYH6', 'TTN', 'TNNT2', 'RYR2', 'ACTA2', 'TP53', 'ASCL1', 'KLF4'];
                 const upq = sanitizedQuery.toUpperCase();
                 const mentionedGenes = geneNames.filter(g => upq.includes(g));
-                
+
                 aaMatches.forEach((seq, idx) => {
                     // Assign to the Nth mentioned gene, or 'CUSTOM_N' if no match
                     const geneName = mentionedGenes[idx] || `CUSTOM_${idx}`;
@@ -1231,7 +1231,7 @@ const BiosimBridge = {
             } catch (e) {
                 if (e.message.includes("Research Query") || e.message.includes("valid research query")) {
                     // Propagate the specific validation error
-                    throw e; 
+                    throw e;
                 }
                 console.warn("Zenith Remote Engine Offline. Activating Local Fallback Manifold (v26.1).");
             }
@@ -1241,13 +1241,13 @@ const BiosimBridge = {
                 const q = sanitizedQuery.toUpperCase();
 
                 // Precision Semantic Tokens
-                const hasCardiac   = q.includes('CARDIO') || q.includes('HEART') || q.includes('MYOCARDIAL') || q.includes('CARDIOMYOCYTE');
-                const hasRejuv     = q.includes('REJUVEN') || q.includes('REVERSE') || q.includes('AGE') || q.includes('BIOLOGICAL AGE');
-                const hasSafety    = q.includes('NON-ONCOGENIC') || q.includes('C-MYC') || q.includes('ESI') || q.includes('EPIGENETIC STABILITY') || q.includes('CRC');
-                const isNeuro      = q.includes('NEURO') || q.includes('BRAIN') || q.includes('NEURON');
-                const isAging      = q.includes('AGING') || q.includes('SENESCE') || q.includes('LONGEVITY');
-                const isIPSC       = q.includes('IPSC') || q.includes('STEM') || q.includes('PLURI');
-                const isNonMyc     = q.includes('NON-ONCOGENIC') || q.includes('C-MYC') || q.includes('NO MYC') || q.includes('WITHOUT MYC');
+                const hasCardiac = q.includes('CARDIO') || q.includes('HEART') || q.includes('MYOCARDIAL') || q.includes('CARDIOMYOCYTE');
+                const hasRejuv = q.includes('REJUVEN') || q.includes('REVERSE') || q.includes('AGE') || q.includes('BIOLOGICAL AGE');
+                const hasSafety = q.includes('NON-ONCOGENIC') || q.includes('C-MYC') || q.includes('ESI') || q.includes('EPIGENETIC STABILITY') || q.includes('CRC');
+                const isNeuro = q.includes('NEURO') || q.includes('BRAIN') || q.includes('NEURON');
+                const isAging = q.includes('AGING') || q.includes('SENESCE') || q.includes('LONGEVITY');
+                const isIPSC = q.includes('IPSC') || q.includes('STEM') || q.includes('PLURI');
+                const isNonMyc = q.includes('NON-ONCOGENIC') || q.includes('C-MYC') || q.includes('NO MYC') || q.includes('WITHOUT MYC');
 
                 // Most specific: Cardiac Rejuvenation with Safety Constraint (GMT Protocol)
                 const isCardioRejuv = hasCardiac && (hasRejuv || hasSafety);
@@ -1347,9 +1347,9 @@ const BiosimBridge = {
             let riskBadge = '';
             if (data.oncogenic_risk !== null && data.oncogenic_risk !== undefined) {
                 const label = data.oncogenic_risk_label || 'LOW';
-                const risk  = (data.oncogenic_risk * 100).toFixed(0);
+                const risk = (data.oncogenic_risk * 100).toFixed(0);
                 const color = label === 'HIGH' ? '#ef4444' : label === 'MODERATE' ? '#f59e0b' : '#10b981';
-                const bg    = label === 'HIGH' ? 'rgba(239,68,68,0.12)' : label === 'MODERATE' ? 'rgba(245,158,11,0.12)' : 'rgba(16,185,129,0.12)';
+                const bg = label === 'HIGH' ? 'rgba(239,68,68,0.12)' : label === 'MODERATE' ? 'rgba(245,158,11,0.12)' : 'rgba(16,185,129,0.12)';
                 riskBadge = `<span style="margin-left:6px;font-size:6px;font-weight:900;color:${color};background:${bg};border:1px solid ${color}40;padding:1px 4px;border-radius:3px;letter-spacing:0.05em;cursor:help" title="Oncogenic Risk = MYC × (1 − TP53). Ref: Land et al. Nature 1983; Zindy et al. Genes & Dev 1998">⚠ MYC RISK: ${label} (${risk}%)</span>`;
             }
 
@@ -1359,7 +1359,7 @@ const BiosimBridge = {
         if (detailText && detailBox) {
             detailText.innerHTML = data.scientific_rationale.replace('OSKM', '<strong class="text-blue-400">OSKM</strong>');
             detailBox.classList.remove('hidden');
-            
+
             // AUTOMATE LATENT ATLAS (Professional Mode)
             if (typeof BiosimBridge.LatentMap !== 'undefined' && BiosimBridge.LatentMap.toggleAtlas) {
                 BiosimBridge.LatentMap.toggleAtlas(true);
@@ -1434,13 +1434,13 @@ const BiosimBridge = {
 
                     // UniProt accession badges (Swiss-Prot reviewed)
                     const knownAccessions = {
-                        'POU5F1':'Q01860','OCT4':'Q01860','SOX2':'P48431','KLF4':'O43474',
-                        'MYC':'P01106','NANOG':'Q9UER7','GATA4':'P43694','TBX5':'Q99593',
-                        'NKX2-5':'P52952','MEF2C':'Q06413','NEUROD2':'Q15784','ASCL1':'P50553',
-                        'SOX17':'Q9Y458','FOXA2':'Q9Y261','PAX6':'P26367','TP53':'P04637',
-                        'SIRT1':'Q96EB6','TERT':'O14746','FOXO3':'O43524','LIN28A':'Q9H9Z2',
-                        'NEUROD1':'Q13562','MYOD1':'P15172','HAND2':'P61296','HNF4A':'P41235',
-                        'PDX1':'P52945','FOXA1':'P55317','PPARGC1A':'Q9UBK2','CDKN2A':'P42771'
+                        'POU5F1': 'Q01860', 'OCT4': 'Q01860', 'SOX2': 'P48431', 'KLF4': 'O43474',
+                        'MYC': 'P01106', 'NANOG': 'Q9UER7', 'GATA4': 'P43694', 'TBX5': 'Q99593',
+                        'NKX2-5': 'P52952', 'MEF2C': 'Q06413', 'NEUROD2': 'Q15784', 'ASCL1': 'P50553',
+                        'SOX17': 'Q9Y458', 'FOXA2': 'Q9Y261', 'PAX6': 'P26367', 'TP53': 'P04637',
+                        'SIRT1': 'Q96EB6', 'TERT': 'O14746', 'FOXO3': 'O43524', 'LIN28A': 'Q9H9Z2',
+                        'NEUROD1': 'Q13562', 'MYOD1': 'P15172', 'HAND2': 'P61296', 'HNF4A': 'P41235',
+                        'PDX1': 'P52945', 'FOXA1': 'P55317', 'PPARGC1A': 'Q9UBK2', 'CDKN2A': 'P42771'
                     };
                     const acc = knownAccessions[gene];
                     const accBadge = acc ? `<a href="https://www.uniprot.org/uniprot/${acc}" target="_blank" style="font-size:5px;color:#6366f1;border:1px solid rgba(99,102,241,0.3);padding:0 2px;border-radius:2px;margin-left:2px;text-decoration:none;font-family:monospace" title="UniProt Swiss-Prot (Reviewed)">${acc}</a>` : '';
@@ -1450,20 +1450,20 @@ const BiosimBridge = {
                     // Entry = best representative structure from RCSB PDB (Homo sapiens, highest resolution)
                     const knownPDB = {
                         'POU5F1': '3L1P', 'OCT4': '3L1P',  // OCT4+SOX2+DNA crystal (Remenyi 2003, Genes Dev)
-                        'SOX2':   '3L1P',                   // Same complex
-                        'TP53':   '2OCJ',                   // p53 tetramer bound to DNA (Cho 1994, Science)
-                        'GATA4':  '1GAT',                   // GATA1 zinc-finger NMR (closely related, Omichinski 1993)
-                        'TBX5':   '2X6V',                   // TBX5 T-box + DNA (Stirnimann 2010, J Mol Biol)
+                        'SOX2': '3L1P',                   // Same complex
+                        'TP53': '2OCJ',                   // p53 tetramer bound to DNA (Cho 1994, Science)
+                        'GATA4': '1GAT',                   // GATA1 zinc-finger NMR (closely related, Omichinski 1993)
+                        'TBX5': '2X6V',                   // TBX5 T-box + DNA (Stirnimann 2010, J Mol Biol)
                         'NKX2-5': '2Y3C',                   // NKX2.5 homeodomain + DNA (Newman 2012)
-                        'PAX6':   '6PAX',                   // PAX6 paired domain + DNA (Xu 1999, Genes Dev)
-                        'NANOG':  '2VI8',                   // NANOG homeodomain NMR (Chang 2010)
-                        'KLF4':   '2WBS',                   // KLF4 zinc fingers + DNA (Schuetz 2011, J Mol Biol)
-                        'FOXA2':  '1VTN',                   // FOXA (HNF3) forkhead + DNA (Clark 1993, Cell)
-                        'MEF2C':  '1C7U',                   // MEF2 MADS-box + DNA (Bhatt 1999, J Mol Biol)
-                        'MYC':    '1NKP',                   // c-MYC bHLH-LZ (Nair 2003, PNAS)
-                        'ASCL1':  '2YPD',                   // ASCL1 bHLH domain structure
-                        'SIRT1':  '4ZZJ',                   // SIRT1 deacetylase domain (Cao 2015)
-                        'HNF4A':  '1PZL',                   // HNF4A ligand-binding domain (Dhe-Paganon 2002)
+                        'PAX6': '6PAX',                   // PAX6 paired domain + DNA (Xu 1999, Genes Dev)
+                        'NANOG': '2VI8',                   // NANOG homeodomain NMR (Chang 2010)
+                        'KLF4': '2WBS',                   // KLF4 zinc fingers + DNA (Schuetz 2011, J Mol Biol)
+                        'FOXA2': '1VTN',                   // FOXA (HNF3) forkhead + DNA (Clark 1993, Cell)
+                        'MEF2C': '1C7U',                   // MEF2 MADS-box + DNA (Bhatt 1999, J Mol Biol)
+                        'MYC': '1NKP',                   // c-MYC bHLH-LZ (Nair 2003, PNAS)
+                        'ASCL1': '2YPD',                   // ASCL1 bHLH domain structure
+                        'SIRT1': '4ZZJ',                   // SIRT1 deacetylase domain (Cao 2015)
+                        'HNF4A': '1PZL',                   // HNF4A ligand-binding domain (Dhe-Paganon 2002)
                     };
                     const pdb = knownPDB[gene];
                     const pdbBadge = pdb ? `<a href="https://www.rcsb.org/structure/${pdb}" target="_blank" style="font-size:5px;color:#10b981;border:1px solid rgba(16,185,129,0.3);padding:0 2px;border-radius:2px;margin-left:2px;text-decoration:none;font-family:monospace" title="Experimental PDB crystal/NMR structure — click to view 3D">PDB:${pdb}</a>` : '';
@@ -1474,7 +1474,7 @@ const BiosimBridge = {
                             <div style="display:flex;justify-content:space-between;align-items:center">
                                 <div style="display:flex;align-items:center;gap:3px">
                                     <div style="width:3px;height:3px;border-radius:full;background:#10b981;box-shadow:0 0 4px #10b981;animation:pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite"></div>
-                                    <span style="font-size:8px;color:#fff;font-family:monospace;font-weight:700">${gene}${auditRange ? ' <span style="font-size:6px;color:#475569">'+auditRange+'</span>' : ''}${accBadge}${lenBadge}${pdbBadge}</span>
+                                    <span style="font-size:8px;color:#fff;font-family:monospace;font-weight:700">${gene}${auditRange ? ' <span style="font-size:6px;color:#475569">' + auditRange + '</span>' : ''}${accBadge}${lenBadge}${pdbBadge}</span>
                                 </div>
                                 <span style="font-size:7px;font-weight:700;color:${scoreColor};margin-left:4px;flex-shrink:0">${pct}%</span>
                             </div>
@@ -1490,7 +1490,7 @@ const BiosimBridge = {
                             </button>
                             <button onclick="BiosimBridge.removeDiscoveryFactor('${gene}')" title="${isGiant ? 'Large Factor: Exceeds AF3 2000aa limit — Deselect to enable validation' : 'Deselect Factor'}"
                                 style="flex-shrink:0;opacity:${isGiant ? '0.8' : '0.4'};background:none;border:none;cursor:pointer;color:#ef4444;padding:1px"
-                                onmouseover="this.style.opacity='1';this.style.color='#ef4444'" onmouseout="this.style.opacity='${isGiant?0.8:0.4}';this.style.color='#ef4444'">
+                                onmouseover="this.style.opacity='1';this.style.color='#ef4444'" onmouseout="this.style.opacity='${isGiant ? 0.8 : 0.4}';this.style.color='#ef4444'">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
                             </button>
                         </div>
@@ -1529,13 +1529,13 @@ const BiosimBridge = {
     // --- UNIPROT LIVE FETCH (v26.4 GOLD — API-Verified & Hardened) ---
     async fetchUniProtSequence(geneName) {
         if (this.sequenceRegistry[geneName]) return this.sequenceRegistry[geneName];
-        
+
         let retries = 3;
         while (retries > 0) {
             try {
                 const url = `https://rest.uniprot.org/uniprotkb/search?query=gene_exact:${encodeURIComponent(geneName)}+AND+organism_id:9606+AND+reviewed:true&format=json&size=1&fields=accession,gene_primary,length,sequence`;
                 const response = await fetch(url, { headers: { 'Accept': 'application/json' } });
-                
+
                 // Retry logic for transient server errors (500, 502, 503, 504) per UniProt docs
                 if ([500, 502, 503, 504].includes(response.status)) {
                     retries--;
@@ -1547,7 +1547,7 @@ const BiosimBridge = {
                 }
 
                 if (!response.ok) throw new Error(`UniProt HTTP ${response.status}`);
-                
+
                 const json = await response.json();
                 const totalResults = response.headers.get('x-total-results') || (json.results ? json.results.length : 0);
 
@@ -1588,15 +1588,15 @@ const BiosimBridge = {
 
             const data = this.lastDiscovery;
             const targetProfile = data.target_profile || {};
-            const profile = Object.entries(targetProfile).sort((a,b) => b[1] - a[1]);
-            
+            const profile = Object.entries(targetProfile).sort((a, b) => b[1] - a[1]);
+
             let sequences = []; let allProteinStrings = []; // Fixed Triple Declaration
             let factorsIncluded = [];
             let totalResidues = 0;
 
             // Zenith Official v26 'Z-Pillar' Scaffold + Dynamic Motif Injection
             // We use the specific GPT-identified motif, defaulting to a strong minimal anchor if absent.
-            let targetAnchor = data.dna_motif_target || "CCTGTGACTGTGGGGTTCA-CGCTCCCGGGTG"; 
+            let targetAnchor = data.dna_motif_target || "CCTGTGACTGTGGGGTTCA-CGCTCCCGGGTG";
             targetAnchor = targetAnchor.replace(/-/g, '').toUpperCase();
             // CRITICAL FIX: AlphaFold 3 strictly requires ACGT. Scrub IUPAC degenerate codes (R, Y, M, N, etc.)
             targetAnchor = targetAnchor.replace(/[^ACGT]/g, 'A');
@@ -1605,7 +1605,7 @@ const BiosimBridge = {
             if (pKeys.includes("POU5F1") && pKeys.includes("SOX2")) {
                 targetAnchor = "CTTTGTTATGCAAAT"; // Absolute Canonical Heterodimer Motif
             }
-            
+
             // CRITICAL FIX FOR >0.80 ipTM: Revert to the golden 35bp footprint for the helical scaffold to anchor properly.
             const totalLen = 35;
             const padLeft = Math.max(0, Math.floor((totalLen - targetAnchor.length) / 2));
@@ -1614,23 +1614,23 @@ const BiosimBridge = {
             const rightPadStr = "CGCTCCCGGGTGACGTGATAGCA";
             const dnaFwd = (leftPadStr.length >= padLeft ? leftPadStr.slice(-padLeft) : leftPadStr.padStart(padLeft, 'A')) + targetAnchor + (rightPadStr.length >= padRight ? rightPadStr.slice(0, padRight) : rightPadStr.padEnd(padRight, 'T'));
 
-            const rcMap = {'A':'T','T':'A','C':'G','G':'C'};
-            const dnaRev = dnaFwd.split('').reverse().map(c=>rcMap[c]||c).join('');
+            const rcMap = { 'A': 'T', 'T': 'A', 'C': 'G', 'G': 'C' };
+            const dnaRev = dnaFwd.split('').reverse().map(c => rcMap[c] || c).join('');
             sequences.push({ "dnaSequence": { "sequence": dnaFwd, "count": 1 } });
             sequences.push({ "dnaSequence": { "sequence": dnaRev, "count": 1 } });
             totalResidues += (dnaFwd.length * 2);
 
             // Universal 'Structural Authority' DHL Library (Reaching ipTM 0.70 Blue Zone)
             const dhlLibrary = {
-                'GATA4': '201-349',   'GATA6': '201-349',
-                'NKX2-5': '138-246',  'TBX5': '60-324',
-                'SNAI1': '150-264',   'SNAI2': '155-264',
-                'MEF2C': '1-95',      'MEF2A': '1-95',
-                'OCT4': '138-285',    'SOX2': '41-120',   'SOX17': '1-120',
-                'KLF4': '395-485',    'MYC': '350-439',
-                'NANOG': '150-250',   'MYOD1': '100-244', 'ASCL1': '150-280',
-                'HNF4A': '120-220',   'FOXA2': '160-260',
-                'FOXO3': '156-242',   'SIRT1': '244-495', 'TP53': '94-292', // Sarkar 2020 Factors
+                'GATA4': '201-349', 'GATA6': '201-349',
+                'NKX2-5': '138-246', 'TBX5': '60-324',
+                'SNAI1': '150-264', 'SNAI2': '155-264',
+                'MEF2C': '1-95', 'MEF2A': '1-95',
+                'OCT4': '138-285', 'SOX2': '41-120', 'SOX17': '1-120',
+                'KLF4': '395-485', 'MYC': '350-439',
+                'NANOG': '150-250', 'MYOD1': '100-244', 'ASCL1': '150-280',
+                'HNF4A': '120-220', 'FOXA2': '160-260',
+                'FOXO3': '156-242', 'SIRT1': '244-495', 'TP53': '94-292', // Sarkar 2020 Factors
                 'EZH2': '500-746',    // EZH2 (PRC2 Catalytic SET Domain) to prevent blind unstructured chopping
                 'VEGFA': '27-191'     // Mature core ONLY (Excluded from DNA docking)
             };
@@ -1638,12 +1638,12 @@ const BiosimBridge = {
             // 2. PROTEIN FACTORS — Domain Handshake Linker (DHL) Pipeline (v33 Gold)
             // CRITICAL FIX: Limit to EXACTLY Top 2 Factors to prevent AF3 structural clash (ipTM collapse).
             // A 35bp DNA strand can realistically only coordinate a Dimer 'Handshake'.
-            const structuralPool = Object.entries(this.lastDiscovery.target_profile || {}).sort((a,b) => b[1]-a[1]);
-            
+            const structuralPool = Object.entries(this.lastDiscovery.target_profile || {}).sort((a, b) => b[1] - a[1]);
+
             // ELITE REVELATION: We must set padding to 0. 
             // Previous 15aa padding added native unstructured 'floppy tails' to the ends of the domains,
             // which connected to our rigid EAAAK anchor, rendering it useless (creating the red noodles in AF3).
-            const Z_LINKER_PAD = 0; 
+            const Z_LINKER_PAD = 0;
 
             for (const [gene] of structuralPool.slice(0, 2)) {
                 let seq = await this.fetchUniProtSequence(gene);
@@ -1652,10 +1652,10 @@ const BiosimBridge = {
                     const signalingBlocklist = ["VEGFA", "VEGFB", "VEGFC", "VEGFD", "IGF1", "FGF2", "HGF", "PDGFA", "PDGFB"];
                     if (signalingBlocklist.includes(gene.toUpperCase()) || signalingBlocklist.includes((gene === 'POU5F1' ? 'OCT4' : gene).toUpperCase())) {
                         console.info(`[Handshake] Skipping signaling factor: ${gene} — preventing structural interference.`);
-                        continue; 
+                        continue;
                     }
                     let parsedSeq = String(seq);
-                    
+
                     // Domain Pruning (DHL constraint)
                     const range = dhlLibrary[gene === 'POU5F1' ? 'OCT4' : gene] || dhlLibrary[gene];
                     if (range) {
@@ -1676,13 +1676,13 @@ const BiosimBridge = {
 
                     allProteinStrings.push(parsedSeq);
                     totalResidues += parsedSeq.length;
-                    
+
                     const acc = this.accessionRegistry[gene] || "Default";
                     factorsIncluded.push(`${gene}_${acc}`);
                 }
             }
 
-              if (factorsIncluded.length === 0) {
+            if (factorsIncluded.length === 0) {
                 // v31: OSKM Foundation Fallback Pool
                 const foundationPool = ['POU5F1', 'SOX2', 'KLF4', 'MYC'];
                 for (const gene of foundationPool) {
@@ -1691,19 +1691,19 @@ const BiosimBridge = {
                         let parsedSeq = String(fallback);
                         const range = dhlLibrary[gene === 'POU5F1' ? 'OCT4' : gene];
                         if (range) {
-                             const match = range.match(/(\d+)-(\d+)/);
-                             if (match) {
-                                  const start = Math.max(0, parseInt(match[1]) - 1 - Z_LINKER_PAD);
-                                  const end = Math.min(parsedSeq.length, parseInt(match[2]) + Z_LINKER_PAD);
-                                  parsedSeq = parsedSeq.substring(start, end);
-                             }
+                            const match = range.match(/(\d+)-(\d+)/);
+                            if (match) {
+                                const start = Math.max(0, parseInt(match[1]) - 1 - Z_LINKER_PAD);
+                                const end = Math.min(parsedSeq.length, parseInt(match[2]) + Z_LINKER_PAD);
+                                parsedSeq = parsedSeq.substring(start, end);
+                            }
                         }
 
-                        sequences.push({ 
-                            "proteinChain": { 
+                        sequences.push({
+                            "proteinChain": {
                                 "sequence": parsedSeq,
                                 "count": 1
-                            } 
+                            }
                         });
                         totalResidues += parsedSeq.length;
                         factorsIncluded.push(`${gene}_Fallback`);
@@ -1744,22 +1744,22 @@ const BiosimBridge = {
             if (manifestName.length > 99) {
                 manifestName = manifestName.substring(0, 99);
             }
-            
+
             const manifest = [{
                 "name": manifestName,
-                "modelSeeds": ["2142086823"], 
+                "modelSeeds": ["2142086823"],
                 "sequences": sequences
             }];
 
             BiosimUI.notify('Native Export', `AlphaFold Server JSON Generated`, 'suc');
 
             const jsonStr = JSON.stringify(manifest, null, 2);
-            
+
             // Fail-safe: Copy to clipboard
             try {
                 navigator.clipboard.writeText(jsonStr);
                 BiosimUI.notify('COPIED', 'JSON manifest copied to clipboard!', 'suc');
-            } catch(e) {}
+            } catch (e) { }
 
             // Simplified Short Name (Prevents Browser Safe-Filter)
             const backupFileName = `zenith_af3.json`;
@@ -1809,9 +1809,9 @@ const BiosimBridge = {
         if (!this.lastDiscovery) return;
         const profile = this.lastDiscovery.target_profile;
         if (!profile) return;
-        
+
         BiosimUI.notify('Injection', 'Applying Discovery Vector to Population...', 'inf');
-        
+
         // v26.4: Force-boot if 0 cells
         if (BiosimEngine.agents.length === 0) {
             BiosimEngine.boot();
@@ -1825,7 +1825,7 @@ const BiosimBridge = {
                 }
             });
         });
-        
+
         BiosimUI.notify('Zenith Engine', 'Population Synchronized with Discovery Manifest.', 'suc');
     },
 
@@ -1846,25 +1846,25 @@ const BiosimBridge = {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ discovery_data: data })
         })
-        .then(res => res.json())
-        .then(resData => {
-            const script = resData.script;
-            const blob = new Blob([script], { type: 'text/x-python' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = filename;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
+            .then(res => res.json())
+            .then(resData => {
+                const script = resData.script;
+                const blob = new Blob([script], { type: 'text/x-python' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
 
-            BiosimUI.notify('Bridge', 'Opentrons v2.27 Flex script generated & downloaded.', 'suc');
-        })
-        .catch(err => {
-            console.error("Opentrons generator error:", err);
-            BiosimUI.notify('Bridge Error', 'Failed to generate protocol script.', 'err');
-        });
+                BiosimUI.notify('Bridge', 'Opentrons v2.27 Flex script generated & downloaded.', 'suc');
+            })
+            .catch(err => {
+                console.error("Opentrons generator error:", err);
+                BiosimUI.notify('Bridge Error', 'Failed to generate protocol script.', 'err');
+            });
     },
 
     async generateReport() {
@@ -2102,7 +2102,7 @@ const BiosimBridge = {
                 }
 
                 if (discDot) discDot.style.backgroundColor = '#10b981';
-                
+
                 // Track backend lateness
                 this.lastSuccessfulPing = Date.now();
 
@@ -2179,11 +2179,11 @@ const BiosimBridge = {
             const gene = (input?.value || '').trim().toUpperCase();
             if (!gene) { BiosimUI.notify('Gene Lookup', 'Enter a gene symbol first', 'warn'); return; }
 
-            const resultEl  = document.getElementById('gene-lookup-result');
-            const errorEl   = document.getElementById('gene-lookup-error');
+            const resultEl = document.getElementById('gene-lookup-result');
+            const errorEl = document.getElementById('gene-lookup-error');
             const loadingEl = document.getElementById('gene-lookup-loading');
-            if (resultEl)  resultEl.classList.add('hidden');
-            if (errorEl)   errorEl.classList.add('hidden');
+            if (resultEl) resultEl.classList.add('hidden');
+            if (errorEl) errorEl.classList.add('hidden');
             if (loadingEl) loadingEl.classList.remove('hidden');
 
             try {
@@ -2192,7 +2192,7 @@ const BiosimBridge = {
                 try {
                     const r = await fetch(`/api/uniprot-lookup?gene=${encodeURIComponent(gene)}`);
                     if (r.ok) data = await r.json();
-                } catch (_) {}
+                } catch (_) { }
 
                 // Fallback: direct UniProt REST API (if backend unreachable)
                 if (!data) {
@@ -2212,7 +2212,7 @@ const BiosimBridge = {
                                 if (c.commentType === 'FUNCTION' && !func) func = (c.texts || [])[0]?.value || null;
                                 if (c.commentType === 'SUBCELLULAR LOCATION' && !loc) loc = c.subcellularLocations?.[0]?.location?.value || null;
                             }
-                            const domains = (e.features || []).filter(f => ['Domain','DNA binding','Zinc finger'].includes(f.type)).slice(0,4);
+                            const domains = (e.features || []).filter(f => ['Domain', 'DNA binding', 'Zinc finger'].includes(f.type)).slice(0, 4);
                             data = {
                                 gene, accession: acc,
                                 protein_name: rec.fullName?.value || null,
@@ -2234,20 +2234,20 @@ const BiosimBridge = {
                 }
 
                 // Render result
-                document.getElementById('glr-gene').textContent     = data.gene;
+                document.getElementById('glr-gene').textContent = data.gene;
                 const accLink = document.getElementById('glr-acc-link');
                 accLink.textContent = data.accession;
                 accLink.href = data.uniprot_url || `https://www.uniprot.org/uniprot/${data.accession}`;
-                document.getElementById('glr-len').textContent      = data.sequence_length ? `${data.sequence_length} aa` : '';
-                document.getElementById('glr-name').textContent     = data.protein_name || '';
-                document.getElementById('glr-loc').textContent      = data.subcellular_location ? `📍 ${data.subcellular_location}` : '';
-                document.getElementById('glr-func').textContent     = data.function || '';
-                document.getElementById('glr-source').textContent   = data.source || 'Swiss-Prot';
+                document.getElementById('glr-len').textContent = data.sequence_length ? `${data.sequence_length} aa` : '';
+                document.getElementById('glr-name').textContent = data.protein_name || '';
+                document.getElementById('glr-loc').textContent = data.subcellular_location ? `📍 ${data.subcellular_location}` : '';
+                document.getElementById('glr-func').textContent = data.function || '';
+                document.getElementById('glr-source').textContent = data.source || 'Swiss-Prot';
 
                 // Domain badges
                 const domEl = document.getElementById('glr-domains');
                 domEl.innerHTML = (data.domains || []).map(d =>
-                    `<span style="font-size:6px;background:rgba(99,102,241,0.15);border:1px solid rgba(99,102,241,0.3);color:#a5b4fc;padding:1px 4px;border-radius:3px">${d.type}${d.description ? ': '+d.description : ''}</span>`
+                    `<span style="font-size:6px;background:rgba(99,102,241,0.15);border:1px solid rgba(99,102,241,0.3);color:#a5b4fc;padding:1px 4px;border-radius:3px">${d.type}${d.description ? ': ' + d.description : ''}</span>`
                 ).join('');
 
                 if (resultEl) resultEl.classList.remove('hidden');
@@ -2265,16 +2265,16 @@ const BiosimBridge = {
     AF3Upload: {
         applyRealMetrics() {
             const plddt = parseFloat(document.getElementById('af3-in-plddt')?.value);
-            const pae   = parseFloat(document.getElementById('af3-in-pae')?.value);
-            const ptm   = parseFloat(document.getElementById('af3-in-ptm')?.value);
-            const iptm  = parseFloat(document.getElementById('af3-in-iptm')?.value);
+            const pae = parseFloat(document.getElementById('af3-in-pae')?.value);
+            const ptm = parseFloat(document.getElementById('af3-in-ptm')?.value);
+            const iptm = parseFloat(document.getElementById('af3-in-iptm')?.value);
 
             // Scientific range validation
             const errors = [];
             if (!isNaN(plddt) && (plddt < 0 || plddt > 100)) errors.push('pLDDT must be 0-100');
-            if (!isNaN(pae)   && (pae   < 0 || pae   > 30))  errors.push('PAE must be 0-30Å');
-            if (!isNaN(ptm)   && (ptm   < 0 || ptm   > 1))   errors.push('pTM must be 0-1');
-            if (!isNaN(iptm)  && (iptm  < 0 || iptm  > 1))   errors.push('ipTM must be 0-1');
+            if (!isNaN(pae) && (pae < 0 || pae > 30)) errors.push('PAE must be 0-30Å');
+            if (!isNaN(ptm) && (ptm < 0 || ptm > 1)) errors.push('pTM must be 0-1');
+            if (!isNaN(iptm) && (iptm < 0 || iptm > 1)) errors.push('ipTM must be 0-1');
             if ([plddt, pae, ptm, iptm].every(isNaN)) { BiosimUI.notify('AF3 Upload', 'Enter at least one metric', 'warn'); return; }
             if (errors.length) { BiosimUI.notify('AF3 Validation', errors.join(' | '), 'err'); return; }
 
@@ -3012,7 +3012,7 @@ const BiosimUI = {
             const p = v / agents.length;
             if (p > 0) entropy -= p * Math.log2(p);
         }
-        
+
         let avgAge = 0, avgHealth = 0;
         if (agents.length > 0) {
             avgAge = agents.reduce((a, b) => a + b.bioAge, 0) / agents.length;
@@ -3132,14 +3132,14 @@ const BiosimUI = {
         CONFIG.geneSymbols.forEach((sym, i) => {
             if (search && !sym.includes(search)) return;
             // Native truncation removed to allow full 5000 discovery
-            
+
             const node = document.createElement('div');
             // Zenith v26.4: Extremely dense 10-column layout
             node.className = 'w-full aspect-square border border-white/5 bg-black/40 flex items-center justify-center text-[5px] text-slate-500 font-mono transition-all duration-300 hover:scale-125 hover:z-10 cursor-pointer overflow-hidden';
             node.id = `g${i}`;
             node.innerText = sym.substring(0, 4);
             node.title = `${sym} (#${i})`;
-            
+
             grid.appendChild(node);
             count++;
         });
