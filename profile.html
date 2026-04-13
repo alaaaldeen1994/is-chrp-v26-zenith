@@ -158,16 +158,22 @@
             overflow: hidden;
         }
 
-        /* Constrained DNA video background */
-        .hero-bg {
-            position: absolute;
-            inset: 0;
-            z-index: -1;
+        /* Global fixed DNA video background */
+        .global-dna-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 0;
             pointer-events: none;
             display: flex;
             align-items: center;
             justify-content: center;
             overflow: hidden;
+            background: #ffffff; /* This is the base color under the video */
+            width: 100vw;
+            height: 100vh;
         }
 
         .hero-video {
@@ -1010,6 +1016,25 @@
 </head>
 
 <body class="light-mode-profile">
+    <!-- GLOBAL DNA BACKGROUND (BULLETPROOF LOCAL CASCADE) -->
+    <div class="global-dna-bg">
+        <video class="hero-video" id="profile-dna-video" autoplay loop muted playsinline preload="auto">
+            <source src="zenith_dna.mp4?v=2" type="video/mp4">
+            <source src="/zenith_dna.mp4?v=2" type="video/mp4">
+            <source src="assets/9.mp4" type="video/mp4">
+            <source src="/assets/9.mp4" type="video/mp4">
+        </video>
+        <div class="hero-overlay"></div>
+        <script>
+            const v = document.getElementById('profile-dna-video');
+            if (v) {
+                v.play().catch(e => {
+                    console.warn("Autoplay blocked, attempting interaction play.");
+                    document.body.addEventListener('click', () => v.play(), {once: true});
+                });
+            }
+        </script>
+    </div>
 
     <!-- Water Glass Frame - soft frosted edge overlay -->
     <div class="glass-frame"></div>
@@ -1164,25 +1189,6 @@
     <!-- Hero Section -->
     <!-- Hero Section -->
     <section class="hero bg-transparent relative z-10">
-        <!-- CONTAINED DNA BACKGROUND (BULLETPROOF LOCAL CASCADE) -->
-        <div class="hero-bg">
-            <video class="hero-video" id="profile-dna-video" autoplay loop muted playsinline preload="auto">
-                <source src="zenith_dna.mp4?v=2" type="video/mp4">
-                <source src="/zenith_dna.mp4?v=2" type="video/mp4">
-                <source src="assets/9.mp4" type="video/mp4">
-                <source src="/assets/9.mp4" type="video/mp4">
-            </video>
-            <div class="hero-overlay"></div>
-            <script>
-                const v_local = document.getElementById('profile-dna-video');
-                if (v_local) {
-                    v_local.play().catch(e => {
-                        console.warn("Autoplay blocked, attempting interaction play.");
-                        document.body.addEventListener('click', () => v_local.play(), {once: true});
-                    });
-                }
-            </script>
-        </div>
 
         <div class="hero-content">
             <span class="text-[11px] font-black text-slate-400 uppercase tracking-[0.5em] mb-8 block">Neural Parameter
@@ -1574,22 +1580,22 @@
             <div class="max-w-7xl mx-auto px-12">
                 <div class="grid grid-cols-2 lg:grid-cols-4 gap-12 mb-32 pb-32 border-b border-slate-50">
                     <div class="status-metric">
-                        <h4 class="text-[10px] font-black text-slate-300 uppercase tracking-[0.3em] mb-4">System Health
+                        <h4 class="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] mb-4">System Health
                         </h4>
                         <p class="text-3xl font-black text-slate-900">Optimal</p>
                     </div>
                     <div class="status-metric">
-                        <h4 class="text-[10px] font-black text-slate-300 uppercase tracking-[0.3em] mb-4">Neural Core
+                        <h4 class="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] mb-4">Neural Core
                         </h4>
                         <p class="text-3xl font-black text-slate-900">Zenith v26.1</p>
                     </div>
                     <div class="status-metric">
-                        <h4 class="text-[10px] font-black text-slate-300 uppercase tracking-[0.3em] mb-4">Data Integrity
+                        <h4 class="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] mb-4">Data Integrity
                         </h4>
                         <p class="text-3xl font-black text-slate-900">Encrypted</p>
                     </div>
                     <div class="status-metric">
-                        <h4 class="text-[10px] font-black text-slate-300 uppercase tracking-[0.3em] mb-4">Cluster
+                        <h4 class="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] mb-4">Cluster
                             Latency</h4>
                         <p class="text-3xl font-black text-slate-900">0.02ms</p>
                     </div>
@@ -1597,21 +1603,21 @@
 
                 <div class="flex flex-col md:flex-row justify-between items-center gap-12 text-center md:text-left">
                     <div class="flex flex-col md:flex-row items-center gap-4">
-                        <svg class="nav-logo-svg text-slate-300" style="width: 24px; height: 24px;" viewBox="0 0 24 24"
+                        <svg class="nav-logo-svg text-slate-600" style="width: 24px; height: 24px;" viewBox="0 0 24 24"
                             fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"
                             stroke-linejoin="round">
                             <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
                         </svg>
-                        <div class="text-[10px] font-black text-slate-300 uppercase tracking-[0.5em]">Nilus Lab
+                        <div class="text-[10px] font-black text-slate-600 uppercase tracking-[0.5em]">Nilus Lab
                             Institutional | RUO v26.1</div>
                     </div>
-                    <div
-                        class="flex flex-wrap justify-center gap-8 md:gap-12 text-[10px] font-black text-slate-400 uppercase tracking-widest">
-                        <a href="about.html" class="hover:text-slate-900 transition-colors">Lab Ops</a>
-                        <a href="regulatory.html" class="hover:text-slate-900 transition-colors">Compliance</a>
-                        <a href="contact.html" class="hover:text-slate-900 transition-colors">Contact Node</a>
-                        <span class="hidden md:inline text-slate-200">|</span>
-                        <span>© 2026 Zenith Foundation</span>
+                    <div class="flex flex-col items-center md:items-end gap-3 tracking-widest uppercase">
+                        <div class="flex gap-8 md:gap-12 text-[10px] font-black text-slate-900 drop-shadow-md">
+                            <a href="about.html" class="hover:text-blue-600 transition-colors">Lab Ops</a>
+                            <a href="regulatory.html" class="hover:text-blue-600 transition-colors">Compliance</a>
+                            <a href="contact.html" class="hover:text-blue-600 transition-colors">Contact Node</a>
+                        </div>
+                        <span class="text-[9px] font-black text-slate-500">© 2026 Zenith Foundation</span>
                     </div>
                 </div>
             </div>
