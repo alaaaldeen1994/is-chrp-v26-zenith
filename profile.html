@@ -107,16 +107,14 @@
 
         * {
             margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
             font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
             background-color: #ffffff;
-            /* Unified White Background */
-            color: var(--text-dark);
-            overflow-x: hidden;
+            color: #0f172a;
+            overflow-x: hidden; /* Prevent horizontal scroll 'half-empty' bug */
+            width: 100%;
+            height: 100%;
             letter-spacing: -0.01em;
             border: none !important;
             box-shadow: none !important;
@@ -1017,14 +1015,22 @@
         /* Nav collapses to a scrollable row on very small screens */
         @media (max-width: 768px) {
             nav {
-                padding: 1rem;
-                flex-wrap: wrap; /* Allows nav to flow to multiple lines if needed */
-                justify-content: center;
-                gap: 1rem;
+                padding: 0.75rem 1rem !important;
+                flex-wrap: nowrap !important; 
+                justify-content: space-between !important;
+                gap: 0.5rem !important;
+                width: 100% !important;
+                box-sizing: border-box !important;
+                overflow: hidden !important;
             }
 
             .nav-links {
-                display: none; /* Hide heavy links on mobile to keep it clean like an app */
+                display: none !important; /* Hide heavy links on mobile */
+            }
+            
+            /* Hide the pulse badge on mobile to save space */
+            nav .bg-slate-50.border.border-slate-100 {
+                display: none !important;
             }
 
             .compliance-bar {
@@ -1038,46 +1044,60 @@
             .hero {
                 min-height: 80vh;
                 align-items: flex-start;
-                padding-top: 15vh;
+                padding-top: 5vh;
+                width: 100% !important;
             }
 
             .hero-content {
                 padding: 0 5% !important;
                 text-align: center;
-                margin-top: 40vh; /* Pushes content below the DNA model */
+                margin-top: 35vh; /* Pushes content below the DNA model */
                 max-width: 100%;
+                width: 100% !important;
+                box-sizing: border-box !important;
             }
             
-            /* Ensures button spans fully under text */
             .hero-content a {
-                width: 100%;
+                width: 100% !important;
                 justify-content: center;
+                margin: 0 auto;
             }
 
             .hero-video {
-                transform: scale(0.65) translate(0, -10vh) !important; /* Move DNA up to not overlap button */
+                transform: scale(0.6) translate(0, -12vh) !important; 
                 object-fit: contain !important;
                 filter: brightness(1.02);
             }
 
             .hero h1 {
-                font-size: 36px !important;
+                font-size: 32px !important;
                 line-height: 1.1;
                 margin-bottom: 1rem;
+                word-wrap: break-word;
             }
 
             .hero p {
                 font-size: 14px !important;
+                line-height: 1.6;
                 margin-bottom: 2rem;
             }
             
-            /* Stat grid padding fix for tiny mobile screens */
-            .bg-transparent .px-12 {
-                padding-left: 1.5rem !important;
-                padding-right: 1.5rem !important;
-                text-align: center;
+            /* Stat grid - make it two columns on mobile for better use of space */
+            .bg-transparent .max-w-7xl + section + section, 
+            .bg-transparent .divide-slate-100 {
+                flex-direction: column !important;
+                align-items: center !important;
             }
-            .bg-transparent .first\:pt-0 {
+            
+            .bg-transparent .flex-col.md\:flex-row {
+                flex-direction: column !important;
+                width: 100% !important;
+            }
+
+            .bg-transparent .px-12, .bg-transparent .px-6 {
+                padding: 2rem 1rem !important;
+                border: none !important;
+                width: 100% !important;
                 text-align: center !important;
             }
         }
@@ -1202,7 +1222,7 @@
                 </div>
             </div>
 
-            <div class="flex items-center gap-6">
+            <div class="nav-links flex items-center gap-6">
                 <a href="index.html" class="text-[12px] font-bold text-slate-900 uppercase tracking-wide">Zenith
                     Mainframe</a>
 
