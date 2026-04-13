@@ -1631,6 +1631,7 @@ const BiosimBridge = {
                 'NANOG': '150-250',   'MYOD1': '100-244', 'ASCL1': '150-280',
                 'HNF4A': '120-220',   'FOXA2': '160-260',
                 'FOXO3': '156-242',   'SIRT1': '244-495', 'TP53': '94-292', // Sarkar 2020 Factors
+                'EZH2': '500-746',    // EZH2 (PRC2 Catalytic SET Domain) to prevent blind unstructured chopping
                 'VEGFA': '27-191'     // Mature core ONLY (Excluded from DNA docking)
             };
 
