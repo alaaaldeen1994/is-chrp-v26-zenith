@@ -181,7 +181,14 @@
             height: 100%;
             object-fit: cover; /* Forces the video to fill the screen like previously */
             opacity: 1;
-            filter: brightness(1.02); /* Crisp white look */
+            filter: contrast(1.05) brightness(1.05); /* Crisp white look */
+        }
+
+        .hero-overlay {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at center, transparent 30%, rgba(255,255,255,0.95) 100%);
+            z-index: 2;
         }
 
         /* Water glass frame overlay - soft frosted edge treatment */
@@ -1009,11 +1016,12 @@
 </head>
 
 <body class="light-mode-profile">
-    <!-- GLOBAL DNA BACKGROUND (RESTORED / CACHE-BUSTED) -->
+    <!-- GLOBAL DNA BACKGROUND (JSDELIVR NATIVE VIDEO) -->
     <div class="global-dna-bg">
-        <iframe src="https://embed.screenapp.io/app/v/Tn5hE7-ht6?embed=true&autoplay=true&loop=true&background=true" 
-                style="width: 100vw; height: 100vh; border: none; transform: scale(1.3);" 
-                allow="autoplay; fullscreen"></iframe>
+        <video class="hero-video" id="profile-dna-video" autoplay loop muted playsinline preload="auto">
+            <source src="https://cdn.jsdelivr.net/gh/alaaaldeen1994/is-chrp-v26-zenith@main/zenith_dna.mp4" type="video/mp4">
+        </video>
+        <div class="hero-overlay"></div>
     </div>
 
     <!-- Water Glass Frame - soft frosted edge overlay -->
