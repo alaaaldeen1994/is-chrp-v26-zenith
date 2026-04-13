@@ -1015,70 +1015,70 @@
         }
 
         /* Nav collapses to a scrollable row on very small screens */
-        nav {
-            padding: 0.75rem 1rem;
-            gap: 0.75rem;
-        }
-
-        .nav-links {
-            gap: 0.5rem 1rem;
-            font-size: 12px;
-        }
-
-        .compliance-bar {
-            flex-direction: column;
-            text-align: center;
-            gap: 0.75rem;
-            bottom: 1rem;
-            width: calc(100% - 2rem);
-        }
-
-        .modal-content {
-            padding: 2rem 1.25rem;
-            border-radius: 16px;
-        }
-
-        .brand-section {
-            padding: 4rem 5%;
-        }
-
-        .capability-grid {
-            padding: 0 5% 6rem;
-        }
-
-        .nav-logo-svg {
-            width: 24px !important;
-            height: 24px !important;
-        }
-        /* --- MOBILE CALIBRATION (Clinical Precision) --- */
         @media (max-width: 768px) {
+            nav {
+                padding: 1rem;
+                flex-wrap: wrap; /* Allows nav to flow to multiple lines if needed */
+                justify-content: center;
+                gap: 1rem;
+            }
+
+            .nav-links {
+                display: none; /* Hide heavy links on mobile to keep it clean like an app */
+            }
+
+            .compliance-bar {
+                flex-direction: column;
+                text-align: center;
+                gap: 0.75rem;
+                bottom: 1rem;
+                width: calc(100% - 2rem);
+            }
+
             .hero {
                 min-height: 80vh;
                 align-items: flex-start;
-                padding-top: 60px;
+                padding-top: 15vh;
             }
 
             .hero-content {
-                padding: 0 6% 10% 6% !important;
+                padding: 0 5% !important;
                 text-align: center;
+                margin-top: 40vh; /* Pushes content below the DNA model */
                 max-width: 100%;
+            }
+            
+            /* Ensures button spans fully under text */
+            .hero-content a {
+                width: 100%;
+                justify-content: center;
             }
 
             .hero-video {
-                transform: scale(0.75) translate(0, 18vh) !important; /* Elegant mobile scaling and centering */
+                transform: scale(0.65) translate(0, -10vh) !important; /* Move DNA up to not overlap button */
                 object-fit: contain !important;
                 filter: brightness(1.02);
             }
 
             .hero h1 {
-                font-size: 38px !important;
+                font-size: 36px !important;
                 line-height: 1.1;
-                margin-bottom: 2rem;
+                margin-bottom: 1rem;
             }
 
             .hero p {
                 font-size: 14px !important;
-                margin-bottom: 2.5rem;
+                margin-bottom: 2rem;
+            }
+            
+            /* Stat grid padding fix for tiny mobile screens */
+            .bg-transparent .px-12 {
+                padding-left: 1.5rem !important;
+                padding-right: 1.5rem !important;
+                text-align: center;
+            }
+            .bg-transparent .first\:pt-0 {
+                text-align: center !important;
             }
         }
     </style>
