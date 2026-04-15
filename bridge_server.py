@@ -483,12 +483,46 @@ signaling_field_3d = SignalingField3D(size=32)
 # LAZY LOADING: Model is initialized on first request to avoid startup timeout
 drift_model = None
 
+TRAINED_DRIFTMLP_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "models", "driftmlp_trained", "driftmlp.pt")
+
 def get_drift_model():
-    """Lazy-load the drift model on first request"""
+    """Lazy-load the drift model on first request, with trained weight recovery."""
     global drift_model
     if drift_model is None:
         print("LAZY INIT: Loading Zenith ULTRA-5K Transformer Model...")
         drift_model = ZenithV2DeepDrift(input_dim=5000).to(dtype=torch.float32)
+
+        # Attempt to load trained weights (partial load for architecture evolution)
+        try:
+            weight_path = TRAINED_DRIFTMLP_PATH
+
+            # Reassemble split parts if full file is missing or too small
+            if not os.path.exists(weight_path) or os.path.getsize(weight_path) < 1000:
+                drift_dir = os.path.dirname(weight_path)
+                if os.path.exists(drift_dir):
+                    parts = sorted([f for f in os.listdir(drift_dir) if f.startswith("driftmlp.pt.part")])
+                    if parts:
+                        print(f"WEIGHT RECOVERY: Reassembling {len(parts)} split parts...")
+                        with open(weight_path, 'wb') as outfile:
+                            for part in parts:
+                                with open(os.path.join(drift_dir, part), 'rb') as infile:
+                                    outfile.write(infile.read())
+                        print("WEIGHT RECOVERY: Reassembly complete.")
+
+            if os.path.exists(weight_path) and os.path.getsize(weight_path) > 1000:
+                size_mb = os.path.getsize(weight_path) / (1024 * 1024)
+                state = torch.load(weight_path, map_location='cpu', weights_only=False)
+                result = drift_model.load_state_dict(state, strict=False)
+                loaded = len(state) - len(result.unexpected_keys)
+                total = len(drift_model.state_dict())
+                print(f"SUCCESS: Loaded {loaded}/{total} weight tensors ({size_mb:.0f} MB)")
+                if result.missing_keys:
+                    print(f"INFO: {len(result.missing_keys)} layers use fresh init (architecture evolution)")
+            else:
+                print("WARNING: No trained weights found. Using random initialization.")
+        except Exception as e:
+            print(f"WARNING: Weight loading failed ({e}). Using random initialization.")
+
         print("SUCCESS: Zenith Ultra-5K Model Ready")
     return drift_model
 
