@@ -197,6 +197,7 @@
                         Diligence</span>
                     <svg class="w-3.5 h-3.5 text-slate-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
                     <div class="inst-dropdown">
+                        <a href="#scientific-authority">Scientific Authority</a>
                         <a href="evidence.html">Evidence Registry</a>
                         <a href="whitepaper.html">Research Whitepaper</a>
                         <a href="regulatory.html">Regulatory Statement</a>
@@ -223,6 +224,14 @@
                 Foundation</span>
             <h1 class="text-8xl font-black text-white leading-[0.95] tracking-tight mb-12">Zenith Ultra
                 <br>Technical Manual</h1>
+            
+            <!-- DEEP KNOWLEDGE ANCHOR -->
+            <div class="bg-blue-600/10 border-l-4 border-blue-500 p-8 mb-12 max-w-4xl">
+                <p class="text-xl text-blue-100 leading-relaxed font-medium italic">
+                    "Zenith v26.1 is built on the Human Cell Atlas — 500,000+ real human cardiac cells (Litviňuková et al., Nature 2020). Using Nobel Prize-winning OSKM reprogramming biology and scVI deep learning, it models epigenetic age reversal — grounded in peer-reviewed science, not theory."
+                </p>
+            </div>
+
             <p class="text-2xl text-slate-500 leading-relaxed max-w-4xl font-medium">
                 Comprehensive operational guide and technical reference for Zenith v26.4.
                 Documenting the high-fidelity manifold learning architectures, UniProt 3-tier sequence integration,
@@ -284,6 +293,71 @@
                             <div
                                 class="h-px bg-slate-100 group-hover:bg-slate-900 transition-all duration-500 w-12 group-hover:w-full">
                             </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- NEW SECTION: SCIENTIFIC AUTHORITY -->
+        <section id="scientific-authority" class="mb-40 scroll-mt-24">
+            <h2 class="text-[11px] font-black tracking-[0.4em] uppercase text-blue-500 mb-8 font-bold">Scientific Authority & Reference Registry</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                <div class="card-elite bg-slate-900/40 border-slate-800">
+                    <h4 class="text-xl font-black text-white mb-6 uppercase tracking-widest">Fundamental Research</h4>
+                    <div class="space-y-6 text-sm">
+                        <div class="border-l-2 border-blue-500/30 pl-4 py-2">
+                            <div class="text-blue-400 font-bold mb-1">Cellular Reprogramming (Nobel 2012)</div>
+                            <p class="text-slate-400 leading-relaxed">Based on the landmark discovery by Shinya Yamanaka, published in <em>Cell</em> (2006), demonstrating that four transcription factors — OCT4, SOX2, KLF4, and MYC (OSKM) — can reprogram adult somatic cells into induced pluripotent stem cells (iPSCs). Awarded the Nobel Prize in Physiology or Medicine in 2012.</p>
+                            <div class="text-[10px] text-slate-500 mt-2 italic">Takahashi & Yamanaka, Cell (2006). DOI: 10.1016/j.cell.2006.07.024</div>
+                        </div>
+                        <div class="border-l-2 border-emerald-500/30 pl-4 py-2">
+                            <div class="text-emerald-400 font-bold mb-1">Human Heart Cell Atlas</div>
+                            <p class="text-slate-400 leading-relaxed">Zenith's training foundation derives from the Human Cell Atlas heart dataset, comprising 500,000+ real human cardiac cells. This dataset provides single-cell transcriptomic baselines across ventricular, atrial, and conduction system cell types from healthy donors.</p>
+                            <div class="text-[10px] text-slate-500 mt-2 italic">Litviňuková et al., Nature (2020). DOI: 10.1038/s41586-020-2797-4</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-elite bg-slate-900/40 border-slate-800">
+                    <h4 class="text-xl font-black text-white mb-6 uppercase tracking-widest">Computational Methodology</h4>
+                    <div class="space-y-6 text-sm">
+                        <div class="border-l-2 border-purple-500/30 pl-4 py-2">
+                            <div class="text-purple-400 font-bold mb-1">scVI Deep Learning Foundation</div>
+                            <p class="text-slate-400 leading-relaxed">Zenith's latent space encoder uses scVI (single-cell Variational Inference), a deep generative model employing Variational Autoencoders (VAEs) for probabilistic analysis of single-cell transcriptomics. It enables manifold learning and denoising across high-dimensional gene expression space.</p>
+                            <div class="text-[10px] text-slate-500 mt-2 italic">Lopez et al., Nature Methods (2018). DOI: 10.1038/s41592-018-0229-2</div>
+                        </div>
+                        <div class="border-l-2 border-rose-500/30 pl-4 py-2">
+                            <div class="text-rose-400 font-bold mb-1">Neural SDEs (Infinite-GAN)</div>
+                            <p class="text-slate-400 leading-relaxed">Models cell-state evolution as continuous-time stochastic processes. Neural SDEs learn the drift (deterministic trajectory) and diffusion (biological noise) terms of transcriptomic dynamics, enabling biologically realistic temporal predictions.</p>
+                            <div class="text-[10px] text-slate-500 mt-2 italic">Kidger et al., ICML (2021). arXiv: 2102.03657</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 mt-12">
+                <div class="card-elite bg-slate-900/40 border-slate-800">
+                    <h4 class="text-xl font-black text-white mb-6 uppercase tracking-widest">Epigenetic Measurement</h4>
+                    <div class="space-y-6 text-sm">
+                        <div class="border-l-2 border-amber-500/30 pl-4 py-2">
+                            <div class="text-amber-400 font-bold mb-1">Horvath & GrimAge Clocks</div>
+                            <p class="text-slate-400 leading-relaxed">Zenith's BioAge metric is architecturally inspired by the Horvath (2013) multi-tissue epigenetic clock and GrimAge (2019) mortality predictor. The engine uses transcriptomic manifold projections to model DNA methylation age trends with high fidelity.</p>
+                            <div class="text-[10px] text-slate-500 mt-2 italic">Horvath, Genome Biol (2013). DOI: 10.1186/gb-2013-14-10-r115</div>
+                        </div>
+                        <div class="border-l-2 border-blue-500/30 pl-4 py-2">
+                            <div class="text-blue-400 font-bold mb-1">AlphaFold 3 Multimer Analysis</div>
+                            <p class="text-slate-400 leading-relaxed">All transcription factor interactions discovered by Zenith are validated via AlphaFold 3 atomic-level 3D structure prediction. This ensures that predicted protein–protein and protein–DNA docking events are structurally feasible at the molecular level.</p>
+                            <div class="text-[10px] text-slate-500 mt-2 italic">Abramson et al., Nature (2024). DOI: 10.1038/s41586-024-07487-w</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-elite bg-slate-900/40 border-slate-800">
+                    <h4 class="text-xl font-black text-white mb-6 uppercase tracking-widest">Partial Reprogramming</h4>
+                    <div class="space-y-6 text-sm">
+                        <div class="border-l-2 border-teal-500/30 pl-4 py-2">
+                            <div class="text-teal-400 font-bold mb-1">Identity-Preserving Rejuvenation</div>
+                            <p class="text-slate-400 leading-relaxed">Grounded in the work of Ocampo et al. (2016) and Sarkar et al. (2020), which demonstrated that transient induction of pluripotency factors can reverse epigenetic aging markers without erasing cell identity — the core principle behind Zenith's DRP protocol.</p>
+                            <div class="text-[10px] text-slate-500 mt-2 italic">Ocampo et al., Cell (2016). DOI: 10.1016/j.cell.2016.11.052</div>
                         </div>
                     </div>
                 </div>
