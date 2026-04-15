@@ -323,7 +323,7 @@ class ZenithV2DeepDrift(nn.Module):
     Zenith Ultra-5K: Foundation Generative Biology Engine.
     Epigenetic-Clock Aware (V26.9).
     """
-    def __init__(self, input_dim=5000, hidden_dim=1024, depth=22, num_heads=8):
+    def __init__(self, input_dim=5000, hidden_dim=1024, depth=12, num_heads=8):
         super().__init__()
         print(f"🧬 INITIALIZING ZENITH ULTRA-ENGINE: Epigenetic-Aware 5K Transformer")
         
@@ -492,7 +492,7 @@ def get_drift_model():
         print("LAZY INIT: Loading Zenith ULTRA-5K Transformer Model...")
         drift_model = ZenithV2DeepDrift(input_dim=5000).to(dtype=torch.float32)
 
-        # Attempt to load trained weights (partial load for architecture evolution)
+        # Load trained weights (architecture matches saved checkpoint)
         try:
             weight_path = TRAINED_DRIFTMLP_PATH
 
@@ -512,12 +512,9 @@ def get_drift_model():
             if os.path.exists(weight_path) and os.path.getsize(weight_path) > 1000:
                 size_mb = os.path.getsize(weight_path) / (1024 * 1024)
                 state = torch.load(weight_path, map_location='cpu', weights_only=False)
-                result = drift_model.load_state_dict(state, strict=False)
-                loaded = len(state) - len(result.unexpected_keys)
+                drift_model.load_state_dict(state, strict=True)
                 total = len(drift_model.state_dict())
-                print(f"SUCCESS: Loaded {loaded}/{total} weight tensors ({size_mb:.0f} MB)")
-                if result.missing_keys:
-                    print(f"INFO: {len(result.missing_keys)} layers use fresh init (architecture evolution)")
+                print(f"SUCCESS: All {total} weight tensors loaded ({size_mb:.0f} MB) — 100% trained")
             else:
                 print("WARNING: No trained weights found. Using random initialization.")
         except Exception as e:
