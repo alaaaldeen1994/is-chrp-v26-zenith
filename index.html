@@ -41,7 +41,7 @@
                     document.documentElement.style.display = 'block'; // Ensure html is visible
                     document.body.style.setProperty('display', 'block', 'important');
                 } else {
-                    // Not signed in Ã¢â‚¬â€ redirect immediately
+                    // Not signed in — redirect immediately
                     window.location.replace('profile.html');
                 }
             });
@@ -138,8 +138,7 @@
     </div>
 
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <!-- Firebase already initialized in auth guard above. Do not load again. -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
