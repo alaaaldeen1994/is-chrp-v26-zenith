@@ -75,6 +75,150 @@ body {
     }
 }
 
+/* --- PHONE: Premium Mobile Simulation Lab --- */
+@media (max-width: 768px) {
+    html, body {
+        overflow-x: hidden !important;
+        width: 100% !important;
+    }
+
+    /* Collapse to single column, hide side panels */
+    #architect-layout {
+        grid-template-columns: 1fr !important;
+        grid-template-rows: auto 60vh auto !important;
+        height: auto !important;
+        min-height: 100vh;
+        overflow-y: auto !important;
+        padding: 0 !important;
+        gap: 0 !important;
+    }
+
+    /* Compact header */
+    header {
+        padding: 0.5rem 1rem !important;
+        height: auto !important;
+        min-height: 40px;
+        flex-wrap: wrap;
+        gap: 0.25rem;
+    }
+
+    .header-stat {
+        font-size: 8px !important;
+    }
+
+    /* Hide left control panel on phone */
+    .panel:first-child {
+        display: none !important;
+    }
+
+    /* Central viewport: full width */
+    .panel:nth-child(2) {
+        grid-column: 1 !important;
+        min-height: 60vh;
+    }
+
+    #viewport-container {
+        width: 100% !important;
+        height: 100% !important;
+        min-height: 50vh;
+    }
+
+    /* Right panel: show below the canvas, scrollable */
+    .panel:last-child {
+        grid-column: 1 !important;
+        border-left: none !important;
+        border-top: 1px solid rgba(255, 255, 255, 0.05);
+        max-height: 50vh;
+        overflow-y: auto;
+    }
+
+    /* HUD overlay: smaller on mobile */
+    .hud-panel {
+        top: 8px !important;
+        left: 8px !important;
+        width: min(220px, calc(100% - 16px)) !important;
+        padding: 10px !important;
+        font-size: 9px !important;
+    }
+
+    /* Toast feed: smaller on mobile */
+    #toast-feed {
+        width: min(260px, calc(100% - 16px)) !important;
+        right: 8px !important;
+        top: 50px !important;
+    }
+
+    .toast {
+        padding: 8px !important;
+        font-size: 10px !important;
+    }
+
+    /* View toggle buttons */
+    .view-toggle-container {
+        top: 8px !important;
+        right: 8px !important;
+    }
+
+    .view-toggle-btn {
+        padding: 5px 8px !important;
+        font-size: 7px !important;
+    }
+
+    /* Clinical dashboard on mobile */
+    #clinical-dashboard {
+        padding: 20px 16px !important;
+    }
+
+    .dash-grid {
+        grid-template-columns: 1fr !important;
+        gap: 12px !important;
+    }
+
+    .chart-container-large {
+        grid-column: span 1 !important;
+        height: 280px !important;
+    }
+
+    .dash-stat-value {
+        font-size: 24px !important;
+    }
+
+    /* Fullscreen microscope/3D buttons */
+    #btn-micro-maximize {
+        top: 12px !important;
+        right: 12px !important;
+        padding: 10px !important;
+    }
+
+    /* Microscopy analysis cards */
+    .micro-analysis-card {
+        top: 10px !important;
+        left: 10px !important;
+        width: calc(100% - 20px) !important;
+        max-width: none !important;
+        max-height: 40vh !important;
+        border-radius: 14px !important;
+        padding: 16px !important;
+    }
+
+    .micro-analytics-sidebar {
+        top: auto !important;
+        bottom: 10px !important;
+        right: 10px !important;
+        width: calc(100% - 20px) !important;
+        max-width: none !important;
+        max-height: 35vh !important;
+        border-radius: 14px !important;
+    }
+
+    /* Footer */
+    footer, aside {
+        padding: 0.5rem 1rem !important;
+        font-size: 9px !important;
+    }
+}
+
+
 /* --- AUTHENTIC FULLSCREEN MICROSCOPE MODE --- */
 #architect-layout.micro-fullscreen-active {
     grid-template-columns: 1fr !important;
