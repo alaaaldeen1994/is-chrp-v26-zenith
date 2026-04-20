@@ -127,11 +127,393 @@
         }
 
         @media (max-width: 768px) {
-            .system-footer {
-                flex-direction: column !important;
-                text-align: center !important;
-                padding: 6px 12px !important;
-                gap: 2px !important;
+            .system-footer { display: none !important; }
+        }
+    </style>
+
+    <!-- MOBILE SHELL STYLES -->
+    <style id="mob-styles">
+        #mobile-shell { display: none; }
+
+        @media (max-width: 768px) {
+            /* Hide entire desktop layout */
+            #architect-layout, #ai-panel, #ai-toggle-btn { display: none !important; }
+
+            /* Show mobile shell */
+            #mobile-shell {
+                display: flex !important;
+                flex-direction: column;
+                height: 100vh;
+                height: 100dvh;
+                width: 100%;
+                max-width: 100vw;
+                background: #02020a;
+                font-family: 'Inter', system-ui, sans-serif;
+                color: #e2e8f0;
+                overflow: hidden;
+                position: relative;
+            }
+
+            /* NAV BAR */
+            #mob-nav {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 0 1rem;
+                height: 44px;
+                min-height: 44px;
+                background: #000;
+                border-bottom: 1px solid rgba(255,255,255,0.07);
+                flex-shrink: 0;
+                z-index: 10;
+            }
+            .mob-nav-brand {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                font-size: 14px;
+                font-weight: 900;
+                letter-spacing: -0.02em;
+                color: #fff;
+                text-transform: uppercase;
+            }
+            .mob-nav-status {
+                display: flex;
+                align-items: center;
+                gap: 5px;
+                font-size: 8px;
+                font-weight: 700;
+                color: #10b981;
+                text-transform: uppercase;
+                letter-spacing: 0.1em;
+                background: rgba(16,185,129,0.1);
+                border: 1px solid rgba(16,185,129,0.3);
+                padding: 3px 10px;
+                border-radius: 100px;
+            }
+            .mob-status-dot {
+                width: 5px;
+                height: 5px;
+                background: #10b981;
+                border-radius: 50%;
+                animation: pulse 2s infinite;
+            }
+            .mob-exit-btn {
+                background: rgba(255,255,255,0.05);
+                border: 1px solid rgba(255,255,255,0.1);
+                color: #94a3b8;
+                padding: 5px 12px;
+                border-radius: 6px;
+                font-size: 9px;
+                font-weight: 700;
+                text-transform: uppercase;
+                letter-spacing: 0.08em;
+                cursor: pointer;
+            }
+
+            /* DESKTOP NOTICE BANNER */
+            #mob-desktop-banner {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                padding: 7px 14px;
+                background: rgba(37,99,235,0.1);
+                border-bottom: 1px solid rgba(37,99,235,0.2);
+                font-size: 10px;
+                color: #93c5fd;
+                flex-shrink: 0;
+            }
+            #mob-desktop-banner span:nth-child(2) { flex: 1; font-weight: 600; }
+            #mob-desktop-banner button {
+                background: none;
+                border: none;
+                color: #475569;
+                font-size: 18px;
+                cursor: pointer;
+                line-height: 1;
+                padding: 0;
+            }
+
+            /* TAB CONTENT */
+            .mob-tab-content {
+                flex: 1;
+                overflow: hidden;
+                position: relative;
+                min-height: 0;
+            }
+
+            /* SIMULATION TAB */
+            #mob-canvas-wrap {
+                width: 100%;
+                height: 100%;
+                background: #000;
+                position: relative;
+                overflow: hidden;
+            }
+            #mob-canvas-wrap canvas {
+                display: block !important;
+                width: 100% !important;
+                height: 100% !important;
+                object-fit: cover;
+            }
+
+            /* HUD overlay */
+            #mob-hud-overlay {
+                position: absolute;
+                top: 10px;
+                left: 10px;
+                display: flex;
+                flex-direction: column;
+                gap: 5px;
+                z-index: 20;
+                background: rgba(0,0,0,0.75);
+                backdrop-filter: blur(8px);
+                border: 1px solid rgba(255,255,255,0.08);
+                border-left: 2px solid #2563eb;
+                border-radius: 8px;
+                padding: 10px 12px;
+            }
+            .mob-hud-stat { display: flex; flex-direction: column; gap: 1px; }
+            .mob-hud-label {
+                font-size: 7px;
+                font-weight: 900;
+                color: #475569;
+                text-transform: uppercase;
+                letter-spacing: 0.08em;
+                font-family: 'JetBrains Mono', monospace;
+            }
+            .mob-hud-value {
+                font-size: 12px;
+                font-weight: 700;
+                color: #e2e8f0;
+                font-family: 'JetBrains Mono', monospace;
+            }
+
+            /* Inject FAB */
+            #mob-inject-fab {
+                position: absolute;
+                bottom: 16px;
+                right: 12px;
+                display: flex;
+                flex-direction: column;
+                gap: 6px;
+                align-items: stretch;
+                z-index: 20;
+                width: 200px;
+            }
+            #mob-inject-fab select {
+                background: rgba(0,0,0,0.85);
+                border: 1px solid rgba(37,99,235,0.4);
+                color: #93c5fd;
+                padding: 7px 10px;
+                border-radius: 8px;
+                font-size: 9px;
+                font-family: 'JetBrains Mono', monospace;
+                font-weight: 700;
+                backdrop-filter: blur(10px);
+                width: 100%;
+            }
+            #mob-inject-btn {
+                background: #2563eb;
+                color: white;
+                border: none;
+                padding: 11px;
+                border-radius: 10px;
+                font-size: 11px;
+                font-weight: 900;
+                text-transform: uppercase;
+                letter-spacing: 0.06em;
+                cursor: pointer;
+                box-shadow: 0 4px 20px rgba(37,99,235,0.4);
+            }
+
+            /* AI PROTOCOL TAB */
+            #mob-ai-tab {
+                display: flex;
+                flex-direction: column;
+                overflow: hidden;
+            }
+            .mob-ai-header {
+                padding: 12px 16px;
+                background: rgba(37,99,235,0.08);
+                border-bottom: 1px solid rgba(37,99,235,0.15);
+                flex-shrink: 0;
+            }
+            .mob-ai-title {
+                font-size: 11px;
+                font-weight: 900;
+                color: #60a5fa;
+                letter-spacing: 0.05em;
+                text-transform: uppercase;
+                margin-bottom: 2px;
+            }
+            .mob-ai-subtitle-text {
+                font-size: 9px;
+                color: #475569;
+                font-weight: 600;
+            }
+            .mob-ai-section {
+                padding: 10px 14px;
+                border-bottom: 1px solid rgba(255,255,255,0.04);
+                flex-shrink: 0;
+            }
+            .mob-ai-section-label {
+                font-size: 8px;
+                font-weight: 900;
+                color: #475569;
+                text-transform: uppercase;
+                letter-spacing: 0.1em;
+                margin-bottom: 6px;
+            }
+            .mob-ai-row {
+                display: flex;
+                gap: 8px;
+                align-items: center;
+            }
+            .mob-ai-row select {
+                flex: 1;
+                background: rgba(0,0,0,0.6);
+                border: 1px solid rgba(255,255,255,0.08);
+                color: #e2e8f0;
+                padding: 8px 10px;
+                border-radius: 6px;
+                font-size: 10px;
+                font-family: 'JetBrains Mono', monospace;
+            }
+            .mob-inject-sm {
+                background: #2563eb;
+                color: white;
+                border: none;
+                padding: 8px 12px;
+                border-radius: 6px;
+                font-size: 9px;
+                font-weight: 900;
+                text-transform: uppercase;
+                cursor: pointer;
+                white-space: nowrap;
+            }
+            #mob-ai-messages-wrap {
+                flex: 1;
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
+                padding: 12px 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+                min-height: 0;
+            }
+            .mob-ai-starter {
+                font-size: 10px;
+                color: #475569;
+                font-style: italic;
+                text-align: center;
+                padding: 20px 0;
+            }
+            .mob-ai-msg-user {
+                align-self: flex-end;
+                background: rgba(37,99,235,0.2);
+                border: 1px solid rgba(37,99,235,0.3);
+                color: #93c5fd;
+                padding: 8px 12px;
+                border-radius: 12px 12px 3px 12px;
+                font-size: 11px;
+                max-width: 85%;
+                line-height: 1.4;
+            }
+            .mob-ai-msg-ai {
+                align-self: flex-start;
+                background: rgba(255,255,255,0.04);
+                border: 1px solid rgba(255,255,255,0.08);
+                color: #cbd5e1;
+                padding: 8px 12px;
+                border-radius: 12px 12px 12px 3px;
+                font-size: 11px;
+                max-width: 90%;
+                line-height: 1.5;
+            }
+            #mob-ai-quickbtns {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 6px;
+                padding: 10px 14px;
+                border-top: 1px solid rgba(255,255,255,0.04);
+                border-bottom: 1px solid rgba(255,255,255,0.04);
+                flex-shrink: 0;
+            }
+            .mob-quick-btn {
+                background: rgba(255,255,255,0.04);
+                border: 1px solid rgba(255,255,255,0.08);
+                color: #94a3b8;
+                padding: 8px 6px;
+                border-radius: 6px;
+                font-size: 9px;
+                font-weight: 700;
+                cursor: pointer;
+                text-align: center;
+                transition: background 0.15s;
+            }
+            .mob-quick-btn:active { background: rgba(37,99,235,0.2); color: #60a5fa; }
+            .mob-ai-input-row {
+                display: flex;
+                gap: 8px;
+                padding: 10px 14px;
+                background: rgba(0,0,0,0.4);
+                border-top: 1px solid rgba(255,255,255,0.06);
+                flex-shrink: 0;
+            }
+            #mob-ai-prompt {
+                flex: 1;
+                background: rgba(255,255,255,0.05);
+                border: 1px solid rgba(255,255,255,0.1);
+                color: #e2e8f0;
+                padding: 10px 12px;
+                border-radius: 8px;
+                font-size: 12px;
+                outline: none;
+                font-family: 'Inter', sans-serif;
+            }
+            .mob-ai-send-btn {
+                background: #2563eb;
+                color: white;
+                border: none;
+                padding: 10px 16px;
+                border-radius: 8px;
+                font-size: 10px;
+                font-weight: 900;
+                text-transform: uppercase;
+                cursor: pointer;
+            }
+
+            /* BOTTOM TAB BAR */
+            #mob-tabbar {
+                display: flex;
+                background: #000;
+                border-top: 1px solid rgba(255,255,255,0.08);
+                flex-shrink: 0;
+                height: 54px;
+            }
+            .mob-tab-btn {
+                flex: 1;
+                background: none;
+                border: none;
+                border-top: 2px solid transparent;
+                color: #475569;
+                font-size: 10px;
+                font-weight: 700;
+                text-transform: uppercase;
+                letter-spacing: 0.06em;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 6px;
+                transition: all 0.15s;
+                font-family: 'Inter', sans-serif;
+            }
+            .mob-tab-btn.mob-tab-active {
+                color: #2563eb;
+                border-top-color: #2563eb;
+                background: rgba(37,99,235,0.05);
             }
         }
     </style>
@@ -280,6 +662,122 @@
         style="position: fixed; bottom: 20px; left: 20px; background: #2563eb; color: white; border: none; padding: 12px 20px; border-radius: 8px; font-size: 11px; cursor: pointer; box-shadow: 0 0 20px rgba(37,99,235,0.5); font-family: 'JetBrains Mono', monospace; font-weight: bold; z-index: 999; display: block;">
         🤖 AI ASSISTANT
     </button>
+
+    <!-- ================================================================
+         MOBILE SHELL — shown only on phones (< 768px)
+         Desktop layout (#architect-layout) is hidden via CSS on mobile.
+         All simulation + AI logic is shared with the desktop version.
+    ================================================================ -->
+    <div id="mobile-shell">
+
+        <!-- TOP NAV -->
+        <div id="mob-nav">
+            <div class="mob-nav-brand">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83z"/><path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65"/><path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65"/></svg>
+                NILUS <span style="color:#2563eb;margin-left:3px">LAB</span>
+            </div>
+            <div class="mob-nav-status">
+                <span class="mob-status-dot"></span> LIVE
+            </div>
+            <button class="mob-exit-btn" onclick="typeof performLogout!=='undefined'?performLogout():window.location.href='profile.html'">EXIT</button>
+        </div>
+
+        <!-- DESKTOP NOTICE BANNER -->
+        <div id="mob-desktop-banner">
+            <span>💻</span>
+            <span>For the full experience, use a desktop or laptop</span>
+            <button onclick="this.parentElement.style.display='none'" aria-label="Dismiss">×</button>
+        </div>
+
+        <!-- TAB: SIMULATION -->
+        <div id="mob-sim-tab" class="mob-tab-content">
+            <!-- Canvas is moved here by JS -->
+            <div id="mob-canvas-wrap"></div>
+
+            <!-- Mini HUD -->
+            <div id="mob-hud-overlay">
+                <div class="mob-hud-stat">
+                    <span class="mob-hud-label">Population</span>
+                    <span class="mob-hud-value" id="mob-pop">2000</span>
+                </div>
+                <div class="mob-hud-stat">
+                    <span class="mob-hud-label">Bio-Age</span>
+                    <span class="mob-hud-value" id="mob-bioage">--</span>
+                </div>
+                <div class="mob-hud-stat">
+                    <span class="mob-hud-label">Entropy</span>
+                    <span class="mob-hud-value" id="mob-entropy">--</span>
+                </div>
+            </div>
+
+            <!-- Inject FAB -->
+            <div id="mob-inject-fab">
+                <select id="mob-factor-sel">
+                    <option value="DRP-Alpha-12">DRP-Alpha-12 (Decaying Resonance)</option>
+                    <option value="OSKM">OSKM (Yamanaka - iPSC)</option>
+                    <option value="MPTR">MPTR (Rejuvenation)</option>
+                    <option value="LIN28">LIN28/NANOG (Thomson)</option>
+                    <option value="DIRECT_NEURO">Direct → Neuro</option>
+                    <option value="DIRECT_CARDIO">Direct → Cardio</option>
+                </select>
+                <button id="mob-inject-btn" onclick="typeof BiosimBridge!=='undefined'&&BiosimBridge.injectVector(document.getElementById('mob-factor-sel').value)">⚡ INJECT</button>
+            </div>
+        </div>
+
+        <!-- TAB: AI PROTOCOL -->
+        <div id="mob-ai-tab" class="mob-tab-content" style="display:none">
+            <div class="mob-ai-header">
+                <div class="mob-ai-title">🤖 AI Protocol Discovery</div>
+                <div class="mob-ai-subtitle-text">Zenith Ultra v26.4 · Research Use Only</div>
+            </div>
+
+            <!-- Factor inject -->
+            <div class="mob-ai-section">
+                <div class="mob-ai-section-label">Reprogramming Factor</div>
+                <div class="mob-ai-row">
+                    <select id="mob-ai-factor-sel">
+                        <option value="DRP-Alpha-12">DRP-Alpha-12 (Decaying Resonance)</option>
+                        <option value="OSKM">OSKM (Yamanaka - iPSC)</option>
+                        <option value="MPTR">MPTR (Transient Rejuvenation)</option>
+                        <option value="LIN28">LIN28/NANOG (Thomson)</option>
+                        <option value="DIRECT_NEURO">Direct → Neuro (Transdiff)</option>
+                        <option value="DIRECT_CARDIO">Direct → Cardio (Transdiff)</option>
+                    </select>
+                    <button class="mob-inject-sm" onclick="typeof BiosimBridge!=='undefined'&&BiosimBridge.injectVector(document.getElementById('mob-ai-factor-sel').value)">INJECT</button>
+                </div>
+            </div>
+
+            <!-- Messages -->
+            <div id="mob-ai-messages-wrap">
+                <div id="mob-ai-messages">
+                    <div class="mob-ai-starter">💡 Ask about reprogramming, genes, or your simulation...</div>
+                </div>
+            </div>
+
+            <!-- Quick questions -->
+            <div id="mob-ai-quickbtns">
+                <button class="mob-quick-btn" onclick="mobAskAI('What is OSKM reprogramming?')">Explain OSKM</button>
+                <button class="mob-quick-btn" onclick="mobAskAI('Analyze current cell populations')">Analyze Cells</button>
+                <button class="mob-quick-btn" onclick="mobAskAI('What is DRP-Alpha-12?')">About DRP-α12</button>
+                <button class="mob-quick-btn" onclick="mobAskAI('Summarize simulation findings')">Summarize</button>
+            </div>
+
+            <!-- Input -->
+            <div class="mob-ai-input-row">
+                <input type="text" id="mob-ai-prompt" placeholder="Ask the Zenith AI..."
+                    onkeypress="if(event.key==='Enter')mobAskAI()">
+                <button class="mob-ai-send-btn" onclick="mobAskAI()">SEND</button>
+            </div>
+        </div>
+
+        <!-- BOTTOM TAB BAR -->
+        <div id="mob-tabbar">
+            <button id="mob-tab-sim-btn" class="mob-tab-btn mob-tab-active" onclick="switchMobTab('sim')">🔬 Simulation</button>
+            <button id="mob-tab-ai-btn" class="mob-tab-btn" onclick="switchMobTab('ai')">🤖 AI Protocol</button>
+        </div>
+
+    </div>
+    <!-- END MOBILE SHELL -->
 
     <div id="architect-layout">
 
@@ -1691,8 +2189,107 @@
             }
         });
     </script>
+
+    <!-- MOBILE SHELL LOGIC -->
+    <script>
+    (function() {
+        if (window.innerWidth > 768) return;
+
+        // Move canvas into mobile shell once the page is ready
+        function mountCanvas() {
+            var canvas = document.getElementById('canvas');
+            var wrap = document.getElementById('mob-canvas-wrap');
+            if (canvas && wrap && !wrap.contains(canvas)) {
+                wrap.appendChild(canvas);
+            }
+        }
+
+        // Sync live stats from simulation to mobile HUD
+        function syncHUD() {
+            var popEl = document.getElementById('header-pop');
+            var epiEl = document.getElementById('hud-epi');
+            var driftEl = document.getElementById('hud-drift');
+            var mobPop = document.getElementById('mob-pop');
+            var mobAge = document.getElementById('mob-bioage');
+            var mobEnt = document.getElementById('mob-entropy');
+            if (popEl && mobPop) mobPop.textContent = popEl.textContent;
+            if (epiEl && mobAge) mobAge.textContent = epiEl.textContent;
+            if (driftEl && mobEnt) mobEnt.textContent = driftEl.textContent;
+        }
+
+        // Wait for simulation to init, then mount canvas and start HUD sync
+        setTimeout(function() {
+            mountCanvas();
+            setInterval(syncHUD, 1500);
+        }, 800);
+    })();
+
+    // Tab switcher
+    window.switchMobTab = function(tab) {
+        var simTab = document.getElementById('mob-sim-tab');
+        var aiTab = document.getElementById('mob-ai-tab');
+        var simBtn = document.getElementById('mob-tab-sim-btn');
+        var aiBtn = document.getElementById('mob-tab-ai-btn');
+        if (!simTab) return;
+        simTab.style.display = tab === 'sim' ? 'block' : 'none';
+        aiTab.style.display  = tab === 'ai'  ? 'flex'  : 'none';
+        simBtn.className = 'mob-tab-btn' + (tab === 'sim' ? ' mob-tab-active' : '');
+        aiBtn.className  = 'mob-tab-btn' + (tab === 'ai'  ? ' mob-tab-active' : '');
+    };
+
+    // Mobile AI chat — bridges to existing AIAssistant on the page
+    window.mobAskAI = function(preset) {
+        var inputEl = document.getElementById('mob-ai-prompt');
+        var msg = preset || (inputEl ? inputEl.value.trim() : '');
+        if (!msg) return;
+        if (inputEl) inputEl.value = '';
+
+        var container = document.getElementById('mob-ai-messages');
+
+        // Clear starter text on first message
+        var starter = container.querySelector('.mob-ai-starter');
+        if (starter) starter.remove();
+
+        // User bubble
+        var userDiv = document.createElement('div');
+        userDiv.className = 'mob-ai-msg-user';
+        userDiv.textContent = msg;
+        container.appendChild(userDiv);
+        container.scrollTop = container.scrollHeight;
+
+        // AI typing bubble
+        var aiDiv = document.createElement('div');
+        aiDiv.className = 'mob-ai-msg-ai';
+        aiDiv.textContent = '...';
+        container.appendChild(aiDiv);
+        container.scrollTop = container.scrollHeight;
+
+        // Route through existing desktop AIAssistant
+        var desktopInput = document.getElementById('ai-prompt');
+        var desktopMsgs  = document.getElementById('ai-messages');
+        if (desktopInput && typeof AIAssistant !== 'undefined') {
+            desktopInput.value = msg;
+            AIAssistant.sendMessage();
+            // Poll for response (desktop AI writes to #ai-messages)
+            var attempts = 0;
+            var lastCount = desktopMsgs ? desktopMsgs.children.length : 0;
+            var poll = setInterval(function() {
+                attempts++;
+                if (desktopMsgs && desktopMsgs.children.length > lastCount) {
+                    var last = desktopMsgs.lastElementChild;
+                    if (last) aiDiv.textContent = last.textContent;
+                    clearInterval(poll);
+                } else if (attempts > 20) {
+                    aiDiv.textContent = 'Response timeout. Check backend connection.';
+                    clearInterval(poll);
+                }
+            }, 500);
+        } else {
+            aiDiv.textContent = 'AI backend offline. Start bridge_server.py to enable.';
+        }
+    };
+    </script>
+
 </body>
 
 </html>
-
-
