@@ -1061,16 +1061,25 @@
                 justify-content: center;
             }
 
-            /* DNA video: CENTER it and make it fill the background beautifully */
-            .hero-video {
-                transform: scale(1.1) translate(0, 0) !important;
-                object-fit: cover !important;
-                opacity: 0.3 !important;
+            /* DNA video: DRAMATIC full-bleed background on mobile */
+            .global-dna-bg {
+                width: 100vw !important;
+                height: 100vh !important;
+                height: 100dvh !important;
             }
 
-            /* Stronger glass frame on mobile for text readability */
+            .hero-video {
+                transform: scale(1.4) translate(0, 0) !important;
+                object-fit: cover !important;
+                opacity: 0.45 !important;
+                -webkit-mask-image: radial-gradient(circle at center, black 80%, transparent 100%) !important;
+                mask-image: radial-gradient(circle at center, black 80%, transparent 100%) !important;
+                filter: contrast(1.15) brightness(1.0) !important;
+            }
+
+            /* Soft glass vignette for text readability */
             .glass-frame {
-                box-shadow: inset 0 0 160px 100px rgba(255, 255, 255, 0.95) !important;
+                box-shadow: inset 0 0 120px 80px rgba(255, 255, 255, 0.92) !important;
             }
 
             /* --- TYPOGRAPHY: Bold, readable, premium --- */
