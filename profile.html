@@ -1258,7 +1258,70 @@
                 flex-direction: column !important;
                 gap: 1rem !important;
             }
+
+            /* ---- STOP ALL HORIZONTAL OVERFLOW ON MOBILE ---- */
+            * { box-sizing: border-box; }
+
+            /* All big case study / feature cards */
+            [class*="rounded-[40px]"], [class*="rounded-[3rem]"],
+            .mb-32.bg-slate-50, .bg-slate-900.rounded-\[3rem\] {
+                border-radius: 16px !important;
+                padding: 1.25rem !important;
+                width: 100% !important;
+                overflow: hidden !important;
+            }
+
+            /* Force all grids to single column */
+            [class*="grid"] {
+                grid-template-columns: 1fr !important;
+            }
+
+            /* Constrain all max-width wrappers */
+            [class*="max-w-"] {
+                max-width: 100% !important;
+                padding-left: 1.25rem !important;
+                padding-right: 1.25rem !important;
+            }
+
+            /* "Propelling Life Science" — big headings wrap properly */
+            .text-6xl, .text-5xl, .text-4xl, h2 {
+                font-size: clamp(22px, 5.5vw, 34px) !important;
+                line-height: 1.2 !important;
+                white-space: normal !important;
+            }
+
+            /* Image containers */
+            [class*="w-full md:w-[450px]"],
+            .aspect-video img, img {
+                width: 100% !important;
+                max-width: 100% !important;
+                height: auto !important;
+            }
+
+            /* Case study inner flex — rows stack */
+            .flex.flex-col.md\:flex-row {
+                flex-direction: column !important;
+            }
+
+            /* Gap-heavy flex containers */
+            .flex.gap-16, .flex.gap-24, .flex.gap-12 {
+                flex-direction: column !important;
+                gap: 1rem !important;
+            }
+
+            /* All sections get safe side padding */
+            section, div > section {
+                padding-left: 1.25rem !important;
+                padding-right: 1.25rem !important;
+            }
+
+            /* Stats badge overlays inside cards */
+            .absolute.top-4, .absolute.bottom-4 {
+                font-size: 8px !important;
+                padding: 5px 8px !important;
+            }
         }
+
 
         /* --- EXTRA SMALL PHONES (iPhone SE, etc.) --- */
         @media (max-width: 380px) {

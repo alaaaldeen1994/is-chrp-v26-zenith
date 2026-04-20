@@ -689,8 +689,8 @@
             <button onclick="this.parentElement.style.display='none'" aria-label="Dismiss">×</button>
         </div>
 
-        <!-- TAB: SIMULATION -->
-        <div id="mob-sim-tab" class="mob-tab-content">
+        <!-- TAB: SIMULATION (now second / background tab) -->
+        <div id="mob-sim-tab" class="mob-tab-content" style="display:none">
             <!-- Canvas is moved here by JS -->
             <div id="mob-canvas-wrap"></div>
 
@@ -724,8 +724,8 @@
             </div>
         </div>
 
-        <!-- TAB: AI PROTOCOL - mirrors the real desktop AI Protocol Discovery panel -->
-        <div id="mob-ai-tab" class="mob-tab-content" style="display:none; overflow-y:auto; -webkit-overflow-scrolling:touch;">
+        <!-- TAB: AI PROTOCOL - default first tab -->
+        <div id="mob-ai-tab" class="mob-tab-content" style="overflow-y:auto; -webkit-overflow-scrolling:touch;">
 
             <!-- Panel header -->
             <div style="padding:10px 14px; background:rgba(37,99,235,0.08); border-bottom:1px solid rgba(37,99,235,0.18); flex-shrink:0;">
@@ -794,8 +794,8 @@
 
         <!-- BOTTOM TAB BAR -->
         <div id="mob-tabbar">
-            <button id="mob-tab-sim-btn" class="mob-tab-btn mob-tab-active" onclick="switchMobTab('sim')">🔬 Simulation</button>
-            <button id="mob-tab-ai-btn" class="mob-tab-btn" onclick="switchMobTab('ai')">🤖 AI Protocol</button>
+            <button id="mob-tab-ai-btn" class="mob-tab-btn mob-tab-active" onclick="switchMobTab('ai')">⚡ AI Protocol</button>
+            <button id="mob-tab-sim-btn" class="mob-tab-btn" onclick="switchMobTab('sim')">🔬 Simulation</button>
         </div>
 
     </div>
