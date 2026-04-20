@@ -1005,7 +1005,7 @@
             font-size: 12px;
         }
 
-        /* --- UNIVERSAL MOBILE CALIBRATION (Guaranteed Desktop-Safe) --- */
+        /* --- PREMIUM MOBILE EXPERIENCE (Phone-First Design) --- */
         @media (max-width: 768px) {
             html, body {
                 overflow-x: hidden !important;
@@ -1013,89 +1013,230 @@
                 position: relative;
             }
 
+            /* --- NAV: Clean & Compact --- */
             nav {
-                padding: 0.75rem 1rem !important;
+                padding: 0.75rem 1.25rem !important;
                 gap: 0.5rem !important;
                 justify-content: space-between !important;
             }
 
             .nav-links {
-                display: none !important; /* The 'half-empty' fix: hide overflow links */
+                display: none !important;
             }
-            
+
             nav .flex.items-center.gap-8 {
                 gap: 0 !important;
             }
-            
-            /* Hide the pulse badge on mobile */
+
             nav .bg-slate-50.border.border-slate-100 {
                 display: none !important;
             }
 
+            /* --- HERO: Full-viewport centered DNA with overlaid text --- */
             .hero {
-                min-height: 80vh !important;
+                min-height: 100vh !important;
+                min-height: 100dvh !important;
                 display: flex !important;
                 flex-direction: column !important;
                 align-items: center !important;
-                justify-content: flex-start !important;
-                padding-top: 10vh !important;
+                justify-content: center !important;
+                padding: 0 !important;
             }
 
             .hero-content {
-                padding: 0 1.5rem !important;
+                padding: 0 1.75rem !important;
                 text-align: center !important;
                 width: 100% !important;
-                margin-top: 25vh !important; /* Shift text to clear the DNA video */
+                margin-top: 0 !important;
+                padding-top: 0 !important;
+                display: flex !important;
+                flex-direction: column !important;
+                align-items: center !important;
             }
-            
+
             .hero-content a {
                 width: 100% !important;
-                max-width: 320px;
+                max-width: 300px;
                 margin: 0 auto !important;
                 justify-content: center;
             }
 
+            /* DNA video: CENTER it and make it fill the background beautifully */
             .hero-video {
-                transform: scale(0.65) translate(0, -10vh) !important;
-                object-fit: contain !important;
+                transform: scale(1.1) translate(0, 0) !important;
+                object-fit: cover !important;
+                opacity: 0.3 !important;
             }
 
-            .hero h1, .text-6xl {
-                font-size: 34px !important;
-                line-height: 1.1 !important;
-                margin-bottom: 1.5rem !important;
-                white-space: normal !important;
+            /* Stronger glass frame on mobile for text readability */
+            .glass-frame {
+                box-shadow: inset 0 0 160px 100px rgba(255, 255, 255, 0.95) !important;
             }
-            
+
+            /* --- TYPOGRAPHY: Bold, readable, premium --- */
+            .hero h1, .text-6xl, .hero-title {
+                font-size: 36px !important;
+                line-height: 1.08 !important;
+                margin-bottom: 1.25rem !important;
+                white-space: normal !important;
+                letter-spacing: -0.03em !important;
+            }
+
             h2 {
-                font-size: 28px !important;
+                font-size: 26px !important;
                 line-height: 1.2 !important;
             }
 
-            .hero p {
+            .hero p, .hero-description {
                 font-size: 15px !important;
                 margin-bottom: 2rem !important;
+                line-height: 1.6 !important;
+                max-width: 340px;
+                margin-left: auto !important;
+                margin-right: auto !important;
             }
 
+            /* --- HERO CONSOLE: Horizontal scroll, compact --- */
+            .hero-console {
+                position: relative !important;
+                bottom: auto !important;
+                right: auto !important;
+                left: auto !important;
+                margin-top: 2rem !important;
+                width: calc(100% + 3.5rem) !important;
+                margin-left: -1.75rem !important;
+                padding: 1rem 1.75rem !important;
+                flex-direction: row !important;
+                flex-wrap: nowrap !important;
+                overflow-x: auto !important;
+                -webkit-overflow-scrolling: touch;
+                gap: 1.25rem !important;
+                justify-content: flex-start !important;
+                scrollbar-width: none;
+                background: rgba(248, 250, 252, 0.85) !important;
+                backdrop-filter: blur(20px) !important;
+                border-top: 1px solid rgba(0, 0, 0, 0.06) !important;
+                border-bottom: 1px solid rgba(0, 0, 0, 0.06) !important;
+            }
+
+            .hero-console::-webkit-scrollbar {
+                display: none;
+            }
+
+            .hud-segment {
+                flex-shrink: 0 !important;
+            }
+
+            .hud-value {
+                font-size: 12px !important;
+            }
+
+            /* --- COMPLIANCE BAR --- */
             .compliance-bar {
                 flex-direction: column;
                 text-align: center;
                 gap: 0.75rem;
                 bottom: 1rem;
                 width: calc(100% - 2rem);
+                font-size: 10px;
             }
 
+            /* --- SECTIONS: Full-width, proper padding --- */
+            .brand-section {
+                padding: 3.5rem 1.5rem !important;
+                flex-direction: column !important;
+                text-align: center !important;
+                gap: 2.5rem !important;
+            }
+
+            .brand-headline {
+                font-size: 28px !important;
+                line-height: 1.15 !important;
+            }
+
+            .brand-text {
+                font-size: 14px !important;
+                line-height: 1.7 !important;
+            }
+
+            .brand-visual {
+                width: 100% !important;
+                max-width: 220px !important;
+                margin: 0 auto !important;
+            }
+
+            .zenith-cipher {
+                width: 200px !important;
+                height: 200px !important;
+            }
+
+            /* --- CAPABILITY GRID: Single column, clean cards --- */
+            .capability-grid {
+                grid-template-columns: 1fr !important;
+                gap: 1.5rem !important;
+                padding: 0 1.5rem 4rem !important;
+            }
+
+            /* --- MODAL: Full-screen feel --- */
             .modal-content {
                 padding: 2rem 1.25rem;
                 border-radius: 16px;
+                margin: 1rem;
+                max-height: 90vh;
+                overflow-y: auto;
             }
 
-            .brand-section {
-                padding: 4rem 5%;
+            /* --- PLATFORM STATUS --- */
+            .platform-status {
+                flex-direction: column !important;
+                gap: 2rem !important;
+                text-align: center !important;
+                padding: 2rem 1.5rem 3rem !important;
             }
 
-            .capability-grid {
-                padding: 0 5% 6rem;
+            .status-metric p {
+                font-size: 28px !important;
+            }
+
+            /* --- EVIDENCE CARDS / CONTENT SECTIONS --- */
+            section {
+                padding-left: 1.5rem !important;
+                padding-right: 1.5rem !important;
+            }
+
+            /* Fix aspect-video containers */
+            .aspect-video {
+                border-radius: 12px !important;
+            }
+
+            /* --- FOOTER CLEANUP --- */
+            footer {
+                padding: 2rem 1.5rem !important;
+                text-align: center !important;
+            }
+
+            footer .flex {
+                flex-direction: column !important;
+                gap: 1rem !important;
+            }
+        }
+
+        /* --- EXTRA SMALL PHONES (iPhone SE, etc.) --- */
+        @media (max-width: 380px) {
+            .hero h1, .text-6xl, .hero-title {
+                font-size: 30px !important;
+            }
+
+            .hero p, .hero-description {
+                font-size: 14px !important;
+            }
+
+            .brand-headline {
+                font-size: 24px !important;
+            }
+
+            h2 {
+                font-size: 22px !important;
             }
         }
     </style>
