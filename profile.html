@@ -1320,6 +1320,46 @@
                 font-size: 8px !important;
                 padding: 5px 8px !important;
             }
+
+            /* --- MOBILE FIX: Inline-styled grids (stats, modules, footer) --- */
+            /* Stats strip: 4-col → 2-col on mobile */
+            section[style*="padding: 4rem 0 5rem"] div[style*="grid-template-columns: repeat(4"] {
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 1rem !important;
+            }
+
+            /* Platform modules: 3-col → 1-col on mobile */
+            div[style*="grid-template-columns: repeat(3"] {
+                grid-template-columns: 1fr !important;
+                gap: 1.25rem !important;
+            }
+
+            /* Platform module cards: reduce padding on mobile */
+            div[style*="border-radius: 28px"] {
+                padding: 1.75rem 1.5rem 1.5rem !important;
+                border-radius: 20px !important;
+            }
+
+            /* Footer status metrics: 4-col → 2-col on mobile */
+            footer div[style*="grid-template-columns: repeat(4"] {
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 1rem !important;
+                margin-bottom: 3rem !important;
+                padding-bottom: 3rem !important;
+            }
+
+            /* Footer bottom: stack vertically on mobile */
+            footer div[style*="justify-content: space-between"] {
+                flex-direction: column !important;
+                align-items: center !important;
+                text-align: center !important;
+                gap: 1.5rem !important;
+            }
+
+            /* Footer links: center on mobile */
+            footer div[style*="align-items: flex-end"] {
+                align-items: center !important;
+            }
         }
 
 
