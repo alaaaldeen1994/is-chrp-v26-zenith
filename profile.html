@@ -1519,61 +1519,70 @@
     <!-- Hero Section -->
     <section class="hero bg-transparent relative z-10">
 
-        <div class="hero-content">
-            <span class="text-[11px] font-black text-slate-400 uppercase tracking-[0.5em] mb-8 block">Neural Parameter
+        <div class="hero-content" style="text-align: left; display: flex; flex-direction: column; align-items: flex-start; max-width: 680px; padding: 5vh 0 10% 5%;">
+            <span style="font-size: 11px; font-weight: 900; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.45em; margin-bottom: 1.5rem; display: block;">Neural Parameter
                 Mainframe</span>
-            <h1 class="font-black text-slate-900 leading-none tracking-tighter mb-8 md:whitespace-nowrap"
-                style="font-size: clamp(28px, 5vw, 42px);">
+            <h1 style="font-size: clamp(36px, 6vw, 56px); font-family: 'Outfit', sans-serif; font-weight: 900; line-height: 1.05; margin-bottom: 1.5rem; letter-spacing: -0.03em; background: linear-gradient(135deg, #0f172a 0%, #1e40af 50%, #3b82f6 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
                 Zenith Ultra
             </h1>
-            <p class="text-lg text-slate-500 leading-relaxed max-w-xl font-medium mb-6">
-                The world's first generative engine for <span class="font-bold text-slate-900">Cellular
+            <p style="color: #475569; font-size: 17px; line-height: 1.75; font-weight: 500; margin-bottom: 1.5rem; max-width: 560px;">
+                The world's first generative engine for <span style="font-weight: 700; color: #0f172a;">Cellular
                     Reprogramming</span>. Simulating high-fidelity <span
-                    class="italic font-semibold text-slate-700">Yamanaka Factor</span> trajectories to reverse
+                    style="font-style: italic; font-weight: 600; color: #334155;">Yamanaka Factor</span> trajectories to reverse
                 biological aging at the cellular level.
             </p>
-            <p class="text-[11px] font-bold text-slate-400 uppercase tracking-[0.15em] mb-12 max-w-xl">
-                Built on the Human Cell Atlas (<em class="not-italic text-slate-500">Nature</em> 2020) · scVI Architecture (<em class="not-italic text-slate-500">Nature Methods</em> 2018) · Nobel Prize-Winning OSKM Biology (<em class="not-italic text-slate-500">Cell</em> 2006)
+            <p style="font-size: 11px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 2.5rem; max-width: 560px; line-height: 1.8;">
+                Built on the Human Cell Atlas (<em style="font-style: normal; color: #64748b; font-weight: 800;">Nature</em> 2020) · scVI Architecture (<em style="font-style: normal; color: #64748b; font-weight: 800;">Nature Methods</em> 2018) · Nobel Prize-Winning OSKM Biology (<em style="font-style: normal; color: #64748b; font-weight: 800;">Cell</em> 2006)
             </p>
-            <div class="flex flex-col md:flex-row items-center justify-center md:justify-start gap-6">
-                <a href="javascript:void(0)" onclick="checkAuthAndRedirect('index.html')"
-                    class="bg-slate-900 hover:bg-slate-800 text-white px-10 py-5 rounded-full text-[13px] font-black uppercase tracking-widest flex items-center gap-3 shadow-xl transition-all transform hover:-translate-y-0.5">
-                    Open Simulation Lab
-                    <div class="w-6 h-6 bg-white rounded-full flex items-center justify-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
-                            stroke="black" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M5 12h14" />
-                            <path d="m12 5 7 7-7 7" />
-                        </svg>
-                    </div>
-                </a>
-            </div>
+            <a href="javascript:void(0)" onclick="checkAuthAndRedirect('index.html')"
+                style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: white; padding: 1.15rem 2.5rem; border-radius: 999px; font-size: 13px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.1em; display: inline-flex; align-items: center; gap: 12px; box-shadow: 0 8px 32px rgba(15, 23, 42, 0.25); transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); text-decoration: none;"
+                onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 12px 40px rgba(15, 23, 42, 0.35)';"
+                onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 8px 32px rgba(15, 23, 42, 0.25)';">
+                Open Simulation Lab
+                <div style="width: 28px; height: 28px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                        stroke="black" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M5 12h14" />
+                        <path d="m12 5 7 7-7 7" />
+                    </svg>
+                </div>
+            </a>
         </div>
 
 
     </section>
 
     <!-- STATS STRIP (285M moved here) -->
-    <section class="bg-transparent py-16 relative z-10">
-        <div class="max-w-7xl mx-auto px-12">
-            <div
-                class="flex flex-col md:flex-row items-center gap-0 divide-y md:divide-y-0 md:divide-x divide-slate-100">
-                <div
-                    class="px-6 md:px-12 py-8 md:py-4 first:pt-0 md:first:pl-0 w-full md:w-auto text-center md:text-left">
-                    <p class="text-5xl font-black text-slate-900 tracking-tighter mb-1">ZENITH</p>
-                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">Engine Architecture</p>
+    <section class="bg-transparent relative z-10" style="padding: 4rem 0 5rem;">
+        <div class="max-w-7xl mx-auto" style="padding: 0 3rem;">
+            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem;">
+                <div style="background: rgba(255,255,255,0.7); backdrop-filter: blur(20px); border: 1px solid rgba(226,232,240,0.8); border-radius: 24px; padding: 2.5rem 2rem; text-align: center; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); cursor: default; position: relative; overflow: hidden;"
+                    onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 20px 40px rgba(0,0,0,0.06)'; this.style.borderColor='#bfdbfe';"
+                    onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'; this.style.borderColor='rgba(226,232,240,0.8)';">
+                    <div style="position: absolute; top: -20px; right: -20px; width: 80px; height: 80px; background: radial-gradient(circle, rgba(59,130,246,0.08) 0%, transparent 70%); border-radius: 50%;"></div>
+                    <p style="font-family: 'Outfit', sans-serif; font-size: 36px; font-weight: 900; color: #0f172a; letter-spacing: -0.03em; margin-bottom: 0.5rem; line-height: 1;">ZENITH</p>
+                    <p style="font-size: 10px; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.25em;">Engine Architecture</p>
                 </div>
-                <div class="px-12 py-4">
-                    <p class="text-5xl font-black text-slate-900 tracking-tighter mb-1">5,000</p>
-                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">Gene Vocabulary</p>
+                <div style="background: rgba(255,255,255,0.7); backdrop-filter: blur(20px); border: 1px solid rgba(226,232,240,0.8); border-radius: 24px; padding: 2.5rem 2rem; text-align: center; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); cursor: default; position: relative; overflow: hidden;"
+                    onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 20px 40px rgba(0,0,0,0.06)'; this.style.borderColor='#bfdbfe';"
+                    onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'; this.style.borderColor='rgba(226,232,240,0.8)';">
+                    <div style="position: absolute; top: -20px; right: -20px; width: 80px; height: 80px; background: radial-gradient(circle, rgba(59,130,246,0.08) 0%, transparent 70%); border-radius: 50%;"></div>
+                    <p style="font-family: 'Outfit', sans-serif; font-size: 42px; font-weight: 900; color: #0f172a; letter-spacing: -0.03em; margin-bottom: 0.5rem; line-height: 1;">5,000</p>
+                    <p style="font-size: 10px; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.25em;">Gene Vocabulary</p>
                 </div>
-                <div class="px-12 py-4">
-                    <p class="text-5xl font-black text-slate-900 tracking-tighter mb-1">150k</p>
-                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">Mapped Cells (HCA)</p>
+                <div style="background: rgba(255,255,255,0.7); backdrop-filter: blur(20px); border: 1px solid rgba(226,232,240,0.8); border-radius: 24px; padding: 2.5rem 2rem; text-align: center; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); cursor: default; position: relative; overflow: hidden;"
+                    onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 20px 40px rgba(0,0,0,0.06)'; this.style.borderColor='#bfdbfe';"
+                    onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'; this.style.borderColor='rgba(226,232,240,0.8)';">
+                    <div style="position: absolute; top: -20px; right: -20px; width: 80px; height: 80px; background: radial-gradient(circle, rgba(59,130,246,0.08) 0%, transparent 70%); border-radius: 50%;"></div>
+                    <p style="font-family: 'Outfit', sans-serif; font-size: 42px; font-weight: 900; color: #0f172a; letter-spacing: -0.03em; margin-bottom: 0.5rem; line-height: 1;">150k</p>
+                    <p style="font-size: 10px; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.25em;">Mapped Cells (HCA)</p>
                 </div>
-                <div class="px-12 py-4">
-                    <p class="text-5xl font-black text-slate-900 tracking-tighter mb-1">32</p>
-                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">Inference Threads</p>
+                <div style="background: rgba(255,255,255,0.7); backdrop-filter: blur(20px); border: 1px solid rgba(226,232,240,0.8); border-radius: 24px; padding: 2.5rem 2rem; text-align: center; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); cursor: default; position: relative; overflow: hidden;"
+                    onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 20px 40px rgba(0,0,0,0.06)'; this.style.borderColor='#bfdbfe';"
+                    onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'; this.style.borderColor='rgba(226,232,240,0.8)';">
+                    <div style="position: absolute; top: -20px; right: -20px; width: 80px; height: 80px; background: radial-gradient(circle, rgba(59,130,246,0.08) 0%, transparent 70%); border-radius: 50%;"></div>
+                    <p style="font-family: 'Outfit', sans-serif; font-size: 42px; font-weight: 900; color: #0f172a; letter-spacing: -0.03em; margin-bottom: 0.5rem; line-height: 1;">32</p>
+                    <p style="font-size: 10px; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.25em;">Inference Threads</p>
                 </div>
             </div>
         </div>
@@ -1684,59 +1693,73 @@
                     </div>
                 </div>
 
-                <div class="mb-24">
-                    <span class="text-[10px] font-black text-slate-300 uppercase tracking-widest mb-6 block">Platform
+                <div style="margin-bottom: 4rem;">
+                    <span style="font-size: 10px; font-weight: 900; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.3em; margin-bottom: 1.25rem; display: block;">Platform
                         Modules</span>
-                    <h2 class="text-5xl font-black text-slate-900 tracking-tight">Everything your<br>team needs.</h2>
+                    <h2 style="font-family: 'Outfit', sans-serif; font-size: clamp(32px, 4vw, 48px); font-weight: 900; color: #0f172a; letter-spacing: -0.02em; line-height: 1.1;">Everything your<br>team needs.</h2>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-10 mb-10">
-                    <div class="bg-transparent shadow-xl border border-slate-100/30">
-                        <div
-                            class="w-16 h-16 bg-slate-50 rounded-2xl flex items-center justify-center mb-10 group-hover:bg-slate-900 transition-colors duration-500">
-                            <i data-lucide="layout-dashboard" class="w-8 h-8 text-slate-900 group-hover:text-white"></i>
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.75rem; margin-bottom: 2.5rem;">
+                    <!-- Pilot Dashboard Card -->
+                    <div style="background: rgba(255,255,255,0.75); backdrop-filter: blur(16px); border: 1px solid rgba(226,232,240,0.9); border-radius: 28px; padding: 2.5rem 2rem 2rem; display: flex; flex-direction: column; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); position: relative; overflow: hidden;"
+                        onmouseover="this.style.transform='translateY(-6px)'; this.style.boxShadow='0 24px 48px rgba(0,0,0,0.08)'; this.style.borderColor='#93c5fd';"
+                        onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'; this.style.borderColor='rgba(226,232,240,0.9)';">
+                        <div style="position: absolute; top: -40px; right: -40px; width: 120px; height: 120px; background: radial-gradient(circle, rgba(59,130,246,0.06) 0%, transparent 70%); border-radius: 50%;"></div>
+                        <div style="width: 56px; height: 56px; background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%); border-radius: 16px; display: flex; align-items: center; justify-content: center; margin-bottom: 2rem;">
+                            <i data-lucide="layout-dashboard" style="width: 26px; height: 26px; color: #0f172a;"></i>
                         </div>
-                        <h3 class="text-2xl font-black text-slate-900 mb-6">Pilot Dashboard</h3>
-                        <p class="text-slate-500 leading-relaxed mb-10 font-medium">
+                        <h3 style="font-family: 'Outfit', sans-serif; font-size: 22px; font-weight: 800; color: #0f172a; margin-bottom: 1rem;">Pilot Dashboard</h3>
+                        <p style="color: #64748b; line-height: 1.65; margin-bottom: 2rem; font-size: 15px; font-weight: 500; flex: 1;">
                             Real-time tracking of Pilot Funnels, Partnership KPIs, and Risk Registers for Enterprise
                             diligence and investor review.
                         </p>
                         <button onclick="window.open('pilot_dashboard.html', '_blank')"
-                            class="inline-flex items-center gap-4 text-slate-900 font-extrabold text-[11px] uppercase tracking-widest hover:gap-8 transition-all">
-                            Access Dashboard <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                            style="display: inline-flex; align-items: center; gap: 10px; color: #0f172a; font-weight: 900; font-size: 11px; text-transform: uppercase; letter-spacing: 0.12em; background: none; border: none; cursor: pointer; padding: 0; transition: gap 0.3s;"
+                            onmouseover="this.style.gap='16px'; this.style.color='#2563eb';"
+                            onmouseout="this.style.gap='10px'; this.style.color='#0f172a';">
+                            Access Dashboard <i data-lucide="arrow-right" style="width: 16px; height: 16px;"></i>
                         </button>
                     </div>
 
-                    <div
-                        class="bg-slate-50 border-2 border-transparent rounded-[40px] p-12 hover:bg-slate-100 transition-all duration-500 group flex flex-col">
-                        <div
-                            class="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mb-10 group-hover:bg-slate-900 transition-colors duration-500 shadow-sm">
-                            <i data-lucide="activity" class="w-8 h-8 text-slate-900 group-hover:text-white"></i>
+                    <!-- Virtual Trials Card -->
+                    <div style="background: rgba(255,255,255,0.75); backdrop-filter: blur(16px); border: 1px solid rgba(226,232,240,0.9); border-radius: 28px; padding: 2.5rem 2rem 2rem; display: flex; flex-direction: column; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); position: relative; overflow: hidden;"
+                        onmouseover="this.style.transform='translateY(-6px)'; this.style.boxShadow='0 24px 48px rgba(0,0,0,0.08)'; this.style.borderColor='#93c5fd';"
+                        onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'; this.style.borderColor='rgba(226,232,240,0.9)';">
+                        <div style="position: absolute; top: -40px; right: -40px; width: 120px; height: 120px; background: radial-gradient(circle, rgba(59,130,246,0.06) 0%, transparent 70%); border-radius: 50%;"></div>
+                        <div style="width: 56px; height: 56px; background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%); border-radius: 16px; display: flex; align-items: center; justify-content: center; margin-bottom: 2rem;">
+                            <i data-lucide="activity" style="width: 26px; height: 26px; color: #0f172a;"></i>
                         </div>
-                        <h3 class="text-2xl font-black text-slate-900 mb-6">Virtual Trials</h3>
-                        <p class="text-slate-500 leading-relaxed mb-10 font-medium">
+                        <h3 style="font-family: 'Outfit', sans-serif; font-size: 22px; font-weight: 800; color: #0f172a; margin-bottom: 1rem;">Virtual Trials</h3>
+                        <p style="color: #64748b; line-height: 1.65; margin-bottom: 2rem; font-size: 15px; font-weight: 500; flex: 1;">
                             Run high-throughput clinical trials on digital cohorts. Test longevity interventions across
                             diverse populations.
                         </p>
                         <button onclick="checkAuthAndRedirect('trials.html')"
-                            class="inline-flex items-center gap-4 text-slate-900 font-extrabold text-[11px] uppercase tracking-widest hover:gap-8 transition-all mt-auto">
-                            Launch Trials <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                            style="display: inline-flex; align-items: center; gap: 10px; color: #0f172a; font-weight: 900; font-size: 11px; text-transform: uppercase; letter-spacing: 0.12em; background: none; border: none; cursor: pointer; padding: 0; transition: gap 0.3s;"
+                            onmouseover="this.style.gap='16px'; this.style.color='#2563eb';"
+                            onmouseout="this.style.gap='10px'; this.style.color='#0f172a';">
+                            Launch Trials <i data-lucide="arrow-right" style="width: 16px; height: 16px;"></i>
                         </button>
                     </div>
 
-                    <div class="bg-white/10 border border-slate-100/30">
-                        <div
-                            class="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mb-10 group-hover:bg-slate-900 transition-colors duration-500 shadow-sm">
-                            <i data-lucide="scale" class="w-8 h-8 text-slate-900 group-hover:text-white"></i>
+                    <!-- Regulatory Statement Card -->
+                    <div style="background: rgba(255,255,255,0.75); backdrop-filter: blur(16px); border: 1px solid rgba(226,232,240,0.9); border-radius: 28px; padding: 2.5rem 2rem 2rem; display: flex; flex-direction: column; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); position: relative; overflow: hidden;"
+                        onmouseover="this.style.transform='translateY(-6px)'; this.style.boxShadow='0 24px 48px rgba(0,0,0,0.08)'; this.style.borderColor='#93c5fd';"
+                        onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'; this.style.borderColor='rgba(226,232,240,0.9)';">
+                        <div style="position: absolute; top: -40px; right: -40px; width: 120px; height: 120px; background: radial-gradient(circle, rgba(59,130,246,0.06) 0%, transparent 70%); border-radius: 50%;"></div>
+                        <div style="width: 56px; height: 56px; background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%); border-radius: 16px; display: flex; align-items: center; justify-content: center; margin-bottom: 2rem;">
+                            <i data-lucide="scale" style="width: 26px; height: 26px; color: #0f172a;"></i>
                         </div>
-                        <h3 class="text-2xl font-black text-slate-900 mb-6">Regulatory Statement</h3>
-                        <p class="text-slate-500 leading-relaxed mb-10 font-medium">
+                        <h3 style="font-family: 'Outfit', sans-serif; font-size: 22px; font-weight: 800; color: #0f172a; margin-bottom: 1rem;">Regulatory Statement</h3>
+                        <p style="color: #64748b; line-height: 1.65; margin-bottom: 2rem; font-size: 15px; font-weight: 500; flex: 1;">
                             Formal Intended Use Statement and 12-Month Evidence Generation Roadmap for institutional
                             compliance.
                         </p>
                         <button onclick="window.open('regulatory.html', '_blank')"
-                            class="inline-flex items-center gap-4 text-slate-900 font-extrabold text-[11px] uppercase tracking-widest hover:gap-8 transition-all mt-auto">
-                            Read Statement <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                            style="display: inline-flex; align-items: center; gap: 10px; color: #0f172a; font-weight: 900; font-size: 11px; text-transform: uppercase; letter-spacing: 0.12em; background: none; border: none; cursor: pointer; padding: 0; transition: gap 0.3s;"
+                            onmouseover="this.style.gap='16px'; this.style.color='#2563eb';"
+                            onmouseout="this.style.gap='10px'; this.style.color='#0f172a';">
+                            Read Statement <i data-lucide="arrow-right" style="width: 16px; height: 16px;"></i>
                         </button>
                     </div>
                 </div>
@@ -1908,48 +1931,66 @@
 
         <!-- PLATFORM STATUS FOOTER -->
         <!-- PLATFORM STATUS FOOTER (Clinical Minimalist) -->
-        <footer class="py-32 bg-transparent border-t border-slate-100 relative z-10">
-            <div class="max-w-7xl mx-auto px-12">
-                <div class="grid grid-cols-2 lg:grid-cols-4 gap-12 mb-32 pb-32 border-b border-slate-50">
-                    <div class="status-metric">
-                        <h4 class="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] mb-4">System Health
-                        </h4>
-                        <p class="text-3xl font-black text-slate-900">Optimal</p>
+        <footer style="padding: 5rem 0; background: transparent; border-top: 1px solid #f1f5f9; position: relative; z-index: 10;">
+            <div style="max-width: 80rem; margin: 0 auto; padding: 0 3rem;">
+                <!-- Status Metrics Grid -->
+                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; margin-bottom: 5rem; padding-bottom: 5rem; border-bottom: 1px solid #f1f5f9;">
+                    <div style="background: rgba(248,250,252,0.8); backdrop-filter: blur(12px); border: 1px solid #f1f5f9; border-radius: 20px; padding: 2rem 1.75rem; transition: all 0.3s ease;"
+                        onmouseover="this.style.borderColor='#bfdbfe'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 24px rgba(0,0,0,0.04)';"
+                        onmouseout="this.style.borderColor='#f1f5f9'; this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 1rem;">
+                            <div style="width: 8px; height: 8px; background: #22c55e; border-radius: 50%; box-shadow: 0 0 8px rgba(34,197,94,0.4);"></div>
+                            <h4 style="font-size: 10px; font-weight: 900; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.25em;">System Health</h4>
+                        </div>
+                        <p style="font-family: 'Outfit', sans-serif; font-size: 26px; font-weight: 900; color: #0f172a;">Optimal</p>
                     </div>
-                    <div class="status-metric">
-                        <h4 class="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] mb-4">Neural Core
-                        </h4>
-                        <p class="text-3xl font-black text-slate-900">Zenith v26.4</p>
+                    <div style="background: rgba(248,250,252,0.8); backdrop-filter: blur(12px); border: 1px solid #f1f5f9; border-radius: 20px; padding: 2rem 1.75rem; transition: all 0.3s ease;"
+                        onmouseover="this.style.borderColor='#bfdbfe'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 24px rgba(0,0,0,0.04)';"
+                        onmouseout="this.style.borderColor='#f1f5f9'; this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 1rem;">
+                            <div style="width: 8px; height: 8px; background: #3b82f6; border-radius: 50%; box-shadow: 0 0 8px rgba(59,130,246,0.4);"></div>
+                            <h4 style="font-size: 10px; font-weight: 900; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.25em;">Neural Core</h4>
+                        </div>
+                        <p style="font-family: 'Outfit', sans-serif; font-size: 26px; font-weight: 900; color: #0f172a;">Zenith v26.4</p>
                     </div>
-                    <div class="status-metric">
-                        <h4 class="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] mb-4">Data Integrity
-                        </h4>
-                        <p class="text-3xl font-black text-slate-900">Encrypted</p>
+                    <div style="background: rgba(248,250,252,0.8); backdrop-filter: blur(12px); border: 1px solid #f1f5f9; border-radius: 20px; padding: 2rem 1.75rem; transition: all 0.3s ease;"
+                        onmouseover="this.style.borderColor='#bfdbfe'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 24px rgba(0,0,0,0.04)';"
+                        onmouseout="this.style.borderColor='#f1f5f9'; this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 1rem;">
+                            <div style="width: 8px; height: 8px; background: #8b5cf6; border-radius: 50%; box-shadow: 0 0 8px rgba(139,92,246,0.4);"></div>
+                            <h4 style="font-size: 10px; font-weight: 900; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.25em;">Data Integrity</h4>
+                        </div>
+                        <p style="font-family: 'Outfit', sans-serif; font-size: 26px; font-weight: 900; color: #0f172a;">Encrypted</p>
                     </div>
-                    <div class="status-metric">
-                        <h4 class="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] mb-4">Cluster
-                            Latency</h4>
-                        <p class="text-3xl font-black text-slate-900">0.02ms</p>
+                    <div style="background: rgba(248,250,252,0.8); backdrop-filter: blur(12px); border: 1px solid #f1f5f9; border-radius: 20px; padding: 2rem 1.75rem; transition: all 0.3s ease;"
+                        onmouseover="this.style.borderColor='#bfdbfe'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 24px rgba(0,0,0,0.04)';"
+                        onmouseout="this.style.borderColor='#f1f5f9'; this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 1rem;">
+                            <div style="width: 8px; height: 8px; background: #f59e0b; border-radius: 50%; box-shadow: 0 0 8px rgba(245,158,11,0.4);"></div>
+                            <h4 style="font-size: 10px; font-weight: 900; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.25em;">Cluster Latency</h4>
+                        </div>
+                        <p style="font-family: 'Outfit', sans-serif; font-size: 26px; font-weight: 900; color: #0f172a;">0.02ms</p>
                     </div>
                 </div>
 
-                <div class="flex flex-col md:flex-row justify-between items-center gap-12 text-center md:text-left">
-                    <div class="flex flex-col md:flex-row items-center gap-4">
-                        <svg class="nav-logo-svg text-slate-600" style="width: 24px; height: 24px;" viewBox="0 0 24 24"
+                <!-- Footer Bottom -->
+                <div style="display: flex; justify-content: space-between; align-items: center; gap: 3rem;">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <svg style="width: 24px; height: 24px; color: #64748b;" viewBox="0 0 24 24"
                             fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"
                             stroke-linejoin="round">
                             <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
                         </svg>
-                        <div class="text-[10px] font-black text-slate-600 uppercase tracking-[0.5em]">Nilus Lab
+                        <div style="font-size: 10px; font-weight: 900; color: #64748b; text-transform: uppercase; letter-spacing: 0.4em;">Nilus Lab
                             Institutional | RUO v26.1</div>
                     </div>
-                    <div class="flex flex-col items-center md:items-end gap-3 tracking-widest uppercase">
-                        <div class="flex gap-8 md:gap-12 text-[10px] font-black text-slate-900 drop-shadow-md">
-                            <a href="about.html" class="hover:text-blue-600 transition-colors">Lab Ops</a>
-                            <a href="regulatory.html" class="hover:text-blue-600 transition-colors">Compliance</a>
-                            <a href="contact.html" class="hover:text-blue-600 transition-colors">Contact Node</a>
+                    <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 0.75rem;">
+                        <div style="display: flex; gap: 2.5rem; font-size: 10px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.15em;">
+                            <a href="about.html" style="color: #0f172a; text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='#2563eb'" onmouseout="this.style.color='#0f172a'">Lab Ops</a>
+                            <a href="regulatory.html" style="color: #0f172a; text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='#2563eb'" onmouseout="this.style.color='#0f172a'">Compliance</a>
+                            <a href="contact.html" style="color: #0f172a; text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='#2563eb'" onmouseout="this.style.color='#0f172a'">Contact Node</a>
                         </div>
-                        <span class="text-[9px] font-black text-slate-500">© 2026 Nilus Lab</span>
+                        <span style="font-size: 9px; font-weight: 900; color: #94a3b8;">© 2026 Nilus Lab</span>
                     </div>
                 </div>
             </div>
