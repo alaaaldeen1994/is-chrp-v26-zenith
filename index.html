@@ -1601,15 +1601,16 @@
                 <span class="panel-title"><i data-lucide="zap" class="w-3.5 h-3.5"></i> AI PROTOCOL DISCOVERY <span class="text-[7px] bg-blue-500/20 px-1.5 py-0.5 rounded text-blue-300 font-black border border-blue-500/30 ml-2">ZENITH-ULTRA-5K</span></span>
                 <div id="discovery-status-dot" class="w-1.5 h-1.5 rounded-full bg-blue-500 shadow-[0_0_8px_#3b82f6]"></div>
             </div>
-            
-            <div class="flex-shrink-0 p-1 bg-blue-950/10 border-b border-white/5 relative group">
- 
-                <div class="space-y-2 mb-4 px-2">
+            <!-- UNIFIED SCROLLABLE AREA (Improved Comfort - No nested scrollbars) -->
+            <div id="protocol-scroll-container" class="flex-1 overflow-y-auto custom-scrollbar relative">
+                
+                <!-- 1. Semantic Target Input -->
+                <div class="space-y-2 mb-4 px-3 pt-4">
                     <div class="flex items-center justify-between">
                         <span class="text-[8px] text-blue-300 font-bold uppercase tracking-tighter">Semantic Target</span>
-                         <div class="flex items-center gap-1">
-                              <span class="text-[6px] text-blue-500 italic uppercase">Zenith-102M Generic Manifold</span>
-                         </div>
+                        <div class="flex items-center gap-1">
+                             <span class="text-[6px] text-blue-500 italic uppercase">Zenith-102M Generic Manifold</span>
+                        </div>
                     </div>
                     <div class="relative group/text">
                         <textarea id="discovery-target-query"
@@ -1621,11 +1622,11 @@
                     </div>
                 </div>
 
-                <!-- OSK PARTIAL REPROGRAMMING MODE (ALAA ALDEEN+) -->
-                <div class="px-2 mb-3">
-                    <div class="p-2.5 bg-amber-950/20 border border-amber-500/20 rounded-xl">
+                <!-- 2. Reprogramming Mode -->
+                <div class="px-3 mb-4">
+                    <div class="p-3 bg-amber-950/20 border border-amber-500/20 rounded-xl">
                         <div class="text-[7px] text-amber-400 font-black uppercase tracking-widest mb-2 flex items-center gap-1.5">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2.5"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+                            <i data-lucide="layers" class="w-2 h-2 text-amber-500"></i>
                             Reprogramming Mode
                         </div>
                         <div class="flex gap-1.5 mb-2">
@@ -1641,83 +1642,56 @@
                             </div>
                             <div class="text-[7px] text-slate-500 font-bold mb-1">Biological Age: <span id="bio-age-val">0.5</span></div>
                             <input id="bio-age-slider" type="range" min="0" max="1" step="0.05" value="0.5" oninput="document.getElementById('bio-age-val').textContent=this.value" class="w-full" style="accent-color:#f59e0b;">
-                            <div class="flex justify-between text-[6px] text-slate-600 mt-0.5"><span>Embryonic</span><span>Senescent</span></div>
                         </div>
                     </div>
                 </div>
 
-                <!-- GENE SEARCH — Live UniProt Lookup -->
-                <div class="px-2 mb-3">
-                    <div class="p-2.5 bg-slate-950/60 border border-slate-700/40 rounded-xl">
+                <!-- 3. Gene Lookup -->
+                <div class="px-3 mb-4">
+                    <div class="p-3 bg-slate-950/60 border border-slate-700/40 rounded-xl">
                         <div class="text-[7px] text-slate-400 font-black uppercase tracking-widest mb-1.5 flex items-center gap-1.5">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                            <i data-lucide="search" class="w-2 h-2 text-blue-500"></i>
                             Gene Lookup — UniProt Swiss-Prot
                         </div>
                         <div class="flex gap-1.5">
                             <input id="gene-search-input" type="text" placeholder="e.g. SOX2, GATA4…"
-                                class="flex-1 bg-black/60 border border-slate-700/50 rounded-lg px-2 py-1.5 text-[9px] text-white placeholder-slate-600 focus:border-indigo-500/60 focus:outline-none transition-all font-mono"
-                                onkeydown="if(event.key==='Enter') BiosimBridge.UniProtLookup.search()">
+                                class="flex-1 bg-black/60 border border-slate-700/50 rounded-lg px-2 py-1.5 text-[9px] text-white placeholder-slate-600 focus:border-indigo-500/60 focus:outline-none transition-all font-mono">
                             <button onclick="BiosimBridge.UniProtLookup.search()"
                                 class="bg-blue-700/40 hover:bg-blue-600/60 border border-blue-500/30 text-blue-300 text-[7px] font-black px-2.5 py-1.5 rounded-lg transition-all uppercase tracking-wider">
                                 FETCH
                             </button>
                         </div>
-                        <div id="gene-lookup-result" class="hidden mt-2 p-2 bg-black/40 border border-slate-700/30 rounded-lg">
-                            <div class="flex items-start justify-between gap-2">
-                                <div class="flex-1 min-w-0">
-                                    <div class="flex items-center gap-1.5 flex-wrap">
-                                        <span id="glr-gene" class="text-[9px] text-white font-black font-mono"></span>
-                                        <a id="glr-acc-link" href="#" target="_blank" class="text-[7px] text-blue-400 border border-blue-500/30 px-1 py-0 rounded font-mono hover:bg-blue-500/10 transition-all"></a>
-                                        <span id="glr-len" class="text-[7px] text-slate-500 font-mono"></span>
-                                    </div>
-                                    <div id="glr-name" class="text-[8px] text-slate-300 mt-0.5 font-medium leading-tight"></div>
-                                    <div id="glr-loc" class="text-[7px] text-blue-400/70 mt-0.5 italic"></div>
-                                    <div id="glr-func" class="text-[7px] text-slate-500 mt-1 leading-relaxed line-clamp-3"></div>
-                                </div>
-                                <span id="glr-source" class="flex-shrink-0 text-[5px] text-blue-400 border border-blue-500/30 px-1 py-0.5 rounded font-black uppercase tracking-tighter">Swiss-Prot</span>
-                            </div>
-                            <div id="glr-domains" class="mt-1.5 flex flex-wrap gap-1"></div>
-                        </div>
-                        <div id="gene-lookup-error" class="hidden mt-1.5 text-[7px] text-red-400 italic"></div>
-                        <div id="gene-lookup-loading" class="hidden mt-1.5 text-[7px] text-blue-400 italic animate-pulse">Querying UniProt Swiss-Prot...</div>
+                        <div id="gene-lookup-result" class="hidden mt-2 p-2 bg-black/40 border border-slate-700/30 rounded-lg"></div>
                     </div>
                 </div>
 
-                <!-- AF3 RESULT UPLOAD — Enter real ipTM scores from alphafoldserver.com -->
-                <div class="px-2 mb-3">
-                    <div class="p-2.5 bg-slate-950/60 border border-slate-700/40 rounded-xl">
+                <!-- 4. AF3 Results -->
+                <div class="px-3 mb-4">
+                    <div class="p-3 bg-slate-950/60 border border-slate-700/40 rounded-xl">
                         <div class="text-[7px] text-slate-400 font-black uppercase tracking-widest mb-1.5 flex items-center gap-1.5">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                            <i data-lucide="upload-cloud" class="w-2 h-2 text-emerald-500"></i>
                             AF3 Results — Enter Real Scores
                         </div>
-                        <div class="grid grid-cols-2 gap-1 mb-1.5">
-                            <input id="af3-in-plddt" type="number" step="0.1" min="0" max="100" placeholder="pLDDT (0-100)"
-                                class="bg-black/60 border border-slate-700/50 rounded px-2 py-1 text-[8px] text-blue-300 placeholder-slate-600 focus:border-blue-500/60 focus:outline-none font-mono">
-                            <input id="af3-in-pae" type="number" step="0.1" min="0" max="30" placeholder="PAE (Å)"
-                                class="bg-black/60 border border-slate-700/50 rounded px-2 py-1 text-[8px] text-blue-300 placeholder-slate-600 focus:border-blue-500/60 focus:outline-none font-mono">
-                            <input id="af3-in-ptm" type="number" step="0.001" min="0" max="1" placeholder="pTM (0-1)"
-                                class="bg-black/60 border border-slate-700/50 rounded px-2 py-1 text-[8px] text-blue-300 placeholder-slate-600 focus:border-blue-500/60 focus:outline-none font-mono">
-                            <input id="af3-in-iptm" type="number" step="0.001" min="0" max="1" placeholder="ipTM (0-1)"
-                                class="bg-black/60 border border-slate-700/50 rounded px-2 py-1 text-[8px] text-blue-300 placeholder-slate-600 focus:border-blue-500/60 focus:outline-none font-mono">
+                        <div class="grid grid-cols-2 gap-1 mb-2">
+                            <input id="af3-in-plddt" type="number" step="0.1" min="0" max="100" placeholder="pLDDT" class="bg-black/60 border border-slate-700/50 rounded px-2 py-1 text-[8px] text-blue-300 font-mono">
+                            <input id="af3-in-pae" type="number" step="0.1" min="0" max="30" placeholder="PAE (Å)" class="bg-black/60 border border-slate-700/50 rounded px-2 py-1 text-[8px] text-blue-300 font-mono">
+                            <input id="af3-in-ptm" type="number" step="0.001" min="0" max="1" placeholder="pTM" class="bg-black/60 border border-slate-700/50 rounded px-2 py-1 text-[8px] text-blue-300 font-mono">
+                            <input id="af3-in-iptm" type="number" step="0.001" min="0" max="1" placeholder="ipTM" class="bg-black/60 border border-slate-700/50 rounded px-2 py-1 text-[8px] text-blue-300 font-mono">
                         </div>
-                        <button onclick="BiosimBridge.AF3Upload.applyRealMetrics()"
-                            class="w-full bg-blue-900/30 hover:bg-blue-700/30 border border-blue-500/30 text-blue-400 text-[7px] font-black py-1.5 rounded-lg transition-all uppercase tracking-widest">
-                            ✓ APPLY REAL AF3 SCORES TO DISCOVERY
-                        </button>
+                        <button onclick="BiosimBridge.AF3Upload.applyRealMetrics()" class="w-full bg-blue-900/30 border border-blue-500/30 text-blue-400 text-[7px] font-black py-2 rounded-lg uppercase tracking-widest">✓ APPLY AF3 SCORES</button>
                     </div>
                 </div>
 
-                <div id="btn-discover-container" class="px-2 mb-2">
+                <div id="btn-discover-container" class="px-3 mb-6">
                     <button id="btn-discover"
                         class="bg-blue-600 hover:bg-blue-500 text-white text-[10px] font-black w-full py-4 rounded-xl transition-all flex items-center justify-center gap-2 shadow-lg shadow-blue-500/20 active:scale-[0.98]"
                         onclick="BiosimBridge.discoverHybridProtocol(this)">
                         <i data-lucide="sparkles" class="w-4 h-4"></i> INITIATE HYBRID DISCOVERY
                     </button>
                 </div>
-            </div>
 
-            <!-- SCROLLABLE RESULTS AREA -->
-            <div id="protocol-scroll-container" class="flex-1 overflow-y-auto custom-scrollbar p-1">
+                <div class="p-1">
+                    <!-- RESULTS BEGIN HERE -->
                 <!-- Loading State -->
                 <div id="discovery-loading" class="hidden my-4 p-5 bg-blue-950/30 border border-blue-500/20 rounded-2xl animation-fade-in relative overflow-hidden">
                     <div class="w-full bg-slate-900/80 h-2 rounded-full overflow-hidden mb-3 border border-white/5">
