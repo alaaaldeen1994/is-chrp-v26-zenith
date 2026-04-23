@@ -3524,16 +3524,30 @@
     </script>
 
     <script>
-        // --- REVEAL ANIMATION OBSERVER ---
+        // --- REVEAL ANIMATION OBSERVER (Robust Fix) ---
         const revealObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('active');
                 }
             });
-        }, { threshold: 0.05 });
+        }, { threshold: 0.05, rootMargin: "0px 0px -50px 0px" });
 
-        document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+        document.querySelectorAll('.reveal').forEach(el => {
+            revealObserver.observe(el);
+            // Immediate check for elements already in view
+            const rect = el.getBoundingClientRect();
+            if (rect.top < window.innerHeight && rect.bottom > 0) {
+                el.classList.add('active');
+            }
+        });
+
+        // Fail-safe: Reveal all after 2 seconds
+        setTimeout(() => {
+            document.querySelectorAll('.reveal:not(.active)').forEach(el => {
+                el.classList.add('active');
+            });
+        }, 2000);
     </script>
 </body>
 
