@@ -1788,10 +1788,10 @@ const BiosimBridge = {
             // A 35bp DNA strand can realistically only coordinate a Dimer 'Handshake'.
             const structuralPool = Object.entries(this.lastDiscovery.target_profile || {}).sort((a,b) => b[1]-a[1]);
             
-            // ELITE REVELATION: We must set padding to 0. 
-            // Previous 15aa padding added native unstructured 'floppy tails' to the ends of the domains,
-            // which connected to our rigid EAAAK anchor, rendering it useless (creating the red noodles in AF3).
-            const Z_LINKER_PAD = 0; 
+            // HIGH-FIDELITY RESTORATION: Set padding to 15aa.
+            // This provides the necessary conformational flexibility for the DNA-Binding Domains
+            // to rotate and dock correctly without being 'pulled' out of position by the linker.
+            const Z_LINKER_PAD = 15; 
 
             for (const [gene] of structuralPool.slice(0, 2)) {
                 let seq = await this.fetchUniProtSequence(gene);
@@ -1864,8 +1864,9 @@ const BiosimBridge = {
 
             // Zenith Universal Structural Authority (ipTM 0.80+ High Fidelity Standard)
             if (allProteinStrings.length > 0 && factorsIncluded.length > 0) {
-                // Return to the rigorous, clean EAAAKx3 structural scaffold.
-                const fused = allProteinStrings.join("EAAAKEAAAKEAAAK");
+                // HIGH-FIDELITY RESTORATION: Use the flexible (GGGGS)x3 Z-Linker.
+                // This allows the proteins to 'handshake' comfortably over the DNA footprint.
+                const fused = allProteinStrings.join("GGGGSGGGGSGGGGS");
                 sequences.push({ "proteinChain": { "sequence": fused, "count": 1 } });
             }
 
