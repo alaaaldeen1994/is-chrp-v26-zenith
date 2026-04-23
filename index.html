@@ -1950,17 +1950,17 @@
 
 
 
-        <!-- COLLAPSIBLE LOGS SECTION -->
-        <div class="mb-4">
-            <button onclick="BiosimUI.toggleLogs()"
-                class="w-full py-1 bg-[#111] border border-dim text-[8px] text-slate-500 hover:text-white rounded flex items-center justify-center gap-2 mb-2">
-                <i data-lucide="terminal" class="w-2.5 h-2.5"></i>
-                <span id="log-toggle-text">SHOW SYSTEM LOGS</span>
-            </button>
+        <!-- COLLAPSIBLE LOGS SECTION (Reordered & Unified Styling) -->
+        <div class="mb-4 space-y-2">
             <button onclick="BiosimUI.toggleAudit()"
                 class="w-full py-1 bg-blue-900/10 border border-blue-500/20 text-[8px] text-blue-400/70 hover:bg-blue-500/10 hover:text-blue-300 rounded flex items-center justify-center gap-2 transition-all uppercase tracking-widest font-black">
                 <i data-lucide="history" class="w-2.5 h-2.5"></i>
                 <span>OPEN TIME-SERIES AUDIT</span>
+            </button>
+            <button onclick="BiosimUI.toggleLogs()"
+                class="w-full py-1 bg-blue-900/10 border border-blue-500/20 text-[8px] text-blue-400/70 hover:bg-blue-500/10 hover:text-blue-300 rounded flex items-center justify-center gap-2 transition-all uppercase tracking-widest font-black">
+                <i data-lucide="terminal" class="w-2.5 h-2.5"></i>
+                <span id="log-toggle-text">SHOW SYSTEM LOGS</span>
             </button>
         </div>
 
