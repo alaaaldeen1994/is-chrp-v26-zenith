@@ -98,8 +98,22 @@
             background: #111827;
             padding: 2.5rem;
             border-radius: 1.5rem;
-            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            margin: 2rem 0;
+            overflow-x: auto;
         }
+
+        /* --- REVEAL ANIMATIONS (Premium Feel) --- */
+        .reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
         .card {
             background: #0f172a;
             border: 1px solid var(--border-elite);
@@ -300,7 +314,7 @@
         </section>
 
         <!-- Section 1.5: Scientific Authority & Reference Registry -->
-        <section id="scientific-authority" class="mb-40 scroll-mt-24">
+        <section id="scientific-authority" class="reveal mb-12 scroll-mt-24">
             <h2 class="text-[11px] font-black tracking-[0.4em] uppercase text-blue-500 mb-8 font-bold">Scientific Authority & Reference Registry</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
                 <div class="card-elite bg-slate-900/40 border-slate-800">
@@ -411,7 +425,7 @@
             </div>
         </section>
 
-        <section id="barrier-fatigue" class="mb-24 scroll-mt-24">
+        <section id="barrier-fatigue" class="reveal mb-8 scroll-mt-24">
             <h2 class="text-[11px] font-black tracking-[0.4em] uppercase text-rose-500 mb-6 font-bold">Section 2.1</h2>
             <h3 class="text-4xl font-black mb-8 tracking-tight">Neutralizing "Barrier Fatigue"</h3>
 
@@ -468,7 +482,7 @@
             </div>
         </section>
 
-        <section id="architecture" class="mb-24 scroll-mt-24">
+        <section id="architecture" class="reveal mb-8 scroll-mt-24">
             <h2 class="text-[11px] font-black tracking-[0.4em] uppercase text-blue-600 mb-6">Section 3</h2>
             <h3 class="text-4xl font-black mb-10 tracking-tight">HD Foundation Architecture</h3>
 
@@ -532,7 +546,7 @@
                     </div>
                 </div>
             </div>
-        <section id="structural-benchmarking" class="mb-24 scroll-mt-24">
+        <section id="structural-benchmarking" class="reveal mb-8 scroll-mt-24">
             <h2 class="text-[11px] font-black tracking-[0.4em] uppercase text-emerald-500 mb-6">Section 4</h2>
             <h3 class="text-4xl font-black mb-10 tracking-tight">Structural Handshake Benchmarking</h3>
 
@@ -587,7 +601,7 @@
 
 
         <!-- Section 4: Training Methodology -->
-        <section id="training" class="mb-20 scroll-mt-24">
+        <section id="training" class="reveal mb-8 scroll-mt-24">
             <h2 class="text-[11px] font-black tracking-[0.4em] uppercase text-purple-500 mb-6">Section 4</h2>
             <h3 class="text-4xl font-black mb-6 tracking-tight">Training Methodology</h3>
 
@@ -655,7 +669,7 @@
         </section>
 
         <!-- Section 5: Mathematical Foundation -->
-        <section id="math" class="mb-20 scroll-mt-24">
+        <section id="math" class="reveal mb-8 scroll-mt-24">
             <h2 class="text-[11px] font-black tracking-[0.4em] uppercase text-blue-500 mb-6">Section 5</h2>
             <h3 class="text-4xl font-black mb-6 tracking-tight">Mathematical Foundation</h3>
 
@@ -739,7 +753,7 @@
         </section>
 
         <!-- Section 6: Cell Types & Color System -->
-        <section id="colors" class="mb-24 scroll-mt-24">
+        <section id="colors" class="reveal mb-8 scroll-mt-24">
             <h2 class="text-[11px] font-black tracking-[0.4em] uppercase text-teal-600 mb-6">Section 6</h2>
             <h3 class="text-4xl font-black mb-8 tracking-tight">Cell Types & Indicator System</h3>
 
@@ -891,7 +905,7 @@
         </section>
 
         <!-- Section 7: Dashboard Layout -->
-        <section id="ui-layout" class="mb-20 scroll-mt-24">
+        <section id="ui-layout" class="reveal mb-8 scroll-mt-24">
             <h2 class="text-[11px] font-black tracking-[0.4em] uppercase text-blue-500 mb-6">Section 7</h2>
             <h3 class="text-4xl font-black mb-6 tracking-tight">Dashboard Layout</h3>
 
@@ -922,7 +936,7 @@
             </div>
         </section>
 
-        <section id="header" class="mb-24 scroll-mt-24">
+        <section id="header" class="reveal mb-8 scroll-mt-24">
             <h2 class="text-[11px] font-black tracking-[0.4em] uppercase text-slate-100 mb-6 font-bold">Section 8</h2>
             <h3 class="text-4xl font-black mb-10 tracking-tight text-white">Header Controls Reference</h3>
 
@@ -971,7 +985,7 @@
         </section>
 
         <!-- Section 9: Protocol Design Panel -->
-        <section id="protocol-panel" class="mb-20 scroll-mt-24">
+        <section id="protocol-panel" class="reveal mb-8 scroll-mt-24">
             <h2 class="text-[11px] font-black tracking-[0.4em] uppercase text-emerald-400 mb-6">Section 9</h2>
             <h3 class="text-4xl font-black mb-6 tracking-tight">Protocol Design Panel (Left Sidebar)</h3>
 
@@ -1030,7 +1044,7 @@
         </section>
 
         <!-- Section 10: Main Viewport -->
-        <section id="viewport" class="mb-20 scroll-mt-24">
+        <section id="viewport" class="reveal mb-8 scroll-mt-24">
             <h2 class="text-[11px] font-black tracking-[0.4em] uppercase text-blue-500 mb-6">Section 10</h2>
             <h3 class="text-4xl font-black mb-6 tracking-tight">Main Viewport</h3>
 
@@ -1064,7 +1078,7 @@
         </section>
 
         <!-- Section 10.5: Cell Physics & Spatial Dynamics -->
-        <section id="cell-physics" class="mb-20 scroll-mt-24">
+        <section id="cell-physics" class="reveal mb-8 scroll-mt-24">
             <h2 class="text-[11px] font-black tracking-[0.4em] uppercase text-cyan-500 mb-6">Section 10.5</h2>
             <h3 class="text-4xl font-black mb-6 tracking-tight">Cell Physics & Spatial Dynamics</h3>
 
@@ -1266,7 +1280,7 @@
         </section>
 
         <!-- Section 11: Analytics Panel -->
-        <section id="analytics" class="mb-20 scroll-mt-24">
+        <section id="analytics" class="reveal mb-8 scroll-mt-24">
             <h2 class="text-[11px] font-black tracking-[0.4em] uppercase text-emerald-400 mb-6">Section 11</h2>
             <h3 class="text-4xl font-black mb-6 tracking-tight">Analytics Panel (Right Sidebar)</h3>
 
@@ -1306,7 +1320,7 @@
         </section>
 
         <!-- Section 12: 5,000-Gene HD System -->
-        <section id="genes" class="mb-20 scroll-mt-24">
+        <section id="genes" class="reveal mb-8 scroll-mt-24">
             <h2 class="text-[11px] font-black tracking-[0.4em] uppercase text-blue-500 mb-6">Section 12</h2>
             <h3 class="text-4xl font-black mb-6 tracking-tight">5,000-Gene HD Foundation</h3>
 
@@ -1413,7 +1427,7 @@
         </section>
 
         <!-- Section 13: Reprogramming Protocols -->
-        <section id="protocols" class="mb-20 scroll-mt-24">
+        <section id="protocols" class="reveal mb-8 scroll-mt-24">
             <h2 class="text-[11px] font-black tracking-[0.4em] uppercase text-yellow-500 mb-6">Section 13</h2>
             <h3 class="text-4xl font-black mb-6 tracking-tight">Reprogramming Protocols</h3>
 
@@ -1556,7 +1570,7 @@
         </section>
 
         <!-- Section 14: Live Telemetry & HUD -->
-        <section id="telemetry" class="mb-20 scroll-mt-24">
+        <section id="telemetry" class="reveal mb-8 scroll-mt-24">
             <h2 class="text-[11px] font-black tracking-[0.4em] uppercase text-emerald-400 mb-6">Section 14</h2>
             <h3 class="text-4xl font-black mb-6 tracking-tight">Live Telemetry & HUD</h3>
 
@@ -1619,7 +1633,7 @@
         </section>
 
         <!-- Section 15: Rendering Modes -->
-        <section id="rendering" class="mb-20 scroll-mt-24">
+        <section id="rendering" class="reveal mb-8 scroll-mt-24">
             <h2 class="text-[11px] font-black tracking-[0.4em] uppercase text-purple-500 mb-6">Section 15</h2>
             <h3 class="text-4xl font-black mb-6 tracking-tight">Rendering Modes</h3>
 
@@ -1666,7 +1680,7 @@
         </section>
 
         <!-- Section 16: Research Laboratory -->
-        <section id="research" class="mb-20 scroll-mt-24">
+        <section id="research" class="reveal mb-8 scroll-mt-24">
             <h2 class="text-[11px] font-black tracking-[0.4em] uppercase text-blue-500 mb-6">Section 16</h2>
             <h3 class="text-4xl font-black mb-6 tracking-tight">Research Laboratory</h3>
 
@@ -1733,7 +1747,7 @@
         </section>
 
         <!-- Section 17: Neural Hybrid Discovery -->
-        <section id="discovery" class="mb-20 scroll-mt-24">
+        <section id="discovery" class="reveal mb-8 scroll-mt-24">
             <h2 class="text-[11px] font-black tracking-[0.4em] uppercase text-purple-500 mb-6">Section 17</h2>
             <h3 class="text-4xl font-black mb-6 tracking-tight">Neural Hybrid Discovery</h3>
 
@@ -1868,7 +1882,7 @@
                 </div>
 
         <!-- Section 18: Empirical Validation & Gold Standards -->
-        <section id="validation-standards" class="mb-24 scroll-mt-24">
+        <section id="validation-standards" class="reveal mb-8 scroll-mt-24">
             <h2 class="text-[11px] font-black tracking-[0.4em] uppercase text-blue-500 mb-6 font-bold">Section 18</h2>
             <h3 class="text-4xl font-black mb-10 tracking-tight text-white">Empirical Validation Benchmarks</h3>
 
@@ -1950,7 +1964,7 @@
         </section>
 
         <!-- Section 18.5: Scientific Integrity Upgrades (v26.4) -->
-        <section id="scientific-integrity" class="mb-20 scroll-mt-24">
+        <section id="scientific-integrity" class="reveal mb-8 scroll-mt-24">
             <h2 class="text-[11px] font-black tracking-[0.4em] uppercase text-emerald-400 mb-6">Section 18.5</h2>
             <h3 class="text-4xl font-black mb-6 tracking-tight">Scientific Integrity Upgrades &mdash; v26.4</h3>
 
@@ -2078,7 +2092,7 @@
                 </div>
             </div>
         </section>
-        <section id="api" class="mb-20 scroll-mt-24">
+        <section id="api" class="reveal mb-8 scroll-mt-24">
             <h2 class="text-[11px] font-black tracking-[0.4em] uppercase text-purple-500 mb-6">Section 19</h2>
             <h3 class="text-4xl font-black mb-6 tracking-tight">Backend API Reference</h3>
 
@@ -2183,7 +2197,7 @@
         </section>
 
         <!-- Section 20: Troubleshooting & Common Issues -->
-        <section id="troubleshooting" class="mb-20 scroll-mt-24">
+        <section id="troubleshooting" class="reveal mb-8 scroll-mt-24">
             <h2 class="text-[11px] font-black tracking-[0.4em] uppercase text-red-500 mb-6">Section 20</h2>
             <h3 class="text-4xl font-black mb-6 tracking-tight">Troubleshooting & Common Issues</h3>
 
@@ -2293,7 +2307,7 @@
         </section>
 
         <!-- Section 21: Data Export & Analysis -->
-        <section id="data-export" class="mb-20 scroll-mt-24">
+        <section id="data-export" class="reveal mb-8 scroll-mt-24">
             <h2 class="text-[11px] font-black tracking-[0.4em] uppercase text-green-500 mb-6">Section 21</h2>
             <h3 class="text-4xl font-black mb-6 tracking-tight">Data Export & Analysis</h3>
 
@@ -2434,7 +2448,7 @@
         </section>
 
         <!-- Section 22: Scientific Interpretation Guide -->
-        <section id="interpretation" class="mb-20 scroll-mt-24">
+        <section id="interpretation" class="reveal mb-8 scroll-mt-24">
             <h2 class="text-[11px] font-black tracking-[0.4em] uppercase text-yellow-500 mb-6">Section 22</h2>
             <h3 class="text-4xl font-black mb-6 tracking-tight">Scientific Interpretation Guide</h3>
 
@@ -2542,7 +2556,7 @@
         </section>
 
         <!-- Section 23: Evolutionary Roadmap -->
-        <section id="roadmap" class="mb-20 scroll-mt-24">
+        <section id="roadmap" class="reveal mb-8 scroll-mt-24">
             <h2 class="text-[11px] font-black tracking-[0.4em] uppercase text-indigo-500 mb-6">Section 23</h2>
             <h3 class="text-4xl font-black mb-6 tracking-tight">Evolutionary Roadmap</h3>
 
@@ -2588,7 +2602,7 @@
         </section>
 
         <!-- Section 24: Master Guide: A to Z Technical Glossary -->
-        <section id="glossary" class="mb-24 scroll-mt-24">
+        <section id="glossary" class="reveal mb-8 scroll-mt-24">
             <h2 class="text-[10px] font-black tracking-[0.4em] uppercase text-teal-600 mb-6">Section 24</h2>
             <h3 class="text-5xl font-black mb-10 tracking-tighter text-white italic">Master Guide: A to Z Technical
                 Glossary</h3>
@@ -2755,7 +2769,7 @@
         </section>
 
         <!-- Section 25: Deep Scientific Critique & Bio-Technical Evaluation -->
-        <section id="limitations" class="mb-20 scroll-mt-24">
+        <section id="limitations" class="reveal mb-8 scroll-mt-24">
             <h2 class="text-[11px] font-black tracking-[0.4em] uppercase text-orange-500 mb-6">Section 25</h2>
             <h3 class="text-4xl font-black mb-6 tracking-tight">Institutional Scientific Critique</h3>
 
@@ -2898,7 +2912,7 @@
         </section>
 
         <!-- Section 19: Quick Start Guide -->
-        <section id="quickstart" class="mb-20 scroll-mt-24">
+        <section id="quickstart" class="reveal mb-8 scroll-mt-24">
             <h2 class="text-[11px] font-black tracking-[0.4em] uppercase text-emerald-400 mb-6">Section 19</h2>
             <h3 class="text-4xl font-black mb-6 tracking-tight">Quick Start Guide</h3>
 
@@ -3039,7 +3053,7 @@
         </section>
 
         <!-- Section 26: Enterprise Virtual Trials -->
-        <section id="enterprise" class="mb-20 scroll-mt-24">
+        <section id="enterprise" class="reveal mb-8 scroll-mt-24">
             <h2 class="text-[11px] font-black tracking-[0.4em] uppercase text-sky-500 mb-6">Section 26</h2>
             <h3 class="text-4xl font-black mb-6 tracking-tight">Enterprise Virtual Trials</h3>
 
@@ -3098,7 +3112,7 @@
         </section>
 
         <!-- Section 27: Zenith-285M Cloud Balance Architecture -->
-        <section id="Zenith-285M" class="mb-20 scroll-mt-24">
+        <section id="Zenith-285M" class="reveal mb-8 scroll-mt-24">
             <h2 class="text-[11px] font-black tracking-[0.4em] uppercase text-emerald-400 mb-6">Section 27</h2>
             <h3 class="text-4xl font-black mb-6 tracking-tight">Zenith-285M Cloud Balance Architecture</h3>
 
@@ -3157,7 +3171,7 @@
         </section>
 
         <!-- Section 28: Bio-Robotic Orchestration (Opentrons Integration) -->
-        <section id="robotics" class="mb-20 scroll-mt-24">
+        <section id="robotics" class="reveal mb-8 scroll-mt-24">
             <h2 class="text-[11px] font-black tracking-[0.4em] uppercase text-blue-500 mb-6">Section 28</h2>
             <h3 class="text-4xl font-black mb-6 tracking-tight">Bio-Robotic Orchestration & Opentrons Integration</h3>
 
@@ -3322,7 +3336,7 @@
 
 
         <!-- Section 26: Enterprise Virtual Trials -->
-        <section id="enterprise" class="mb-20 scroll-mt-24">
+        <section id="enterprise" class="reveal mb-8 scroll-mt-24">
             <h2 class="text-[11px] font-black tracking-[0.4em] uppercase text-sky-500 mb-6">Section 26</h2>
             <h3 class="text-4xl font-black mb-6 tracking-tight">Enterprise Virtual Trials (Cohort-X)</h3>
 
@@ -3376,7 +3390,7 @@
         </section>
 
         <!-- Section 27: Zenith Ultra Architecture -->
-        <section id="Zenith-102M" class="mb-20 scroll-mt-24">
+        <section id="Zenith-102M" class="reveal mb-8 scroll-mt-24">
             <h2 class="text-[11px] font-black tracking-[0.4em] uppercase text-emerald-400 mb-6">Section 27</h2>
             <h3 class="text-4xl font-black mb-6 tracking-tight">Zenith Ultra Foundation Architecture</h3>
 
@@ -3509,6 +3523,18 @@
         });
     </script>
 
+    <script>
+        // --- REVEAL ANIMATION OBSERVER ---
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, { threshold: 0.05 });
+
+        document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+    </script>
 </body>
 
 </html>

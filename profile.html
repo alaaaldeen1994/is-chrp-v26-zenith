@@ -1381,6 +1381,16 @@
                 font-size: 22px !important;
             }
         }
+        /* --- REVEAL ANIMATIONS (Premium Feel) --- */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 1s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
     </style>
 </head>
 
@@ -1557,9 +1567,9 @@
 
     <!-- Hero Section -->
     <!-- Hero Section -->
-    <section class="hero bg-transparent relative z-10">
+    <section class="hero bg-transparent relative z-10 reveal">
 
-        <div class="hero-content" style="text-align: left; display: flex; flex-direction: column; align-items: flex-start; max-width: 680px; padding: 5vh 0 10% 5%;">
+        <div class="hero-content" style="text-align: left; display: flex; flex-direction: column; align-items: flex-start; max-width: 680px; padding: 4vh 0 6% 5%;">
             <span style="font-size: 11px; font-weight: 900; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.45em; margin-bottom: 1.5rem; display: block;">Neural Parameter
                 Mainframe</span>
             <h1 style="font-size: clamp(36px, 6vw, 56px); font-family: 'Outfit', sans-serif; font-weight: 900; line-height: 1.05; margin-bottom: 1.5rem; letter-spacing: -0.03em; background: linear-gradient(135deg, #0f172a 0%, #1e40af 50%, #3b82f6 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
@@ -1593,7 +1603,7 @@
     </section>
 
     <!-- STATS STRIP (285M moved here) -->
-    <section class="bg-transparent relative z-10" style="padding: 4rem 0 5rem;">
+    <section class="bg-transparent relative z-10 reveal" style="padding: 1rem 0 3rem;">
         <div class="max-w-7xl mx-auto" style="padding: 0 3rem;">
             <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem;">
                 <div style="background: rgba(255,255,255,0.7); backdrop-filter: blur(20px); border: 1px solid rgba(226,232,240,0.8); border-radius: 24px; padding: 2.5rem 2rem; text-align: center; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); cursor: default; position: relative; overflow: hidden;"
@@ -1629,105 +1639,119 @@
     </section>
 
 
-    <!-- FOUNDATION DISCOVERY SECTION (Clinical Minimalist) -->
-    <section class="py-40 bg-transparent relative z-10">
+    <!-- FOUNDATION DISCOVERY SECTION (Premium Redesign) -->
+    <section class="py-12 bg-transparent relative z-10 reveal">
         <div class="max-w-7xl mx-auto px-12">
-            <div class="grid lg:grid-cols-2 gap-24 items-end mb-32">
+            <div class="grid lg:grid-cols-2 gap-16 items-end mb-16">
                 <div>
-                    <span class="text-[11px] font-black text-slate-400 uppercase tracking-[0.4em] mb-8 block">Project
-                        Scope</span>
-                    <h2 class="text-6xl font-black text-slate-900 leading-[1.05] tracking-tight">A streamlined system
-                        <br>for medical teams.
-                    </h2>
+                    <span class="text-[11px] font-black text-blue-600 uppercase tracking-[0.4em] mb-4 block">Core Modules</span>
+                    <h2 class="text-5xl font-black text-slate-900 leading-[1.1] tracking-tight">Built for precision<br>clinical teams.</h2>
                 </div>
                 <div>
-                    <p class="text-xl text-slate-500 leading-relaxed font-medium">
-                        Zenith v26.1 provides the architectural foundation for precision clinical navigation.
-                        We help teams move faster, reduce risk, and improve outcomes.
+                    <p class="text-lg text-slate-500 leading-relaxed font-medium">
+                        Zenith v26.1 provides the architectural foundation for precision clinical navigation. Move faster, reduce risk, improve outcomes.
                     </p>
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
-                <!-- Solution 1 -->
-                <div class="group cursor-pointer">
-                    <div class="font-black uppercase tracking-[0.3em] mb-6"
-                        style="color: #000 !important; font-size: 13px;">01 / DISCOVERY</div>
-                    <h3 class="text-2xl font-black text-slate-900 mb-4">Precision Manifolds</h3>
-                    <p class="text-slate-500 leading-relaxed mb-8">Access high-definition single-cell baselines to
-                        benchmark clinical trajectories with 99.8% fidelity.</p>
-                    <div
-                        class="w-12 h-px bg-slate-200 group-hover:w-full group-hover:bg-slate-900 transition-all duration-500">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <!-- Card 1: Discovery -->
+                <div class="group relative bg-white/80 backdrop-blur-xl border border-slate-200/80 rounded-3xl p-8 transition-all duration-500 hover:shadow-2xl hover:shadow-blue-500/10 hover:-translate-y-1 hover:border-blue-300 overflow-hidden cursor-pointer">
+                    <div class="absolute top-0 right-0 w-40 h-40 bg-gradient-to-bl from-blue-500/5 to-transparent rounded-full -translate-y-10 translate-x-10"></div>
+                    <div class="relative z-10">
+                        <div class="flex items-center gap-4 mb-5">
+                            <div class="w-12 h-12 bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl flex items-center justify-center border border-blue-200/50 group-hover:from-blue-100 group-hover:to-blue-200 transition-colors">
+                                <i data-lucide="scan-search" class="w-5 h-5 text-blue-600"></i>
+                            </div>
+                            <span class="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">01 / Discovery</span>
+                        </div>
+                        <h3 class="text-xl font-black text-slate-900 mb-2">Precision Manifolds</h3>
+                        <p class="text-sm text-slate-500 leading-relaxed">Access high-definition single-cell baselines to benchmark clinical trajectories with 99.8% fidelity.</p>
                     </div>
                 </div>
 
-                <!-- Solution 2 -->
-                <div class="group cursor-pointer">
-                    <div class="font-black uppercase tracking-[0.3em] mb-6"
-                        style="color: #000 !important; font-size: 13px;">02 / COMPLIANCE</div>
-                    <h3 class="text-2xl font-black text-slate-900 mb-4">Evidence Registry</h3>
-                    <p class="text-slate-500 leading-relaxed mb-8">Full provenance tracking for research use only (RUO)
-                        applications, ensuring institutional-grade audit trails.</p>
-                    <div
-                        class="w-12 h-px bg-slate-200 group-hover:w-full group-hover:bg-slate-900 transition-all duration-500">
+                <!-- Card 2: Compliance -->
+                <div class="group relative bg-white/80 backdrop-blur-xl border border-slate-200/80 rounded-3xl p-8 transition-all duration-500 hover:shadow-2xl hover:shadow-emerald-500/10 hover:-translate-y-1 hover:border-emerald-300 overflow-hidden cursor-pointer">
+                    <div class="absolute top-0 right-0 w-40 h-40 bg-gradient-to-bl from-emerald-500/5 to-transparent rounded-full -translate-y-10 translate-x-10"></div>
+                    <div class="relative z-10">
+                        <div class="flex items-center gap-4 mb-5">
+                            <div class="w-12 h-12 bg-gradient-to-br from-emerald-50 to-emerald-100 rounded-2xl flex items-center justify-center border border-emerald-200/50 group-hover:from-emerald-100 group-hover:to-emerald-200 transition-colors">
+                                <i data-lucide="file-check-2" class="w-5 h-5 text-emerald-600"></i>
+                            </div>
+                            <span class="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">02 / Compliance</span>
+                        </div>
+                        <h3 class="text-xl font-black text-slate-900 mb-2">Evidence Registry</h3>
+                        <p class="text-sm text-slate-500 leading-relaxed">Full provenance tracking for research use only (RUO) applications, ensuring institutional-grade audit trails.</p>
                     </div>
                 </div>
 
-                <!-- Solution 3 -->
-                <div class="group cursor-pointer">
-                    <div class="font-black uppercase tracking-[0.3em] mb-6"
-                        style="color: #000 !important; font-size: 13px;">03 / EXECUTION</div>
-                    <h3 class="text-2xl font-black text-slate-900 mb-4">Simulation Lab</h3>
-                    <p class="text-slate-500 leading-relaxed mb-8">Deploy virtual trials to plan and manage complex
-                        reprogramming protocols with clarity and control.</p>
-                    <div
-                        class="w-12 h-px bg-slate-200 group-hover:w-full group-hover:bg-slate-900 transition-all duration-500">
+                <!-- Card 3: Execution -->
+                <div class="group relative bg-white/80 backdrop-blur-xl border border-slate-200/80 rounded-3xl p-8 transition-all duration-500 hover:shadow-2xl hover:shadow-purple-500/10 hover:-translate-y-1 hover:border-purple-300 overflow-hidden cursor-pointer">
+                    <div class="absolute top-0 right-0 w-40 h-40 bg-gradient-to-bl from-purple-500/5 to-transparent rounded-full -translate-y-10 translate-x-10"></div>
+                    <div class="relative z-10">
+                        <div class="flex items-center gap-4 mb-5">
+                            <div class="w-12 h-12 bg-gradient-to-br from-purple-50 to-purple-100 rounded-2xl flex items-center justify-center border border-purple-200/50 group-hover:from-purple-100 group-hover:to-purple-200 transition-colors">
+                                <i data-lucide="flask-conical" class="w-5 h-5 text-purple-600"></i>
+                            </div>
+                            <span class="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">03 / Execution</span>
+                        </div>
+                        <h3 class="text-xl font-black text-slate-900 mb-2">Simulation Lab</h3>
+                        <p class="text-sm text-slate-500 leading-relaxed">Deploy virtual trials to plan and manage complex reprogramming protocols with clarity and control.</p>
                     </div>
                 </div>
 
-                <!-- Solution 4: OSK Partial Reprogramming (ALAA ALDEEN+) -->
-                <div class="group cursor-pointer">
-                    <div class="font-black uppercase tracking-[0.3em] mb-6"
-                        style="color: #000 !important; font-size: 13px;">04 / SAFETY</div>
-                    <h3 class="text-2xl font-black text-slate-900 mb-4">OSK Partial Mode</h3>
-                    <p class="text-slate-500 leading-relaxed mb-8">Computationally constrained partial reprogramming — oncogene blacklist, dedifferentiation ceiling, Sirtuin pathway scoring, and Horvath clock enrichment.</p>
-                    <div
-                        class="w-12 h-px bg-slate-200 group-hover:w-full group-hover:bg-blue-600 transition-all duration-500">
+                <!-- Card 4: OSK Safety (ALAA ALDEEN+) -->
+                <div class="group relative bg-white/80 backdrop-blur-xl border border-slate-200/80 rounded-3xl p-8 transition-all duration-500 hover:shadow-2xl hover:shadow-blue-500/10 hover:-translate-y-1 hover:border-blue-300 overflow-hidden cursor-pointer">
+                    <div class="absolute top-0 right-0 w-40 h-40 bg-gradient-to-bl from-slate-500/5 to-transparent rounded-full -translate-y-10 translate-x-10"></div>
+                    <div class="relative z-10">
+                        <div class="flex items-center gap-4 mb-5">
+                            <div class="w-12 h-12 bg-gradient-to-br from-slate-100 to-slate-200 rounded-2xl flex items-center justify-center border border-slate-300/50 group-hover:from-blue-100 group-hover:to-blue-200 transition-colors">
+                                <i data-lucide="shield-check" class="w-5 h-5 text-slate-700 group-hover:text-blue-600 transition-colors"></i>
+                            </div>
+                            <span class="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">04 / Safety</span>
+                        </div>
+                        <h3 class="text-xl font-black text-slate-900 mb-2">OSK Partial Mode</h3>
+                        <p class="text-sm text-slate-500 leading-relaxed">Computationally constrained partial reprogramming — oncogene blacklist, dedifferentiation ceiling, Sirtuin scoring.</p>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- OSK PARTIAL REPROGRAMMING CASE STUDY (ALAA ALDEEN+) -->
-        <section class="py-24 bg-transparent relative z-10">
+        <!-- OSK PARTIAL REPROGRAMMING — HORIZONTAL DASHBOARD (ALAA ALDEEN+) -->
+        <section class="py-10 bg-transparent relative z-10 reveal">
             <div class="max-w-7xl mx-auto px-12">
-                <div class="bg-slate-50 border border-slate-200 rounded-[40px] p-12 relative overflow-hidden group shadow-sm transition-all hover:shadow-xl">
-                    <div class="absolute -left-20 -bottom-20 w-80 h-80 bg-blue-500/5 blur-[100px] rounded-full group-hover:bg-blue-500/10 transition-colors"></div>
+                <div class="bg-slate-900 rounded-3xl p-8 md:p-10 relative overflow-hidden group shadow-2xl">
+                    <div class="absolute -left-32 -bottom-32 w-96 h-96 bg-blue-500/10 blur-[120px] rounded-full"></div>
+                    <div class="absolute right-0 top-0 w-72 h-72 bg-emerald-500/5 blur-[100px] rounded-full"></div>
                     <div class="relative z-10">
-                        <div class="flex items-center gap-3 mb-6">
-                            <span class="bg-slate-900 text-white text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-widest">New Module</span>
-                            <span class="text-slate-400 text-[10px] font-bold uppercase tracking-widest">OSK Partial Reprogramming</span>
+                        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6 mb-8">
+                            <div>
+                                <div class="flex items-center gap-3 mb-3">
+                                    <span class="bg-blue-500 text-white text-[9px] font-black px-3 py-1 rounded-full uppercase tracking-widest">New</span>
+                                    <span class="text-slate-500 text-[10px] font-bold uppercase tracking-widest">OSK Partial Reprogramming</span>
+                                </div>
+                                <h2 class="text-2xl md:text-3xl font-black text-white leading-tight">Rejuvenation <span class="text-blue-400">Without Risk.</span></h2>
+                            </div>
+                            <p class="text-sm text-slate-400 max-w-md leading-relaxed">
+                                Computationally constrained factor selection — oncogene blacklist, dedifferentiation ceiling, Sirtuin/NAD+ scoring, and Horvath clock enrichment.
+                            </p>
                         </div>
-                        <h2 class="text-4xl font-black text-slate-900 mb-6 leading-tight">Rejuvenation <span class="text-blue-600">Without Risk.</span></h2>
-                        <p class="text-lg text-slate-500 font-medium leading-relaxed mb-8 max-w-3xl">
-                            Full Yamanaka reprogramming (OSKM) carries oncogenic risk from c-MYC. Zenith's OSK Partial Mode computationally constrains factor selection — blocking oncogenes, enforcing a dedifferentiation ceiling, and scoring each factor against the Sirtuin/NAD+ longevity axis and Horvath epigenetic clock.
-                        </p>
-                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                            <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm">
-                                <div class="text-[9px] text-slate-400 font-black uppercase mb-1">Oncogene Filter</div>
-                                <div class="text-xl font-black text-slate-900">12 <span class="text-sm text-slate-400">blocked</span></div>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                            <div class="bg-white/5 border border-white/10 rounded-2xl p-4 backdrop-blur-sm hover:bg-white/10 transition-colors">
+                                <div class="text-[9px] text-blue-400 font-black uppercase mb-1 tracking-wider">Oncogene Filter</div>
+                                <div class="text-2xl font-black text-white">12 <span class="text-sm font-medium text-slate-500">blocked</span></div>
                             </div>
-                            <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm">
-                                <div class="text-[9px] text-slate-400 font-black uppercase mb-1">Sirtuin Pathway</div>
-                                <div class="text-xl font-black text-slate-900">SIRT1-7 <span class="text-sm text-slate-400">scored</span></div>
+                            <div class="bg-white/5 border border-white/10 rounded-2xl p-4 backdrop-blur-sm hover:bg-white/10 transition-colors">
+                                <div class="text-[9px] text-emerald-400 font-black uppercase mb-1 tracking-wider">Sirtuin Pathway</div>
+                                <div class="text-2xl font-black text-white">SIRT1-7 <span class="text-sm font-medium text-slate-500">scored</span></div>
                             </div>
-                            <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm">
-                                <div class="text-[9px] text-slate-400 font-black uppercase mb-1">Horvath Clock</div>
-                                <div class="text-xl font-black text-slate-900">8 <span class="text-sm text-slate-400">CpG loci</span></div>
+                            <div class="bg-white/5 border border-white/10 rounded-2xl p-4 backdrop-blur-sm hover:bg-white/10 transition-colors">
+                                <div class="text-[9px] text-purple-400 font-black uppercase mb-1 tracking-wider">Horvath Clock</div>
+                                <div class="text-2xl font-black text-white">8 <span class="text-sm font-medium text-slate-500">CpG loci</span></div>
                             </div>
-                            <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm">
-                                <div class="text-[9px] text-slate-400 font-black uppercase mb-1">Safety Modes</div>
-                                <div class="text-xl font-black text-slate-900">3 <span class="text-sm text-slate-400">levels</span></div>
+                            <div class="bg-white/5 border border-white/10 rounded-2xl p-4 backdrop-blur-sm hover:bg-white/10 transition-colors">
+                                <div class="text-[9px] text-slate-400 font-black uppercase mb-1 tracking-wider">Safety Modes</div>
+                                <div class="text-2xl font-black text-white">3 <span class="text-sm font-medium text-slate-500">levels</span></div>
                             </div>
                         </div>
                     </div>
@@ -1736,10 +1760,10 @@
         </section>
 
         <!-- PLATFORM CAPABILITIES SECTION -->
-        <section class="py-32 bg-transparent relative z-10">
+        <section class="py-12 bg-transparent relative z-10 reveal">
             <div class="max-w-7xl mx-auto px-12">
                 <!-- GOLD STANDARD DISCOVERY CASE STUDY (INSTITUTIONAL REFERENCE) -->
-                <div class="mb-32 bg-slate-50 border border-slate-200 rounded-[40px] p-12 relative overflow-hidden group shadow-sm transition-all hover:shadow-xl">
+                <div class="mb-16 bg-slate-50 border border-slate-200 rounded-[40px] p-12 relative overflow-hidden group shadow-sm transition-all hover:shadow-xl">
                     <div class="absolute -right-20 -top-20 w-80 h-80 bg-blue-500/5 blur-[100px] rounded-full group-hover:bg-blue-500/10 transition-colors"></div>
                     <div class="relative z-10 flex flex-col md:flex-row gap-12 items-center">
                         <div class="flex-1">
@@ -1781,74 +1805,55 @@
                     </div>
                 </div>
 
-                <div style="margin-bottom: 4rem;">
-                    <span style="font-size: 10px; font-weight: 900; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.3em; margin-bottom: 1.25rem; display: block;">Platform
-                        Modules</span>
-                    <h2 style="font-family: 'Outfit', sans-serif; font-size: clamp(32px, 4vw, 48px); font-weight: 900; color: #0f172a; letter-spacing: -0.02em; line-height: 1.1;">Everything your<br>team needs.</h2>
+                <div class="mb-10">
+                    <span class="text-[10px] font-black text-blue-600 uppercase tracking-[0.3em] mb-3 block">Platform Modules</span>
+                    <h2 class="text-4xl font-black text-slate-900 tracking-tight leading-tight" style="font-family: 'Outfit', sans-serif;">Everything your<br>team needs.</h2>
                 </div>
 
-                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.75rem; margin-bottom: 2.5rem;">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
                     <!-- Pilot Dashboard Card -->
-                    <div style="background: rgba(255,255,255,0.75); backdrop-filter: blur(16px); border: 1px solid rgba(226,232,240,0.9); border-radius: 28px; padding: 2.5rem 2rem 2rem; display: flex; flex-direction: column; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); position: relative; overflow: hidden;"
-                        onmouseover="this.style.transform='translateY(-6px)'; this.style.boxShadow='0 24px 48px rgba(0,0,0,0.08)'; this.style.borderColor='#93c5fd';"
-                        onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'; this.style.borderColor='rgba(226,232,240,0.9)';">
-                        <div style="position: absolute; top: -40px; right: -40px; width: 120px; height: 120px; background: radial-gradient(circle, rgba(59,130,246,0.06) 0%, transparent 70%); border-radius: 50%;"></div>
-                        <div style="width: 56px; height: 56px; background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%); border-radius: 16px; display: flex; align-items: center; justify-content: center; margin-bottom: 2rem;">
-                            <i data-lucide="layout-dashboard" style="width: 26px; height: 26px; color: #0f172a;"></i>
+                    <div class="group relative bg-white/80 backdrop-blur-xl border border-slate-200/80 rounded-3xl p-7 transition-all duration-500 hover:shadow-2xl hover:shadow-blue-500/8 hover:-translate-y-1 hover:border-blue-300 overflow-hidden">
+                        <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-blue-500/5 to-transparent rounded-full -translate-y-8 translate-x-8"></div>
+                        <div class="relative z-10">
+                            <div class="w-12 h-12 bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl flex items-center justify-center border border-blue-200/50 mb-5">
+                                <i data-lucide="layout-dashboard" class="w-5 h-5 text-blue-600"></i>
+                            </div>
+                            <h3 class="text-lg font-black text-slate-900 mb-2" style="font-family: 'Outfit', sans-serif;">Pilot Dashboard</h3>
+                            <p class="text-sm text-slate-500 leading-relaxed mb-5">Real-time tracking of Pilot Funnels, Partnership KPIs, and Risk Registers for Enterprise diligence.</p>
+                            <button onclick="window.open('pilot_dashboard.html', '_blank')" class="inline-flex items-center gap-2 text-[11px] font-black text-slate-900 uppercase tracking-wider group-hover:text-blue-600 group-hover:gap-4 transition-all">
+                                Access Dashboard <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                            </button>
                         </div>
-                        <h3 style="font-family: 'Outfit', sans-serif; font-size: 22px; font-weight: 800; color: #0f172a; margin-bottom: 1rem;">Pilot Dashboard</h3>
-                        <p style="color: #64748b; line-height: 1.65; margin-bottom: 2rem; font-size: 15px; font-weight: 500; flex: 1;">
-                            Real-time tracking of Pilot Funnels, Partnership KPIs, and Risk Registers for Enterprise
-                            diligence and investor review.
-                        </p>
-                        <button onclick="window.open('pilot_dashboard.html', '_blank')"
-                            style="display: inline-flex; align-items: center; gap: 10px; color: #0f172a; font-weight: 900; font-size: 11px; text-transform: uppercase; letter-spacing: 0.12em; background: none; border: none; cursor: pointer; padding: 0; transition: gap 0.3s;"
-                            onmouseover="this.style.gap='16px'; this.style.color='#2563eb';"
-                            onmouseout="this.style.gap='10px'; this.style.color='#0f172a';">
-                            Access Dashboard <i data-lucide="arrow-right" style="width: 16px; height: 16px;"></i>
-                        </button>
                     </div>
 
                     <!-- Virtual Trials Card -->
-                    <div style="background: rgba(255,255,255,0.75); backdrop-filter: blur(16px); border: 1px solid rgba(226,232,240,0.9); border-radius: 28px; padding: 2.5rem 2rem 2rem; display: flex; flex-direction: column; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); position: relative; overflow: hidden;"
-                        onmouseover="this.style.transform='translateY(-6px)'; this.style.boxShadow='0 24px 48px rgba(0,0,0,0.08)'; this.style.borderColor='#93c5fd';"
-                        onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'; this.style.borderColor='rgba(226,232,240,0.9)';">
-                        <div style="position: absolute; top: -40px; right: -40px; width: 120px; height: 120px; background: radial-gradient(circle, rgba(59,130,246,0.06) 0%, transparent 70%); border-radius: 50%;"></div>
-                        <div style="width: 56px; height: 56px; background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%); border-radius: 16px; display: flex; align-items: center; justify-content: center; margin-bottom: 2rem;">
-                            <i data-lucide="activity" style="width: 26px; height: 26px; color: #0f172a;"></i>
+                    <div class="group relative bg-white/80 backdrop-blur-xl border border-slate-200/80 rounded-3xl p-7 transition-all duration-500 hover:shadow-2xl hover:shadow-emerald-500/8 hover:-translate-y-1 hover:border-emerald-300 overflow-hidden">
+                        <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-emerald-500/5 to-transparent rounded-full -translate-y-8 translate-x-8"></div>
+                        <div class="relative z-10">
+                            <div class="w-12 h-12 bg-gradient-to-br from-emerald-50 to-emerald-100 rounded-2xl flex items-center justify-center border border-emerald-200/50 mb-5">
+                                <i data-lucide="activity" class="w-5 h-5 text-emerald-600"></i>
+                            </div>
+                            <h3 class="text-lg font-black text-slate-900 mb-2" style="font-family: 'Outfit', sans-serif;">Virtual Trials</h3>
+                            <p class="text-sm text-slate-500 leading-relaxed mb-5">Run high-throughput clinical trials on digital cohorts. Test longevity interventions across diverse populations.</p>
+                            <button onclick="checkAuthAndRedirect('trials.html')" class="inline-flex items-center gap-2 text-[11px] font-black text-slate-900 uppercase tracking-wider group-hover:text-emerald-600 group-hover:gap-4 transition-all">
+                                Launch Trials <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                            </button>
                         </div>
-                        <h3 style="font-family: 'Outfit', sans-serif; font-size: 22px; font-weight: 800; color: #0f172a; margin-bottom: 1rem;">Virtual Trials</h3>
-                        <p style="color: #64748b; line-height: 1.65; margin-bottom: 2rem; font-size: 15px; font-weight: 500; flex: 1;">
-                            Run high-throughput clinical trials on digital cohorts. Test longevity interventions across
-                            diverse populations.
-                        </p>
-                        <button onclick="checkAuthAndRedirect('trials.html')"
-                            style="display: inline-flex; align-items: center; gap: 10px; color: #0f172a; font-weight: 900; font-size: 11px; text-transform: uppercase; letter-spacing: 0.12em; background: none; border: none; cursor: pointer; padding: 0; transition: gap 0.3s;"
-                            onmouseover="this.style.gap='16px'; this.style.color='#2563eb';"
-                            onmouseout="this.style.gap='10px'; this.style.color='#0f172a';">
-                            Launch Trials <i data-lucide="arrow-right" style="width: 16px; height: 16px;"></i>
-                        </button>
                     </div>
 
                     <!-- Regulatory Statement Card -->
-                    <div style="background: rgba(255,255,255,0.75); backdrop-filter: blur(16px); border: 1px solid rgba(226,232,240,0.9); border-radius: 28px; padding: 2.5rem 2rem 2rem; display: flex; flex-direction: column; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); position: relative; overflow: hidden;"
-                        onmouseover="this.style.transform='translateY(-6px)'; this.style.boxShadow='0 24px 48px rgba(0,0,0,0.08)'; this.style.borderColor='#93c5fd';"
-                        onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'; this.style.borderColor='rgba(226,232,240,0.9)';">
-                        <div style="position: absolute; top: -40px; right: -40px; width: 120px; height: 120px; background: radial-gradient(circle, rgba(59,130,246,0.06) 0%, transparent 70%); border-radius: 50%;"></div>
-                        <div style="width: 56px; height: 56px; background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%); border-radius: 16px; display: flex; align-items: center; justify-content: center; margin-bottom: 2rem;">
-                            <i data-lucide="scale" style="width: 26px; height: 26px; color: #0f172a;"></i>
+                    <div class="group relative bg-white/80 backdrop-blur-xl border border-slate-200/80 rounded-3xl p-7 transition-all duration-500 hover:shadow-2xl hover:shadow-purple-500/8 hover:-translate-y-1 hover:border-purple-300 overflow-hidden">
+                        <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-purple-500/5 to-transparent rounded-full -translate-y-8 translate-x-8"></div>
+                        <div class="relative z-10">
+                            <div class="w-12 h-12 bg-gradient-to-br from-purple-50 to-purple-100 rounded-2xl flex items-center justify-center border border-purple-200/50 mb-5">
+                                <i data-lucide="scale" class="w-5 h-5 text-purple-600"></i>
+                            </div>
+                            <h3 class="text-lg font-black text-slate-900 mb-2" style="font-family: 'Outfit', sans-serif;">Regulatory Statement</h3>
+                            <p class="text-sm text-slate-500 leading-relaxed mb-5">Formal Intended Use Statement and 12-Month Evidence Generation Roadmap for institutional compliance.</p>
+                            <button onclick="window.open('regulatory.html', '_blank')" class="inline-flex items-center gap-2 text-[11px] font-black text-slate-900 uppercase tracking-wider group-hover:text-purple-600 group-hover:gap-4 transition-all">
+                                Read Statement <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                            </button>
                         </div>
-                        <h3 style="font-family: 'Outfit', sans-serif; font-size: 22px; font-weight: 800; color: #0f172a; margin-bottom: 1rem;">Regulatory Statement</h3>
-                        <p style="color: #64748b; line-height: 1.65; margin-bottom: 2rem; font-size: 15px; font-weight: 500; flex: 1;">
-                            Formal Intended Use Statement and 12-Month Evidence Generation Roadmap for institutional
-                            compliance.
-                        </p>
-                        <button onclick="window.open('regulatory.html', '_blank')"
-                            style="display: inline-flex; align-items: center; gap: 10px; color: #0f172a; font-weight: 900; font-size: 11px; text-transform: uppercase; letter-spacing: 0.12em; background: none; border: none; cursor: pointer; padding: 0; transition: gap 0.3s;"
-                            onmouseover="this.style.gap='16px'; this.style.color='#2563eb';"
-                            onmouseout="this.style.gap='10px'; this.style.color='#0f172a';">
-                            Read Statement <i data-lucide="arrow-right" style="width: 16px; height: 16px;"></i>
-                        </button>
                     </div>
                 </div>
             </div>
@@ -1856,7 +1861,7 @@
 
 
         <!-- CORE CAPABILITY VISUAL -->
-        <section class="max-w-7xl mx-auto px-6 py-24 relative z-10">
+        <section class="max-w-7xl mx-auto px-6 py-16 relative z-10 reveal">
             <div
                 class="relative rounded-3xl overflow-hidden shadow-2xl border border-slate-100 min-h-[600px] flex items-center p-12 md:p-24 bg-white/50 backdrop-blur-sm">
                 <!-- Scientific Lab Background Image -->
@@ -1908,7 +1913,7 @@
 
 
         <!-- SECTION 18: EMPIRICAL VALIDATION (AUTONOMOUS STRUCTURAL AUTHORITY) -->
-        <section class="max-w-7xl mx-auto px-6 py-24 border-t border-slate-100 bg-white relative z-10">
+        <section class="max-w-7xl mx-auto px-6 py-12 border-t border-slate-100 bg-white relative z-10 reveal">
             <div class="mb-16">
                 <span class="text-[10px] font-black text-blue-600 uppercase tracking-[0.5em] mb-4 block">Institutional Truth</span>
                 <h2 class="text-5xl font-black text-slate-900 mb-6 tracking-tight">Autonomous Structural Authority</h2>
@@ -1995,25 +2000,44 @@
             </div>
         </section>
         <!-- CORE CAPABILITIES -->
-        <section class="capability-grid relative z-10">
-            <div class="capability-card">
-                <i data-lucide="target" class="w-12 h-12"></i>
-                <h3>Target Identification</h3>
-                <p>Advanced algorithmic screening to pinpoint high-value genomic targets for specific therapeutic
-                    interventions and state induction.</p>
-            </div>
-            <div class="capability-card">
-                <i data-lucide="workflow" class="w-12 h-12"></i>
-                <h3>Generative Dynamics</h3>
-                <p>Utilizing proprietary Attention manifolds to model continuous trajectories of cell fate conversion
-                    and
-                    aging-related cellular drift.</p>
-            </div>
-            <div class="capability-card">
-                <i data-lucide="shield-alert" class="w-12 h-12"></i>
-                <h3>Safety Hardening</h3>
-                <p>Comprehensive monitoring systems designed to detect and mitigate oncogenic risk factors during
-                    reprogramming cycles.</p>
+        <!-- CORE CAPABILITIES (Premium Redesign) -->
+        <section class="max-w-7xl mx-auto px-12 py-12 relative z-10 reveal">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Capability 1 -->
+                <div class="group relative bg-white/60 backdrop-blur-xl border border-slate-200/60 rounded-[32px] p-10 transition-all duration-500 hover:shadow-2xl hover:shadow-blue-500/5 hover:-translate-y-2 hover:border-blue-400/30 overflow-hidden cursor-default">
+                    <div class="absolute top-0 right-0 w-48 h-48 bg-gradient-to-bl from-blue-500/5 to-transparent rounded-full -translate-y-12 translate-x-12"></div>
+                    <div class="relative z-10 text-center flex flex-col items-center">
+                        <div class="w-16 h-16 bg-gradient-to-br from-blue-50 to-blue-100 rounded-3xl flex items-center justify-center border border-blue-200/50 mb-8 group-hover:scale-110 transition-transform duration-500">
+                            <i data-lucide="target" class="w-7 h-7 text-blue-600"></i>
+                        </div>
+                        <h3 class="text-2xl font-black text-slate-900 mb-4" style="font-family: 'Outfit', sans-serif;">Target Identification</h3>
+                        <p class="text-slate-500 leading-relaxed font-medium">Advanced algorithmic screening to pinpoint high-value genomic targets for specific therapeutic interventions and state induction.</p>
+                    </div>
+                </div>
+
+                <!-- Capability 2 -->
+                <div class="group relative bg-white/60 backdrop-blur-xl border border-slate-200/60 rounded-[32px] p-10 transition-all duration-500 hover:shadow-2xl hover:shadow-emerald-500/5 hover:-translate-y-2 hover:border-emerald-400/30 overflow-hidden cursor-default">
+                    <div class="absolute top-0 right-0 w-48 h-48 bg-gradient-to-bl from-emerald-500/5 to-transparent rounded-full -translate-y-12 translate-x-12"></div>
+                    <div class="relative z-10 text-center flex flex-col items-center">
+                        <div class="w-16 h-16 bg-gradient-to-br from-emerald-50 to-emerald-100 rounded-3xl flex items-center justify-center border border-emerald-200/50 mb-8 group-hover:scale-110 transition-transform duration-500">
+                            <i data-lucide="workflow" class="w-7 h-7 text-emerald-600"></i>
+                        </div>
+                        <h3 class="text-2xl font-black text-slate-900 mb-4" style="font-family: 'Outfit', sans-serif;">Generative Dynamics</h3>
+                        <p class="text-slate-500 leading-relaxed font-medium">Utilizing proprietary Attention manifolds to model continuous trajectories of cell fate conversion and aging-related cellular drift.</p>
+                    </div>
+                </div>
+
+                <!-- Capability 3 -->
+                <div class="group relative bg-white/60 backdrop-blur-xl border border-slate-200/60 rounded-[32px] p-10 transition-all duration-500 hover:shadow-2xl hover:shadow-purple-500/5 hover:-translate-y-2 hover:border-purple-400/30 overflow-hidden cursor-default">
+                    <div class="absolute top-0 right-0 w-48 h-48 bg-gradient-to-bl from-purple-500/5 to-transparent rounded-full -translate-y-12 translate-x-12"></div>
+                    <div class="relative z-10 text-center flex flex-col items-center">
+                        <div class="w-16 h-16 bg-gradient-to-br from-purple-50 to-purple-100 rounded-3xl flex items-center justify-center border border-purple-200/50 mb-8 group-hover:scale-110 transition-transform duration-500">
+                            <i data-lucide="shield-alert" class="w-7 h-7 text-purple-600"></i>
+                        </div>
+                        <h3 class="text-2xl font-black text-slate-900 mb-4" style="font-family: 'Outfit', sans-serif;">Safety Hardening</h3>
+                        <p class="text-slate-500 leading-relaxed font-medium">Comprehensive monitoring systems designed to detect and mitigate oncogenic risk factors during reprogramming cycles.</p>
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -2229,6 +2253,17 @@
                     closeLoginModal();
                 }
             });
+
+            // --- REVEAL ANIMATION OBSERVER ---
+            const revealObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
         </script>
 </body>
 
