@@ -198,6 +198,19 @@ from dotenv import load_dotenv
 # Load environment variables
 load_dotenv()
 
+# --- OSK PARTIAL REPROGRAMMING MODULE (ALAA ALDEEN+) ---
+try:
+    from partial_safety import (
+        filter_for_partial_reprogramming,
+        score_sirtuin_pathway,
+        score_horvath_impact
+    )
+    PARTIAL_MODE_AVAILABLE = True
+    print("ZENITH OSK: Partial Reprogramming Module loaded.")
+except ImportError:
+    PARTIAL_MODE_AVAILABLE = False
+    print("WARNING: partial_safety.py not found. Partial mode disabled.")
+
 # scVI and AnnData are required for 'Clinical Mode'
 try:
     import scvi
@@ -2888,7 +2901,113 @@ async def run_virtual_trial(req: TrialRequest):
 @app.get("/v26_trials.html", response_class=FileResponse)
 async def serve_trials():
     return FileResponse("trials.html")
-    
+
+# ============================================================
+# OSK PARTIAL REPROGRAMMING ENDPOINT (ALAA ALDEEN+)
+# NEW ROUTE — no existing endpoints modified
+# ============================================================
+
+class PartialReprogrammingRequest(BaseModel):
+    prompt: str
+    mode: str = "balanced"       # "conservative" | "balanced" | "aggressive"
+    bio_age: float = 0.5         # 0.0 (young) → 1.0 (senescent)
+    cell_type: str = "generic"   # for future expansion
+    openai_key: Optional[str] = None
+
+@app.post("/partial-reprogramming")
+async def partial_reprogramming_endpoint(req: PartialReprogrammingRequest):
+    """
+    ZENITH OSK PARTIAL REPROGRAMMING
+    Prompt → GPT-4o Factor Discovery → Safety Filter → Sirtuin Score → Horvath Score → AF3 Manifest
+    """
+    if not PARTIAL_MODE_AVAILABLE:
+        raise HTTPException(status_code=503, detail="Partial Reprogramming module not loaded.")
+
+    try:
+        # STAGE 1: Parse factors from prompt using GPT-4o
+        client, has_key = get_openai_client(req.openai_key)
+        if not client or not has_key:
+            raise HTTPException(status_code=400, detail="OpenAI API key required for factor discovery.")
+
+        ai_prompt = (
+            f"You are a molecular biology expert. From this research objective: '{req.prompt}', "
+            f"identify the top 6 human transcription factor gene symbols most relevant for "
+            f"cellular reprogramming or rejuvenation. Return ONLY a comma-separated list of "
+            f"official HGNC gene symbols (e.g. FOXO3, SIRT1, KLF4). No explanations."
+        )
+
+        response = await client.chat.completions.create(
+            model="gpt-4o",
+            messages=[{"role": "user", "content": ai_prompt}],
+            max_tokens=60,
+            temperature=0.0
+        )
+
+        raw_symbols = response.choices[0].message.content.strip()
+        candidates = [s.strip().upper() for s in raw_symbols.replace(" ", "").split(",") if s.strip()]
+        print(f"OSK PARTIAL: Parsed candidates: {candidates}")
+
+        # STAGE 2: Run partial safety filter
+        safety_result = filter_for_partial_reprogramming(
+            candidates=candidates,
+            mode=req.mode,
+            bio_age=req.bio_age
+        )
+
+        # STAGE 3: Fetch sequences for approved factors via D2H
+        approved_genes = [f["gene"] for f in safety_result["approved"]]
+        sequences = {}
+        if approved_genes:
+            sequences = await D2HUtility.fetch_real_sequences(approved_genes)
+
+        # STAGE 4: Generate AF3 manifest for top 2 approved factors
+        af3_manifest = None
+        if len(approved_genes) >= 2:
+            seq1 = sequences.get(approved_genes[0], "")
+            seq2 = sequences.get(approved_genes[1], "")
+            if seq1 and seq2 and not seq1.startswith("SEQUENCE_NOT_FOUND"):
+                fused = D2HUtility.generate_z_linker_handshake(seq1[:200], seq2[:200])
+                af3_manifest = {
+                    "name": f"Zenith_Partial_{approved_genes[0]}_{approved_genes[1]}",
+                    "modelSeeds": [2142086823],
+                    "sequences": [
+                        {"proteinChain": {"sequence": fused, "count": 1}},
+                        {"dnaSequence": {"sequence": "CCTGTGACTGTGGGGTTCACGCTCCCGGGTG", "count": 1}}
+                    ],
+                    "dialect": "alphafold3",
+                    "version": 1
+                }
+
+        return JSONResponse({
+            "status": "COMPLETED",
+            "pipeline": "ZENITH_OSK_PARTIAL_v1",
+            "prompt": req.prompt,
+            "candidates_discovered": candidates,
+            "partial_report": safety_result,
+            "sequences_fetched": len(sequences),
+            "af3_manifest": af3_manifest,
+            "approved_count": len(approved_genes),
+            "blocked_count": len(safety_result["blocked"])
+        })
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        print(f"OSK PARTIAL ERROR: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=f"Partial Reprogramming Error: {str(e)}")
+
+# Status endpoint for partial mode availability
+@app.get("/partial-reprogramming/status")
+async def partial_status():
+    return JSONResponse({
+        "available": PARTIAL_MODE_AVAILABLE,
+        "version": "OSK_PARTIAL_v1",
+        "modes": ["conservative", "balanced", "aggressive"],
+        "features": ["oncogene_filter", "dediff_filter", "sirtuin_scorer", "horvath_scorer", "af3_manifest"]
+    })
+
 @app.on_event("startup")
 async def startup_event():
     print("\n" + "="*50)

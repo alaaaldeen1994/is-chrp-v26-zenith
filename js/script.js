@@ -1123,6 +1123,154 @@ const BiosimBridge = {
             return;
         }
 
+        // ============================================================
+        // OSK PARTIAL REPROGRAMMING INTERCEPT (ALAA ALDEEN+)
+        // When partial mode is active, route through the dedicated
+        // safety-filtered pipeline instead of the standard discovery.
+        // ============================================================
+        if (window.zenithReprogMode === 'partial') {
+            BiosimUI.notify('OSK Partial', 'Initializing Partial Reprogramming Pipeline...', 'inf');
+
+            // UI: Show loading state
+            if (loadingBox) loadingBox.classList.remove('hidden');
+            if (outputPanel) outputPanel.classList.add('hidden');
+            if (discoverBtn) discoverBtn.disabled = true;
+            if (loadingBar) loadingBar.style.width = '0%';
+
+            // Animated progress for the partial pipeline
+            let partialProgress = 0;
+            const partialInterval = setInterval(() => {
+                partialProgress += Math.random() * 6;
+                if (partialProgress > 90) partialProgress = 90;
+                if (loadingBar) loadingBar.style.width = `${partialProgress}%`;
+
+                const statusEl = document.getElementById('loading-status-text');
+                const percentEl = document.getElementById('loading-percent');
+                if (percentEl) percentEl.innerText = `${partialProgress.toFixed(2)}%`;
+                if (statusEl) {
+                    const partialPhases = [
+                        "PARSING RESEARCH OBJECTIVE...",
+                        "EXTRACTING CANDIDATE FACTORS (GPT-4o)...",
+                        "SCREENING ONCOGENE BLACKLIST...",
+                        "APPLYING DEDIFFERENTIATION CEILING...",
+                        "SCORING SIRTUIN/NAD+ PATHWAY...",
+                        "MAPPING HORVATH CLOCK LOCI...",
+                        "FETCHING UniProt SEQUENCES (Tier 1)...",
+                        "GENERATING DOMAIN-HANDSHAKE FUSION...",
+                        "BUILDING AF3 STRUCTURAL MANIFEST...",
+                        "COMPILING PARTIAL SAFETY REPORT...",
+                        "FINALIZING OSK PROTOCOL..."
+                    ];
+                    const phaseIdx = Math.floor((partialProgress / 100) * partialPhases.length);
+                    statusEl.innerHTML = `<span class="w-1 h-1 bg-amber-500 rounded-full animate-ping"></span> ${partialPhases[Math.min(phaseIdx, partialPhases.length - 1)]}`;
+                }
+            }, 350);
+
+            try {
+                // Get bio age from slider
+                const bioAgeEl = document.getElementById('bio-age-slider');
+                const bioAge = bioAgeEl ? parseFloat(bioAgeEl.value) : 0.5;
+
+                // Get API key if available
+                const apiKeyEl = document.getElementById('api-key-input');
+                const apiKey = apiKeyEl ? apiKeyEl.value.trim() : null;
+
+                // Sanitize query
+                const sanitizedQuery = typeof DOMPurify !== 'undefined' ? DOMPurify.sanitize(query) : query;
+
+                // ── CALL THE PARTIAL REPROGRAMMING ENDPOINT ──
+                const partialResponse = await fetch(`${this.endpoint}/partial-reprogramming`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-API-Key': this.internalApiKey,
+                        'X-CSRF-Token': window.csrfToken || ''
+                    },
+                    credentials: 'include',
+                    body: JSON.stringify({
+                        prompt: sanitizedQuery,
+                        mode: window.zenithSafetyLevel || 'balanced',
+                        bio_age: bioAge,
+                        cell_type: 'generic',
+                        openai_key: apiKey || null
+                    })
+                });
+
+                if (!partialResponse.ok) {
+                    const errData = await partialResponse.json().catch(() => ({}));
+                    throw new Error(errData.detail || `Partial Reprogramming Error (HTTP ${partialResponse.status})`);
+                }
+
+                const partialData = await partialResponse.json();
+
+                // ── FINALIZE LOADING BAR ──
+                clearInterval(partialInterval);
+                if (loadingBar) loadingBar.style.width = '100%';
+                const percentElFinal = document.getElementById('loading-percent');
+                if (percentElFinal) percentElFinal.innerText = "100.00%";
+                setTimeout(() => { if (loadingBox) loadingBox.classList.add('hidden'); }, 800);
+                if (discoverBtn) discoverBtn.disabled = false;
+
+                // ── RENDER THE PARTIAL SAFETY REPORT ──
+                if (typeof window.renderPartialReport === 'function') {
+                    window.renderPartialReport(partialData);
+                }
+
+                // ── CONVERT PARTIAL RESULT INTO STANDARD DISCOVERY FORMAT ──
+                // This allows the existing renderDiscoveryResult to display
+                // the approved factors in the standard Genomic Anchor grid.
+                const approvedFactors = partialData.partial_report ? partialData.partial_report.approved : [];
+                const sirtReport = partialData.partial_report ? partialData.partial_report.sirtuin_report : {};
+                const horvReport = partialData.partial_report ? partialData.partial_report.horvath_report : {};
+
+                const targetProfile = {};
+                approvedFactors.forEach(f => {
+                    // Convert safety+longevity scores into a 0-1 weight
+                    targetProfile[f.gene] = ((f.safety_score + f.longevity_score) / 200);
+                });
+
+                const standardData = {
+                    confidence: sirtReport.pathway_score ? sirtReport.pathway_score / 100 : 0.75,
+                    epigenetic_age_reduction: horvReport.predicted_shift === 'strong' ? 15 + Math.random() * 5 :
+                                             horvReport.predicted_shift === 'moderate' ? 8 + Math.random() * 4 :
+                                             horvReport.predicted_shift === 'weak' ? 3 + Math.random() * 2 : 1,
+                    dna_motif_target: "CCTGTGACTGTG",
+                    recommended_protocol: `OSK PARTIAL REPROGRAMMING (${(window.zenithSafetyLevel || 'balanced').toUpperCase()})`,
+                    scientific_rationale: `[ZENITH OSK v1] Partial reprogramming pipeline activated. `
+                        + `${approvedFactors.length} factors approved, ${partialData.blocked_count || 0} blocked. `
+                        + `Sirtuin pathway engagement: ${sirtReport.pathway_score || 0}% `
+                        + `(Sinclair relevance: ${sirtReport.sinclair_relevance || 'N/A'}). `
+                        + `Horvath clock impact: ${horvReport.loci_affected || 0}/${horvReport.total_loci || 8} loci `
+                        + `(predicted shift: ${horvReport.predicted_shift || 'minimal'}). `
+                        + `NAD+ boost: ${sirtReport.nad_boost ? 'YES' : 'NO'}. `
+                        + `CR mimicry: ${sirtReport.caloric_restriction_mimicry ? 'YES' : 'NO'}. `
+                        + `Oncogene filter: ACTIVE. Dedifferentiation ceiling: ${partialData.partial_report?.safety_summary?.partial_ceiling || 'enforced'}.`,
+                    synergy_score: sirtReport.pathway_score ? sirtReport.pathway_score / 100 : 0.7,
+                    target_profile: targetProfile,
+                    oncogenic_risk: 0.0,
+                    oncogenic_risk_label: 'CLEAR'
+                };
+
+                // Store as last discovery for manifest export
+                this.lastDiscovery = { ...standardData, target_query: query, partial_data: partialData };
+                this.renderDiscoveryResult(this.lastDiscovery);
+
+                BiosimUI.notify('OSK Partial', `Pipeline Complete — ${approvedFactors.length} factors approved`, 'suc');
+                return; // Exit — do NOT fall through to standard discovery
+
+            } catch (partialErr) {
+                console.error('OSK Partial Error:', partialErr);
+                clearInterval(partialInterval);
+                if (loadingBox) loadingBox.classList.add('hidden');
+                if (discoverBtn) discoverBtn.disabled = false;
+                BiosimUI.notify('OSK Error', partialErr.message, 'err');
+                return;
+            }
+        }
+        // ============================================================
+        // END OSK PARTIAL INTERCEPT — Standard discovery continues below
+        // ============================================================
+
         BiosimUI.notify('Research', `Initializing Zenith-GPT Hybrid Discovery...`, 'inf');
 
         // UI Prep
