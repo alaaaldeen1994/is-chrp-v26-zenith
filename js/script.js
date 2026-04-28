@@ -1367,7 +1367,10 @@ const BiosimBridge = {
                         current_genes: Array.from(avgGenes),
                         target_query: sanitizedQuery,
                         api_key: document.getElementById('api-key-input')?.value?.trim() || null,
-                        knockouts: BiosimLab.activeKnockouts
+                        knockouts: BiosimLab.activeKnockouts,
+                        repro_mode: window.zenithReprogMode || 'full',
+                        safety_level: window.zenithSafetyLevel || 'balanced',
+                        bio_age: parseFloat(document.getElementById('bio-age-slider')?.value || 0.5)
                     })
                 });
                 if (response.ok) {
@@ -1542,6 +1545,11 @@ const BiosimBridge = {
             // If no real metrics: the panel shows the AF3 submission guide (set in HTML)
         } else if (af3Panel) {
             af3Panel.classList.add('hidden');
+        }
+
+        // --- PARTIAL REPROGRAMMING REPORT (ALAA ALDEEN+) ---
+        if (typeof window.renderPartialReport === 'function') {
+            window.renderPartialReport(data);
         }
 
         // v28 CUSTOM: If this is the ZENITH ASSISTANT, hide the gene manifest and score to keep it clean.

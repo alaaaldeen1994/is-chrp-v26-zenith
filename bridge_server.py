@@ -18,6 +18,13 @@ import re
 import json
 import time
 
+# --- ZENITH PARTIAL REPROGRAMMING ENGINE ---
+try:
+    from partial_safety import filter_for_partial_reprogramming
+    PARTIAL_MODE_AVAILABLE = True
+except ImportError:
+    PARTIAL_MODE_AVAILABLE = False
+
 # --- ZENITH D2H PIPELINE: Domain-to-Handshake Automation ---
 class D2HUtility:
     """
@@ -1305,7 +1312,10 @@ class HybridDiscoveryRequest(BaseModel):
     current_genes: List[float]
     target_query: str
     api_key: Optional[str] = None
-    knockouts: List[int] = [] # NEW: Constraints for hybrid discovery
+    knockouts: List[int] = [] 
+    repro_mode: Optional[str] = "full"
+    safety_level: Optional[str] = "balanced"
+    bio_age: Optional[float] = 0.5
 
 class DiscoveryResult(BaseModel):
     recommended_protocol: str
@@ -1320,6 +1330,7 @@ class DiscoveryResult(BaseModel):
     epigenetic_age_reduction: Optional[float] = 0.0
     drug_advisory: Optional[List[str]] = None
     af3_metrics: Optional[Dict[str, float]] = None
+    partial_report: Optional[Dict[str, Any]] = None
     # Oncogenic risk score: MYC weight × (1 − TP53 weight)
     # Validated proxy: Land et al. 1983 (Nature); Zindy et al. 1998 (Genes & Dev)
     # 0.0 = safe, 1.0 = maximal oncogenic pressure
@@ -2115,7 +2126,10 @@ async def discover_hybrid(req: HybridDiscoveryRequest, request: Request):
         # Input: [Current(5000), Target(5000), Age(1)]
         current_5k = (current_vec + perturbation).unsqueeze(0)
         target_5k = target_vec.unsqueeze(0)
-        age_in = torch.tensor([[0.5]])
+        
+        # v26.4: Dynamic Biological Age Adjustment
+        age_val = float(req.bio_age) if req.bio_age is not None else 0.5
+        age_in = torch.tensor([[age_val]])
 
         # Concat: [1, 10001]
         input_tensor = torch.cat([current_5k, target_5k, age_in], dim=1) 
@@ -2224,14 +2238,34 @@ async def discover_hybrid(req: HybridDiscoveryRequest, request: Request):
             oncogenic_risk_label = "LOW"
         print(f"⚠️ ONCOGENIC RISK: MYC={myc_w:.2f}, TP53={tp53_w:.2f} → Risk={oncogenic_risk} ({oncogenic_risk_label})")
 
+        # 5. Partial Reprogramming Safety Firewall (ALAA ALDEEN+)
+        target_profile = gpt_gene_data
+        partial_report = None
+        if req.repro_mode == "partial" and PARTIAL_MODE_AVAILABLE:
+            print(f"ZENITH OSK: Activating Partial Reprogramming Safety Firewall (Mode: {req.safety_level})")
+            candidate_genes = list(target_profile.keys())
+            partial_report = filter_for_partial_reprogramming(
+                candidates=candidate_genes,
+                mode=req.safety_level or "balanced",
+                bio_age=age_val
+            )
+            
+            # Prune dangerous genes from the final profile
+            sanitized_profile = {}
+            approved_list = [f["gene"] for f in partial_report["approved"]]
+            for gene, weight in target_profile.items():
+                if gene in approved_list:
+                    sanitized_profile[gene] = weight
+            target_profile = sanitized_profile
+
         return DiscoveryResult(
-            recommended_protocol=best_protocol,
+            recommended_protocol=best_protocol if not req.repro_mode == "partial" else f"PARTIAL REPROGRAMMING ({req.safety_level})",
             confidence=float(confidence),
             scientific_rationale=rationale,
             predicted_pathway=["Initiation", "Semantic Mapping", "Gradient Decoupling", "Target State"],
             synergy_score=float(manifold_synergy),
             custom_vector=ideal_vector.tolist(),
-            target_profile=gpt_gene_data,
+            target_profile=target_profile,
             structural_audit=audit_data,
             dna_motif_target=dna_motif,
             epigenetic_age_reduction=age_reduction,
