@@ -1640,79 +1640,135 @@
 
 
     <!-- FOUNDATION DISCOVERY SECTION (Premium Redesign) -->
-    <section class="py-12 bg-transparent relative z-10 reveal">
+    <!-- CORE MODULES — CREATIVE ANIMATED SECTION -->
+    <section class="py-12 bg-transparent relative z-10 reveal" id="core-modules-section">
+        <style>
+            @keyframes cm-float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)} }
+            @keyframes cm-pulse { 0%,100%{opacity:0.6;transform:scale(1)} 50%{opacity:1;transform:scale(1.15)} }
+            @keyframes cm-shimmer { 0%{background-position:-200% 0} 100%{background-position:200% 0} }
+            @keyframes cm-glow { 0%,100%{box-shadow:0 0 20px rgba(59,130,246,0.15)} 50%{box-shadow:0 0 40px rgba(59,130,246,0.3)} }
+            @keyframes cm-line-grow { from{height:0} to{height:100%} }
+            @keyframes cm-fade-up { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:translateY(0)} }
+            .cm-card{position:relative;background:rgba(255,255,255,0.92);backdrop-filter:blur(24px);border:1px solid rgba(226,232,240,0.6);border-radius:28px;padding:2.5rem;overflow:hidden;transition:all 0.6s cubic-bezier(0.16,1,0.3,1);cursor:pointer}
+            .cm-card:hover{transform:translateY(-8px) scale(1.02);box-shadow:0 32px 64px rgba(59,130,246,0.15);border-color:#93c5fd}
+            .cm-card:hover .cm-icon-wrap{animation:cm-glow 2s ease-in-out infinite;transform:scale(1.1)}
+            .cm-card:hover .cm-orb{animation:cm-pulse 2s ease-in-out infinite}
+            .cm-card:hover .cm-shimmer-bar{opacity:1}
+            .cm-icon-wrap{width:64px;height:64px;border-radius:20px;display:flex;align-items:center;justify-content:center;transition:all 0.5s cubic-bezier(0.16,1,0.3,1);position:relative;z-index:2}
+            .cm-orb{position:absolute;border-radius:50%;pointer-events:none;opacity:0.5;transition:all 0.6s ease}
+            .cm-step-num{font-family:'Outfit',sans-serif;font-size:72px;font-weight:900;position:absolute;top:1.5rem;right:2rem;line-height:1;opacity:0.04;letter-spacing:-0.05em;z-index:1}
+            .cm-shimmer-bar{position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,#3b82f6,#60a5fa,#3b82f6,transparent);background-size:200% 100%;animation:cm-shimmer 3s linear infinite;opacity:0;transition:opacity 0.4s ease;border-radius:0 0 28px 28px}
+            .cm-timeline-dot{width:16px;height:16px;border-radius:50%;background:linear-gradient(135deg,#3b82f6,#1d4ed8);border:3px solid #fff;box-shadow:0 0 0 4px rgba(59,130,246,0.2);position:relative;z-index:3;transition:all 0.4s ease}
+            .cm-timeline-dot:hover{transform:scale(1.3);box-shadow:0 0 0 8px rgba(59,130,246,0.3)}
+            #core-modules-section .cm-card:nth-child(1){animation:cm-fade-up 0.8s 0.1s both}
+            #core-modules-section .cm-card:nth-child(2){animation:cm-fade-up 0.8s 0.25s both}
+            #core-modules-section .cm-card:nth-child(3){animation:cm-fade-up 0.8s 0.4s both}
+            #core-modules-section .cm-card:nth-child(4){animation:cm-fade-up 0.8s 0.55s both}
+        </style>
         <div class="max-w-7xl mx-auto px-12">
-            <div class="grid lg:grid-cols-2 gap-16 items-end mb-16">
-                <div>
-                    <span class="text-[11px] font-black text-blue-600 uppercase tracking-[0.4em] mb-4 block">Core Modules</span>
-                    <h2 class="text-5xl font-black text-slate-900 leading-[1.1] tracking-tight">Built for precision<br>clinical teams.</h2>
+            <!-- Header with animated accent -->
+            <div style="display: flex; align-items: flex-start; gap: 4rem; margin-bottom: 4rem;">
+                <div style="flex: 1;">
+                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 1.25rem;">
+                        <div style="width: 32px; height: 3px; background: linear-gradient(90deg, #3b82f6, #60a5fa); border-radius: 4px;"></div>
+                        <span style="font-size: 11px; font-weight: 900; color: #2563eb; text-transform: uppercase; letter-spacing: 0.4em;">Core Modules</span>
+                    </div>
+                    <h2 style="font-size: clamp(32px, 5vw, 48px); font-weight: 900; color: #0f172a; line-height: 1.1; letter-spacing: -0.03em; font-family: 'Outfit', sans-serif;">
+                        Built for precision<br><span style="background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">clinical teams.</span>
+                    </h2>
                 </div>
-                <div>
-                    <p class="text-lg text-slate-500 leading-relaxed font-medium">
+                <div style="max-width: 380px; padding-top: 2rem;">
+                    <p style="font-size: 16px; color: #64748b; line-height: 1.75; font-weight: 500;">
                         Zenith v26.1 provides the architectural foundation for precision clinical navigation. Move faster, reduce risk, improve outcomes.
                     </p>
                 </div>
             </div>
 
-            <!-- Premium Vertical Card Grid (2x2) -->
-            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem;">
-                <!-- Card 1: Discovery -->
-                <div style="background: rgba(255,255,255,0.9); backdrop-filter: blur(20px); border: 1px solid rgba(226,232,240,0.8); border-radius: 28px; padding: 2.5rem; transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1); cursor: pointer; position: relative; overflow: hidden; border-top: 4px solid #3b82f6;"
-                    onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 24px 48px rgba(59,130,246,0.12)'; this.style.borderColor='#93c5fd'; this.style.borderTopColor='#2563eb';"
-                    onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'; this.style.borderColor='rgba(226,232,240,0.8)'; this.style.borderTopColor='#3b82f6';">
-                    <div style="position: absolute; top: -30px; right: -30px; width: 120px; height: 120px; background: radial-gradient(circle, rgba(59,130,246,0.08) 0%, transparent 70%); border-radius: 50%;"></div>
-                    <div style="position: relative; z-index: 2;">
-                        <div style="width: 56px; height: 56px; background: linear-gradient(135deg, #eff6ff, #dbeafe); border-radius: 18px; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(191,219,254,0.5); margin-bottom: 1.5rem;">
-                            <i data-lucide="scan-search" style="width: 24px; height: 24px; color: #2563eb;"></i>
-                        </div>
-                        <span style="font-size: 9px; font-weight: 900; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.3em; display: block; margin-bottom: 10px;">01 / Discovery</span>
-                        <h3 style="font-size: 22px; font-weight: 900; color: #0f172a; margin-bottom: 10px; font-family: 'Outfit', sans-serif;">Precision Manifolds</h3>
-                        <p style="font-size: 14px; color: #64748b; line-height: 1.7;">Access high-definition single-cell baselines to benchmark clinical trajectories with 99.8% fidelity.</p>
+            <!-- Creative Bento Grid with Timeline -->
+            <div style="display: flex; gap: 3rem;">
+                <!-- Left: Animated Vertical Timeline -->
+                <div style="display: flex; flex-direction: column; align-items: center; padding-top: 2.5rem; flex-shrink: 0; width: 16px;">
+                    <div class="cm-timeline-dot"></div>
+                    <div style="width: 2px; flex: 1; background: linear-gradient(180deg, #3b82f6 0%, #dbeafe 50%, #3b82f6 100%); border-radius: 2px; position: relative; overflow: hidden;">
+                        <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; animation: cm-line-grow 2s ease-out both;"></div>
                     </div>
+                    <div class="cm-timeline-dot"></div>
+                    <div style="width: 2px; flex: 1; background: linear-gradient(180deg, #3b82f6 0%, #dbeafe 50%, #3b82f6 100%); border-radius: 2px;"></div>
+                    <div class="cm-timeline-dot"></div>
+                    <div style="width: 2px; flex: 1; background: linear-gradient(180deg, #3b82f6 0%, #dbeafe 50%, #3b82f6 100%); border-radius: 2px;"></div>
+                    <div class="cm-timeline-dot"></div>
                 </div>
 
-                <!-- Card 2: Compliance -->
-                <div style="background: rgba(255,255,255,0.9); backdrop-filter: blur(20px); border: 1px solid rgba(226,232,240,0.8); border-radius: 28px; padding: 2.5rem; transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1); cursor: pointer; position: relative; overflow: hidden; border-top: 4px solid #3b82f6;"
-                    onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 24px 48px rgba(59,130,246,0.12)'; this.style.borderColor='#93c5fd'; this.style.borderTopColor='#2563eb';"
-                    onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'; this.style.borderColor='rgba(226,232,240,0.8)'; this.style.borderTopColor='#3b82f6';">
-                    <div style="position: absolute; top: -30px; right: -30px; width: 120px; height: 120px; background: radial-gradient(circle, rgba(59,130,246,0.08) 0%, transparent 70%); border-radius: 50%;"></div>
-                    <div style="position: relative; z-index: 2;">
-                        <div style="width: 56px; height: 56px; background: linear-gradient(135deg, #eff6ff, #dbeafe); border-radius: 18px; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(191,219,254,0.5); margin-bottom: 1.5rem;">
-                            <i data-lucide="file-check-2" style="width: 24px; height: 24px; color: #2563eb;"></i>
+                <!-- Right: Cards -->
+                <div style="flex: 1; display: flex; flex-direction: column; gap: 1.5rem;">
+                    <!-- Card 1: Discovery -->
+                    <div class="cm-card">
+                        <div class="cm-step-num">01</div>
+                        <div class="cm-orb" style="width: 140px; height: 140px; background: radial-gradient(circle, rgba(59,130,246,0.12) 0%, transparent 70%); top: -40px; right: -20px; animation: cm-float 6s ease-in-out infinite;"></div>
+                        <div class="cm-orb" style="width: 80px; height: 80px; background: radial-gradient(circle, rgba(147,197,253,0.15) 0%, transparent 70%); bottom: -20px; left: 30%; animation: cm-float 8s ease-in-out 1s infinite;"></div>
+                        <div style="position: relative; z-index: 2; display: flex; align-items: flex-start; gap: 1.75rem;">
+                            <div class="cm-icon-wrap" style="background: linear-gradient(135deg, #eff6ff, #dbeafe); border: 1px solid rgba(191,219,254,0.6); flex-shrink: 0;">
+                                <i data-lucide="scan-search" style="width: 28px; height: 28px; color: #2563eb;"></i>
+                            </div>
+                            <div>
+                                <span style="font-size: 10px; font-weight: 900; color: #3b82f6; text-transform: uppercase; letter-spacing: 0.25em; display: block; margin-bottom: 8px;">Discovery</span>
+                                <h3 style="font-size: 24px; font-weight: 900; color: #0f172a; margin-bottom: 8px; font-family: 'Outfit', sans-serif;">Precision Manifolds</h3>
+                                <p style="font-size: 15px; color: #64748b; line-height: 1.7;">Access high-definition single-cell baselines to benchmark clinical trajectories with 99.8% fidelity.</p>
+                            </div>
                         </div>
-                        <span style="font-size: 9px; font-weight: 900; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.3em; display: block; margin-bottom: 10px;">02 / Compliance</span>
-                        <h3 style="font-size: 22px; font-weight: 900; color: #0f172a; margin-bottom: 10px; font-family: 'Outfit', sans-serif;">Evidence Registry</h3>
-                        <p style="font-size: 14px; color: #64748b; line-height: 1.7;">Full provenance tracking for research use only (RUO) applications, ensuring institutional-grade audit trails.</p>
+                        <div class="cm-shimmer-bar"></div>
                     </div>
-                </div>
 
-                <!-- Card 3: Execution -->
-                <div style="background: rgba(255,255,255,0.9); backdrop-filter: blur(20px); border: 1px solid rgba(226,232,240,0.8); border-radius: 28px; padding: 2.5rem; transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1); cursor: pointer; position: relative; overflow: hidden; border-top: 4px solid #3b82f6;"
-                    onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 24px 48px rgba(59,130,246,0.12)'; this.style.borderColor='#93c5fd'; this.style.borderTopColor='#2563eb';"
-                    onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'; this.style.borderColor='rgba(226,232,240,0.8)'; this.style.borderTopColor='#3b82f6';">
-                    <div style="position: absolute; top: -30px; right: -30px; width: 120px; height: 120px; background: radial-gradient(circle, rgba(59,130,246,0.08) 0%, transparent 70%); border-radius: 50%;"></div>
-                    <div style="position: relative; z-index: 2;">
-                        <div style="width: 56px; height: 56px; background: linear-gradient(135deg, #eff6ff, #dbeafe); border-radius: 18px; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(191,219,254,0.5); margin-bottom: 1.5rem;">
-                            <i data-lucide="flask-conical" style="width: 24px; height: 24px; color: #2563eb;"></i>
+                    <!-- Card 2: Compliance -->
+                    <div class="cm-card">
+                        <div class="cm-step-num">02</div>
+                        <div class="cm-orb" style="width: 120px; height: 120px; background: radial-gradient(circle, rgba(59,130,246,0.1) 0%, transparent 70%); top: -30px; right: 40px; animation: cm-float 7s ease-in-out 0.5s infinite;"></div>
+                        <div style="position: relative; z-index: 2; display: flex; align-items: flex-start; gap: 1.75rem;">
+                            <div class="cm-icon-wrap" style="background: linear-gradient(135deg, #eff6ff, #dbeafe); border: 1px solid rgba(191,219,254,0.6); flex-shrink: 0;">
+                                <i data-lucide="file-check-2" style="width: 28px; height: 28px; color: #2563eb;"></i>
+                            </div>
+                            <div>
+                                <span style="font-size: 10px; font-weight: 900; color: #3b82f6; text-transform: uppercase; letter-spacing: 0.25em; display: block; margin-bottom: 8px;">Compliance</span>
+                                <h3 style="font-size: 24px; font-weight: 900; color: #0f172a; margin-bottom: 8px; font-family: 'Outfit', sans-serif;">Evidence Registry</h3>
+                                <p style="font-size: 15px; color: #64748b; line-height: 1.7;">Full provenance tracking for research use only (RUO) applications, ensuring institutional-grade audit trails.</p>
+                            </div>
                         </div>
-                        <span style="font-size: 9px; font-weight: 900; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.3em; display: block; margin-bottom: 10px;">03 / Execution</span>
-                        <h3 style="font-size: 22px; font-weight: 900; color: #0f172a; margin-bottom: 10px; font-family: 'Outfit', sans-serif;">Simulation Lab</h3>
-                        <p style="font-size: 14px; color: #64748b; line-height: 1.7;">Deploy virtual trials to plan and manage complex reprogramming protocols with clarity and control.</p>
+                        <div class="cm-shimmer-bar"></div>
                     </div>
-                </div>
 
-                <!-- Card 4: Safety -->
-                <div style="background: rgba(255,255,255,0.9); backdrop-filter: blur(20px); border: 1px solid rgba(226,232,240,0.8); border-radius: 28px; padding: 2.5rem; transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1); cursor: pointer; position: relative; overflow: hidden; border-top: 4px solid #3b82f6;"
-                    onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 24px 48px rgba(59,130,246,0.12)'; this.style.borderColor='#93c5fd'; this.style.borderTopColor='#2563eb';"
-                    onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'; this.style.borderColor='rgba(226,232,240,0.8)'; this.style.borderTopColor='#3b82f6';">
-                    <div style="position: absolute; top: -30px; right: -30px; width: 120px; height: 120px; background: radial-gradient(circle, rgba(59,130,246,0.08) 0%, transparent 70%); border-radius: 50%;"></div>
-                    <div style="position: relative; z-index: 2;">
-                        <div style="width: 56px; height: 56px; background: linear-gradient(135deg, #eff6ff, #dbeafe); border-radius: 18px; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(191,219,254,0.5); margin-bottom: 1.5rem;">
-                            <i data-lucide="shield-check" style="width: 24px; height: 24px; color: #2563eb;"></i>
+                    <!-- Card 3: Execution -->
+                    <div class="cm-card">
+                        <div class="cm-step-num">03</div>
+                        <div class="cm-orb" style="width: 100px; height: 100px; background: radial-gradient(circle, rgba(59,130,246,0.12) 0%, transparent 70%); bottom: -20px; right: -10px; animation: cm-float 9s ease-in-out 0.8s infinite;"></div>
+                        <div style="position: relative; z-index: 2; display: flex; align-items: flex-start; gap: 1.75rem;">
+                            <div class="cm-icon-wrap" style="background: linear-gradient(135deg, #eff6ff, #dbeafe); border: 1px solid rgba(191,219,254,0.6); flex-shrink: 0;">
+                                <i data-lucide="flask-conical" style="width: 28px; height: 28px; color: #2563eb;"></i>
+                            </div>
+                            <div>
+                                <span style="font-size: 10px; font-weight: 900; color: #3b82f6; text-transform: uppercase; letter-spacing: 0.25em; display: block; margin-bottom: 8px;">Execution</span>
+                                <h3 style="font-size: 24px; font-weight: 900; color: #0f172a; margin-bottom: 8px; font-family: 'Outfit', sans-serif;">Simulation Lab</h3>
+                                <p style="font-size: 15px; color: #64748b; line-height: 1.7;">Deploy virtual trials to plan and manage complex reprogramming protocols with clarity and control.</p>
+                            </div>
                         </div>
-                        <span style="font-size: 9px; font-weight: 900; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.3em; display: block; margin-bottom: 10px;">04 / Safety</span>
-                        <h3 style="font-size: 22px; font-weight: 900; color: #0f172a; margin-bottom: 10px; font-family: 'Outfit', sans-serif;">OSK Partial Mode</h3>
-                        <p style="font-size: 14px; color: #64748b; line-height: 1.7;">Computationally constrained partial reprogramming — oncogene blacklist, dedifferentiation ceiling, Sirtuin scoring.</p>
+                        <div class="cm-shimmer-bar"></div>
+                    </div>
+
+                    <!-- Card 4: Safety -->
+                    <div class="cm-card">
+                        <div class="cm-step-num">04</div>
+                        <div class="cm-orb" style="width: 160px; height: 160px; background: radial-gradient(circle, rgba(59,130,246,0.08) 0%, transparent 70%); top: -50px; left: -30px; animation: cm-float 10s ease-in-out 1.2s infinite;"></div>
+                        <div class="cm-orb" style="width: 60px; height: 60px; background: radial-gradient(circle, rgba(147,197,253,0.2) 0%, transparent 70%); bottom: 10px; right: 20%; animation: cm-float 5s ease-in-out 0.3s infinite;"></div>
+                        <div style="position: relative; z-index: 2; display: flex; align-items: flex-start; gap: 1.75rem;">
+                            <div class="cm-icon-wrap" style="background: linear-gradient(135deg, #eff6ff, #dbeafe); border: 1px solid rgba(191,219,254,0.6); flex-shrink: 0;">
+                                <i data-lucide="shield-check" style="width: 28px; height: 28px; color: #2563eb;"></i>
+                            </div>
+                            <div>
+                                <span style="font-size: 10px; font-weight: 900; color: #3b82f6; text-transform: uppercase; letter-spacing: 0.25em; display: block; margin-bottom: 8px;">Safety</span>
+                                <h3 style="font-size: 24px; font-weight: 900; color: #0f172a; margin-bottom: 8px; font-family: 'Outfit', sans-serif;">OSK Partial Mode</h3>
+                                <p style="font-size: 15px; color: #64748b; line-height: 1.7;">Computationally constrained partial reprogramming — oncogene blacklist, dedifferentiation ceiling, Sirtuin scoring.</p>
+                            </div>
+                        </div>
+                        <div class="cm-shimmer-bar"></div>
                     </div>
                 </div>
             </div>
