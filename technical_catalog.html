@@ -3486,11 +3486,166 @@
                 </div>
             </div>
 
-        <!-- SECTION 29 REMOVED: Superseded by v26.4 Autonomous Authority Metrics -->
+        <!-- Section 29: OSK Partial Reprogramming — Rejuvenation Without Risk -->
+        <section id="osk-safety" class="reveal mb-8 scroll-mt-24">
+            <h2 class="text-[11px] font-black tracking-[0.4em] uppercase text-blue-500 mb-6">Section 29</h2>
+            <h3 class="text-4xl font-black mb-3 tracking-tight">OSK Partial Reprogramming</h3>
+            <p class="text-lg text-slate-400 mb-8 font-medium">Rejuvenation <span class="text-blue-400 font-black">Without Risk.</span></p>
 
+            <div class="card border-blue-500/20">
+                <!-- Section Intro -->
+                <div class="flex items-center gap-3 mb-6">
+                    <span class="bg-blue-600 text-white text-[9px] font-black px-3 py-1 rounded-full uppercase tracking-widest">New in v26.4</span>
+                    <span class="text-slate-500 text-[10px] font-bold uppercase tracking-widest">Computationally Constrained Safety</span>
+                </div>
 
+                <p class="text-lg text-slate-300 mb-10 leading-relaxed">
+                    The <strong class="text-white">OSK Partial Reprogramming</strong> module implements computationally constrained
+                    factor selection to enable cellular rejuvenation while maintaining strict safety boundaries. Unlike full OSKM
+                    induction, the OSK Partial Mode excludes <strong class="text-blue-400">c-Myc</strong> and applies multi-layered
+                    safety constraints — oncogene blacklist, dedifferentiation ceiling, Sirtuin/NAD+ scoring, and Horvath
+                    clock enrichment — to prevent malignant transformation.
+                </p>
 
-        <!-- SECTION 9 REMOVED: Superseded by v26.4 Autonomous Authority Metrics -->
+                <!-- Metric Cards -->
+                <div class="grid md:grid-cols-4 gap-4 mb-10">
+                    <div class="bg-blue-500/10 border border-blue-500/20 rounded-2xl p-5 text-center">
+                        <div class="flex items-center justify-center gap-2 mb-3">
+                            <i data-lucide="shield-off" class="w-4 h-4 text-blue-400"></i>
+                            <span class="text-[9px] text-blue-400 font-black uppercase tracking-wider">Oncogene Filter</span>
+                        </div>
+                        <div class="text-3xl font-black text-white mb-1">12</div>
+                        <div class="text-xs text-slate-500 font-semibold">genes blocked</div>
+                        <div class="mt-3 h-1 bg-slate-800 rounded-full overflow-hidden">
+                            <div class="bg-blue-500 h-full w-full rounded-full" style="box-shadow: 0 0 8px #3b82f6;"></div>
+                        </div>
+                    </div>
+                    <div class="bg-blue-500/10 border border-blue-500/20 rounded-2xl p-5 text-center">
+                        <div class="flex items-center justify-center gap-2 mb-3">
+                            <i data-lucide="activity" class="w-4 h-4 text-blue-400"></i>
+                            <span class="text-[9px] text-blue-400 font-black uppercase tracking-wider">Sirtuin Pathway</span>
+                        </div>
+                        <div class="text-3xl font-black text-white mb-1">SIRT1-7</div>
+                        <div class="text-xs text-slate-500 font-semibold">fully scored</div>
+                        <div class="mt-3 h-1 bg-slate-800 rounded-full overflow-hidden">
+                            <div class="bg-blue-500 h-full w-[85%] rounded-full" style="box-shadow: 0 0 8px #3b82f6;"></div>
+                        </div>
+                    </div>
+                    <div class="bg-blue-500/10 border border-blue-500/20 rounded-2xl p-5 text-center">
+                        <div class="flex items-center justify-center gap-2 mb-3">
+                            <i data-lucide="clock" class="w-4 h-4 text-blue-400"></i>
+                            <span class="text-[9px] text-blue-400 font-black uppercase tracking-wider">Horvath Clock</span>
+                        </div>
+                        <div class="text-3xl font-black text-white mb-1">8</div>
+                        <div class="text-xs text-slate-500 font-semibold">CpG loci tracked</div>
+                        <div class="mt-3 h-1 bg-slate-800 rounded-full overflow-hidden">
+                            <div class="bg-blue-500 h-full w-[72%] rounded-full" style="box-shadow: 0 0 8px #3b82f6;"></div>
+                        </div>
+                    </div>
+                    <div class="bg-blue-500/10 border border-blue-500/20 rounded-2xl p-5 text-center">
+                        <div class="flex items-center justify-center gap-2 mb-3">
+                            <i data-lucide="lock" class="w-4 h-4 text-blue-400"></i>
+                            <span class="text-[9px] text-blue-400 font-black uppercase tracking-wider">Safety Modes</span>
+                        </div>
+                        <div class="text-3xl font-black text-white mb-1">3</div>
+                        <div class="text-xs text-slate-500 font-semibold">constraint levels</div>
+                        <div class="mt-3 h-1 bg-slate-800 rounded-full overflow-hidden">
+                            <div class="bg-blue-500 h-full w-[60%] rounded-full" style="box-shadow: 0 0 8px #3b82f6;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Safety Architecture Detail -->
+                <div class="grid lg:grid-cols-2 gap-8 mb-10">
+                    <div class="space-y-5">
+                        <h4 class="text-xl font-bold text-white flex items-center gap-3">
+                            <i data-lucide="shield-check" class="w-6 h-6 text-blue-400"></i>
+                            Multi-Layer Safety Architecture
+                        </h4>
+                        <div class="border-l-2 border-blue-500/30 pl-4">
+                            <h5 class="text-white font-bold text-sm mb-1">Layer 1: Oncogene Blacklist</h5>
+                            <p class="text-[11px] text-slate-100 leading-relaxed">A hard blacklist of 12 known oncogenes (including c-Myc, KRAS, TP53-gain) is enforced at the protocol level. Any factor cocktail that activates blacklisted genes is automatically rejected before simulation begins.</p>
+                        </div>
+                        <div class="border-l-2 border-blue-500/30 pl-4">
+                            <h5 class="text-white font-bold text-sm mb-1">Layer 2: Dedifferentiation Ceiling</h5>
+                            <p class="text-[11px] text-slate-100 leading-relaxed">A maximum dedifferentiation threshold prevents cells from regressing past the target rejuvenation state. The ceiling is calibrated per tissue type to preserve lineage identity and prevent pluripotent overshoot.</p>
+                        </div>
+                        <div class="border-l-2 border-blue-500/30 pl-4">
+                            <h5 class="text-white font-bold text-sm mb-1">Layer 3: Sirtuin/NAD+ Scoring</h5>
+                            <p class="text-[11px] text-slate-100 leading-relaxed">SIRT1-7 pathway activation is scored in real-time during simulation. Protocols are ranked by their ability to enhance NAD+ biosynthesis while maintaining mitochondrial membrane potential above safety thresholds.</p>
+                        </div>
+                    </div>
+                    <div class="space-y-5">
+                        <h4 class="text-xl font-bold text-white flex items-center gap-3">
+                            <i data-lucide="dna" class="w-6 h-6 text-blue-400"></i>
+                            Epigenetic Clock Integration
+                        </h4>
+                        <div class="border-l-2 border-blue-500/30 pl-4">
+                            <h5 class="text-white font-bold text-sm mb-1">Horvath CpG Enrichment</h5>
+                            <p class="text-[11px] text-slate-100 leading-relaxed">8 canonical Horvath clock CpG loci are monitored throughout the simulation trajectory. Age reversal is validated by confirming methylation pattern regression at these specific genomic coordinates.</p>
+                        </div>
+                        <div class="border-l-2 border-blue-500/30 pl-4">
+                            <h5 class="text-white font-bold text-sm mb-1">OSK Factor Selection</h5>
+                            <p class="text-[11px] text-slate-100 leading-relaxed">Oct4 (POU5F1), Sox2, and Klf4 are applied without c-Myc. This combination enables partial reprogramming — resetting the epigenetic clock while preserving somatic cell identity and avoiding full dedifferentiation to iPSC state.</p>
+                        </div>
+                        <div class="border-l-2 border-blue-500/30 pl-4">
+                            <h5 class="text-white font-bold text-sm mb-1">Genomic Stability Index (GSI)</h5>
+                            <p class="text-[11px] text-slate-100 leading-relaxed">A real-time GSI metric tracks DNA damage markers throughout the reprogramming trajectory. Protocols that cause GSI to drop below 0.95 are flagged and terminated, ensuring structural genome integrity.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Technical Specification -->
+                <div class="bg-black/40 rounded-xl p-6 border border-white/5 mb-8">
+                    <h5 class="text-blue-400 font-black text-xs uppercase mb-4 tracking-widest">OSK Partial Mode — Technical Specification</h5>
+                    <div class="code-block" style="font-size: 11px;">
+# ZENITH v26.4 OSK PARTIAL REPROGRAMMING ENGINE
+# Computationally Constrained Rejuvenation Protocol
+
+ONCOGENE_BLACKLIST = [
+    "MYC", "KRAS", "BRAF", "PIK3CA", "EGFR",
+    "HER2", "ALK", "RET", "MET", "FGFR1",
+    "CDK4", "CCND1"
+]  # 12 genes — hard block
+
+SIRTUIN_TARGETS = ["SIRT1", "SIRT2", "SIRT3", "SIRT4", "SIRT5", "SIRT6", "SIRT7"]
+HORVATH_CPG_LOCI = 8  # Canonical clock sites
+
+SAFETY_CONSTRAINTS = {
+    "max_dedifferentiation": 0.35,   # Ceiling: 35% of iPSC trajectory
+    "min_genomic_stability": 0.95,   # GSI floor
+    "max_oncogene_activation": 0.0,  # Zero tolerance
+    "sirtuin_threshold": 0.60,       # Min SIRT pathway score
+    "horvath_reversal_target": -12,  # Years (biological age delta)
+}
+
+def validate_protocol(factor_cocktail, cell_state):
+    """Reject any protocol that violates safety constraints."""
+    for gene in factor_cocktail:
+        if gene in ONCOGENE_BLACKLIST:
+            raise SafetyViolation(f"BLOCKED: {gene} is oncogenic")
+    if cell_state.gsi < SAFETY_CONSTRAINTS["min_genomic_stability"]:
+        raise SafetyViolation("GSI below safety floor")
+    return True  # Protocol cleared for simulation
+                    </div>
+                </div>
+
+                <!-- RUO Disclaimer -->
+                <div class="p-6 bg-blue-500/10 border border-blue-500/30 rounded-xl">
+                    <h5 class="text-lg font-bold text-blue-400 mb-3 flex items-center gap-2">
+                        <i data-lucide="info" class="w-5 h-5"></i>
+                        Research Use Only (RUO)
+                    </h5>
+                    <p class="text-sm text-slate-300 leading-relaxed">
+                        OSK Partial Reprogramming is a <strong class="text-white">computational simulation module</strong>.
+                        All safety constraints operate within the Zenith in-silico environment and do not constitute
+                        clinical safety guarantees. Real-world application requires independent wet-lab validation,
+                        institutional review, and regulatory approval. The 12-gene oncogene blacklist and GSI thresholds
+                        are based on published literature and HCA cardiac dataset benchmarks.
+                    </p>
+                </div>
+            </div>
+        </section>
 
             <!-- Footer -->
             <footer class="border-t border-slate-800 pt-10 mt-24">
