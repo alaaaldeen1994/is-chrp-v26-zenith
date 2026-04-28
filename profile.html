@@ -1654,93 +1654,65 @@
                 </div>
             </div>
 
-            <!-- Premium Vertical Card Stack -->
-            <div style="display: flex; flex-direction: column; gap: 1.25rem;">
+            <!-- Premium Vertical Card Grid (2x2) -->
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem;">
                 <!-- Card 1: Discovery -->
-                <div style="display: flex; align-items: stretch; background: rgba(255,255,255,0.85); backdrop-filter: blur(20px); border: 1px solid rgba(226,232,240,0.8); border-radius: 24px; overflow: hidden; transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1); cursor: pointer; position: relative;"
-                    onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 24px 48px rgba(59,130,246,0.12)'; this.style.borderColor='#93c5fd';"
-                    onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'; this.style.borderColor='rgba(226,232,240,0.8)';">
-                    <div style="width: 5px; background: linear-gradient(180deg, #3b82f6, #1d4ed8); flex-shrink: 0; border-radius: 24px 0 0 24px;"></div>
-                    <div style="padding: 2rem 2.5rem; flex: 1; display: flex; align-items: center; gap: 2rem;">
-                        <div style="width: 56px; height: 56px; background: linear-gradient(135deg, #eff6ff, #dbeafe); border-radius: 18px; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(191,219,254,0.5); flex-shrink: 0;">
+                <div style="background: rgba(255,255,255,0.9); backdrop-filter: blur(20px); border: 1px solid rgba(226,232,240,0.8); border-radius: 28px; padding: 2.5rem; transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1); cursor: pointer; position: relative; overflow: hidden; border-top: 4px solid #3b82f6;"
+                    onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 24px 48px rgba(59,130,246,0.12)'; this.style.borderColor='#93c5fd'; this.style.borderTopColor='#2563eb';"
+                    onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'; this.style.borderColor='rgba(226,232,240,0.8)'; this.style.borderTopColor='#3b82f6';">
+                    <div style="position: absolute; top: -30px; right: -30px; width: 120px; height: 120px; background: radial-gradient(circle, rgba(59,130,246,0.08) 0%, transparent 70%); border-radius: 50%;"></div>
+                    <div style="position: relative; z-index: 2;">
+                        <div style="width: 56px; height: 56px; background: linear-gradient(135deg, #eff6ff, #dbeafe); border-radius: 18px; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(191,219,254,0.5); margin-bottom: 1.5rem;">
                             <i data-lucide="scan-search" style="width: 24px; height: 24px; color: #2563eb;"></i>
                         </div>
-                        <div style="flex: 1;">
-                            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 6px;">
-                                <span style="font-size: 9px; font-weight: 900; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.3em;">01 / Discovery</span>
-                            </div>
-                            <h3 style="font-size: 20px; font-weight: 900; color: #0f172a; margin-bottom: 4px; font-family: 'Outfit', sans-serif;">Precision Manifolds</h3>
-                            <p style="font-size: 14px; color: #64748b; line-height: 1.6;">Access high-definition single-cell baselines to benchmark clinical trajectories with 99.8% fidelity.</p>
-                        </div>
-                        <div style="flex-shrink: 0; opacity: 0.3;">
-                            <i data-lucide="chevron-right" style="width: 20px; height: 20px; color: #94a3b8;"></i>
-                        </div>
+                        <span style="font-size: 9px; font-weight: 900; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.3em; display: block; margin-bottom: 10px;">01 / Discovery</span>
+                        <h3 style="font-size: 22px; font-weight: 900; color: #0f172a; margin-bottom: 10px; font-family: 'Outfit', sans-serif;">Precision Manifolds</h3>
+                        <p style="font-size: 14px; color: #64748b; line-height: 1.7;">Access high-definition single-cell baselines to benchmark clinical trajectories with 99.8% fidelity.</p>
                     </div>
                 </div>
 
                 <!-- Card 2: Compliance -->
-                <div style="display: flex; align-items: stretch; background: rgba(255,255,255,0.85); backdrop-filter: blur(20px); border: 1px solid rgba(226,232,240,0.8); border-radius: 24px; overflow: hidden; transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1); cursor: pointer; position: relative;"
-                    onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 24px 48px rgba(59,130,246,0.12)'; this.style.borderColor='#93c5fd';"
-                    onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'; this.style.borderColor='rgba(226,232,240,0.8)';">
-                    <div style="width: 5px; background: linear-gradient(180deg, #3b82f6, #1d4ed8); flex-shrink: 0; border-radius: 24px 0 0 24px;"></div>
-                    <div style="padding: 2rem 2.5rem; flex: 1; display: flex; align-items: center; gap: 2rem;">
-                        <div style="width: 56px; height: 56px; background: linear-gradient(135deg, #eff6ff, #dbeafe); border-radius: 18px; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(191,219,254,0.5); flex-shrink: 0;">
+                <div style="background: rgba(255,255,255,0.9); backdrop-filter: blur(20px); border: 1px solid rgba(226,232,240,0.8); border-radius: 28px; padding: 2.5rem; transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1); cursor: pointer; position: relative; overflow: hidden; border-top: 4px solid #3b82f6;"
+                    onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 24px 48px rgba(59,130,246,0.12)'; this.style.borderColor='#93c5fd'; this.style.borderTopColor='#2563eb';"
+                    onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'; this.style.borderColor='rgba(226,232,240,0.8)'; this.style.borderTopColor='#3b82f6';">
+                    <div style="position: absolute; top: -30px; right: -30px; width: 120px; height: 120px; background: radial-gradient(circle, rgba(59,130,246,0.08) 0%, transparent 70%); border-radius: 50%;"></div>
+                    <div style="position: relative; z-index: 2;">
+                        <div style="width: 56px; height: 56px; background: linear-gradient(135deg, #eff6ff, #dbeafe); border-radius: 18px; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(191,219,254,0.5); margin-bottom: 1.5rem;">
                             <i data-lucide="file-check-2" style="width: 24px; height: 24px; color: #2563eb;"></i>
                         </div>
-                        <div style="flex: 1;">
-                            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 6px;">
-                                <span style="font-size: 9px; font-weight: 900; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.3em;">02 / Compliance</span>
-                            </div>
-                            <h3 style="font-size: 20px; font-weight: 900; color: #0f172a; margin-bottom: 4px; font-family: 'Outfit', sans-serif;">Evidence Registry</h3>
-                            <p style="font-size: 14px; color: #64748b; line-height: 1.6;">Full provenance tracking for research use only (RUO) applications, ensuring institutional-grade audit trails.</p>
-                        </div>
-                        <div style="flex-shrink: 0; opacity: 0.3;">
-                            <i data-lucide="chevron-right" style="width: 20px; height: 20px; color: #94a3b8;"></i>
-                        </div>
+                        <span style="font-size: 9px; font-weight: 900; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.3em; display: block; margin-bottom: 10px;">02 / Compliance</span>
+                        <h3 style="font-size: 22px; font-weight: 900; color: #0f172a; margin-bottom: 10px; font-family: 'Outfit', sans-serif;">Evidence Registry</h3>
+                        <p style="font-size: 14px; color: #64748b; line-height: 1.7;">Full provenance tracking for research use only (RUO) applications, ensuring institutional-grade audit trails.</p>
                     </div>
                 </div>
 
                 <!-- Card 3: Execution -->
-                <div style="display: flex; align-items: stretch; background: rgba(255,255,255,0.85); backdrop-filter: blur(20px); border: 1px solid rgba(226,232,240,0.8); border-radius: 24px; overflow: hidden; transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1); cursor: pointer; position: relative;"
-                    onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 24px 48px rgba(59,130,246,0.12)'; this.style.borderColor='#93c5fd';"
-                    onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'; this.style.borderColor='rgba(226,232,240,0.8)';">
-                    <div style="width: 5px; background: linear-gradient(180deg, #3b82f6, #1d4ed8); flex-shrink: 0; border-radius: 24px 0 0 24px;"></div>
-                    <div style="padding: 2rem 2.5rem; flex: 1; display: flex; align-items: center; gap: 2rem;">
-                        <div style="width: 56px; height: 56px; background: linear-gradient(135deg, #eff6ff, #dbeafe); border-radius: 18px; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(191,219,254,0.5); flex-shrink: 0;">
+                <div style="background: rgba(255,255,255,0.9); backdrop-filter: blur(20px); border: 1px solid rgba(226,232,240,0.8); border-radius: 28px; padding: 2.5rem; transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1); cursor: pointer; position: relative; overflow: hidden; border-top: 4px solid #3b82f6;"
+                    onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 24px 48px rgba(59,130,246,0.12)'; this.style.borderColor='#93c5fd'; this.style.borderTopColor='#2563eb';"
+                    onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'; this.style.borderColor='rgba(226,232,240,0.8)'; this.style.borderTopColor='#3b82f6';">
+                    <div style="position: absolute; top: -30px; right: -30px; width: 120px; height: 120px; background: radial-gradient(circle, rgba(59,130,246,0.08) 0%, transparent 70%); border-radius: 50%;"></div>
+                    <div style="position: relative; z-index: 2;">
+                        <div style="width: 56px; height: 56px; background: linear-gradient(135deg, #eff6ff, #dbeafe); border-radius: 18px; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(191,219,254,0.5); margin-bottom: 1.5rem;">
                             <i data-lucide="flask-conical" style="width: 24px; height: 24px; color: #2563eb;"></i>
                         </div>
-                        <div style="flex: 1;">
-                            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 6px;">
-                                <span style="font-size: 9px; font-weight: 900; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.3em;">03 / Execution</span>
-                            </div>
-                            <h3 style="font-size: 20px; font-weight: 900; color: #0f172a; margin-bottom: 4px; font-family: 'Outfit', sans-serif;">Simulation Lab</h3>
-                            <p style="font-size: 14px; color: #64748b; line-height: 1.6;">Deploy virtual trials to plan and manage complex reprogramming protocols with clarity and control.</p>
-                        </div>
-                        <div style="flex-shrink: 0; opacity: 0.3;">
-                            <i data-lucide="chevron-right" style="width: 20px; height: 20px; color: #94a3b8;"></i>
-                        </div>
+                        <span style="font-size: 9px; font-weight: 900; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.3em; display: block; margin-bottom: 10px;">03 / Execution</span>
+                        <h3 style="font-size: 22px; font-weight: 900; color: #0f172a; margin-bottom: 10px; font-family: 'Outfit', sans-serif;">Simulation Lab</h3>
+                        <p style="font-size: 14px; color: #64748b; line-height: 1.7;">Deploy virtual trials to plan and manage complex reprogramming protocols with clarity and control.</p>
                     </div>
                 </div>
 
                 <!-- Card 4: Safety -->
-                <div style="display: flex; align-items: stretch; background: rgba(255,255,255,0.85); backdrop-filter: blur(20px); border: 1px solid rgba(226,232,240,0.8); border-radius: 24px; overflow: hidden; transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1); cursor: pointer; position: relative;"
-                    onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 24px 48px rgba(59,130,246,0.12)'; this.style.borderColor='#93c5fd';"
-                    onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'; this.style.borderColor='rgba(226,232,240,0.8)';">
-                    <div style="width: 5px; background: linear-gradient(180deg, #3b82f6, #1d4ed8); flex-shrink: 0; border-radius: 24px 0 0 24px;"></div>
-                    <div style="padding: 2rem 2.5rem; flex: 1; display: flex; align-items: center; gap: 2rem;">
-                        <div style="width: 56px; height: 56px; background: linear-gradient(135deg, #eff6ff, #dbeafe); border-radius: 18px; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(191,219,254,0.5); flex-shrink: 0;">
+                <div style="background: rgba(255,255,255,0.9); backdrop-filter: blur(20px); border: 1px solid rgba(226,232,240,0.8); border-radius: 28px; padding: 2.5rem; transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1); cursor: pointer; position: relative; overflow: hidden; border-top: 4px solid #3b82f6;"
+                    onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 24px 48px rgba(59,130,246,0.12)'; this.style.borderColor='#93c5fd'; this.style.borderTopColor='#2563eb';"
+                    onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'; this.style.borderColor='rgba(226,232,240,0.8)'; this.style.borderTopColor='#3b82f6';">
+                    <div style="position: absolute; top: -30px; right: -30px; width: 120px; height: 120px; background: radial-gradient(circle, rgba(59,130,246,0.08) 0%, transparent 70%); border-radius: 50%;"></div>
+                    <div style="position: relative; z-index: 2;">
+                        <div style="width: 56px; height: 56px; background: linear-gradient(135deg, #eff6ff, #dbeafe); border-radius: 18px; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(191,219,254,0.5); margin-bottom: 1.5rem;">
                             <i data-lucide="shield-check" style="width: 24px; height: 24px; color: #2563eb;"></i>
                         </div>
-                        <div style="flex: 1;">
-                            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 6px;">
-                                <span style="font-size: 9px; font-weight: 900; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.3em;">04 / Safety</span>
-                            </div>
-                            <h3 style="font-size: 20px; font-weight: 900; color: #0f172a; margin-bottom: 4px; font-family: 'Outfit', sans-serif;">OSK Partial Mode</h3>
-                            <p style="font-size: 14px; color: #64748b; line-height: 1.6;">Computationally constrained partial reprogramming — oncogene blacklist, dedifferentiation ceiling, Sirtuin scoring.</p>
-                        </div>
-                        <div style="flex-shrink: 0; opacity: 0.3;">
-                            <i data-lucide="chevron-right" style="width: 20px; height: 20px; color: #94a3b8;"></i>
-                        </div>
+                        <span style="font-size: 9px; font-weight: 900; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.3em; display: block; margin-bottom: 10px;">04 / Safety</span>
+                        <h3 style="font-size: 22px; font-weight: 900; color: #0f172a; margin-bottom: 10px; font-family: 'Outfit', sans-serif;">OSK Partial Mode</h3>
+                        <p style="font-size: 14px; color: #64748b; line-height: 1.7;">Computationally constrained partial reprogramming — oncogene blacklist, dedifferentiation ceiling, Sirtuin scoring.</p>
                     </div>
                 </div>
             </div>
