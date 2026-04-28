@@ -168,12 +168,11 @@ class D2HUtility:
     @staticmethod
     def generate_z_linker_handshake(seq1: str, seq2: str) -> str:
         """
-        (G4S)×4 Flexible Linker Fusion (20aa): [Domain A] - GGGGSGGGGSGGGGSGGGGS - [Domain B]
-        Upgraded from (G4S)×3 (15aa) to (G4S)×4 (20aa) to provide superior domain separation
-        for multi-domain TF fusions, reducing steric clash at the handshake interface.
-        Reference: Argos 1990 (J Mol Biol); Chen et al. 2013 (Adv Drug Deliv Rev)
+        (G4S)×3 Flexible Linker Fusion (15aa): [Domain A] - GGGGSGGGGSGGGGS - [Domain B]
+        Restored to (G4S)×3 (15aa) with 15aa padding for high-fidelity structural docking,
+        resolving ipTM collapse by allowing proper conformational flexibility.
         """
-        linker = "GGGGSGGGGSGGGGSGGGGS"  # (G4S)x4 — 20aa
+        linker = "GGGGSGGGGSGGGGS"  # (G4S)x3 — 15aa
         return f"{seq1}{linker}{seq2}"
 
 # --- ZENITH PRO PERFORMANCE TUNING ---

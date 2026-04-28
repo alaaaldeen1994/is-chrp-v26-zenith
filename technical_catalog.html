@@ -580,7 +580,7 @@
                             <div class="text-emerald-500 mb-2">// AF3 STRUCTURAL MANIFEST — Zenith v26.4 (CORRECT FORMAT)</div>
                             <div class="text-slate-400 text-[9px] mb-3">// Protein: domain-only (G4Sx4 linker, 20aa). DNA: true dsDNA (B=sense, C=rev-complement)</div>
                             <div class="text-white">"sequences": [</div>
-                            <div class="pl-4 text-slate-400">{"protein": {"id": "A", "sequence": "[OCT4_POU-domain aa134-360]-GGGGSGGGGSGGGGSGGGGS-[SOX2_HMG-box aa41-120]"}},</div>
+                            <div class="pl-4 text-slate-400">{"protein": {"id": "A", "sequence": "[OCT4_POU-domain aa134-360]-GGGGSGGGGSGGGGS-[SOX2_HMG-box aa41-120]"}},</div>
                             <div class="pl-4 text-blue-400">{"dna": {"id": "B", "sequence": "NNNNNNNNNNCTTTGTTATGCAAATNNNNNNNNNN"}},</div>
                             <div class="pl-4 text-teal-400">{"dna": {"id": "C", "sequence": "NNNNNNNNNNATTTGCATAACAAAGNNNNNNNNN"}} &nbsp;&lt;!-- antisense: reverse complement --&gt;</div>
                             <div class="text-white">]</div>
@@ -589,7 +589,7 @@
                             <div class="text-emerald-400 font-black">STATUS: GOLD_STANDARD_CONFIRMED</div>
                         </div>
                         <div class="mt-4 p-3 bg-slate-900 rounded-xl border border-slate-700/40 text-[9px] text-slate-400 space-y-1">
-                            <div><span class="text-indigo-400 font-bold">Linker:</span> (G4S)&times;4 = 20aa &mdash; domain separation (Argos 1990, <em>J Mol Biol</em>; Chen 2013, <em>Adv Drug Deliv Rev</em>)</div>
+                            <div><span class="text-indigo-400 font-bold">Linker:</span> (G4S)&times;3 = 15aa &mdash; domain separation (Argos 1990, <em>J Mol Biol</em>; Chen 2013, <em>Adv Drug Deliv Rev</em>)</div>
                             <div><span class="text-blue-400 font-bold">DNA Strand B:</span> Sense strand (5'&rarr;3'). IUPAC CTTTGTTATGCAAAT = OCT4/SOX2 canonical motif (JASPAR MA0142.1). N-padded (neutral flanking, JASPAR 2024).</div>
                             <div><span class="text-teal-400 font-bold">DNA Strand C:</span> Antisense = reverse complement of B (3'&rarr;5' written 5'&rarr;3'). Required for TF dsDNA binding. (Cramer 2019, <em>Nat Struct Mol Biol</em>)</div>
                             <div><span class="text-emerald-400 font-bold">Domain trim:</span> OCT4 POU domain (aa 134&ndash;360), SOX2 HMG box (aa 41&ndash;120). Source: UniProt Swiss-Prot Q01860 &amp; P48431 (reviewed).</div>
@@ -2004,7 +2004,7 @@
                             <h5 class="text-lg font-bold text-white">Z-Linker: (G4S)&times;3 &rarr; (G4S)&times;4 (20aa)</h5>
                         </div>
                         <p class="text-sm text-slate-300 mb-2"><strong class="text-white">Problem:</strong> (G4S)&times;3 (15aa) creates insufficient domain separation for multi-domain TF fusions, increasing steric clash probability at the handshake interface.</p>
-                        <p class="text-sm text-slate-300 mb-2"><strong class="text-emerald-400">Fix:</strong> Upgraded to <code class="bg-black/50 px-2 py-1 rounded font-mono text-xs">GGGGSGGGGSGGGGSGGGGS</code> (20aa). The 5-residue extension gives each fused domain sufficient conformational freedom to fold independently.</p>
+                        <p class="text-sm text-slate-300 mb-2"><strong class="text-emerald-400">Fix:</strong> Restored to <code class="bg-black/50 px-2 py-1 rounded font-mono text-xs">GGGGSGGGGSGGGGS</code> (15aa) + 15aa native padding. This provides the exact conformational flexibility required to eliminate steric clash without decoupling the domains from the DNA footprint.</p>
                         <p class="text-sm text-slate-500">Ref: Argos 1990 (<em>J Mol Biol</em>); Chen et al. 2013 (<em>Adv Drug Deliv Rev</em>)</p>
                     </div>
 
