@@ -2963,22 +2963,49 @@ async def partial_reprogramming_endpoint(req: PartialReprogrammingRequest):
             raise HTTPException(status_code=400, detail="OpenAI API key required for factor discovery.")
 
         ai_prompt = (
-            f"You are a molecular biology expert. From this research objective: '{req.prompt}', "
-            f"identify the top 6 human transcription factor gene symbols most relevant for "
-            f"cellular reprogramming or rejuvenation. Return ONLY a comma-separated list of "
-            f"official HGNC gene symbols (e.g. FOXO3, SIRT1, KLF4). No explanations."
+            f"You are a computational systems biologist. Analyze this research objective: '{req.prompt}'.\n\n"
+            f"Return a JSON object with exactly these fields:\n"
+            f"1. \"genes\": an array of the top 6 official HGNC gene symbols (Homo sapiens only) most relevant "
+            f"for this cellular reprogramming or rejuvenation goal.\n"
+            f"2. \"age_reduction\": estimated years of DNA methylation age reduction (Horvath/GrimAge clock basis) "
+            f"achievable with these factors. If this is not a rejuvenation goal, return 0. "
+            f"Be realistic — the maximum published in-vitro partial reprogramming age reduction is ~13 years "
+            f"(Sarkar et al. 2020, Nature Cell Biology). If the user specifies a cap (e.g. 'cap at 9 years'), "
+            f"respect that cap and do not exceed it.\n"
+            f"3. \"dna_motif\": the primary 15-25bp TF binding consensus motif (IUPAC, ACGT only) for the "
+            f"dominant factor in this network, from JASPAR or ENCODE ChIP-seq data.\n\n"
+            f"Return ONLY valid JSON. Example: "
+            f"{{\"genes\": [\"FOXO3\", \"SIRT1\", \"KLF4\"], \"age_reduction\": 8.5, \"dna_motif\": \"TTGTTTAC\"}}"
         )
 
         response = await client.chat.completions.create(
             model="gpt-4o",
             messages=[{"role": "user", "content": ai_prompt}],
-            max_tokens=60,
-            temperature=0.0
+            max_tokens=200,
+            temperature=0.0,
+            response_format={"type": "json_object"}
         )
 
-        raw_symbols = response.choices[0].message.content.strip()
-        candidates = [s.strip().upper() for s in raw_symbols.replace(" ", "").split(",") if s.strip()]
-        print(f"OSK PARTIAL: Parsed candidates: {candidates}")
+        import json as _json
+        gpt_result = _json.loads(response.choices[0].message.content)
+        candidates = [s.strip().upper() for s in gpt_result.get("genes", []) if isinstance(s, str) and s.strip()]
+        
+        # Age reduction: enforce scientific maximum (13y) and user-requested cap
+        MAX_AGE_REDUCTION_YEARS = 13.0
+        raw_age = float(gpt_result.get("age_reduction", 0.0))
+        # Parse user's age cap from prompt (e.g. "cap at 9 years", "9 years")
+        import re
+        cap_match = re.search(r'cap\s*(?:at|of|to)?\s*(\d+\.?\d*)\s*years?', req.prompt, re.IGNORECASE)
+        user_cap = float(cap_match.group(1)) if cap_match else MAX_AGE_REDUCTION_YEARS
+        age_reduction = min(raw_age, MAX_AGE_REDUCTION_YEARS, user_cap)
+        if raw_age > user_cap:
+            print(f"⚠️ GPT returned age_reduction={raw_age}y — capped at user-requested {user_cap}y")
+        
+        # DNA motif: scrub non-ACGT characters
+        dna_motif = gpt_result.get("dna_motif", "CCTGTGACTGTG")
+        dna_motif = re.sub(r'[^ACGT]', 'A', dna_motif.upper())
+        
+        print(f"OSK PARTIAL: Parsed candidates: {candidates}, age_reduction: {age_reduction}y, motif: {dna_motif}")
 
         # STAGE 2: Run partial safety filter
         safety_result = filter_for_partial_reprogramming(
@@ -3020,7 +3047,9 @@ async def partial_reprogramming_endpoint(req: PartialReprogrammingRequest):
             "sequences_fetched": len(sequences),
             "af3_manifest": af3_manifest,
             "approved_count": len(approved_genes),
-            "blocked_count": len(safety_result["blocked"])
+            "blocked_count": len(safety_result["blocked"]),
+            "age_reduction": age_reduction,
+            "dna_motif": dna_motif
         })
 
     except HTTPException:
@@ -3096,5 +3125,5 @@ async def startup_event():
     
 if __name__ == "__main__":
     port = int(os.getenv("PORT", 9999))
-    # ZENITH ULTRA: Single-worker strategy for local stability; scalable on host.
-    uvicorn.run("bridge_server:app", host="0.0.0.0", port=port, workers=1)
+    # ZENITH ULTRA: Bind specifically to 127.0.0.1 for local loopback reliability
+    uvicorn.run("bridge_server:app", host="127.0.0.1", port=port, workers=1)

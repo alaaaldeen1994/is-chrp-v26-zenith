@@ -1231,10 +1231,8 @@ const BiosimBridge = {
 
                 const standardData = {
                     confidence: sirtReport.pathway_score ? sirtReport.pathway_score / 100 : 0.75,
-                    epigenetic_age_reduction: horvReport.predicted_shift === 'strong' ? 15 + Math.random() * 5 :
-                                             horvReport.predicted_shift === 'moderate' ? 8 + Math.random() * 4 :
-                                             horvReport.predicted_shift === 'weak' ? 3 + Math.random() * 2 : 1,
-                    dna_motif_target: "CCTGTGACTGTG",
+                    epigenetic_age_reduction: partialData.age_reduction || 0,
+                    dna_motif_target: partialData.dna_motif || "CCTGTGACTGTG",
                     recommended_protocol: `OSK PARTIAL REPROGRAMMING (${(window.zenithSafetyLevel || 'balanced').toUpperCase()})`,
                     scientific_rationale: `[ZENITH OSK v1] Partial reprogramming pipeline activated. `
                         + `${approvedFactors.length} factors approved, ${partialData.blocked_count || 0} blocked. `
