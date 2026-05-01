@@ -1526,7 +1526,7 @@
                         <a href="evidence.html">Evidence Registry</a>
                         <a href="whitepaper.html">Research Whitepaper</a>
                         <a href="regulatory.html">Regulatory Statement</a>
-                        <a href="v26_clinical_report.html">Clinical Report v26.1</a>
+                        <a href="v26_clinical_report.html">Clinical Report v26.4</a>
                     </div>
                 </div>
 
@@ -2242,11 +2242,12 @@
                             <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
                         </svg>
                         <div style="font-size: 10px; font-weight: 900; color: #64748b; text-transform: uppercase; letter-spacing: 0.4em;">Nilus Lab
-                            Institutional | RUO v26.1</div>
+                            Institutional | RUO v26.4</div>
                     </div>
                     <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 0.75rem;">
                         <div style="display: flex; gap: 2.5rem; font-size: 10px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.15em;">
                             <a href="about.html" style="color: #0f172a; text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='#2563eb'" onmouseout="this.style.color='#0f172a'">Lab Ops</a>
+                            <a href="legal.html" style="color: #0f172a; text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='#2563eb'" onmouseout="this.style.color='#0f172a'">Legal & Privacy</a>
                             <a href="regulatory.html" style="color: #0f172a; text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='#2563eb'" onmouseout="this.style.color='#0f172a'">Compliance</a>
                             <a href="contact.html" style="color: #0f172a; text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='#2563eb'" onmouseout="this.style.color='#0f172a'">Contact Node</a>
                         </div>
@@ -2429,4 +2430,48 @@
         </script>
 </body>
 
+<!-- COOKIE CONSENT BANNER -->
+<div id="cookie-consent-banner" style="display: none; position: fixed; bottom: 0; left: 0; right: 0; z-index: 99999; background: rgba(15,23,42,0.97); backdrop-filter: blur(20px); border-top: 1px solid rgba(255,255,255,0.1); padding: 1.25rem 2rem; animation: slideUp 0.5s cubic-bezier(0.16,1,0.3,1);">
+    <style>
+        @keyframes slideUp {
+            from { transform: translateY(100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+    </style>
+    <div style="max-width: 80rem; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 2rem; flex-wrap: wrap;">
+        <div style="flex: 1; min-width: 280px;">
+            <p style="font-size: 13px; color: #e2e8f0; font-weight: 500; line-height: 1.6; margin: 0;">
+                <strong style="color: white;">🍪 Cookie Compliance</strong> — 
+                We use essential cookies for authentication and anonymous telemetry to maintain platform stability. 
+                No personal data is used for model training. 
+                <a href="legal.html#privacy" style="color: #60a5fa; text-decoration: underline; font-weight: 700;">Privacy Policy</a>
+            </p>
+        </div>
+        <div style="display: flex; gap: 12px; flex-shrink: 0;">
+            <button onclick="declineCookies()" style="background: transparent; color: #94a3b8; border: 1px solid #334155; padding: 0.6rem 1.5rem; border-radius: 999px; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; cursor: pointer; transition: all 0.3s ease;" onmouseover="this.style.borderColor='#64748b'; this.style.color='#e2e8f0';" onmouseout="this.style.borderColor='#334155'; this.style.color='#94a3b8';">Decline Optional</button>
+            <button onclick="acceptCookies()" style="background: linear-gradient(135deg, #2563eb, #3b82f6); color: white; border: none; padding: 0.6rem 1.5rem; border-radius: 999px; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 16px rgba(37,99,235,0.3);" onmouseover="this.style.transform='translateY(-1px)'; this.style.boxShadow='0 6px 20px rgba(37,99,235,0.4)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 16px rgba(37,99,235,0.3)';">Accept All</button>
+        </div>
+    </div>
+</div>
+<script>
+    // Cookie consent logic
+    (function() {
+        const consent = localStorage.getItem('zenith_cookie_consent');
+        if (!consent) {
+            setTimeout(function() {
+                document.getElementById('cookie-consent-banner').style.display = 'block';
+            }, 1500);
+        }
+    })();
+
+    function acceptCookies() {
+        localStorage.setItem('zenith_cookie_consent', 'accepted');
+        document.getElementById('cookie-consent-banner').style.display = 'none';
+    }
+
+    function declineCookies() {
+        localStorage.setItem('zenith_cookie_consent', 'essential_only');
+        document.getElementById('cookie-consent-banner').style.display = 'none';
+    }
+</script>
 </html>
