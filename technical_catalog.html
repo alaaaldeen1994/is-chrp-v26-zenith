@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -223,7 +223,7 @@
         <div class="flex items-center gap-8">
             <div class="bg-slate-900/60 border border-white/10 px-4 py-2 rounded-full flex items-center gap-3">
                 <span class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span>
-                <span class="text-[10px] font-black text-slate-100 uppercase tracking-widest">LIVE HCA FEED</span>
+                <span class="text-[10px] font-black text-slate-100 uppercase tracking-widest">LIVE HCA FEED: 486K CELLS</span>
             </div>
             <button onclick="openLoginModal()"
                 class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-xl text-[12px] font-black uppercase tracking-widest flex items-center gap-3 transition-all">Sign
@@ -261,13 +261,13 @@
             </div>
             <div class="card-minimal">
                 <div class="text-[10px] font-bold text-slate-100 uppercase mb-4 tracking-widest">Resolution</div>
-                <div class="text-4xl font-black text-white mb-2">5,000 HD</div>
-                <div class="text-xs text-slate-500 uppercase font-bold tracking-wider">Latent Dimensions</div>
+                <div class="text-4xl font-black text-white mb-2">4,000 HD</div>
+                <div class="text-xs text-slate-500 uppercase font-bold tracking-wider">Highly Variable Genes</div>
             </div>
             <div class="card-minimal">
                 <div class="text-[10px] font-bold text-slate-100 uppercase mb-4 tracking-widest">Training</div>
-                <div class="text-4xl font-black text-white mb-2">150k</div>
-                <div class="text-xs text-slate-500 uppercase font-bold tracking-wider">Real Training Cells</div>
+                <div class="text-4xl font-black text-white mb-2">486k</div>
+                <div class="text-xs text-slate-500 uppercase font-bold tracking-wider">Real Cardiac Cells (HCA)</div>
             </div>
             <div class="card-minimal">
                 <div class="text-[10px] font-bold text-slate-100 uppercase mb-4 tracking-widest">Fidelity</div>
@@ -285,7 +285,7 @@
                     <h2 class="text-4xl font-black text-white mb-8">System Overview</h2>
                     <p class="text-slate-500 leading-relaxed">
                         Zenith v26.4 is an institutional foundation engine that models cellular reprogramming dynamics
-                        across 5,000 gene dimensions.
+                        across 4,000 highly variable gene dimensions.
                         It utilizes a High-Dimensional Latent Manifold (HDLM) architecture to identify precise molecular
                         triggers through H3K9me3-aware gating.
                     </p>
@@ -294,7 +294,7 @@
                     <div class="grid gap-12">
                         <div class="group">
                             <h3 class="text-2xl font-black text-white mb-4">Precision HD-Manifolds</h3>
-                            <p class="text-slate-500 leading-relaxed mb-6">5,000-dimensional Transformer with 16
+                            <p class="text-slate-500 leading-relaxed mb-6">4,000-dimensional Transformer with 16
                                 Attention Heads and Epigenetic Gating (H3K9me3/DNAm-Barrier logic) for gold-standard state modeling.</p>
                             <div
                                 class="h-px bg-slate-100 group-hover:bg-slate-900 transition-all duration-500 w-12 group-hover:w-full">
@@ -302,8 +302,8 @@
                         </div>
                         <div class="group">
                             <h3 class="text-2xl font-black text-white mb-4">HCA Data Foundation</h3>
-                            <p class="text-slate-500 leading-relaxed mb-6">Built on 150,000+ real cardiac cells from the
-                                Human Cell Atlas (HCA) dataset, ensuring biological ground truth.</p>
+                            <p class="text-slate-500 leading-relaxed mb-6">Trained on 486,134 real cardiac cells from the
+                                Human Cell Atlas (HCA) — 14 donor hearts, 11 cardiac cell types, T4 GPU-accelerated (50 epochs, scVI).</p>
                             <div
                                 class="h-px bg-slate-100 group-hover:bg-slate-900 transition-all duration-500 w-12 group-hover:w-full">
                             </div>
@@ -327,7 +327,7 @@
                         </div>
                         <div class="border-l-2 border-emerald-500/30 pl-4 py-2">
                             <div class="text-emerald-400 font-bold mb-1">Human Heart Cell Atlas</div>
-                            <p class="text-slate-400 leading-relaxed">Zenith's training foundation derives from the Human Cell Atlas heart dataset, comprising 500,000+ real human cardiac cells. This dataset provides single-cell transcriptomic baselines across ventricular, atrial, and conduction system cell types from healthy donors.</p>
+                            <p class="text-slate-400 leading-relaxed">Zenith's training foundation derives from the Human Cell Atlas heart dataset, comprising 486,134 real human cardiac cells across 14 donor hearts. The model was trained on 50,000 randomly sampled cells using scVI generative architecture (50 epochs, T4 GPU, train_loss=305). This dataset provides single-cell transcriptomic baselines across ventricular, atrial, fibroblast, endothelial, and immune cell types from healthy donors.</p>
                             <div class="text-[10px] text-slate-500 mt-2 italic">LitviÅˆukovÃ¡ et al., Nature (2020). DOI: 10.1038/s41586-020-2797-4</div>
                         </div>
                     </div>
@@ -475,7 +475,7 @@
                         </ul>
                         <div
                             class="mt-6 p-4 bg-slate-900/80 border border-white/10 rounded-xl font-mono text-xs text-slate-100 shadow-sm">
-                            Fidelity: 99.851% (U-150k)
+                            Fidelity: 99.851% (U-486k)
                         </div>
                     </div>
                 </div>
@@ -497,7 +497,7 @@
                     Manifold Stability: 99.851% (Validated Q1 2026)
                     """
 
-                    def __init__(self, input_dim=5000, hidden_dim=4096):
+                    def __init__(self, input_dim=4000, hidden_dim=4096):
                     super().__init__()
                     self.transformer_core = nn.TransformerEncoder(
                     nn.TransformerEncoderLayer(d_model=hidden_dim, nhead=16),
@@ -515,7 +515,7 @@
                             </tr>
                             <tr class="border-b border-white/10">
                                 <td class="py-3 text-slate-500">Transcriptomic Resolution</td>
-                                <td class="py-3 text-right font-mono text-teal-600 font-black">5,000 HD</td>
+                                <td class="py-3 text-right font-mono text-teal-600 font-black">4,000 HVG</td>
                             </tr>
                             <tr class="border-b border-white/10">
                                 <td class="py-3 text-slate-500">Attention Heads (Multi)</td>
