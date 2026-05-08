@@ -1059,8 +1059,11 @@ async def health_check():
     return {
         "status": "online",
         "timestamp": time.time(),
+        "version": "PRO",
+        "engine": "Zenith Ultra-HD (4K HVG)",
         "model_loaded": drift_model is not None,
-        "mode": model_mode
+        "mode": model_mode,
+        "zenith_status": "ready" if drift_model is not None else "lazy_init"
     }
 
 @app.get("/")
@@ -1193,16 +1196,7 @@ async def get_pilot_dashboard_path():
 async def get_abstract():
     return FileResponse("SCIENTIFIC_ABSTRACT_V26.md", media_type="text/markdown")
 
-@app.get("/health")
-async def health_check():
-    """Detailed health check for UI status indicators."""
-    return {
-        "status": "online", 
-        "version": "PRO", 
-        "engine": "Zenith Ultra-HD (5K)",
-        "mode": model_mode, # HCA Clinical Mode status
-        "zenith_status": "ready" if drift_model is not None else "lazy_init"
-    }
+# (Duplicate /health endpoint removed — consolidated at line 1056)
 
 # LIVE CELL STATE SYNCHRONIZATION (for 3D View)
 # Global storage for current simulation state and remote commands
@@ -2653,8 +2647,8 @@ class DiscoveryRequest(BaseModel):
     api_key: Optional[str] = None
     knockouts: Optional[List[int]] = []
 
-@app.post("/discover_protocol")
-async def discover_protocol(req: DiscoveryRequest):
+@app.post("/discover_protocol_v1")
+async def discover_protocol_v1(req: DiscoveryRequest):
     """
     Zenith Hybrid Discovery Engine (Altos/Nobel Aligned).
     Implements Context-Aware Factor Reduction (Kim et al., 2009) and Therapeutic Indexing.
