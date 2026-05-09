@@ -10,6 +10,7 @@ from typing import Dict, List, Any
 # ZENITH v27: EXPERT PERTURBATION ENGINE
 # Grounded in HCA-486k manifold and empirical GRN inference
 # =================================================================
+from grn_authority import GRNAuthority
 
 GENE_PROXY_HUB = {
     "GATA4": ["TNNT2", "MYH7", "NPPA", "ACTN2", "SLC8A1"],
@@ -127,6 +128,14 @@ class PerturbationEngine:
             idx = self.gene_to_idx[gene_name]
             gene_expr[idx] += 10.0 * dose 
 
+        # 4b. Apply GRN Regulatory Ripple Effects (Priority 4)
+        print("[PerturbationEngine] Priority 4: Computing GRN regulatory influence...")
+        active_tfs = {f: dose for f in applied_factors}
+        influence_vec = GRNAuthority.compute_network_influence(active_tfs, self.var_names)
+        
+        # Merge influence into expression vector
+        gene_expr += influence_vec * 2.0 # Scaling factor for visualization
+        
         # 5. Re-encode to final latent state (Manifold Fusion)
         x_input = torch.tensor(gene_expr[:4000], dtype=torch.float32).unsqueeze(0)
         with torch.no_grad():

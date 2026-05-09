@@ -560,6 +560,8 @@ const BiosimEngine = {
         });
 
         BiosimUI.initGeneGrid(); // Zenith V27 grid init
+        BiosimBridge.loadStructuralMetadata(); // v33: Fetch verified domain data
+        BiosimBridge.loadGrnLinks(); // v33: Fetch verified GRN links
         this.boot();
 
         // Start Backend Status Monitoring
@@ -809,15 +811,31 @@ const BiosimStore = { env: { vector: null, disease: null } };
 const BiosimBridge = {
     sequenceRegistry: {}, 
     accessionRegistry: {}, 
-    domainDefaults: { // Mapped fragments for high-fidelity handshake (RUO)
-        "GATA4": "CPVESCDRRFSRSDKLAEHKKYHSNKAKR", 
-        "NKX2-5": "RRRRTAFTNEQIDELERRFKQQRYLSAPEREHLAAMIKLTQCKIQVQWKFQNRRAKWRRLKQQKTHP",
-        "SNAI1": "RKCPSCSLHFSRSADLADLSHLKKHFSKHK",
-        "TBX5": "PKALVLSGSPGRRRWLLSPGEPEPEPEPEPEPEPEPEPEPEPEPEPE",
-        "OCT4": "NLLQKEVEKFAVCQKALETLPNLCQGKKVLSLLHKLEKELAFAENKPSGKRSKFQPSLQFSSIESDVLDSPSMNTAAANKLQKELEQFAKLLKQKRITLGYTQADVGLTLGVLFGKVFSQTTICRFEALQLSFKNMCKLKPLLNKWLE",
-        "SOX2": "DRVKRPMNAFMVWSRGQRRKMAQENPKMHNSEISKRLGAEWKLLSETEKRPFIDEAKRLRALHMKEHPDYKYRPRRKTK",
-        "NEUROD1": "ERRRREKQANVRERERNRIAASKCRNRKKEKEILEQQLRDLPNRPDGHH",
-        "MEF2C": "RPAVPPVGSYSFMGPRRRLLGPRRRLLGPRRRLL"
+    structuralRegistry: {}, // v33: Populated from /api/v2/structural_metadata
+    grnLinks: {}, // v33: Populated from /api/v2/grn_links
+    
+    async loadStructuralMetadata() {
+        try {
+            const response = await fetch(`${this.endpoint}/api/v2/structural_metadata`);
+            if (response.ok) {
+                this.structuralRegistry = await response.json();
+                console.log("🧬 [ZENITH] Structural Authority Loaded: Verified PDB Mappings Synced.");
+            }
+        } catch (e) {
+            console.warn("Structural Authority fallback: using internal heuristics.");
+        }
+    },
+
+    async loadGrnLinks() {
+        try {
+            const response = await fetch(`${this.endpoint}/api/v2/grn_links`);
+            if (response.ok) {
+                this.grnLinks = await response.json();
+                console.log("🕸️ [ZENITH] GRN Authority Loaded: Causal Regulatory Links Synced.");
+            }
+        } catch (e) {
+            console.warn("GRN Authority fallback: no regulatory metadata available.");
+        }
     },
     endpoint: window.location.origin,
     internalApiKey: 'DEVELOPER_KEY', 
@@ -852,6 +870,22 @@ const BiosimBridge = {
 
         // Re-boot engine to apply seed if needed
         BiosimEngine.boot();
+    },
+
+    async runClinicalAudit(factors, concordance) {
+        try {
+            const response = await fetch(`${this.endpoint}/api/v2/clinical_audit`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ factors, concordance })
+            });
+            if (response.ok) {
+                const auditData = await response.json();
+                BiosimUI.renderClinicalAudit(auditData);
+            }
+        } catch (e) {
+            console.error("Clinical Audit Fetch Failed:", e);
+        }
     },
 
     downloadManifest() {
@@ -1614,6 +1648,12 @@ const BiosimBridge = {
             window.renderPartialReport(data);
         }
 
+        // --- PRIORITY 5: CLINICAL SAFETY AUDIT (v33) ---
+        const factors = Object.keys(data.target_profile || {});
+        if (factors.length > 0) {
+            BiosimBridge.runClinicalAudit(factors, data.confidence || 0.80);
+        }
+
         // v28 CUSTOM: If this is the ZENITH ASSISTANT, hide the gene manifest and score to keep it clean.
         const isAssistant = data.recommended_protocol === "ZENITH ASSISTANT";
         const actionGrid = outPanel ? outPanel.querySelector('.flex.gap-1') : null;
@@ -1838,24 +1878,8 @@ const BiosimBridge = {
             sequences.push({ "dnaSequence": { "sequence": dnaRev, "count": 1 } });
             totalResidues += (dnaFwd.length * 2);
 
-            // Universal 'Structural Authority' DHL Library (Reaching ipTM 0.70 Blue Zone)
-            const dhlLibrary = {
-                'GATA4': '201-349',   'GATA6': '201-349',
-                'NKX2-5': '138-246',  'TBX5': '60-324',
-                'SNAI1': '150-264',   'SNAI2': '155-264',
-                'MEF2C': '1-95',      'MEF2A': '1-95',
-                'OCT4': '138-285',    'SOX2': '41-120',   'SOX17': '1-120',
-                'KLF4': '395-485',    'MYC': '350-439',
-                'NANOG': '150-250',   'MYOD1': '100-244', 'ASCL1': '150-280',
-                'HNF4A': '120-220',   'FOXA2': '160-260',
-                'FOXO3': '156-242',   'SIRT1': '244-495', 'TP53': '94-292', // Sarkar 2020 Factors
-                'EZH2': '500-746',    // EZH2 (PRC2 Catalytic SET Domain) to prevent blind unstructured chopping
-                'VEGFA': '27-191'     // Mature core ONLY (Excluded from DNA docking)
-            };
-
             // 2. PROTEIN FACTORS — Domain Handshake Linker (DHL) Pipeline (v33 Gold)
-            // CRITICAL FIX: Limit to EXACTLY Top 2 Factors to prevent AF3 structural clash (ipTM collapse).
-            // A 35bp DNA strand can realistically only coordinate a Dimer 'Handshake'.
+            // Using Structural Authority Registry (Verified PDB mappings)
             const structuralPool = Object.entries(this.lastDiscovery.target_profile || {}).sort((a,b) => b[1]-a[1]);
             
             // HIGH-FIDELITY RESTORATION: Set padding to 15aa.
@@ -1875,7 +1899,8 @@ const BiosimBridge = {
                     let parsedSeq = String(seq);
                     
                     // Domain Pruning (DHL constraint)
-                    const range = dhlLibrary[gene === 'POU5F1' ? 'OCT4' : gene] || dhlLibrary[gene];
+                    const structuralMeta = this.structuralRegistry[gene === 'POU5F1' ? 'OCT4' : gene] || this.structuralRegistry[gene];
+                    const range = structuralMeta ? structuralMeta.residues : null;
                     if (range) {
                         const match = range.match(/(\d+)-(\d+)/);
                         if (match) {
@@ -1895,8 +1920,8 @@ const BiosimBridge = {
                     allProteinStrings.push(parsedSeq);
                     totalResidues += parsedSeq.length;
                     
-                    const acc = this.accessionRegistry[gene] || "Default";
-                    factorsIncluded.push(`${gene}_${acc}`);
+                    const pdb = structuralMeta ? structuralMeta.pdb_id : "NO_PDB";
+                    factorsIncluded.push(`${gene}_${pdb}`);
                 }
             }
 
@@ -1907,7 +1932,8 @@ const BiosimBridge = {
                     const fallback = await this.fetchUniProtSequence(gene);
                     if (fallback) {
                         let parsedSeq = String(fallback);
-                        const range = dhlLibrary[gene === 'POU5F1' ? 'OCT4' : gene];
+                        const structuralMeta = this.structuralRegistry[gene === 'POU5F1' ? 'OCT4' : gene];
+                        const range = structuralMeta ? structuralMeta.residues : null;
                         if (range) {
                              const match = range.match(/(\d+)-(\d+)/);
                              if (match) {
@@ -1924,7 +1950,8 @@ const BiosimBridge = {
                             } 
                         });
                         totalResidues += parsedSeq.length;
-                        factorsIncluded.push(`${gene}_Fallback`);
+                        const pdb = structuralMeta ? structuralMeta.pdb_id : "NO_PDB";
+                        factorsIncluded.push(`${gene}_${pdb}`);
                     }
                 }
             }
@@ -3457,12 +3484,65 @@ const BiosimUI = {
             node.innerText = sym.substring(0, 4);
             node.title = `${sym} (#${i})`;
             
+            node.addEventListener('mouseenter', () => BiosimUI.highlightRegulatoryNetwork(sym));
+            node.addEventListener('mouseleave', () => BiosimUI.clearRegulatoryHighlight());
+            
             grid.appendChild(node);
             count++;
         });
 
         if (count === 0) {
             grid.innerHTML = '<div class="col-span-12 text-[8px] text-slate-600 italic p-2">No genes found.</div>';
+        }
+    },
+
+    highlightRegulatoryNetwork(tf) {
+        const links = BiosimBridge.grnLinks[tf];
+        if (!links) return;
+
+        console.log(`[GRN] Highlighting targets for TF: ${tf}`);
+        Object.entries(links).forEach(([target, weight]) => {
+            const idx = CONFIG.geneSymbols.indexOf(target);
+            if (idx === -1) return;
+
+            const el = document.getElementById(`g${idx}`);
+            if (el) {
+                el.style.borderColor = weight > 0 ? '#10b981' : '#ef4444'; // Green for activation, Red for repression
+                el.style.boxShadow = `0 0 15px ${weight > 0 ? 'rgba(16,185,129,0.5)' : 'rgba(239,68,68,0.5)'}`;
+                el.style.zIndex = '20';
+                el.style.transform = 'scale(1.3)';
+            }
+        });
+
+        // Highlight the TF itself
+        const tfIdx = CONFIG.geneSymbols.indexOf(tf);
+        if (tfIdx !== -1) {
+            const tfEl = document.getElementById(`g${tfIdx}`);
+            if (tfEl) {
+                tfEl.style.borderColor = '#6366f1';
+                tfEl.style.boxShadow = '0 0 20px rgba(99,102,241,0.8)';
+                tfEl.style.transform = 'scale(1.5)';
+                tfEl.style.zIndex = '30';
+            }
+        }
+    },
+
+    clearRegulatoryHighlight() {
+        // We could refresh the whole grid or just targeted reset
+        // For performance, we refresh the inspector state which resets grid styles
+        if (window.selectedAgent) {
+            this.updateInspector(window.selectedAgent);
+        } else {
+            // Default reset if no agent selected
+            CONFIG.geneSymbols.forEach((sym, i) => {
+                const el = document.getElementById(`g${i}`);
+                if (el) {
+                    el.style.borderColor = 'rgba(255, 255, 255, 0.05)';
+                    el.style.boxShadow = 'none';
+                    el.style.transform = 'none';
+                    el.style.zIndex = '1';
+                }
+            });
         }
     },
 
@@ -3559,19 +3639,10 @@ const BiosimUI = {
             ];
 
             channels.forEach(ch => {
-                const row = document.createElement('div');
-                row.className = 'flex justify-between items-center text-[8px]';
-                const intensity = Math.min(100, Math.max(0, ch.val * 100)).toFixed(1);
-                row.innerHTML = `
-                    <span class="text-slate-400">${ch.name}</span>
-                    <div class="flex items-center gap-4">
-                        <div class="w-16 h-1 bg-slate-800 rounded-full overflow-hidden">
-                            <div class="h-full bg-current ${ch.color}" style="width: ${intensity}%"></div>
-                        </div>
-                        <span class="${ch.color} font-mono w-8 text-right">${intensity}%</span>
-                    </div>
-                `;
-                gnnList.appendChild(row);
+                const li = document.createElement('div');
+                li.className = 'flex justify-between items-center bg-white/5 p-1.5 rounded border border-white/5';
+                li.innerHTML = `<span class="text-[7px] font-black uppercase text-slate-400">${ch.name}</span> <span class="text-[7px] font-mono ${ch.color}">${(ch.val * 100).toFixed(1)}%</span>`;
+                gnnList.appendChild(li);
             });
 
             if (a.paracrineNeighbors && a.paracrineNeighbors.length > 0) {
@@ -3580,7 +3651,65 @@ const BiosimUI = {
                 peerRow.innerText = `Intercepting ${a.paracrineNeighbors.length} adjacent peers...`;
                 gnnList.appendChild(peerRow);
             }
+    renderClinicalAudit(data) {
+        const panel = document.getElementById('clinical-audit-panel');
+        if (!panel) return;
+        panel.classList.remove('hidden');
+
+        // Tier Badge
+        const tierBadge = document.getElementById('audit-tier-badge');
+        const [tierLabel, tierEvidence] = data.evidence_quality;
+        tierBadge.innerText = tierLabel;
+        
+        // Color coding for Tiers
+        if (tierLabel.includes('Tier 1')) {
+            tierBadge.className = "px-2 py-0.5 bg-blue-500/10 border border-blue-500/30 rounded text-[8px] font-black text-blue-300";
+        } else if (tierLabel.includes('Tier 2')) {
+            tierBadge.className = "px-2 py-0.5 bg-emerald-500/10 border border-emerald-500/30 rounded text-[8px] font-black text-emerald-300";
+        } else {
+            tierBadge.className = "px-2 py-0.5 bg-slate-500/10 border border-slate-500/30 rounded text-[8px] font-black text-slate-400";
         }
+        
+        document.getElementById('audit-evidence-text').innerText = tierEvidence;
+
+        // Stability List
+        const stabilityList = document.getElementById('audit-stability-list');
+        if (stabilityList) {
+            stabilityList.innerHTML = '';
+            data.proteotoxic_stress.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'flex justify-between items-center text-[7px]';
+                const color = item.instability_index < 40 ? 'text-emerald-400' : 'text-red-400';
+                div.innerHTML = `<span class="text-slate-300 font-bold">${item.gene}</span> <span class="font-mono ${color}">${item.instability_index.toFixed(1)} II [${item.status}]</span>`;
+                stabilityList.appendChild(div);
+            });
+        }
+
+        // Oncogenic List
+        const oncoList = document.getElementById('audit-oncogenic-list');
+        if (oncoList) {
+            oncoList.innerHTML = '';
+            if (data.oncogenic_alerts.length === 0) {
+                oncoList.innerHTML = '<div class="text-[7px] text-slate-500 italic">No high-risk oncogenes detected.</div>';
+            } else {
+                data.oncogenic_alerts.forEach(alert => {
+                    const div = document.createElement('div');
+                    div.className = 'p-1.5 bg-red-950/20 border border-red-500/20 rounded text-[7px]';
+                    div.innerHTML = `<div class="flex justify-between mb-1"><span class="font-black text-red-400">${alert.gene} ALERT</span> <span class="bg-red-500 text-white px-1 rounded font-black">${alert.risk_level}</span></div>
+                                     <div class="text-slate-400 leading-tight">${alert.phenotype} (${alert.evidence})</div>`;
+                    oncoList.appendChild(div);
+                });
+            }
+        }
+
+        // Status Tag
+        const statusTag = document.getElementById('audit-status-tag');
+        if (statusTag) {
+            statusTag.innerText = `Status: ${data.safety_status}`;
+            statusTag.className = data.safety_status === 'PASS' ? 'text-[9px] font-black text-emerald-400 uppercase tracking-widest' : 'text-[9px] font-black text-red-400 uppercase tracking-widest';
+        }
+        
+        if (typeof lucide !== 'undefined') lucide.createIcons();
     },
 
     updateFactorBreakdown(vector) {

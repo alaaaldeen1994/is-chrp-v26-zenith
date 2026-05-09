@@ -3181,6 +3181,50 @@ class WotRequest(BaseModel):
     day: float
     target_cluster: str
 
+# --- SCIENTIFIC VALIDATION: STRUCTURAL AUTHORITY ENDPOINT ---
+# --- SCIENTIFIC VALIDATION: CLINICAL AUDIT ENDPOINT ---
+class AuditRequest(BaseModel):
+    factors: List[str]
+    concordance: float
+
+@app.post("/api/v2/clinical_audit")
+async def run_clinical_audit(req: AuditRequest):
+    """
+    PRIORITY 5: Clinical Guardrails & Safety.
+    Audits the proposed cocktail for Proteotoxic Stress and Oncogenic Risk.
+    """
+    from clinical_audit_engine import ClinicalAuditEngine
+    
+    # Load sequences from local registry
+    try:
+        with open("factor_sequences.json", "r") as f:
+            full_registry = json.load(f)
+    except:
+        full_registry = {}
+        
+    seq_map = {f: full_registry.get(f.upper(), "M") for f in req.factors}
+    
+    report = ClinicalAuditEngine.generate_clinical_report(req.factors, seq_map, req.concordance)
+    return report
+
+@app.get("/api/v2/grn_links")
+async def get_grn_links():
+    """
+    PRIORITY 4: Gene Regulatory Network (GRN) Concordancy.
+    Provides verified regulatory links (TF -> Target).
+    """
+    from grn_authority import GRNAuthority
+    return GRNAuthority.REGULATORY_LINKS
+
+@app.get("/api/v2/structural_metadata")
+async def get_structural_metadata():
+    """
+    PRIORITY 3: AlphaFold Structural Authority.
+    Provides verified PDB mappings and domain ranges for transcription factors.
+    """
+    from structural_authority import StructuralAuthority
+    return StructuralAuthority.PDB_REGISTRY
+
 @app.post("/api/v2/trajectory_wot")
 async def wot_trajectory_fate(req: WotRequest):
     """
