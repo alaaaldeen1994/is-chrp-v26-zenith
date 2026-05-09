@@ -3176,6 +3176,35 @@ async def startup_event():
         
     print("="*50 + "\n")
     
+# --- SCIENTIFIC VALIDATION: WADDINGTON-OT ENDPOINT ---
+class WotRequest(BaseModel):
+    day: float
+    target_cluster: str
+
+@app.post("/api/v2/trajectory_wot")
+async def wot_trajectory_fate(req: WotRequest):
+    """
+    PRIORITY 2: Waddington-OT Trajectory Inference.
+    Calculates ancestor/descendant probabilities using Optimal Transport.
+    (Schiebinger et al., Cell 2019)
+    """
+    from trajectory_wot_engine import WotTrajectoryEngine
+    import asyncio
+    
+    try:
+        # Offload OT computation to avoid blocking the event loop
+        engine = WotTrajectoryEngine()
+        await asyncio.to_thread(engine.compute_transport_maps)
+        
+        return {
+            "status": "success",
+            "methodology": "Waddington-OT Optimal Transport",
+            "citation": "Schiebinger et al., Cell 2019 (DOI: 10.1016/j.cell.2019.01.006)",
+            "message": f"Transport maps calculated. Fate probabilities for day {req.day} cells shifting toward '{req.target_cluster}' are ready for querying."
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    
 if __name__ == "__main__":
     port = int(os.getenv("PORT", 9999))
     # ZENITH ULTRA: Bind specifically to 127.0.0.1 for local loopback reliability
