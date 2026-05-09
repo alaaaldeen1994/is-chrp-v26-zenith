@@ -25,6 +25,25 @@ try:
 except ImportError:
     PARTIAL_MODE_AVAILABLE = False
 
+# --- ZENITH v27 PERTURBATION ENGINE (scVI latent arithmetic) ---
+try:
+    from perturbation_engine import PerturbationEngine
+    _perturbation_engine = PerturbationEngine()
+    PERTURBATION_ENGINE_AVAILABLE = True
+except ImportError:
+    _perturbation_engine = None
+    PERTURBATION_ENGINE_AVAILABLE = False
+
+def get_perturbation_engine():
+    """Lazy-init the scVI perturbation engine."""
+    global _perturbation_engine
+    if _perturbation_engine is not None and _perturbation_engine.mode == "uninitialized":
+        try:
+            _perturbation_engine.initialize()
+        except Exception as e:
+            print(f"[PerturbationEngine] Init failed: {e}")
+    return _perturbation_engine
+
 # --- ZENITH D2H PIPELINE: Domain-to-Handshake Automation ---
 class D2HUtility:
     """
@@ -1348,6 +1367,8 @@ class DiscoveryResult(BaseModel):
     # 0.0 = safe, 1.0 = maximal oncogenic pressure
     oncogenic_risk: Optional[float] = None
     oncogenic_risk_label: Optional[str] = None  # "LOW" | "MODERATE" | "HIGH"
+    # v27: scVI perturbation engine enrichment (latent arithmetic predictions)
+    scvi_enrichment: Optional[Dict[str, Any]] = None
 
 class ReportRequest(BaseModel):
     session_id: str
@@ -2270,6 +2291,30 @@ async def discover_hybrid(req: HybridDiscoveryRequest, request: Request):
                     sanitized_profile[gene] = weight
             target_profile = sanitized_profile
 
+        # --- v27: ENRICH WITH scVI PERTURBATION ENGINE ---
+        scvi_enrichment = None
+        if PERTURBATION_ENGINE_AVAILABLE:
+            try:
+                pe = get_perturbation_engine()
+                if pe and pe.mode != "uninitialized":
+                    factor_list = list(target_profile.keys()) if target_profile else []
+                    if factor_list:
+                        scvi_result = pe.predict_factor_effect(
+                            factors=factor_list,
+                            source_type="Fibroblast"
+                        )
+                        scvi_enrichment = {
+                            "predicted_nearest_type": scvi_result.get("predicted_nearest_type"),
+                            "latent_displacement": scvi_result.get("latent_displacement"),
+                            "n_significant_DEGs": scvi_result.get("n_significant_genes"),
+                            "method": "scvi_latent_arithmetic",
+                            "provenance": "PREDICTED",
+                        }
+                        print(f"   scVI: nearest={scvi_enrichment['predicted_nearest_type']}, "
+                              f"displacement={scvi_enrichment['latent_displacement']}")
+            except Exception as e:
+                print(f"   scVI enrichment skipped: {e}")
+
         return DiscoveryResult(
             recommended_protocol=best_protocol if not req.repro_mode == "partial" else f"PARTIAL REPROGRAMMING ({req.safety_level})",
             confidence=float(confidence),
@@ -2282,9 +2327,10 @@ async def discover_hybrid(req: HybridDiscoveryRequest, request: Request):
             dna_motif_target=dna_motif,
             epigenetic_age_reduction=age_reduction,
             drug_advisory=drugs,
-            af3_metrics=None,  # Real values obtained after submitting manifest to alphafoldserver.com
+            af3_metrics=None,
             oncogenic_risk=oncogenic_risk,
-            oncogenic_risk_label=oncogenic_risk_label
+            oncogenic_risk_label=oncogenic_risk_label,
+            scvi_enrichment=scvi_enrichment
         )
     except Exception as e:
         import traceback
@@ -2958,6 +3004,54 @@ class PartialReprogrammingRequest(BaseModel):
     bio_age: float = 0.5         # 0.0 (young) → 1.0 (senescent)
     cell_type: str = "generic"   # for future expansion
     openai_key: Optional[str] = None
+
+# ============================================================
+# v27: scVI PERTURBATION ENGINE ENDPOINTS
+# ============================================================
+
+@app.post("/api/v2/trajectory")
+async def scvi_trajectory(request: Request):
+    """Predict gene expression trajectory between cell types via scVI latent interpolation."""
+    body = await request.json()
+    source = body.get("source_type", "Fibroblast")
+    target = body.get("target_type", "Cardiomyocyte")
+    n_steps = body.get("n_steps", 20)
+    genes = body.get("genes_of_interest", None)
+    
+    pe = get_perturbation_engine()
+    if pe is None or pe.mode == "uninitialized":
+        raise HTTPException(status_code=503, detail="Perturbation engine not available")
+    
+    result = pe.predict_trajectory(source, target, n_steps, genes)
+    return result
+
+@app.post("/api/v2/perturbation")
+async def scvi_perturbation(request: Request):
+    """Predict effect of TF overexpression via scVI encode-decode perturbation."""
+    body = await request.json()
+    factors = body.get("factors", [])
+    source = body.get("source_type", "Fibroblast")
+    dose = body.get("dose", 1.0)
+    
+    pe = get_perturbation_engine()
+    if pe is None or pe.mode == "uninitialized":
+        raise HTTPException(status_code=503, detail="Perturbation engine not available")
+    
+    result = pe.predict_factor_effect(factors, source, dose)
+    return result
+
+@app.get("/api/v2/cell-types")
+async def scvi_cell_types():
+    """Return available cell types and gene vocabulary info."""
+    pe = get_perturbation_engine()
+    if pe is None or pe.mode == "uninitialized":
+        return {"available": False, "reason": "Engine not initialized"}
+    return {
+        "available": True,
+        "mode": pe.mode,
+        "cell_types": pe.get_cell_types(),
+        "gene_vocabulary": pe.get_gene_vocabulary(),
+    }
 
 @app.post("/partial-reprogramming")
 async def partial_reprogramming_endpoint(req: PartialReprogrammingRequest):
