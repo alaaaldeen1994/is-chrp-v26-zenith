@@ -3053,6 +3053,29 @@ async def scvi_cell_types():
         "gene_vocabulary": pe.get_gene_vocabulary(),
     }
 
+@app.post("/api/v2/population-audit")
+async def scvi_population_audit(request: Request):
+    """Audit the current simulated population against scVI latent space."""
+    body = await request.json()
+    avg_genes = body.get("avg_genes", []) # 5000-dim
+    
+    if not avg_genes:
+        raise HTTPException(status_code=400, detail="Missing population gene data")
+    
+    pe = get_perturbation_engine()
+    if pe is None or pe.mode == "uninitialized":
+        raise HTTPException(status_code=503, detail="Perturbation engine not available")
+    
+    # Use the new audit_state method to encode and classify the population average
+    try:
+        # avg_genes is expected to be the simulation's 5000-dim vector
+        result = pe.audit_state(np.array(avg_genes))
+        return result
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=str(e))
+
 @app.post("/partial-reprogramming")
 async def partial_reprogramming_endpoint(req: PartialReprogrammingRequest):
     """

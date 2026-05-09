@@ -28,7 +28,7 @@ import json
 import time
 import numpy as np
 import torch
-from typing import List, Dict, Optional, Tuple
+from typing import List, Dict, Optional, Tuple, Any
 
 # ============================================================
 # CONFIGURATION
@@ -385,6 +385,38 @@ class PerturbationEngine:
             "method": "scvi_encode_decode_perturbation",
             "provenance": "PREDICTED",
             "dose": dose,
+        }
+    
+    def audit_state(self, genes: np.ndarray, source_type: str = "Fibroblast") -> Dict[str, Any]:
+        """
+        Audit a custom gene expression state against the scVI latent manifold.
+        Used to validate simulation accuracy against HCA measured data.
+        """
+        if self.mode == "uninitialized":
+            raise RuntimeError("PerturbationEngine is uninitialized")
+        
+        # Ensure 4000-dim (model vocabulary)
+        # Simulation is 5000-dim, model is 4000-dim (HVG)
+        x_input = torch.tensor(genes[:4000], dtype=torch.float32).unsqueeze(0)
+        
+        with torch.no_grad():
+            batch_index = torch.zeros(1, 1, dtype=torch.long)
+            encoder_out = self.model.module.z_encoder(x_input, batch_index)
+            z_state = encoder_out[0].loc.numpy().flatten()
+        
+        # Find nearest centroid
+        nearest_type, nearest_dist = self._nearest_centroid(z_state)
+        
+        # Displacement from source
+        z_displacement = z_state - self.centroids[source_type]
+        
+        return {
+            "nearest_type": nearest_type,
+            "distance_to_nearest": round(float(nearest_dist), 4),
+            "displacement_from_source": round(float(np.linalg.norm(z_displacement)), 4),
+            "z": z_state.tolist(),
+            "method": "scvi_latent_audit",
+            "provenance": "MEASURED_VS_SIMULATED",
         }
     
     def _nearest_centroid(self, z: np.ndarray) -> Tuple[str, float]:

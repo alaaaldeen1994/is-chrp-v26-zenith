@@ -1110,6 +1110,51 @@ const BiosimBridge = {
         BiosimUI.notify('Therapy', `Disease Intervention Successful`, 'suc');
     },
 
+    async runPopulationAudit() {
+        BiosimUI.notify('Audit', 'Encoding current population to scVI latent space...', 'inf');
+        
+        const agents = BiosimEngine.agents;
+        if (agents.length === 0) return;
+
+        const avgGenes = new Float32Array(5000);
+        for (const a of agents) {
+            for (let i = 0; i < 5000; i++) avgGenes[i] += a.genes[i];
+        }
+        for (let i = 0; i < 5000; i++) avgGenes[i] /= agents.length;
+
+        try {
+            const response = await fetch(`${this.endpoint}/api/v2/population-audit`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-API-Key': this.internalApiKey,
+                    'X-CSRF-Token': window.csrfToken || ''
+                },
+                body: JSON.stringify({ avg_genes: Array.from(avgGenes) })
+            });
+
+            if (!response.ok) throw new Error('Audit Failed');
+            const data = await response.json();
+
+            // Display results in the scvi-summary panel or a new audit panel
+            const summaryEl = document.getElementById('scvi-summary');
+            const summaryText = document.getElementById('scvi-summary-text');
+            if (summaryEl && summaryText) {
+                summaryEl.classList.remove('hidden');
+                summaryText.innerHTML = `
+                    <div class="mb-1 font-black text-blue-300 uppercase">Population Latent Audit</div>
+                    <div>Nearest Measured Type: <span class="text-white font-bold">${data.nearest_type}</span></div>
+                    <div>Latent Displacement: <span class="text-blue-400 font-mono">${data.displacement_from_source.toFixed(4)}</span></div>
+                    <div class="mt-1 text-[8px] opacity-60">This confirms the current simulation state against the 486k Human Cell Atlas manifold.</div>
+                `;
+            }
+            BiosimUI.notify('Audit', `Audit Complete: Nearest=${data.nearest_type}`, 'suc');
+        } catch (e) {
+            console.error(e);
+            BiosimUI.notify('Audit Error', e.message, 'err');
+        }
+    },
+
     async discoverHybridProtocol() {
         const queryEl = document.getElementById('discovery-target-query');
         const loadingBox = document.getElementById('discovery-loading');
@@ -1512,6 +1557,19 @@ const BiosimBridge = {
             // AUTOMATE LATENT ATLAS (Professional Mode)
             if (typeof BiosimBridge.LatentMap !== 'undefined' && BiosimBridge.LatentMap.toggleAtlas) {
                 BiosimBridge.LatentMap.toggleAtlas(true);
+            }
+        }
+
+        // --- v27: scVI LATENT VERIFICATION ---
+        const scviPanel = document.getElementById('scvi-latent-panel');
+        if (scviPanel) {
+            if (data.scvi_enrichment) {
+                scviPanel.classList.remove('hidden');
+                document.getElementById('scvi-nearest-type').innerText = data.scvi_enrichment.predicted_nearest_type || '--';
+                document.getElementById('scvi-displacement').innerText = (data.scvi_enrichment.latent_displacement || 0).toFixed(4);
+                document.getElementById('scvi-deg-count').innerText = data.scvi_enrichment.n_significant_DEGs || '--';
+            } else {
+                scviPanel.classList.add('hidden');
             }
         }
 
