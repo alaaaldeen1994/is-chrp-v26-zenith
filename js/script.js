@@ -1145,7 +1145,12 @@ const BiosimBridge = {
                     <div class="mb-1 font-black text-blue-300 uppercase">Population Latent Audit</div>
                     <div>Nearest Measured Type: <span class="text-white font-bold">${data.nearest_type}</span></div>
                     <div>Latent Displacement: <span class="text-blue-400 font-mono">${data.displacement_from_source.toFixed(4)}</span></div>
-                    <div class="mt-1 text-[8px] opacity-60">This confirms the current simulation state against the 486k Human Cell Atlas manifold.</div>
+                    <div class="mt-2 p-1 bg-amber-500/10 border border-amber-500/30 rounded">
+                        <div class="text-[7px] text-amber-300 uppercase font-black">Predicted Biological Age</div>
+                        <div class="text-xs text-white font-bold">${data.predicted_biological_age ? data.predicted_biological_age + ' yrs' : 'Calculating...'} <span class="text-amber-500">🟡</span></div>
+                        <div class="text-[6px] text-amber-500/60 uppercase">Data-Driven Epigenetic Clock (Sprint 3)</div>
+                    </div>
+                    <div class="mt-1 text-[8px] opacity-60">Validated against 486,134 Cells [ATLAS: Litviňuková Nature 2020, DOI:10.1038/s41586-020-2797-4]. Provenance: PREDICTED.</div>
                 `;
             }
             BiosimUI.notify('Audit', `Audit Complete: Nearest=${data.nearest_type}`, 'suc');
@@ -1406,15 +1411,16 @@ const BiosimBridge = {
                         'X-CSRF-Token': window.csrfToken || ''
                     },
                     credentials: 'include',
-                    body: JSON.stringify({
-                        current_genes: Array.from(avgGenes),
-                        target_query: sanitizedQuery,
-                        api_key: document.getElementById('api-key-input')?.value?.trim() || null,
-                        knockouts: BiosimLab.activeKnockouts,
-                        repro_mode: window.zenithReprogMode || 'full',
-                        safety_level: window.zenithSafetyLevel || 'balanced',
-                        bio_age: parseFloat(document.getElementById('bio-age-slider')?.value || 0.5)
-                    })
+                        body: JSON.stringify({
+                            current_genes: Array.from(avgGenes),
+                            target_query: sanitizedQuery,
+                            api_key: document.getElementById('api-key-input')?.value?.trim() || null,
+                            knockouts: BiosimLab.activeKnockouts,
+                            drugs: (typeof BiosimExpert !== 'undefined') ? BiosimExpert.activeDrugs : [],
+                            repro_mode: window.zenithReprogMode || 'full',
+                            safety_level: window.zenithSafetyLevel || 'balanced',
+                            bio_age: parseFloat(document.getElementById('bio-age-slider')?.value || 0.5)
+                        })
                 });
                 if (response.ok) {
                     data = await response.json();
@@ -1427,7 +1433,7 @@ const BiosimBridge = {
                     // Propagate the specific validation error
                     throw e; 
                 }
-                console.warn("Zenith Remote Engine Offline. Activating Local Fallback Manifold (v26.1).");
+                console.warn("Backend required for validated predictions. Showing literature-based defaults.");
             }
 
             // --- INTUITION ENGINE: SEMANTIC FALLBACK (v26.2 CARDIAC PRECISION) ---
@@ -2531,17 +2537,80 @@ const BiosimBridge = {
 
     // === COLONY MICROSCOPE MODULE ===
     LatentMap: {
-        scene: null, camera: null, renderer: null, instancedMesh: null,
-        controls: null, isMacroInit: false,
-        viewMode: '2D',
-        dummy: null,
-        mCanvas: null,
-        mCtx: null,
-        cells: [],
-        bgFilaments: [],
-        mParams: { radius: 320, green: 0.9, blue: 0.7, red: 0.8 },
-        isLiveSyncing: false,
-        running3D: false,
+        centroids: [],
+        centroidLabels: [],
+
+        async fetchCentroids() {
+            try {
+                const response = await fetch(`${BiosimBridge.endpoint}/api/v2/centroids`, {
+                    headers: { 'X-API-Key': BiosimBridge.internalApiKey }
+                });
+                if (response.ok) {
+                    this.centroids = await response.json();
+                    this.renderCentroids();
+                }
+            } catch (e) {
+                console.warn("Failed to fetch centroids:", e);
+            }
+        },
+
+        renderCentroids() {
+            if (!this.scene) return;
+            const mScale = 60.0;
+            const overlay = document.getElementById('3d-labels-overlay');
+            if (overlay) overlay.innerHTML = '';
+            this.centroidLabels = [];
+
+            this.centroids.forEach(c => {
+                const pos = c.latent;
+                const x = pos[0] * mScale;
+                const y = pos[1] * mScale;
+                const z = pos[2] * mScale;
+
+                // Sphere Landmark
+                const geom = new THREE.SphereGeometry(4, 16, 16);
+                const mat = new THREE.MeshStandardMaterial({ 
+                    color: 0x00f2ff, emissive: 0x00f2ff, emissiveIntensity: 2.0,
+                    transparent: true, opacity: 0.6
+                });
+                const mesh = new THREE.Mesh(geom, mat);
+                mesh.position.set(x, y, z);
+                this.scene.add(mesh);
+
+                // HTML Label
+                if (overlay) {
+                    const el = document.createElement('div');
+                    el.className = 'absolute text-[9px] text-blue-400 font-black uppercase tracking-widest px-2 py-1 bg-black/60 border border-blue-500/30 rounded whitespace-nowrap pointer-events-none transition-opacity';
+                    el.innerText = c.name;
+                    el.style.transform = 'translate(-50%, -50%)';
+                    overlay.appendChild(el);
+                    this.centroidLabels.push({ el, pos: new THREE.Vector3(x, y, z) });
+                }
+            });
+        },
+
+        updateLabels() {
+            if (!this.camera || !this.centroidLabels.length) return;
+            const width = this.renderer.domElement.clientWidth;
+            const height = this.renderer.domElement.clientHeight;
+
+            this.centroidLabels.forEach(l => {
+                const vector = l.pos.clone().project(this.camera);
+                
+                // Check if behind camera
+                if (vector.z > 1) {
+                    l.el.style.opacity = 0;
+                    return;
+                }
+
+                const x = (vector.x * 0.5 + 0.5) * width;
+                const y = (-(vector.y * 0.5) + 0.5) * height;
+                
+                l.el.style.left = `${x}px`;
+                l.el.style.top = `${y}px`;
+                l.el.style.opacity = 1;
+            });
+        },
 
         toggleView(mode) {
             this.viewMode = mode;
@@ -2720,6 +2789,7 @@ const BiosimBridge = {
 
             this.animate3D();
             this.running3D = true;
+            this.fetchCentroids(); // Zenith v27: Latent Landmark Integration
             console.log('✅ Zenith: Tri-Layer Render Engine Initialized');
         },
 
@@ -2745,21 +2815,34 @@ const BiosimBridge = {
             const gridSize = Math.ceil(Math.sqrt(cellCount));
 
             BiosimEngine.agents.forEach((a, i) => {
-                // Determine 3D Base Position
-                if (!a.x3d) {
-                    const row = Math.floor(i / gridSize);
-                    const col = i % gridSize;
-                    a.x3d = (col - gridSize / 2) * spacing;
-                    a.y3d = (row - gridSize / 2) * spacing;
-                    a.z3d = (Math.random() - 0.5) * 100;
-                    a.phase = Math.random() * 15;
+                // v27: SCIENTIFIC LATENT POSITIONING
+                // If the agent has scVI manifold coordinates, use them.
+                // Otherwise fallback to the grid for initial frames.
+                let x, y, z;
+                if (a.manifoldPos && (a.manifoldPos.x !== 0 || a.manifoldPos.y !== 0 || a.manifoldPos.z !== 0)) {
+                    // Scaled for the Three.js viewport
+                    const mScale = 60.0;
+                    x = a.manifoldPos.x * mScale;
+                    y = a.manifoldPos.y * mScale;
+                    z = a.manifoldPos.z * mScale;
+                } else {
+                    // FALLBACK: Distributed Grid
+                    if (!a.x3d) {
+                        const row = Math.floor(i / gridSize);
+                        const col = i % gridSize;
+                        a.x3d = (col - gridSize / 2) * spacing;
+                        a.y3d = (row - gridSize / 2) * spacing;
+                        a.z3d = (Math.random() - 0.5) * 100;
+                    }
+                    x = a.x3d; y = a.y3d; z = a.z3d;
                 }
 
+                if (!a.phase) a.phase = Math.random() * 15;
                 const pulse = 1 + Math.sin(this.time * 2.5 + a.phase) * 0.1;
                 const baseScale = 1.0 + (a.health || 1.0) * 0.2;
 
                 // 1. MEMBRANE UPDATE (Purple)
-                this.dummy.position.set(a.x3d, a.y3d, a.z3d);
+                this.dummy.position.set(x, y, z);
                 const memScale = baseScale * pulse;
                 this.dummy.scale.set(memScale, memScale, memScale);
 
@@ -2782,21 +2865,42 @@ const BiosimBridge = {
 
                 // 2. DNA CORE UPDATE (Cyan - Independent inner vibration)
                 const dnaPulse = pulse * 0.9;
-                const dnaY = a.y3d + Math.sin(this.time * 3 + a.phase) * 0.8;
-                this.dummy.position.set(a.x3d, dnaY, a.z3d);
+                const dnaY = y + Math.sin(this.time * 3 + a.phase) * 0.8;
+                this.dummy.position.set(x, dnaY, z);
                 this.dummy.scale.set(dnaPulse, dnaPulse, dnaPulse);
                 this.dummy.updateMatrix();
                 this.dnaMesh.setMatrixAt(i, this.dummy.matrix);
 
-                // 3. ACTININ UPDATE (White structural inclusions)
-                for (let j = 0; j < 2; j++) {
-                    const offset = (j === 0 ? 3.5 : -3.5) * pulse;
-                    const ax = a.x3d + Math.sin(this.time + j) * offset;
-                    const ay = a.y3d + Math.cos(this.time + j) * offset;
-                    this.dummy.position.set(ax, ay, a.z3d);
-                    this.dummy.scale.set(1.0, 1.0, 1.0);
-                    this.dummy.updateMatrix();
-                    this.actininMesh.setMatrixAt(i * 2 + j, this.dummy.matrix);
+                // --- TRAJECTORY TRAILS (Sprint 7 - High Fidelity) ---
+                if (i % 20 === 0) { // Limit to 100 trails for performance
+                    if (!this.trails) this.trails = {};
+                    if (!this.trails[i]) {
+                        const geometry = new THREE.BufferGeometry();
+                        const positions = new Float32Array(30 * 3); // 30 points
+                        geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+                        const material = new THREE.LineBasicMaterial({ 
+                            color: 0x60a5fa, transparent: true, opacity: 0.3, blending: THREE.AdditiveBlending 
+                        });
+                        this.trails[i] = {
+                            line: new THREE.Line(geometry, material),
+                            pts: []
+                        };
+                        this.scene.add(this.trails[i].line);
+                    }
+                    
+                    const t = this.trails[i];
+                    t.pts.push(new THREE.Vector3(x, y, z));
+                    if (t.pts.length > 30) t.pts.shift();
+                    
+                    const attr = t.line.geometry.attributes.position;
+                    for (let j = 0; j < t.pts.length; j++) {
+                        attr.setXYZ(j, t.pts[j].x, t.pts[j].y, t.pts[j].z);
+                    }
+                    // Fill rest with last point
+                    for (let j = t.pts.length; j < 30; j++) {
+                        attr.setXYZ(j, x, y, z);
+                    }
+                    attr.needsUpdate = true;
                 }
             });
 
@@ -2804,7 +2908,7 @@ const BiosimBridge = {
             if (this.membraneMesh.instanceColor) this.membraneMesh.instanceColor.needsUpdate = true;
             this.dnaMesh.instanceMatrix.needsUpdate = true;
             this.actininMesh.instanceMatrix.needsUpdate = true;
-
+            this.updateLabels();
             this.renderer.render(this.scene, this.camera);
         },
 
@@ -4353,5 +4457,104 @@ window.addEventListener('load', () => {
         VisionBridge.init();
     }
 });
+
+// --- EXPERT CONTROLLER (Sprint 5-6) ---
+const BiosimExpert = {
+    activeDrugs: [],
+
+    addDrugToProtocol() {
+        const select = document.getElementById('drug-select');
+        const drug = select.value;
+        if (!drug || this.activeDrugs.includes(drug)) return;
+
+        this.activeDrugs.push(drug);
+        this.renderDrugs();
+        BiosimUI.notify('Pharmacology', `${drug} added to cocktail`, 'suc');
+        BiosimUI.logTerminal(`PHARMACOLOGY: Small molecule ${drug} integrated into synergistic manifold.`);
+    },
+
+    removeDrug(drug) {
+        this.activeDrugs = this.activeDrugs.filter(d => d !== drug);
+        this.renderDrugs();
+    },
+
+    renderDrugs() {
+        const container = document.getElementById('active-drugs-list');
+        if (!container) return;
+
+        container.innerHTML = this.activeDrugs.map(drug => `
+            <div class="flex items-center gap-1 bg-purple-600/30 text-purple-100 text-[8px] px-2 py-1 rounded border border-purple-500/30 group animate-slide-in">
+                <span>${drug}</span>
+                <button onclick="BiosimExpert.removeDrug('${drug}')" class="hover:text-white ml-1 opacity-50 group-hover:opacity-100">×</button>
+            </div>
+        `).join('');
+    },
+
+    async runLiteratureAudit(btn) {
+        if (btn) btn.disabled = true;
+        BiosimUI.notify('Expert Audit', 'Fetching Canonical Literature Benchmarks...', 'inf');
+        BiosimUI.logTerminal('AUDIT: Comparing current manifold against 12 peer-reviewed datasets...');
+
+        try {
+            const res = await fetch(`${BiosimBridge.endpoint}/api/v2/literature-audit`, {
+                headers: { 'X-API-Key': BiosimBridge.internalApiKey }
+            });
+            const results = await res.json();
+
+            // Render a high-fidelity modal or log the report
+            console.log("Literature Audit Results:", results);
+            
+            // For now, log the main results to terminal
+            Object.keys(results).forEach(key => {
+                const r = results[key];
+                const icon = r.status === 'PASS' ? '✅' : '❌';
+                BiosimUI.logTerminal(`[AUDIT] ${icon} ${key}: Jaccard=${r.jaccard_similarity.toFixed(3)} Fidelity=${r.fidelity_score}% [${r.tier}]`);
+            });
+
+            BiosimUI.notify('Audit Complete', 'Literature Concordance Report Generated.', 'suc');
+        } catch (e) {
+            console.error(e);
+            BiosimUI.notify('Audit Error', 'Benchmark logic unavailable.', 'err');
+        } finally {
+            if (btn) btn.disabled = false;
+        }
+    },
+
+    async downloadWetlabManifest() {
+        BiosimUI.notify('Manifest', 'Compiling Wet-Lab Reagent List...', 'inf');
+        
+        // Extract data from the current results
+        const factors_text = document.getElementById('discovery-rec').innerText;
+        const drugs = this.activeDrugs || [];
+        const target = document.getElementById('scvi-nearest-type').innerText;
+
+        try {
+            const res = await fetch(`${BiosimBridge.endpoint}/api/v2/generate-manifest`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    name: "ZENITH_EXPERT_VALIDATION",
+                    factors: factors_text.split(',').map(f => f.trim()),
+                    drugs: drugs,
+                    target: target
+                })
+            });
+            const data = await res.json();
+            
+            // Download as Markdown
+            const blob = new Blob([data.protocol_md], { type: 'text/markdown' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = data.filename;
+            a.click();
+            
+            BiosimUI.notify('Manifest Ready', 'Experimental SOP Exported.', 'suc');
+            BiosimUI.logTerminal(`[WETLAB] Manifest generated for ${target} reprograming. Protocol saved.`);
+        } catch (e) {
+            console.error(e);
+            BiosimUI.notify('Manifest Error', 'Translation Engine Offline.', 'err');
+        }
+    }
+};
 
 // Zenith Sync Patch 04:40

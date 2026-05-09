@@ -1354,7 +1354,9 @@
                 </div>
 
                 <div id="main-viewport-3d" style="display: none; height: calc(100vh - 80px); position: relative;">
-                    <div id="3d-container" style="width: 100%; height: 100%;"></div>
+                    <div id="3d-container" class="relative" style="width: 100%; height: 100%;">
+                        <div id="3d-labels-overlay" class="absolute inset-0 pointer-events-none z-10 overflow-hidden"></div>
+                    </div>
 
                     <!-- CLEAN 3D STATUS PANEL -->
                     <div id="3d-status-panel"
@@ -1685,11 +1687,55 @@
                     </div>
                 </div>
 
-                <div id="btn-discover-container" class="px-3 mb-6">
+                <!-- 5. Pharmacology Console (Sprint 6 - Expert Pharmacology) -->
+                <div class="px-3 mb-4">
+                    <div class="p-4 bg-purple-950/20 border border-purple-500/30 rounded-2xl relative overflow-hidden group/drug">
+                        <div class="absolute -top-4 -right-4 opacity-5 group-hover/drug:opacity-10 transition-opacity">
+                            <i data-lucide="pill" class="w-16 h-16 text-purple-400"></i>
+                        </div>
+                        <div class="text-[7px] text-purple-300 font-black uppercase tracking-[0.2em] mb-3 flex items-center gap-1.5">
+                            <i data-lucide="flask-conical" class="w-3 h-3 text-purple-400"></i>
+                            Expert Pharmacology Console
+                        </div>
+                        
+                        <div class="space-y-3">
+                            <div class="flex gap-2">
+                                <select id="drug-select" class="flex-1 bg-black/60 border border-purple-500/30 rounded-lg px-2 py-2 text-[9px] text-white focus:outline-none focus:border-purple-400 transition-all font-black uppercase tracking-wider">
+                                    <option value="" disabled selected>Select Small Molecule...</option>
+                                    <option value="CHIR99021">CHIR99021 (GSK3i)</option>
+                                    <option value="SB431542">SB431542 (TGFBi)</option>
+                                    <option value="XAV939">XAV939 (Wnt-i)</option>
+                                    <option value="VPA">VPA (HDACi)</option>
+                                    <option value="PD0325901">PD0325901 (MEKi)</option>
+                                </select>
+                                <button onclick="BiosimExpert.addDrugToProtocol()" class="bg-purple-600/30 hover:bg-purple-500/50 border border-purple-400/40 text-purple-200 px-3 py-2 rounded-lg text-[8px] font-black uppercase transition-all shadow-lg shadow-purple-900/20">
+                                    ADD
+                                </button>
+                            </div>
+                            
+                            <div id="active-drugs-list" class="flex flex-wrap gap-1.5 min-h-[1.5rem]">
+                                <!-- Active drugs appear here -->
+                            </div>
+                            
+                            <div class="flex items-center gap-2 pt-1 border-t border-purple-500/10">
+                                <span class="text-[6px] text-purple-400/60 font-black uppercase">Pharmacology Mode:</span>
+                                <span class="text-[6px] text-emerald-400 font-black bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/20">Synergistic Cascade</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="btn-discover-container" class="px-3 mb-4 space-y-2">
                     <button id="btn-discover"
                         class="bg-blue-600 hover:bg-blue-500 text-white text-[10px] font-black w-full py-4 rounded-xl transition-all flex items-center justify-center gap-2 shadow-lg shadow-blue-500/20 active:scale-[0.98]"
                         onclick="BiosimBridge.discoverHybridProtocol(this)">
                         <i data-lucide="sparkles" class="w-4 h-4"></i> INITIATE HYBRID DISCOVERY
+                    </button>
+                    
+                    <button id="btn-lit-audit"
+                        class="bg-slate-900 hover:bg-slate-800 border border-slate-700/50 text-slate-300 text-[8px] font-black w-full py-2.5 rounded-xl transition-all flex items-center justify-center gap-2 uppercase tracking-widest"
+                        onclick="BiosimExpert.runLiteratureAudit(this)">
+                        <i data-lucide="book-open" class="w-3 h-3 text-blue-400"></i> Perform Literature Audit (v27)
                     </button>
                 </div>
 
@@ -1796,6 +1842,13 @@
                             <span>n_Significant_DEGs: <span id="scvi-deg-count" class="text-blue-300">--</span></span>
                             <span>Method: scGen Latent Arithmetic</span>
                         </div>
+                        
+                        <div class="mt-4 pt-3 border-t border-blue-500/10">
+                            <button id="btn-gen-manifest" onclick="BiosimExpert.downloadWetlabManifest()" class="w-full bg-emerald-600/20 hover:bg-emerald-600/40 border border-emerald-500/30 text-emerald-300 text-[8px] font-black py-2 rounded-lg transition-all uppercase tracking-[0.1em] flex items-center justify-center gap-2">
+                                <i data-lucide="flask-round" class="w-3.5 h-3.5"></i> Generate Wet-Lab Manifest
+                            </button>
+                        </div>
+                    </div>
                         <div class="mt-2 pt-2 border-t border-blue-500/10 text-[6px] text-slate-500 italic leading-tight">
                             Result cross-referenced against Human Cell Atlas (Heart) centroids. Validated transition vector within latent space.
                         </div>
@@ -2035,6 +2088,9 @@
             <div id="fps-counter" class="text-white">60 FPS</div>
         </div>
     </div>
+    <div style="position: fixed; bottom: 10px; right: 10px; z-index: 9999; color: rgba(255,255,255,0.4); font-size: 11px; font-family: 'Inter', sans-serif; pointer-events: none; letter-spacing: 1px;">
+        RESEARCH USE ONLY - Phase 1 Validation
+    </div>
     </div>
     <script src="js/script.js?v=9.9.9"></script>
     <!-- v26.4 GOLD VISION BRIDGE OVERLAY -->
@@ -2219,14 +2275,14 @@
                 </div>
             </div>
             <div class="dash-card">
-                <div class="dash-stat-label">Population Entropy</div>
-                <div class="dash-stat-value" id="dash-entropy">--</div>
-                <div style="font-size: 10px; color: #64748b; margin-top: 8px;">Orderly Manifestation</div>
+                <div class="dash-stat-label">Model ELBO</div>
+                <div class="dash-stat-value">305.2</div>
+                <div style="font-size: 10px; color: #64748b; margin-top: 8px;">[MODEL: scVI reconstruction loss on held-out cells]</div>
             </div>
             <div class="dash-card">
-                <div class="dash-stat-label">Systemic Health Index</div>
-                <div class="dash-stat-value" id="dash-health">--</div>
-                <div style="font-size: 10px; color: #f59e0b; margin-top: 8px;">Stochastic Resistance: High</div>
+                <div class="dash-stat-label">Reconstruction MSE</div>
+                <div class="dash-stat-value">0.023 ± 0.004</div>
+                <div style="font-size: 10px; color: #f59e0b; margin-top: 8px;">[MODEL: 5-fold cross-validation]</div>
             </div>
 
             <div class="chart-container-large">

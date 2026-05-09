@@ -48,29 +48,47 @@ class ZenithValidationEngine:
             "status": "PASS"
         }
 
-    def validate_external_dataset(self, h5ad_path: str):
+    def run_benchmark_validation(self):
         """
-        Validate Zenith predictions against an external dataset (e.g. GSE183852).
-        Calculates the overlap between Zenith-predicted DEGs and real measured DEGs.
+        Benchmark Zenith v27 against canonical Cardiac Reprogramming (GMT).
         """
-        if not os.path.exists(h5ad_path):
-            print(f"[Validation] External dataset not found at {h5ad_path}")
-            return {"error": "File not found"}
-
-        print(f"[Validation] Validating against external dataset: {h5ad_path}")
+        print("[Validation] Benchmarking GMT Protocol (GATA4+MEF2C+TBX5)...")
         
-        # Logic:
-        # 1. Load h5ad
-        # 2. Extract DEG list from the paper's conditions
-        # 3. Predict same conditions in Zenith
-        # 4. Calculate Jaccard Similarity and Pearson Correlation
+        # 1. Predict GMT effect
+        # Note: GATA4 and TBX5 will be proxied via GENE_PROXY_HUB
+        prediction = self.engine.predict_factor_effect(
+            factors=["GATA4", "MEF2C", "TBX5"], 
+            source_type="Fibroblast", 
+            dose=1.0
+        )
+        
+        if "error" in prediction:
+            return prediction
+
+        predicted_degs = set(prediction["top_DEGs"].keys())
+        print(f"[Validation] Top 10 Predicted DEGs: {list(predicted_degs)[:10]}")
+        
+        # 2. Canonical Cardiac Reprogramming DEG Gold Standard (Subset)
+        # Based on Chaffin et al. 2022 and Ieda et al. 2010
+        gold_standard = {
+            "TNNT2", "TTN", "MYH6", "MYH7", "NPPA", "NPPB", "ACTC1", "TNNI3",
+            "GATA4", "TBX5", "NKX2-5", "MEF2C", "HAND2", "ISL1", "GATA6"
+        }
+        
+        # 3. Calculate Metrics
+        # We check how many of our 4000 available genes in scVI overlap with the gold standard
+        available_gold = gold_standard.intersection(set(self.engine.gene_to_idx.keys()))
+        overlap = predicted_degs.intersection(available_gold)
+        
+        jaccard = len(overlap) / len(available_gold) if available_gold else 0
+        
+        print(f"[Validation] Benchmark Result: Jaccard={jaccard:.3f} ({len(overlap)}/{len(available_gold)} markers)")
         
         return {
-            "dataset": os.path.basename(h5ad_path),
-            "jaccard_similarity": 0.68, # Strong biological overlap
-            "pearson_correlation": 0.81,
-            "n_overlap_genes": 450,
-            "status": "VALIDATED"
+            "protocol": "GMT",
+            "jaccard_similarity": jaccard,
+            "n_markers_predicted": len(overlap),
+            "status": "PASS" if jaccard > 0.6 else "FAIL"
         }
 
     def generate_scientific_report(self):
@@ -106,4 +124,5 @@ Zenith v27 demonstrates institutional-grade predictive accuracy for cellular tra
 if __name__ == "__main__":
     val = ZenithValidationEngine()
     val.cross_validate_latent_arithmetic("Fibroblast", "Cardiomyocyte")
+    val.run_benchmark_validation()
     val.generate_scientific_report()
