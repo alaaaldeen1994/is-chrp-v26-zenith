@@ -200,6 +200,11 @@
                             <span class="text-[10px] font-bold text-slate-500">BIO-AGE DELTA</span>
                             <span class="text-xs font-black text-indigo-600" id="opt-rejuv">--</span>
                         </div>
+                        <button onclick="exportRobotScript()" 
+                            class="w-full bg-slate-900 hover:bg-black text-white text-[9px] font-black py-3 rounded-xl transition-all flex items-center justify-center gap-2 uppercase tracking-widest mt-2">
+                            <i data-lucide="microscope" class="w-3 h-3"></i>
+                            Export Robot Script (D2B)
+                        </button>
                     </div>
                 </div>
 
@@ -420,6 +425,7 @@
                 if (!response.ok) throw new Error("Optimization Engine Offline");
 
                 const data = await response.json();
+                this.lastAudit = data;
                 document.getElementById('optimization-results').classList.remove('hidden');
                 document.getElementById('opt-on').innerText = `${data.optimal_on_hours}h`;
                 document.getElementById('opt-off').innerText = `${data.optimal_off_hours}h`;
@@ -432,6 +438,39 @@
                 btn.disabled = false;
             }
             lucide.createIcons();
+        }
+
+        async function exportRobotScript() {
+            if (!this.lastAudit) {
+                BiosimUI.notify('Error', 'No optimized dosage data found.', 'err');
+                return;
+            }
+
+            try {
+                const response = await fetch('/generate_opentrons_protocol', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        discovery_data: {
+                            target_query: document.getElementById('disease-select').value,
+                            recommended_protocol: document.getElementById('protocol-select').value,
+                            target_profile: { "GATA4": 0.9, "TBX5": 0.8, "MEF2C": 0.7 } // Mock for synthesis demo
+                        },
+                        dosage_audit: this.lastAudit
+                    })
+                });
+
+                const data = await response.json();
+                const blob = new Blob([data.script], { type: 'text/plain' });
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `Zenith_Robot_Protocol_${Date.now()}.py`;
+                a.click();
+                BiosimUI.notify('D2B Export', 'Opentrons protocol ready for Flex.', 'suc');
+            } catch (e) {
+                BiosimUI.notify('Error', 'Failed to generate robot manifest.', 'err');
+            }
         }
 
         window.onload = () => {
