@@ -1,4 +1,4 @@
-"""Fix double-encoded UTF-8 in technical_catalog.html"""
+﻿"""Fix double-encoded UTF-8 in technical_catalog.html"""
 import os
 
 filepath = os.path.join(os.path.dirname(__file__), "technical_catalog.html")
@@ -11,7 +11,7 @@ with open(filepath, "rb") as f:
 text = raw.decode("utf-8")
 
 # Replace double-encoded author name with clean ASCII-safe version
-# The bytes c385 cb86 = double-encoded ň, c383 c2a1 = double-encoded á
+# The bytes c385 cb86 = double-encoded Åˆ, c383 c2a1 = double-encoded Ã¡
 replacements = {
     "Litvi\u00c5\u02c6ukov\u00c3\u00a1": "Litvinukova",  # ASCII-safe
     "\u00e2\u20ac\u201c": "\u2014",  # em-dash

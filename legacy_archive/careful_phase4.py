@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """
 Phase 4: Biological Cell Morphology  
 Cell-type-specific scaling/rotation
@@ -11,7 +11,7 @@ def check_syntax():
                           capture_output=True, text=True)
     return result.returncode == 0, result.stderr
 
-print("🔬 Phase 4: Biological Morphology...")
+print("ðŸ”¬ Phase 4: Biological Morphology...")
 print("=" * 70)
 
 with open('js/script.js', 'r', encoding='utf-8') as f:
@@ -76,7 +76,7 @@ for i, line in enumerate(lines):
         for j, code_line in enumerate(new_code):
             lines.insert(start_line + j, code_line)
         
-        print("✅ Inserted biological morphology code")
+        print("âœ… Inserted biological morphology code")
         break
 
 with open('js/script.js', 'w', encoding='utf-8') as f:
@@ -85,7 +85,7 @@ with open('js/script.js', 'w', encoding='utf-8') as f:
 is_valid, error = check_syntax()
 
 if is_valid:
-    print("✅ PHASE 4 COMPLETE!")
+    print("âœ… PHASE 4 COMPLETE!")
     print("   - SOMATIC: 2:1 elongated")
     print("   - iPSC: Rounded with wobble")
     print("   - CARDIO: 2.5:1 rod")
@@ -93,6 +93,6 @@ if is_valid:
     print("   - TUMOR: Irregular 1.3x")
     print("   - DEATH: 0.4x shrunken")
 else:
-    print("❌ Error:")
+    print("âŒ Error:")
     print(error)
     subprocess.run(['git', 'checkout', 'HEAD', '--', 'js/script.js'])

@@ -1,11 +1,11 @@
-
+﻿
 import requests
 import numpy as np
 import time
 import json
 import os
 
-# Configuration for Nilus Lab Zenith v26.1
+# Configuration for Nilus Lab Zenith v27.0 GOLD
 BASE_URL = "http://127.0.0.1:9999"
 SIM_STEP_ENDPOINT = f"{BASE_URL}/simulate_step"
 N_CELLS = 10 

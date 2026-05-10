@@ -1,4 +1,4 @@
-from PIL import Image
+﻿from PIL import Image
 import os
 
 def create_modern_favicon(source_path):

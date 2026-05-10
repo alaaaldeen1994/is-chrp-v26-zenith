@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """
 Phase 5: Camera & Zoom Fixes
 """
@@ -10,7 +10,7 @@ def check_syntax():
                           capture_output=True, text=True)
     return result.returncode == 0, result.stderr
 
-print("📷 Phase 5: Camera & Zoom...")
+print("ðŸ“· Phase 5: Camera & Zoom...")
 print("=" * 70)
 
 with open('js/script.js', 'r', encoding='utf-8') as f:
@@ -29,7 +29,7 @@ new_camera = """this.camera = new THREE.PerspectiveCamera(
             this.camera.position.set(0, 0, 200);"""
 
 content = content.replace(old_camera, new_camera)
-print("✅ Camera far plane increased to 2000")
+print("âœ… Camera far plane increased to 2000")
 
 # Replace controls setup  
 old_controls = """this.controls = new THREE.OrbitControls(this.camera, this.renderer.domElement);
@@ -50,7 +50,7 @@ new_controls = """this.controls = new THREE.OrbitControls(this.camera, this.rend
             this.controls.target.set(0, 0, 0);"""
 
 content = content.replace(old_controls, new_controls)
-print("✅ Camera controls configured (zoom: 50-500, smooth)")
+print("âœ… Camera controls configured (zoom: 50-500, smooth)")
 
 with open('js/script.js', 'w', encoding='utf-8') as f:
     f.write(content)
@@ -58,8 +58,8 @@ with open('js/script.js', 'w', encoding='utf-8') as f:
 is_valid, error = check_syntax()
 
 if is_valid:
-    print("✅ PHASE 5 COMPLETE!")
+    print("âœ… PHASE 5 COMPLETE!")
 else:
-    print("❌ Error:")
+    print("âŒ Error:")
     print(error)
     subprocess.run(['git', 'checkout', 'HEAD', '--', 'js/script.js'])

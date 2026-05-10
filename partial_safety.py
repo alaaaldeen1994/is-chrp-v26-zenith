@@ -1,4 +1,4 @@
-"""
+﻿"""
 partial_safety.py
 ~~~~~~~~~~~~~~~~~
 ZENITH OSK PARTIAL REPROGRAMMING MODULE
@@ -6,13 +6,13 @@ Filters transcription factor candidates for partial reprogramming safety.
 Scores Sirtuin/NAD+ pathway engagement and Horvath clock gene impact.
 
 References:
-  - Sinclair DA et al. (2020) Nature 588:124-129 — OSK vision restoration
-  - Yang JH et al. (2023) Aging 15:5966-5989 — Chemical reprogramming
-  - Horvath S (2013) Genome Biology 14:R115 — Epigenetic clock
+  - Sinclair DA et al. (2020) Nature 588:124-129 â€” OSK vision restoration
+  - Yang JH et al. (2023) Aging 15:5966-5989 â€” Chemical reprogramming
+  - Horvath S (2013) Genome Biology 14:R115 â€” Epigenetic clock
 
 Author: Nilus Lab
 Date: 2026-04-23
-Checkpoint: ALAA ALDEEN (additive only — no existing code modified)
+Checkpoint: ALAA ALDEEN (additive only â€” no existing code modified)
 """
 
 from typing import List, Dict, Optional
@@ -22,64 +22,64 @@ from typing import List, Dict, Optional
 # SECTION 1: SAFETY DATABASES
 # ============================================================
 
-# Oncogenes — ALWAYS blocked in partial mode
+# Oncogenes â€” ALWAYS blocked in partial mode
 ONCOGENE_BLACKLIST = {
-    "MYC":   "Proto-oncogene — drives uncontrolled proliferation",
-    "MYCN":  "Neuroblastoma oncogene — amplification = tumour",
-    "KRAS":  "RAS family — constitutive growth signaling",
-    "BRAF":  "RAF kinase — melanoma driver",
-    "ABL1":  "Tyrosine kinase — CML driver (BCR-ABL)",
-    "BCL2":  "Anti-apoptotic — blocks programmed cell death",
-    "MDM2":  "p53 inhibitor — disables tumour suppression",
-    "CDK4":  "Cyclin-dependent kinase — cell cycle accelerator",
-    "CCND1": "Cyclin D1 — G1/S checkpoint override",
-    "FOS":   "AP-1 component — proliferation signal",
-    "JUN":   "AP-1 component — proliferation signal",
-    "TERT":  "Telomerase — immortalisation risk (blocked in conservative mode only)",
+    "MYC":   "Proto-oncogene â€” drives uncontrolled proliferation",
+    "MYCN":  "Neuroblastoma oncogene â€” amplification = tumour",
+    "KRAS":  "RAS family â€” constitutive growth signaling",
+    "BRAF":  "RAF kinase â€” melanoma driver",
+    "ABL1":  "Tyrosine kinase â€” CML driver (BCR-ABL)",
+    "BCL2":  "Anti-apoptotic â€” blocks programmed cell death",
+    "MDM2":  "p53 inhibitor â€” disables tumour suppression",
+    "CDK4":  "Cyclin-dependent kinase â€” cell cycle accelerator",
+    "CCND1": "Cyclin D1 â€” G1/S checkpoint override",
+    "FOS":   "AP-1 component â€” proliferation signal",
+    "JUN":   "AP-1 component â€” proliferation signal",
+    "TERT":  "Telomerase â€” immortalisation risk (blocked in conservative mode only)",
 }
 
-# Full dedifferentiation risk — blocked in conservative + balanced modes
+# Full dedifferentiation risk â€” blocked in conservative + balanced modes
 FULL_DEDIFF_RISK = {
-    "POU5F1": "Full Oct4 expression drives complete pluripotency — teratoma risk",
-    "OCT4":   "Alias for POU5F1 — same dedifferentiation risk",
-    "LIN28A": "Promotes unlimited self-renewal — tumour formation risk",
-    "NANOG":  "Core pluripotency maintainer — full dediff at high expression",
+    "POU5F1": "Full Oct4 expression drives complete pluripotency â€” teratoma risk",
+    "OCT4":   "Alias for POU5F1 â€” same dedifferentiation risk",
+    "LIN28A": "Promotes unlimited self-renewal â€” tumour formation risk",
+    "NANOG":  "Core pluripotency maintainer â€” full dediff at high expression",
 }
 
 # Safe partial reprogramming factors (literature-validated)
 PARTIAL_SAFE_FACTORS = {
     # Yamanaka-adjacent (OSK-safe)
     "SOX2":  {"safety": 85, "longevity": 70, "notes": "Safe in OSK context without MYC. HMG-box pioneer TF."},
-    "KLF4":  {"safety": 82, "longevity": 75, "notes": "Krüppel-like barrier eraser — safe at controlled dose."},
+    "KLF4":  {"safety": 82, "longevity": 75, "notes": "KrÃ¼ppel-like barrier eraser â€” safe at controlled dose."},
     # Sirtuin / NAD+ axis (Sinclair core)
-    "SIRT1": {"safety": 98, "longevity": 99, "notes": "NAD-dependent deacetylase — Sinclair's primary target."},
-    "SIRT3": {"safety": 95, "longevity": 88, "notes": "Mitochondrial sirtuin — cardioprotective, ROS defense."},
-    "SIRT6": {"safety": 96, "longevity": 92, "notes": "DNA repair sirtuin — maintains genomic stability."},
-    "SIRT2": {"safety": 90, "longevity": 80, "notes": "Cytoskeletal sirtuin — peripheral myelination."},
-    "SIRT5": {"safety": 92, "longevity": 78, "notes": "Succinyl/malonyl deacylase — cardiac protection."},
-    "SIRT7": {"safety": 88, "longevity": 75, "notes": "Nucleolar sirtuin — rDNA stability."},
+    "SIRT1": {"safety": 98, "longevity": 99, "notes": "NAD-dependent deacetylase â€” Sinclair's primary target."},
+    "SIRT3": {"safety": 95, "longevity": 88, "notes": "Mitochondrial sirtuin â€” cardioprotective, ROS defense."},
+    "SIRT6": {"safety": 96, "longevity": 92, "notes": "DNA repair sirtuin â€” maintains genomic stability."},
+    "SIRT2": {"safety": 90, "longevity": 80, "notes": "Cytoskeletal sirtuin â€” peripheral myelination."},
+    "SIRT5": {"safety": 92, "longevity": 78, "notes": "Succinyl/malonyl deacylase â€” cardiac protection."},
+    "SIRT7": {"safety": 88, "longevity": 75, "notes": "Nucleolar sirtuin â€” rDNA stability."},
     # FOXO longevity axis
-    "FOXO3": {"safety": 95, "longevity": 95, "notes": "Master longevity TF — stress resistance, autophagy."},
-    "FOXO1": {"safety": 90, "longevity": 85, "notes": "Metabolic regulation — gluconeogenesis, insulin signaling."},
-    "FOXO4": {"safety": 88, "longevity": 80, "notes": "Senescence regulation — FOXO4-DRI peptide target."},
+    "FOXO3": {"safety": 95, "longevity": 95, "notes": "Master longevity TF â€” stress resistance, autophagy."},
+    "FOXO1": {"safety": 90, "longevity": 85, "notes": "Metabolic regulation â€” gluconeogenesis, insulin signaling."},
+    "FOXO4": {"safety": 88, "longevity": 80, "notes": "Senescence regulation â€” FOXO4-DRI peptide target."},
     # Epigenetic modulators
-    "TET1":  {"safety": 80, "longevity": 70, "notes": "DNA demethylase — epigenetic reprogramming without dediff."},
-    "TET2":  {"safety": 82, "longevity": 72, "notes": "DNA demethylase — clonal haematopoiesis caution."},
-    "KDM6A": {"safety": 78, "longevity": 65, "notes": "H3K27 demethylase — chromatin opening."},
-    "KDM6B": {"safety": 78, "longevity": 65, "notes": "H3K27 demethylase — inflammation-linked."},
+    "TET1":  {"safety": 80, "longevity": 70, "notes": "DNA demethylase â€” epigenetic reprogramming without dediff."},
+    "TET2":  {"safety": 82, "longevity": 72, "notes": "DNA demethylase â€” clonal haematopoiesis caution."},
+    "KDM6A": {"safety": 78, "longevity": 65, "notes": "H3K27 demethylase â€” chromatin opening."},
+    "KDM6B": {"safety": 78, "longevity": 65, "notes": "H3K27 demethylase â€” inflammation-linked."},
     # Cardiac-safe factors
-    "GATA4": {"safety": 85, "longevity": 60, "notes": "Cardiac TF — direct conversion, no pluripotency."},
-    "TBX5":  {"safety": 88, "longevity": 55, "notes": "T-box cardiac TF — lineage-specific, safe."},
-    "NKX2-5":{"safety": 86, "longevity": 58, "notes": "NK2 homeodomain — cardiac specification."},
-    "MEF2C": {"safety": 84, "longevity": 55, "notes": "MADS-box — cardiac/muscle differentiation."},
+    "GATA4": {"safety": 85, "longevity": 60, "notes": "Cardiac TF â€” direct conversion, no pluripotency."},
+    "TBX5":  {"safety": 88, "longevity": 55, "notes": "T-box cardiac TF â€” lineage-specific, safe."},
+    "NKX2-5":{"safety": 86, "longevity": 58, "notes": "NK2 homeodomain â€” cardiac specification."},
+    "MEF2C": {"safety": 84, "longevity": 55, "notes": "MADS-box â€” cardiac/muscle differentiation."},
     # Neural-safe factors
-    "ASCL1": {"safety": 80, "longevity": 50, "notes": "bHLH neuronal pioneer — direct conversion."},
-    "NEUROD2":{"safety": 82, "longevity": 48, "notes": "Neurogenic bHLH — terminal differentiation."},
-    "PAX6":  {"safety": 84, "longevity": 52, "notes": "Paired-box — retinal/neuronal, Sinclair OSK target tissue."},
+    "ASCL1": {"safety": 80, "longevity": 50, "notes": "bHLH neuronal pioneer â€” direct conversion."},
+    "NEUROD2":{"safety": 82, "longevity": 48, "notes": "Neurogenic bHLH â€” terminal differentiation."},
+    "PAX6":  {"safety": 84, "longevity": 52, "notes": "Paired-box â€” retinal/neuronal, Sinclair OSK target tissue."},
     # NAD+ biosynthesis
     "NAMPT": {"safety": 90, "longevity": 92, "notes": "Rate-limiting NAD+ biosynthesis enzyme."},
-    "NMNAT1":{"safety": 92, "longevity": 88, "notes": "Nuclear NAD+ synthase — neuroprotective."},
-    "PPARGC1A":{"safety": 88, "longevity": 90, "notes": "PGC-1α — mitochondrial biogenesis master regulator."},
+    "NMNAT1":{"safety": 92, "longevity": 88, "notes": "Nuclear NAD+ synthase â€” neuroprotective."},
+    "PPARGC1A":{"safety": 88, "longevity": 90, "notes": "PGC-1Î± â€” mitochondrial biogenesis master regulator."},
 }
 
 
@@ -112,14 +112,14 @@ SIRTUIN_PATHWAY = {
 # CpG-associated genes from the Horvath multi-tissue clock (2013)
 # These are already in the Zenith gene vocabulary (bridge_server.py lines 564-565)
 HORVATH_CLOCK_GENES = [
-    "ELOVL2",    # Strongest age predictor — fatty acid elongase
-    "FHL2",      # Four-and-a-half LIM domains — cardiac
-    "ASPA",      # Aspartoacylase — brain myelination
-    "EDARADD",   # Ectodysplasin receptor — ectodermal development
-    "C1orf132",  # Chromosome 1 ORF — strong clock CpG
-    "KLF14",     # Krüppel-like factor — metabolic regulation
-    "TRIM59",    # Tripartite motif — immune regulation
-    "CDH23",     # Cadherin 23 — hearing/inner ear (age-associated loss)
+    "ELOVL2",    # Strongest age predictor â€” fatty acid elongase
+    "FHL2",      # Four-and-a-half LIM domains â€” cardiac
+    "ASPA",      # Aspartoacylase â€” brain myelination
+    "EDARADD",   # Ectodysplasin receptor â€” ectodermal development
+    "C1orf132",  # Chromosome 1 ORF â€” strong clock CpG
+    "KLF14",     # KrÃ¼ppel-like factor â€” metabolic regulation
+    "TRIM59",    # Tripartite motif â€” immune regulation
+    "CDH23",     # Cadherin 23 â€” hearing/inner ear (age-associated loss)
 ]
 
 # Known regulatory connections: which TFs affect which clock genes
@@ -193,7 +193,7 @@ def filter_for_partial_reprogramming(
             approved.append(_score_factor(gene_upper, bio_age, override_safety=30))
             continue
 
-        # CHECK 3: Known safe factor — score it
+        # CHECK 3: Known safe factor â€” score it
         approved.append(_score_factor(gene_upper, bio_age))
 
     # Generate pathway reports
@@ -241,13 +241,13 @@ def _score_factor(gene: str, bio_age: float, override_safety: int = None) -> Dic
             "notes": known["notes"]
         }
     else:
-        # Unknown factor — moderate default scores
+        # Unknown factor â€” moderate default scores
         return {
             "gene": gene,
             "safety_score": override_safety if override_safety is not None else 60,
             "longevity_score": 50,
             "sirtuin_pathway": False,
-            "notes": "Factor not in curated database — manual review recommended."
+            "notes": "Factor not in curated database â€” manual review recommended."
         }
 
 
@@ -365,7 +365,7 @@ def score_horvath_impact(factors: List[str]) -> Dict:
 
 if __name__ == "__main__":
     print("=" * 60)
-    print("ZENITH PARTIAL REPROGRAMMING — SELF-TEST")
+    print("ZENITH PARTIAL REPROGRAMMING â€” SELF-TEST")
     print("=" * 60)
 
     # Test 1: Endothelial rejuvenation (Sinclair-relevant)
@@ -377,12 +377,12 @@ if __name__ == "__main__":
 
     print("APPROVED:")
     for f in result["approved"]:
-        sirt = "🟢 SIRT" if f["sirtuin_pathway"] else "     "
-        print(f"  ✅ {f['gene']:10} | Safety: {f['safety_score']:3} | Longevity: {f['longevity_score']:3} | {sirt}")
+        sirt = "ðŸŸ¢ SIRT" if f["sirtuin_pathway"] else "     "
+        print(f"  âœ… {f['gene']:10} | Safety: {f['safety_score']:3} | Longevity: {f['longevity_score']:3} | {sirt}")
 
     print("\nBLOCKED:")
     for f in result["blocked"]:
-        print(f"  ⛔ {f['gene']:10} | Reason: {f['reason'][:60]}")
+        print(f"  â›” {f['gene']:10} | Reason: {f['reason'][:60]}")
 
     print(f"\nSIRTUIN PATHWAY:")
     sr = result["sirtuin_report"]

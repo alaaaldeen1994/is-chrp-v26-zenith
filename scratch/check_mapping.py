@@ -1,4 +1,4 @@
-import json
+﻿import json
 with open("models/scvi_model_486k/gene_index.json", "r") as f:
     data = json.load(f)
     var_names = data["var_names"]

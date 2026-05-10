@@ -1,10 +1,10 @@
-
+﻿
 import requests
 import os
 import scanpy as sc
 
 def fetch_real_hca_segments():
-    print(f"🧬 PHASE 1: Segmented Real Data Acquisition (Target: 150,000 Heart Cells)...")
+    print(f"ðŸ§¬ PHASE 1: Segmented Real Data Acquisition (Target: 150,000 Heart Cells)...")
     
     # We use the CellxGene Census direct download links for the Heart Atlas
     # To avoid the 5GB crash, we pull the 2023 Cardiac Multi-Organ subset
@@ -15,9 +15,9 @@ def fetch_real_hca_segments():
     os.makedirs("data/real", exist_ok=True)
     
     if os.path.exists(save_path):
-        print(f"✅ Data already detected. Skipping download.")
+        print(f"âœ… Data already detected. Skipping download.")
     else:
-        print(f"📥 Downloading Official HCA Heart Atlas (Segmented Method)...")
+        print(f"ðŸ“¥ Downloading Official HCA Heart Atlas (Segmented Method)...")
         # Stream the download in 10MB chunks to avoid RAM spikes
         with requests.get(url, stream=True) as r:
             r.raise_for_status()
@@ -28,10 +28,10 @@ def fetch_real_hca_segments():
                     chunk_count += 1
                     if chunk_count % 10 == 0:
                         print(f"   - Received {chunk_count * 10} MB...")
-        print(f"✅ Download Complete: {save_path}")
+        print(f"âœ… Download Complete: {save_path}")
 
     # PHASE 2: Verification and Splitting (The 'Separation' Strategy)
-    print(f"🧬 PHASE 2: Inspecting Real Data Anatomy...")
+    print(f"ðŸ§¬ PHASE 2: Inspecting Real Data Anatomy...")
     adata = sc.read_h5ad(save_path, backed='r')
     print(f"   - Official Shape: {adata.shape}")
     
@@ -40,7 +40,7 @@ def fetch_real_hca_segments():
     n_cells = adata.shape[0]
     segment_size = n_cells // 10
     
-    print(f"🧬 PHASE 3: Splitting into 10 High-Speed Segments...")
+    print(f"ðŸ§¬ PHASE 3: Splitting into 10 High-Speed Segments...")
     for i in range(10):
         start = i * segment_size
         end = (i + 1) * segment_size if i < 9 else n_cells
@@ -53,7 +53,7 @@ def fetch_real_hca_segments():
         else:
             print(f"   - Segment {i} already exists.")
             
-    print(f"🎉 SUCCESS: 150,000 REAL HCA cells acquired and 'separated' into 10 modules.")
+    print(f"ðŸŽ‰ SUCCESS: 150,000 REAL HCA cells acquired and 'separated' into 10 modules.")
 
 if __name__ == "__main__":
     fetch_real_hca_segments()

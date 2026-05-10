@@ -1,6 +1,6 @@
-# -*- coding: utf-8 -*-
+﻿# -*- coding: utf-8 -*-
 """
-Ensembl → Gene Symbol Mapping for the 486k Heart Cell Atlas
+Ensembl â†’ Gene Symbol Mapping for the 486k Heart Cell Atlas
 ============================================================
 Converts var_names from Ensembl IDs (ENSG...) to gene symbols (POU5F1, SOX2...)
 using the 'feature_name' column already embedded in the h5ad file.
@@ -24,7 +24,7 @@ p("486,134 cells | 32,383 genes")
 p("=" * 60)
 
 # ============================================================
-# STEP 1: Extract the full Ensembl → Symbol mapping from the file
+# STEP 1: Extract the full Ensembl â†’ Symbol mapping from the file
 # ============================================================
 p("\n[1] Extracting mapping from h5ad file...")
 
@@ -39,7 +39,7 @@ with h5py.File(INPUT_FILE, 'r') as f:
                   for v in fn['categories'][:]]
     codes = fn['codes'][:]
     
-    # Build the mapping: ensembl_id → gene_symbol
+    # Build the mapping: ensembl_id â†’ gene_symbol
     gene_symbols = [categories[code] for code in codes]
     
     # Also get cell count

@@ -1,5 +1,5 @@
-# -*- coding: utf-8 -*-
-"""ZENITH QC PIPELINE v1.2 — Memory-safe, uses pre-computed QC from file"""
+﻿# -*- coding: utf-8 -*-
+"""ZENITH QC PIPELINE v1.2 â€” Memory-safe, uses pre-computed QC from file"""
 import sys, os, time, json, h5py, numpy as np, gc
 from scipy.sparse import csr_matrix
 import anndata as ad, pandas as pd

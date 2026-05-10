@@ -1,7 +1,7 @@
-"""
+﻿"""
 test_partial_safety.py
 ~~~~~~~~~~~~~~~~~~~~~~
-ZENITH PARTIAL REPROGRAMMING — INSTITUTIONAL TEST SUITE v2.0
+ZENITH PARTIAL REPROGRAMMING â€” INSTITUTIONAL TEST SUITE v2.0
 
 A comprehensive, production-grade test suite for the Safety Firewall,
 Sirtuin Pathway Scorer, Horvath Clock Enrichment, and database integrity.
@@ -20,11 +20,11 @@ Test Categories:
    11. Cross-Mode Consistency Validation
 
 References:
-    - Sarkar et al. (2020) Nature Cell Biology — 13-year rejuvenation limit
-    - Sinclair DA et al. (2020) Nature 588:124-129 — OSK vision restoration
-    - Horvath S (2013) Genome Biology 14:R115 — Epigenetic clock
+    - Sarkar et al. (2020) Nature Cell Biology â€” 13-year rejuvenation limit
+    - Sinclair DA et al. (2020) Nature 588:124-129 â€” OSK vision restoration
+    - Horvath S (2013) Genome Biology 14:R115 â€” Epigenetic clock
 
-Author: Nilus Lab — Quality Assurance Division
+Author: Nilus Lab â€” Quality Assurance Division
 Date: 2026-05-01
 Classification: INSTITUTIONAL (RUO)
 """
@@ -73,7 +73,7 @@ class TestOncogeneFirewall(unittest.TestCase):
     """
 
     def test_myc_blocked_all_modes(self):
-        """c-MYC is a proto-oncogene — must be blocked in ALL modes including aggressive."""
+        """c-MYC is a proto-oncogene â€” must be blocked in ALL modes including aggressive."""
         for mode in ["conservative", "balanced", "aggressive"]:
             with self.subTest(mode=mode):
                 result = filter_for_partial_reprogramming(["MYC"], mode=mode)
@@ -81,7 +81,7 @@ class TestOncogeneFirewall(unittest.TestCase):
                               f"CRITICAL: MYC leaked through in {mode} mode!")
 
     def test_kras_blocked_all_modes(self):
-        """KRAS drives constitutive growth signaling — never safe."""
+        """KRAS drives constitutive growth signaling â€” never safe."""
         for mode in ["conservative", "balanced", "aggressive"]:
             with self.subTest(mode=mode):
                 self.assertIn("KRAS", _blocked_genes(
@@ -94,14 +94,14 @@ class TestOncogeneFirewall(unittest.TestCase):
                     filter_for_partial_reprogramming(["BRAF"], mode=mode)))
 
     def test_bcl2_blocked_all_modes(self):
-        """BCL2 blocks apoptosis — immortalization risk."""
+        """BCL2 blocks apoptosis â€” immortalization risk."""
         for mode in ["conservative", "balanced", "aggressive"]:
             with self.subTest(mode=mode):
                 self.assertIn("BCL2", _blocked_genes(
                     filter_for_partial_reprogramming(["BCL2"], mode=mode)))
 
     def test_all_oncogenes_blocked_balanced(self):
-        """Submit the entire oncogene blacklist — every single entry must be blocked."""
+        """Submit the entire oncogene blacklist â€” every single entry must be blocked."""
         all_oncogenes = list(ONCOGENE_BLACKLIST.keys())
         result = filter_for_partial_reprogramming(all_oncogenes, mode="balanced")
         for gene in all_oncogenes:
@@ -455,7 +455,7 @@ class TestEdgeCases(unittest.TestCase):
         self.assertEqual(len(r["approved"]), 2)
 
     def test_lowercase_input(self):
-        """The filter normalizes to uppercase — lowercase should still work."""
+        """The filter normalizes to uppercase â€” lowercase should still work."""
         r = filter_for_partial_reprogramming(["sirt1"], mode="balanced")
         self.assertEqual(r["approved"][0]["gene"], "SIRT1")
 
@@ -465,7 +465,7 @@ class TestEdgeCases(unittest.TestCase):
         self.assertEqual(r["approved"][0]["gene"], "SIRT1")
 
     def test_large_cocktail(self):
-        """20 factors at once — system should not crash."""
+        """20 factors at once â€” system should not crash."""
         factors = list(PARTIAL_SAFE_FACTORS.keys())[:20]
         r = filter_for_partial_reprogramming(factors, mode="balanced")
         self.assertGreater(len(r["approved"]), 0)
@@ -566,7 +566,7 @@ class TestCrossModeConsistency(unittest.TestCase):
 
 if __name__ == "__main__":
     print("=" * 70)
-    print("  ZENITH SAFETY FIREWALL — INSTITUTIONAL TEST SUITE v2.0")
+    print("  ZENITH SAFETY FIREWALL â€” INSTITUTIONAL TEST SUITE v2.0")
     print("  Nilus Lab | Quality Assurance Division")
     print("=" * 70)
     start = time.time()

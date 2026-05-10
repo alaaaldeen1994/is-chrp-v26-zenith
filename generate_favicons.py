@@ -1,4 +1,4 @@
-from PIL import Image
+﻿from PIL import Image
 import os
 
 def generate_icons(source_path):

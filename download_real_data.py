@@ -1,4 +1,4 @@
-import requests
+﻿import requests
 import os
 import pandas as pd
 import io
@@ -10,19 +10,19 @@ def download_geo_data(accession):
     """
     Downloads and parses a GEO Series Matrix file for gene expression time-course.
     """
-    print(f"📡 Connecting to NCBI GEO for {accession}...")
+    print(f"ðŸ“¡ Connecting to NCBI GEO for {accession}...")
     url = f"https://ftp.ncbi.nlm.nih.gov/geo/series/GSE108nnn/{accession}/matrix/{accession}_series_matrix.txt.gz"
     
     try:
-        print(f"⬇️ Downloading {url}...")
+        print(f"â¬‡ï¸ Downloading {url}...")
         response = requests.get(url, stream=True)
         response.raise_for_status()
         
         content = response.content
-        print(f"✅ Download complete ({len(content)/1024/1024:.2f} MB). Parsing...")
+        print(f"âœ… Download complete ({len(content)/1024/1024:.2f} MB). Parsing...")
         return content
     except Exception as e:
-        print(f"❌ Error downloading matrix: {e}")
+        print(f"âŒ Error downloading matrix: {e}")
         return None
 
 def parse_geo_matrix(content):
@@ -83,7 +83,7 @@ def parse_geo_matrix(content):
         if day not in time_map: time_map[day] = []
         time_map[day].append(metadata['sample_ids'][i])
 
-    print(f"📅 Identified Timepoints: {sorted(list(time_map.keys()))} days")
+    print(f"ðŸ“… Identified Timepoints: {sorted(list(time_map.keys()))} days")
 
     # 2. Extract Data Table
     # The table is between !Series_matrix_table_begin and !series_matrix_table_end
@@ -98,7 +98,7 @@ def parse_geo_matrix(content):
             break
             
     if start_line >= end_line:
-        print("⚠️ Could not find data table bounds.")
+        print("âš ï¸ Could not find data table bounds.")
         return None, None
         
     # Isolate the block
@@ -122,9 +122,9 @@ def parse_geo_matrix(content):
         df.columns = [c.replace('"', '') for c in df.columns]
         # Clean index (remove quotes)
         df.index = [str(idx).replace('"', '') for idx in df.index]
-        print(f"✅ Parsed {len(df)} probes x {len(df.columns)} samples")
+        print(f"âœ… Parsed {len(df)} probes x {len(df.columns)} samples")
     except Exception as e:
-        print(f"⚠️ Parsing failed: {e}")
+        print(f"âš ï¸ Parsing failed: {e}")
         return None, None
 
     return df, time_map
@@ -150,7 +150,7 @@ def main():
             "Mki67": "MKI67"
         }
         
-        print("\n🔍 Extracting authentic gene trajectories...")
+        print("\nðŸ” Extracting authentic gene trajectories...")
         
         authentic_data = {
             "description": "REAL GSE108222 Data (Parsed)",
@@ -175,7 +175,7 @@ def main():
             valid_samples = [s for s in sample_ids if s in df.columns]
             
             if not valid_samples:
-                print(f"⚠️ No samples found for Day {d}")
+                print(f"âš ï¸ No samples found for Day {d}")
                 for k in extracted_genes: extracted_genes[k].append(0.0)
                 continue
 
@@ -201,7 +201,7 @@ def main():
                 extracted_genes[human_sym].append(float(val))
 
         # Normalize Data (0-1 Scaling for comparison)
-        print("📊 Normalizing trajectories...")
+        print("ðŸ“Š Normalizing trajectories...")
         for sym, vals in extracted_genes.items():
             v_arr = np.array(vals)
             if v_arr.max() > 0:
@@ -217,7 +217,7 @@ def main():
         with open("validation_results/gse108222_reference.json", "w") as f:
             json.dump(authentic_data, f, indent=2)
             
-        print("✅ REAL VALIDATION DATA SAVED.")
+        print("âœ… REAL VALIDATION DATA SAVED.")
         print("   (Note: If values are all 0, it means Probe-to-Gene mapping failed without GPL annotation file.)")
 
 if __name__ == "__main__":

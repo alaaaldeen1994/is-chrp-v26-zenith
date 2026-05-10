@@ -1,9 +1,9 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """
 Phase 6: Complete View Isolation
 """
 
-print("🔒 Phase 6: View Isolation...")
+print("ðŸ”’ Phase 6: View Isolation...")
 print("=" * 70)
 
 with open('css/style.css', 'r', encoding='utf-8') as f:
@@ -45,12 +45,12 @@ if "PHASE 6: COMPLETE VIEW ISOLATION" not in css:
     with open('css/style.css', 'w', encoding='utf-8') as f:
         f.write(css)
     
-    print("✅ View isolation CSS rules added")
+    print("âœ… View isolation CSS rules added")
     print("   - 3D panel hidden in 2D/Microscopy")
     print("   - HUD hidden in 3D")
     print("   - Legends properly scoped")
     print("   - Selection info only in 3D")
 else:
-    print("✅ View isolation already present")
+    print("âœ… View isolation already present")
 
-print("\n✅ PHASE 6 COMPLETE!")
+print("\nâœ… PHASE 6 COMPLETE!")

@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """
 Phase 7: Quality Polish - Emissive glows and smooth transitions
 """
@@ -10,7 +10,7 @@ def check_syntax():
                           capture_output=True, text=True)
     return result.returncode == 0, result.stderr
 
-print("✨ Phase 7: Quality Polish...")
+print("âœ¨ Phase 7: Quality Polish...")
 print("=" * 70)
 
 with open('js/script.js', 'r', encoding='utf-8') as f:
@@ -49,7 +49,7 @@ if "PHASE 7: Enhanced colors" not in content:
                 this.instancedMesh.setColorAt(i, color);"""
     
     content = content.replace(old_color, new_color)
-    print("✅ Emissive glow added (iPSC: 15%, Tumor: 20%, Death: 0%)")
+    print("âœ… Emissive glow added (iPSC: 15%, Tumor: 20%, Death: 0%)")
 
 with open('js/script.js', 'w', encoding='utf-8') as f:
     f.write(content)
@@ -58,9 +58,9 @@ with open('js/script.js', 'w', encoding='utf-8') as f:
 is_valid, error = check_syntax()
 
 if is_valid:
-    print("✅ JavaScript syntax valid")
+    print("âœ… JavaScript syntax valid")
 else:
-    print("❌ Syntax error:")
+    print("âŒ Syntax error:")
     print(error)
     subprocess.run(['git', 'checkout', 'HEAD', '--', 'js/script.js'])
     exit(1)
@@ -107,10 +107,10 @@ button {
     with open('css/style.css', 'w', encoding='utf-8') as f:
         f.write(css)
     
-    print("✅ Smooth transitions added (0.3s fade)")
+    print("âœ… Smooth transitions added (0.3s fade)")
 
 print("\n" + "=" * 70)
-print("✨ PHASE 7 COMPLETE!")
+print("âœ¨ PHASE 7 COMPLETE!")
 print("   - iPSC cells glow (active)")
 print("   - Tumor cells glow (metabolic)")
 print("   - Dead cells darkened")

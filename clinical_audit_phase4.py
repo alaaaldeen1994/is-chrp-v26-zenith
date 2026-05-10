@@ -1,4 +1,4 @@
-import torch
+﻿import torch
 import numpy as np
 import os
 import sys
@@ -10,7 +10,7 @@ from bridge_server import ZenithV2DeepDrift, GENE_SYMBOLS
 
 def run_clinical_audit():
     print("==================================================================")
-    print("🧪 ZENITH ULTRA-V4: PHASE 4 CLINICAL AUDIT")
+    print("ðŸ§ª ZENITH ULTRA-V4: PHASE 4 CLINICAL AUDIT")
     print("==================================================================")
     print("Target: 150,000-Cell HCA Fine-Tuned Transformer")
     print("Dimensions: 5,000 HD Gene Manifold")
@@ -22,13 +22,13 @@ def run_clinical_audit():
     
     weights_path = "models/driftmlp_trained/driftmlp.pt"
     if not os.path.exists(weights_path):
-        print(f"❌ ERROR: Model weights not found at {weights_path}")
+        print(f"âŒ ERROR: Model weights not found at {weights_path}")
         return
 
-    print(f"📦 Loading Phase 4 Weights: {weights_path}...")
+    print(f"ðŸ“¦ Loading Phase 4 Weights: {weights_path}...")
     model.load_state_dict(torch.load(weights_path, map_location=device))
     model.eval()
-    print("✅ Model weights verified and loaded into memory.")
+    print("âœ… Model weights verified and loaded into memory.")
 
     # 2. Prepare Audit Case (Senescent Heart Cell)
     print("\n[CASE STUDY] Subject: Senescent Cardiomyocyte (BioAge 0.85)")
@@ -55,7 +55,7 @@ def run_clinical_audit():
     input_tensor = torch.tensor(input_np, dtype=torch.float16).unsqueeze(0).to(device)
 
     # 3. Execute Audit
-    print("🚀 Running Backpropagation Audit Through Transformer Stack...")
+    print("ðŸš€ Running Backpropagation Audit Through Transformer Stack...")
     with torch.no_grad():
         drift, manifold = model(input_tensor, return_latent=True)
     
@@ -77,10 +77,10 @@ def run_clinical_audit():
     # Conclusion
     print("\n[CONCLUSION]")
     if esi > 0.85:
-        print("✅ SUCCESS: The Zenith Ultra Transformer identifies a valid rejuvenation trajectory.")
+        print("âœ… SUCCESS: The Zenith Ultra Transformer identifies a valid rejuvenation trajectory.")
         print("   The cell has overcome the chromatin barrier with high-fidelity manifold alignment.")
     else:
-        print("⚠️ CAUTION: Significant epigenetic resistance detected.")
+        print("âš ï¸ CAUTION: Significant epigenetic resistance detected.")
         print("   The model suggests increasing DRP-Alpha-12 potency to neutralize H3K9me3.")
 
     print("\n==================================================================")

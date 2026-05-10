@@ -1,6 +1,6 @@
-# -*- coding: utf-8 -*-
+﻿# -*- coding: utf-8 -*-
 """
-Ensembl → Gene Symbol Mapping for the 486k Heart Cell Atlas
+Ensembl â†’ Gene Symbol Mapping for the 486k Heart Cell Atlas
 Step 1: Check what gene metadata exists in the file
 """
 import sys, os

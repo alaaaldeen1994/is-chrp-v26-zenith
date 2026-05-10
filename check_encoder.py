@@ -1,4 +1,4 @@
-from scvi.model import SCVI
+﻿from scvi.model import SCVI
 import torch
 
 model = SCVI.load("models/scvi_model_486k")

@@ -1,4 +1,4 @@
-import json
+﻿import json
 import os
 import argparse
 from datetime import datetime
@@ -58,7 +58,7 @@ class ValidationGenerator:
         md += "| Compound | Concentration | Timing | Purpose |\n"
         md += "| :--- | :--- | :--- | :--- |\n"
         for d in drugs:
-            md += f"| {d} | 5-10 µM | Days 0-7 | Synergistic Fate Bias |\n"
+            md += f"| {d} | 5-10 ÂµM | Days 0-7 | Synergistic Fate Bias |\n"
         if not drugs:
             md += "| None | N/A | N/A | Basal Reprogramming |\n"
         md += "\n"
@@ -67,7 +67,7 @@ class ValidationGenerator:
         base_media = MEDIA_REAGENTS.get(target_cell, "Standard Reprogramming Medium (DMEM + 10% FBS)")
         md += f"**Base Medium:** {base_media}\n"
         md += "**Coating:** Matrigel (1:100) or Fibronectin\n"
-        md += "**Incubation:** 37°C, 5% CO2, 5% O2 (Hypoxic Optimization)\n\n"
+        md += "**Incubation:** 37Â°C, 5% CO2, 5% O2 (Hypoxic Optimization)\n\n"
         
         md += "## 4. Validation & Analytics (FACS/qPCR)\n"
         markers = FACS_MARKERS.get(target_cell, ["GAPDH (Control)", "ACTB (Control)"])

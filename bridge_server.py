@@ -1,4 +1,4 @@
-import uvicorn
+﻿import uvicorn
 from fastapi import FastAPI, Request, HTTPException, Form, Response, Cookie
 from fastapi.responses import HTMLResponse, JSONResponse, FileResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
@@ -51,19 +51,19 @@ class D2HUtility:
     UniProt REST API Integration (rest.uniprot.org)
     
     Strategy (3 tiers):
-      TIER 1 — Direct accession lookup: Fastest, 100% canonical Swiss-Prot entry guaranteed.
-      TIER 2 — Reviewed gene search: Forces Swiss-Prot only for unknown genes.
-      TIER 3 — Local backup: Offline fallback for known critical factors.
+      TIER 1 â€” Direct accession lookup: Fastest, 100% canonical Swiss-Prot entry guaranteed.
+      TIER 2 â€” Reviewed gene search: Forces Swiss-Prot only for unknown genes.
+      TIER 3 â€” Local backup: Offline fallback for known critical factors.
     """
 
     # TIER 1: Known canonical UniProt accession IDs (Swiss-Prot reviewed, Homo sapiens)
-    # These are permanent, stable accessions — they never change.
+    # These are permanent, stable accessions â€” they never change.
     CANONICAL_ACCESSIONS = {
-        "POU5F1": "Q01860",  # OCT4 — Core pluripotency TF (POU domain)
+        "POU5F1": "Q01860",  # OCT4 â€” Core pluripotency TF (POU domain)
         "OCT4":   "Q01860",  # Alias
         "SOX2":   "P48431",  # HMG-box pioneer TF
-        "KLF4":   "O43474",  # Krüppel-like factor 4 (barrier-to-reprogramming eraser)
-        "MYC":    "P01106",  # c-MYC oncogene (use with caution — tumor risk)
+        "KLF4":   "O43474",  # KrÃ¼ppel-like factor 4 (barrier-to-reprogramming eraser)
+        "MYC":    "P01106",  # c-MYC oncogene (use with caution â€” tumor risk)
         "NANOG":  "Q9UER7",  # Homeobox pluripotency TF
         "LIN28A": "Q9H9Z2",  # RNA-binding protein (Thomson reprogramming)
         "GATA4":  "P43694",  # GATA zinc-finger cardiac TF
@@ -85,7 +85,7 @@ class D2HUtility:
     async def fetch_real_sequences(genes: List[str]) -> dict:
         """
         Fetches canonical protein sequences from UniProt.
-        Priority: TIER 1 (accession) → TIER 2 (reviewed search) → TIER 3 (local backup)
+        Priority: TIER 1 (accession) â†’ TIER 2 (reviewed search) â†’ TIER 3 (local backup)
         """
         results = {}
         async with httpx.AsyncClient(timeout=15.0) as client:
@@ -94,7 +94,7 @@ class D2HUtility:
                 sequence = None
                 source = "unknown"
 
-                # ── TIER 1: Direct accession lookup (fastest & most precise) ───────────
+                # â”€â”€ TIER 1: Direct accession lookup (fastest & most precise) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
                 accession = D2HUtility.CANONICAL_ACCESSIONS.get(gene_upper)
                 if accession:
                     try:
@@ -105,11 +105,11 @@ class D2HUtility:
                             sequence = data.get("sequence", {}).get("value", "")
                             if sequence:
                                 source = f"UniProt/{accession} (Tier1-Accession)"
-                                print(f"✅ UniProt TIER1: {gene_upper} → {accession} ({len(sequence)} aa)")
+                                print(f"âœ… UniProt TIER1: {gene_upper} â†’ {accession} ({len(sequence)} aa)")
                     except Exception as e:
-                        print(f"⚠️ UniProt TIER1 failed for {gene_upper}/{accession}: {e}")
+                        print(f"âš ï¸ UniProt TIER1 failed for {gene_upper}/{accession}: {e}")
 
-                # ── TIER 2: Reviewed-only gene name search (Swiss-Prot canonical) ──────
+                # â”€â”€ TIER 2: Reviewed-only gene name search (Swiss-Prot canonical) â”€â”€â”€â”€â”€â”€
                 if not sequence:
                     try:
                         # reviewed:true forces Swiss-Prot only (gold standard, expert-curated)
@@ -128,11 +128,11 @@ class D2HUtility:
                                 sequence = entry.get("sequence", {}).get("value", "")
                                 if sequence:
                                     source = f"UniProt/{acc} (Tier2-Reviewed)"
-                                    print(f"✅ UniProt TIER2: {gene_upper} → {acc} ({len(sequence)} aa)")
+                                    print(f"âœ… UniProt TIER2: {gene_upper} â†’ {acc} ({len(sequence)} aa)")
                     except Exception as e:
-                        print(f"⚠️ UniProt TIER2 failed for {gene_upper}: {e}")
+                        print(f"âš ï¸ UniProt TIER2 failed for {gene_upper}: {e}")
 
-                # ── TIER 3: Local backup database (offline fallback) ──────────────────
+                # â”€â”€ TIER 3: Local backup database (offline fallback) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
                 if not sequence:
                     backup_db = {
                         "POU5F1": "MAGHLASDFAFSPPPGGGGDGPGGPEPGWVDPRTWLSFQGPPGGPGIGPGVGPGSEVWGIPPCPPPYEFCGGMAYCGPQVGVGLVPQGGLETSQPEGEAGVGVESNSDGASDEPCPPVPSSAGLAEVPALPVPGGPLGVAAGLGPAGGGSPGGGGSPGGGGSPGGGGSPGSSRAQASAASAPKSKPASADHSGGS",
@@ -145,11 +145,11 @@ class D2HUtility:
                     sequence = backup_db.get(gene_upper)
                     if sequence:
                         source = "LocalBackup (Tier3)"
-                        print(f"⚠️ UniProt TIER3 (backup): {gene_upper} ({len(sequence)} aa)")
+                        print(f"âš ï¸ UniProt TIER3 (backup): {gene_upper} ({len(sequence)} aa)")
                     else:
-                        # Mark clearly — do NOT silently return garbage
+                        # Mark clearly â€” do NOT silently return garbage
                         sequence = f"SEQUENCE_NOT_FOUND_{gene_upper}_VERIFY_MANUALLY_ON_UNIPROT_ORG"
-                        print(f"❌ No sequence available for {gene_upper}")
+                        print(f"âŒ No sequence available for {gene_upper}")
 
                 results[gene_upper] = sequence
         return results
@@ -188,17 +188,17 @@ class D2HUtility:
                     # Sequence length
                     annotations["length"] = data.get("sequence", {}).get("length")
         except Exception as e:
-            print(f"⚠️ Annotation fetch failed for {accession}: {e}")
+            print(f"âš ï¸ Annotation fetch failed for {accession}: {e}")
         return annotations
 
     @staticmethod
     def generate_z_linker_handshake(seq1: str, seq2: str) -> str:
         """
-        (G4S)×3 Flexible Linker Fusion (15aa): [Domain A] - GGGGSGGGGSGGGGS - [Domain B]
-        Restored to (G4S)×3 (15aa) with 15aa padding for high-fidelity structural docking,
+        (G4S)Ã—3 Flexible Linker Fusion (15aa): [Domain A] - GGGGSGGGGSGGGGS - [Domain B]
+        Restored to (G4S)Ã—3 (15aa) with 15aa padding for high-fidelity structural docking,
         resolving ipTM collapse by allowing proper conformational flexibility.
         """
-        linker = "GGGGSGGGGSGGGGS"  # (G4S)x3 — 15aa
+        linker = "GGGGSGGGGSGGGGS"  # (G4S)x3 â€” 15aa
         return f"{seq1}{linker}{seq2}"
 
 # --- ZENITH PRO PERFORMANCE TUNING ---
@@ -295,7 +295,7 @@ model_mode = "SIMULATION"
 
 
 # Zenith Ultra-V4: ~285M Parameter Multi-Head Transformer Foundation Engine
-# Governing Law: Attn(Q, K, V) = Softmax(QKᵀ/√d)V
+# Governing Law: Attn(Q, K, V) = Softmax(QKáµ€/âˆšd)V
 # --- PHASE 3: EPIGENETIC ENGINE (BIO-AGE AWARE REGULATION) ---
 
 class EpigeneticGate(nn.Module):
@@ -363,7 +363,7 @@ class ZenithV2DeepDrift(nn.Module):
     """
     def __init__(self, input_dim=5000, hidden_dim=1024, depth=12, num_heads=8):
         super().__init__()
-        print(f"🧬 INITIALIZING ZENITH ULTRA-ENGINE: Epigenetic-Aware 5K Transformer")
+        print(f"ðŸ§¬ INITIALIZING ZENITH ULTRA-ENGINE: Epigenetic-Aware 5K Transformer")
         
         self.encoder = nn.Sequential(
             nn.Linear(input_dim * 2 + 1, hidden_dim),
@@ -387,9 +387,9 @@ class ZenithV2DeepDrift(nn.Module):
 
         # Scientific Honesty: Calculate actual parameter count
         total_params = sum(p.numel() for p in self.parameters())
-        print(f"🧬 [ZENITH-CORE] Parameter Matrix: {total_params / 1e6:.1f} Million")
-        print(f"🧬 [ZENITH-CORE] Gene Vocabulary: {input_dim}")
-        print(f"🧬 [ZENITH-CORE] Optimized for 32 Inference Threads")
+        print(f"ðŸ§¬ [ZENITH-CORE] Parameter Matrix: {total_params / 1e6:.1f} Million")
+        print(f"ðŸ§¬ [ZENITH-CORE] Gene Vocabulary: {input_dim}")
+        print(f"ðŸ§¬ [ZENITH-CORE] Optimized for 32 Inference Threads")
 
     def _init_weights(self):
         for m in self.modules():
@@ -445,7 +445,7 @@ class MemoryGuardian:
 # Global Guardian Instance
 guardian = MemoryGuardian()
 
-# v26.1: High-Fidelity Diffusion Suite
+# v27.0 GOLD: High-Fidelity Diffusion Suite
 class SignalingField:
     """
     2D Diffusion PDE for Real-Space Paracrine Signaling (PI Requirement).
@@ -477,7 +477,7 @@ class SignalingField:
 
 signaling_field = SignalingField(size=64)
 
-# v26.1: High-Fidelity Volumetric Diffusion
+# v27.0 GOLD: High-Fidelity Volumetric Diffusion
 class SignalingField3D:
     """
     3D Diffusion PDE for Real-Space Paracrine Signaling (PI Requirement).
@@ -566,11 +566,11 @@ _base_symbols = [
     "EGFR", "FGFR1", "TGFBR1", "BMPR2", "NOTCH1", "WNT1", "SHH", "LIFR", "IFNGR1", "IL6R",
     # 90-99: HOUSEKEEPING V1
     "ACTB", "TUBB", "LMNA", "LMNB1", "HSP90AA1", "CANX", "PDIK1L", "B2M", "PPIA", "RPL13A",
-    # 100-109: MATURATION / METABOLIC (V26.1 Expansion)
+    # 100-109: MATURATION / METABOLIC (v27.0 GOLD Expansion)
     "PPARGC1A", "PPARA", "RXRA", "CPT1B", "ACADM", "OXCT1", "HADHB", "UCP3", "KCNJ2", "FABP3",
     # 110-119: EPIGENETIC CLOCK (HORVATH/ALTOS LABS PRECISION)
     "ELOVL2", "FHL2", "ASPA", "EDARADD", "C1orf132", "KLF14", "TRIM59", "CDH23", "NHLRC1", "SCGN",
-    # 120-139: EXTENDED RESEARCH MODULE (v26.4 GOLD)
+    # 120-139: EXTENDED RESEARCH MODULE (v27.0 GOLD GOLD)
     "PPP3CA", "PPP3CB", "NFATC1", "NFATC2", "PLN", "CASQ2", "ATP2A2", "RYR2", "MYL2", "MYL7",
     "SYP", "DLG4", "GRIN1", "GRIN2B", "SYNJ1", "STX1A", "SNAP25", "VAMP2", "SYN1", "GAP43",
     "SIRT1", "SIRT2", "SIRT3", "SIRT4", "SIRT5", "SIRT6", "SIRT7", "FOXO3", "FOXO1", "FOXO4",
@@ -598,7 +598,7 @@ GENE_SYMBOLS = GENE_SYMBOLS[:5000] # Force 5000 index constraint
 
 # --- LIFESPAN EVENT HANDLER ---
 
-# v26.1: Mock SCVI for robust fallback when model files are absent
+# v27.0 GOLD: Mock SCVI for robust fallback when model files are absent
 class MockSCVI:
     """Professional fallback for when HCA model files are missing."""
     def __init__(self):
@@ -680,7 +680,7 @@ async def lifespan(app: FastAPI):
 
     if SCVI_AVAILABLE:
         # ================================================================
-        # ZENITH v26.4 MODEL PRIORITY SYSTEM
+        # ZENITH v27.0 GOLD MODEL PRIORITY SYSTEM
         # Priority 1: 486k-cell model (trained on full Heart Cell Atlas)
         # Priority 2: 18k-cell model (legacy HCA subsampled)
         # Priority 3: Mock SCVI (preview/fallback mode)
@@ -697,12 +697,12 @@ async def lifespan(app: FastAPI):
         # Try Priority 1 first
         if os.path.exists(model_pt_486k):
             try:
-                print("[ZENITH v26.4] Detected 486k Full HCA Model — upgrading...")
+                print("[ZENITH v27.0 GOLD] Detected 486k Full HCA Model â€” upgrading...")
                 # The newer scvi-tools versions pack everything into model.pt and can load without adata.h5ad!
                 scvi_model = SCVI.load(model_dir_486k)
                 model_mode = "CLINICAL"
                 print("SUCCESS: 486k Full HCA Model loaded (486,134 cells | 13 donors | Nature 2020).")
-                print("  Yamanaka factors: POU5F1, SOX2, NANOG, KLF4, MYC, LIN28A — 6/6 confirmed.")
+                print("  Yamanaka factors: POU5F1, SOX2, NANOG, KLF4, MYC, LIN28A â€” 6/6 confirmed.")
             except Exception as e:
                 print(f"WARNING: 486k model found but failed to load: {e}")
                 print("Falling back to Priority 2 (18k model)...")
@@ -766,7 +766,7 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(
-    title="Nilus Lab | IS-CHRP v26.1 Clinical AI Bridge", 
+    title="Nilus Lab | IS-CHRP v27.0 GOLD Clinical AI Bridge", 
     description="Professional-grade AI bridge for Clinical Digital Twins by Nilus Lab (Zenith Edition).",
     lifespan=lifespan
 )
@@ -879,7 +879,7 @@ async def serve_profile():
 @app.get("/api/uniprot-lookup")
 async def uniprot_lookup(gene: str):
     """
-    ZENITH UniProt Live Lookup — Public endpoint.
+    ZENITH UniProt Live Lookup â€” Public endpoint.
     Searches UniProt for any human gene symbol and returns:
       - Canonical sequence (Swiss-Prot reviewed, Homo sapiens)
       - UniProt accession ID
@@ -1184,7 +1184,7 @@ async def get_pilot_dashboard_path():
 async def get_abstract():
     return FileResponse("SCIENTIFIC_ABSTRACT_V26.md", media_type="text/markdown")
 
-# (Duplicate /health endpoint removed — consolidated at line 1056)
+# (Duplicate /health endpoint removed â€” consolidated at line 1056)
 
 # LIVE CELL STATE SYNCHRONIZATION (for 3D View)
 # Global storage for current simulation state and remote commands
@@ -1331,7 +1331,7 @@ class DiscoveryResult(BaseModel):
     drug_advisory: Optional[List[str]] = None
     af3_metrics: Optional[Dict[str, float]] = None
     partial_report: Optional[Dict[str, Any]] = None
-    # Oncogenic risk score: MYC weight × (1 − TP53 weight)
+    # Oncogenic risk score: MYC weight Ã— (1 âˆ’ TP53 weight)
     # Validated proxy: Land et al. 1983 (Nature); Zindy et al. 1998 (Genes & Dev)
     # 0.0 = safe, 1.0 = maximal oncogenic pressure
     oncogenic_risk: Optional[float] = None
@@ -1725,7 +1725,7 @@ async def simulate_step(batch: BatchCellState):
         mod_tensor = torch.tensor(vec, dtype=torch.float32)
         drift[:, :1000] += mod_tensor * 0.3
 
-        # v26.1: Specialized Multi-Phenotype Vectors
+        # v27.0 GOLD: Specialized Multi-Phenotype Vectors
         if batch.vector == 'CLINICAL_COMBO':
             for idx in range(n_agents):
                 # We use a deterministic split based on the batch index
@@ -1781,7 +1781,7 @@ async def simulate_step(batch: BatchCellState):
     chromatin_tensor = torch.clamp(chromatin_tensor + chromatin_delta, 0.0, 1.0)
     
     # 6. Apply Drift (Euler-Maruyama)
-    # v26.1: GENOMIC KNOCKOUT CONSTRAINTS
+    # v27.0 GOLD: GENOMIC KNOCKOUT CONSTRAINTS
     # If a researcher has 'silenced' a gene, we zero its drift and state
     scaled_drift = drift * batch.potency
     if batch.knockouts:
@@ -1861,7 +1861,7 @@ def identify_most_relevant_factors(attribution_map: dict, top_n: int = 12) -> di
     """
     Returns the top-N genes from the GPT attribution map, sorted by weight.
     Priority is given to HIGH_FIDELITY_FACTORS (known HGNC-approved TFs) but
-    all returned genes are preserved — none are silently dropped.
+    all returned genes are preserved â€” none are silently dropped.
     This ensures novel protocols with valid non-canonical factors are not truncated.
     """
     # Tier 1: known high-fidelity factors first
@@ -1949,14 +1949,14 @@ async def get_target_vector_from_query(query: str, api_key: Optional[str] = None
         explanation = data.get("rationale", "Semantic mapping successful.")
         audit_data  = data.get("audit", {})
         dna_motif   = data.get("dna_motif", "CTTTGTTATGCAAAT")  # default: OCT4/SOX2 pluripotency motif (JASPAR MA0142.1)
-        # Cap age_reduction at 13.0 years — maximum published in any in-vitro
+        # Cap age_reduction at 13.0 years â€” maximum published in any in-vitro
         # Yamanaka-based partial reprogramming study (Sarkar et al. 2020, Nature Cell Biology;
         # Lu et al. 2020, Nature). Values above this are not supported by experimental evidence.
         MAX_AGE_REDUCTION_YEARS = 13.0
         raw_age = float(data.get("age_reduction", 0.0))
         age_reduction = min(raw_age, MAX_AGE_REDUCTION_YEARS)
         if raw_age > MAX_AGE_REDUCTION_YEARS:
-            print(f"⚠️ GPT returned age_reduction={raw_age}y — capped at {MAX_AGE_REDUCTION_YEARS}y (max published, Sarkar 2020)")
+            print(f"âš ï¸ GPT returned age_reduction={raw_age}y â€” capped at {MAX_AGE_REDUCTION_YEARS}y (max published, Sarkar 2020)")
         drugs = data.get("drugs", [])
         
         target_vec = torch.zeros(len(GENE_SYMBOLS))
@@ -1994,13 +1994,13 @@ async def generate_af3_manifest(req: dict):
         if not factors: factors = ["POU5F1", "SOX2"] # Final safety fallback
         
         # 2. Sequential Precision Fetch
-        print(f"🧬 D2H PIPELINE: Fetching High-Fidelity Sequences for {factors}")
+        print(f"ðŸ§¬ D2H PIPELINE: Fetching High-Fidelity Sequences for {factors}")
         sequences = await D2HUtility.fetch_real_sequences(factors[:2])
 
         # 3. Domain-Only Extraction before Z-Linker Fusion
         # AlphaFold 3 chain limit: ~2000aa. Full-length fusion of two large proteins
-        # (e.g. POU5F1 360aa + SOX2 317aa + 15aa linker = 692aa — fine)
-        # But GATA4 442aa + TBX5 518aa + 15aa = 975aa — still fine.
+        # (e.g. POU5F1 360aa + SOX2 317aa + 15aa linker = 692aa â€” fine)
+        # But GATA4 442aa + TBX5 518aa + 15aa = 975aa â€” still fine.
         # For very large proteins (TERT 1132aa, MYH7 1935aa) we must trim to functional domain.
         # Known functional domain residue ranges (from UniProt reviewed annotations):
         FUNCTIONAL_DOMAINS = {
@@ -2020,7 +2020,7 @@ async def generate_af3_manifest(req: dict):
             "FOXA2":  (84, 172),    # Forkhead domain
             "PAX6":   (4, 128),     # Paired domain
             "TP53":   (102, 292),   # DNA-binding domain (tumour suppressor core)
-            "TERT":   (601, 900),   # Reverse transcriptase domain (trim — full = 1132aa)
+            "TERT":   (601, 900),   # Reverse transcriptase domain (trim â€” full = 1132aa)
             "SIRT1":  (229, 498),   # Deacetylase domain
             "FOXO3":  (156, 256),   # Forkhead DNA-binding domain
         }
@@ -2040,16 +2040,16 @@ async def generate_af3_manifest(req: dict):
                     return segment
             # No domain info: return full sequence (already verified against chain limit above)
             if len(seq) > 1000:
-                print(f"⚠️ {gene}: No domain annotation, full sequence is {len(seq)}aa — may exceed AF3 limit")
+                print(f"âš ï¸ {gene}: No domain annotation, full sequence is {len(seq)}aa â€” may exceed AF3 limit")
             return seq
 
         seq_a = extract_domain(sequences.get(factors[0], ""), factors[0])
         seq_b = extract_domain(sequences.get(factors[1], ""), factors[1]) if len(factors) >= 2 else ""
 
         total_len = len(seq_a) + len(seq_b) + 15  # 15 = Z-linker
-        print(f"🔗 Domain chain: {factors[0]}={len(seq_a)}aa + Z-linker + {factors[1] if len(factors)>=2 else 'N/A'}={len(seq_b)}aa = {total_len}aa total")
+        print(f"ðŸ”— Domain chain: {factors[0]}={len(seq_a)}aa + Z-linker + {factors[1] if len(factors)>=2 else 'N/A'}={len(seq_b)}aa = {total_len}aa total")
         if total_len > 2000:
-            print(f"⚠️ WARNING: Fused chain {total_len}aa exceeds AF3 2000aa limit. Consider domain-only trimming.")
+            print(f"âš ï¸ WARNING: Fused chain {total_len}aa exceeds AF3 2000aa limit. Consider domain-only trimming.")
 
         # 4. Z-Linker Fusion
         if len(factors) >= 2 and seq_a and seq_b:
@@ -2067,23 +2067,23 @@ async def generate_af3_manifest(req: dict):
         # Validate: only IUPAC DNA characters allowed
         valid_iupac = set('ACGTNRYSWKMBDHV')
         if not all(c in valid_iupac for c in core_motif):
-            print(f"⚠️ Invalid IUPAC motif '{core_motif}' — using N-padded fallback")
+            print(f"âš ï¸ Invalid IUPAC motif '{core_motif}' â€” using N-padded fallback")
             core_motif = "CTTTGTTATGCAAAT"  # OCT4/SOX2 canonical pluripotency motif
 
-        # Pad to standard 35bp with 'N' flanking (neutral — no A-bias)
+        # Pad to standard 35bp with 'N' flanking (neutral â€” no A-bias)
         flank = max(0, (35 - len(core_motif)) // 2)
         remainder = 35 - len(core_motif) - (2 * flank)
         dna_anchor = ('N' * flank) + core_motif + ('N' * (flank + remainder))
-        print(f"🧬 DNA Anchor: {dna_anchor} ({len(dna_anchor)}bp, core={core_motif})") 
+        print(f"ðŸ§¬ DNA Anchor: {dna_anchor} ({len(dna_anchor)}bp, core={core_motif})") 
 
         # 6. Export Master Manifest (AlphaFold 3 Job Format)
         # Reference: https://github.com/google-deepmind/alphafold3/blob/main/docs/input.md
         #
         # IMPORTANT: Transcription factors bind double-stranded DNA (dsDNA).
         # AF3 requires both strands explicitly:
-        #   id "B" = sense strand (5'→3')
-        #   id "C" = antisense strand = reverse complement of B (3'→5' written 5'→3')
-        # Reference: AF3 input spec §3.2; Cramer 2019 (Nat Struct Mol Biol)
+        #   id "B" = sense strand (5'â†’3')
+        #   id "C" = antisense strand = reverse complement of B (3'â†’5' written 5'â†’3')
+        # Reference: AF3 input spec Â§3.2; Cramer 2019 (Nat Struct Mol Biol)
         COMPLEMENT = str.maketrans('ACGTNRYSWKMBDHV', 'TGCANYRWSMKVHDB')
         antisense_anchor = dna_anchor.translate(COMPLEMENT)[::-1]  # Reverse complement
 
@@ -2092,17 +2092,17 @@ async def generate_af3_manifest(req: dict):
             "modelSeeds": [42],
             "sequences": [
                 {"protein": {"id": "A", "sequence": fused_sequence}},
-                {"dna": {"id": "B", "sequence": dna_anchor}},       # Sense strand (5'→3')
+                {"dna": {"id": "B", "sequence": dna_anchor}},       # Sense strand (5'â†’3')
                 {"dna": {"id": "C", "sequence": antisense_anchor}}  # Antisense strand (reverse complement)
             ],
             "dialect": "alphafold3",
             "version": 1
         }
-        print(f"✅ D2H COMPLETE: Manifest | Chain A={len(fused_sequence)}aa | DNA B={len(dna_anchor)}bp + C={len(antisense_anchor)}bp (dsDNA)")
+        print(f"âœ… D2H COMPLETE: Manifest | Chain A={len(fused_sequence)}aa | DNA B={len(dna_anchor)}bp + C={len(antisense_anchor)}bp (dsDNA)")
         return manifest
         
     except Exception as e:
-        print(f"❌ D2H CRITICAL FAILURE: {str(e)}")
+        print(f"âŒ D2H CRITICAL FAILURE: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.post("/discover_hybrid", response_model=DiscoveryResult)
@@ -2119,14 +2119,14 @@ async def discover_hybrid(req: HybridDiscoveryRequest, request: Request):
         target_vec, gpt_rationale, gpt_gene_data, audit_data, dna_motif, age_reduction, drugs = await get_target_vector_from_query(req.target_query, req.api_key)
         target_vec = target_vec.to(dtype=torch.float32)
         
-        current_vec = torch.tensor(req.current_genes, dtype=torch.float32) # Full 5000-dim from v26.4
+        current_vec = torch.tensor(req.current_genes, dtype=torch.float32) # Full 5000-dim from v27.0 GOLD
         
         # 3. Mathematically Grounded scVI Perturbation Prediction
         # The direction in expression space is approximated by the delta
         # between target state and current state (optimal transport proxy).
         ideal_vector = (target_vec - current_vec).detach().numpy().flatten()
         
-        # v26.1: Knockout enforcement in discovery manifold
+        # v27.0 GOLD: Knockout enforcement in discovery manifold
         if req.knockouts:
             for g_idx in req.knockouts:
                 if 0 <= g_idx < 1000:
@@ -2197,11 +2197,11 @@ async def discover_hybrid(req: HybridDiscoveryRequest, request: Request):
         # the real structural validation scores.
         # -----------------------------------------------------------------
 
-        # ── ONCOGENIC RISK SCORE ─────────────────────────────────────────────────
+        # â”€â”€ ONCOGENIC RISK SCORE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
         # Biology: MYC is the canonical oncogene (Land et al., Nature 1983).
         # TP53 is the primary tumour suppressor gating MYC-driven proliferation
         # (Zindy et al., Genes & Development 1998; Vousden & Prives, Cell 2009).
-        # Risk = MYC_weight × (1 − TP53_weight)
+        # Risk = MYC_weight Ã— (1 âˆ’ TP53_weight)
         # 0.0 = no oncogenic pressure, 1.0 = maximal MYC + no p53 suppression.
         myc_w   = float(gpt_gene_data.get("MYC", 0.0))
         tp53_w  = float(gpt_gene_data.get("TP53", 0.3))  # default 0.3 = baseline p53 activity
@@ -2212,7 +2212,7 @@ async def discover_hybrid(req: HybridDiscoveryRequest, request: Request):
             oncogenic_risk_label = "MODERATE"
         else:
             oncogenic_risk_label = "LOW"
-        print(f"⚠️ ONCOGENIC RISK: MYC={myc_w:.2f}, TP53={tp53_w:.2f} → Risk={oncogenic_risk} ({oncogenic_risk_label})")
+        print(f"âš ï¸ ONCOGENIC RISK: MYC={myc_w:.2f}, TP53={tp53_w:.2f} â†’ Risk={oncogenic_risk} ({oncogenic_risk_label})")
 
         # 5. Partial Reprogramming Safety Firewall (ALAA ALDEEN+)
         target_profile = gpt_gene_data
@@ -2298,7 +2298,7 @@ async def generate_opentrons_protocol(req: OpentronsRequest):
 
     script = f"""from opentrons import protocol_api
 
-# ZENITH v26.4 GOLD ROBOTIC BRIDGE | FOUNDATION MODEL EXPORT
+# ZENITH v27.0 GOLD GOLD ROBOTIC BRIDGE | FOUNDATION MODEL EXPORT
 # Generated by Nilus Lab AI Discovery Engine
 # Goal: "{target_query}"
 # Logic: {rationale}
@@ -2397,7 +2397,7 @@ async def discover_protocol(req: DiscoveryRequest):
         # (Optimal transport proxy via delta difference)
         ideal_vector = (target_vec - current_vec).detach().numpy().flatten()
         
-        # v26.1: Knockout enforcement in discovery manifold
+        # v27.0 GOLD: Knockout enforcement in discovery manifold
         if req.knockouts:
             for g_idx in req.knockouts:
                 if 0 <= g_idx < 1000:
@@ -2555,7 +2555,7 @@ async def chat_proxy(req: ChatRequest):
         return {"reply": "Backend Error: Failed to initialize OpenAI client."}
     
     try:
-        print(f"🔄 Calling OpenAI with model: {req.model}")
+        print(f"ðŸ”„ Calling OpenAI with model: {req.model}")
         response = await client.chat.completions.create(
             model=req.model,
             messages=req.messages,
@@ -2624,7 +2624,7 @@ async def discover_protocol_v1(req: DiscoveryRequest):
     Implements Context-Aware Factor Reduction (Kim et al., 2009) and Therapeutic Indexing.
     Prioritizes 'Minimal Effective Dose' to ensure safety (Yamanaka Safety Principle).
     """
-    print(f"🔬 DISCOVERY REQUEST: Target={req.target_type}, Knockouts={req.knockouts}")
+    print(f"ðŸ”¬ DISCOVERY REQUEST: Target={req.target_type}, Knockouts={req.knockouts}")
     
     # 0. Load Guidelines (Context)
     # Ideally logic is hardcoded, but we acknowledge the 'Constitution' exists.
@@ -2646,7 +2646,7 @@ async def discover_protocol_v1(req: DiscoveryRequest):
     semantic_override = False
     if len(req.target_type) > 15 and req.api_key:
         try:
-            print(f"🧠 SEMANTIC ENGINE: Parsing complex query -> '{req.target_type[:50]}...'")
+            print(f"ðŸ§  SEMANTIC ENGINE: Parsing complex query -> '{req.target_type[:50]}...'")
             client = openai.OpenAI(api_key=req.api_key)
             
             completion = client.chat.completions.create(
@@ -2680,7 +2680,7 @@ async def discover_protocol_v1(req: DiscoveryRequest):
                 semantic_override = True
                 
         except Exception as e:
-            print(f"⚠️ SEMANTIC PARSE FAILED: {e}")
+            print(f"âš ï¸ SEMANTIC PARSE FAILED: {e}")
 
     best_protocol = None
     best_score = -999.0
@@ -2700,7 +2700,7 @@ async def discover_protocol_v1(req: DiscoveryRequest):
     try:
         model = get_drift_model()
         if model:
-            print("🤖 ZENITH ENGINE: Running Context-Aware Simulation...")
+            print("ðŸ¤– ZENITH ENGINE: Running Context-Aware Simulation...")
             
             # Detect Precision
             model_dtype = next(model.parameters()).dtype
@@ -2779,7 +2779,7 @@ async def discover_protocol_v1(req: DiscoveryRequest):
             synergy = float(1.0 / (1.0 + np.exp(-best_score * 5)))
 
     except Exception as e:
-        print(f"⚠️ SIM FAILED: {e}")
+        print(f"âš ï¸ SIM FAILED: {e}")
         
     # Fallback Logic (Nobel/Altos Aligned)
     if not best_protocol:
@@ -2819,7 +2819,7 @@ class TrialResponse(BaseModel):
 @app.post("/run_virtual_trial", response_model=TrialResponse)
 async def run_virtual_trial(req: TrialRequest):
     try:
-        print(f"🚀 INITIATING VIRTUAL TRIAL: {req.disease} (N={req.cohort_size})")
+        print(f"ðŸš€ INITIATING VIRTUAL TRIAL: {req.disease} (N={req.cohort_size})")
         
         # 1. GENERATE COHORT (PyTorch Tensor Logic)
         N = req.cohort_size
@@ -2908,7 +2908,7 @@ async def run_virtual_trial(req: TrialRequest):
             "status": "COMPLETED"
         }
     except Exception as e:
-        print(f"❌ TRIAL SIMULATION CRASH: {str(e)}")
+        print(f"âŒ TRIAL SIMULATION CRASH: {str(e)}")
         import traceback
         traceback.print_exc()
         raise HTTPException(status_code=500, detail=f"Simulation Engine Failure: {str(e)}")
@@ -2919,13 +2919,13 @@ async def serve_trials():
 
 # ============================================================
 # OSK PARTIAL REPROGRAMMING ENDPOINT (ALAA ALDEEN+)
-# NEW ROUTE — no existing endpoints modified
+# NEW ROUTE â€” no existing endpoints modified
 # ============================================================
 
 class PartialReprogrammingRequest(BaseModel):
     prompt: str
     mode: str = "balanced"       # "conservative" | "balanced" | "aggressive"
-    bio_age: float = 0.5         # 0.0 (young) → 1.0 (senescent)
+    bio_age: float = 0.5         # 0.0 (young) â†’ 1.0 (senescent)
     cell_type: str = "generic"   # for future expansion
     openai_key: Optional[str] = None
 
@@ -3004,7 +3004,7 @@ async def scvi_population_audit(request: Request):
 async def partial_reprogramming_endpoint(req: PartialReprogrammingRequest):
     """
     ZENITH OSK PARTIAL REPROGRAMMING
-    Prompt → GPT-4o Factor Discovery → Safety Filter → Sirtuin Score → Horvath Score → AF3 Manifest
+    Prompt â†’ GPT-4o Factor Discovery â†’ Safety Filter â†’ Sirtuin Score â†’ Horvath Score â†’ AF3 Manifest
     """
     if not PARTIAL_MODE_AVAILABLE:
         raise HTTPException(status_code=503, detail="Partial Reprogramming module not loaded.")
@@ -3022,7 +3022,7 @@ async def partial_reprogramming_endpoint(req: PartialReprogrammingRequest):
             f"for this cellular reprogramming or rejuvenation goal.\n"
             f"2. \"age_reduction\": estimated years of DNA methylation age reduction (Horvath/GrimAge clock basis) "
             f"achievable with these factors. If this is not a rejuvenation goal, return 0. "
-            f"Be realistic — the maximum published in-vitro partial reprogramming age reduction is ~13 years "
+            f"Be realistic â€” the maximum published in-vitro partial reprogramming age reduction is ~13 years "
             f"(Sarkar et al. 2020, Nature Cell Biology). If the user specifies a cap (e.g. 'cap at 9 years'), "
             f"respect that cap and do not exceed it.\n"
             f"3. \"dna_motif\": the primary 15-25bp TF binding consensus motif (IUPAC, ACGT only) for the "
@@ -3052,7 +3052,7 @@ async def partial_reprogramming_endpoint(req: PartialReprogrammingRequest):
         user_cap = float(cap_match.group(1)) if cap_match else MAX_AGE_REDUCTION_YEARS
         age_reduction = min(raw_age, MAX_AGE_REDUCTION_YEARS, user_cap)
         if raw_age > user_cap:
-            print(f"⚠️ GPT returned age_reduction={raw_age}y — capped at user-requested {user_cap}y")
+            print(f"âš ï¸ GPT returned age_reduction={raw_age}y â€” capped at user-requested {user_cap}y")
         
         # DNA motif: scrub non-ACGT characters
         dna_motif = gpt_result.get("dna_motif", "CCTGTGACTGTG")
@@ -3126,24 +3126,24 @@ async def partial_status():
 @app.on_event("startup")
 async def startup_event():
     print("\n" + "="*50)
-    print("🚀 SYSTEM DIAGNOSTIC: STARTUP COMPLETE")
+    print("ðŸš€ SYSTEM DIAGNOSTIC: STARTUP COMPLETE")
     print("="*50)
     
     # 1. Debug Directory State
     drift_dir = os.path.dirname(TRAINED_DRIFTMLP_PATH)
     if os.path.exists(drift_dir):
         files = os.listdir(drift_dir)
-        print(f"📂 CONTENTS provided in {drift_dir}: {len(files)} files")
+        print(f"ðŸ“‚ CONTENTS provided in {drift_dir}: {len(files)} files")
         # print(files) # Uncomment if needed
         
         # 2. Check for Split Parts
         parts = sorted([f for f in files if f.startswith("driftmlp.pt.part")])
         if parts:
-            print(f"📦 FOUND {len(parts)} SPLIT PARTS for Zenith Model")
+            print(f"ðŸ“¦ FOUND {len(parts)} SPLIT PARTS for Zenith Model")
             
             # 3. Trigger Reassembly if needed
             if not os.path.exists(TRAINED_DRIFTMLP_PATH) or os.path.getsize(TRAINED_DRIFTMLP_PATH) < 1000:
-                print(f"🔄 INITIATING REASSEMBLY of Zenith V28 Model ({len(parts)} parts)...")
+                print(f"ðŸ”„ INITIATING REASSEMBLY of Zenith V28 Model ({len(parts)} parts)...")
                 try:
                     with open(TRAINED_DRIFTMLP_PATH, 'wb') as outfile:
                         for part in parts:
@@ -3151,28 +3151,28 @@ async def startup_event():
                             print(f"   - Merging {part}...")
                             with open(part_path, 'rb') as infile:
                                 outfile.write(infile.read())
-                    print("✅ REASSEMBLY SUCCESSFUL!")
+                    print("âœ… REASSEMBLY SUCCESSFUL!")
                 except Exception as e:
-                    print(f"❌ REASSEMBLY FAILED: {str(e)}")
+                    print(f"âŒ REASSEMBLY FAILED: {str(e)}")
         else:
-            print("⚠️ NO SPLIT PARTS FOUND for Zenith Model")
+            print("âš ï¸ NO SPLIT PARTS FOUND for Zenith Model")
 
     # 4. Verify Final Model File
     if os.path.exists(TRAINED_DRIFTMLP_PATH):
         try:
             size_mb = os.path.getsize(TRAINED_DRIFTMLP_PATH) / (1024 * 1024)
-            print(f"📊 MODEL FILE FOUND: {size_mb:.2f} MB")
+            print(f"ðŸ“Š MODEL FILE FOUND: {size_mb:.2f} MB")
             
             if size_mb > 100:
                 # Load weights
                 drift_model.load_state_dict(torch.load(TRAINED_DRIFTMLP_PATH, map_location='cpu', weights_only=False))
-                print("🌟 STATUS: ZENITH V28 (102M) WEIGHTS LOADED SUCCESSFULLY")
+                print("ðŸŒŸ STATUS: ZENITH V28 (102M) WEIGHTS LOADED SUCCESSFULLY")
             else:
-                print("⚠️ STATUS: MODEL FILE TOO SMALL - LIKELY CORRUPT/POINTER")
+                print("âš ï¸ STATUS: MODEL FILE TOO SMALL - LIKELY CORRUPT/POINTER")
         except Exception as e:
-             print(f"❌ STATUS: FAILED TO LOAD WEIGHTS: {e}")
+             print(f"âŒ STATUS: FAILED TO LOAD WEIGHTS: {e}")
     else:
-        print("❌ STATUS: ZENITH MODEL FILE MISSING (Using Random Weights)")
+        print("âŒ STATUS: ZENITH MODEL FILE MISSING (Using Random Weights)")
         
     print("="*50 + "\n")
     

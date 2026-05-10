@@ -1,5 +1,5 @@
-"""
-IS-CHRP v26.1 - Complete Real Data Pipeline
+﻿"""
+IS-CHRP v27.0 GOLD - Complete Real Data Pipeline
 ============================================
 
 This script automates EVERYTHING:
@@ -25,44 +25,44 @@ from datetime import datetime
 # ============================================================
 def check_dependencies():
     print("=" * 60)
-    print("🔍 STEP 0: Checking Dependencies")
+    print("ðŸ” STEP 0: Checking Dependencies")
     print("=" * 60)
     
     missing = []
     
     try:
         import scanpy
-        print("✅ scanpy installed")
+        print("âœ… scanpy installed")
     except ImportError:
         missing.append("scanpy")
     
     try:
         import scvi
-        print("✅ scvi-tools installed")
+        print("âœ… scvi-tools installed")
     except ImportError:
         missing.append("scvi-tools")
     
     try:
         import torch
-        print("✅ PyTorch installed")
+        print("âœ… PyTorch installed")
     except ImportError:
         missing.append("torch")
     
     try:
         import anndata
-        print("✅ anndata installed")
+        print("âœ… anndata installed")
     except ImportError:
         missing.append("anndata")
     
     try:
         import cellxgene_census
-        print("✅ cellxgene-census installed")
+        print("âœ… cellxgene-census installed")
     except ImportError:
         missing.append("cellxgene-census")
-        print("⚠️ cellxgene-census not installed (optional, will use fallback)")
+        print("âš ï¸ cellxgene-census not installed (optional, will use fallback)")
     
     if missing and 'cellxgene-census' not in missing:
-        print(f"\n❌ Missing required packages: {missing}")
+        print(f"\nâŒ Missing required packages: {missing}")
         print(f"   Run: pip install {' '.join(missing)}")
         return False
     
@@ -74,7 +74,7 @@ def check_dependencies():
 # ============================================================
 def download_reprogramming_data():
     print("\n" + "=" * 60)
-    print("📡 STEP 1: Downloading Real Reprogramming Data")
+    print("ðŸ“¡ STEP 1: Downloading Real Reprogramming Data")
     print("=" * 60)
     
     import scanpy as sc
@@ -86,25 +86,25 @@ def download_reprogramming_data():
     adata_path = os.path.join(data_dir, "reprogramming_timecourse.h5ad")
     
     if os.path.exists(adata_path):
-        print(f"✅ Data already exists: {adata_path}")
+        print(f"âœ… Data already exists: {adata_path}")
         return sc.read_h5ad(adata_path)
     
     # Strategy: Use scVI's built-in heart atlas as base + create synthetic trajectories
     # from pluripotency markers for training
-    print("📥 Downloading Human Cell Atlas heart data via scVI...")
+    print("ðŸ“¥ Downloading Human Cell Atlas heart data via scVI...")
     
     try:
         import scvi
         adata = scvi.data.heart_cell_atlas_subsampled()
-        print(f"✅ Downloaded: {adata.n_obs} cells x {adata.n_vars} genes")
+        print(f"âœ… Downloaded: {adata.n_obs} cells x {adata.n_vars} genes")
     except Exception as e:
-        print(f"⚠️ scVI download failed: {e}")
-        print("🔄 Creating synthetic reprogramming dataset instead...")
+        print(f"âš ï¸ scVI download failed: {e}")
+        print("ðŸ”„ Creating synthetic reprogramming dataset instead...")
         adata = create_synthetic_reprogramming_data()
     
     # Add time labels for trajectory learning
     # For real HCA data, we'll create pseudo-time based on marker expression
-    print("🕐 Computing pseudo-time from pluripotency markers...")
+    print("ðŸ• Computing pseudo-time from pluripotency markers...")
     
     # Find pluripotency genes
     pluri_genes = ['POU5F1', 'SOX2', 'NANOG', 'KLF4', 'MYC']
@@ -124,15 +124,15 @@ def download_reprogramming_data():
         adata.obs['pseudo_day'] = (1 - pluri_score) * 21  # 21-day reprogramming scale
         adata.obs['pluripotency_score'] = pluri_score
         
-        print(f"✅ Pseudo-time computed: Day 0 (somatic) to Day 21 (pluripotent)")
+        print(f"âœ… Pseudo-time computed: Day 0 (somatic) to Day 21 (pluripotent)")
     else:
-        print("⚠️ Pluripotency markers not found, using random pseudo-time")
+        print("âš ï¸ Pluripotency markers not found, using random pseudo-time")
         adata.obs['pseudo_day'] = np.random.uniform(0, 21, adata.n_obs)
         adata.obs['pluripotency_score'] = np.random.uniform(0, 1, adata.n_obs)
     
     # Save
     adata.write_h5ad(adata_path)
-    print(f"💾 Saved to: {adata_path}")
+    print(f"ðŸ’¾ Saved to: {adata_path}")
     
     return adata
 
@@ -144,7 +144,7 @@ def create_synthetic_reprogramming_data():
     """
     import anndata as ad
     
-    print("🧬 Generating synthetic reprogramming trajectory...")
+    print("ðŸ§¬ Generating synthetic reprogramming trajectory...")
     
     n_cells = 5000
     n_genes = 1000
@@ -200,7 +200,7 @@ def create_synthetic_reprogramming_data():
     adata.obs['pseudo_day'] = days
     adata.obs['pluripotency_score'] = X[:, :5].mean(axis=1)
     
-    print(f"✅ Created synthetic data: {adata.n_obs} cells x {adata.n_vars} genes")
+    print(f"âœ… Created synthetic data: {adata.n_obs} cells x {adata.n_vars} genes")
     
     return adata
 
@@ -210,7 +210,7 @@ def create_synthetic_reprogramming_data():
 # ============================================================
 def train_scvi_model(adata):
     print("\n" + "=" * 60)
-    print("🧠 STEP 2: Training scVI Model")
+    print("ðŸ§  STEP 2: Training scVI Model")
     print("=" * 60)
     
     import scvi
@@ -222,10 +222,10 @@ def train_scvi_model(adata):
     model_path = os.path.join(model_dir, "model.pt")
     
     if os.path.exists(model_path):
-        print(f"✅ scVI model already trained: {model_dir}")
+        print(f"âœ… scVI model already trained: {model_dir}")
         return scvi.model.SCVI.load(model_dir)
     
-    print("📊 Preprocessing data for scVI...")
+    print("ðŸ“Š Preprocessing data for scVI...")
     
     # Standard preprocessing
     sc.pp.filter_genes(adata, min_cells=10)
@@ -238,7 +238,7 @@ def train_scvi_model(adata):
     # Select highly variable genes
     sc.pp.highly_variable_genes(adata, n_top_genes=2000)
     
-    print(f"📐 Training on {adata.n_obs} cells x {adata.n_vars} genes")
+    print(f"ðŸ“ Training on {adata.n_obs} cells x {adata.n_vars} genes")
     
     # Setup scVI
     scvi.model.SCVI.setup_anndata(adata)
@@ -246,7 +246,7 @@ def train_scvi_model(adata):
     # Create and train model
     model = scvi.model.SCVI(adata, n_latent=16)
     
-    print("🏋️ Training scVI (this may take 5-10 minutes)...")
+    print("ðŸ‹ï¸ Training scVI (this may take 5-10 minutes)...")
     model.train(max_epochs=50, early_stopping=True)
     
     # Save model
@@ -255,7 +255,7 @@ def train_scvi_model(adata):
     # Also save adata for loading later
     adata.write_h5ad(os.path.join(model_dir, "adata.h5ad"))
     
-    print(f"💾 scVI model saved to: {model_dir}")
+    print(f"ðŸ’¾ scVI model saved to: {model_dir}")
     
     return model
 
@@ -265,7 +265,7 @@ def train_scvi_model(adata):
 # ============================================================
 def create_trajectory_pairs(adata, scvi_model):
     print("\n" + "=" * 60)
-    print("🔄 STEP 3: Creating Real Trajectory Pairs")
+    print("ðŸ”„ STEP 3: Creating Real Trajectory Pairs")
     print("=" * 60)
     
     import torch
@@ -276,19 +276,19 @@ def create_trajectory_pairs(adata, scvi_model):
     pairs_path = os.path.join(data_dir, "trajectory_pairs.npz")
     
     if os.path.exists(pairs_path):
-        print(f"✅ Trajectory pairs already exist: {pairs_path}")
+        print(f"âœ… Trajectory pairs already exist: {pairs_path}")
         data = np.load(pairs_path)
         return data['X'], data['Y']
     
     # Get latent representations
-    print("📈 Extracting latent representations...")
+    print("ðŸ“ˆ Extracting latent representations...")
     latent = scvi_model.get_latent_representation()
     
     # Get time labels
     days = adata.obs['pseudo_day'].values
     
     # Create pairs: (state_t, state_t+dt)
-    print("🔗 Creating state transition pairs...")
+    print("ðŸ”— Creating state transition pairs...")
     
     X_list = []  # Input: [genes(16), age(1), context(16)]
     Y_list = []  # Output: [delta_genes(16), delta_age(1)]
@@ -305,7 +305,7 @@ def create_trajectory_pairs(adata, scvi_model):
     unique_days = sorted(np.unique(days))
     day_indices = {d: np.where(days == d)[0] for d in unique_days}
     
-    print(f"📅 Timepoints found: {unique_days}")
+    print(f"ðŸ“… Timepoints found: {unique_days}")
     
     for i, day1 in enumerate(unique_days[:-1]):
         day2 = unique_days[i + 1]
@@ -339,11 +339,11 @@ def create_trajectory_pairs(adata, scvi_model):
     X = np.array(X_list, dtype=np.float32)
     Y = np.array(Y_list, dtype=np.float32)
     
-    print(f"✅ Created {len(X)} trajectory pairs")
+    print(f"âœ… Created {len(X)} trajectory pairs")
     
     # Save
     np.savez(pairs_path, X=X, Y=Y)
-    print(f"💾 Saved to: {pairs_path}")
+    print(f"ðŸ’¾ Saved to: {pairs_path}")
     
     return X, Y
 
@@ -353,7 +353,7 @@ def create_trajectory_pairs(adata, scvi_model):
 # ============================================================
 def train_driftmlp(X, Y):
     print("\n" + "=" * 60)
-    print("🧠 STEP 4: Training DriftMLP Neural SDE")
+    print("ðŸ§  STEP 4: Training DriftMLP Neural SDE")
     print("=" * 60)
     
     import torch
@@ -378,7 +378,7 @@ def train_driftmlp(X, Y):
             return self.net(x)
     
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    print(f"🖥️ Using device: {device}")
+    print(f"ðŸ–¥ï¸ Using device: {device}")
     
     # Create model
     model = DriftMLP(input_dim=16, hidden_dim=64).to(device)
@@ -396,7 +396,7 @@ def train_driftmlp(X, Y):
     epochs = 100
     losses = []
     
-    print(f"🏋️ Training for {epochs} epochs...")
+    print(f"ðŸ‹ï¸ Training for {epochs} epochs...")
     
     for epoch in range(epochs):
         epoch_loss = 0.0
@@ -432,8 +432,8 @@ def train_driftmlp(X, Y):
     with open(os.path.join(model_dir, "training_metadata.json"), "w") as f:
         json.dump(metadata, f, indent=2)
     
-    print(f"💾 Model saved to: {model_path}")
-    print(f"📊 Final loss: {losses[-1]:.6f}")
+    print(f"ðŸ’¾ Model saved to: {model_path}")
+    print(f"ðŸ“Š Final loss: {losses[-1]:.6f}")
     
     return model, losses
 
@@ -443,7 +443,7 @@ def train_driftmlp(X, Y):
 # ============================================================
 def patch_bridge_server():
     print("\n" + "=" * 60)
-    print("🔧 STEP 5: Patching bridge_server.py")
+    print("ðŸ”§ STEP 5: Patching bridge_server.py")
     print("=" * 60)
     
     server_path = os.path.join(os.path.dirname(__file__), "bridge_server.py")
@@ -453,7 +453,7 @@ def patch_bridge_server():
     
     # Check if already patched
     if "TRAINED_WEIGHTS_LOADED = True" in content:
-        print("✅ bridge_server.py already patched")
+        print("âœ… bridge_server.py already patched")
         return
     
     # Find the line that needs patching
@@ -462,10 +462,10 @@ def patch_bridge_server():
 TRAINED_DRIFTMLP_PATH = os.path.join(os.path.dirname(__file__), "models", "driftmlp_trained", "driftmlp.pt")
 if os.path.exists(TRAINED_DRIFTMLP_PATH):
     drift_model.load_state_dict(torch.load(TRAINED_DRIFTMLP_PATH, weights_only=True))
-    print("✅ TRAINED DriftMLP weights loaded!")
+    print("âœ… TRAINED DriftMLP weights loaded!")
     TRAINED_WEIGHTS_LOADED = True
 else:
-    print("⚠️ Trained weights not found, using random initialization")
+    print("âš ï¸ Trained weights not found, using random initialization")
     TRAINED_WEIGHTS_LOADED = False"""
     
     if old_line in content:
@@ -474,9 +474,9 @@ else:
         with open(server_path, "w", encoding="utf-8") as f:
             f.write(content)
         
-        print("✅ bridge_server.py patched to load trained weights")
+        print("âœ… bridge_server.py patched to load trained weights")
     else:
-        print("⚠️ Could not find patch location - may need manual update")
+        print("âš ï¸ Could not find patch location - may need manual update")
         print("   Add this code after drift_model = ZenithV2DeepDrift(...):")
         print(new_code)
 
@@ -486,13 +486,13 @@ else:
 # ============================================================
 def main():
     print("\n" + "=" * 60)
-    print("🚀 IS-CHRP v26.1 - REAL DATA PIPELINE")
+    print("ðŸš€ IS-CHRP v27.0 GOLD - REAL DATA PIPELINE")
     print("   Automated Setup for Validated Predictions")
     print("=" * 60)
     
     # Check dependencies
     if not check_dependencies():
-        print("\n❌ Please install missing dependencies and retry.")
+        print("\nâŒ Please install missing dependencies and retry.")
         return
     
     # Step 1: Download data
@@ -511,16 +511,16 @@ def main():
     patch_bridge_server()
     
     print("\n" + "=" * 60)
-    print("🎉 PIPELINE COMPLETE!")
+    print("ðŸŽ‰ PIPELINE COMPLETE!")
     print("=" * 60)
     print("\nYour IS-CHRP system now uses:")
-    print("  ✅ Real Human Cell Atlas data")
-    print("  ✅ Trained scVI model for latent space")
-    print("  ✅ DriftMLP trained on REAL trajectories")
+    print("  âœ… Real Human Cell Atlas data")
+    print("  âœ… Trained scVI model for latent space")
+    print("  âœ… DriftMLP trained on REAL trajectories")
     print("\nNext steps:")
     print("  1. Restart your server: python bridge_server.py")
     print("  2. Open index.html in browser")
-    print("  3. Your predictions are now DATA-DRIVEN! 🎯")
+    print("  3. Your predictions are now DATA-DRIVEN! ðŸŽ¯")
 
 
 if __name__ == "__main__":

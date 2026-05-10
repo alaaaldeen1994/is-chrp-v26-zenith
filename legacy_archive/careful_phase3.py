@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """
 CAREFUL Phase 3 - FIXED: Find proper insertion points
 """
@@ -11,7 +11,7 @@ def check_syntax():
                           capture_output=True, text=True)
     return result.returncode == 0, result.stderr
 
-print("🖱️ Phase 3: Cell Clicking (FIXED)...")
+print("ðŸ–±ï¸ Phase 3: Cell Clicking (FIXED)...")
 print("=" * 70)
 
 with open('js/script.js', 'r', encoding='utf-8') as f:
@@ -120,8 +120,8 @@ print("\nTesting syntax...")
 is_valid, error = check_syntax()
 
 if is_valid:
-    print("✅ PHASE 3 COMPLETE!")
+    print("âœ… PHASE 3 COMPLETE!")
 else:
-    print("❌ Error:")
+    print("âŒ Error:")
     print(error)
     subprocess.run(['git', 'checkout', 'HEAD', '--', 'js/script.js'])

@@ -1,4 +1,4 @@
-
+﻿
 import os
 import sys
 
@@ -6,11 +6,11 @@ CHUNK_SIZE = 45 * 1024 * 1024  # 45MB chunks (Safe for GitHub)
 
 def split_file(file_path):
     if not os.path.exists(file_path):
-        print(f"❌ File not found: {file_path}")
+        print(f"âŒ File not found: {file_path}")
         return
 
     file_size = os.path.getsize(file_path)
-    print(f"📦 Splitting {file_path} ({file_size / 1024 / 1024:.2f} MB)...")
+    print(f"ðŸ“¦ Splitting {file_path} ({file_size / 1024 / 1024:.2f} MB)...")
 
     with open(file_path, 'rb') as f:
         part_num = 0
@@ -26,7 +26,7 @@ def split_file(file_path):
             print(f"   Created {part_name}")
             part_num += 1
     
-    print("✅ Split complete.")
+    print("âœ… Split complete.")
 
 if __name__ == "__main__":
     if len(sys.argv) > 1:

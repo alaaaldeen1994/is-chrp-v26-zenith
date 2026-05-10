@@ -1,4 +1,4 @@
-"""
+﻿"""
 Security Middleware for Nilus Lab Platform
 Implements XSS, CSRF, and Rate Limiting Protection
 """

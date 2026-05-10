@@ -1,10 +1,10 @@
-"""
-IS-CHRP v26.1 - Yamanaka Validation (Fixed for ZenithV2DeepDrift)
+﻿"""
+IS-CHRP v27.0 GOLD - Yamanaka Validation (Fixed for ZenithV2DeepDrift)
 =================================================================
 
-⚠️  DEPRECATED: This script validates the legacy DriftMLP model only.
+âš ï¸  DEPRECATED: This script validates the legacy DriftMLP model only.
     For the production 486k scVI model, use: validate_486k_model.py
-    (Grade A — 5/6 passed, committed 2026-05-08)
+    (Grade A â€” 5/6 passed, committed 2026-05-08)
 
 This script validates the trained ZenithV2DeepDrift model against 
 real Yamanaka 2006 reprogramming dynamics.
@@ -77,7 +77,7 @@ GENE_MAP = {
 
 def load_model():
     """Load trained ZenithV2DeepDrift model."""
-    print("📥 Loading trained ZenithV2DeepDrift model...")
+    print("ðŸ“¥ Loading trained ZenithV2DeepDrift model...")
     
     model = ZenithV2DeepDrift(input_dim=1000, hidden_dim=1024)
     model_path = os.path.join(os.path.dirname(__file__), "models", "driftmlp_trained", "driftmlp.pt")
@@ -89,7 +89,7 @@ def load_model():
     model.eval()
     
     params = sum(p.numel() for p in model.parameters())
-    print(f"✅ Model loaded: {params:,} parameters")
+    print(f"âœ… Model loaded: {params:,} parameters")
     
     return model
 
@@ -99,7 +99,7 @@ def simulate_oskm_reprogramming(model, n_days=21, dt=0.1):
     Simulate 21-day OSKM reprogramming using ZenithV2DeepDrift.
     Returns gene expression trajectories over time.
     """
-    print(f"🧬 Simulating {n_days}-day OSKM reprogramming...")
+    print(f"ðŸ§¬ Simulating {n_days}-day OSKM reprogramming...")
     
     # Initial somatic state (low pluripotency)
     genes = np.zeros(1000, dtype=np.float32)
@@ -162,7 +162,7 @@ def simulate_oskm_reprogramming(model, n_days=21, dt=0.1):
         genes = np.clip(genes, 0, 1)
         bioage = np.clip(bioage, 0.1, 1.0)
     
-    print(f"✅ Simulation complete: {len(time_points)} timepoints")
+    print(f"âœ… Simulation complete: {len(time_points)} timepoints")
     
     return time_points, trajectory
 
@@ -170,7 +170,7 @@ def simulate_oskm_reprogramming(model, n_days=21, dt=0.1):
 def analyze_results(time_points, trajectory):
     """Analyze reprogramming trajectory and compute metrics."""
     print("\n" + "=" * 60)
-    print("📊 VALIDATION RESULTS")
+    print("ðŸ“Š VALIDATION RESULTS")
     print("=" * 60)
     
     time_np = np.array(time_points)
@@ -197,7 +197,7 @@ def analyze_results(time_points, trajectory):
         results["day_21"][name] = vals[day_21_idx]
     
     # Print comparison table
-    print("\n📈 Gene Expression Over Time:")
+    print("\nðŸ“ˆ Gene Expression Over Time:")
     print("-" * 60)
     print(f"{'Gene':<10} {'Day 0':>10} {'Day 7':>10} {'Day 14':>10} {'Day 21':>10}")
     print("-" * 60)
@@ -208,7 +208,7 @@ def analyze_results(time_points, trajectory):
     
     # Compute validation metrics
     print("\n" + "=" * 60)
-    print("🔬 BIOLOGICAL VALIDATION CRITERIA")
+    print("ðŸ”¬ BIOLOGICAL VALIDATION CRITERIA")
     print("=" * 60)
     
     # Criterion 1: Pluripotency increase
@@ -217,35 +217,35 @@ def analyze_results(time_points, trajectory):
     nanog_increase = results["day_21"]["NANOG"] - results["day_0"]["NANOG"]
     
     pluri_pass = oct4_increase > 0.1 and sox2_increase > 0.1
-    print(f"1. Pluripotency Increase (OCT4/SOX2 ↑)")
+    print(f"1. Pluripotency Increase (OCT4/SOX2 â†‘)")
     print(f"   OCT4: {oct4_increase:+.3f}  SOX2: {sox2_increase:+.3f}  NANOG: {nanog_increase:+.3f}")
-    print(f"   Result: {'✅ PASS' if pluri_pass else '❌ FAIL'}")
+    print(f"   Result: {'âœ… PASS' if pluri_pass else 'âŒ FAIL'}")
     
     # Criterion 2: MYC temporal dynamics (peaks then decreases for safe reprogramming)
     myc_peak_idx = np.argmax(trajectory["MYC"])
     myc_peaked_correctly = myc_peak_idx < len(time_points) * 0.7  # Peak before 70% of trajectory
     print(f"\n2. MYC Dynamics (Peak then Decline)")
     print(f"   Peak at day: {time_points[myc_peak_idx]:.1f}")
-    print(f"   Result: {'✅ PASS (safe trajectory)' if myc_peaked_correctly else '⚠️ WARNING (sustained MYC = oncogenic risk)'}")
+    print(f"   Result: {'âœ… PASS (safe trajectory)' if myc_peaked_correctly else 'âš ï¸ WARNING (sustained MYC = oncogenic risk)'}")
     
     # Criterion 3: Rejuvenation
     age_decrease = results["day_0"]["BioAge"] - results["day_21"]["BioAge"]
     rejuv_pass = age_decrease > 0.1
     print(f"\n3. Biological Age Rejuvenation")
     print(f"   Age decrease: {age_decrease:+.3f} ({age_decrease * 50:.1f} years equivalent)")
-    print(f"   Result: {'✅ PASS' if rejuv_pass else '❌ FAIL'}")
+    print(f"   Result: {'âœ… PASS' if rejuv_pass else 'âŒ FAIL'}")
     
     # Overall score
     print("\n" + "=" * 60)
     score = sum([pluri_pass, myc_peaked_correctly, rejuv_pass]) / 3 * 100
-    print(f"📊 OVERALL VALIDATION SCORE: {score:.0f}%")
+    print(f"ðŸ“Š OVERALL VALIDATION SCORE: {score:.0f}%")
     
     if score >= 80:
-        print("🎉 EXCELLENT: Model captures key reprogramming dynamics!")
+        print("ðŸŽ‰ EXCELLENT: Model captures key reprogramming dynamics!")
     elif score >= 50:
-        print("⚠️ MODERATE: Model shows some correct behavior, needs improvement")
+        print("âš ï¸ MODERATE: Model shows some correct behavior, needs improvement")
     else:
-        print("❌ POOR: Model does not capture reprogramming dynamics")
+        print("âŒ POOR: Model does not capture reprogramming dynamics")
     print("=" * 60)
     
     return results, score
@@ -253,7 +253,7 @@ def analyze_results(time_points, trajectory):
 
 def main():
     print("\n" + "=" * 60)
-    print("🔬 IS-CHRP v26.1 YAMANAKA VALIDATION")
+    print("ðŸ”¬ IS-CHRP v27.0 GOLD YAMANAKA VALIDATION")
     print("   Testing trained model against biological criteria")
     print("=" * 60 + "\n")
     
@@ -281,7 +281,7 @@ def main():
     with open(os.path.join(output_dir, "zenith_validation.json"), "w") as f:
         json.dump(report, f, indent=2)
     
-    print(f"\n💾 Results saved to validation_results/zenith_validation.json")
+    print(f"\nðŸ’¾ Results saved to validation_results/zenith_validation.json")
     
     return score
 

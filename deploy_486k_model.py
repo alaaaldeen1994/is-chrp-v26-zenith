@@ -1,4 +1,4 @@
-# ZENITH v26.4 — How to Deploy the 486k Model to Railway
+﻿# ZENITH v27.0 GOLD â€” How to Deploy the 486k Model to Railway
 # After Google Colab training finishes
 
 # =====================================================================
@@ -6,7 +6,7 @@
 # =====================================================================
 # Go to: https://drive.google.com/drive/folders/... (your Zenith_Data folder)
 # You will see a NEW folder: "zenith_v26_486k_model"
-# Right-click → Download (it will zip it)
+# Right-click â†’ Download (it will zip it)
 # Extract the zip on your PC
 
 # =====================================================================
@@ -66,5 +66,5 @@ else:
 #
 # To update Railway:
 #   git add bridge_server.py
-#   git commit -m "feat: Add 486k scVI model priority loading (Zenith v26.4)"
+#   git commit -m "feat: Add 486k scVI model priority loading (Zenith v27.0 GOLD)"
 #   git push

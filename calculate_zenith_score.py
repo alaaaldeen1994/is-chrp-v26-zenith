@@ -1,4 +1,4 @@
-import json
+﻿import json
 import os
 import numpy as np
 from literature_benchmark import LiteratureBenchmark

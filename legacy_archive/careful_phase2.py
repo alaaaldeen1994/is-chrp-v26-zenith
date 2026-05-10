@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """
 CAREFUL Phase 2 Implementation - Backend Connection
 Testing after each change to ensure no syntax errors
@@ -12,7 +12,7 @@ def check_syntax():
                           capture_output=True, text=True)
     return result.returncode == 0, result.stderr
 
-print("🔧 Phase 2: Adding Backend Connection CAREFULLY...")
+print("ðŸ”§ Phase 2: Adding Backend Connection CAREFULLY...")
 print("=" * 70)
 
 # Read file
@@ -44,7 +44,7 @@ for i, line in enumerate(lines):
             "            if (this.frame % 120 === 0) {\r\n",
             "                const types = {};\r\n",
             "                BiosimEngine.agents.forEach(a => types[a.type] = (types[a.type] || 0) + 1);\r\n",
-            "                console.log(`🔷 3D: ${cellCount} cells |`, types);\r\n",
+            "                console.log(`ðŸ”· 3D: ${cellCount} cells |`, types);\r\n",
             "            }\r\n",
             "\r\n"
         ]
@@ -65,12 +65,12 @@ print("\nTesting JavaScript syntax...")
 is_valid, error = check_syntax()
 
 if is_valid:
-    print("✅ Phase 2 COMPLETE: Syntax valid!")
+    print("âœ… Phase 2 COMPLETE: Syntax valid!")
     print("   - Cell count display updates")
     print("   - Console logging every 2s")
     print("   - Backend connected")
 else:
-    print("❌ Syntax error detected:")
+    print("âŒ Syntax error detected:")
     print(error)
     print("\nREVERTING changes...")
     subprocess.run(['git', 'checkout', 'HEAD', '--', 'js/script.js'])

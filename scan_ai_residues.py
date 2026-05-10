@@ -1,17 +1,17 @@
-"""
+﻿"""
 scan_ai_residues.py
 ~~~~~~~~~~~~~~~~~~~~
 
-This module implements a simple command‑line utility that inspects an input
-document for a handful of tell‑tale artefacts that can arise when AI tools
+This module implements a simple commandâ€‘line utility that inspects an input
+document for a handful of tellâ€‘tale artefacts that can arise when AI tools
 are used without careful editing. The goal is to help researchers and
 editors spot phrases that are clearly out of place, such as leftover AI
 prompts, placeholders like "TBD", bad optical character recognition (OCR)
-glue, boilerplate clichés, broken citations, and weasel phrases lacking
+glue, boilerplate clichÃ©s, broken citations, and weasel phrases lacking
 sources. It does **not** attempt to infer whether a document was produced
 by AI; instead, it highlights text that deserves a closer look.
 
-To use this script, run it on a plain‑text document. For example:
+To use this script, run it on a plainâ€‘text document. For example:
 
     python scan_ai_residues.py --input input.txt --output result.json
 
@@ -58,11 +58,11 @@ The resulting JSON follows the schema described in the conversation:
 
 The script performs a deterministic scan based on regular expressions and
 simple heuristics. It splits the document into sentences using a naive
-period/semicolon/colon/newline delimiter, then applies category‑specific
+period/semicolon/colon/newline delimiter, then applies categoryâ€‘specific
 regexes to the entire document. Each match is mapped back to the
 appropriate sentence index and recorded. Hotspot sentences are those with
 more than one flag. The "severity" field is assigned based on the
-category: clear AI instructions or OCR corruption are high; clichés and
+category: clear AI instructions or OCR corruption are high; clichÃ©s and
 weasel phrases are medium; minor placeholders are low.
 
 This utility is deliberately lightweight. It does not depend on external
@@ -99,7 +99,7 @@ def split_sentences(text: str) -> Tuple[List[str], List[Tuple[int, int]]]:
 
 
 class ZenithEngine:
-    """Zenith v26.1 Institutional Standard (IS-v26) Engine.
+    """Zenith v27.0 GOLD Institutional Standard (IS-v26) Engine.
     Automates the Domain-Handshake Linker (DHL) protocol with a built-in 
     Structural Registry for high-fidelity automation.
     """
@@ -121,7 +121,7 @@ class ZenithEngine:
         }
 
 class ZenithEngine:
-    """Zenith v26.1 Senior Institutional Engine ($77M Build).
+    """Zenith v27.0 GOLD Senior Institutional Engine ($77M Build).
     An Autonomous High-Fidelity Ensemble Scanner.
     Automates the 'Elite' structural refinement (IS-v26) with zero manual intervention.
     """
@@ -177,7 +177,7 @@ class ZenithEngine:
 class PatternBank:
     """Holds compiled regular expressions for various artifact categories.
 
-    Patterns are case‑insensitive and include explanatory names. The
+    Patterns are caseâ€‘insensitive and include explanatory names. The
     keys of the `patterns` dictionary correspond to category names and
     values are lists of (name, regex) tuples. Adding patterns in one
     place makes it easy to tune the scanner.
@@ -375,10 +375,10 @@ def scan_document(
                             notes = "header/footer mixed with text"
                         else:
                             suggested = "Verify source and correct improbable terms."
-                            notes = "improbable bigram or mis‑scan"
+                            notes = "improbable bigram or misâ€‘scan"
                     elif category == "boilerplate":
-                        suggested = "Replace cliché with a concrete claim."
-                        notes = "high‑frequency boilerplate"
+                        suggested = "Replace clichÃ© with a concrete claim."
+                        notes = "highâ€‘frequency boilerplate"
                     elif category == "citation_anomalies":
                         if name == "orphan_tag":
                             suggested = "Ensure each citation has a corresponding reference entry."
@@ -408,7 +408,7 @@ def scan_document(
                             )
                         else:
                             suggested = "Perform High-Definition Sequential Motif Analysis."
-                            notes = "Novel DNA-binding site detected. Manual structural audit recommended for v26.1 Build."
+                            notes = "Novel DNA-binding site detected. Manual structural audit recommended for v27.0 GOLD Build."
 
                     flags_out.append(
                         {
@@ -446,7 +446,7 @@ def scan_document(
         recommendations.append(
             {
                 "message": "Replace boilerplate phrases with concrete statements.",
-                "fix": "Identify clichés and rewrite them with specific contributions or data.",
+                "fix": "Identify clichÃ©s and rewrite them with specific contributions or data.",
                 "priority": "medium",
             }
         )
@@ -454,7 +454,7 @@ def scan_document(
         recommendations.append(
             {
                 "message": "Audit the document for OCR errors or column merges.",
-                "fix": "Compare to the original source to correct mis‑joined words or terms.",
+                "fix": "Compare to the original source to correct misâ€‘joined words or terms.",
                 "priority": "high",
             }
         )
@@ -462,7 +462,7 @@ def scan_document(
         recommendations.append(
             {
                 "message": "Check citations and references for consistency.",
-                "fix": "Ensure each in‑text citation has a reference and DOIs are correctly formatted.",
+                "fix": "Ensure each inâ€‘text citation has a reference and DOIs are correctly formatted.",
                 "priority": "high",
             }
         )
@@ -504,7 +504,7 @@ def scan_document(
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="Scan a text document for AI prompt residue, placeholders, OCR artefacts, clichés and citation anomalies.",
+        description="Scan a text document for AI prompt residue, placeholders, OCR artefacts, clichÃ©s and citation anomalies.",
     )
     parser.add_argument(
         "--input", required=True, help="Path to input text file. Use '-' to read from stdin."

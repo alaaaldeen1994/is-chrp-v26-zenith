@@ -1,4 +1,4 @@
-from PIL import Image, ImageDraw
+﻿from PIL import Image, ImageDraw
 import os
 
 def draw_dna_icon(size=512):

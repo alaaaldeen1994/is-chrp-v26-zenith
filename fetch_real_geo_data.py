@@ -1,4 +1,4 @@
-import os
+﻿import os
 import time
 import json
 import numpy as np
@@ -55,7 +55,7 @@ def fetch_and_process_geo(accession="GSE165180"):
     
     X_list, Y_list = [], []
     
-    print("✅ Creating trajectory pairs: (state_t, state_t+1, delta_t) for DriftMLP training")
+    print("âœ… Creating trajectory pairs: (state_t, state_t+1, delta_t) for DriftMLP training")
     
     # Generate pseudo-real data aligned to vocab
     for i in range(len(timepoints) - 1):

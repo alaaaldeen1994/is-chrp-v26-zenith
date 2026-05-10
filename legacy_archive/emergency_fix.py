@@ -1,10 +1,10 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """
 CRITICAL FIX: My previous scripts didn't work correctly
 Manually fixing the remaining issues NOW
 """
 
-print("🔧 CRITICAL FIX: Applying changes that didn't work...")
+print("ðŸ”§ CRITICAL FIX: Applying changes that didn't work...")
 print("=" * 70)
 
 # Read file
@@ -42,8 +42,8 @@ content = content.replace(old_mat, new_mat)
 with open('js/script.js', 'w', encoding='utf-8') as f:
     f.write(content)
 
-print("✅ Syntax error fixed")
-print("✅ Membrane properties applied")
+print("âœ… Syntax error fixed")
+print("âœ… Membrane properties applied")
 
 # FIX 3: Add smooth transitions to CSS (simpler approach)
 print("\nAdding CSS transitions...")
@@ -64,18 +64,18 @@ if "fadeIn" not in css:
 """
     with open('css/style.css', 'w', encoding='utf-8') as f:
         f.write(css)
-    print("✅ CSS transitions added")
+    print("âœ… CSS transitions added")
 else:
-    print("✅ CSS transitions already present")
+    print("âœ… CSS transitions already present")
 
 print("\n" + "=" * 70)
-print("✅ ALL FIXES APPLIED!")
+print("âœ… ALL FIXES APPLIED!")
 print("Now testing for syntax errors...")
 
 import subprocess
 result = subprocess.run(['node', '--check', 'js/script.js'], capture_output=True, text=True)
 if result.returncode == 0:
-    print("✅ JavaScript syntax: VALID")
+    print("âœ… JavaScript syntax: VALID")
 else:
-    print("❌ JavaScript syntax error:")
+    print("âŒ JavaScript syntax error:")
     print(result.stderr)
