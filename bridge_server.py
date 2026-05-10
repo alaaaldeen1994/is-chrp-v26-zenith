@@ -4,10 +4,6 @@ from fastapi.responses import HTMLResponse, JSONResponse, FileResponse, Redirect
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 from typing import List, Dict, Optional, Any, Tuple
-import numpy as np
-import torch
-import torch.nn as nn
-import pandas as pd
 import os
 import smtplib
 from email.mime.text import MIMEText
@@ -17,7 +13,37 @@ import httpx
 import re
 import json
 import time
-from af3_automation_bridge import AF3AutomationBridge
+
+# --- LAZY LOADING FOR HEAVY LIBRARIES (Resource Management) ---
+_np = None
+_torch = None
+_pd = None
+
+def get_np():
+    global _np
+    if _np is None:
+        import numpy as np
+        _np = np
+    return _np
+
+def get_torch():
+    global _torch
+    if _torch is None:
+        import torch
+        _torch = torch
+    return _torch
+
+def get_pd():
+    global _pd
+    if _pd is None:
+        import pandas as pd
+        _pd = pd
+    return _pd
+
+def get_af3_bridge():
+    from af3_automation_bridge import AF3AutomationBridge
+    return AF3AutomationBridge()
+
 
 # --- LAZY LOADING FOR HEAVY ENGINES (Resource Management) ---
 _dosage_optimizer = None
@@ -226,8 +252,8 @@ class D2HUtility:
 # Set thread count securely
 try:
     cpus = os.cpu_count() or 1
-    torch.set_num_threads(cpus)
-    torch.set_num_interop_threads(cpus)
+    get_torch().set_num_threads(cpus)
+    get_torch().set_num_interop_threads(cpus)
     print(f"ZENITH ULTRA-HD: Optimized for {cpus} vCPUs (Threads synced)")
 except Exception as e:
     print(f"ZENITH ULTRA-HD: Thread optimization warning: {e}")
@@ -402,7 +428,7 @@ class ZenithV2DeepDrift(nn.Module):
         )
 
         self._init_weights()
-        self.register_buffer('manifold_proj', torch.randn(hidden_dim, 3))
+        self.register_buffer('manifold_proj', get_torch().randn(hidden_dim, 3))
         self.manifold_proj = self.manifold_proj / self.manifold_proj.norm(dim=0, keepdim=True)
 
         # Scientific Honesty: Calculate actual parameter count
@@ -434,7 +460,7 @@ class ZenithV2DeepDrift(nn.Module):
         
         drift = self.decoder(h)
         if return_latent:
-            manifold = torch.matmul(h, self.manifold_proj)
+            manifold = get_torch().matmul(h, self.manifold_proj)
             return drift, manifold
         return drift
 
@@ -454,8 +480,8 @@ class MemoryGuardian:
         if self.counter >= self.interval:
             import gc
             gc.collect()
-            if torch.cuda.is_available():
-                torch.cuda.empty_cache()
+            if get_torch().cuda.is_available():
+                get_torch().cuda.empty_cache()
             self.counter = 0
             # Anchor Manifold: Return a deterministic hash of the first 100 weights
             # This allows the 3D Viewport to verify it hasn't drifted.
@@ -473,9 +499,9 @@ class SignalingField:
     """
     def __init__(self, size=64):
         self.size = size
-        self.field = torch.zeros((1, 1, size, size))
+        self.field = get_torch().zeros((1, 1, size, size))
         self.decay = 0.95
-        self.kernel = torch.tensor([[[[0.1, 0.1, 0.1], [0.1, 0.2, 0.1], [0.1, 0.1, 0.1]]]])
+        self.kernel = get_torch().tensor([[[[0.1, 0.1, 0.1], [0.1, 0.2, 0.1], [0.1, 0.1, 0.1]]]])
         
     def update(self, pos_x, pos_y, strengths, dt=0.1):
         # Convert coords to grid indices
@@ -485,10 +511,10 @@ class SignalingField:
         for i in range(len(ix)):
             self.field[0, 0, iy[i], ix[i]] += strengths[i] * dt
             
-        with torch.no_grad():
-            self.field = torch.nn.functional.conv2d(self.field, self.kernel, padding=1)
+        with get_torch().no_grad():
+            self.field = get_torch().nn.functional.conv2d(self.field, self.kernel, padding=1)
             self.field *= self.decay
-            self.field = torch.clamp(self.field, 0.0, 5.0)
+            self.field = get_torch().clamp(self.field, 0.0, 5.0)
 
     def sample(self, pos_x, pos_y):
         ix = (pos_x * (self.size - 1)).long().clamp(0, self.size - 1)
@@ -505,10 +531,10 @@ class SignalingField3D:
     """
     def __init__(self, size=32): # 32x32x32 = 32,768 voxels
         self.size = size
-        self.field = torch.zeros((1, 1, size, size, size))
+        self.field = get_torch().zeros((1, 1, size, size, size))
         self.decay = 0.975 # Fast biological decay
         # 15-point Biological Stencil (Optimized for performance)
-        self.kernel = torch.ones((1, 1, 3, 3, 3)) * 0.05
+        self.kernel = get_torch().ones((1, 1, 3, 3, 3)) * 0.05
         self.kernel[0, 0, 1, 1, 1] = 0.2 
         
     def update(self, agents_pos_3d, strengths):
@@ -524,8 +550,8 @@ class SignalingField3D:
             self.field[0, 0, x, y, z] += strengths[i]
 
         # 3D Convolutional Diffusion
-        with torch.no_grad():
-            self.field = torch.nn.functional.conv3d(self.field, self.kernel, padding=1)
+        with get_torch().no_grad():
+            self.field = get_torch().nn.functional.conv3d(self.field, self.kernel, padding=1)
             self.field *= self.decay
             self.field = self.field.clamp(0, 5.0)
 
@@ -626,19 +652,19 @@ class MockSCVI:
         # We ensure it includes our Simulation genes (GENE_SYMBOLS)
         extras = [f"HCA_GENE_{i}" for i in range(4000)]
         self.adata = type('MockAdata', (), {})()
-        self.adata.var_names = pd.Index(GENE_SYMBOLS + extras)
+        self.adata.var_names = get_pd().Index(GENE_SYMBOLS + extras)
         self.is_mock = True
         
     def get_latent_representation(self, adata):
         # Return random but consistent 12D vectors based on input
         batch_size = adata.X.shape[0] if hasattr(adata, 'X') else 1
-        return np.random.normal(0, 2, (batch_size, 12)) 
+        return get_np().random.normal(0, 2, (batch_size, 12)) 
         
     def get_normalized_expression(self, adata, n_samples=1):
         # Return random expression
         batch_size = adata.X.shape[0] if hasattr(adata, 'X') else 1
         n_vars = len(self.adata.var_names)
-        return np.abs(np.random.normal(0, 1, (batch_size, n_vars)))
+        return get_np().abs(get_np().random.normal(0, 1, (batch_size, n_vars)))
 
 
 def reassemble_split_files():
@@ -743,7 +769,7 @@ async def lifespan(app: FastAPI):
                 model_pt_path = os.path.join(model_dir_hca, "model.pt")
                 if os.path.exists(model_pt_path):
                     try:
-                        state = torch.load(model_pt_path, map_location="cpu")
+                        state = get_torch().load(model_pt_path, map_location="cpu")
                         if "model_state_dict" in state:
                             keys_to_remove = [k for k in state["model_state_dict"].keys() if "pyro" in k]
                             if keys_to_remove:
@@ -751,7 +777,7 @@ async def lifespan(app: FastAPI):
                                 for k in keys_to_remove:
                                     del state["model_state_dict"][k]
                                 try:
-                                    torch.save(state, model_pt_path)
+                                    get_torch().save(state, model_pt_path)
                                     print("SANITIZER: Model patched.")
                                 except:
                                     print("SANITIZER: Could not save (file in use). Skipping.")
@@ -1090,7 +1116,7 @@ async def sync_cell_states(payload: dict):
         for i in range(0, len(positions), 2):
             x, y = positions[i], positions[i+1]
             # Simple projective map for latency simulation
-            z = np.sin(x*10) * np.cos(y*10)
+            z = get_np().sin(x*10) * get_np().cos(y*10)
             manifold.extend([x, y, z])
 
         return {
@@ -1494,13 +1520,13 @@ async def impute_genes(state: CellState):
 
         # CASE 1: CLINICAL MODEL INFERENCE
         if scvi_model is not None and (model_mode == "CLINICAL" or model_mode == "PREVIEW"):
-            full_genes = np.zeros(len(scvi_model.adata.var_names))
+            full_genes = get_np().zeros(len(scvi_model.adata.var_names))
             for i, gene_symbol in enumerate(GENE_SYMBOLS):
                 if gene_symbol in scvi_model.adata.var_names:
                     idx = scvi_model.adata.var_names.get_loc(gene_symbol)
                     full_genes[idx] = input_genes[i]
             
-            adata = ad.AnnData(X=full_genes.reshape(1, -1).astype(np.float32))
+            adata = ad.AnnData(X=full_genes.reshape(1, -1).astype(get_np().float32))
             adata.var_names = scvi_model.adata.var_names
             
             latent = scvi_model.get_latent_representation(adata)
@@ -1515,7 +1541,7 @@ async def impute_genes(state: CellState):
             # PHASE 4: Calculate Epigenetic Stability Index (ESI)
             # This represents the alignment between the target state and current chromatin plasticity
             # High ESI (>0.85) means the cell is effectively reprogrammed beyond just RNA.
-            latent_norm = np.linalg.norm(latent)
+            latent_norm = get_np().linalg.norm(latent)
             stability_base = 0.95 if model_mode == "CLINICAL" else 0.70
             esi = min(1.0, stability_base * (1.0 - (latent_norm % 0.1)))
             
@@ -1567,7 +1593,7 @@ async def get_latent_ATLAS():
         try:
             # Sample 400 random points from the training data for background visualization
             adata = scvi_model.adata
-            indices = np.random.choice(len(adata), min(400, len(adata)), replace=False)
+            indices = get_np().random.choice(len(adata), min(400, len(adata)), replace=False)
             sub_adata = adata[indices].copy()
             
             latent = scvi_model.get_latent_representation(sub_adata)
@@ -1655,21 +1681,21 @@ async def simulate_step(batch: BatchCellState):
     if n_agents == 0:
         return BatchSimulationResult(genes=[], proteins=[], chromatin=[], ages=[], burdens=[], drift_magnitude=0.0)
     
-    genes_np = np.array(batch.genes, dtype=np.float32).reshape(n_agents, 1000)
-    proteins_np = np.array(batch.proteins, dtype=np.float32).reshape(n_agents, 1000)
-    chromatin_tensor = torch.tensor(batch.chromatin, dtype=torch.float32).reshape(n_agents, 1000)
-    ages_tensor = torch.tensor(batch.ages, dtype=torch.float32).reshape(n_agents, 1)
+    genes_np = get_np().array(batch.genes, dtype=get_np().float32).reshape(n_agents, 1000)
+    proteins_np = get_np().array(batch.proteins, dtype=get_np().float32).reshape(n_agents, 1000)
+    chromatin_tensor = get_torch().tensor(batch.chromatin, dtype=get_torch().float32).reshape(n_agents, 1000)
+    ages_tensor = get_torch().tensor(batch.ages, dtype=get_torch().float32).reshape(n_agents, 1)
     
     # ... (Spatial logic remains same)
-    pos_np = np.array(batch.positions, dtype=np.float32).reshape(n_agents, 2)
-    pos_x = torch.tensor(pos_np[:, 0])
-    pos_y = torch.tensor(pos_np[:, 1])
+    pos_np = get_np().array(batch.positions, dtype=get_np().float32).reshape(n_agents, 2)
+    pos_x = get_torch().tensor(pos_np[:, 0])
+    pos_y = get_torch().tensor(pos_np[:, 1])
     
     # 2. REAL PARACRINE PHYSICS (Diffusion PDE)
     # Heart Markers: TNNT2 (idx 13), TTN (idx 14)
     # v28: Multi-component signaling (Cardio flux + Stem flux)
-    cardio_strength = torch.tensor(proteins_np[:, 13] + proteins_np[:, 14]).clamp(0, 2.0)
-    stem_strength = torch.tensor(proteins_np[:, 0] + proteins_np[:, 2]).clamp(0, 1.0) # OCT4 + NANOG
+    cardio_strength = get_torch().tensor(proteins_np[:, 13] + proteins_np[:, 14]).clamp(0, 2.0)
+    stem_strength = get_torch().tensor(proteins_np[:, 0] + proteins_np[:, 2]).clamp(0, 1.0) # OCT4 + NANOG
     
     # Update field (Cardio drives primary field for now)
     signaling_field.update(pos_x, pos_y, cardio_strength + stem_strength * 0.5, dt=dt)
@@ -1677,7 +1703,7 @@ async def simulate_step(batch: BatchCellState):
     
     # Context Vector: Map field intensity to receptors (EGFR idx 80, LIFR idx 87)
     # Optimized: No loops, using direct tensor assignment from field signals
-    context_tensor = torch.zeros(n_agents, 1000)
+    context_tensor = get_torch().zeros(n_agents, 1000)
     context_tensor[:, 80] = local_signals 
     context_tensor[:, 87] = stem_strength # Direct niche contact
     # (Neighbor loop logic removed largely in favor of field approximation for speed)
@@ -1685,24 +1711,24 @@ async def simulate_step(batch: BatchCellState):
     # 3. Zenith Ultra-V4 (HD) (Differentiable Biology)
     # 3. Zenith Ultra-V4 (HD) (Differentiable Biology)
     # FIX: Padding 1000 -> 5000 using 'Biological Baseline Noise' (Not Zeros)
-    state_tensor_1k = torch.tensor(genes_np, dtype=torch.float32) # [N, 1000]
+    state_tensor_1k = get_torch().tensor(genes_np, dtype=get_torch().float32) # [N, 1000]
     
     # Generate Gaussian Noise (Simulating Low-Level Background Transcription)
     # Mean=0.1 (Base expression), Std=0.05
     noise_mean = 0.1
     noise_std = 0.05
-    padding = torch.normal(mean=noise_mean, std=noise_std, size=(n_agents, 4000))
+    padding = get_torch().normal(mean=noise_mean, std=noise_std, size=(n_agents, 4000))
     
-    state_tensor_5k = torch.cat([state_tensor_1k, padding], dim=1) # [N, 5000]
+    state_tensor_5k = get_torch().cat([state_tensor_1k, padding], dim=1) # [N, 5000]
     
     # Pad Context to 5k (Context usually represents target/environment)
     context_tensor_1k = context_tensor
     # Context padding can remain zeros as it represents specific signaling inputs
-    context_padding = torch.zeros(n_agents, 4000) 
-    context_tensor_5k = torch.cat([context_tensor_1k, context_padding], dim=1) # [N, 5000]
+    context_padding = get_torch().zeros(n_agents, 4000) 
+    context_tensor_5k = get_torch().cat([context_tensor_1k, context_padding], dim=1) # [N, 5000]
 
     # Input Construction: [CurrentGenes(5000), ContextGenes(5000), Age(1)] -> [N, 10001]
-    input_tensor = torch.cat([state_tensor_5k, context_tensor_5k, ages_tensor], dim=1) # [N, 10001]
+    input_tensor = get_torch().cat([state_tensor_5k, context_tensor_5k, ages_tensor], dim=1) # [N, 10001]
     
     # AUTO-DETECT PRECISION (Fix for Float/Half Mismatch)
     model = get_drift_model()
@@ -1710,22 +1736,22 @@ async def simulate_step(batch: BatchCellState):
     
     input_tensor = input_tensor.to(dtype=target_dtype) 
     
-    with torch.no_grad():
+    with get_torch().no_grad():
         drift_out, manifold = model(input_tensor, return_latent=True) 
         # Output sizes: drift=[N, 5001], manifold=[N, 3]
         
         # Take first 1000 genes AND age (index 5000) to maintain 1001-dim simulation loop compatibility
         drift_genes = drift_out[:, :1000]
         drift_age = drift_out[:, 5000:5001]
-        drift = torch.cat([drift_genes, drift_age], dim=1).to(dtype=torch.float32)
+        drift = get_torch().cat([drift_genes, drift_age], dim=1).to(dtype=get_torch().float32)
         
-        manifold = manifold.to(dtype=torch.float32)
+        manifold = manifold.to(dtype=get_torch().float32)
         
     # v28: VECTOR INJECTION (1000-dim)
     if batch.vector:
         print(f"Applying Vector Pulse: {batch.vector} (Potency: {batch.potency})")
 
-        vec = np.zeros(1000)
+        vec = get_np().zeros(1000)
         if batch.vector == 'OSKM': 
             vec[:3] = 1.0;  # OCT4, SOX2, NANOG
             vec[4] = 1.0;   # KLF4
@@ -1744,14 +1770,14 @@ async def simulate_step(batch: BatchCellState):
             # Split protocol handled individually below
             pass
             
-        mod_tensor = torch.tensor(vec, dtype=torch.float32)
+        mod_tensor = get_torch().tensor(vec, dtype=get_torch().float32)
         drift[:, :1000] += mod_tensor * 0.3
 
         # v27.0 GOLD: Specialized Multi-Phenotype Vectors
         if batch.vector == 'CLINICAL_COMBO':
             for idx in range(n_agents):
                 # We use a deterministic split based on the batch index
-                p_vec = torch.zeros(1000)
+                p_vec = get_torch().zeros(1000)
                 if idx % 2 == 0:
                     p_vec[10:20] = 0.5 # Cardiac Boost (Red)
                 else:
@@ -1779,7 +1805,7 @@ async def simulate_step(batch: BatchCellState):
     total_stress = proliferation_stress + inflammation_stress + 0.05 # Baseline
     
     # Accumulate Burden
-    burdens_tensor = torch.tensor(batch.burdens, dtype=torch.float32).reshape(n_agents)
+    burdens_tensor = get_torch().tensor(batch.burdens, dtype=get_torch().float32).reshape(n_agents)
     damage_delta = (total_stress / repair_capacity) * 0.01 * dt
     burdens_tensor += damage_delta
     
@@ -1800,7 +1826,7 @@ async def simulate_step(batch: BatchCellState):
     closing_rate = 0.05 * ages_tensor.squeeze()
     
     chromatin_delta = (opening_rate - closing_rate).unsqueeze(1) * dt  # [N] -> [N, 1] for broadcast
-    chromatin_tensor = torch.clamp(chromatin_tensor + chromatin_delta, 0.0, 1.0)
+    chromatin_tensor = get_torch().clamp(chromatin_tensor + chromatin_delta, 0.0, 1.0)
     
     # 6. Apply Drift (Euler-Maruyama)
     # v27.0 GOLD: GENOMIC KNOCKOUT CONSTRAINTS
@@ -1829,19 +1855,19 @@ async def simulate_step(batch: BatchCellState):
     ages_tensor += (age_drift + rejuv_boost).unsqueeze(1) * dt
     
     # 7. Protein Lag (Vectorized)
-    new_proteins_tensor = torch.tensor(proteins_np) + (new_self_state - torch.tensor(proteins_np)) * 0.15
+    new_proteins_tensor = get_torch().tensor(proteins_np) + (new_self_state - get_torch().tensor(proteins_np)) * 0.15
     new_proteins = new_proteins_tensor.numpy()
     
     # Final Output preparation with clamp
-    final_output_tensor = torch.clamp(new_self_state, 0.0, 1.0)
-    drift_mag = float(torch.abs(drift).mean().item())
+    final_output_tensor = get_torch().clamp(new_self_state, 0.0, 1.0)
+    drift_mag = float(get_torch().abs(drift).mean().item())
     
     # 8. STABILITY CALCULATION (Professional Safety Metric)
     # Stability = f(Drift Entropy, DNA Burden)
     # High drift + High damage = Low Stability
     burden_mean = float(burdens_tensor.mean().item())
     stability = 1.0 - (drift_mag * 5.0) - (burden_mean * 0.2)
-    stability = float(np.clip(stability, 0.01, 1.0))
+    stability = float(get_np().clip(stability, 0.01, 1.0))
     
     return BatchSimulationResult(
         genes=final_output_tensor.flatten().tolist(),
@@ -1899,7 +1925,7 @@ def identify_most_relevant_factors(attribution_map: dict, top_n: int = 12) -> di
     return merged
 
 
-async def get_target_vector_from_query(query: str, api_key: Optional[str] = None) -> Tuple[torch.Tensor, str, Dict[str, float]]:
+async def get_target_vector_from_query(query: str, api_key: Optional[str] = None) -> Tuple[get_torch().Tensor, str, Dict[str, float]]:
     """
     Uses OpenAI GPT-4o to translate a natural language research query into a 1000-dimensional gene target vector.
     v28 Upgrade: Returns weighted intensities, semantic explanation, and raw gene data.
@@ -1911,7 +1937,7 @@ async def get_target_vector_from_query(query: str, api_key: Optional[str] = None
     if not enabled:
         # Fallback to a generic iPSC-like signature
         fallback_genes = {"POU5F1": 1.0, "SOX2": 1.0, "NANOG": 1.0}
-        return torch.tensor([0.8]*5 + [0.0]*995, dtype=torch.float32), "OpenAI Offline: Using canonical pluripotent markers.", fallback_genes
+        return get_torch().tensor([0.8]*5 + [0.0]*995, dtype=get_torch().float32), "OpenAI Offline: Using canonical pluripotent markers.", fallback_genes
 
     try:
         # We provide GPT with the core biological modules for context
@@ -1965,7 +1991,7 @@ async def get_target_vector_from_query(query: str, api_key: Optional[str] = None
         
         if data.get("status") == "greeting" or data.get("error"):
             # Return a special greeting signal
-            return torch.zeros(len(GENE_SYMBOLS)), data.get("rationale", data.get("error", "How can I help you?")), {}, {}, "", 0.0, []
+            return get_torch().zeros(len(GENE_SYMBOLS)), data.get("rationale", data.get("error", "How can I help you?")), {}, {}, "", 0.0, []
 
         gene_data = data.get("genes", {})
         explanation = data.get("rationale", "Semantic mapping successful.")
@@ -1981,7 +2007,7 @@ async def get_target_vector_from_query(query: str, api_key: Optional[str] = None
             print(f"âš ï¸ GPT returned age_reduction={raw_age}y â€” capped at {MAX_AGE_REDUCTION_YEARS}y (max published, Sarkar 2020)")
         drugs = data.get("drugs", [])
         
-        target_vec = torch.zeros(len(GENE_SYMBOLS))
+        target_vec = get_torch().zeros(len(GENE_SYMBOLS))
         filtered_gene_data = {}
         for genename, weight in gene_data.items():
             g_upper = genename.strip().upper()
@@ -1999,7 +2025,7 @@ async def get_target_vector_from_query(query: str, api_key: Optional[str] = None
         error_type = type(e).__name__
         error_msg = str(e)
         print(f"Hybrid Semantic Translation Error [{error_type}]: {error_msg}")
-        return torch.tensor([0.5]*10 + [0.0]*(len(GENE_SYMBOLS)-10), dtype=torch.float32), f"Translation Error ({error_type}): {error_msg}", {}, {}, "GGGGTCACGGTC", 0.0, []
+        return get_torch().tensor([0.5]*10 + [0.0]*(len(GENE_SYMBOLS)-10), dtype=get_torch().float32), f"Translation Error ({error_type}): {error_msg}", {}, {}, "GGGGTCACGGTC", 0.0, []
 
 @app.post("/api/v1/clinical/af3-manifest")
 async def generate_af3_manifest(req: dict):
@@ -2139,9 +2165,9 @@ async def discover_hybrid(req: HybridDiscoveryRequest, request: Request):
     try:
         # 1. Translate Natural Language to Biological Coordinates
         target_vec, gpt_rationale, gpt_gene_data, audit_data, dna_motif, age_reduction, drugs = await get_target_vector_from_query(req.target_query, req.api_key)
-        target_vec = target_vec.to(dtype=torch.float32)
+        target_vec = target_vec.to(dtype=get_torch().float32)
         
-        current_vec = torch.tensor(req.current_genes, dtype=torch.float32) # Full 5000-dim from v27.0 GOLD
+        current_vec = get_torch().tensor(req.current_genes, dtype=get_torch().float32) # Full 5000-dim from v27.0 GOLD
         
         # 3. Mathematically Grounded scVI Perturbation Prediction
         # The direction in expression space is approximated by the delta
@@ -2167,13 +2193,13 @@ async def discover_hybrid(req: HybridDiscoveryRequest, request: Request):
         best_protocol = "NOVEL_DESIGN"
         max_sim = 0.0
         for name, indices in protocols.items():
-            proto_vec = np.zeros(5000)
+            proto_vec = get_np().zeros(5000)
             for idx in indices: proto_vec[idx] = 1.0
-            pos_ideal = np.maximum(ideal_vector, 0)
-            norm_ideal = np.linalg.norm(pos_ideal)
-            norm_proto = np.linalg.norm(proto_vec)
+            pos_ideal = get_np().maximum(ideal_vector, 0)
+            norm_ideal = get_np().linalg.norm(pos_ideal)
+            norm_proto = get_np().linalg.norm(proto_vec)
             if norm_ideal > 1e-6 and norm_proto > 1e-6:
-                score = np.dot(pos_ideal, proto_vec) / (norm_ideal * norm_proto)
+                score = get_np().dot(pos_ideal, proto_vec) / (norm_ideal * norm_proto)
                 if score > max_sim:
                     max_sim = score
                     best_protocol = name
@@ -2198,7 +2224,7 @@ async def discover_hybrid(req: HybridDiscoveryRequest, request: Request):
         if max_sim < 0.85:
             best_protocol = "NOVEL BIO-DESIGN"
 
-        confidence = max_sim if max_sim > 0.85 else (0.5 + np.max(ideal_vector)*0.4)
+        confidence = max_sim if max_sim > 0.85 else (0.5 + get_np().max(ideal_vector)*0.4)
         
         rationale = f"[ZENITH HYBRID ENGINE] {gpt_rationale} "
         if max_sim > 0.85:
@@ -2207,7 +2233,7 @@ async def discover_hybrid(req: HybridDiscoveryRequest, request: Request):
             rationale += "The Zenith Ultra-HD (5K) model has computed an optimized trajectory for this semantic target."
 
         # Real manifold-derived synergy score (cosine similarity between gradient and canonical protocol space)
-        manifold_synergy = max_sim if max_sim > 0.05 else float(np.clip(np.mean(np.abs(ideal_vector[:50])), 0.1, 0.99))
+        manifold_synergy = max_sim if max_sim > 0.05 else float(get_np().clip(get_np().mean(get_np().abs(ideal_vector[:50])), 0.1, 0.99))
 
         # -----------------------------------------------------------------
         # SCIENTIFIC INTEGRITY NOTE:
@@ -2351,8 +2377,8 @@ async def discover_protocol(req: DiscoveryRequest):
             'ENDO':   [0.0]*30 + [0.8]*10 + [0.0]*960
         }
         
-        target_vec = torch.tensor(targets.get(req.target_type, targets['IPSC']), dtype=torch.float32)
-        current_vec = torch.tensor(req.current_genes, dtype=torch.float32) # Already 100-dim
+        target_vec = get_torch().tensor(targets.get(req.target_type, targets['IPSC']), dtype=get_torch().float32)
+        current_vec = get_torch().tensor(req.current_genes, dtype=get_torch().float32) # Already 100-dim
         
         # 3. Simulate Forward Step through ZenithV2DeepDrift (REMOVED)
         # Replaced with mathematically grounded vector shift 
@@ -2380,17 +2406,17 @@ async def discover_protocol(req: DiscoveryRequest):
         # Calculate similarity scores
         for name, indices in protocols.items():
             # Create a unit comparison vector for the protocol
-            proto_vec = np.zeros(1000)
+            proto_vec = get_np().zeros(1000)
             for idx in indices: proto_vec[idx] = 1.0
             
             # Cosine Similarity: (A.B) / (|A||B|)
             # We only care about the positive direction of the gradient
-            positive_ideal = np.maximum(ideal_vector, 0)
-            norm_ideal = np.linalg.norm(positive_ideal)
-            norm_proto = np.linalg.norm(proto_vec)
+            positive_ideal = get_np().maximum(ideal_vector, 0)
+            norm_ideal = get_np().linalg.norm(positive_ideal)
+            norm_proto = get_np().linalg.norm(proto_vec)
             
             if norm_ideal > 1e-6 and norm_proto > 1e-6:
-                score = np.dot(positive_ideal, proto_vec) / (norm_ideal * norm_proto)
+                score = get_np().dot(positive_ideal, proto_vec) / (norm_ideal * norm_proto)
                 if score > max_sim:
                     max_sim = score
                     best_protocol = name
@@ -2398,7 +2424,7 @@ async def discover_protocol(req: DiscoveryRequest):
         # Custom threshold for 'NOVEL' vs 'CANONICAL'
         if max_sim < 0.35:
             best_protocol = "NOVEL_DESIGN"
-            confidence = 0.5 + (np.max(ideal_vector) * 0.2) # Heuristic for novel
+            confidence = 0.5 + (get_np().max(ideal_vector) * 0.2) # Heuristic for novel
         else:
             confidence = max_sim 
 
@@ -2412,7 +2438,7 @@ async def discover_protocol(req: DiscoveryRequest):
         local_client, local_gpt = get_openai_client(req.api_key)
         if local_gpt:
             try:
-                top_genes_idx = np.argsort(ideal_vector)[::-1][:3]
+                top_genes_idx = get_np().argsort(ideal_vector)[::-1][:3]
                 top_genes = [GENE_SYMBOLS[i] for i in top_genes_idx]
                 
                 prompt = (
@@ -2435,12 +2461,33 @@ async def discover_protocol(req: DiscoveryRequest):
         synergy = 0.75  # Default
         try:
             # Heuristic: Focus (top weights vs noise) + Alignment (max_sim)
-            focused_weight = np.sum(np.sort(np.abs(ideal_vector))[::-1][:10]) / (np.sum(np.abs(ideal_vector)) + 1e-6)
+            focused_weight = get_np().sum(get_np().sort(get_np().abs(ideal_vector))[::-1][:10]) / (get_np().sum(get_np().abs(ideal_vector)) + 1e-6)
             synergy = (max_sim * 0.6) + (focused_weight * 0.4)
             synergy = min(max(synergy, 0.1), 0.99) # Clamp to aesthetic range
         except Exception as e:
             print(f"Synergy Calc Error: {e}")
             synergy = 0.75
+
+        # --- AF3 STRUCTURAL VALIDATION BRIDGE (v27.0 GOLD) ---
+        af3_result = None
+        try:
+            # Get all genes that have structural metadata
+            from structural_authority import StructuralAuthority
+            mapped_genes = set(StructuralAuthority.get_all_mapped_factors())
+            
+            # Find the top 2 genes from the manifold that are also in the structural registry
+            top_genes_idx = get_np().argsort(ideal_vector)[::-1]
+            eligible_tfs = [GENE_SYMBOLS[i] for i in top_genes_idx if GENE_SYMBOLS[i] in mapped_genes]
+            
+            primary_tf = eligible_tfs[0] if len(eligible_tfs) > 0 else "POU5F1" # Fallback to canonical
+            secondary_tf = eligible_tfs[1] if len(eligible_tfs) > 1 else None
+            
+            # Use the AF3 bridge
+            from af3_automation_bridge import AF3AutomationBridge
+            bridge = AF3AutomationBridge()
+            af3_result = bridge.generate_structural_job(primary_tf, secondary_tf)
+        except Exception as e:
+            print(f"[AF3 Integration] Structural job failed: {e}")
 
         return {
             "recommended_protocol": best_protocol,
@@ -2448,7 +2495,8 @@ async def discover_protocol(req: DiscoveryRequest):
             "scientific_rationale": rationale,
             "predicted_pathway": ["Trajectory Alignment", "Manifold Orthogonalization", "Attractor Convergence"],
             "synergy_score": float(synergy),
-            "custom_vector": ideal_vector.tolist() if best_protocol == "NOVEL_DESIGN" else None
+            "custom_vector": ideal_vector.tolist() if best_protocol == "NOVEL_DESIGN" else None,
+            "af3_validation": af3_result
         }
         
     except Exception as e:
@@ -2668,7 +2716,7 @@ async def discover_protocol_v1(req: DiscoveryRequest):
     # 2. Analyze Starting Context (The 'Gurdon' Check)
     # Are we starting from a 'Locked' somatic state or a 'Plastic' stem state?
     # We infer this from the input gene expression of Pluripotency markers (0-10)
-    current_genes = torch.tensor(req.current_genes, dtype=torch.float32)
+    current_genes = get_torch().tensor(req.current_genes, dtype=get_torch().float32)
     pluripotency_score = float(current_genes[:10].mean())
     is_plastic = pluripotency_score > 0.3 # Threshold for "Partially Unlocked"
     
@@ -2683,7 +2731,7 @@ async def discover_protocol_v1(req: DiscoveryRequest):
             # Detect Precision
             model_dtype = next(model.parameters()).dtype
 
-            current_5k = torch.tensor(req.current_genes + [0.0]*4000, dtype=torch.float32).unsqueeze(0)
+            current_5k = get_torch().tensor(req.current_genes + [0.0]*4000, dtype=get_torch().float32).unsqueeze(0)
             current_5k = current_5k.to(dtype=model_dtype) # Cast to Half/Float
             
             # Define Target Indices
@@ -2704,13 +2752,13 @@ async def discover_protocol_v1(req: DiscoveryRequest):
                     scores[name] = -1.0
                     continue
 
-                with torch.no_grad():
+                with get_torch().no_grad():
                     # Construct Vector
-                    target_vec = torch.zeros(1, 5000, dtype=model_dtype)
+                    target_vec = get_torch().zeros(1, 5000, dtype=model_dtype)
                     target_vec[0, indices] = 1.0 
-                    age_vec = torch.tensor([[0.5]], dtype=model_dtype)
+                    age_vec = get_torch().tensor([[0.5]], dtype=model_dtype)
                     
-                    x_in = torch.cat([current_5k, target_vec, age_vec], dim=1)
+                    x_in = get_torch().cat([current_5k, target_vec, age_vec], dim=1)
                     
                     # Predict
                     pred = model(x_in)
@@ -2754,7 +2802,7 @@ async def discover_protocol_v1(req: DiscoveryRequest):
             
             # Normalize Display Score
             confidence = 96.0 if is_plastic else 88.0 # Higher confidence in plastic cells
-            synergy = float(1.0 / (1.0 + np.exp(-best_score * 5)))
+            synergy = float(1.0 / (1.0 + get_np().exp(-best_score * 5)))
 
     except Exception as e:
         print(f"âš ï¸ SIM FAILED: {e}")
@@ -2829,7 +2877,7 @@ async def run_virtual_trial(req: TrialRequest):
         # 1. GENERATE COHORT (PyTorch Tensor Logic)
         N = req.cohort_size
         sigma = {"High": 1.0, "Medium": 0.5, "Low": 0.1}.get(req.variance, 0.5)
-        base_population = torch.rand(N, 1000) * 0.1
+        base_population = get_torch().rand(N, 1000) * 0.1
         
         if req.disease == "ALZ":
             base_population[:, 80:90] += 0.8
@@ -2838,8 +2886,8 @@ async def run_virtual_trial(req: TrialRequest):
             base_population[:, 40:50] += 0.9
             base_population[:, 60:70] += 0.5
         
-        noise = torch.randn(N, 1000) * (0.05 * sigma)
-        patients = torch.clamp(base_population + noise, 0.0, 1.0)
+        noise = get_torch().randn(N, 1000) * (0.05 * sigma)
+        patients = get_torch().clamp(base_population + noise, 0.0, 1.0)
         
         # 2. RUN SIMULATION
         active_cohort = patients.clone()
@@ -2858,41 +2906,41 @@ async def run_virtual_trial(req: TrialRequest):
             active_cohort[:, 75:80] += 0.7  # Epigenetic Reset Boost
         elif req.protocol == "LIN28_NANOG":
             active_cohort[:, [2,3]] += 0.9   # NANOG/LIN28 (Thomson Style)        
-        with torch.no_grad():
-            target_dtype = torch.float32
+        with get_torch().no_grad():
+            target_dtype = get_torch().float32
             noise_mean, noise_std = 0.1, 0.05
             for step in range(3):
-                age_vec = torch.zeros(N, 1) + (0.5 + step * 0.1)
-                pad_act = torch.normal(mean=noise_mean, std=noise_std, size=(N, 4000))
-                active_5k = torch.cat([active_cohort, pad_act], dim=1)
-                ctx_act = torch.zeros(N, 5000)
-                act_in = torch.cat([active_5k, ctx_act, age_vec], dim=1).to(dtype=target_dtype)
+                age_vec = get_torch().zeros(N, 1) + (0.5 + step * 0.1)
+                pad_act = get_torch().normal(mean=noise_mean, std=noise_std, size=(N, 4000))
+                active_5k = get_torch().cat([active_cohort, pad_act], dim=1)
+                ctx_act = get_torch().zeros(N, 5000)
+                act_in = get_torch().cat([active_5k, ctx_act, age_vec], dim=1).to(dtype=target_dtype)
                 
-                pad_pla = torch.normal(mean=noise_mean, std=noise_std, size=(N, 4000))
-                placebo_5k = torch.cat([placebo_cohort, pad_pla], dim=1)
-                ctx_pla = torch.zeros(N, 5000)
-                pla_in = torch.cat([placebo_5k, ctx_pla, age_vec], dim=1).to(dtype=target_dtype)
+                pad_pla = get_torch().normal(mean=noise_mean, std=noise_std, size=(N, 4000))
+                placebo_5k = get_torch().cat([placebo_cohort, pad_pla], dim=1)
+                ctx_pla = get_torch().zeros(N, 5000)
+                pla_in = get_torch().cat([placebo_5k, ctx_pla, age_vec], dim=1).to(dtype=target_dtype)
                 
                 active_drift = model(act_in)
                 placebo_drift = model(pla_in)
                 
-                active_cohort = torch.clamp(active_cohort + active_drift[:, :1000].to(dtype=torch.float32) * 0.2, 0, 1)
-                placebo_cohort = torch.clamp(placebo_cohort + placebo_drift[:, :1000].to(dtype=torch.float32) * 0.2, 0, 1)
+                active_cohort = get_torch().clamp(active_cohort + active_drift[:, :1000].to(dtype=get_torch().float32) * 0.2, 0, 1)
+                placebo_cohort = get_torch().clamp(placebo_cohort + placebo_drift[:, :1000].to(dtype=get_torch().float32) * 0.2, 0, 1)
                 
         # 3. CALCULATE METRICS
-        p_stress = torch.mean(placebo_cohort[:, 80:100], dim=1)
-        p_health = torch.mean(placebo_cohort[:, 0:10], dim=1)
+        p_stress = get_torch().mean(placebo_cohort[:, 80:100], dim=1)
+        p_health = get_torch().mean(placebo_cohort[:, 0:10], dim=1)
         placebo_risk = p_stress * (1.5 - p_health)
         
-        a_stress = torch.mean(active_cohort[:, 80:100], dim=1)
-        a_health = torch.mean(active_cohort[:, 0:10], dim=1)
+        a_stress = get_torch().mean(active_cohort[:, 80:100], dim=1)
+        a_health = get_torch().mean(active_cohort[:, 0:10], dim=1)
         active_risk = a_stress * (1.5 - a_health)
         
-        days = np.linspace(0, 10, 100)
+        days = get_np().linspace(0, 10, 100)
         mean_risk_p = float(placebo_risk.mean())
         mean_risk_a = float(active_risk.mean())
-        km_placebo = [np.exp(-mean_risk_p * t) for t in days]
-        km_active = [np.exp(-mean_risk_a * t) for t in days]
+        km_placebo = [get_np().exp(-mean_risk_p * t) for t in days]
+        km_active = [get_np().exp(-mean_risk_a * t) for t in days]
         
         delta = (placebo_risk - active_risk).numpy()
         waterfall_data = sorted(delta.tolist())
@@ -2901,14 +2949,14 @@ async def run_virtual_trial(req: TrialRequest):
         pca_1 = diff_tensor[:, 0:500].mean(dim=1) * 100
         pca_2 = diff_tensor[:, 500:1000].mean(dim=1) * 100
             
-        mean_delta = np.mean(delta)
-        std_delta = np.std(delta)
+        mean_delta = get_np().mean(delta)
+        std_delta = get_np().std(delta)
         if std_delta < 1e-9:
             t_stat = 10.0 if mean_delta > 0 else 0.0
         else:
-            t_stat = mean_delta / (std_delta / np.sqrt(N))
+            t_stat = mean_delta / (std_delta / get_np().sqrt(N))
             
-        p_value = np.exp(-0.5 * t_stat**2)
+        p_value = get_np().exp(-0.5 * t_stat**2)
         if p_value < 1e-6: p_value = 1e-6
 
         return {
@@ -3007,7 +3055,7 @@ async def scvi_population_audit(request: Request):
     # Use the new audit_state method to encode and classify the population average
     try:
         # avg_genes is expected to be the simulation's 5000-dim vector
-        result = pe.audit_state(np.array(avg_genes))
+        result = pe.audit_state(get_np().array(avg_genes))
         return result
     except Exception as e:
         import traceback
@@ -3179,7 +3227,7 @@ async def startup_event():
             
             if size_mb > 100:
                 # Load weights
-                drift_model.load_state_dict(torch.load(TRAINED_DRIFTMLP_PATH, map_location='cpu', weights_only=False))
+                drift_model.load_state_dict(get_torch().load(TRAINED_DRIFTMLP_PATH, map_location='cpu', weights_only=False))
                 print("ðŸŒŸ STATUS: ZENITH V28 (102M) WEIGHTS LOADED SUCCESSFULLY")
             else:
                 print("âš ï¸ STATUS: MODEL FILE TOO SMALL - LIKELY CORRUPT/POINTER")
