@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zenith v27.0 GOLD | Operational Manual (A-Z)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;500;600;700;800;900&family=JetBrains+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --zenith-blue: #2563eb;
+            --zenith-teal: #0d9488;
+            --glass-bg: rgba(15, 23, 42, 0.8);
+        }
+
+        body {
+            background-color: #020617;
+            color: #f8fafc;
+            font-family: 'Outfit', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #fff 0%, #3b82f6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .card-pillar {
+            background: rgba(30, 41, 59, 0.4);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 2.5rem;
+            padding: 3rem;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .card-pillar:hover {
+            border-color: var(--zenith-blue);
+            transform: translateY(-8px);
+            background: rgba(30, 41, 59, 0.6);
+        }
+
+        .step-number {
+            font-family: 'JetBrains Mono', monospace;
+            background: linear-gradient(135deg, #2563eb, #0d9488);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 900;
+        }
+
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 1.5rem;
+        }
+
+        .bento-item {
+            grid-column: span 12;
+        }
+
+        @media (min-width: 1024px) {
+            .bento-item-6 { grid-column: span 6; }
+            .bento-item-4 { grid-column: span 4; }
+            .bento-item-8 { grid-column: span 8; }
+        }
+
+        .nav-link {
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-link:hover {
+            color: var(--zenith-blue);
+        }
+
+        .sticky-header {
+            background: rgba(2, 6, 23, 0.8);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+    </style>
+</head>
+
+<body class="selection:bg-blue-500/30">
+
+    <header class="sticky top-0 z-50 sticky-header py-6">
+        <div class="container mx-auto px-10 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/20">
+                    <i data-lucide="zap" class="w-6 h-6 text-white"></i>
+                </div>
+                <h1 class="text-2xl font-black tracking-tighter uppercase">Zenith <span class="text-blue-500">v27.0 GOLD</span></h1>
+            </div>
+            <nav class="hidden lg:flex items-center gap-10 text-[10px] font-black uppercase tracking-widest text-slate-400">
+                <a href="index.html" class="nav-link">Dashboard</a>
+                <a href="#discovery" class="nav-link">AI Discovery</a>
+                <a href="#structural" class="nav-link">Structural Bridge</a>
+                <a href="#trials" class="nav-link">Clinical SDE</a>
+                <a href="#robotic" class="nav-link">Robotic Bridge</a>
+            </nav>
+            <div class="flex gap-4">
+                <span class="bg-amber-500/10 text-amber-500 border border-amber-500/20 px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-widest">How Zenith Works (A-Z)</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-10 py-24">
+        
+        <!-- Hero Section -->
+        <section class="max-w-5xl mb-32">
+            <div class="flex items-center gap-4 mb-8">
+                <span class="h-px w-12 bg-blue-600"></span>
+                <span class="text-xs font-black tracking-[0.4em] uppercase text-blue-500">How It Works</span>
+            </div>
+            <h1 class="text-7xl lg:text-9xl font-black tracking-tighter mb-10 gradient-text leading-tight">
+                THE ZENITH <br>OPERATIONAL <br>PATHWAY.
+            </h1>
+            <p class="text-2xl text-slate-400 font-light leading-relaxed max-w-3xl">
+                Zenith is an institutional bridge that translates natural language research intents into 
+                <strong class="text-white">mathematically-validated biological protocols</strong>. 
+                From the first prompt to the final robotic synthesis, every step is governed by the 285M-parameter GOLD manifold.
+            </p>
+        </section>
+
+        <!-- The A-Z Pathway Bento -->
+        <div class="bento-grid mb-32">
+            
+            <!-- Step A: Discovery -->
+            <section id="discovery" class="bento-item bento-item-8 card-pillar">
+                <div class="flex justify-between items-start mb-12">
+                    <div class="step-number text-5xl">01</div>
+                    <div class="bg-blue-500/10 p-3 rounded-2xl"><i data-lucide="brain-circuit" class="w-8 h-8 text-blue-500"></i></div>
+                </div>
+                <h3 class="text-4xl font-black text-white mb-6 uppercase tracking-tight">AI Discovery Manifold</h3>
+                <p class="text-slate-400 leading-relaxed mb-8">
+                    Your research intent (e.g., *"Reverse age of HMVECs by 10 years, restore eNOS, suppress SASP, no c-MYC"*) is processed by the **Zenith-GPT Hybrid Engine**. We translate this specific clinical goal into high-dimensional vector coordinates within the **scVI latent manifold**.
+                </p>
+                <div class="grid grid-cols-2 gap-6 text-[11px] font-bold text-slate-500">
+                    <div class="border-l-2 border-blue-500/30 pl-4 py-2">
+                        <span class="text-white">HMVEC TARGETING</span><br>Specific targeting of cardiac microvascular niches.
+                    </div>
+                    <div class="border-l-2 border-teal-500/30 pl-4 py-2">
+                        <span class="text-white">ONCOGENIC FILTER</span><br>Strict exclusion of c-MYC and mitogens for ESI 98%.
+                    </div>
+                </div>
+            </section>
+
+            <!-- Step B: Latent Arithmetic -->
+            <section class="bento-item bento-item-4 card-pillar bg-indigo-500/5">
+                <div class="step-number text-5xl mb-12">02</div>
+                <h3 class="text-2xl font-black text-white mb-6 uppercase">Latent Arithmetic</h3>
+                <p class="text-sm text-slate-400 leading-relaxed">
+                    We compute the **Differential Trajectory** required to reverse the biological age of HMVECs by exactly 10.0 years while restoring eNOS (NOS3) enzymatic activity.
+                </p>
+                <div class="mt-8 p-6 bg-black/40 rounded-2xl font-mono text-[10px] text-indigo-400 border border-indigo-500/20">
+                    delta_z = z_target - z_current
+                </div>
+            </section>
+
+            <!-- Step C: Structural Handshake -->
+            <section id="structural" class="bento-item bento-item-4 card-pillar bg-teal-500/5">
+                <div class="step-number text-5xl mb-12">03</div>
+                <h3 class="text-2xl font-black text-white mb-6 uppercase">AF3 Bridge</h3>
+                <p class="text-sm text-slate-400 leading-relaxed">
+                    The discovered CRCs (Core Regulatory Complexes) are validated via **AlphaFold 3**. We ensure the non-oncogenic factors exhibit stable docking at the eNOS promoter without mitogenic interference.
+                </p>
+                <div class="mt-8 flex gap-2">
+                    <div class="w-full h-1 bg-teal-500/20 rounded-full overflow-hidden">
+                        <div class="w-3/4 h-full bg-teal-500"></div>
+                    </div>
+                    <span class="text-[9px] font-black text-teal-500">IPTM: 0.84</span>
+                </div>
+            </section>
+
+            <!-- Step D: Virtual Clinical Trial -->
+            <section id="trials" class="bento-item bento-item-8 card-pillar">
+                <div class="flex justify-between items-start mb-12">
+                    <div class="step-number text-5xl">04</div>
+                    <div class="bg-rose-500/10 p-3 rounded-2xl"><i data-lucide="activity" class="w-8 h-8 text-rose-500"></i></div>
+                </div>
+                <h3 class="text-4xl font-black text-white mb-6 uppercase tracking-tight">Phase IV Virtual Trials</h3>
+                <p class="text-slate-400 leading-relaxed mb-8">
+                    The HMVEC rejuvenation protocol is tested on **1,000+ Digital Twins**. The **Neural SDE Engine** simulates the suppression of SASP-mediated inflammatory drift across the coronary microvascular niche.
+                </p>
+                <div class="bg-black/20 border border-white/5 rounded-3xl p-8 flex items-center justify-between">
+                    <div class="text-center">
+                        <div class="text-2xl font-black text-white">1k+</div>
+                        <div class="text-[9px] font-black text-slate-500 uppercase tracking-widest">Cohort Size</div>
+                    </div>
+                    <div class="h-8 w-px bg-white/10"></div>
+                    <div class="text-center">
+                        <div class="text-2xl font-black text-teal-500">98%</div>
+                        <div class="text-[9px] font-black text-slate-500 uppercase tracking-widest">Epigenetic Stability (ESI)</div>
+                    </div>
+                    <div class="h-8 w-px bg-white/10"></div>
+                    <div class="text-center">
+                        <div class="text-2xl font-black text-rose-500">SDE</div>
+                        <div class="text-[9px] font-black text-slate-500 uppercase tracking-widest">Stochastic Engine</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Step E: Robotic Bridge -->
+            <section id="robotic" class="bento-item bento-item-12 card-pillar bg-amber-500/5 border-amber-500/10">
+                <div class="flex flex-col md:flex-row gap-20 items-center">
+                    <div class="flex-1">
+                        <div class="step-number text-5xl mb-12">05</div>
+                        <h3 class="text-5xl font-black text-white mb-8 uppercase tracking-tight">D2B Robotic Handshake</h3>
+                        <p class="text-xl text-slate-400 leading-relaxed mb-10">
+                            The finalized protocol is exported as an **Opentrons Flex Labware Script**. This "Discovery-to-Bench" (D2B) 
+                            bridge automates the synthesis of your synthetic reprogramming cocktail.
+                        </p>
+                        <button class="bg-amber-500 hover:bg-amber-600 text-black font-black px-10 py-5 rounded-2xl uppercase tracking-widest text-xs transition-all shadow-xl shadow-amber-500/20">
+                            Download Operational Manual (PDF)
+                        </button>
+                    </div>
+                    <div class="w-full md:w-1/3 bg-black/40 border border-white/10 rounded-[2.5rem] p-10 font-mono text-xs text-amber-500/80">
+                        <div class="mb-4 text-slate-600">// OPENTRONS PROTOCOL v2.1</div>
+                        <div class="mb-2">protocol = opentrons.execute()</div>
+                        <div class="mb-2">pipette = protocol.load_instrument('p300_single_gen2')</div>
+                        <div class="mb-2">plate = protocol.load_labware('corning_96_wellplate')</div>
+                        <div class="mt-6 text-amber-400"># DISCOVERY-TO-BENCH SYNC COMPLETE</div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Call to Action -->
+        <section class="text-center py-24 border-t border-white/5">
+            <h2 class="text-5xl font-black text-white mb-10 gradient-text">READY TO BEGIN?</h2>
+            <div class="flex justify-center gap-6">
+                <a href="index.html" class="bg-blue-600 hover:bg-blue-700 text-white font-black px-12 py-6 rounded-2xl uppercase tracking-widest text-sm transition-all">Launch Console</a>
+                <a href="technical_catalog.html" class="bg-slate-900 hover:bg-slate-800 text-white font-black px-12 py-6 rounded-2xl uppercase tracking-widest text-sm transition-all border border-white/10">Technical Reference</a>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="py-20 border-t border-white/5 bg-black/20">
+        <div class="container mx-auto px-10 flex flex-col md:flex-row justify-between items-center gap-10">
+            <div class="flex items-center gap-3 opacity-50">
+                <div class="w-8 h-8 bg-slate-700 rounded-lg flex items-center justify-center">
+                    <i data-lucide="zap" class="w-5 h-5 text-white"></i>
+                </div>
+                <h1 class="text-lg font-black tracking-tighter uppercase">Nilus Lab Zenith</h1>
+            </div>
+            <div class="text-[10px] font-black text-slate-600 uppercase tracking-widest">
+                &copy; 2026 Nilus Lab Institutional Research | All Rights Reserved
+            </div>
+            <div class="flex gap-6">
+                <i data-lucide="github" class="w-5 h-5 text-slate-500 hover:text-white cursor-pointer transition-colors"></i>
+                <i data-lucide="twitter" class="w-5 h-5 text-slate-500 hover:text-white cursor-pointer transition-colors"></i>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+
+</html>
