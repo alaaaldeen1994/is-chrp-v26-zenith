@@ -4,10 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zenith v27.0 GOLD | User Journey (A-Z)</title>
+    <title>Zenith v27.0 GOLD | Institutional Operational Manual (A-Z)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800;900&family=JetBrains+Mono&display=swap" rel="stylesheet">
     <style>
         body {
             background-color: #020617;
@@ -18,8 +18,8 @@
 
         .step-card {
             border-left: 2px solid #2563eb;
-            padding-left: 2rem;
-            margin-bottom: 4rem;
+            padding-left: 2.5rem;
+            margin-bottom: 5rem;
             position: relative;
         }
 
@@ -39,12 +39,46 @@
             font-size: 0.8rem;
         }
 
-        .highlight-box {
+        .outcome-box {
+            background: rgba(16, 185, 129, 0.05);
+            border: 1px solid rgba(16, 185, 129, 0.1);
+            border-radius: 1.5rem;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .logic-table {
+            width: 100%;
+            font-size: 0.75rem;
+            border-collapse: collapse;
+            margin-top: 2rem;
+        }
+
+        .logic-table th {
+            text-align: left;
+            padding: 1rem;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .logic-table td {
+            padding: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+        }
+
+        .mono {
+            font-family: 'JetBrains Mono', monospace;
+            color: #3b82f6;
+        }
+
+        .highlight-prompt {
             background: rgba(37, 99, 235, 0.05);
             border: 1px solid rgba(37, 99, 235, 0.1);
-            border-radius: 1rem;
-            padding: 1.5rem;
-            margin-top: 1rem;
+            border-radius: 1.25rem;
+            padding: 2rem;
+            margin: 2rem 0;
         }
 
         .clean-title {
@@ -52,98 +86,166 @@
             font-weight: 900;
             color: #fff;
         }
-
-        .nav-btn {
-            background: #2563eb;
-            color: white;
-            font-weight: 800;
-            padding: 0.75rem 2rem;
-            border-radius: 999px;
-            text-transform: uppercase;
-            font-size: 0.7rem;
-            letter-spacing: 0.1em;
-            transition: all 0.3s ease;
-        }
-
-        .nav-btn:hover {
-            background: #1d4ed8;
-            transform: scale(1.05);
-        }
     </style>
 </head>
 
-<body class="p-8 lg:p-24">
+<body class="p-8 lg:p-24 selection:bg-blue-500/30">
 
-    <div class="max-w-2xl mx-auto">
+    <div class="max-w-3xl mx-auto">
         
-        <header class="mb-20">
-            <div class="flex items-center gap-3 mb-6">
+        <header class="mb-32">
+            <div class="flex items-center gap-3 mb-8">
                 <i data-lucide="zap" class="w-6 h-6 text-blue-500"></i>
-                <span class="text-xs font-black uppercase tracking-[0.4em] text-slate-500">Nilus Lab User Guide</span>
+                <span class="text-xs font-black uppercase tracking-[0.5em] text-slate-500">Zenith v27.0 GOLD | Operational Manual</span>
             </div>
-            <h1 class="text-5xl clean-title mb-6 leading-tight">HOW ZENITH WORKS: <br>A-Z USER JOURNEY</h1>
-            <p class="text-slate-400 text-lg">Follow these 5 steps to execute a professional rejuvenation protocol using the Zenith v27.0 GOLD platform.</p>
+            <h1 class="text-6xl lg:text-7xl clean-title mb-8 leading-tight">THE A-Z <br>RESEARCH <br>PATHWAY</h1>
+            <p class="text-slate-400 text-xl font-light max-w-xl">A complete institutional walkthrough of the Zenith platform, documenting expected outcomes and underlying technical logic.</p>
         </header>
 
-        <!-- STEP 1: SIGN IN -->
+        <!-- STEP 1: AUTHENTICATION -->
         <div class="step-card">
             <div class="step-number">01</div>
-            <h3 class="text-xl font-bold mb-3 text-white uppercase tracking-wide">Secure Institutional Sign-In</h3>
-            <p class="text-slate-400 mb-4">Access the private Nilus Lab portal at <span class="text-blue-500">www.niluslab.com/zenith</span>. Ensure your Phase IV Institutional GOLD License is active to unlock the full 285M-parameter manifold.</p>
-            <div class="flex items-center gap-2 text-[10px] font-black text-slate-500 uppercase tracking-widest">
-                <i data-lucide="shield-check" class="w-3 h-3 text-emerald-500"></i> Authorized Access Required
+            <h3 class="text-2xl font-black text-white mb-4 uppercase tracking-tight">Phase IV Institutional Access</h3>
+            <p class="text-slate-400">Researchers must authenticate via the secure portal. This step initializes the **Institutional GOLD License**, unlocking the full 285M-parameter manifolds.</p>
+            
+            <div class="outcome-box">
+                <div class="text-[10px] text-emerald-500 font-black uppercase tracking-widest mb-3 flex items-center gap-2">
+                    <i data-lucide="check-circle" class="w-3 h-3"></i> Expected Outcome
+                </div>
+                <p class="text-sm text-slate-300">The browser redirects to the **Zenith Mainframe**. The header confirms "Phase IV GOLD Status" and the HCA 486k Heart Atlas connection is established.</p>
             </div>
         </div>
 
-        <!-- STEP 2: OPEN SIMULATION CONSOLE -->
+        <!-- STEP 2: CONSOLE INITIALIZATION -->
         <div class="step-card">
             <div class="step-number">02</div>
-            <h3 class="text-xl font-bold mb-3 text-white uppercase tracking-wide">Launch Simulation Console</h3>
-            <p class="text-slate-400 mb-4">From your researcher dashboard, click <strong class="text-white uppercase">"Open Simulation Console"</strong>. This initializes the live cell-state environment and connects to the scVI backend.</p>
+            <h3 class="text-2xl font-black text-white mb-4 uppercase tracking-tight">Console & Manifold Sync</h3>
+            <p class="text-slate-400">Launch the **Simulation Console**. The platform performs a multi-spectral sync between the user's genomic profile and the global geroscience manifold.</p>
+            
+            <div class="outcome-box">
+                <div class="text-[10px] text-emerald-500 font-black uppercase tracking-widest mb-3 flex items-center gap-2">
+                    <i data-lucide="check-circle" class="w-3 h-3"></i> Expected Outcome
+                </div>
+                <p class="text-sm text-slate-300">A live **5,000-Gene Heatmap** renders on the screen. Individual cell clusters (Cardiomyocytes, HMVECs, Fibroblasts) become interactive and highlightable.</p>
+            </div>
         </div>
 
-        <!-- STEP 3: CONFIGURE RESEARCH PROMPT -->
+        <!-- STEP 3: THE RESEARCH PROMPT -->
         <div class="step-card">
             <div class="step-number">03</div>
-            <h3 class="text-xl font-bold mb-3 text-white uppercase tracking-wide">Configure Research Prompt</h3>
-            <p class="text-slate-400 mb-4">Enter your specific clinical objective into the Discovery Manifold input. Use high-fidelity prompts for maximum accuracy.</p>
-            <div class="highlight-box">
-                <div class="text-[10px] text-blue-500 font-black uppercase tracking-widest mb-3">Example Protocol</div>
-                <p class="text-sm italic text-slate-300 leading-relaxed">
-                    "Reverse the biological age of human cardiac microvascular endothelial cells (HMVECs) by exactly 10 years to restore the youthful coronary niche. Target the restoration of eNOS enzymatic activity and the clear suppression of the SASP-mediated inflammatory drift. Strictly maintain a non-oncogenic profile by identifying CRCs that do NOT rely on c-MYC or high-potency mitogens. Target an ESI of 98%."
+            <h3 class="text-2xl font-black text-white mb-4 uppercase tracking-tight">Clinical Goal Configuration</h3>
+            <p class="text-slate-400">Enter your specific rejuvenation target. Zenith uses a hybrid NLP/Biological transformer to map your intent to transcription factor (TF) coordinates.</p>
+            
+            <div class="highlight-prompt">
+                <div class="text-[9px] text-blue-500 font-black uppercase tracking-widest mb-4">Institutional HMVEC Example</div>
+                <p class="text-sm italic text-slate-100 leading-relaxed">
+                    "Reverse the biological age of HMVECs by exactly 10 years to restore the coronary niche. Restore eNOS (NOS3) activity and suppress SASP inflammation. No c-MYC or mitogens. Target ESI 98%."
                 </p>
             </div>
+
+            <div class="outcome-box">
+                <div class="text-[10px] text-emerald-500 font-black uppercase tracking-widest mb-3 flex items-center gap-2">
+                    <i data-lucide="check-circle" class="w-3 h-3"></i> Expected Outcome
+                </div>
+                <p class="text-sm text-slate-300">The **Discovery Engine** highlights a candidate cocktail (e.g., KLF2 + MEF2C). The "Non-Oncogenic" guardrail confirms that MYC activity remains at baseline.</p>
+            </div>
         </div>
 
-        <!-- STEP 4: INITIATE HYBRID DISCOVERY -->
+        <!-- STEP 4: HYBRID DISCOVERY -->
         <div class="step-card">
             <div class="step-number">04</div>
-            <h3 class="text-xl font-bold mb-3 text-white uppercase tracking-wide">Initiative Hybrid Discovery</h3>
-            <p class="text-slate-400 mb-4">Click <strong class="text-blue-500 uppercase">"Initiate Discovery"</strong>. The system will now perform stochastic latent arithmetic across the 486,000-cell heart atlas to identify the optimal transcription factor combination.</p>
-            <div class="flex items-center gap-4 mt-6">
-                <div class="w-full bg-slate-800 h-1 rounded-full overflow-hidden">
-                    <div class="w-3/4 h-full bg-blue-500"></div>
+            <h3 class="text-2xl font-black text-white mb-4 uppercase tracking-tight">Stochastic Latent Inference</h3>
+            <p class="text-slate-400">Executing the **Initiate Discovery** command triggers a Neural SDE trajectory simulation. We compute the exact delta required to shift the HMVEC state by 10 years.</p>
+            
+            <div class="outcome-box">
+                <div class="text-[10px] text-emerald-500 font-black uppercase tracking-widest mb-3 flex items-center gap-2">
+                    <i data-lucide="check-circle" class="w-3 h-3"></i> Expected Outcome
                 </div>
-                <span class="text-[9px] font-black text-blue-500 uppercase">Computing...</span>
+                <p class="text-sm text-slate-300">A **Waterfall Plot** appears, showing the distribution of rejuvenation across the cell population. The **Epigenetic Stability Index (ESI)** calculates to **98.4%**.</p>
             </div>
         </div>
 
-        <!-- STEP 5: FINAL STRUCTURAL VALIDATION -->
-        <div class="step-card border-none">
+        <!-- STEP 5: FINAL VALIDATION & AF3 -->
+        <div class="step-card border-none mb-32">
             <div class="step-number">05</div>
-            <h3 class="text-xl font-bold mb-3 text-white uppercase tracking-wide">Final Results & AF3 Bridge</h3>
-            <p class="text-slate-400 mb-4">Once complete, review your results. The system will display the successful **10-Year Age Reversal** delta and generate the final **AlphaFold 3 Structural Manifest** for laboratory synthesis.</p>
-            <div class="highlight-box border-emerald-500/20 bg-emerald-500/5">
-                <div class="flex justify-between items-center">
-                    <span class="text-[10px] text-emerald-500 font-black uppercase tracking-widest">Protocol Verified</span>
-                    <span class="text-[10px] text-slate-500 font-bold uppercase">ESI: 98.4%</span>
+            <h3 class="text-2xl font-black text-white mb-4 uppercase tracking-tight">Structural Handshake & Export</h3>
+            <p class="text-slate-400">Final results are bridged to the physical world. We generate the structural manifests and robotic synthesis scripts for immediate wet-lab execution.</p>
+            
+            <div class="outcome-box">
+                <div class="text-[10px] text-emerald-500 font-black uppercase tracking-widest mb-3 flex items-center gap-2">
+                    <i data-lucide="check-circle" class="w-3 h-3"></i> Expected Outcome
                 </div>
+                <p class="text-sm text-slate-300">The **AlphaFold 3 Bridge** panel displays a stable protein-DNA handshake. The researcher can download the **D2B Robotic Script** (Opentrons Flex format).</p>
             </div>
         </div>
 
-        <footer class="mt-20 pt-12 border-t border-white/5 text-center">
-            <a href="index.html" class="nav-btn">Back to Console</a>
-        </div>
+        <!-- SYSTEM LOGIC MAPPING (A-Z) -->
+        <section id="system-mapping" class="mb-32">
+            <div class="flex items-center gap-4 mb-12">
+                <span class="h-px w-12 bg-slate-800"></span>
+                <h2 class="text-4xl font-black text-white uppercase tracking-tighter">System Logic Mapping</h2>
+            </div>
+            <p class="text-slate-400 mb-8">Technical mapping of console UI items to their underlying Zenith v27.0 GOLD code functions.</p>
+            
+            <table class="logic-table">
+                <thead>
+                    <tr>
+                        <th>Console Item</th>
+                        <th>Technical Logic / Function</th>
+                        <th>Source File</th>
+                    </tr>
+                </thead>
+                <tbody class="text-slate-400">
+                    <tr>
+                        <td class="font-bold text-white">Discovery Prompt</td>
+                        <td class="mono">discover_hybrid()</td>
+                        <td>bridge_server.py</td>
+                    </tr>
+                    <tr>
+                        <td class="font-bold text-white">Trial Simulation</td>
+                        <td class="mono">run_virtual_trial()</td>
+                        <td>bridge_server.py</td>
+                    </tr>
+                    <tr>
+                        <td class="font-bold text-white">SDE Update Rule</td>
+                        <td class="mono">euler_maruyama_sde()</td>
+                        <td>bridge_server.py</td>
+                    </tr>
+                    <tr>
+                        <td class="font-bold text-white">AF3 Manifest</td>
+                        <td class="mono">generate_manifest()</td>
+                        <td>af3_automation_bridge.py</td>
+                    </tr>
+                    <tr>
+                        <td class="font-bold text-white">ESI Calculator</td>
+                        <td class="mono">calculate_zenith_score()</td>
+                        <td>calculate_zenith_score.py</td>
+                    </tr>
+                    <tr>
+                        <td class="font-bold text-white">Dosage Optimizer</td>
+                        <td class="mono">bayesian_optimization()</td>
+                        <td>dosage_optimization_engine.py</td>
+                    </tr>
+                    <tr>
+                        <td class="font-bold text-white">Robotic Export</td>
+                        <td class="mono">export_flex_script()</td>
+                        <td>robotic_bridge.py</td>
+                    </tr>
+                    <tr>
+                        <td class="font-bold text-white">Safety Audit</td>
+                        <td class="mono">clinical_safety_audit()</td>
+                        <td>clinical_audit_engine.py</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <footer class="text-center py-20 border-t border-white/5">
+            <div class="flex justify-center gap-6">
+                <a href="index.html" class="bg-blue-600 hover:bg-blue-700 text-white font-black px-10 py-5 rounded-2xl uppercase tracking-widest text-[10px] transition-all">Launch Console</a>
+                <a href="technical_catalog.html" class="bg-slate-900 hover:bg-slate-800 text-white font-black px-10 py-5 rounded-2xl uppercase tracking-widest text-[10px] transition-all border border-white/10">Technical Reference</a>
+            </div>
+        </footer>
 
     </div>
 
