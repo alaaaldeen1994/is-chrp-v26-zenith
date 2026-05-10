@@ -1848,6 +1848,9 @@ const BiosimBridge = {
                     <div class="bg-purple-500 h-full shadow-[0_0_8px_rgba(139,92,246,0.6)]" style="width: ${width}%"></div>
                 </div>
                 <div class="mt-1 text-[6px] text-slate-500 uppercase tracking-tighter flex justify-between items-center">
+                    <span>Structural Concordance</span>
+                    <span id="af3-status-link">${data.structural_validation_job ? '<a href="' + data.structural_validation_job + '" target="_blank" class="text-indigo-400 hover:text-indigo-300 transition-colors font-black flex items-center gap-1"><svg xmlns="http://www.w3.org/2000/svg" width="6" height="6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg> AF3 MANIFEST GEN</a>' : 'AWAITING COCKTAIL'}</span>
+                </div>
                     <span>Cosine similarity: gradient vector ↔ canonical protocol manifold</span>
                     <span class="${width >= 60 ? 'text-emerald-500' : 'text-yellow-500'} font-bold">${width >= 85 ? 'CANONICAL MATCH' : width >= 50 ? 'NOVEL BIO-DESIGN' : 'LOW SIGNAL'}</span>
                 </div>

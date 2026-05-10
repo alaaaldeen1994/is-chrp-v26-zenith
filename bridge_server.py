@@ -17,6 +17,7 @@ import httpx
 import re
 import json
 import time
+from af3_automation_bridge import AF3AutomationBridge
 
 # --- ZENITH PARTIAL REPROGRAMMING ENGINE ---
 try:
@@ -865,6 +866,7 @@ if os.path.exists("validation_results"):
 
 if os.path.exists("assets"):
     app.mount("/assets", StaticFiles(directory="assets"), name="assets")
+    app.mount("/af3_jobs", StaticFiles(directory="af3_jobs"), name="af3_jobs")
 
 @app.get("/", response_class=HTMLResponse)
 async def serve_index():
@@ -1338,6 +1340,7 @@ class DiscoveryResult(BaseModel):
     oncogenic_risk_label: Optional[str] = None  # "LOW" | "MODERATE" | "HIGH"
     # v27: scVI perturbation engine enrichment (latent arithmetic predictions)
     scvi_enrichment: Optional[Dict[str, Any]] = None
+    structural_validation_job: Optional[str] = None
 
 class ReportRequest(BaseModel):
     session_id: str
@@ -2258,6 +2261,22 @@ async def discover_hybrid(req: HybridDiscoveryRequest, request: Request):
             except Exception as e:
                 print(f"   scVI enrichment skipped: {e}")
 
+        # --- STAGE 4: AUTOMATED AF3 STRUCTURAL VALIDATION ---
+        af3_filepath = None
+        try:
+            bridge = AF3AutomationBridge()
+            factor_list = list(target_profile.keys()) if target_profile else []
+            if len(factor_list) >= 2:
+                res = bridge.generate_structural_job(factor_list[0], factor_list[1])
+                if res["status"] == "success":
+                    af3_filepath = res["filepath"]
+            elif len(factor_list) == 1:
+                res = bridge.generate_structural_job(factor_list[0])
+                if res["status"] == "success":
+                    af3_filepath = res["filepath"]
+        except Exception as e:
+            print(f"âš ï¸  AF3 AUTO-BRIDGE FAILED: {e}")
+
         return DiscoveryResult(
             recommended_protocol=best_protocol if not req.repro_mode == "partial" else f"PARTIAL REPROGRAMMING ({req.safety_level})",
             confidence=float(confidence),
@@ -2273,7 +2292,8 @@ async def discover_hybrid(req: HybridDiscoveryRequest, request: Request):
             af3_metrics=None,
             oncogenic_risk=oncogenic_risk,
             oncogenic_risk_label=oncogenic_risk_label,
-            scvi_enrichment=scvi_enrichment
+            scvi_enrichment=scvi_enrichment,
+            structural_validation_job=af3_filepath
         )
     except Exception as e:
         import traceback
@@ -2800,11 +2820,38 @@ async def discover_protocol_v1(req: DiscoveryRequest):
         confidence = 85.0
         synergy = 0.8
         
+    # --- STAGE 4: AUTOMATED AF3 STRUCTURAL VALIDATION ---
+    af3_filepath = None
+    try:
+        bridge = AF3AutomationBridge()
+        # If it's a multi-factor protocol, try to validate the primary and secondary
+        factors = list(candidates.get(best_protocol, []))
+        if len(factors) >= 2:
+            # Map indices back to symbols for the bridge
+            # Heuristic: Use the symbols we know
+            inv_map = {0:"OCT4", 1:"SOX2", 4:"KLF4", 5:"MYC", 10:"GATA4", 11:"TBX5", 12:"MEF2C", 13:"NKX2-5"}
+            f1 = inv_map.get(factors[0])
+            f2 = inv_map.get(factors[1])
+            if f1:
+                res = bridge.generate_structural_job(f1, f2)
+                if res["status"] == "success":
+                    af3_filepath = res["filepath"]
+        elif len(factors) == 1:
+            inv_map = {0:"OCT4", 1:"SOX2", 4:"KLF4", 5:"MYC", 10:"GATA4", 11:"TBX5", 12:"MEF2C", 13:"NKX2-5"}
+            f1 = inv_map.get(factors[0])
+            if f1:
+                res = bridge.generate_structural_job(f1)
+                if res["status"] == "success":
+                    af3_filepath = res["filepath"]
+    except Exception as e:
+        print(f"âš ï¸  AF3 AUTO-BRIDGE FAILED: {e}")
+
     return {
         "recommended_protocol": best_protocol,
         "scientific_rationale": rationale,
         "confidence": confidence,
-        "synergy_score": synergy
+        "synergy_score": synergy,
+        "structural_validation_job": af3_filepath
     }
 
 class TrialResponse(BaseModel):
