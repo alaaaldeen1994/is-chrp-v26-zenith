@@ -2406,6 +2406,14 @@ async def get_pilot_dashboard():
 async def get_pilot_dashboard_path():
 
     return FileResponse("pilot_dashboard.html")
+@app.get("/how_it_works", response_class=HTMLResponse)
+async def serve_how_it_works_root():
+    return FileResponse("how_it_works.html")
+
+@app.get("/how_it_works.html", response_class=HTMLResponse)
+async def serve_how_it_works_file():
+    return FileResponse("how_it_works.html")
+
 
 
 
