@@ -975,8 +975,7 @@ async def uniprot_lookup(gene: str):
             # Protein name
             names = data.get("proteinDescription", {})
             rec = names.get("recommendedName", {})
-            result["protein_name"] = rec.get("fullName", {}).get("value") or \
-                names.get("submissionNames", [{}])[0].get("fullName", {}).get("value")
+            result["protein_name"] = rec.get("fullName", {}).get("value") or names.get("submissionNames", [{}])[0].get("fullName", {}).get("value")
 
             # Comments: function + location
             for c in data.get("comments", []):
