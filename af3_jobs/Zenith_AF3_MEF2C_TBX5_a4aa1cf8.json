@@ -1,0 +1,28 @@
+{
+  "name": "Zenith_AF3_MEF2C_TBX5_a4aa1cf8",
+  "modelSeeds": [
+    42
+  ],
+  "sequences": [
+    {
+      "proteinChain": {
+        "sequence": "MGRKKIQITRIMDERNRQVTFTKRKFGLMKKAYELSVLCDCEIALIIFNSSNKLFQYASTDMDKVLLKYTEYNEPHESRTNSDIVETLRKKGLNGCDSPDPDADDSVGHS",
+        "count": 1
+      }
+    },
+    {
+      "proteinChain": {
+        "sequence": "SALGAPSKSPSSPQAAFTQQGMEGIKVFLHERELWLKFHEVGTEMIITKAGRRMFPSYKVKVTGLNPKTKYILLMDIVPADDHRYKFADNKWSVTGKAEPAMPGRLYVHPDSPATGAHWMRQLVSFQKLKLTNNHLDPFGHIILNSMHKYQPRLHIVKADENNGFGSKNTAFCTHVFPETAFIAVTSYQNHKITQLKIENNPFAKGFRGSDDMELHRMSRMQSKEYPVVPRSTVRQKVASN",
+        "count": 1
+      }
+    },
+    {
+      "dnaSequence": {
+        "sequence": "CCTGTGACTGTGGGGTTCACGCTCCCGGGTG",
+        "count": 1
+      }
+    }
+  ],
+  "dialect": "alphafold3",
+  "version": 1
+}
