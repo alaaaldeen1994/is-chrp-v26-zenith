@@ -5767,7 +5767,7 @@ async def run_virtual_trial(req: TrialRequest):
 
         
 
-                with torch.no_grad():
+        with torch.no_grad():
             dt = 0.2  # Time step
             for step in range(5):
                 # NEURAL SDE FORM: dx = f(x,t)dt + g(x,t)dW
