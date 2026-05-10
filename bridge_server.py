@@ -1,4 +1,4 @@
-﻿import uvicorn
+import uvicorn
 from fastapi import FastAPI, Request, HTTPException, Form, Response, Cookie
 from fastapi.responses import HTMLResponse, JSONResponse, FileResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
@@ -2608,6 +2608,7 @@ async def chat_proxy(req: ChatRequest):
 # --- ENTERPRISE VIRTUAL TRIALS (PHASE III ENGINE) ---
 class TrialRequest(BaseModel):
     disease: str
+    protocol: str = "OSKM_STANDARD"
     cohort_size: int
     variance: str # 'High', 'Medium', 'Low'
 
@@ -2842,8 +2843,17 @@ async def run_virtual_trial(req: TrialRequest):
         model = get_drift_model()
         model.eval()
         
-        active_cohort[:, [0,1,4,5]] += 0.5 
-        
+        # Protocol-specific perturbation
+        if req.protocol == "OSKM_STANDARD":
+            active_cohort[:, [0,1,4,5]] += 0.8 # Strong Oct4/Sox2/Klf4/Myc
+        elif req.protocol == "DRP_ALPHA_12":
+            active_cohort[:, [0,1,4]] += 0.4 # Oct4/Sox2/Klf4
+            active_cohort[:, 70:75] += 0.6  # SIRT1/FOXO3 Rejuvenation Boost
+        elif req.protocol == "MPTR_PARTIAL":
+            active_cohort[:, [0,1]] += 0.3   # Oct4/Sox2 only (Altos Style)
+            active_cohort[:, 75:80] += 0.7  # Epigenetic Reset Boost
+        elif req.protocol == "LIN28_NANOG":
+            active_cohort[:, [2,3]] += 0.9   # NANOG/LIN28 (Thomson Style)        
         with torch.no_grad():
             target_dtype = torch.float32
             noise_mean, noise_std = 0.1, 0.05

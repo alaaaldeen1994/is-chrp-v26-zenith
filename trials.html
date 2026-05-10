@@ -95,14 +95,14 @@
 
     <header class="border-b border-slate-100 bg-white/80 backdrop-blur-xl p-6 flex justify-between items-center z-50">
         <div class="flex items-center gap-6">
-            <a href="profile.html" class="exit-btn">
+            <a href="index.html" class="exit-btn">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
                     <polyline points="16 17 21 12 16 7" />
                     <line x1="21" y1="12" x2="9" y2="12" />
                 </svg>
-                EXIT
+                EXIT CONSOLE
             </a>
             <div class="h-8 w-px bg-slate-100"></div>
             <div>
@@ -129,6 +129,17 @@
                     <option value="CF">Cardiac Fibrosis (Post-MI)</option>
                     <option value="EP">Endothelial Dysfunction</option>
                     <option value="HPC">Hutchinson-Gilford Progeria</option>
+                </select>
+            </div>
+
+            <div>
+                <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mb-4">Intervention Protocol</h3>
+                <select id="protocol-select"
+                    class="w-full bg-white border border-slate-200 text-sm p-4 rounded-2xl text-slate-900 font-bold focus:border-teal-500 outline-none shadow-sm">
+                    <option value="DRP_ALPHA_12">DRP-Alpha-12 (Adaptive Pulse)</option>
+                    <option value="MPTR_PARTIAL">MPTR-Partial (Altos Vision)</option>
+                    <option value="OSKM_STANDARD">OSKM Standard (Noble Cockt.)</option>
+                    <option value="LIN28_NANOG">LIN28+NANOG Rejuvenation</option>
                 </select>
             </div>
 
@@ -281,12 +292,22 @@
             const ctxMan = document.getElementById('manifold-chart').getContext('2d');
             manifoldChart = new Chart(ctxMan, {
                 type: 'scatter',
-                data: { datasets: [{ label: 'Twins', data: [], backgroundColor: '#0d9488', pointRadius: 4 }] },
+                data: { datasets: [{ label: 'Cell State Clusters', data: [], backgroundColor: '#0d9488', pointRadius: 5, hoverRadius: 8, borderWidth: 1, borderColor: 'white' }] },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    scales: { x: { display: false }, y: { display: false } },
-                    plugins: { legend: { display: false } }
+                    scales: { 
+                        x: { display: true, grid: { display: false }, ticks: { display: false }, title: { display: true, text: 'Latent Dimension 1', font: { size: 10, weight: '900' } } }, 
+                        y: { display: true, grid: { display: false }, ticks: { display: false }, title: { display: true, text: 'Latent Dimension 2', font: { size: 10, weight: '900' } } } 
+                    },
+                    plugins: { 
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: (ctx) => `Twin ${ctx.dataIndex}: Stability ${ctx.raw.y.toFixed(2)}`
+                            }
+                        }
+                    }
                 }
             });
         }
@@ -302,10 +323,11 @@
 
             try {
                 const disease = document.getElementById('disease-select').value;
+                const protocol = document.getElementById('protocol-select').value;
                 const response = await fetch('/run_virtual_trial', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json', 'X-API-Key': 'DEVELOPER_KEY' },
-                    body: JSON.stringify({ disease: disease, cohort_size: total, variance: 'High' })
+                    body: JSON.stringify({ disease: disease, protocol: protocol, cohort_size: total, variance: 'High' })
                 });
 
                 if (!response.ok) throw new Error("Simulation Core Offline");
