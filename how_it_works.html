@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zenith v27.0 GOLD | Institutional Operational Manual (A-Z)</title>
+    <title>Zenith v27.0 GOLD | Console Command Map (A-Z)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800;900&family=JetBrains+Mono&display=swap" rel="stylesheet">
@@ -16,69 +16,47 @@
             line-height: 1.6;
         }
 
-        .step-card {
-            border-left: 2px solid #2563eb;
-            padding-left: 2.5rem;
-            margin-bottom: 5rem;
-            position: relative;
-        }
-
-        .step-number {
-            position: absolute;
-            left: -1rem;
-            top: 0;
-            background: #2563eb;
-            color: white;
-            width: 2rem;
-            height: 2rem;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 900;
-            font-size: 0.8rem;
-        }
-
-        .outcome-box {
-            background: rgba(16, 185, 129, 0.05);
-            border: 1px solid rgba(16, 185, 129, 0.1);
+        .console-group {
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            background: rgba(15, 23, 42, 0.4);
             border-radius: 1.5rem;
-            padding: 1.5rem;
-            margin-top: 1.5rem;
+            padding: 2rem;
+            margin-bottom: 2rem;
         }
 
-        .logic-table {
-            width: 100%;
-            font-size: 0.75rem;
-            border-collapse: collapse;
-            margin-top: 2rem;
-        }
-
-        .logic-table th {
-            text-align: left;
-            padding: 1rem;
-            color: #64748b;
+        .item-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            font-weight: 800;
             text-transform: uppercase;
             letter-spacing: 0.1em;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .logic-table td {
-            padding: 1rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.02);
-        }
-
-        .mono {
-            font-family: 'JetBrains Mono', monospace;
             color: #3b82f6;
+            margin-bottom: 0.5rem;
+            display: block;
         }
 
-        .highlight-prompt {
-            background: rgba(37, 99, 235, 0.05);
-            border: 1px solid rgba(37, 99, 235, 0.1);
-            border-radius: 1.25rem;
-            padding: 2rem;
-            margin: 2rem 0;
+        .item-desc {
+            font-size: 0.85rem;
+            color: #94a3b8;
+        }
+
+        .outcome-tag {
+            display: inline-block;
+            background: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+            font-size: 0.6rem;
+            font-weight: 900;
+            padding: 0.2rem 0.6rem;
+            border-radius: 999px;
+            margin-top: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .section-header {
+            border-left: 4px solid #2563eb;
+            padding-left: 1.5rem;
+            margin: 4rem 0 2rem;
         }
 
         .clean-title {
@@ -91,160 +69,133 @@
 
 <body class="p-8 lg:p-24 selection:bg-blue-500/30">
 
-    <div class="max-w-3xl mx-auto">
+    <div class="max-w-4xl mx-auto">
         
-        <header class="mb-32">
-            <div class="flex items-center gap-3 mb-8">
+        <header class="mb-20">
+            <div class="flex items-center gap-3 mb-6">
                 <i data-lucide="zap" class="w-6 h-6 text-blue-500"></i>
-                <span class="text-xs font-black uppercase tracking-[0.5em] text-slate-500">Zenith v27.0 GOLD | Operational Manual</span>
+                <span class="text-xs font-black uppercase tracking-[0.5em] text-slate-500">Nilus Lab | Institutional Guide</span>
             </div>
-            <h1 class="text-6xl lg:text-7xl clean-title mb-8 leading-tight">THE A-Z <br>RESEARCH <br>PATHWAY</h1>
-            <p class="text-slate-400 text-xl font-light max-w-xl">A complete institutional walkthrough of the Zenith platform, documenting expected outcomes and underlying technical logic.</p>
+            <h1 class="text-6xl clean-title mb-6 leading-tight">CONSOLE COMMAND <br>MAP (A-Z)</h1>
+            <p class="text-slate-400 text-lg font-light">A granular walkthrough of every interactive item in the Zenith v27.0 GOLD Mainframe.</p>
         </header>
 
-        <!-- STEP 1: AUTHENTICATION -->
-        <div class="step-card">
-            <div class="step-number">01</div>
-            <h3 class="text-2xl font-black text-white mb-4 uppercase tracking-tight">Phase IV Institutional Access</h3>
-            <p class="text-slate-400">Researchers must authenticate via the secure portal. This step initializes the **Institutional GOLD License**, unlocking the full 285M-parameter manifolds.</p>
-            
-            <div class="outcome-box">
-                <div class="text-[10px] text-emerald-500 font-black uppercase tracking-widest mb-3 flex items-center gap-2">
-                    <i data-lucide="check-circle" class="w-3 h-3"></i> Expected Outcome
-                </div>
-                <p class="text-sm text-slate-300">The browser redirects to the **Zenith Mainframe**. The header confirms "Phase IV GOLD Status" and the HCA 486k Heart Atlas connection is established.</p>
+        <!-- HEADER CONTROLS -->
+        <div class="section-header">
+            <h2 class="text-2xl font-black text-white uppercase tracking-tight">01. Global Header & Environment</h2>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="console-group">
+                <span class="item-label">VALIDATED Badge</span>
+                <p class="item-desc">Confirms server-side handshake with the scVI Manifold. Green indicates "Phase IV GOLD" stability.</p>
+            </div>
+            <div class="console-group">
+                <span class="item-label">Engine Capacity</span>
+                <p class="item-desc">Displays the active model (Zenith-Ultra v27.0). Tracks VRAM and inference load for large-scale discovery.</p>
+            </div>
+            <div class="console-group">
+                <span class="item-label">Navigation (Docs/Profile/Map)</span>
+                <p class="item-desc">Accesses the Institutional Evidence Registry and your specific Genomic Health Index.</p>
+            </div>
+            <div class="console-group">
+                <span class="item-label">View Modes (2D / Micro / 3D)</span>
+                <p class="item-desc">Switch between transcriptomic manifolds, colony microscopy feeds, and real-time 3D cellular entities.</p>
             </div>
         </div>
 
-        <!-- STEP 2: CONSOLE INITIALIZATION -->
-        <div class="step-card">
-            <div class="step-number">02</div>
-            <h3 class="text-2xl font-black text-white mb-4 uppercase tracking-tight">Console & Manifold Sync</h3>
-            <p class="text-slate-400">Launch the **Simulation Console**. The platform performs a multi-spectral sync between the user's genomic profile and the global geroscience manifold.</p>
-            
-            <div class="outcome-box">
-                <div class="text-[10px] text-emerald-500 font-black uppercase tracking-widest mb-3 flex items-center gap-2">
-                    <i data-lucide="check-circle" class="w-3 h-3"></i> Expected Outcome
-                </div>
-                <p class="text-sm text-slate-300">A live **5,000-Gene Heatmap** renders on the screen. Individual cell clusters (Cardiomyocytes, HMVECs, Fibroblasts) become interactive and highlightable.</p>
+        <!-- PROTOCOL DESIGN (LEFT) -->
+        <div class="section-header">
+            <h2 class="text-2xl font-black text-white uppercase tracking-tight">02. Protocol Design (Left Sidebar)</h2>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="console-group">
+                <span class="item-label">Reprogramming Factors</span>
+                <p class="item-desc">Select canonical cocktails (e.g., OSKM) or custom AI-discovered factors. <br><strong>Outcome:</strong> Triggers the latent state transition in the simulation.</p>
+                <span class="outcome-tag">Functional: transfect_population()</span>
+            </div>
+            <div class="console-group">
+                <span class="item-label">MPTR (Nilus Lab Rejuvenation)</span>
+                <p class="item-desc">Exclusive epigenetic age-reversal module. Focuses on DNA methylation restoration without pluripotency loss.</p>
+                <span class="outcome-tag">Outcome: Bio-Age Delta Reductions</span>
+            </div>
+            <div class="console-group">
+                <span class="item-label">Therapeutic Intervention</span>
+                <p class="item-desc">Triggers specific clinical protocols (e.g., DRP-Alpha-12) against pathological cell states like SMA or Tumorigenesis.</p>
+            </div>
+            <div class="console-group">
+                <span class="item-label">Genomic Knockout</span>
+                <p class="item-desc">Simulate the deletion of genes (e.g., TP53). Used for "Stress Testing" the stability of a discovered cocktail.</p>
+                <span class="outcome-tag">Logic: genomic_knockout()</span>
             </div>
         </div>
 
-        <!-- STEP 3: THE RESEARCH PROMPT -->
-        <div class="step-card">
-            <div class="step-number">03</div>
-            <h3 class="text-2xl font-black text-white mb-4 uppercase tracking-tight">Clinical Goal Configuration</h3>
-            <p class="text-slate-400">Enter your specific rejuvenation target. Zenith uses a hybrid NLP/Biological transformer to map your intent to transcription factor (TF) coordinates.</p>
-            
-            <div class="highlight-prompt">
-                <div class="text-[9px] text-blue-500 font-black uppercase tracking-widest mb-4">Institutional HMVEC Example</div>
-                <p class="text-sm italic text-slate-100 leading-relaxed">
-                    "Reverse the biological age of HMVECs by exactly 10 years to restore the coronary niche. Restore eNOS (NOS3) activity and suppress SASP inflammation. No c-MYC or mitogens. Target ESI 98%."
-                </p>
+        <!-- LIVE TELEMETRY (CENTER) -->
+        <div class="section-header">
+            <h2 class="text-2xl font-black text-white uppercase tracking-tight">03. Live Telemetry & Cell State</h2>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="console-group">
+                <span class="item-label">Genomic Stability Index (GSI)</span>
+                <p class="item-desc">Real-time percentage tracking of genome integrity. Target 95%+ during rejuvenation trials.</p>
             </div>
-
-            <div class="outcome-box">
-                <div class="text-[10px] text-emerald-500 font-black uppercase tracking-widest mb-3 flex items-center gap-2">
-                    <i data-lucide="check-circle" class="w-3 h-3"></i> Expected Outcome
-                </div>
-                <p class="text-sm text-slate-300">The **Discovery Engine** highlights a candidate cocktail (e.g., KLF2 + MEF2C). The "Non-Oncogenic" guardrail confirms that MYC activity remains at baseline.</p>
+            <div class="console-group">
+                <span class="item-label">Predictive Drift</span>
+                <p class="item-desc">Measures the "STABLE" vs "DIVERGENT" status of the cell population. Monitored by the Neural SDE engine.</p>
+            </div>
+            <div class="console-group">
+                <span class="item-label">Cell Detail Overlay</span>
+                <p class="item-desc">Shows individual Cell ID, Health, Bio-Age, and Primary scVI markers for a selected entity.</p>
+            </div>
+            <div class="console-group">
+                <span class="item-label">Signaling Intercept (GNN)</span>
+                <p class="item-desc">Visualizes Graph Neural Network (GNN) paracrine signaling between neighboring cells.</p>
             </div>
         </div>
 
-        <!-- STEP 4: HYBRID DISCOVERY -->
-        <div class="step-card">
-            <div class="step-number">04</div>
-            <h3 class="text-2xl font-black text-white mb-4 uppercase tracking-tight">Stochastic Latent Inference</h3>
-            <p class="text-slate-400">Executing the **Initiate Discovery** command triggers a Neural SDE trajectory simulation. We compute the exact delta required to shift the HMVEC state by 10 years.</p>
-            
-            <div class="outcome-box">
-                <div class="text-[10px] text-emerald-500 font-black uppercase tracking-widest mb-3 flex items-center gap-2">
-                    <i data-lucide="check-circle" class="w-3 h-3"></i> Expected Outcome
-                </div>
-                <p class="text-sm text-slate-300">A **Waterfall Plot** appears, showing the distribution of rejuvenation across the cell population. The **Epigenetic Stability Index (ESI)** calculates to **98.4%**.</p>
+        <!-- AI PROTOCOL DISCOVERY (RIGHT) -->
+        <div class="section-header">
+            <h2 class="text-2xl font-black text-white uppercase tracking-tight">04. AI Protocol Discovery (Right Sidebar)</h2>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="console-group">
+                <span class="item-label">Semantic Target (Input)</span>
+                <p class="item-desc">Enter natural language biological goals (e.g., "10-year age reversal of HMVECs").</p>
+                <span class="outcome-tag">Logic: parse_semantic_intent()</span>
+            </div>
+            <div class="console-group">
+                <span class="item-label">Gene Lookup (UniProt)</span>
+                <p class="item-desc">Fetch real-time canonical sequence data for any TF candidate directly from Swiss-Prot.</p>
+            </div>
+            <div class="console-group">
+                <span class="item-label">AF3 Results Input</span>
+                <p class="item-desc">Enter real AlphaFold 3 scores (pLDDT, ipTM) to validate the structural feasibility of the AI prediction.</p>
+            </div>
+            <div class="console-group">
+                <span class="item-label">Expert Pharmacology</span>
+                <p class="item-desc">Add small molecule synergistic boosters (e.g., Vitamin C, GSK-J4) to the reprogramming cocktail.</p>
+            </div>
+            <div class="console-group md:col-span-2 border-blue-500/20 bg-blue-500/5">
+                <span class="item-label text-blue-400">Initiate Hybrid Discovery (Main CTA)</span>
+                <p class="item-desc">The master command. Runs latent arithmetic, Neural SDE simulations, and safety audits in one unified pass.</p>
+                <span class="outcome-tag bg-blue-500/20 text-blue-400">Final Outcome: 98%+ ESI Validation</span>
             </div>
         </div>
 
-        <!-- STEP 5: FINAL VALIDATION & AF3 -->
-        <div class="step-card border-none mb-32">
-            <div class="step-number">05</div>
-            <h3 class="text-2xl font-black text-white mb-4 uppercase tracking-tight">Structural Handshake & Export</h3>
-            <p class="text-slate-400">Final results are bridged to the physical world. We generate the structural manifests and robotic synthesis scripts for immediate wet-lab execution.</p>
-            
-            <div class="outcome-box">
-                <div class="text-[10px] text-emerald-500 font-black uppercase tracking-widest mb-3 flex items-center gap-2">
-                    <i data-lucide="check-circle" class="w-3 h-3"></i> Expected Outcome
-                </div>
-                <p class="text-sm text-slate-300">The **AlphaFold 3 Bridge** panel displays a stable protein-DNA handshake. The researcher can download the **D2B Robotic Script** (Opentrons Flex format).</p>
+        <!-- FOOTER & SDE LOGIC -->
+        <div class="section-header">
+            <h2 class="text-2xl font-black text-white uppercase tracking-tight">05. Institutional Footer & Audit</h2>
+        </div>
+        <div class="console-group mb-32">
+            <span class="item-label">Neural SDE Governing Law</span>
+            <p class="item-desc mb-4">Displays the mathematical update rule driving the simulation: <br><code class="text-blue-500">dx_t = f(x_t, t)dt + g(x_t, t)dW_t</code></p>
+            <div class="flex gap-4">
+                <span class="outcome-tag">PDB Structural Authority v1.0</span>
+                <span class="outcome-tag">Clinical Safety Audit v3.4</span>
             </div>
         </div>
-
-        <!-- SYSTEM LOGIC MAPPING (A-Z) -->
-        <section id="system-mapping" class="mb-32">
-            <div class="flex items-center gap-4 mb-12">
-                <span class="h-px w-12 bg-slate-800"></span>
-                <h2 class="text-4xl font-black text-white uppercase tracking-tighter">System Logic Mapping</h2>
-            </div>
-            <p class="text-slate-400 mb-8">Technical mapping of console UI items to their underlying Zenith v27.0 GOLD code functions.</p>
-            
-            <table class="logic-table">
-                <thead>
-                    <tr>
-                        <th>Console Item</th>
-                        <th>Technical Logic / Function</th>
-                        <th>Source File</th>
-                    </tr>
-                </thead>
-                <tbody class="text-slate-400">
-                    <tr>
-                        <td class="font-bold text-white">Discovery Prompt</td>
-                        <td class="mono">discover_hybrid()</td>
-                        <td>bridge_server.py</td>
-                    </tr>
-                    <tr>
-                        <td class="font-bold text-white">Trial Simulation</td>
-                        <td class="mono">run_virtual_trial()</td>
-                        <td>bridge_server.py</td>
-                    </tr>
-                    <tr>
-                        <td class="font-bold text-white">SDE Update Rule</td>
-                        <td class="mono">euler_maruyama_sde()</td>
-                        <td>bridge_server.py</td>
-                    </tr>
-                    <tr>
-                        <td class="font-bold text-white">AF3 Manifest</td>
-                        <td class="mono">generate_manifest()</td>
-                        <td>af3_automation_bridge.py</td>
-                    </tr>
-                    <tr>
-                        <td class="font-bold text-white">ESI Calculator</td>
-                        <td class="mono">calculate_zenith_score()</td>
-                        <td>calculate_zenith_score.py</td>
-                    </tr>
-                    <tr>
-                        <td class="font-bold text-white">Dosage Optimizer</td>
-                        <td class="mono">bayesian_optimization()</td>
-                        <td>dosage_optimization_engine.py</td>
-                    </tr>
-                    <tr>
-                        <td class="font-bold text-white">Robotic Export</td>
-                        <td class="mono">export_flex_script()</td>
-                        <td>robotic_bridge.py</td>
-                    </tr>
-                    <tr>
-                        <td class="font-bold text-white">Safety Audit</td>
-                        <td class="mono">clinical_safety_audit()</td>
-                        <td>clinical_audit_engine.py</td>
-                    </tr>
-                </tbody>
-            </table>
-        </section>
 
         <footer class="text-center py-20 border-t border-white/5">
-            <div class="flex justify-center gap-6">
-                <a href="index.html" class="bg-blue-600 hover:bg-blue-700 text-white font-black px-10 py-5 rounded-2xl uppercase tracking-widest text-[10px] transition-all">Launch Console</a>
-                <a href="technical_catalog.html" class="bg-slate-900 hover:bg-slate-800 text-white font-black px-10 py-5 rounded-2xl uppercase tracking-widest text-[10px] transition-all border border-white/10">Technical Reference</a>
-            </div>
+            <a href="index.html" class="nav-btn">Return to Console</a>
         </footer>
 
     </div>
