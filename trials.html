@@ -178,6 +178,31 @@
                     Initiate Phase IV Simulation
                 </button>
 
+                <button onclick="optimizeDosage()" id="btn-optimize"
+                    class="mt-4 w-full bg-slate-900 hover:bg-slate-800 text-white font-black py-5 rounded-2xl shadow-xl shadow-slate-500/10 transition-all flex items-center justify-center gap-3 uppercase tracking-widest text-xs">
+                    <i data-lucide="cpu" class="w-5 h-5"></i>
+                    AI Dosage Optimization
+                </button>
+
+                <div id="optimization-results" class="hidden mt-6 bg-slate-50 border border-slate-200 rounded-2xl p-6">
+                    <h4 class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-4">Golden Ratio Found</h4>
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center">
+                            <span class="text-[10px] font-bold text-slate-500">PULSE ON</span>
+                            <span class="text-xs font-black text-teal-600" id="opt-on">--</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-[10px] font-bold text-slate-500">PULSE OFF</span>
+                            <span class="text-xs font-black text-slate-900" id="opt-off">--</span>
+                        </div>
+                        <div class="h-px bg-slate-200"></div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-[10px] font-bold text-slate-500">BIO-AGE DELTA</span>
+                            <span class="text-xs font-black text-indigo-600" id="opt-rejuv">--</span>
+                        </div>
+                    </div>
+                </div>
+
                 <button onclick="exportTrialData()" id="btn-export"
                     class="hidden mt-4 w-full bg-white border border-slate-200 hover:bg-slate-50 text-slate-400 font-black py-4 rounded-2xl transition-all flex items-center justify-center gap-2 text-[10px] uppercase tracking-widest">
                     <i data-lucide="download" class="w-4 h-4"></i>
@@ -379,6 +404,34 @@
             a.href = url;
             a.download = `Zenith_Trial_Audit_${Date.now()}.csv`;
             a.click();
+        }
+
+        async function optimizeDosage() {
+            const btn = document.getElementById('btn-optimize');
+            btn.disabled = true;
+            btn.innerHTML = `<i class="animate-spin" data-lucide="loader-2"></i> SEARCHING PEAK...`;
+
+            try {
+                const response = await fetch('/api/v2/dosage_optimization', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+
+                if (!response.ok) throw new Error("Optimization Engine Offline");
+
+                const data = await response.json();
+                document.getElementById('optimization-results').classList.remove('hidden');
+                document.getElementById('opt-on').innerText = `${data.optimal_on_hours}h`;
+                document.getElementById('opt-off').innerText = `${data.optimal_off_hours}h`;
+                document.getElementById('opt-rejuv').innerText = `-${data.predicted_rejuvenation}y`;
+
+                btn.innerHTML = `<i data-lucide="zap"></i> RHYTHM PERFECTED`;
+                btn.classList.replace('bg-slate-900', 'bg-indigo-600');
+            } catch (e) {
+                btn.innerHTML = `<i data-lucide="alert-triangle"></i> ENGINE ERROR`;
+                btn.disabled = false;
+            }
+            lucide.createIcons();
         }
 
         window.onload = () => {

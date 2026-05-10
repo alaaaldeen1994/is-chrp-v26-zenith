@@ -18,6 +18,7 @@ import re
 import json
 import time
 from af3_automation_bridge import AF3AutomationBridge
+from dosage_optimization_engine import DosageOptimizer
 
 # --- ZENITH PARTIAL REPROGRAMMING ENGINE ---
 try:
@@ -2215,7 +2216,7 @@ async def discover_hybrid(req: HybridDiscoveryRequest, request: Request):
             oncogenic_risk_label = "MODERATE"
         else:
             oncogenic_risk_label = "LOW"
-        print(f"âš ï¸ ONCOGENIC RISK: MYC={myc_w:.2f}, TP53={tp53_w:.2f} â†’ Risk={oncogenic_risk} ({oncogenic_risk_label})")
+        print(f"[WARNING] ONCOGENIC RISK: MYC={myc_w:.2f}, TP53={tp53_w:.2f} → Risk={oncogenic_risk} ({oncogenic_risk_label})")
 
         # 5. Partial Reprogramming Safety Firewall (ALAA ALDEEN+)
         target_profile = gpt_gene_data
@@ -2275,7 +2276,7 @@ async def discover_hybrid(req: HybridDiscoveryRequest, request: Request):
                 if res["status"] == "success":
                     af3_filepath = res["filepath"]
         except Exception as e:
-            print(f"âš ï¸  AF3 AUTO-BRIDGE FAILED: {e}")
+            print(f"[ERROR] AF3 AUTO-BRIDGE FAILED: {e}")
 
         return DiscoveryResult(
             recommended_protocol=best_protocol if not req.repro_mode == "partial" else f"PARTIAL REPROGRAMMING ({req.safety_level})",
@@ -2626,6 +2627,21 @@ async def chat_proxy(req: ChatRequest):
 
 
 # --- ENTERPRISE VIRTUAL TRIALS (PHASE III ENGINE) ---
+@app.post("/api/v2/dosage_optimization")
+async def run_dosage_optimization():
+    """
+    Triggers the Bayesian Dosage Optimization loop.
+    Returns the 'Golden Ratio' for pulse reprogramming.
+    """
+    try:
+        optimizer = DosageOptimizer(target_reduction=12.0)
+        final_audit = optimizer.optimize()
+        return final_audit
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=str(e))
+
 class TrialRequest(BaseModel):
     disease: str
     protocol: str = "OSKM_STANDARD"
@@ -2844,7 +2860,7 @@ async def discover_protocol_v1(req: DiscoveryRequest):
                 if res["status"] == "success":
                     af3_filepath = res["filepath"]
     except Exception as e:
-        print(f"âš ï¸  AF3 AUTO-BRIDGE FAILED: {e}")
+        print(f"[ERROR] AF3 AUTO-BRIDGE FAILED: {e}")
 
     return {
         "recommended_protocol": best_protocol,
