@@ -18,8 +18,24 @@ import re
 import json
 import time
 from af3_automation_bridge import AF3AutomationBridge
-from dosage_optimization_engine import DosageOptimizer
-from robotic_bridge import RoboticBridge
+
+# --- LAZY LOADING FOR HEAVY ENGINES (Resource Management) ---
+_dosage_optimizer = None
+_robotic_bridge = None
+
+def get_dosage_optimizer():
+    global _dosage_optimizer
+    if _dosage_optimizer is None:
+        from dosage_optimization_engine import DosageOptimizer
+        _dosage_optimizer = DosageOptimizer(target_reduction=12.0)
+    return _dosage_optimizer
+
+def get_robotic_bridge():
+    global _robotic_bridge
+    if _robotic_bridge is None:
+        from robotic_bridge import RoboticBridge
+        _robotic_bridge = RoboticBridge()
+    return _robotic_bridge
 
 # --- ZENITH PARTIAL REPROGRAMMING ENGINE ---
 try:
@@ -54,19 +70,19 @@ class D2HUtility:
     UniProt REST API Integration (rest.uniprot.org)
     
     Strategy (3 tiers):
-      TIER 1 â€” Direct accession lookup: Fastest, 100% canonical Swiss-Prot entry guaranteed.
-      TIER 2 â€” Reviewed gene search: Forces Swiss-Prot only for unknown genes.
-      TIER 3 â€” Local backup: Offline fallback for known critical factors.
+      TIER 1 - Direct accession lookup: Fastest, 100% canonical Swiss-Prot entry guaranteed.
+      TIER 2 - Reviewed gene search: Forces Swiss-Prot only for unknown genes.
+      TIER 3 - Local backup: Offline fallback for known critical factors.
     """
 
     # TIER 1: Known canonical UniProt accession IDs (Swiss-Prot reviewed, Homo sapiens)
-    # These are permanent, stable accessions â€” they never change.
+    # These are permanent, stable accessions - they never change.
     CANONICAL_ACCESSIONS = {
-        "POU5F1": "Q01860",  # OCT4 â€” Core pluripotency TF (POU domain)
+        "POU5F1": "Q01860",  # OCT4 - Core pluripotency TF (POU domain)
         "OCT4":   "Q01860",  # Alias
         "SOX2":   "P48431",  # HMG-box pioneer TF
-        "KLF4":   "O43474",  # KrÃ¼ppel-like factor 4 (barrier-to-reprogramming eraser)
-        "MYC":    "P01106",  # c-MYC oncogene (use with caution â€” tumor risk)
+        "KLF4":   "O43474",  # Krüppel-like factor 4 (barrier-to-reprogramming eraser)
+        "MYC":    "P01106",  # c-MYC oncogene (use with caution - tumor risk)
         "NANOG":  "Q9UER7",  # Homeobox pluripotency TF
         "LIN28A": "Q9H9Z2",  # RNA-binding protein (Thomson reprogramming)
         "GATA4":  "P43694",  # GATA zinc-finger cardiac TF
@@ -88,7 +104,7 @@ class D2HUtility:
     async def fetch_real_sequences(genes: List[str]) -> dict:
         """
         Fetches canonical protein sequences from UniProt.
-        Priority: TIER 1 (accession) â†’ TIER 2 (reviewed search) â†’ TIER 3 (local backup)
+        Priority: TIER 1 (accession) -> TIER 2 (reviewed search) -> TIER 3 (local backup)
         """
         results = {}
         async with httpx.AsyncClient(timeout=15.0) as client:
@@ -97,7 +113,8 @@ class D2HUtility:
                 sequence = None
                 source = "unknown"
 
-                # â”€â”€ TIER 1: Direct accession lookup (fastest & most precise) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+                # -- TIER 1: Direct accession lookup (fastest & most precise) --
+
                 accession = D2HUtility.CANONICAL_ACCESSIONS.get(gene_upper)
                 if accession:
                     try:
@@ -2312,7 +2329,8 @@ async def generate_opentrons_protocol(req: OpentronsRequest):
     Generates a Python script for Opentrons Flex robots.
     """
     try:
-        script = RoboticBridge.generate_protocol(req.discovery_data, req.dosage_audit)
+        bridge = get_robotic_bridge()
+        script = bridge.generate_protocol(req.discovery_data, req.dosage_audit)
         return {"script": script}
     except Exception as e:
         import traceback
@@ -2557,7 +2575,7 @@ async def run_dosage_optimization():
     Returns the 'Golden Ratio' for pulse reprogramming.
     """
     try:
-        optimizer = DosageOptimizer(target_reduction=12.0)
+        optimizer = get_dosage_optimizer()
         final_audit = optimizer.optimize()
         return final_audit
     except Exception as e:
