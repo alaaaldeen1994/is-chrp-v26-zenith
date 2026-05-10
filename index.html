@@ -40,7 +40,7 @@
                     document.documentElement.style.display = 'block'; // Ensure html is visible
                     document.body.style.setProperty('display', 'block', 'important');
                 } else {
-                    // Not signed in â€” redirect immediately
+                    // Not signed in — redirect immediately
                     window.location.replace('profile.html');
                 }
             });
@@ -663,7 +663,7 @@
     </button>
 
     <!-- ================================================================
-         MOBILE SHELL â€” shown only on phones (< 768px)
+         MOBILE SHELL — shown only on phones (< 768px)
          Desktop layout (#architect-layout) is hidden via CSS on mobile.
          All simulation + AI logic is shared with the desktop version.
     ================================================================ -->
@@ -716,10 +716,10 @@
                     <option value="OSKM">OSKM (Yamanaka - iPSC)</option>
                     <option value="MPTR">MPTR (Rejuvenation)</option>
                     <option value="LIN28">LIN28/NANOG (Thomson)</option>
-                    <option value="DIRECT_NEURO">Direct â†’ Neuro</option>
-                    <option value="DIRECT_CARDIO">Direct â†’ Cardio</option>
+                    <option value="DIRECT_NEURO">Direct → Neuro</option>
+                    <option value="DIRECT_CARDIO">Direct → Cardio</option>
                 </select>
-                <button id="mob-inject-btn" onclick="typeof BiosimBridge!=='undefined'&&BiosimBridge.injectVector(document.getElementById('mob-factor-sel').value)">âš¡ INJECT</button>
+                <button id="mob-inject-btn" onclick="typeof BiosimBridge!=='undefined'&&BiosimBridge.injectVector(document.getElementById('mob-factor-sel').value)">⚡ INJECT</button>
             </div>
         </div>
 
@@ -729,7 +729,7 @@
             <!-- Panel header -->
             <div style="padding:10px 14px; background:rgba(37,99,235,0.08); border-bottom:1px solid rgba(37,99,235,0.18); flex-shrink:0;">
                 <div style="font-size:11px; font-weight:900; color:#60a5fa; letter-spacing:0.05em; text-transform:uppercase;">&#9889; AI Protocol Discovery</div>
-                <div style="font-size:9px; color:#475569; margin-top:2px;">Zenith-102M Generic Manifold Â· Research Use Only</div>
+                <div style="font-size:9px; color:#475569; margin-top:2px;">Zenith-102M Generic Manifold · Research Use Only</div>
             </div>
 
             <!-- Semantic Target -->
@@ -762,9 +762,9 @@
 
             <!-- Gene Lookup -->
             <div style="padding:10px 14px; border-bottom:1px solid rgba(255,255,255,0.04);">
-                <div style="font-size:7px; font-weight:900; color:#64748b; text-transform:uppercase; letter-spacing:0.1em; margin-bottom:6px;">ðŸ” Gene Lookup â€” UniProt Swiss-Prot</div>
+                <div style="font-size:7px; font-weight:900; color:#64748b; text-transform:uppercase; letter-spacing:0.1em; margin-bottom:6px;">ðŸ” Gene Lookup — UniProt Swiss-Prot</div>
                 <div style="display:flex; gap:6px;">
-                    <input id="mob-gene-search-input" type="text" placeholder="e.g. SOX2, GATA4â€¦"
+                    <input id="mob-gene-search-input" type="text" placeholder="e.g. SOX2, GATA4..."
                         style="flex:1; background:rgba(0,0,0,0.6); border:1px solid rgba(255,255,255,0.08); border-radius:6px; padding:8px 10px; font-size:10px; color:#fff; outline:none; font-family:'JetBrains Mono',monospace;"
                         onkeydown="if(event.key==='Enter'){document.getElementById('gene-search-input').value=this.value; if(typeof BiosimBridge!=='undefined')BiosimBridge.UniProtLookup.search();}">
                     <button onclick="document.getElementById('gene-search-input').value=document.getElementById('mob-gene-search-input').value; if(typeof BiosimBridge!=='undefined')BiosimBridge.UniProtLookup.search();"
@@ -774,11 +774,11 @@
 
             <!-- AF3 Scores -->
             <div style="padding:10px 14px; border-bottom:1px solid rgba(255,255,255,0.04);">
-                <div style="font-size:7px; font-weight:900; color:#64748b; text-transform:uppercase; letter-spacing:0.1em; margin-bottom:8px;">â†‘ AF3 Results â€” Enter Real Scores</div>
+                <div style="font-size:7px; font-weight:900; color:#64748b; text-transform:uppercase; letter-spacing:0.1em; margin-bottom:8px;">â†‘ AF3 Results — Enter Real Scores</div>
                 <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-bottom:8px;">
                     <input id="mob-af3-plddt" type="number" step="0.1" min="0" max="100" placeholder="pLDDT (0-100)"
                         style="background:rgba(0,0,0,0.6); border:1px solid rgba(255,255,255,0.08); border-radius:6px; padding:7px 8px; font-size:9px; color:#6ee7b7; font-family:'JetBrains Mono',monospace; outline:none;">
-                    <input id="mob-af3-pae" type="number" step="0.1" min="0" max="30" placeholder="PAE (Ã…)"
+                    <input id="mob-af3-pae" type="number" step="0.1" min="0" max="30" placeholder="PAE (Å)"
                         style="background:rgba(0,0,0,0.6); border:1px solid rgba(255,255,255,0.08); border-radius:6px; padding:7px 8px; font-size:9px; color:#93c5fd; font-family:'JetBrains Mono',monospace; outline:none;">
                     <input id="mob-af3-ptm" type="number" step="0.001" min="0" max="1" placeholder="pTM (0-1)"
                         style="background:rgba(0,0,0,0.6); border:1px solid rgba(255,255,255,0.08); border-radius:6px; padding:7px 8px; font-size:9px; color:#93c5fd; font-family:'JetBrains Mono',monospace; outline:none;">
@@ -792,7 +792,7 @@
                     document.getElementById('af3-in-iptm').value=document.getElementById('mob-af3-iptm').value;
                     if(typeof BiosimBridge!=='undefined')BiosimBridge.AF3Upload.applyRealMetrics();"
                     style="width:100%; background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.3); color:#34d399; padding:9px; border-radius:8px; font-size:9px; font-weight:900; text-transform:uppercase; letter-spacing:0.08em; cursor:pointer;">
-                    âœ“ APPLY REAL AF3 SCORES TO DISCOVERY
+                    ✓ APPLY REAL AF3 SCORES TO DISCOVERY
                 </button>
             </div>
 
@@ -813,7 +813,7 @@
 
         <!-- BOTTOM TAB BAR -->
         <div id="mob-tabbar">
-            <button id="mob-tab-ai-btn" class="mob-tab-btn mob-tab-active" onclick="switchMobTab('ai')">âš¡ AI Protocol</button>
+            <button id="mob-tab-ai-btn" class="mob-tab-btn mob-tab-active" onclick="switchMobTab('ai')">⚡ AI Protocol</button>
             <button id="mob-tab-sim-btn" class="mob-tab-btn" onclick="switchMobTab('sim')">ðŸ”¬ Simulation</button>
         </div>
 
@@ -1266,7 +1266,7 @@
                     <div class="hud-row text-blue-400"><span>Identity Stability</span><span class="hud-value"
                             id="hud-stability">SECURE</span></div>
                     <div class="hud-row text-blue-400"><span>Mean Mobility</span><span class="hud-value"
-                            id="hud-movement">0.00 Âµm/s</span></div>
+                            id="hud-movement">0.00 μm/s</span></div>
                     <!-- DRP PHASE INDICATOR (Hidden by default) -->
                     <div class="hud-row text-pink-400" id="drp-phase-row"
                         style="display:none; border-top: 1px dashed #f472b6; margin-top:4px; padding-top:4px;">
@@ -1763,7 +1763,7 @@
                     </div>
                     <div class="space-y-3">
                         <div>
-                            <div class="text-[7px] text-emerald-400 font-black uppercase mb-1">âœ… Approved Factors</div>
+                            <div class="text-[7px] text-emerald-400 font-black uppercase mb-1">✅ Approved Factors</div>
                             <div id="pr-approved" class="space-y-1"></div>
                         </div>
                         <div>
@@ -1797,7 +1797,7 @@
                         <div class="flex items-center justify-between mb-2">
                             <div class="text-[7px] text-blue-400 font-black uppercase tracking-[0.2em] opacity-60">System.Rationale_D2H</div>
                             <button id="copy-rationale-btn"
-                                onclick="(function(){const t=document.getElementById('discovery-detail-text');if(!t||!t.innerText.trim())return;navigator.clipboard.writeText(t.innerText).then(()=>{const b=document.getElementById('copy-rationale-btn');const orig=b.innerHTML;b.innerHTML='<span style=\'color:#34d399;font-size:7px;font-weight:900;\'>âœ“ COPIED</span>';setTimeout(()=>{b.innerHTML=orig;},1500);})})()"
+                                onclick="(function(){const t=document.getElementById('discovery-detail-text');if(!t||!t.innerText.trim())return;navigator.clipboard.writeText(t.innerText).then(()=>{const b=document.getElementById('copy-rationale-btn');const orig=b.innerHTML;b.innerHTML='<span style=\'color:#34d399;font-size:7px;font-weight:900;\'>✓ COPIED</span>';setTimeout(()=>{b.innerHTML=orig;},1500);})})()"
                                 class="flex items-center gap-0.5 text-[6px] text-blue-400/60 border border-blue-500/20 bg-blue-900/10 px-1.5 py-0.5 rounded hover:bg-blue-500/20 hover:text-blue-300 transition-all font-black uppercase tracking-tighter opacity-0 group-hover/terminal:opacity-100">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
                                 COPY
@@ -1887,13 +1887,13 @@
                         </div>
                         <a href="https://alphafoldserver.com" target="_blank" class="mt-2 flex items-center justify-center gap-1 w-full py-1.5 bg-blue-900/20 border border-blue-500/30 rounded text-[7px] text-blue-400 hover:bg-blue-500/20 transition-all font-black uppercase tracking-widest">
                             <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-                            Submit Manifest â†’ alphafoldserver.com
+                            Submit Manifest → alphafoldserver.com
                         </a>
                     </div>
 
 
 
-                    <!-- ACTION BUTTONS â€” always visible -->
+                    <!-- ACTION BUTTONS — always visible -->
                     <div class="flex gap-1">
                         <button onclick="BiosimBridge.exportAlphaFoldManifest()"
                             class="flex-1 py-2 bg-blue-600/20 border border-blue-500/40 rounded-lg text-[8px] text-blue-300 font-black hover:bg-blue-600/35 flex items-center justify-center gap-1 transition-all">
@@ -2290,7 +2290,7 @@
                 <button
                     class="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-md font-bold text-xs shadow-lg transition-all"
                     onclick="window.print()">
-                    ÃƒÂ°Ã…Â¸Ã¢â‚¬â€œÃ‚Â¨ÃƒÂ¯Ã‚Â¸Ã‚Â PRINT CLINICAL REPORT
+                    &#128424; PRINT CLINICAL REPORT
                 </button>
                 <button class="close-dash-btn px-6 py-2.5 bg-slate-800 hover:bg-slate-700"
                     onclick="BiosimUI.toggleDashboard()">CLOSE</button>
@@ -2311,7 +2311,7 @@
             </div>
             <div class="dash-card">
                 <div class="dash-stat-label">Reconstruction MSE</div>
-                <div class="dash-stat-value">0.023 Â± 0.004</div>
+                <div class="dash-stat-value">0.023 ± 0.004</div>
                 <div style="font-size: 10px; color: #f59e0b; margin-top: 8px;">[MODEL: 5-fold cross-validation]</div>
             </div>
 
@@ -2431,7 +2431,7 @@
         aiBtn.className  = 'mob-tab-btn' + (tab === 'ai'  ? ' mob-tab-active' : '');
     };
 
-    // Mobile AI chat â€” bridges to existing AIAssistant on the page
+    // Mobile AI chat — bridges to existing AIAssistant on the page
     window.mobAskAI = function(preset) {
         var inputEl = document.getElementById('mob-ai-prompt');
         var msg = preset || (inputEl ? inputEl.value.trim() : '');
