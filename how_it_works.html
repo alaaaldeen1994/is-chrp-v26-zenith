@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zenith v27.0 GOLD | Console Command Map (A-Z)</title>
+    <title>Zenith v27.0 GOLD | Definitive Operational Protocol (1-12)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800;900&family=JetBrains+Mono&display=swap" rel="stylesheet">
@@ -13,189 +13,381 @@
             background-color: #020617;
             color: #f8fafc;
             font-family: 'Outfit', sans-serif;
-            line-height: 1.6;
+            line-height: 1.8;
         }
 
-        .console-group {
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            background: rgba(15, 23, 42, 0.4);
-            border-radius: 1.5rem;
-            padding: 2rem;
+        .step-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 100px 20px;
+        }
+
+        .step-block {
+            margin-bottom: 100px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding-bottom: 60px;
+        }
+
+        .step-header {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
             margin-bottom: 2rem;
         }
 
-        .item-label {
+        .step-index {
             font-family: 'JetBrains Mono', monospace;
-            font-size: 0.65rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            color: #3b82f6;
-            margin-bottom: 0.5rem;
-            display: block;
+            background: #2563eb;
+            color: white;
+            width: 3.5rem;
+            height: 3.5rem;
+            border-radius: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 1.25rem;
+            flex-shrink: 0;
+            box-shadow: 0 10px 30px -10px rgba(37, 99, 235, 0.5);
         }
 
-        .item-desc {
-            font-size: 0.85rem;
+        .step-title {
+            font-size: 2.5rem;
+            font-weight: 900;
+            letter-spacing: -0.03em;
+            color: #fff;
+            text-transform: uppercase;
+        }
+
+        .item-list {
+            list-style: none;
+            padding: 0;
+            margin-top: 2rem;
+        }
+
+        .item-row {
+            background: rgba(30, 41, 59, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            border-radius: 1.25rem;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .item-row:hover {
+            border-color: #2563eb;
+            background: rgba(30, 41, 59, 0.5);
+        }
+
+        .item-name {
+            font-family: 'JetBrains Mono', monospace;
+            color: #3b82f6;
+            font-weight: 900;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .item-description {
+            font-size: 0.95rem;
             color: #94a3b8;
         }
 
-        .outcome-tag {
-            display: inline-block;
+        .outcome-badge {
             background: rgba(16, 185, 129, 0.1);
             color: #10b981;
             font-size: 0.6rem;
             font-weight: 900;
+            text-transform: uppercase;
             padding: 0.2rem 0.6rem;
             border-radius: 999px;
-            margin-top: 0.5rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
+            margin-top: 1rem;
+            display: inline-block;
         }
 
-        .section-header {
-            border-left: 4px solid #2563eb;
-            padding-left: 1.5rem;
-            margin: 4rem 0 2rem;
-        }
-
-        .clean-title {
-            letter-spacing: -0.02em;
-            font-weight: 900;
-            color: #fff;
+        .prompt-card {
+            background: rgba(37, 99, 235, 0.1);
+            border: 1px solid rgba(37, 99, 235, 0.2);
+            padding: 2rem;
+            border-radius: 1.5rem;
+            margin-top: 2rem;
+            font-style: italic;
+            color: #d1d5db;
         }
     </style>
 </head>
 
-<body class="p-8 lg:p-24 selection:bg-blue-500/30">
+<body class="selection:bg-blue-500/30">
 
-    <div class="max-w-4xl mx-auto">
+    <div class="step-container">
         
-        <header class="mb-20">
-            <div class="flex items-center gap-3 mb-6">
-                <i data-lucide="zap" class="w-6 h-6 text-blue-500"></i>
-                <span class="text-xs font-black uppercase tracking-[0.5em] text-slate-500">Nilus Lab | Institutional Guide</span>
+        <header class="mb-32 text-center">
+            <div class="flex justify-center gap-3 mb-6">
+                <i data-lucide="zap" class="w-8 h-8 text-blue-500"></i>
             </div>
-            <h1 class="text-6xl clean-title mb-6 leading-tight">CONSOLE COMMAND <br>MAP (A-Z)</h1>
-            <p class="text-slate-400 text-lg font-light">A granular walkthrough of every interactive item in the Zenith v27.0 GOLD Mainframe.</p>
+            <h1 class="text-6xl font-black tracking-tighter text-white uppercase mb-6">ZENITH v27.0 GOLD <br>PROTOCOL MANUAL</h1>
+            <p class="text-slate-500 text-xl font-light">An exhaustive, step-by-step institutional walkthrough from sign-in to structural validation.</p>
         </header>
 
-        <!-- HEADER CONTROLS -->
-        <div class="section-header">
-            <h2 class="text-2xl font-black text-white uppercase tracking-tight">01. Global Header & Environment</h2>
-        </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div class="console-group">
-                <span class="item-label">VALIDATED Badge</span>
-                <p class="item-desc">Confirms server-side handshake with the scVI Manifold. Green indicates "Phase IV GOLD" stability.</p>
+        <!-- STEP 01: SIGN IN -->
+        <div class="step-block">
+            <div class="step-header">
+                <div class="step-index">01</div>
+                <h2 class="step-title">Authentication</h2>
             </div>
-            <div class="console-group">
-                <span class="item-label">Engine Capacity</span>
-                <p class="item-desc">Displays the active model (Zenith-Ultra v27.0). Tracks VRAM and inference load for large-scale discovery.</p>
-            </div>
-            <div class="console-group">
-                <span class="item-label">Navigation (Docs/Profile/Map)</span>
-                <p class="item-desc">Accesses the Institutional Evidence Registry and your specific Genomic Health Index.</p>
-            </div>
-            <div class="console-group">
-                <span class="item-label">View Modes (2D / Micro / 3D)</span>
-                <p class="item-desc">Switch between transcriptomic manifolds, colony microscopy feeds, and real-time 3D cellular entities.</p>
-            </div>
+            <p class="text-slate-400">Access the institutional portal at <strong>www.niluslab.com/zenith</strong>. This step verifies your license and connects to the heart atlas backend.</p>
+            <ul class="item-list">
+                <li class="item-row">
+                    <span class="item-name">Institutional Sign-In</span>
+                    <span class="item-description">Verifies researcher credentials and active Phase IV license.</span>
+                </li>
+            </ul>
         </div>
 
-        <!-- PROTOCOL DESIGN (LEFT) -->
-        <div class="section-header">
-            <h2 class="text-2xl font-black text-white uppercase tracking-tight">02. Protocol Design (Left Sidebar)</h2>
-        </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div class="console-group">
-                <span class="item-label">Reprogramming Factors</span>
-                <p class="item-desc">Select canonical cocktails (e.g., OSKM) or custom AI-discovered factors. <br><strong>Outcome:</strong> Triggers the latent state transition in the simulation.</p>
-                <span class="outcome-tag">Functional: transfect_population()</span>
+        <!-- STEP 02: DASHBOARD AUDIT -->
+        <div class="step-block">
+            <div class="step-header">
+                <div class="step-index">02</div>
+                <h2 class="step-title">Dashboard Audit</h2>
             </div>
-            <div class="console-group">
-                <span class="item-label">MPTR (Nilus Lab Rejuvenation)</span>
-                <p class="item-desc">Exclusive epigenetic age-reversal module. Focuses on DNA methylation restoration without pluripotency loss.</p>
-                <span class="outcome-tag">Outcome: Bio-Age Delta Reductions</span>
-            </div>
-            <div class="console-group">
-                <span class="item-label">Therapeutic Intervention</span>
-                <p class="item-desc">Triggers specific clinical protocols (e.g., DRP-Alpha-12) against pathological cell states like SMA or Tumorigenesis.</p>
-            </div>
-            <div class="console-group">
-                <span class="item-label">Genomic Knockout</span>
-                <p class="item-desc">Simulate the deletion of genes (e.g., TP53). Used for "Stress Testing" the stability of a discovered cocktail.</p>
-                <span class="outcome-tag">Logic: genomic_knockout()</span>
-            </div>
+            <p class="text-slate-400">Review your genomic health baseline before entering the high-fidelity simulation environment.</p>
+            <ul class="item-list">
+                <li class="item-row">
+                    <span class="item-name">Researcher Profile</span>
+                    <span class="item-description">Displays your personal Heart Health Index and Bio-Age baseline.</span>
+                </li>
+                <li class="item-row">
+                    <span class="item-name">Evidence Registry</span>
+                    <span class="item-description">Global database of validated geroscience papers used as ground-truth.</span>
+                </li>
+            </ul>
         </div>
 
-        <!-- LIVE TELEMETRY (CENTER) -->
-        <div class="section-header">
-            <h2 class="text-2xl font-black text-white uppercase tracking-tight">03. Live Telemetry & Cell State</h2>
-        </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div class="console-group">
-                <span class="item-label">Genomic Stability Index (GSI)</span>
-                <p class="item-desc">Real-time percentage tracking of genome integrity. Target 95%+ during rejuvenation trials.</p>
+        <!-- STEP 03: ENTER CONSOLE -->
+        <div class="step-block">
+            <div class="step-header">
+                <div class="step-index">03</div>
+                <h2 class="step-title">Console Initialization</h2>
             </div>
-            <div class="console-group">
-                <span class="item-label">Predictive Drift</span>
-                <p class="item-desc">Measures the "STABLE" vs "DIVERGENT" status of the cell population. Monitored by the Neural SDE engine.</p>
-            </div>
-            <div class="console-group">
-                <span class="item-label">Cell Detail Overlay</span>
-                <p class="item-desc">Shows individual Cell ID, Health, Bio-Age, and Primary scVI markers for a selected entity.</p>
-            </div>
-            <div class="console-group">
-                <span class="item-label">Signaling Intercept (GNN)</span>
-                <p class="item-desc">Visualizes Graph Neural Network (GNN) paracrine signaling between neighboring cells.</p>
-            </div>
+            <p class="text-slate-400">Launch the Zenith Mainframe. This step loads the 486,000-cell manifold and establishes the live data bridge.</p>
+            <ul class="item-list">
+                <li class="item-row">
+                    <span class="item-name">Open Simulation Console</span>
+                    <span class="item-description">Main entrance button. Triggers VRAM allocation for the scVI engine.</span>
+                </li>
+            </ul>
         </div>
 
-        <!-- AI PROTOCOL DISCOVERY (RIGHT) -->
-        <div class="section-header">
-            <h2 class="text-2xl font-black text-white uppercase tracking-tight">04. AI Protocol Discovery (Right Sidebar)</h2>
-        </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div class="console-group">
-                <span class="item-label">Semantic Target (Input)</span>
-                <p class="item-desc">Enter natural language biological goals (e.g., "10-year age reversal of HMVECs").</p>
-                <span class="outcome-tag">Logic: parse_semantic_intent()</span>
+        <!-- STEP 04: HEADER COMMANDS -->
+        <div class="step-block">
+            <div class="step-header">
+                <div class="step-index">04</div>
+                <h2 class="step-title">Global Header Overview</h2>
             </div>
-            <div class="console-group">
-                <span class="item-label">Gene Lookup (UniProt)</span>
-                <p class="item-desc">Fetch real-time canonical sequence data for any TF candidate directly from Swiss-Prot.</p>
-            </div>
-            <div class="console-group">
-                <span class="item-label">AF3 Results Input</span>
-                <p class="item-desc">Enter real AlphaFold 3 scores (pLDDT, ipTM) to validate the structural feasibility of the AI prediction.</p>
-            </div>
-            <div class="console-group">
-                <span class="item-label">Expert Pharmacology</span>
-                <p class="item-desc">Add small molecule synergistic boosters (e.g., Vitamin C, GSK-J4) to the reprogramming cocktail.</p>
-            </div>
-            <div class="console-group md:col-span-2 border-blue-500/20 bg-blue-500/5">
-                <span class="item-label text-blue-400">Initiate Hybrid Discovery (Main CTA)</span>
-                <p class="item-desc">The master command. Runs latent arithmetic, Neural SDE simulations, and safety audits in one unified pass.</p>
-                <span class="outcome-tag bg-blue-500/20 text-blue-400">Final Outcome: 98%+ ESI Validation</span>
-            </div>
+            <p class="text-slate-400">Control the global state of the research session.</p>
+            <ul class="item-list">
+                <li class="item-row">
+                    <span class="item-name">VALIDATED Badge</span>
+                    <span class="item-description">Confirms PDB Structural Authority and SDE stability.</span>
+                </li>
+                <li class="item-row">
+                    <span class="item-name">Engine Capacity (GOLD)</span>
+                    <span class="item-description">Visual monitor of AI manifold load and parameter count.</span>
+                </li>
+                <li class="item-row">
+                    <span class="item-name">REBOOT Button</span>
+                    <span class="item-description">Resets the entire simulation to the baseline somatic state.</span>
+                </li>
+                <li class="item-row">
+                    <span class="item-name">Navigation (Map / Data / Docs)</span>
+                    <span class="item-description">One-click access to technical documentation and dataset manifests.</span>
+                </li>
+            </ul>
         </div>
 
-        <!-- FOOTER & SDE LOGIC -->
-        <div class="section-header">
-            <h2 class="text-2xl font-black text-white uppercase tracking-tight">05. Institutional Footer & Audit</h2>
-        </div>
-        <div class="console-group mb-32">
-            <span class="item-label">Neural SDE Governing Law</span>
-            <p class="item-desc mb-4">Displays the mathematical update rule driving the simulation: <br><code class="text-blue-500">dx_t = f(x_t, t)dt + g(x_t, t)dW_t</code></p>
-            <div class="flex gap-4">
-                <span class="outcome-tag">PDB Structural Authority v1.0</span>
-                <span class="outcome-tag">Clinical Safety Audit v3.4</span>
+        <!-- STEP 05: VISUALIZATION MODES -->
+        <div class="step-block">
+            <div class="step-header">
+                <div class="step-index">05</div>
+                <h2 class="step-title">Visual Perspective Shifts</h2>
             </div>
+            <p class="text-slate-400">Change how you observe the cellular population.</p>
+            <ul class="item-list">
+                <li class="item-row">
+                    <span class="item-name">2D Manifold View</span>
+                    <span class="item-description">UMAP/t-SNE latent space view of transcriptomic clusters.</span>
+                </li>
+                <li class="item-row">
+                    <span class="item-name">Microscopy View</span>
+                    <span class="item-description">Simulated 48x oil immersion feed of colony morphology.</span>
+                </li>
+                <li class="item-row">
+                    <span class="item-name">3D Entity View</span>
+                    <span class="item-description">Immersive three-dimensional rendering of cellular physical state.</span>
+                </li>
+            </ul>
         </div>
 
-        <footer class="text-center py-20 border-t border-white/5">
-            <a href="index.html" class="nav-btn">Return to Console</a>
+        <!-- STEP 06: PROTOCOL DESIGN (LEFT) -->
+        <div class="step-block">
+            <div class="step-header">
+                <div class="step-index">06</div>
+                <h2 class="step-title">Protocol Design (Sidebar Left)</h2>
+            </div>
+            <p class="text-slate-400">Configure the biological interventions to be tested.</p>
+            <ul class="item-list">
+                <li class="item-row">
+                    <span class="item-name">Reprogramming Factors (Dropdown)</span>
+                    <span class="item-description">Select canonical (OSKM) or synthetic (DRP-Alpha-12) cocktails.</span>
+                </li>
+                <li class="item-row">
+                    <span class="item-name">TRANSFECT POPULATION (Button)</span>
+                    <span class="item-description">Applies the selected factors to the current cell cohort.</span>
+                </li>
+                <li class="item-row">
+                    <span class="item-name">H1FOO-DD / MPTR (Checkboxes)</span>
+                    <span class="item-description">Enables specialized oocyte-factor boosts or methylation-exclusive modes.</span>
+                </li>
+                <li class="item-row">
+                    <span class="item-name">Perturbations (Induce Tumor/SMA)</span>
+                    <span class="item-description">Challenges the protocol with pathological stress states.</span>
+                </li>
+                <li class="item-row">
+                    <span class="item-name">Genomic Knockout (Apply Knockout)</span>
+                    <span class="item-description">Deletes specific genes (e.g., TP53) to test protocol safety.</span>
+                </li>
+                <li class="item-row">
+                    <span class="item-name">Knowledge Integration (Upload Data)</span>
+                    <span class="item-description">Upload external research PDFs to prime the AI discovery engine.</span>
+                </li>
+            </ul>
+        </div>
+
+        <!-- STEP 07: LIVE TELEMETRY (CENTER) -->
+        <div class="step-block">
+            <div class="step-header">
+                <div class="step-index">07</div>
+                <h2 class="step-title">Live Telemetry Analysis</h2>
+            </div>
+            <p class="text-slate-400">Monitor the real-time health and stability of the trial.</p>
+            <ul class="item-list">
+                <li class="item-row">
+                    <span class="item-name">Entropy / Genomic Stability</span>
+                    <span class="item-description">Tracks the chaotic vs stable state of the cell population.</span>
+                </li>
+                <li class="item-row">
+                    <span class="item-name">Predictive Drift (Neural SDE)</span>
+                    <span class="item-description">Confirms if the trajectory is drifting toward target or divergence.</span>
+                </li>
+                <li class="item-row">
+                    <span class="item-name">Target BioAge</span>
+                    <span class="item-description">The active goal for epigenetic age-reversal (e.g., 0.1011).</span>
+                </li>
+            </ul>
+        </div>
+
+        <!-- STEP 08: CELL INTERACTION -->
+        <div class="step-block">
+            <div class="step-header">
+                <div class="step-index">08</div>
+                <h2 class="step-title">Cell Interaction Overlay</h2>
+            </div>
+            <p class="text-slate-400">Click individual cells in the central viewport to see granular data.</p>
+            <ul class="item-list">
+                <li class="item-row">
+                    <span class="item-name">Cell ID / Type / Health / BioAge</span>
+                    <span class="item-description">Detailed genomic snapshot of a single entity.</span>
+                </li>
+                <li class="item-row">
+                    <span class="item-name">Signaling Intercept (GNN)</span>
+                    <span class="item-description">Visualize paracrine signaling between neighboring cells.</span>
+                </li>
+            </ul>
+        </div>
+
+        <!-- STEP 09: AI DISCOVERY (RIGHT) -->
+        <div class="step-block">
+            <div class="step-header">
+                <div class="step-index">09</div>
+                <h2 class="step-title">AI Protocol Discovery (Sidebar Right)</h2>
+            </div>
+            <p class="text-slate-400">Define your research intent and discover new biological interventions.</p>
+            <ul class="item-list">
+                <li class="item-row">
+                    <span class="item-name">Semantic Target (Input)</span>
+                    <span class="item-description">Enter your goal. e.g., "10-year HMVEC Reversal, eNOS focus."</span>
+                </li>
+                <li class="prompt-card">
+                    "Reverse the biological age of HMVECs by exactly 10 years to restore the youthful coronary niche. Target the restoration of eNOS enzymatic activity and the clear suppression of the SASP-mediated inflammatory drift. Strictly maintain a non-oncogenic profile by identifying CRCs that do NOT rely on c-MYC or high-potency mitogens. Target an ESI of 98%."
+                </li>
+                <li class="item-row">
+                    <span class="item-name">Reprogramming Mode (Toggle)</span>
+                    <span class="item-description">Switch between "FULL" or "OSK PARTIAL" logic.</span>
+                </li>
+                <li class="item-row">
+                    <span class="item-name">Gene Lookup (UniProt Fetch)</span>
+                    <span class="item-description">Fetches canonical protein sequences from Swiss-Prot for validation.</span>
+                </li>
+            </ul>
+        </div>
+
+        <!-- STEP 10: STRUCTURAL VALIDATION -->
+        <div class="step-block">
+            <div class="step-header">
+                <div class="step-index">10</div>
+                <h2 class="step-title">AlphaFold 3 Bridge</h2>
+            </div>
+            <p class="text-slate-400">Bridge the gap between AI prediction and physical reality.</p>
+            <ul class="item-list">
+                <li class="item-row">
+                    <span class="item-name">AF3 Results (pLDDT / ipTM)</span>
+                    <span class="item-description">Input structural scores to confirm protein-DNA docking stability.</span>
+                </li>
+                <li class="item-row">
+                    <span class="item-name">APPLY AF3 SCORES (Button)</span>
+                    <span class="item-description">Locked-in structural verification for the discovered cocktail.</span>
+                </li>
+            </ul>
+        </div>
+
+        <!-- STEP 11: INITIATE HYBRID DISCOVERY -->
+        <div class="step-block">
+            <div class="step-header">
+                <div class="step-index">11</div>
+                <h2 class="step-title">Final Execution</h2>
+            </div>
+            <p class="text-slate-400">The master command that unifies all previous configurations.</p>
+            <ul class="item-list">
+                <li class="item-row" style="border-color: #2563eb; background: rgba(37, 99, 235, 0.1);">
+                    <span class="item-name">INITIATE HYBRID DISCOVERY (CTA)</span>
+                    <span class="item-description">Runs the full pipeline. <br><strong>Outcome:</strong> Validates a 98% ESI rejuvenation protocol.</span>
+                </li>
+            </ul>
+        </div>
+
+        <!-- STEP 12: RESULTS & FOOTER -->
+        <div class="step-block border-none">
+            <div class="step-header">
+                <div class="step-index">12</div>
+                <h2 class="step-title">System Audit & Footer</h2>
+            </div>
+            <p class="text-slate-400">Final verification of the scientific integrity of the result.</p>
+            <ul class="item-list">
+                <li class="item-row">
+                    <span class="item-name">Neural SDE Governing Law</span>
+                    <span class="item-description">The mathematical proof driving the simulation results.</span>
+                </li>
+                <li class="item-row">
+                    <span class="item-name">Clinical Safety Audit v3.4</span>
+                    <span class="item-description">Confirms 100% adherence to non-oncogenic and dosage constraints.</span>
+                </li>
+            </ul>
+        </div>
+
+        <footer class="mt-20 pt-12 border-t border-white/5 text-center">
+            <a href="index.html" class="bg-blue-600 hover:bg-blue-700 text-white font-black px-12 py-6 rounded-2xl uppercase tracking-widest text-sm transition-all">Back to Zenith Mainframe</a>
         </footer>
 
     </div>
