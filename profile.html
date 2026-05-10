@@ -213,12 +213,21 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            mix-blend-mode: darken; /* MATHEMATICAL HARMONY: Makes the video's white background disappear */
+            mix-blend-mode: darken;
             -webkit-mask-image: radial-gradient(circle at center, black 60%, transparent 95%);
             mask-image: radial-gradient(circle at center, black 60%, transparent 95%);
-            transform: scale(0.85) translate(15vw, 5vh); /* Elegant, professional scale */
+            transform: scale(0.85) translate(15vw, 5vh);
             opacity: 1;
-            filter: contrast(1.1) brightness(1.05); /* Pushes background to pure white for perfect blend */
+            filter: contrast(1.1) brightness(1.05);
+            transition: all 1s ease;
+        }
+
+        @media (max-width: 1024px) {
+            .hero-video {
+                transform: scale(1.6) translate(0, 0) !important;
+                opacity: 0.4 !important;
+                filter: grayscale(1) contrast(1.2) brightness(1.1);
+            }
         }
 
         .hero-overlay {
@@ -1348,37 +1357,67 @@
                 padding-bottom: 3rem !important;
             }
 
-            /* Footer bottom: stack vertically on mobile */
-            footer div[style*="justify-content: space-between"] {
-                flex-direction: column !important;
-                align-items: center !important;
+        /* --- MOBILE RESPONSIVENESS OVERHAUL (ZENITH v27.0 GOLD) --- */
+        @media (max-width: 1024px) {
+            .hero-content {
+                padding: 5vh 5% 10% !important;
                 text-align: center !important;
-                gap: 1.5rem !important;
-            }
-
-            /* Footer links: center on mobile */
-            footer div[style*="align-items: flex-end"] {
                 align-items: center !important;
+                max-width: 100% !important;
+                margin: 0 auto !important;
+            }
+            .hero p {
+                margin: 0 auto 2rem !important;
+            }
+            .hero-video {
+                transform: scale(1.5) translate(0, 0) !important;
+                opacity: 0.3 !important; /* Fade video back on mobile to ensure legibility */
+            }
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr) !important;
             }
         }
 
-
-        /* --- EXTRA SMALL PHONES (iPhone SE, etc.) --- */
-        @media (max-width: 380px) {
-            .hero h1, .text-6xl, .hero-title {
-                font-size: 30px !important;
+        @media (max-width: 768px) {
+            nav {
+                padding: 1rem 5% !important;
             }
+            .nav-links {
+                display: none !important; /* Hide secondary links on phone */
+            }
+            .hero h1 {
+                font-size: 42px !important;
+                line-height: 1.1 !important;
+            }
+            .hero p {
+                font-size: 15px !important;
+            }
+            .stats-grid {
+                grid-template-columns: 1fr !important;
+                gap: 1rem !important;
+            }
+            #dashboard-view {
+                padding: 2rem 5% !important;
+            }
+            #dashboard-view .max-w-7xl {
+                padding: 0 !important;
+            }
+            .sticky {
+                position: relative !important;
+                top: 0 !important;
+            }
+        }
 
-            .hero p, .hero-description {
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 34px !important;
+            }
+            .hero p {
                 font-size: 14px !important;
             }
-
-            .brand-headline {
-                font-size: 24px !important;
-            }
-
-            h2 {
-                font-size: 22px !important;
+            .btn-agency-primary {
+                padding: 1.25rem 2rem !important;
+                font-size: 12px !important;
             }
         }
         /* --- REVEAL ANIMATIONS (Premium Feel) --- */
@@ -1605,7 +1644,7 @@
     <!-- STATS STRIP (285M moved here) -->
     <section class="bg-transparent relative z-10" style="padding: 1rem 0 3rem;">
         <div class="max-w-7xl mx-auto" style="padding: 0 3rem;">
-            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem;">
+            <div class="stats-grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem;">
                 <div style="background: rgba(255,255,255,0.7); backdrop-filter: blur(20px); border: 1px solid rgba(226,232,240,0.8); border-radius: 24px; padding: 2.5rem 2rem; text-align: center; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); cursor: default; position: relative; overflow: hidden;"
                     onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 20px 40px rgba(0,0,0,0.06)'; this.style.borderColor='#bfdbfe';"
                     onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'; this.style.borderColor='rgba(226,232,240,0.8)';">
@@ -1663,7 +1702,7 @@
                         <!-- Badge Rack -->
                         <div>
                             <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] mb-6 text-center">Institutional Badges</h3>
-                            <div class="grid grid-cols-3 gap-4">
+                            <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
                                 <div class="group relative">
                                     <div class="bg-white border border-slate-200 p-3 rounded-xl flex items-center justify-center grayscale hover:grayscale-0 transition-all cursor-help">
                                         <i data-lucide="dna" class="w-6 h-6 text-blue-600"></i>
