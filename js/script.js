@@ -3723,6 +3723,9 @@ const BiosimUI = {
                 peerRow.innerText = `Intercepting ${a.paracrineNeighbors.length} adjacent peers...`;
                 gnnList.appendChild(peerRow);
             }
+        }
+    },
+
     renderClinicalAudit(data) {
         const panel = document.getElementById('clinical-audit-panel');
         if (!panel) return;
