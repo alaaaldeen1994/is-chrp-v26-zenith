@@ -2518,7 +2518,7 @@
                     window.location.href = url;
                 } else {
                     _redirectAfterLogin = url;
-                    openLoginModal(false);
+                    openLoginModal(false); // Do not reset the redirect we just set!
                 }
             }
 

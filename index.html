@@ -34,13 +34,18 @@
                 firebase.initializeApp(firebaseConfig);
             }
 
+            // Robust Auth Guard with initialization state handling
             firebase.auth().onAuthStateChanged(function (user) {
                 if (user) {
-                    // Authenticated - reveal content
-                    document.documentElement.style.display = 'block'; // Ensure html is visible
+                    console.log("[AUTH] Session Verified:", user.email);
+                    // Ensure body is visible immediately
+                    document.body.style.display = 'block';
                     document.body.style.setProperty('display', 'block', 'important');
+                    // Force a layout recalculation for Three.js
+                    window.dispatchEvent(new Event('resize'));
                 } else {
-                    // Not signed in — redirect immediately
+                    console.warn("[AUTH] No active session. Redirecting to Profile...");
+                    // Only redirect if we are sure there is no user
                     window.location.replace('profile.html');
                 }
             });
