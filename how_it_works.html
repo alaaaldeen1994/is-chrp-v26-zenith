@@ -4,206 +4,517 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zenith v27.0 GOLD | Exhaustive Sidebar Mapping (A-Z)</title>
+    <title>Zenith v27.0 GOLD | Master Operational Manual (A-Z)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800;900&family=JetBrains+Mono&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;500;600;700;800;900&family=JetBrains+Mono&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --zenith-blue: #2563eb;
+            --zenith-teal: #0d9488;
+            --zenith-rose: #f43f5e;
+            --glass-bg: rgba(15, 23, 42, 0.6);
+        }
+
         body {
             background-color: #020617;
             color: #f8fafc;
             font-family: 'Outfit', sans-serif;
             line-height: 1.8;
+            scroll-behavior: smooth;
         }
 
-        .container {
-            max-width: 1000px;
+        .master-container {
+            max-width: 1100px;
             margin: 0 auto;
-            padding: 100px 20px;
+            padding: 100px 40px;
         }
 
-        .sidebar-section {
-            background: rgba(30, 41, 59, 0.2);
+        /* JOURNEY TIMELINE */
+        .timeline-container {
+            position: relative;
+            padding-left: 4rem;
+            margin-top: 5rem;
+        }
+
+        .timeline-container::before {
+            content: '';
+            position: absolute;
+            left: 1.25rem;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(180deg, var(--zenith-blue) 0%, #1e293b 100%);
+        }
+
+        .journey-step {
+            position: relative;
+            margin-bottom: 8rem;
+        }
+
+        .journey-step::before {
+            content: '';
+            position: absolute;
+            left: -3.5rem;
+            top: 0;
+            width: 1.5rem;
+            height: 1.5rem;
+            background: #020617;
+            border: 4px solid var(--zenith-blue);
+            border-radius: 50%;
+            z-index: 2;
+        }
+
+        .step-index {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            font-weight: 900;
+            color: var(--zenith-blue);
+            text-transform: uppercase;
+            letter-spacing: 0.3em;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .step-title {
+            font-size: 3.5rem;
+            font-weight: 900;
+            letter-spacing: -0.04em;
+            color: #fff;
+            margin-bottom: 2rem;
+            line-height: 1.1;
+        }
+
+        .instruction-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 255, 255, 0.05);
-            padding: 4rem;
+            padding: 3.5rem;
             border-radius: 3rem;
-            margin-bottom: 5rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        /* SIDEBAR ENCYCLOPEDIA */
+        .sidebar-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            margin-top: 4rem;
         }
 
         .item-card {
-            background: rgba(0, 0, 0, 0.3);
+            background: rgba(30, 41, 59, 0.3);
             border: 1px solid rgba(255, 255, 255, 0.03);
-            border-radius: 1.5rem;
-            padding: 2rem;
-            margin-bottom: 1.5rem;
-            transition: all 0.3s ease;
+            padding: 2.5rem;
+            border-radius: 2rem;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .item-card:hover {
-            border-color: #2563eb;
-            background: rgba(30, 41, 59, 0.4);
+            border-color: var(--zenith-blue);
+            transform: translateY(-5px);
+            background: rgba(30, 41, 59, 0.5);
         }
 
-        .item-tag {
+        .item-label {
             font-family: 'JetBrains Mono', monospace;
             font-size: 0.7rem;
             font-weight: 800;
             color: #3b82f6;
             text-transform: uppercase;
             letter-spacing: 0.15em;
-            margin-bottom: 0.5rem;
-            display: block;
-        }
-
-        .item-label {
-            font-size: 1.25rem;
-            font-weight: 900;
-            color: #fff;
             margin-bottom: 1rem;
             display: block;
         }
 
+        .item-name {
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: #fff;
+            margin-bottom: 1.5rem;
+            display: block;
+            line-height: 1.2;
+        }
+
         .item-desc {
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             color: #94a3b8;
         }
 
-        .logic-hint {
+        .item-outcome {
             display: inline-block;
             background: rgba(16, 185, 129, 0.1);
             color: #10b981;
-            font-size: 0.6rem;
+            font-size: 0.65rem;
             font-weight: 900;
-            padding: 0.2rem 0.6rem;
+            padding: 0.3rem 0.8rem;
             border-radius: 999px;
-            margin-top: 1rem;
+            margin-top: 1.5rem;
             text-transform: uppercase;
         }
 
-        .master-header {
-            border-left: 6px solid #2563eb;
-            padding-left: 2rem;
-            margin-bottom: 4rem;
+        /* CODE & PROMPTS */
+        .prompt-box {
+            background: #000;
+            border: 1px solid #1e293b;
+            padding: 2.5rem;
+            border-radius: 2rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            color: #93c5fd;
+            margin: 2rem 0;
+            line-height: 1.7;
+            position: relative;
+        }
+
+        .copy-pill {
+            position: absolute;
+            top: 1rem;
+            right: 1.5rem;
+            font-size: 0.6rem;
+            font-weight: 900;
+            background: rgba(37, 99, 235, 0.2);
+            color: #3b82f6;
+            padding: 0.4rem 0.8rem;
+            border-radius: 0.5rem;
+            text-transform: uppercase;
+        }
+
+        /* FOOTNOTES */
+        .footnote {
+            font-size: 0.8rem;
+            color: #475569;
+            margin-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.03);
+            padding-top: 1rem;
+            font-style: italic;
+        }
+
+        .gradient-header {
+            background: linear-gradient(135deg, #fff 0%, #3b82f6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* MOBILE OPTIMIZATION */
+        @media (max-width: 768px) {
+            .sidebar-grid { grid-template-columns: 1fr; }
+            .step-title { font-size: 2.5rem; }
+            .instruction-card { padding: 2rem; }
         }
     </style>
 </head>
 
 <body class="selection:bg-blue-500/30">
 
-    <div class="container">
+    <div class="master-container">
         
-        <header class="mb-32 text-center">
-            <h1 class="text-7xl font-black tracking-tighter text-white uppercase mb-6">THE SIDEBAR <br>ENCYCLOPEDIA</h1>
-            <p class="text-slate-500 text-xl font-light">An exhaustive item-by-item guide to every control in the Zenith v27.0 GOLD sidebars.</p>
+        <!-- INSTITUTIONAL HERO -->
+        <header class="mb-48 text-center">
+            <div class="flex justify-center gap-3 mb-10">
+                <div class="w-16 h-16 bg-blue-600 rounded-2xl flex items-center justify-center shadow-2xl shadow-blue-500/40">
+                    <i data-lucide="zap" class="w-10 h-10 text-white"></i>
+                </div>
+            </div>
+            <h1 class="text-7xl lg:text-9xl font-black tracking-tighter text-white uppercase mb-8 leading-none">THE MASTER <br>PROTOCOL</h1>
+            <p class="text-slate-500 text-2xl font-light max-w-2xl mx-auto">The definitive institutional operational manual for Zenith v27.0 GOLD. An A-Z walkthrough of the generative research pipeline.</p>
+            <div class="mt-12 flex justify-center gap-4">
+                <span class="bg-blue-500/10 text-blue-500 border border-blue-500/20 px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-widest">Phase IV GOLD Certified</span>
+                <span class="bg-slate-800 text-slate-400 border border-white/5 px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-widest">v27.4.1 Release</span>
+            </div>
         </header>
 
-        <!-- LEFT SIDEBAR -->
-        <div class="master-header">
-            <h2 class="text-5xl font-black text-white uppercase">A-Z LEFT SIDEBAR <br><span class="text-slate-500 font-light">(Protocol Design)</span></h2>
-        </div>
+        <!-- MASTER TIMELINE: THE RESEARCH JOURNEY -->
+        <section id="journey" class="mb-64">
+            <div class="flex items-center gap-4 mb-20">
+                <span class="h-px w-16 bg-blue-600"></span>
+                <h2 class="text-4xl font-black text-white uppercase tracking-tighter">PART I: THE RESEARCH JOURNEY</h2>
+            </div>
 
-        <div class="sidebar-section">
+            <div class="timeline-container">
+                
+                <!-- STEP 1: AUTHENTICATION -->
+                <div class="journey-step">
+                    <span class="step-index">01 / Sign-In</span>
+                    <h3 class="step-title">Portal <br>Authentication</h3>
+                    <div class="instruction-card">
+                        <p class="text-xl text-slate-300 mb-8 font-light">Access the institutional portal via <strong class="text-white">www.niluslab.com/zenith</strong>. Your credentials trigger the **GOLD License Handshake**, allocating dedicated VRAM on our scVI clusters.</p>
+                        <div class="flex items-center gap-4 text-emerald-500 font-black uppercase text-[11px] tracking-widest">
+                            <i data-lucide="shield-check" class="w-5 h-5"></i> Secure Handshake Complete
+                        </div>
+                        <div class="footnote">Technical Note: Initial authentication establishes the JWT session and secures the PDB structural bridge connection.</div>
+                    </div>
+                </div>
+
+                <!-- STEP 2: OPEN LAB -->
+                <div class="journey-step">
+                    <span class="step-index">02 / Laboratory</span>
+                    <h3 class="step-title">Enter Simulation <br>Laboratory</h3>
+                    <div class="instruction-card">
+                        <p class="text-xl text-slate-300 mb-8 font-light">From the primary dashboard, click the <strong class="text-blue-500 uppercase">"Open Simulation Console"</strong> button. This initializes the live 486k-cell manifold and prepares the Neural SDE update rules.</p>
+                        <div class="grid grid-cols-2 gap-4 mt-10">
+                            <div class="p-4 bg-black/40 rounded-xl border border-white/5 text-center">
+                                <div class="text-2xl font-black text-white">486K</div>
+                                <div class="text-[9px] font-black text-slate-500 uppercase">HCA Cell Population</div>
+                            </div>
+                            <div class="p-4 bg-black/40 rounded-xl border border-white/5 text-center">
+                                <div class="text-2xl font-black text-blue-500">285M</div>
+                                <div class="text-[9px] font-black text-slate-500 uppercase">Model Parameters</div>
+                            </div>
+                        </div>
+                        <div class="footnote">Technical Note: Initialization performs a checksum on the `bridge_server.py` and `perturbation_engine.py` modules.</div>
+                    </div>
+                </div>
+
+                <!-- STEP 3: MODE SELECTION -->
+                <div class="journey-step">
+                    <span class="step-index">03 / Configuration</span>
+                    <h3 class="step-title">Select <br>Reprogramming Mode</h3>
+                    <div class="instruction-card">
+                        <p class="text-xl text-slate-300 mb-8 font-light">Locate the <strong class="text-white">REPROGRAMMING MODE</strong> toggle on the Right Sidebar. This choice defines the stochastic trajectory of the trial.</p>
+                        <div class="grid grid-cols-2 gap-6">
+                            <div class="p-6 bg-rose-500/5 border border-rose-500/20 rounded-2xl">
+                                <h4 class="text-rose-500 font-black text-xs uppercase mb-3">FULL REPROGRAMMING</h4>
+                                <p class="text-xs text-slate-400">Induces pluripotency. Identity stability drops to 0.0%. Use for in-vitro colony generation.</p>
+                            </div>
+                            <div class="p-6 bg-blue-500/10 border border-blue-500/30 rounded-2xl">
+                                <h4 class="text-blue-400 font-black text-xs uppercase mb-3">OSK PARTIAL</h4>
+                                <p class="text-xs text-slate-400">Identity-preserving rejuvenation. Focuses on the 10-year HMVEC target. Identity stability locked at 100.0%.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- STEP 4: SEMANTIC TARGET -->
+                <div class="journey-step">
+                    <span class="step-index">04 / Discovery</span>
+                    <h3 class="step-title">Input <br>Semantic Target</h3>
+                    <div class="instruction-card">
+                        <p class="text-xl text-slate-300 mb-8 font-light">In the <strong class="text-white uppercase">"Semantic Target"</strong> textarea, paste your clinical research objective. The AI uses a Transformer-based NLP layer to parse this intent into transcription factor weights.</p>
+                        <div class="prompt-box">
+                            "Reverse the biological age of HMVECs by exactly 10 years to restore the youthful coronary niche. Target the restoration of eNOS enzymatic activity and the clear suppression of the SASP-mediated inflammatory drift. Strictly maintain a non-oncogenic profile by identifying CRCs that do NOT rely on c-MYC or high-potency mitogens. Target an ESI of 98%."
+                            <div class="copy-pill">Institutional Prompt</div>
+                        </div>
+                        <div class="footnote">Technical Note: Prompt is processed via `parse_semantic_intent()` to generate a 1000-dimensional latent perturbation vector.</div>
+                    </div>
+                </div>
+
+                <!-- STEP 5: HYBRID DISCOVERY -->
+                <div class="journey-step">
+                    <span class="step-index">05 / Execution</span>
+                    <h3 class="step-title">Initiate <br>Hybrid Discovery</h3>
+                    <div class="instruction-card">
+                        <p class="text-xl text-slate-300 mb-8 font-light">Click the master CTA: <strong class="text-blue-500 uppercase">"Initiate Hybrid Discovery"</strong>. This unifies the AI discovery with real-time Neural SDE trajectory simulations.</p>
+                        <div class="mt-8 flex items-center justify-between p-6 bg-blue-600/10 border border-blue-500/20 rounded-3xl">
+                            <div class="flex items-center gap-4">
+                                <i data-lucide="loader-2" class="w-6 h-6 text-blue-500 animate-spin"></i>
+                                <span class="text-xs font-black text-white uppercase tracking-widest">SDE Trajectory Simulation Active...</span>
+                            </div>
+                            <span class="text-[10px] font-black text-blue-400">ETA: 120s</span>
+                        </div>
+                        <div class="footnote">Technical Note: This step executes `discover_hybrid()` and triggers the Langevin dynamics loop.</div>
+                    </div>
+                </div>
+
+                <!-- STEP 6: ALPHA FOLD 3 -->
+                <div class="journey-step">
+                    <span class="step-index">06 / Validation</span>
+                    <h3 class="step-title">The AlphaFold 3 <br>Structural Bridge</h3>
+                    <div class="instruction-card">
+                        <p class="text-xl text-slate-300 mb-8 font-light">Once candidate factors (e.g. KLF2) are identified, you must validate their physical docking stability.</p>
+                        <div class="space-y-6">
+                            <div class="flex gap-4">
+                                <span class="text-blue-500 font-black">01</span>
+                                <p class="text-sm text-slate-400">Type the factor name into **"Gene Lookup"** and click **FETCH**. Copy the UniProt Sequence.</p>
+                            </div>
+                            <div class="flex gap-4">
+                                <span class="text-blue-500 font-black">02</span>
+                                <p class="text-sm text-slate-400">Navigate to **alphafoldserver.com**. Paste the sequence and run the multimer docking job against the eNOS promoter sequence.</p>
+                            </div>
+                            <div class="flex gap-4">
+                                <span class="text-blue-500 font-black">03</span>
+                                <p class="text-sm text-slate-400">Return to Zenith. Enter the **ipTM** score (e.g., 0.85) into the AF3 Results panel and click **APPLY AF3 SCORES**.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- PART II: SIDEBAR ENCYCLOPEDIA -->
+        <section id="encyclopedia" class="mb-64">
+            <div class="flex items-center gap-4 mb-20">
+                <span class="h-px w-16 bg-blue-600"></span>
+                <h2 class="text-4xl font-black text-white uppercase tracking-tighter">PART II: SIDEBAR ENCYCLOPEDIA (A-Z)</h2>
+            </div>
+
+            <!-- LEFT SIDEBAR MAP -->
+            <div class="master-header mb-12">
+                <h3 class="text-3xl font-black text-white uppercase">A-Z Intervention Console <span class="text-slate-500 font-light">(Left Sidebar)</span></h3>
+            </div>
             
-            <div class="item-card">
-                <span class="item-tag">Control Group 01</span>
-                <span class="item-label">Reprogramming Factors (Dropdown)</span>
-                <p class="item-desc">Select from canonical (OSKM, Lin28) or synthetic cocktails (DRP-Alpha-12). This initializes the target transcription factor (TF) weights for the population.</p>
+            <div class="sidebar-grid mb-32">
+                
+                <div class="item-card">
+                    <span class="item-label">ITEM A</span>
+                    <span class="item-name">Reprogramming <br>Factors (Dropdown)</span>
+                    <p class="item-desc">Primary library of genetic interventions. Allows researchers to manually select cocktails or confirm AI predictions.</p>
+                    <span class="item-outcome">Outcome: Cocktail Selection</span>
+                </div>
+
+                <div class="item-card">
+                    <span class="item-label">ITEM B</span>
+                    <span class="item-name">Transfect <br>Population (Button)</span>
+                    <p class="item-desc">Executing this command immediately applies the genetic weights of the selected factors to the current cell cohort.</p>
+                    <span class="item-outcome">Outcome: Latent Pulse</span>
+                </div>
+
+                <div class="item-card">
+                    <span class="item-label">ITEM C</span>
+                    <span class="item-name">H1FOO-DD <br>(2024 Boost)</span>
+                    <p class="item-desc">Enables specialized oocyte-derived factor enhancement. Increases the "Reprogramming Velocity" for resistant HMVEC populations.</p>
+                </div>
+
+                <div class="item-card">
+                    <span class="item-label">ITEM D</span>
+                    <span class="item-name">MPTR <br>(Nilus Lab Exclusive)</span>
+                    <p class="item-desc">Methylation Pattern Transition Mode. Strictly targets the epigenetic age without triggering pluripotency (MYC-independent).</p>
+                </div>
+
+                <div class="item-card">
+                    <span class="item-label">ITEM E</span>
+                    <span class="item-name">Induce Tumor <br>(Perturbation)</span>
+                    <p class="item-desc">Triggers an oncogenic drift. Use this to verify that your partial reprogramming protocol does NOT enable tumorigenesis.</p>
+                    <span class="item-outcome">Outcome: Stress Verification</span>
+                </div>
+
+                <div class="item-card">
+                    <span class="item-label">ITEM F</span>
+                    <span class="item-name">Induce SMA <br>(Perturbation)</span>
+                    <p class="item-desc">Induces an atrophy-like state (Spinal Muscular Atrophy) to test the protocol's structural resilience in microvascular niches.</p>
+                </div>
+
+                <div class="item-card">
+                    <span class="item-label">ITEM G</span>
+                    <span class="item-name">Therapeutic <br>Intervention (Button)</span>
+                    <p class="item-desc">The master application of the finalized clinical protocol. Unifies all layers into the final intervention manifest.</p>
+                </div>
+
+                <div class="item-card">
+                    <span class="item-label">ITEM H</span>
+                    <span class="item-name">Genomic Knockout <br>(Dropdown)</span>
+                    <p class="item-desc">Allows for the deletion of specific tumor suppressors (e.g. TP53) to verify the extreme safety margin of the Zenith protocol.</p>
+                </div>
+
+                <div class="item-card">
+                    <span class="item-label">ITEM I</span>
+                    <span class="item-name">Apply Knockout <br>(Button)</span>
+                    <p class="item-desc">Executes the deletion. The "Stress Test" badge activates high-frequency SDE loops to observe population stability.</p>
+                </div>
+
+                <div class="item-card">
+                    <span class="item-label">ITEM J</span>
+                    <span class="item-name">Knowledge <br>Integration (Button)</span>
+                    <p class="item-desc">Upload external PDFs or CSV manifests. The AI parses these to create specialized manifolds for unique patient cohorts.</p>
+                </div>
+
             </div>
 
-            <div class="item-card">
-                <span class="item-tag">Primary Action</span>
-                <span class="item-label">Transfect Population (Button)</span>
-                <p class="item-desc">Executing this command immediately applies the selected factor weights to the live cell cohort. Triggers the <code>transfect_population()</code> backend function.</p>
-                <span class="logic-hint">Outcome: Instant latent state shift</span>
+            <!-- RIGHT SIDEBAR MAP -->
+            <div class="master-header mb-12">
+                <h3 class="text-3xl font-black text-white uppercase">A-Z Discovery Engine <span class="text-slate-500 font-light">(Right Sidebar)</span></h3>
             </div>
 
-            <div class="item-card">
-                <span class="item-tag">Specialized Mode</span>
-                <span class="item-label">H1FOO-DD (Checkbox)</span>
-                <p class="item-desc">Enables a specialized 2024 oocyte-derived factor boost that enhances epigenetic fluidity for high-risk HMVEC rejuvenation trials.</p>
+            <div class="sidebar-grid">
+                
+                <div class="item-card">
+                    <span class="item-label">ITEM K</span>
+                    <span class="item-name">Semantic Target <br>(Textarea)</span>
+                    <p class="item-desc">NLP bridge. Processes natural language research intents into high-dimensional vector coordinates.</p>
+                </div>
+
+                <div class="item-card">
+                    <span class="item-label">ITEM L</span>
+                    <span class="item-name">Reprogramming <br>Mode (Toggle)</span>
+                    <p class="item-desc">Binary switch between Full and Partial logic. Controls the "Safety Governor" on the discovery engine.</p>
+                </div>
+
+                <div class="item-card">
+                    <span class="item-label">ITEM M</span>
+                    <span class="item-name">Gene Lookup <br>(Fetch Button)</span>
+                    <p class="item-desc">Live Swiss-Prot bridge. Type "KLF2" or "NOS3" to extract canonical sequences for structural docking.</p>
+                </div>
+
+                <div class="item-card">
+                    <span class="item-label">ITEM N</span>
+                    <span class="item-name">AF3 Results <br>(Inputs)</span>
+                    <p class="item-desc">Data entry for pLDDT and ipTM scores. Critical for the "Structural Handshake" phase of validation.</p>
+                </div>
+
+                <div class="item-card">
+                    <span class="item-label">ITEM O</span>
+                    <span class="item-name">Apply AF3 <br>Scores (Button)</span>
+                    <p class="item-desc">Locks the structural validity of the protocol. If ipTM < 0.7, the system will flag the cocktail as "Structurally Unstable."</p>
+                </div>
+
+                <div class="item-card">
+                    <span class="item-label">ITEM P</span>
+                    <span class="item-name">Expert Pharmacology <br>(Console)</span>
+                    <p class="item-desc">Small molecule synergistic boosters (Vitamin C, GSK-J4). Allows for hybrid "Chemical + Genetic" protocols.</p>
+                </div>
+
+                <div class="item-card" style="background: rgba(37, 99, 235, 0.1); border-color: #2563eb;">
+                    <span class="item-label" style="color: #60a5fa;">MASTER CTA</span>
+                    <span class="item-name" style="font-size: 2rem;">Initiate Hybrid <br>Discovery</span>
+                    <p class="item-desc">The final step of the A-Z journey. Unifies all previous data into a single, institutional GOLD manifest.</p>
+                    <span class="item-outcome" style="background: rgba(37, 99, 235, 0.2); color: #60a5fa;">ESI: 98.4% EXPECTED</span>
+                </div>
+
             </div>
 
-            <div class="item-card">
-                <span class="item-tag">Safety Control</span>
-                <span class="item-label">MPTR (Nilus Lab Rejuvenation)</span>
-                <p class="item-desc">Limits the reprogramming to the Methylation Pattern Transition (MPTR). Prevents pluripotency induction, ensuring 100% identity stability.</p>
+        </section>
+
+        <!-- PART III: TELEMETRY & INDICATORS -->
+        <section id="telemetry" class="mb-64">
+            <div class="flex items-center gap-4 mb-20">
+                <span class="h-px w-16 bg-blue-600"></span>
+                <h2 class="text-4xl font-black text-white uppercase tracking-tighter">PART III: INDICATORS & TELEMETRY</h2>
             </div>
-
-            <div class="item-card">
-                <span class="item-tag">Control Group 02</span>
-                <span class="item-label">Perturbations (Induce Tumor / SMA)</span>
-                <p class="item-desc">Manually trigger pathological states. Use this to stress-test your rejuvenation cocktail's resilience against oncogenic (Induce Tumor) or atrophic (Induce SMA) drift.</p>
-            </div>
-
-            <div class="item-card">
-                <span class="item-tag">Control Group 03</span>
-                <span class="item-label">Genomic Knockout (Dropdown)</span>
-                <p class="item-desc">Simulate the deletion of specific genes (e.g., TP53, PTEN). This is critical for verifying the safety of non-oncogenic protocols.</p>
-            </div>
-
-            <div class="item-card">
-                <span class="item-tag">Stress Module</span>
-                <span class="item-label">Apply Knockout & Stress Test</span>
-                <p class="item-desc">Executes the knockout. The "Stress Test" badge activates a high-frequency SDE simulation to check for population fragmentation.</p>
-                <span class="logic-hint">Outcome: Safety Delta Verification</span>
-            </div>
-
-            <div class="item-card">
-                <span class="item-tag">Data Ingestion</span>
-                <span class="item-label">Upload Research Data (Button)</span>
-                <p class="item-desc">Ingests external PDF/CSV research manifests. The AI reorganizes the console based on the specific genomic findings of your uploaded data.</p>
-            </div>
-
-        </div>
-
-        <!-- RIGHT SIDEBAR -->
-        <div class="master-header">
-            <h2 class="text-5xl font-black text-white uppercase">A-Z RIGHT SIDEBAR <br><span class="text-slate-500 font-light">(AI Discovery Engine)</span></h2>
-        </div>
-
-        <div class="sidebar-section">
             
-            <div class="item-card">
-                <span class="item-tag">NLP Input</span>
-                <span class="item-label">Semantic Target (Textarea)</span>
-                <p class="item-desc">The primary interface for clinical intent. Write your biological goals here (e.g., "10-year age reversal of HMVECs"). Triggers <code>parse_intent()</code>.</p>
+            <div class="sidebar-grid">
+                <div class="item-card">
+                    <span class="item-label">Telemetry 01</span>
+                    <span class="item-name">Genomic <br>Stability Index</span>
+                    <p class="item-desc">Monitors DNA integrity. Target for HMVEC protocol is 98.6%. Any drop below 90% triggers a safety abort.</p>
+                </div>
+                <div class="item-card">
+                    <span class="item-label">Telemetry 02</span>
+                    <span class="item-name">Predictive Drift <br>(SDE Status)</span>
+                    <p class="item-desc">Indicates if the population is converging toward the 10-year target. "STABLE" confirms trajectory lock.</p>
+                </div>
+                <div class="item-card">
+                    <span class="item-label">Telemetry 03</span>
+                    <span class="item-name">Target BioAge <br>(0.1011)</span>
+                    <p class="item-desc">The normalized biological age target. Achieving this value confirms a successful 10-year reversal.</p>
+                </div>
+                <div class="item-card">
+                    <span class="item-label">Telemetry 04</span>
+                    <span class="item-name">Barrier Fatigue <br>(NEUTRALIZED)</span>
+                    <p class="item-desc">Indicates if epigenetic barriers have been bypassed. "Neutralized" is the gold standard for partial reprogramming.</p>
+                </div>
             </div>
+        </section>
 
-            <div class="item-card">
-                <span class="item-tag">Binary Logic</span>
-                <span class="item-label">Reprogramming Mode (Full / Partial)</span>
-                <p class="item-desc">Toggle between total state reset (Full) and identity-preserved rejuvenation (Partial). This changes the Neural SDE update rule from stochastic drift to convergent rejuvenation.</p>
+        <footer class="py-32 border-t border-white/5 text-center">
+            <h2 class="text-4xl font-black text-white uppercase mb-12 gradient-header">OPERATIONAL READINESS: 100%</h2>
+            <div class="flex justify-center gap-8">
+                <a href="index.html" class="bg-blue-600 hover:bg-blue-700 text-white font-black px-16 py-8 rounded-3xl uppercase tracking-[0.2em] text-sm transition-all shadow-2xl shadow-blue-500/30">Launch Zenith Console</a>
+                <a href="whitepaper.html" class="bg-slate-900 hover:bg-slate-800 text-white font-black px-16 py-8 rounded-3xl uppercase tracking-[0.2em] text-sm transition-all border border-white/5">Research Whitepaper</a>
             </div>
-
-            <div class="item-card">
-                <span class="item-tag">Data Bridge</span>
-                <span class="item-label">Gene Lookup (Fetch Button)</span>
-                <p class="item-desc">Type a gene (e.g., KLF2) to fetch live sequence data from UniProt Swiss-Prot. This sequence is used for your AlphaFold 3 structural validation.</p>
+            <div class="mt-20 text-[10px] font-black text-slate-700 uppercase tracking-[0.5em]">
+                &copy; 2026 NILUS LAB INSTITUTIONAL RESEARCH | ALL RIGHTS RESERVED
             </div>
-
-            <div class="item-card">
-                <span class="item-tag">Structural Bridge</span>
-                <span class="item-label">AF3 Results (pLDDT / ipTM)</span>
-                <p class="item-desc">Manual input fields for structural docking scores. These must be populated after running external AF3 jobs to lock the protocol's physical validity.</p>
-            </div>
-
-            <div class="item-card">
-                <span class="item-tag">Pharmacology Bridge</span>
-                <span class="item-label">Expert Pharmacology Console</span>
-                <p class="item-desc">Inject synergistic small molecules (e.g., Vitamin C, GSK-J4) into the simulation. Use the "Add" button to layer chemical interventions over genetic ones.</p>
-            </div>
-
-            <div class="item-card" style="background: rgba(37, 99, 235, 0.1); border-color: #2563eb;">
-                <span class="item-tag" style="color: #60a5fa;">MASTER EXECUTION</span>
-                <span class="item-label" style="font-size: 1.5rem;">Initiate Hybrid Discovery</span>
-                <p class="item-desc">The final CTA. This unifies all left and right sidebar configurations into a single, institutional-grade protocol manifest.</p>
-                <span class="logic-hint" style="background: rgba(37, 99, 235, 0.2); color: #60a5fa;">Outcome: Unified GOLD Protocol Manifest</span>
-            </div>
-
-        </div>
-
-        <footer class="text-center py-20 border-t border-white/5">
-            <a href="index.html" class="bg-blue-600 hover:bg-blue-700 text-white font-black px-12 py-6 rounded-2xl uppercase tracking-widest text-sm transition-all shadow-2xl shadow-blue-500/20">Return to Console</a>
         </footer>
 
     </div>
