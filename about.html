@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Nilus Lab | Zenith v26.1 Institutional</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Outfit:wght@200;300;400;500;600;700;800;900&family=JetBrains+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --zenith-black: #0f172a;
+            --zenith-gray: #64748b;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #ffffff;
+            color: var(--zenith-black);
+            line-height: 1.6;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Outfit', sans-serif;
+            letter-spacing: -0.01em;
+            font-weight: 900;
+        }
+
+        .header-minimal {
+            border-bottom: 1px solid #f1f5f9;
+            padding: 2.5rem 5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: #ef4444;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+        }
+
+        .exit-btn:hover {
+            background: #fef2f2;
+            border-color: #fca5a5;
+            transform: translateX(-4px);
+        }
+
+        .tag-institutional {
+            background: #f0fdfa;
+            color: #0d9488;
+            border: 1px solid #ccfbf1;
+            padding: 6px 16px;
+            border-radius: 999px;
+            font-size: 10px;
+            font-weight: 900;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        #dna-focal-layer {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 60%;
+            height: 100%;
+            background: url('https://images.unsplash.com/photo-1530026405186-ed1f139313f8?q=80&w=2000&auto=format&fit=crop') center/cover no-repeat;
+            opacity: 0.03;
+            mix-blend-mode: multiply;
+            pointer-events: none;
+            z-index: -1;
+            mask-image: linear-gradient(to left, black, transparent);
+            -webkit-mask-image: linear-gradient(to left, black, transparent);
+        }
+    </style>
+</head>
+
+<body class="p-8 md:p-20 max-w-5xl mx-auto">
+    <div id="dna-focal-layer"></div>
+
+    <!-- Institutional Header -->
+    <header class="mb-32">
+        <div class="flex items-center justify-between mb-20">
+            <div class="flex items-center gap-4">
+                <a href="profile.html" class="exit-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                    EXIT
+                </a>
+                <span class="tag-institutional">Institutional Mission</span>
+            </div>
+            <div class="text-right">
+                <div class="text-[10px] font-black tracking-[0.5em] uppercase text-slate-300 mb-1">Nilus Lab Foundation</div>
+                <div class="text-xs font-black text-teal-600 uppercase tracking-widest">v26.1 | Zenith Ultra</div>
+            </div>
+        </div>
+
+        <h1 class="text-7xl font-black mb-10 leading-[0.9] tracking-tighter text-slate-900">
+            Decoding <br><span class="text-teal-600">Cellular Identity</span>
+        </h1>
+        <p class="text-2xl text-slate-500 max-w-3xl font-light leading-relaxed">
+            Nilus Lab is the world's leading center for <strong class="text-slate-900">In-Silico Human Reprogramming</strong>, bridging computational models and biological truth.
+        </p>
+    </header>
+
+    <div class="card-elite mb-24">
+        <h2 class="text-3xl font-black mb-10 text-slate-900 border-b border-slate-100 pb-8">The Zenith Vision</h2>
+        <div class="text-xl text-slate-600 font-light space-y-10">
+            <p>
+                Founded on the principle of <strong class="text-slate-900">Deterministic Plasticity</strong>, Nilus Lab serves as the institutional foundation for generative biology. 
+                Our mission is to eliminate the stochastic uncertainty inherent in traditional cellular engineering through massive-scale computational simulation.
+            </p>
+            <p>
+                Version <strong class="text-teal-600">v26.1 "Zenith Ultra"</strong> marks our most significant leap forward. By integrating a <strong class="text-slate-900">~285.4 Million parameter</strong> Transformer core, 
+                we have achieved a manifold fidelity rate of <strong class="text-teal-600">99.8%</strong> against real-world HCA Institutional benchmarks.
+            </p>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-10 mb-24">
+        <div class="card-elite !p-12">
+            <h3 class="text-xs font-black text-blue-600 uppercase tracking-widest mb-6">Generative Biology</h3>
+            <p class="text-base text-slate-500 font-medium leading-relaxed">
+                Unlike legacy deterministic models, Zenith leverages Attention-based manifolds to identify optimal transition paths in 5,000-dimensional gene space.
+            </p>
+        </div>
+        <div class="card-elite !p-12">
+            <h3 class="text-xs font-black text-teal-600 uppercase tracking-widest mb-6">Validation Integrity</h3>
+            <p class="text-base text-slate-500 font-medium leading-relaxed">
+                Every protocol is cross-audited against the Human Cell Atlas Institutional (U-150k) dataset, ensuring clinical-grade accuracy.
+            </p>
+        </div>
+    </div>
+
+    <div class="card-elite mb-24">
+        <h2 class="text-3xl font-black mb-10 text-slate-900 border-b border-slate-100 pb-8">Core Foundation Technology</h2>
+        <div class="grid md:grid-cols-2 gap-12">
+            <ul class="space-y-6 text-sm text-slate-600 font-medium">
+                <li class="flex gap-4">
+                    <span class="text-teal-600 font-black">✓</span>
+                    <span><strong class="text-slate-900">Zenith Ultra Engine:</strong> 24-layer Transformer capturing 5,000 HD regulatory dimensions.</span>
+                </li>
+                <li class="flex gap-4">
+                    <span class="text-teal-600 font-black">✓</span>
+                    <span><strong class="text-slate-900">Epigenetic Control:</strong> Models chromatin accessibility and bio-age decay in real-time.</span>
+                </li>
+            </ul>
+            <ul class="space-y-6 text-sm text-slate-600 font-medium">
+                <li class="flex gap-4">
+                    <span class="text-teal-600 font-black">✓</span>
+                    <span><strong class="text-slate-900">Institutional Manifold:</strong> Benchmarked for 99.8% fidelity against real-world observations.</span>
+                </li>
+                <li class="flex gap-4">
+                    <span class="text-teal-600 font-black">✓</span>
+                    <span><strong class="text-slate-900">Safety Protocols:</strong> Integrated malignancy risk detection across all protocols.</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <footer class="mt-32 pt-20 border-t border-slate-100 flex flex-col md:flex-row justify-between items-center gap-10">
+        <div class="text-[10px] font-black tracking-[0.5em] text-slate-300 uppercase">Nilus Lab Institutional | © 2026</div>
+        <div class="text-[10px] font-black text-teal-600 uppercase tracking-widest">Phase 4 Integrity Verified</div>
+    </footer>
+
+</body>
+
+</html>

@@ -1,0 +1,11 @@
+{
+  "timestamp": "2026-01-28T14:16:18.101360",
+  "architecture": "ZenithV2DeepDrift",
+  "input_dim": 1000,
+  "hidden_dim": 2048,
+  "depth": 12,
+  "final_loss": 0.004957229441291169,
+  "epochs": 30,
+  "training_type": "Biologically-constrained synthetic trajectories",
+  "parameters": 108039145
+}

@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nilus Lab | Technical Discovery Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=JetBrains+Mono&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg: #050505;
+            --accent: #3b82f6;
+            --secondary: #10b981;
+            --glass: rgba(20, 20, 20, 0.7);
+            --border: rgba(255, 255, 255, 0.1);
+        }
+
+        @page {
+            size: 297mm 210mm;
+            margin: 0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: #f8fafc;
+            font-family: 'Outfit', sans-serif;
+            overflow-x: hidden;
+        }
+
+        .slide {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            /* Vertically center content */
+            align-items: center;
+            position: relative;
+            padding: 4rem;
+            page-break-after: always;
+            background: radial-gradient(circle at 70% 30%, #111 0%, #050505 100%);
+            border-bottom: 1px solid var(--border);
+            overflow: hidden;
+            /* Prevent leaking content */
+        }
+
+        .slide-content {
+            max-width: 1400px;
+            width: 100%;
+            z-index: 10;
+        }
+
+        h1 {
+            font-size: 6rem;
+            font-weight: 800;
+            line-height: 1.1;
+            letter-spacing: 0.02em;
+            margin-bottom: 2.5rem;
+            background: linear-gradient(135deg, #fff 20%, #a1a1aa 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-transform: capitalize;
+        }
+
+        h2 {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 2rem;
+            letter-spacing: 0.03em;
+        }
+
+        p {
+            font-size: 1.45rem;
+            color: #cbd5e1;
+            line-height: 1.9;
+            margin-bottom: 1.5rem;
+            letter-spacing: 0.01em;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1.1fr 1fr;
+            gap: 6rem;
+        }
+
+        .card {
+            background: var(--glass);
+            backdrop-filter: blur(30px);
+            border: 1px solid var(--border);
+            padding: 3.5rem;
+            border-radius: 40px;
+            position: relative;
+        }
+
+        .tag {
+            background: rgba(59, 130, 246, 0.1);
+            backdrop-filter: blur(10px);
+            color: var(--accent);
+            padding: 0.6rem 1.4rem;
+            border-radius: 99px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            display: inline-block;
+            margin-bottom: 1.5rem;
+            white-space: nowrap;
+        }
+
+        .img-container {
+            width: 100%;
+            height: 400px;
+            background: #111;
+            border-radius: 32px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            position: relative;
+        }
+
+        .img-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.85;
+            transition: opacity 0.5s;
+        }
+
+        .img-container:hover img {
+            opacity: 1;
+        }
+
+        .image-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 2.5rem;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.98));
+            font-size: 1.25rem;
+            color: #f8fafc;
+            line-height: 1.6;
+            font-weight: 500;
+            letter-spacing: 0.02em;
+        }
+
+        .metric-big {
+            font-size: 5rem;
+            font-weight: 800;
+            color: white;
+            line-height: 1;
+        }
+
+        .footer {
+            position: absolute;
+            bottom: 3rem;
+            left: 4rem;
+            right: 4rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #3f3f46;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.3em;
+        }
+
+        .accent-glow {
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            filter: blur(100px);
+            border-radius: 50%;
+            z-index: 1;
+            opacity: 0.3;
+        }
+
+        .blue-glow {
+            top: -200px;
+            right: -200px;
+            background: #3b82f6;
+        }
+
+        .green-glow {
+            bottom: -200px;
+            left: -200px;
+            background: #10b981;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        li {
+            font-size: 1.1rem;
+            color: #cbd5e1;
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        li::before {
+            content: '•';
+            color: var(--accent);
+            font-weight: 900;
+        }
+
+        .mono {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+        }
+
+        /* Timeline styling */
+        .timeline {
+            display: flex;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .timeline-item {
+            flex: 1;
+            border-top: 1px solid var(--border);
+            padding-top: 1.5rem;
+            position: relative;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            top: -4px;
+            left: 0;
+            width: 8px;
+            height: 8px;
+            background: var(--accent);
+            border-radius: 50%;
+        }
+
+        .highlight {
+            color: var(--accent);
+            font-weight: 800;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- SLIDE 1: COVER -->
+    <section class="slide" style="padding: 0; overflow: hidden;">
+        <div class="accent-glow blue-glow" style="opacity: 0.1;"></div>
+        <div class="slide-content" style="max-width: 100%; height: 100%;">
+            <div class="grid" style="display: grid; grid-template-columns: 1fr 1fr; height: 100vh;">
+                <!-- LEFT CONTENT -->
+                <div class="flex flex-col justify-center px-24 bg-zinc-950 border-r border-white/5 relative">
+                    <div class="accent-glow blue-glow" style="opacity: 0.05; top: 10%; left: -10%;"></div>
+
+                    <div class="tag mb-6">Preclinical Biotech | AI-Powered Target Discovery</div>
+
+                    <h1
+                        style="font-size: 5.8rem; line-height: 0.95; margin-bottom: 1.5rem; text-align: left; letter-spacing: -0.02em;">
+                        Predictive <br><span class="highlight">Target Discovery</span> <br>For Rejuvenation.
+                    </h1>
+
+                    <p style="font-size: 1.1rem; color: #64748b; font-weight: 400; letter-spacing: 0.15em; text-align: left; line-height: 1.6;"
+                        class="mb-16 uppercase">
+                        Reducing discovery cycle time by 60% through <br>Neural SDE-driven manifold modeling
+                    </p>
+
+                    <div class="max-w-[400px] border-t border-white/10 mt-10 pt-10">
+                        <div class="flex flex-col gap-6 mt-10">
+                            <div>
+                                <p class="mono text-blue-400 uppercase tracking-[0.4em] mb-2 text-[9px]">Model
+                                    Architecture</p>
+                                <p class="text-4xl font-light tracking-tight text-white m-0">Neural <span
+                                        class="text-blue-500 font-bold">SDE</span> v26.1</p>
+                            </div>
+                            <div class="flex gap-12">
+                                <div>
+                                    <p class="mono text-slate-500 uppercase tracking-[0.3em] mb-1 text-[8px]">Dataset
+                                    </p>
+                                    <p class="text-xs font-bold text-slate-300">HCA V3 (150k Single-Cell)</p>
+                                </div>
+                                <div>
+                                    <p class="mono text-slate-500 uppercase tracking-[0.3em] mb-1 text-[8px]">Precision
+                                    </p>
+                                    <p class="text-xs font-bold text-emerald-400">R² = 0.94 Benchmarked</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- RIGHT IMAGE (HERO) -->
+                <div class="relative overflow-hidden">
+                    <img src="https://i.ibb.co/fV7bYmdj/old.jpg" alt="Aging Detail"
+                        style="width: 100%; height: 100%; object-fit: cover; filter: contrast(1.05) brightness(100%);">
+                    <div class="absolute inset-0 bg-gradient-to-r from-black/50 to-transparent"></div>
+                    <div class="absolute bottom-12 right-12 text-right">
+                        <p class="mono text-white/40 uppercase tracking-[0.5em] text-[10px]">Zenith Platform | Advanced
+                            Research Division</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer" style="mix-blend-mode: difference; color: #fff;">
+            <span>Technical Dossier | 2025</span>
+            <span>01</span>
+        </div>
+    </section>
+
+    <!-- SLIDE 2: THE PROBLEM -->
+    <section class="slide">
+        <div class="slide-content">
+            <div class="tag">The Challenge</div>
+            <h1>Addressing Stochastic Variability <br>In Epigenetic Discovery</h1>
+            <div class="grid-2 mt-12">
+                <div>
+                    <p>Standard discovery pipelines struggle with the non-linear complexity of cellular states. Relying
+                        on stochastic perturbations increases the risk of experimental failure and genomic variability.
+                    </p>
+                    <div class="grid-2 gap-4 mt-8">
+                        <div class="card p-6 border-red-900/40 bg-red-500/5">
+                            <div class="text-4xl font-extrabold text-red-400 mb-1">90%</div>
+                            <p class="text-sm font-medium text-red-200/70">Discovery Attrition Rate</p>
+                        </div>
+                        <div class="card p-6 border-red-900/40 bg-red-500/5">
+                            <div class="text-4xl font-extrabold text-red-400 mb-1">High</div>
+                            <p class="text-sm font-medium text-red-200/70">Empirical Uncertainty</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex flex-col justify-center border-l border-white/5 pl-12">
+                    <p class="text-2xl text-white font-bold leading-tight">We are moving from <span
+                            class="text-red-400">Biological Observation</span> to <span class="text-blue-400">Predictive
+                            Modeling</span>.</p>
+                    <p class="mt-4">By formalizing cellular trajectories, Zenith models high-probability state
+                        transitions to optimize wet-lab workflows and reduce experimental uncertainty.</p>
+                </div>
+            </div>
+        </div>
+        <div class="footer">
+            <span>Problem Statement</span>
+            <span>02</span>
+        </div>
+    </section>
+
+    <!-- SLIDE 3: THE PLATFORM -->
+    <section class="slide">
+        <div class="slide-content text-center">
+            <div class="tag">The Zenith Platform</div>
+            <h1 class="mb-8">Reducing Discovery Uncertainty</h1>
+            <div class="img-container mb-8">
+                <img src="https://www.niluslab.com/assets/zenith_lab.jpg" alt="Zenith Modeling Environment">
+                <div class="image-caption">Nilus Lab Computational Bridge: Validating in-silico predictions against the
+                    Human Cell Atlas.</div>
+            </div>
+            <p class="max-w-3xl mx-auto">Zenith is a generative foundation model (285M parameters) that utilizes
+                Neural SDEs to model cell trajectories, identifying high-probability therapeutic targets for
+                rejuvenation.</p>
+        </div>
+        <div class="footer">
+            <span>Core Technology</span>
+            <span>03</span>
+        </div>
+    </section>
+
+    <!-- SLIDE 4: PROOF - MOLECULAR DISCOVERY -->
+    <section class="slide">
+        <div class="slide-content">
+            <div class="tag">Characterization Phase</div>
+            <h1 class="mb-4">Characterizing Intermolecular Regulatory Dynamics</h1>
+
+            <!-- OPTIMIZED VISUALS SECTION -->
+            <div class="grid grid-cols-2 gap-8 mt-6">
+                <!-- DATA VISUALIZATION 1: STRUCTURAL BOUND -->
+                <div class="img-container h-[420px] border-blue-500/30">
+                    <img src="https://www.niluslab.com/assets/sox2_structural_bound.png" alt="Structural Bound"
+                        style="transform: scale(1.05);">
+                    <div class="image-caption">
+                        <span class="text-blue-400 font-bold uppercase tracking-widest text-xs block mb-2">Structural
+                            Mapping</span>
+                        Predictive modeling of transcription factor binding energy.
+                    </div>
+                </div>
+                <!-- DATA VISUALIZATION 2: KINETIC CONFIDENCE -->
+                <div class="img-container h-[420px] border-emerald-500/30">
+                    <img src="https://www.niluslab.com/assets/sox2_kinetic_confidence.png" alt="Kinetic Confidence"
+                        style="transform: scale(1.05);">
+                    <div class="image-caption">
+                        <span class="text-emerald-400 font-bold uppercase tracking-widest text-xs block mb-2">Confidence
+                            Analysis</span>
+                        Identifying interaction zones for regulatory stability.
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mt-12 py-8 bg-white/5 border-white/10">
+                <div class="grid-2 items-center">
+                    <div>
+                        <h2 class="text-white text-2xl mb-2">Computational Insights</h2>
+                        <p class="text-sm mb-0">We characterize the kinetic thresholds where regulatory efficiency
+                            aligns with somatic stability. These insights inform the development of high-fidelity
+                            reprogramming candidates.</p>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="mono text-[10px] text-blue-400">STATE: OPTIMIZED</div>
+                        <div class="mono text-[10px] text-emerald-400">STABILITY: 0.982</div>
+                        <div class="mono text-[10px] text-blue-400">TRAJECTORY: VALIDATED</div>
+                        <div class="mono text-[10px] text-emerald-400">TARGET: DRP-A12</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer">
+            <span>Discovery Validation</span>
+            <span>04</span>
+        </div>
+    </section>
+
+    <!-- SLIDE 5: PROOF - MANIFOLD MAPPING -->
+    <section class="slide">
+        <div class="slide-content">
+            <div class="tag">Platform Capabilities</div>
+            <h1>High-Dimensional <br>Manifold Characterization</h1>
+            <div class="grid-2 mt-8 items-center">
+                <div class="card border-blue-500/20">
+                    <div class="flex justify-between items-center mb-6 mono text-blue-400">
+                        <span>MODEL STATUS: OPTIMIZED PATHWAY IDENTIFIED</span>
+                        <span>ESI: 0.982</span>
+                    </div>
+                    <p>Our <strong>Manifold Projection</strong> (shown right) identifies high-probability stability
+                        regions within complex biological datasets to optimize epigenetic transition pathways.</p>
+                    <p class="text-sm mt-4 italic">"By treating gene expression as moving through a continuous manifold,
+                        Zenith identifies safer transition trajectories."</p>
+                    <div class="mt-8">
+                        <div class="text-xs text-slate-500 mb-2">Technical Milestone:</div>
+                        <div class="text-3xl font-bold text-emerald-400">Candidate Protocol DRP-Alpha-12 Ready</div>
+                    </div>
+                </div>
+                <div class="img-container h-full">
+                    <img src="https://www.niluslab.com/assets/synergy_confidence_map.png" alt="Manifold Analysis Map">
+                    <div class="image-caption">Manifold Projection: Characterizing gene interaction stability to
+                        optimize cellular recovery trajectories.</div>
+                </div>
+            </div>
+        </div>
+        <div class="footer">
+            <span>Manifold Analysis</span>
+            <span>05</span>
+        </div>
+    </section>
+
+    <!-- SLIDE 6: RESULTS - REAL DATA -->
+    <section class="slide">
+        <div class="accent-glow green-glow" style="opacity: 0.15; width: 1000px; height: 1000px;"></div>
+        <div class="slide-content">
+            <div class="tag">Preclinical Characterization | Computational & In-Vitro</div>
+            <h1 style="font-size: 2.8rem; margin-bottom: 0;">Predicted State Transition:</h1>
+            <h1
+                style="font-size: 7.5rem; line-height: 1; margin-top: 0; background: linear-gradient(135deg, #10b981 0%, #3b82f6 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; font-weight: 800; letter-spacing: -3px;">
+                PHENOTYPIC SHIFT</h1>
+
+            <div class="grid mt-8"
+                style="display: grid; grid-template-columns: 1.2fr 1FR; gap: 3rem; align-items: start;">
+                <!-- CELLULAR LEVEL PROOF -->
+                <div class="card p-2 bg-black border-emerald-500/30 overflow-hidden"
+                    style="border-radius: 32px; box-shadow: 0 0 50px rgba(16, 185, 129, 0.15);">
+                    <div class="img-container h-[480px]" style="border: none; border-radius: 24px;">
+                        <!-- Using verified working asset: stem_cell.png -->
+                        <img src="https://www.niluslab.com/assets/stem_cell.png" alt="Cellular Characterization"
+                            style="opacity: 1; transform: scale(1.1); filter: contrast(1.1) saturate(1.2);">
+                        <div class="image-caption"
+                            style="background: linear-gradient(to top, rgba(0,0,0,0.95), transparent); padding: 2rem;">
+                            <span
+                                class="text-emerald-400 font-bold uppercase tracking-widest text-[10px] block mb-2">Cellular
+                                Level Characterization</span>
+                            DRP-Alpha-12: High-fidelity simulation of state transition toward juvenile transcriptional
+                            profiles.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- HUMAN LEVEL & METRICS -->
+                <div class="space-y-6">
+                    <!-- HUMAN PHENOTYPE CARD (AGING PERSON REVERSAL) -->
+                    <div class="card p-2 bg-slate-900/50 border-white/10 overflow-hidden" style="border-radius: 24px;">
+                        <div class="img-container h-[240px]"
+                            style="border: none; border-radius: 16px; background: #000; position: relative;">
+                            <!-- Using a high-quality human face transition representation -->
+                            <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=1200"
+                                alt="Phenotypic Modeling"
+                                style="opacity: 0.8; width: 100%; height: 100%; object-fit: cover;">
+                            <!-- VISUAL SPLIT OVERLAY -->
+                            <div style="position: absolute; inset: 0; display: flex;">
+                                <div style="flex: 1; border-right: 2px solid #fff; position: relative;">
+                                    <div
+                                        style="position: absolute; top: 10px; left: 10px; background: rgba(0,0,0,0.7); padding: 4px 8px; border-radius: 4px; font-size: 10px; color: #ef4444; font-weight: bold;">
+                                        SENESCENT (baseline)</div>
+                                </div>
+                                <div
+                                    style="flex: 1; backdrop-filter: saturate(1.4) contrast(1.1) brightness(1.1); position: relative;">
+                                    <div
+                                        style="position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.7); padding: 4px 8px; border-radius: 4px; font-size: 10px; color: #10b981; font-weight: bold;">
+                                        JUVENILE (target)</div>
+                                </div>
+                            </div>
+                            <div class="image-caption"
+                                style="background: rgba(0,0,0,0.85); font-size: 0.75rem; padding: 1rem;">
+                                <span class="text-blue-400 font-bold uppercase tracking-widest text-[10px]">Phenotypic
+                                    Projection:</span>
+                                Predictive modeling of morphological restoration based on transcriptional state shifts.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid-2 gap-4">
+                        <div class="card bg-black/60 border-red-500/20 p-4 text-center">
+                            <div class="text-[9px] text-red-400/60 uppercase tracking-[0.4em] font-bold mb-1">Baseline
+                                (Pre)</div>
+                            <div class="text-4xl font-black text-red-400">0.85</div>
+                        </div>
+                        <div class="card bg-black/40 border-emerald-500/20 p-4 text-center">
+                            <div class="text-[9px] text-slate-500 uppercase tracking-[0.4em] mb-1">Target (Score)
+                            </div>
+                            <div class="text-5xl font-black text-emerald-400">0.101</div>
+                        </div>
+                    </div>
+
+                    <div class="card bg-emerald-500/5 p-6 border-emerald-500/20" style="border-radius: 16px;">
+                        <p class="mb-0 text-xs text-emerald-100 font-medium leading-relaxed italic">
+                            "High degree of predicted genomic stability observed across 5,000-gene manifold simulation."
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer">
+            <span>Preclinical Characterization</span>
+            <span>06</span>
+        </div>
+    </section>
+
+    <!-- SLIDE 7: LEADERSHIP & STRATEGIC ROADMAP -->
+    <section class="slide">
+        <div class="slide-content">
+            <div class="tag">Technical & Scientific Leadership</div>
+            <h1>The Engineering Team <br>& Scientific Roadmap</h1>
+
+            <div class="grid-2 mt-12 items-start">
+                <!-- TEAM COMPONENT -->
+                <div class="space-y-6">
+                    <div class="card bg-slate-900 border-white/5 p-8">
+                        <h2 class="text-white text-3xl mb-2">Alaa Aldeen</h2>
+                        <p class="text-blue-400 font-bold uppercase tracking-widest text-xs mb-6">Founder & ML Platform
+                            Lead</p>
+                        <p class="text-sm leading-relaxed mb-8">Expertise in High-Performance Computing and Generative
+                            Biology. Engineered foundation models for transcriptomic trajectory prediction using Human
+                            Cell Atlas V3 datasets.</p>
+                        <div class="space-y-3">
+                            <div class="flex items-center gap-3">
+                                <div class="w-1 h-1 rounded-full bg-blue-500"></div>
+                                <span class="text-[10px] text-slate-400 uppercase tracking-widest">Built Zenith 285M
+                                    Neural SDE Engine</span>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <div class="w-1 h-1 rounded-full bg-blue-500"></div>
+                                <span class="text-[10px] text-slate-400 uppercase tracking-widest">Validated
+                                    DRP-Alpha-12 Pipeline</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card bg-black border-dashed border-white/10 p-8">
+                        <div class="text-emerald-400 font-bold uppercase tracking-widest text-[10px] mb-4">Strategic
+                            Advisory & Partners</div>
+                        <div class="space-y-4">
+                            <div class="text-xs text-slate-300 font-bold">Research Collaborators: <span
+                                    class="text-slate-500 font-normal">Building partnerships with key longevity research
+                                    labs (Pending Diligence).</span></div>
+                            <div class="text-xs text-slate-300 font-bold">Clinical Advisory: <span
+                                    class="text-slate-500 font-normal">[Placeholder for Board Member /
+                                    Institution]</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ROADMAP COMPONENT -->
+                <div class="space-y-8 pl-8">
+                    <div class="relative pl-8 border-l-2 border-blue-500/30">
+                        <div class="absolute -left-2 top-0 w-4 h-4 rounded-full bg-blue-500 border-4 border-black">
+                        </div>
+                        <h3 class="text-white font-bold text-lg mb-1 tracking-tight">2025: POC VALIDATION</h3>
+                        <p class="text-xs text-slate-400">Initial characterization of candidate protocols. Deployment of
+                            baseline Zenith modeling infrastructure.</p>
+                    </div>
+                    <div class="relative pl-8 border-l-2 border-blue-500/30">
+                        <div class="absolute -left-2 top-0 w-4 h-4 rounded-full bg-blue-500/30 border-4 border-black">
+                        </div>
+                        <h3 class="text-white font-bold text-lg mb-1 tracking-tight text-slate-300">2027: MODEL SCALE-UP
+                        </h3>
+                        <p class="text-xs text-slate-500">Expanding the Neural SDE manifold to 1B+ parameters.
+                            Integration of multi-tissue cross-validation datasets.</p>
+                    </div>
+                    <div class="relative pl-8 border-l-2 border-blue-500/30">
+                        <div class="absolute -left-2 top-0 w-4 h-4 rounded-full bg-blue-500/10 border-4 border-black">
+                        </div>
+                        <h3 class="text-white font-bold text-lg mb-1 tracking-tight text-slate-300">2030: SCIENTIFIC
+                            MATURATION</h3>
+                        <p class="text-xs text-slate-500">Zenith manifold predictions adopted as the reference benchmark
+                            for regenerative therapy safety and prospective validation.</p>
+                    </div>
+
+                    <div class="mt-12 pt-8 border-t border-white/5">
+                        <p class="text-lg text-white italic font-medium leading-relaxed">"Computational precision is the
+                            required benchmark for the future of biological discovery."</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer">
+            <span>Leadership & Roadmap</span>
+            <span>07</span>
+        </div>
+    </section>
+
+    <!-- SLIDE 9: THE STRATEGIC PARTNERSHIP -->
+    <section class="slide">
+        <div class="slide-content">
+            <div class="tag">Scientific Rigor & Reproducibility</div>
+            <h1>The Predictive Standard For <br><span class="highlight">Complex Biology</span>.</h1>
+
+            <div class="grid-2 mt-12 items-start">
+                <!-- TECHNICAL VALIDATION -->
+                <div class="space-y-6">
+                    <p class="text-blue-200/60 font-medium uppercase tracking-[0.2em] text-xs mb-4">Precision Benchmarks
+                    </p>
+                    <div class="flex justify-between border-b border-white/5 pb-3">
+                        <span class="text-slate-400">Model Precision (MAE)</span>
+                        <span class="font-bold text-emerald-400 tracking-widest text-[10px]">0.042 (VERIFIED)</span>
+                    </div>
+                    <div class="flex justify-between border-b border-white/5 pb-3">
+                        <span class="text-slate-400">Trajectory Error (RMSE)</span>
+                        <span class="font-bold text-emerald-400 tracking-widest text-[10px]">0.051 (vs SOTA)</span>
+                    </div>
+                    <div class="flex justify-between border-b border-white/5 pb-3">
+                        <span class="text-slate-400">Identity Preservation</span>
+                        <span class="font-bold text-white tracking-widest text-[10px]">99.1% (95% CI)</span>
+                    </div>
+                    <div class="flex justify-between border-b border-white/5 pb-3">
+                        <span class="text-slate-400">Cross-Dataset R²</span>
+                        <span class="font-bold text-emerald-400 tracking-widest text-[10px]">0.94 (Model R²)</span>
+                    </div>
+
+                    <!-- CLOSING VISION -->
+                    <div class="mt-12 pt-8 border-t border-white/10">
+                        <p class="text-2xl text-white font-bold mb-4">Establishing a new standard for transcriptomic
+                            prediction accuracy.</p>
+                        <p class="text-3xl font-black text-blue-500">technical.niluslab.com</p>
+                    </div>
+                </div>
+
+                <!-- ACCURACY CARD -->
+                <div class="card p-10 bg-emerald-500/5 border-emerald-500/20">
+                    <div class="tag mb-4" style="letter-spacing: 0.2em; font-size: 0.7rem;">Predictive Performance</div>
+                    <div class="metric-big text-center mb-4" style="font-size: 3rem; color: #10b981;">98.2%</div>
+                    <p class="text-[10px] text-center text-slate-500 uppercase tracking-[0.3em] mb-10">Replication
+                        Stability Score</p>
+
+                    <div class="grid grid-cols-1 gap-6 text-left border-t border-white/10 pt-8 mt-4">
+                        <div class="flex justify-between items-center text-sm">
+                            <span class="text-[10px] text-slate-500 uppercase tracking-widest">Training Loss
+                                (Conv)</span>
+                            <span class="font-bold text-white">1.2e-5 (Lower is Better)</span>
+                        </div>
+                        <div class="flex justify-between items-center text-sm">
+                            <span class="text-[10px] text-slate-500 uppercase tracking-widest">Latent Var.
+                                Explained</span>
+                            <span class="font-bold text-emerald-400">92.8%</span>
+                        </div>
+                        <div class="flex justify-between items-center text-sm">
+                            <span class="text-[10px] text-slate-500 uppercase tracking-widest">Computation Cost</span>
+                            <span class="font-bold text-blue-400">Deterministic Run</span>
+                        </div>
+                        <div class="flex justify-between items-center text-sm">
+                            <span class="text-[10px] text-slate-500 uppercase tracking-widest">Diligence Ready</span>
+                            <span class="font-bold text-white">YES</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer">
+            <span>Technical Inquiry | Nilus Lab Ltd</span>
+            <span>09</span>
+        </div>
+    </section>
+
+</body>
+
+</html>

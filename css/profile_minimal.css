@@ -1,0 +1,160 @@
+/**
+ * NilusLab Zenith v26.1 - Profile High-Fidelity Fix
+ * 1:1 Replication of the 'DNA Profile Mockup' (Premium Agency Aesthetic)
+ */
+
+:root {
+    --bg-agency-pure: #ffffff;
+    --bg-agency-soft: #f8fafc;
+    --text-agency-black: #0f172a;
+    --text-agency-muted: #64748b;
+    --dna-blue-glow: rgba(15, 23, 42, 0.05);
+    --dna-teal-accent: #0f172a;
+    --glass-20-bg: rgba(255, 255, 255, 0.72);
+    --glass-20-border: rgba(255, 255, 255, 0.4);
+    --glass-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.08);
+}
+
+body.light-mode-profile {
+    background-color: var(--bg-agency-pure);
+    color: var(--text-agency-black);
+    font-family: 'Inter', sans-serif;
+    letter-spacing: -0.01em;
+}
+
+/* HIGH-FIDELITY HERO COMPOSITION */
+.agency-hero {
+    position: relative;
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background: radial-gradient(circle at 50% 50%, #ffffff 0%, #f1f5f9 100%);
+}
+
+/* The DNA Focal Point - Massive & Glowing */
+#dna-focal-layer {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.95;
+    mix-blend-mode: multiply;
+}
+
+.dna-visual-asset {
+    width: 80%;
+    max-width: 1100px;
+    height: auto;
+    filter: drop-shadow(0 0 80px rgba(15, 23, 42, 0.05));
+    animation: floatingHelix 8s ease-in-out infinite;
+}
+
+@keyframes floatingHelix {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-20px); }
+}
+
+/* PRECISE TYPOGRAPHY (MOCKUP SCALE) */
+.agency-hero-content {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+    max-width: 1000px;
+}
+
+.agency-label {
+    font-size: 13px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.6em;
+    color: var(--text-agency-muted);
+    margin-bottom: 2.5rem;
+    opacity: 0.7;
+}
+
+.agency-title {
+    font-family: 'Outfit', sans-serif;
+    font-size: 112px; /* MOCKUP SCALE */
+    font-weight: 900;
+    letter-spacing: -0.05em;
+    line-height: 0.95;
+    color: var(--text-agency-black);
+    margin-bottom: 2rem;
+}
+
+.agency-subtitle {
+    font-size: 24px;
+    font-weight: 500;
+    color: var(--text-agency-muted);
+    max-width: 750px;
+    margin: 0 auto 4rem;
+    line-height: 1.5;
+}
+
+.serif-accent {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    color: var(--text-agency-black);
+    font-weight: 400;
+}
+
+/* GLASSMORPHISM 2.0 (MODIFIED FOR HIGHER CONTRAST) */
+.glass-stat-card {
+    background: var(--glass-20-bg);
+    backdrop-filter: blur(35px) saturate(180%);
+    -webkit-backdrop-filter: blur(35px) saturate(180%);
+    border: 1px solid var(--glass-20-border);
+    border-radius: 32px;
+    padding: 2.5rem 2rem;
+    box-shadow: var(--glass-shadow);
+    transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    text-align: center;
+}
+
+.glass-stat-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 40px 80px -15px rgba(0, 0, 0, 0.12);
+    border-color: rgba(15, 23, 42, 0.1);
+}
+
+.stat-value {
+    font-family: 'Outfit', sans-serif;
+    font-size: 38px;
+    font-weight: 900;
+    color: var(--text-agency-black);
+    line-height: 1;
+    margin-bottom: 0.5rem;
+}
+
+.stat-label {
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+    color: var(--text-agency-muted);
+}
+
+/* PREMIUM AGENCY BUTTON */
+.btn-agency-primary {
+    background: var(--text-agency-black);
+    color: #fff;
+    padding: 1.5rem 4rem;
+    border-radius: 100px;
+    font-size: 15px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.btn-agency-primary:hover {
+    background: #000;
+    transform: scale(1.05) translateY(-2px);
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.15);
+}

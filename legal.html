@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Legal Center | Nilus Lab Zenith v26.4</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;500;600;700;800;900&family=JetBrains+Mono&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --zenith-teal: #0d9488;
+            --zenith-blue: #2563eb;
+            --card-elite: rgba(255, 255, 255, 0.9);
+            --border-elite: rgba(13, 148, 136, 0.12);
+        }
+
+        body {
+            background-color: #ffffff;
+            color: #0f172a;
+            font-family: 'Outfit', sans-serif;
+            line-height: 1.8;
+            background-image: 
+                radial-gradient(circle at 100% 0%, rgba(13, 148, 136, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 0% 100%, rgba(37, 99, 235, 0.05) 0%, transparent 40%);
+            background-attachment: fixed;
+            min-height: 100vh;
+            scroll-behavior: smooth;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 100px;
+            left: 20px;
+            width: 300px;
+            height: calc(100vh - 140px);
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-elite);
+            border-radius: 2rem;
+            padding: 2.5rem;
+            display: none; /* Desktop only */
+        }
+
+        @media (min-width: 1024px) {
+            .sidebar { display: block; }
+            .main-content { margin-left: 360px; }
+        }
+
+        .main-content {
+            padding: 2rem;
+            max-width: 1000px;
+        }
+
+        .nav-link {
+            display: block;
+            padding: 12px 20px;
+            color: #64748b;
+            font-size: 13px;
+            border-radius: 12px;
+            margin-bottom: 8px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background: #f0fdfa;
+            color: var(--zenith-teal);
+            transform: translateX(4px);
+        }
+
+        .section-title {
+            font-size: 3rem;
+            font-weight: 900;
+            color: #0f172a;
+            margin-bottom: 2.5rem;
+            letter-spacing: -0.05em;
+            border-bottom: 1px solid #f1f5f9;
+            padding-bottom: 1.5rem;
+        }
+
+        .legal-text {
+            font-size: 15px;
+            line-height: 2;
+            color: #475569;
+            margin-bottom: 5rem;
+        }
+
+        .legal-text h3 {
+            color: #0f172a;
+            font-weight: 900;
+            margin-top: 3.5rem;
+            margin-bottom: 1.5rem;
+            font-size: 1.25rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .legal-text ul {
+            list-style-type: disc;
+            padding-left: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .exit-btn {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: white;
+            padding: 10px 24px;
+            border-radius: 999px;
+            border: 1px solid #e2e8f0;
+            font-size: 11px;
+            font-weight: 900;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: #ef4444;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+        }
+
+        .exit-btn:hover {
+            background: #fef2f2;
+            border-color: #fca5a5;
+            transform: translateX(-4px);
+        }
+
+        .tag-institutional {
+            background: #f0fdfa;
+            color: #0d9488;
+            border: 1px solid #ccfbf1;
+            padding: 6px 16px;
+            border-radius: 999px;
+            font-size: 10px;
+            font-weight: 900;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+    </style>
+</head>
+
+<body class="p-8 md:p-20">
+
+    <!-- Header -->
+    <header class="mb-24 no-print">
+        <div class="flex items-center justify-between mb-20">
+            <div class="flex items-center gap-4">
+                <a href="profile.html" class="exit-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                    EXIT
+                </a>
+                <span class="tag-institutional">Compliance Node v26.4</span>
+            </div>
+            <div class="text-right">
+                <div class="text-[10px] font-black tracking-[0.5em] uppercase text-slate-300 mb-1">Nilus Lab Group</div>
+                <div class="text-xs font-black text-teal-600 uppercase tracking-widest">Legal & Privacy Center</div>
+            </div>
+        </div>
+    </header>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar no-print">
+        <div class="text-[10px] font-black text-slate-300 uppercase tracking-[0.3em] mb-8 px-4">Registry Contents</div>
+        <nav>
+            <a href="#terms" class="nav-link">Terms of Service</a>
+            <a href="#privacy" class="nav-link">Privacy Policy</a>
+            <a href="#gdpr" class="nav-link">GDPR Compliance</a>
+            <a href="#data-usage" class="nav-link">Research Data Ops</a>
+        </nav>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+
+        <!-- TERMS OF SERVICE -->
+        <section id="terms" class="mb-32">
+            <h1 class="section-title">Terms of Service</h1>
+            <div class="legal-text">
+                <p class="font-black text-teal-600 uppercase tracking-widest text-[10px] mb-4">Last Updated: March 2026</p>
+                <h3>1. Acceptance of Terms</h3>
+                <p>By accessing the Zenith platform ("the Service"), you agree to be legally bound by these Institutional Terms of Service. If you representing an organization, you affirm authority to bind said entity to these protocols.</p>
+
+                <h3>2. Licensing and SKU Tiers</h3>
+                <p>Nilus Lab provides tiered access to the Zenith Platform based on organization type and intended use:</p>
+                <ul>
+                    <li><strong>Academic Tier</strong>: For non-commercial research by accredited institutions. Results must be published with attribution to Nilus Lab.</li>
+                    <li><strong>Biotech Pilot</strong>: Licensed for commercial target prioritization in early-stage biotechnology firms.</li>
+                    <li><strong>Pharma Enterprise</strong>: Full commercial licensing for large-scale therapeutic discovery, includes dedicated compute nodes (~285M Parameter Manifolds) and technical diligence support.</li>
+                </ul>
+
+                <h3>3. Limitation of Liability</h3>
+                <p>Nilus Lab provides simulations as a decision-support system. While Zenith v26.4 achieves 99.8% model fidelity, results are computational predictions. Users are responsible for independent wet-lab validation (In-vitro/In-vivo).</p>
+            </div>
+        </section>
+
+        <!-- PRIVACY POLICY -->
+        <section id="privacy" class="mb-32">
+            <h1 class="section-title">Privacy Policy</h1>
+            <div class="legal-text">
+                <h3>1. Protocol Data Collection</h3>
+                <p>We collect minimal personal metadata necessary for authentication, specifically institutional email address and encrypted password hash via Firebase/Google protocols.</p>
+
+                <h3>2. Intellectual Property (IP)</h3>
+                <p>Any parameters, gene sets, or protocol configurations uploaded to the IS-CHRP platform remain the exclusive intellectual property of the licensed user/organization. Nilus Lab does not use private simulation inputs for base-model training.</p>
+
+                <h3>3. Institutional Telemetry</h3>
+                <p>We collect anonymous system telemetry (e.g., vCPU load, inference latency) to ensure platform stability and node health across the Zenith cluster.</p>
+            </div>
+        </section>
+
+        <!-- GDPR -->
+        <section id="gdpr" class="mb-32">
+            <h1 class="section-title flex items-center gap-6">
+                GDPR & Data Ops
+                <span class="bg-teal-50 text-teal-600 text-[10px] px-4 py-1.5 rounded-full border border-teal-100 font-black uppercase tracking-widest">EU CERTIFIED</span>
+            </h1>
+            <div class="legal-text">
+                <p>Nilus Lab Group is committed to full compliance with the General Data Protection Regulation (GDPR).</p>
+
+                <h3>Institutional Data Rights</h3>
+                <p>Users maintain the right to complete account erasure and simulation history purging. Request for data portability (JSON/CSV) are processed within 2 institutional business hours.</p>
+
+                <h3>Data Residency</h3>
+                <p>All institutional data is stored on nodes located within the European Economic Area (EEA) or jurisdictions with equivalent data protection protocols.</p>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        lucide.createIcons();
+        
+        // Simple scroll spy for active link highlighting
+        const sections = document.querySelectorAll('section');
+        const navLinks = document.querySelectorAll('.nav-link');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (pageYOffset >= sectionTop - 250) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href').includes(current)) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

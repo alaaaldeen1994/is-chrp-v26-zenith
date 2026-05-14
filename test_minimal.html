@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Test Engine Load</title>
+</head>
+
+<body>
+    <h1>Testing BiosimEngine...</h1>
+    <div id="status">Loading...</div>
+
+    <script>
+        // Minimal test
+        try {
+            const BiosimEngine = {
+                agents: [],
+                active: false
+            };
+
+            const BiosimIO = {
+                downloadData() {
+                    alert('downloadData called');
+                }
+            };
+
+            document.getElementById('status').innerText = 'SUCCESS! Engine loaded.';
+            console.log('Test successful:', typeof BiosimEngine, typeof BiosimIO);
+        } catch (e) {
+            document.getElementById('status').innerText = 'ERROR: ' + e.message;
+            console.error(e);
+        }
+    </script>
+</body>
+
+</html>

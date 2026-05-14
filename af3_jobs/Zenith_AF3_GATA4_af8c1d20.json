@@ -1,0 +1,22 @@
+{
+  "name": "Zenith_AF3_GATA4_af8c1d20",
+  "modelSeeds": [
+    42
+  ],
+  "sequences": [
+    {
+      "proteinChain": {
+        "sequence": "SAGPFDSPVLHSLPGRANPAARHPNLDMFDDFSEGRECVNCGAMSTPLWRRDGTGHYLCNACGLYHKMNGINRPLIKPQRRLSASRRVGLSCANCQTTTTTLWRRNAEGEPVCNACGLYMKLHGVPRPLAMRKEGIQTRKRKPKNLNKSKTPAAPSGSESLPPASGASSNS",
+        "count": 1
+      }
+    },
+    {
+      "dnaSequence": {
+        "sequence": "CCTGTGACTGTGGGGTTCACGCTCCCGGGTG",
+        "count": 1
+      }
+    }
+  ],
+  "dialect": "alphafold3",
+  "version": 1
+}

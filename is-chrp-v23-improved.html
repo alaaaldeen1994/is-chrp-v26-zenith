@@ -1,0 +1,1682 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="IS-CHRP v24.0: High-Fidelity Biological Simulation Plafrom. Mission: Mature cells can be reprogrammed to become pluripotent (Nobel 2012).">
+    <meta name="author" content="Altos Labs | Institute of Computation">
+    <title>Altos Labs | IS-CHRP v24.0 | Nobel Edition</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500;700&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            /* --- COLOR PRIMITIVES: OBSIDIAN & FLUORESCENCE --- */
+            --void: #000000;
+            --layer-1: #050505;
+            --layer-2: #0a0a0a;
+            --layer-3: #111111;
+
+            --border-dim: #1f1f1f;
+            --border-mid: #333333;
+            --border-high: #525252;
+
+            /* --- SEMANTIC PALETTE --- */
+            --c-brand: #2563eb;
+            /* Altos Blue */
+            --c-brand-glow: rgba(37, 99, 235, 0.4);
+
+            --c-bio: #10b981;
+            /* Biology / Stable / Safe */
+            --c-warn: #f59e0b;
+            /* Warning / Transient */
+            --c-crit: #ef4444;
+            /* Critical / Apoptosis / Tumor */
+            --c-data: #8b5cf6;
+            /* Data / Compute */
+
+            /* --- STATE COLORS --- */
+            --s-somatic: #64748b;
+            /* Slate 500 */
+            --s-ipsc: #eab308;
+            /* Yellow 500 */
+            --s-neuro: #a855f7;
+            /* Purple 500 */
+            --s-cardio: #f43f5e;
+            /* Rose 500 */
+            --s-tumor: #ef4444;
+            /* Red 500 */
+            --s-death: #1e293b;
+            /* Slate 800 */
+
+            /* --- TYPOGRAPHY --- */
+            --font-sans: 'Inter', system-ui, sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+
+            /* --- METRICS --- */
+            --header-h: 48px;
+            --footer-h: 32px;
+        }
+
+        /* --- GLOBAL RESET --- */
+        * {
+            box-sizing: border-box;
+            outline: none;
+            user-select: none;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            background-color: var(--void);
+            color: #e2e8f0;
+            font-family: var(--font-sans);
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            font-size: 11px;
+            line-height: 1.4;
+        }
+
+        /* --- LAYOUT ENGINE: RESPONSIVE GRID --- */
+        #architect-layout {
+            display: grid;
+            /* Adaptive Columns: Fixed Left (280px) | Fluid Center | Fixed Right (340px) */
+            /* Using minmax ensures the center canvas never collapses to 0 */
+            grid-template-columns: 280px minmax(0, 1fr) 340px;
+            grid-template-rows: var(--header-h) 1fr var(--footer-h);
+            height: 100vh;
+            width: 100vw;
+            gap: 1px;
+            background-color: var(--border-dim);
+        }
+
+        /* --- COMPONENT: PANELS --- */
+        .panel {
+            background-color: var(--layer-2);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+            backdrop-filter: blur(20px);
+        }
+
+        .panel-header {
+            height: 40px;
+            min-height: 40px;
+            padding: 0 16px;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.02) 0%, rgba(0, 0, 0, 0) 100%);
+            border-bottom: 1px solid var(--border-dim);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .panel-title {
+            font-family: var(--font-mono);
+            font-weight: 700;
+            font-size: 10px;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* --- COMPONENT: SCROLL AREAS --- */
+        .scroll-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+            /* Custom Scrollbar */
+            scrollbar-width: thin;
+            scrollbar-color: #333 transparent;
+        }
+
+        .scroll-container::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .scroll-container::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .scroll-container::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 3px;
+            border: 1px solid #000;
+        }
+
+        .scroll-container::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+
+        /* --- COMPONENT: CONTROLS --- */
+        .control-group {
+            margin-bottom: 12px;
+            border-bottom: 1px solid var(--border-dim);
+            padding-bottom: 8px;
+        }
+
+        .control-group:last-child {
+            border: none;
+            margin-bottom: 0;
+        }
+
+        .control-label {
+            display: block;
+            font-size: 9px;
+            font-weight: 700;
+            color: #64748b;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* --- COMPONENT: INPUTS & SELECTS --- */
+        select {
+            width: 100%;
+            background: var(--layer-1);
+            border: 1px solid var(--border-mid);
+            color: #cbd5e1;
+            padding: 10px;
+            font-family: var(--font-mono);
+            font-size: 10px;
+            border-radius: 4px;
+            outline: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        select:hover {
+            border-color: #525252;
+        }
+
+        select:focus {
+            border-color: var(--c-brand);
+        }
+
+        /* Custom Range Slider */
+        input[type="range"] {
+            -webkit-appearance: none;
+            width: 100%;
+            background: transparent;
+            cursor: pointer;
+            margin: 12px 0;
+        }
+
+        input[type="range"]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 4px;
+            background: #1e293b;
+            border-radius: 2px;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 14px;
+            width: 14px;
+            border-radius: 50%;
+            background: #e2e8f0;
+            margin-top: -5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            transition: transform 0.1s, background 0.2s;
+            border: 2px solid #0f172a;
+        }
+
+        input[type="range"]:hover::-webkit-slider-thumb {
+            transform: scale(1.2);
+            background: var(--c-brand);
+        }
+
+        /* --- COMPONENT: BUTTONS --- */
+        .btn {
+            width: 100%;
+            padding: 12px 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-dim);
+            color: #cbd5e1;
+            font-family: var(--font-mono);
+            font-size: 10px;
+            font-weight: 600;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+            margin-bottom: 4px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn:hover:not(:disabled) {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--border-mid);
+            color: #fff;
+            transform: translateX(2px);
+        }
+
+        .btn:active:not(:disabled) {
+            transform: translateX(1px);
+        }
+
+        .btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        /* Button Variants */
+        .btn-brand {
+            border-left: 3px solid var(--c-brand);
+        }
+
+        .btn-bio {
+            border-left: 3px solid var(--c-bio);
+        }
+
+        .btn-warn {
+            border-left: 3px solid var(--c-warn);
+        }
+
+        .btn-crit {
+            border-left: 3px solid var(--c-crit);
+        }
+
+        .btn-data {
+            border-left: 3px solid var(--c-data);
+        }
+
+        /* --- COMPONENT: VISUALIZATION VIEWPORT --- */
+        #viewport-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 50% 40%, #080808 0%, #000 100%);
+            cursor: crosshair;
+            overflow: hidden;
+        }
+
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* --- COMPONENT: HUD (Heads Up Display) --- */
+        .hud-panel {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 260px;
+            background: rgba(5, 5, 5, 0.9);
+            border: 1px solid var(--border-mid);
+            border-left: 2px solid var(--c-brand);
+            padding: 16px;
+            border-radius: 4px;
+            backdrop-filter: blur(12px);
+            pointer-events: auto;
+            z-index: 10;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+        }
+
+        .hud-row {
+            display: flex;
+            justify-content: space-between;
+            font-family: var(--font-mono);
+            font-size: 10px;
+            margin-bottom: 6px;
+            color: #94a3b8;
+        }
+
+        .hud-value {
+            color: #f8fafc;
+            font-weight: 700;
+        }
+
+        /* --- COMPONENT: TOAST NOTIFICATIONS --- */
+        #toast-feed {
+            position: absolute;
+            top: 60px;
+            right: 20px;
+            width: 320px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            z-index: 100;
+            pointer-events: none;
+        }
+
+        .toast {
+            background: #0f0f0f;
+            border: 1px solid var(--border-mid);
+            border-left: 3px solid var(--c-brand);
+            padding: 12px;
+            border-radius: 4px;
+            pointer-events: auto;
+            animation: slideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+        }
+
+        .toast-h {
+            font-weight: 700;
+            color: #fff;
+            font-size: 11px;
+            margin-bottom: 2px;
+        }
+
+        .toast-b {
+            color: #94a3b8;
+            font-size: 10px;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* --- COMPONENT: GENE GRID --- */
+        .gene-matrix {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1px;
+            padding: 1px;
+            background: #000;
+            border: 1px solid var(--border-dim);
+            aspect-ratio: 1;
+        }
+
+        .gene-node {
+            background: #111;
+            transition: background 0.1s linear;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-mono);
+            font-size: 9px;
+            color: #555;
+        }
+
+        /* --- COMPONENT: TERMINAL --- */
+        #terminal-output {
+            font-family: var(--font-mono);
+            font-size: 10px;
+            color: #94a3b8;
+            padding-right: 4px;
+        }
+
+        .log-line {
+            padding: 2px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+            display: flex;
+            gap: 10px;
+        }
+
+        .log-ts {
+            color: #475569;
+            min-width: 50px;
+        }
+
+        .log-inf {
+            color: var(--c-brand);
+        }
+
+        .log-suc {
+            color: var(--c-bio);
+        }
+
+        .log-wrn {
+            color: var(--c-warn);
+        }
+
+        .log-err {
+            color: var(--c-crit);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="toast-feed"></div>
+
+    <div id="architect-layout">
+
+        <div class="panel"
+            style="grid-column: 1 / -1; flex-direction: row; border-bottom: 1px solid #222; z-index: 50;">
+            <div class="flex items-center px-6 h-full w-[280px] border-r border-dim bg-black">
+                <div class="w-4 h-4 bg-blue-600 rounded-sm mr-4 shadow-[0_0_20px_rgba(37,99,235,0.6)] animate-pulse">
+                </div>
+                <div>
+                    <div class="text-xs font-bold text-white tracking-[0.2em]">ALTOS LABS</div>
+                    <div class="text-[9px] text-slate-500 font-mono">IS-CHRP v24.0 | NOBEL EDITION</div>
+                </div>
+            </div>
+
+            <div class="flex flex-1 items-center px-8 justify-between bg-black">
+                <div class="flex gap-12 font-mono text-[9px] text-slate-500">
+                    <div class="text-blue-500 italic">"Our mission is to restore cell health and resilience to reverse
+                        disease."</div>
+                    <div class="hidden xl:block">POPULATION: <span class="text-white font-bold" id="header-pop">0</span>
+                    </div>
+                </div>
+
+                <div class="flex gap-3 items-center">
+                    <div class="flex items-center gap-2 bg-[#111] border border-dim rounded px-2 py-1 h-[26px]">
+                        <div id="ai-status"
+                            class="w-1.5 h-1.5 rounded-full bg-red-500 shadow-[0_0_5px_rgba(239,68,68,0.5)] transition-colors">
+                        </div>
+                        <input type="password" id="openai-key" placeholder="API Key"
+                            class="w-24 bg-transparent border-none text-[9px] text-slate-300 focus:ring-0 placeholder-slate-600 h-full !p-0 !m-0"
+                            style="padding:0; margin:0;"
+                            oninput="Store.state.apiKey = this.value; document.getElementById('ai-status').className = this.value.length > 10 ? 'w-1.5 h-1.5 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)] transition-colors' : 'w-1.5 h-1.5 rounded-full bg-red-500 shadow-[0_0_5px_rgba(239,68,68,0.5)] transition-colors'">
+                    </div>
+
+                    <div class="flex gap-1">
+                        <button
+                            class="px-3 py-1.5 bg-[#111] border border-dim text-[10px] text-slate-400 hover:text-white rounded transition-colors"
+                            title="Save Experiment State" onclick="IO.saveState()">
+                            <i data-lucide="save" class="w-3 h-3"></i>
+                        </button>
+                        <button
+                            class="px-3 py-1.5 bg-[#111] border border-dim text-[10px] text-slate-400 hover:text-white rounded transition-colors"
+                            title="Load Experiment State" onclick="document.getElementById('state-upload').click()">
+                            <i data-lucide="upload-cloud" class="w-3 h-3"></i>
+                        </button>
+                        <input type="file" id="state-upload" style="display:none" onchange="IO.loadState(this)"
+                            accept=".json">
+                    </div>
+
+                    <button
+                        class="px-4 py-1.5 bg-[#111] border border-dim text-[10px] text-slate-400 hover:text-white rounded transition-colors"
+                        onclick="Kernel.resetView()">
+                        RESET VIEW
+                    </button>
+                    <button
+                        class="px-4 py-1.5 bg-blue-900/20 border border-blue-800 text-[10px] text-blue-400 hover:text-white rounded transition-colors flex items-center gap-2"
+                        onclick="IO.exportCSV()">
+                        <i data-lucide="download" class="w-3 h-3"></i> CSV
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel" style="grid-row: 2; grid-column: 1;">
+            <div class="panel-header">
+                <span class="panel-title"><i data-lucide="sliders" class="w-3 h-3"></i> PROTOCOL DESIGN</span>
+            </div>
+
+            <div class="scroll-container">
+
+
+                <span class="control-label">1. Cell Source (Patient Derived)</span>
+                <div class="mb-3">
+                    <div class="flex justify-between text-[9px] text-slate-400 mb-1">
+                        <span>Confluency</span><span class="text-white font-mono" id="disp-pop">1200</span>
+                    </div>
+                    <input type="range" min="100" max="3000" step="100" value="1200"
+                        oninput="document.getElementById('disp-pop').innerText=this.value; Store.config.agentCount=parseInt(this.value)">
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <button class="btn btn-brand" onclick="Kernel.boot()">
+                        <span>RESET (FIBRO)</span> <i data-lucide="rotate-ccw" class="w-3 h-3"></i>
+                    </button>
+                    <button class="btn btn-data" onclick="IO.generateReport()">
+                        <span>AI LAB REPORT</span> <i data-lucide="file-text" class="w-3 h-3"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <span class="control-label">2. Reprogramming Strategy</span>
+
+                <div class="mb-2">
+                    <div class="text-[9px] text-slate-500 mb-1">DELIVERY METHOD (SAFETY)</div>
+                    <select id="method-sel">
+                        <option value="RETRO">Retroviral (High Eff, High Risk)</option>
+                        <option value="MRNA">Synthetic mRNA (Safe, Slow)</option>
+                        <option value="PROTEIN">Recombinant Protein (Safest)</option>
+                        <option value="SCNT">SCNT (Gurdon - Nuclear Transfer)</option>
+                    </select>
+                </div>
+
+                <div class="mb-2">
+                    <div class="text-[9px] text-slate-500 mb-1">TRANSCRIPTION FACTORS</div>
+                    <select id="factor-sel">
+                        <option value="OSKM">OSKM (Yamanaka - iPSC)</option>
+                        <option value="LIN28">LIN28/NANOG (Thomson)</option>
+                        <option value="DIRECT_NEURO">Direct -> Neuro (Transdiff)</option>
+                        <option value="DIRECT_CARDIO">Direct -> Cardio (Transdiff)</option>
+                    </select>
+                </div>
+
+                <button class="btn btn-warn" onclick="Kernel.inject()">
+                    <span>TRANSFECT CELLS</span> <i data-lucide="zap" class="w-3 h-3"></i>
+                </button>
+            </div>
+
+            <div class="control-group">
+                <span class="control-label">3. "Disease in a Dish"</span>
+
+                <div class="grid grid-cols-2 gap-2 mt-3">
+                    <button class="btn btn-ctrl" onclick="Kernel.induce('TUMOR')">
+                        <i data-lucide="zap" class="w-3 h-3 text-red-500"></i> <span>TUMOR</span>
+                    </button>
+                    <button class="btn btn-ctrl" onclick="Kernel.treat('P53')">
+                        <i data-lucide="shield" class="w-3 h-3 text-blue-400"></i> <span>KILL (P53)</span>
+                    </button>
+                </div>
+
+                <div class="mt-3 pt-3 border-t border-mid">
+                    <div class="control-label mb-2">NOBEL TOOLS (2012)</div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <button class="btn btn-ctrl"
+                            onclick="Store.state.environment.method = 'SCNT'; UI.notify('Micropipette Ready', 'Click cells to perform Nuclear Transfer.', 'inf');">
+                            <i data-lucide="syringe" class="w-3 h-3 text-teal-400"></i> <span>SCNT (Gurdon)</span>
+                        </button>
+                        <button class="btn btn-ctrl" onclick="Kernel.inject()">
+                            <i data-lucide="flask-conical" class="w-3 h-3 text-green-400"></i> <span>OSKM
+                                (Yamanaka)</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="text-[9px] text-slate-500 mb-1 mt-2">THERAPEUTIC COMPOUNDS</div>
+                <div class="grid grid-cols-2 gap-2">
+                    <button class="btn btn-bio" onclick="Kernel.treat('KINETIN')">
+                        <span>KINETIN (Splicing)</span> <i data-lucide="pill" class="w-3 h-3"></i>
+                    </button>
+                    <button class="btn btn-bio" onclick="Kernel.treat('BETA_BLOCKER')">
+                        <span>BETA BLOCKER (Rhythm)</span> <i data-lucide="activity" class="w-3 h-3"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="control-group" style="border:none;">
+                <span class="control-label">4. Quality Control Assays</span>
+                <div class="grid grid-cols-2 gap-2">
+                    <button class="btn btn-data" onclick="Kernel.assay('TERATOMA')">
+                        <span>TERATOMA ASSAY (In Vivo)</span> <i data-lucide="microscope" class="w-3 h-3"></i>
+                    </button>
+                    <button class="btn btn-data" onclick="Kernel.assay('TETRAPLOID')">
+                        <span>TETRAPLOID COMP. (Gold Std)</span> <i data-lucide="award" class="w-3 h-3"></i>
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="panel" style="grid-row: 2; grid-column: 2;">
+            <div id="viewport-container" style="position: relative;">
+                <!-- View Toggle -->
+                <button
+                    class="absolute top-4 right-4 z-20 bg-black/50 hover:bg-black/80 text-[9px] text-white border border-mid px-2 py-1 rounded backdrop-blur font-mono transition-colors"
+                    onclick="Store.state.viewMode = (Store.state.viewMode === 'TYPE' ? 'STABILITY' : 'TYPE'); UI.notify('View Mode', Store.state.viewMode, 'inf');">
+                    <i data-lucide="eye" class="w-3 h-3 inline mr-1"></i> VIEW MODE
+                </button>
+
+                <div class="hud-panel" id="hud-main">
+                    <div id="hud-drag-handle" style="cursor: move;"
+                        class="text-[10px] font-bold text-slate-400 mb-3 pb-2 border-b border-mid flex justify-between select-none">
+                        <span>LANGEVIN DYNAMICS</span>
+                        <span
+                            class="text-green-500 text-[9px] bg-green-900/20 px-1.5 py-0.5 rounded border border-green-900"
+                            id="sim-status">STANDBY</span>
+                    </div>
+
+                    <div class="hud-row"><span>Control Feedback</span><span class="hud-value text-blue-400"
+                            id="hud-epi">100%</span></div>
+                    <div class="hud-row"><span>System Stability</span><span class="hud-value text-slate-200"
+                            id="hud-dna">1.00</span></div>
+                    <div class="hud-row"><span>Tumor Risk</span><span class="hud-value text-slate-500"
+                            id="hud-risk">LOW</span></div>
+                    <div class="hud-row"><span>Vector Load</span><span class="hud-value text-yellow-400"
+                            id="hud-vec">NONE</span></div>
+
+                    <div class="mt-4 pt-2 border-t border-mid">
+                        <div class="text-[9px] font-bold text-slate-500 mb-2">AGENT INSPECTOR</div>
+                        <div class="hud-row"><span>ID</span><span class="hud-value" id="insp-id">--</span></div>
+                        <div class="hud-row"><span>Identity</span><span class="hud-value" id="insp-state">--</span>
+                        </div>
+                        <div class="hud-row"><span>Oncogenicity</span><span class="hud-value text-red-400"
+                                id="insp-onco">--</span></div>
+                    </div>
+
+                    <div class="mt-4 pt-2 border-t border-mid">
+                        <div class="text-[9px] font-bold text-slate-500 mb-2">LEGEND</div>
+                        <div class="grid grid-cols-2 gap-1 text-[9px] font-mono text-slate-400">
+                            <div class="flex items-center gap-1">
+                                <div class="w-1.5 h-1.5 rounded-full bg-slate-500"></div> FIBRO
+                            </div>
+                            <div class="flex items-center gap-1">
+                                <div class="w-1.5 h-1.5 rounded-full bg-yellow-500"></div> IPSC
+                            </div>
+                            <div class="flex items-center gap-1">
+                                <div class="w-1.5 h-1.5 rounded-full bg-purple-500"></div> NEURO
+                            </div>
+                            <div class="flex items-center gap-1">
+                                <div class="w-1.5 h-1.5 rounded-full bg-red-400"></div> CARDIO
+                            </div>
+                            <div class="flex items-center gap-1">
+                                <div class="w-1.5 h-1.5 rounded-full bg-red-600 animate-pulse"></div> TUMOR
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <canvas id="canvas"></canvas>
+            </div>
+        </div>
+
+        <div class="panel" style="grid-row: 2; grid-column: 3;">
+            <div class="panel-header">
+                <span class="panel-title"><i data-lucide="bar-chart-2" class="w-3 h-3"></i> STATE SPACE</span>
+            </div>
+
+            <div class="scroll-container">
+                <div class="mb-4 bg-black border border-dim p-3 rounded">
+                    <div class="flex justify-between items-end mb-2">
+                        <span class="text-[9px] font-bold text-slate-500 uppercase">State Density</span>
+                        <span class="text-[9px] text-slate-600">KDE PLOT</span>
+                    </div>
+                    <div class="w-full h-32 relative"><canvas id="chart-main"></canvas></div>
+                </div>
+
+                <div class="mb-4">
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-[9px] font-bold text-slate-500 uppercase">Transcriptome</span>
+                        <span class="text-[9px] text-blue-500 font-mono">4-GENE MANIFOLD</span>
+                    </div>
+                    <div id="gene-grid" class="gene-matrix">
+                        <div class="gene-node" id="g0">OCT4</div>
+                        <div class="gene-node" id="g1">NEURO</div>
+                        <div class="gene-node" id="g2">CARDIO</div>
+                        <div class="gene-node" id="g3">STRESS</div>
+                    </div>
+                </div>
+
+                <div class="flex-1 bg-black border border-dim rounded p-2 h-48 overflow-hidden flex flex-col">
+                    <div class="text-[9px] font-bold text-slate-500 mb-2 border-b border-dim pb-1">KERNEL EVENTS
+                    </div>
+                    <div id="terminal-output" class="overflow-y-auto flex-1">
+                        <div class="log-line"><span class="log-ts">[00:00]</span><span class="log-inf">Kernel
+                                Loaded.</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel p-0" style="grid-row: 3; grid-column: 1 / -1; border-top: 1px solid var(--border-dim);">
+            <div class="h-full bg-[#080808] flex items-center px-6 justify-between">
+
+                <div class="flex gap-4 items-center w-full max-w-2xl">
+                    <span class="text-[9px] font-bold text-slate-500 tracking-wider">TIMELINE</span>
+                    <div class="flex-1 h-1.5 bg-[#1e293b] rounded-full overflow-hidden relative cursor-pointer group">
+                        <div id="progress-bar"
+                            class="h-full bg-gradient-to-r from-blue-700 to-blue-400 w-0 transition-all duration-100">
+                        </div>
+                    </div>
+                    <span class="text-[10px] text-blue-400 font-mono w-20 text-right" id="time-disp">T+0.0d</span>
+                </div>
+
+                <div class="flex gap-8 text-[9px] text-slate-600 font-mono">
+                    <span>RENDER: <span class="text-slate-400">HIGH_CONTRAST_2D</span></span>
+                    <span>FPS: <span id="fps-counter" class="text-white">60</span></span>
+                </div>
+            </div>
+        </div>
+
+
+
+        <script>
+            /**
+             * ALTOS LABS | KERNEL v24.0 (CONTROL THEORY EDITION)
+             * --------------------------
+             * Author: Dr. Hana El-Samad (Simulated)
+             * Architecture: Dynamical Systems with Feedback Control
+             */
+
+            // --- 3.1 STORE & CONFIG ---
+            const Store = {
+                config: {
+                    agentCount: 1200,
+                    dt: 0.016,
+                    sigma: 0.15, // Thermal noise
+                    friction: 0.94,
+                    trailFade: 0.15,
+                    scale: window.devicePixelRatio || 1,
+                    repulsion: 0.03, // Collision strength
+                    radius: 3, // Agent radius
+                },
+                limits: {
+                    maxPop: 3000,
+                    mitosisChance: 0.008,
+                    crowdingLimit: 6
+                },
+                state: {
+                    running: false,
+                    tick: 0,
+                    selectedId: -1,
+                    environment: {
+                        vector: null,
+                        method: 'MRNA',
+                        disease: null,
+                        drug: null
+                    },
+                    apiKey: null,
+                    viewMode: 'TYPE' // 'TYPE' or 'STABILITY'
+                },
+                // The Waddington Landscape Attractors (Basins of Attraction)
+                attractors: {
+                    SOMATIC: { x: 0.2, y: 0.8, c: '#64748b', r: 0.1, id: 'SOMATIC' },
+                    IPSC: { x: 0.5, y: 0.15, c: '#eab308', r: 0.15, id: 'IPSC' },
+                    NEURO: { x: 0.85, y: 0.8, c: '#a855f7', r: 0.12, id: 'NEURO' },
+                    CARDIO: { x: 0.15, y: 0.4, c: '#f43f5e', r: 0.12, id: 'CARDIO' },
+                    DEATH: { x: 0.95, y: 0.95, c: '#1e293b', r: 0.1, id: 'DEATH' },
+                    TUMOR: { x: 0.5, y: 0.5, c: '#ef4444', r: 0.15, id: 'TUMOR' }
+                }
+            };
+
+            // --- 3.2 MATH LIBRARY (VECTOR2) ---
+            class Vector2 {
+                constructor(x, y) { this.x = x; this.y = y; }
+                add(v) { this.x += v.x; this.y += v.y; return this; }
+                mult(s) { this.x *= s; this.y *= s; return this; }
+                mag() { return Math.sqrt(this.x * this.x + this.y * this.y); }
+                dist(v) { return Math.sqrt((this.x - v.x) ** 2 + (this.y - v.y) ** 2); }
+                copy() { return new Vector2(this.x, this.y); }
+            }
+
+            const MathUtils = {
+                randn: () => Math.sqrt(-2 * Math.log(Math.random())) * Math.cos(2 * Math.PI * Math.random()),
+                clamp: (v, min, max) => Math.max(min, Math.min(max, v))
+            };
+
+            // --- 3.2.1 SPATIAL PARTITIONING (SpatialGrid) ---
+            class SpatialGrid {
+                constructor(cellSize) {
+                    this.cellSize = cellSize;
+                    this.grid = new Map();
+                }
+                clear() { this.grid.clear(); }
+                getKey(x, y) {
+                    const cx = Math.floor(x * 100);
+                    const cy = Math.floor(y * 100);
+                    return `${cx},${cy}`;
+                }
+                insert(agent) {
+                    const key = this.getKey(agent.pos.x, agent.pos.y);
+                    if (!this.grid.has(key)) this.grid.set(key, []);
+                    this.grid.get(key).push(agent);
+                }
+                query(agent, radius) {
+                    const neighbors = [];
+                    const cx = Math.floor(agent.pos.x * 100);
+                    const cy = Math.floor(agent.pos.y * 100);
+                    for (let i = -1; i <= 1; i++) {
+                        for (let j = -1; j <= 1; j++) {
+                            const key = `${cx + i},${cy + j}`;
+                            if (this.grid.has(key)) {
+                                const cellAgents = this.grid.get(key);
+                                for (let other of cellAgents) {
+                                    if (other !== agent) neighbors.push(other);
+                                }
+                            }
+                        }
+                    }
+                    return neighbors;
+                }
+            }
+
+            // --- 3.3 DYNAMICAL SYSTEMS ENGINE (THE CONTROLLER) ---
+            // Implementation of El-Samad Control Theory:
+            // dX/dt = f(X) - kX + U + Noise
+            // Where X is the state vector of the Gene Regulatory Network (GRN)
+
+            class GeneRegulatoryNetwork {
+                constructor() {
+                    // 4-Dimensional State Vector representing competing Lineage Drivers
+                    // [0]: Pluripotency (Oct4/Sox2)
+                    // [1]: Ectoderm (Neuro / Pax6)
+                    // [2]: Mesoderm (Cardio / Tbx5)
+                    // [3]: Endoderm/Stress (Sox17 / p53)
+                    this.state = new Float32Array(4).fill(0);
+
+                    // Initialize in random low-energy basin
+                    this.state[0] = Math.random() * -0.5; // Repressed Pluripotency
+                    this.state[1] = Math.random() * -0.5;
+                    this.state[2] = Math.random() * -0.5;
+                    this.velocity = 0; // Lyapunov Proxy (Rate of Change)
+                }
+
+                // The Non-Linear Transfer Function (Hill Function approximation using tanh)
+                // This creates the "Switch-like" behavior of biology
+                activation(x) {
+                    return Math.tanh(x * 2.5);
+                }
+
+                evolve(dt, env) {
+                    const s = this.state;
+                    const ds = new Float32Array(4);
+
+                    // --- 1. INTERNAL TOPOLOGY (The Wiring Diagram) ---
+                    // We model "Mutual Inhibition" - the core motif of differentiation
+
+                    // Index 0 (Pluripotency) inhibits everyone, and is inhibited by everyone
+                    let drive0 = 0.1; // Basal activation (LIF)
+                    let inhibition0 = (s[1] + s[2] + s[3]) * 0.8;
+
+                    // Index 1 (Neuro) & 2 (Cardio) represent differentiation choices
+                    let drive1 = 0;
+                    let drive2 = 0;
+                    let inhibition1 = s[0] * 1.2 + s[2] * 1.5; // Cross-repression with Cardio
+                    let inhibition2 = s[0] * 1.2 + s[1] * 1.5; // Cross-repression with Neuro
+
+                    // --- 2. EXTERNAL CONTROL INPUTS (U) ---
+                    if (env.vector === 'OSKM') {
+                        drive0 += 2.5; // Yamanaka Factors: Intense Forcing
+                        // c-Myc side effect: Stress/Oncogenicity accumulation
+                        s[3] += dt * 0.8;
+                    }
+                    if (env.vector === 'LIN28') {
+                        drive0 += 1.2; // Thomson Factors: Gentle Forcing
+                        // LIN28 actually suppresses Let-7, reducing differentiation noise
+                        s[3] -= dt * 0.1; // Protective
+                    }
+
+                    // SCNT (Gurdon) Logic - Nuclear Reset
+                    if (env.method === 'SCNT') {
+                        // Massive erasure of somatic state
+                        inhibition1 += 5.0; // Crush Neuro
+                        inhibition2 += 5.0; // Crush Cardio
+                        drive0 += 4.0; // Force Pluripotency
+                        // Trauma handled in Agent update
+                    }
+
+                    if (env.vector === 'DIRECT_NEURO') drive1 += 1.5;
+                    if (env.vector === 'DIRECT_CARDIO') drive2 += 1.5;
+
+                    if (env.disease === 'ALS') s[3] += dt * 0.5; // Accumulation of Stress (p53)
+
+                    // --- 3. FEEDBACK CONTROL (Synthetic & Natural) ---
+                    // "Homeostatic Restitution" - The system fights to stay bounded
+                    const feedbackGain = 0.5;
+
+                    // Drug Therapy as a Control Input
+                    if (env.drug === 'KINETIN') s[3] -= dt * 2.0; // Clears stress
+
+                    // --- 4. INTEGRATION (Euler Method) ---
+                    // dX/dt = Activation - Decay + Feedback
+
+                    ds[0] = this.activation(drive0 - inhibition0) - s[0];
+                    ds[1] = this.activation(drive1 - inhibition1) - s[1];
+                    ds[2] = this.activation(drive2 - inhibition2) - s[2];
+                    ds[3] = (Math.random() - 0.5) * 0.5 - s[3]; // Stochastic stress baseline
+
+                    // Integrate (Euler method)
+                    let totalChange = 0;
+                    for (let i = 0; i < 4; i++) {
+                        s[i] += ds[i] * dt * 4.0; // Rate multiplier
+                        // Clamp to [-1, 1] for numerical stability
+                        if (s[i] > 1) s[i] = 1;
+                        if (s[i] < -1) s[i] = -1;
+                        totalChange += ds[i] * ds[i];
+                    }
+
+                    // Update Velocity Metric (for Resilience Visualization)
+                    // High Velocity = Unstable/Transitioning. Low Velocity = Stable.
+                    this.velocity = Math.sqrt(totalChange);
+                }
+
+                // Project high-dimensional gene state to cell identity string
+                getIdentity() {
+                    const s = this.state;
+                    if (s[3] > 0.8) return 'DEATH';
+                    // Tumor is a "loss of control" state - high proliferative markers (simulated here as high Pluripotency + Stress)
+                    if (s[0] > 0.9 && s[3] > 0.2) return 'TUMOR';
+
+                    if (s[0] > 0.5) return 'IPSC';
+                    if (s[1] > 0.5) return 'NEURO';
+                    if (s[2] > 0.5) return 'CARDIO';
+
+                    return 'SOMATIC'; // Default basin
+                }
+            }
+
+            // --- 3.4 CELL AGENT CLASS ---
+            class CellAgent {
+                constructor(id) {
+                    this.id = id;
+                    this.pos = new Vector2(
+                        Store.attractors.SOMATIC.x + MathUtils.randn() * 0.05,
+                        Store.attractors.SOMATIC.y + MathUtils.randn() * 0.05
+                    );
+                    this.vel = new Vector2(0, 0);
+
+                    this.state = 'SOMATIC';
+                    this.health = 1.0;
+
+                    this.grn = new GeneRegulatoryNetwork();
+                }
+
+                update(env, grid) {
+                    if (this.state === 'DEATH') return;
+
+                    // --- 1.1 SCNT Trauma Logic (Gurdon) ---
+                    if (env && env.method === 'SCNT' && Math.random() < 0.05) {
+                        this.health -= 0.1; // Physical trauma of nuclear transfer
+                    }
+
+                    // --- 1.2 EVOLVE CONTROLLER (GRN) ---
+                    this.grn.evolve(Store.config.dt, env);
+
+                    // Emergent State Determination
+                    // The physics doesn't dictate the state; the Internal Controller does.
+                    const newState = this.grn.getIdentity();
+                    if (newState !== this.state) {
+                        this.state = newState;
+                        if (this.state === 'IPSC') this.health = 1.0; // Rejuvenation event
+                    }
+
+                    // --- 2. MAPPING STATE TO MANIFOLD (Physics) ---
+                    // We project the 4D gene state onto the 2D landscape.
+                    // This represents the "Waddington Landscape" as a physical force field.
+
+                    let target = Store.attractors[this.state];
+
+                    // Calculate "Homeostatic Drive" to the attractor
+                    // F = -k * (Pos - Attractor)
+                    let dx = target.x - this.pos.x;
+                    let dy = target.y - this.pos.y;
+
+                    // Strength depends on "Stability" of the gene state
+                    // If the gene state is "confident" (e.g. s[0] = 0.99), the pull is strong.
+                    // If the gene state is transitional (s[0] = 0.1), the pull is weak (plasticity).
+
+                    // Simplified "Confidence" metric from state magnitude
+                    let confidence = Math.max(...this.grn.state.map(Math.abs));
+                    let strength = 0.005 + (confidence * 0.05);
+
+                    // --- 3. VERLET INTEGRATION ---
+                    this.vel.x += (dx * strength) + (MathUtils.randn() * Store.config.sigma * 0.05);
+                    this.vel.y += (dy * strength) + (MathUtils.randn() * Store.config.sigma * 0.05);
+
+                    // --- 4. INTERACTIONS (Contact Inhibition) ---
+                    // Cells should not overlap - this is a physical constraint of biology
+                    const neighbors = grid.query(this, 0.02);
+                    let separationX = 0, separationY = 0;
+                    let count = 0;
+                    const minDist = 0.015;
+
+                    for (let other of neighbors) {
+                        const distSq = (this.pos.x - other.pos.x) ** 2 + (this.pos.y - other.pos.y) ** 2;
+                        if (distSq < minDist * minDist && distSq > 0) {
+                            const dist = Math.sqrt(distSq);
+                            const push = (minDist - dist) / dist;
+                            separationX += (this.pos.x - other.pos.x) * push;
+                            separationY += (this.pos.y - other.pos.y) * push;
+                            count++;
+                        }
+                    }
+
+                    if (count > 0) {
+                        this.vel.x += separationX * Store.config.repulsion;
+                        this.vel.y += separationY * Store.config.repulsion;
+                    }
+
+                    this.vel.mult(Store.config.friction);
+                    this.pos.add(this.vel);
+
+                    if (this.pos.x < 0 || this.pos.x > 1) { this.vel.x *= -1; this.pos.x = MathUtils.clamp(this.pos.x, 0, 1); }
+                    if (this.pos.y < 0 || this.pos.y > 1) { this.vel.y *= -1; this.pos.y = MathUtils.clamp(this.pos.y, 0, 1); }
+                }
+
+                mitosis(grid) {
+                    // --- BIOLOGICAL CHECKPOINTS ---
+                    // 1. G1/S Checkpoint: Must be in Pluripotent State (High Energy)
+                    if (this.state !== 'IPSC') return null;
+
+                    // 2. Metabolic Checkpoint: Must be healthy
+                    if (this.health < 0.9) return null;
+
+                    // 3. Environmental Checkpoint: Random probability (Cell Cycle timing)
+                    if (Math.random() > Store.limits.mitosisChance) return null;
+
+                    // 4. Contact Inhibition: Check for crowding
+                    const neighbors = grid.query(this, 0.04);
+                    if (neighbors.length > Store.limits.crowdingLimit) return null;
+
+                    // --- CYTOKINESIS ---
+                    const child = new CellAgent(-1); // ID assigned by Kernel
+
+                    // Spatial Division
+                    child.pos = this.pos.copy();
+                    child.pos.x += (Math.random() - 0.5) * 0.02;
+                    child.pos.y += (Math.random() - 0.5) * 0.02;
+
+                    // Epigenetic Inheritance (Memory)
+                    // Child inherits parent's GRN state
+                    child.grn.state.set(this.grn.state);
+                    child.state = this.state;
+
+                    // Mutation / Noise (Evolutionary drift)
+                    child.grn.state[0] += (Math.random() - 0.5) * 0.05;
+
+                    return child;
+                }
+            }
+
+            // --- 4.0 RENDERER (OPTIMIZED) ---
+            const Renderer = {
+                sprites: {},
+
+                initSprites: () => {
+                    const colors = {
+                        'SOMATIC': '#64748b',
+                        'IPSC': '#eab308',
+                        'NEURO': '#a855f7',
+                        'CARDIO': '#f43f5e',
+                        'TUMOR': '#ef4444',
+                        'DEATH': '#1e293b'
+                    };
+
+                    const r = Store.config.radius * 2;
+
+                    for (let k in colors) {
+                        const cvs = document.createElement('canvas');
+                        cvs.width = r * 4;
+                        cvs.height = r * 4;
+                        const ctx = cvs.getContext('2d');
+
+                        const cx = r * 2, cy = r * 2;
+
+                        ctx.beginPath();
+                        ctx.arc(cx, cy, r, 0, Math.PI * 2);
+                        ctx.fillStyle = colors[k];
+                        ctx.fill();
+
+                        const g = ctx.createRadialGradient(cx, cy, r, cx, cy, r * 2);
+                        g.addColorStop(0, colors[k]);
+                        g.addColorStop(1, 'rgba(0,0,0,0)');
+                        ctx.globalAlpha = 0.4;
+                        ctx.fillStyle = g;
+                        ctx.beginPath();
+                        ctx.arc(cx, cy, r * 2, 0, Math.PI * 2);
+                        ctx.fill();
+
+                        Renderer.sprites[k] = cvs;
+                    }
+                },
+
+                draw: (ctx, agents, w, h) => {
+                    const s = Store.config.scale;
+
+                    ctx.fillStyle = `rgba(0,0,0,${Store.config.trailFade})`;
+                    ctx.fillRect(0, 0, w, h);
+                    ctx.globalCompositeOperation = 'lighter';
+                    ctx.clearRect(0, 0, Kernel.canvas.width, Kernel.canvas.height);
+
+
+                    for (let k in Store.attractors) {
+                        let a = Store.attractors[k];
+                        ctx.beginPath();
+                        ctx.arc(a.x * w, a.y * h, 20, 0, Math.PI * 2);
+                        ctx.strokeStyle = `${a.c}44`;
+                        ctx.lineWidth = 1;
+                        ctx.stroke();
+                        ctx.fillStyle = `${a.c}66`;
+                        ctx.font = '10px JetBrains Mono';
+                        ctx.fillText(k, a.x * w + 25, a.y * h);
+                    }
+
+                    // --- RENDER AGENTS ---
+                    for (let a of Kernel.agents) {
+                        const sx = a.pos.x * w;
+                        const sy = a.pos.y * h;
+
+                        if (Store.state.viewMode === 'STABILITY') {
+                            // HEATMAP MODE: Stability (Lyapunov Proxy)
+                            // Velocity ~ 0 (Stable) -> Blue
+                            // Velocity > 0.1 (Unstable) -> Red
+                            const v = (a.grn ? a.grn.velocity : 0) * 10; // Scale for visibility
+                            const stability = 1 - Math.min(v, 1); // 1 = Stable, 0 = Chaotic
+
+                            // Color Interpolation (Red to Blue)
+                            const r = Math.floor((1 - stability) * 255);
+                            const b = Math.floor(stability * 255);
+
+                            ctx.fillStyle = `rgb(${r}, 0, ${b})`;
+                            ctx.beginPath();
+                            ctx.arc(sx, sy, 4 * Store.config.scale, 0, Math.PI * 2);
+                            ctx.fill();
+
+                        } else {
+                            // STANDARD MODE: Cell Type Sprites
+                            const sprite = Renderer.sprites[a.state] || Renderer.sprites['SOMATIC'];
+                            const size = Store.config.radius * 2 * 4;
+
+                            ctx.globalAlpha = a.health;
+                            if (a.health > 0.1) {
+                                ctx.drawImage(sprite, sx - size / 2, sy - size / 2, size, size);
+                            }
+                        }
+
+                        if (a.id === Store.state.selectedId) {
+                            ctx.strokeStyle = '#fff';
+                            ctx.lineWidth = 2;
+                            ctx.beginPath(); ctx.arc(sx, sy, 8, 0, Math.PI * 2); ctx.stroke();
+                        }
+                    }
+                    ctx.globalCompositeOperation = 'source-over';
+                    ctx.globalAlpha = 1.0;
+                }
+            };
+
+            // --- 5.0 KERNEL CONTROLLER ---
+            const Kernel = {
+                agents: [],
+                grid: null,
+                canvas: null, ctx: null,
+                nextId: 0,
+
+                init: () => {
+                    lucide.createIcons();
+
+                    Kernel.canvas = document.getElementById('canvas');
+                    Kernel.ctx = Kernel.canvas.getContext('2d', { alpha: false });
+
+                    const resize = () => {
+                        const p = document.getElementById('viewport-container');
+                        const dpr = window.devicePixelRatio || 1;
+                        Kernel.canvas.width = p.clientWidth * dpr;
+                        Kernel.canvas.height = p.clientHeight * dpr;
+                        Store.config.scale = dpr;
+                    };
+                    window.addEventListener('resize', resize);
+                    resize();
+
+                    Kernel.canvas.addEventListener('mousedown', Kernel.handleInput);
+
+                    Renderer.initSprites();
+                    UI.initCharts();
+                    // UI.initGeneGrid(); // Removed huge grid for 4-gene view
+
+                    Kernel.grid = new SpatialGrid(0.05);
+
+                    Kernel.boot();
+                    UI.notify('System Online', 'Dynamical Controller initialized.', 'suc');
+
+                    requestAnimationFrame(Kernel.loop);
+                },
+
+                boot: () => {
+                    Store.state.running = false;
+                    Kernel.agents = [];
+                    Kernel.nextId = Store.config.agentCount;
+                    for (let i = 0; i < Store.config.agentCount; i++) Kernel.agents.push(new CellAgent(i));
+
+                    document.getElementById('header-pop').innerText = Store.config.agentCount;
+                    Store.state.running = true;
+                    Store.state.tick = 0;
+                },
+
+                // --- ACTIONS ---
+                inject: () => {
+                    const vec = document.getElementById('factor-sel').value;
+                    const met = document.getElementById('method-sel').value;
+                    Store.state.environment.vector = vec;
+                    Store.state.environment.method = met;
+
+                    UI.notify('Perturbation', `Applying Force: ${vec}`, 'inf');
+                    document.getElementById('hud-vec').innerText = vec;
+                    document.getElementById('hud-vec').className = "hud-value text-blue-400 animate-pulse";
+
+                    setTimeout(() => {
+                        Store.state.environment.vector = null;
+                        document.getElementById('hud-vec').innerText = "NONE";
+                        document.getElementById('hud-vec').className = "hud-value text-slate-500";
+                        UI.notify('Homeostasis', 'Force removed. Relaxation phase.', 'suc');
+                    }, 6000);
+                },
+
+                induce: (disease) => {
+                    Store.state.environment.disease = disease;
+                    UI.notify('Pathology', `${disease} phenotype induced.`, 'err');
+                },
+
+                treat: (drug) => {
+                    Store.state.environment.drug = drug;
+                    UI.notify('Pharmacy', `Administering ${drug}...`, 'suc');
+                    setTimeout(() => Store.state.environment.drug = null, 4000);
+                },
+
+                assay: (type) => {
+                    let ipsc = Kernel.agents.filter(a => a.state === 'IPSC').length;
+                    let tumors = Kernel.agents.filter(a => a.state === 'TUMOR').length;
+
+                    if (type === 'TERATOMA') {
+                        if (ipsc > 200 && tumors < 50) UI.notify('Assay Result', 'PASS: Pluripotency Confirmed.', 'suc');
+                        else if (tumors >= 50) UI.notify('Assay Result', 'FAIL: Malignant Teratocarcinoma.', 'err');
+                        else UI.notify('Assay Result', 'Inconclusive: Low Yield.', 'warn');
+                    }
+                    if (type === 'TETRAPLOID') {
+                        if (ipsc > 300 && tumors < 10) UI.notify('Tetraploid Comp.', 'PASS: Viable Organism.', 'suc');
+                        else UI.notify('Tetraploid Comp.', 'FAIL: Developmental Arrest.', 'err');
+                    }
+                },
+
+                handleInput: (e) => {
+                    const rect = Kernel.canvas.getBoundingClientRect();
+                    const x = (e.clientX - rect.left) / rect.width;
+                    const y = (e.clientY - rect.top) / rect.height;
+
+                    let min = 0.05;
+                    let pick = -1;
+
+                    Kernel.agents.forEach(a => {
+                        const d = a.pos.dist(new Vector2(x, y));
+                        if (d < min) { min = d; pick = a.id; }
+                    });
+
+                    if (pick !== -1) {
+                        const agent = Kernel.agents[pick];
+
+                        // SCNT LOGIC (Gurdon)
+                        if (Store.state.environment.method === 'SCNT') {
+                            agent.state = 'IPSC';
+                            agent.grn.state = [0.99, 0.99, 0.99, -0.99, -0.99, -0.99, -0.99, -0.99, -0.99, -0.99]; // Force Pluripotency
+                            agent.health -= 0.4; // Trauma
+                            UI.notify('Nuclear Transfer', `Agent ${pick} reprogrammed via SCNT.`, 'warn');
+                            Store.state.environment.method = null; // Reset tool
+                        } else {
+                            Store.state.selectedId = pick;
+                            UI.notify('Inspector', `Locked on Agent ${pick}`, 'inf');
+                        }
+                    }
+                },
+
+                loop: () => {
+                    if (!Store.state.running) return;
+                    const start = performance.now();
+                    Store.state.tick++;
+
+                    Kernel.grid.clear();
+                    for (let a of Kernel.agents) Kernel.grid.insert(a);
+
+                    let stats = { IPSC: 0, DEATH: 0, TUMOR: 0, EPI: 0, DNA: 0 };
+                    let born = [];
+
+                    for (let a of Kernel.agents) {
+                        a.update(Store.state.environment, Kernel.grid);
+
+                        // Attempt Mitosis
+                        if (Kernel.agents.length + born.length < Store.limits.maxPop) {
+                            const child = a.mitosis(Kernel.grid);
+                            if (child) {
+                                child.id = Kernel.nextId++;
+                                born.push(child);
+                            }
+                        }
+
+                        if (a.state === 'IPSC') stats.IPSC++;
+                        if (a.state === 'DEATH') stats.DEATH++;
+                        if (a.state === 'TUMOR') stats.TUMOR++;
+                    }
+
+                    if (born.length > 0) {
+                        Kernel.agents = Kernel.agents.concat(born);
+                        document.getElementById('header-pop').innerText = Kernel.agents.length;
+                        // Flash population counter
+                        if (Store.state.tick % 5 === 0) document.getElementById('header-pop').className = "text-yellow-400 font-bold";
+                        else document.getElementById('header-pop').className = "text-white font-bold";
+                    } else {
+                        document.getElementById('header-pop').className = "text-white font-bold";
+                    }
+
+                    Renderer.draw(Kernel.ctx, Kernel.agents, Kernel.canvas.width, Kernel.canvas.height);
+
+                    if (Store.state.tick % 6 === 0) {
+                        UI.updateCharts(stats);
+                        if (Store.state.selectedId > -1) UI.updateGeneVis(Kernel.agents[Store.state.selectedId]);
+
+                        document.getElementById('hud-epi').innerText = "Active";
+
+                        let risk = "LOW";
+                        if (stats.TUMOR > 10) {
+                            risk = "CRITICAL";
+                            document.getElementById('hud-risk').className = "hud-value text-red-500 animate-pulse";
+                        } else {
+                            document.getElementById('hud-risk').className = "hud-value text-slate-500";
+                        }
+                        document.getElementById('hud-risk').innerText = risk;
+
+                        document.getElementById('sim-status').innerText = "RUNNING";
+                        document.getElementById('time-disp').innerText = `T+${(Store.state.tick / 100).toFixed(1)}d`;
+                        document.getElementById('progress-bar').style.width = (Store.state.tick / 50) % 100 + '%';
+                        document.getElementById('fps-counter').innerText = Math.round(1000 / (performance.now() - start));
+                    }
+
+                    requestAnimationFrame(Kernel.loop);
+                }
+            };
+
+            const IO = {
+                exportCSV: function () {
+                    try {
+                        console.log("Starting CSV Export...");
+                        if (!Kernel.agents || Kernel.agents.length === 0) {
+                            UI.notify('Data Error', 'No agents to export.', 'err');
+                            return;
+                        }
+
+                        let csv = "\uFEFFID,Type,X,Y,Health,Stress,Oct4,Sox2,Nanog,Gata6,Cdx2,T,Pax6,NeuroD1,Tbx5,Mef2c\n";
+
+                        const fmt = (v, d) => (typeof v === 'number' && !isNaN(v)) ? v.toFixed(d) : "0.00";
+
+                        for (let i = 0; i < Kernel.agents.length; i++) {
+                            const a = Kernel.agents[i];
+                            if (!a) continue;
+
+                            const g = (a.grn && Array.isArray(a.grn.state)) ? a.grn.state : [];
+                            const px = a.pos ? a.pos.x : 0;
+                            const py = a.pos ? a.pos.y : 0;
+
+                            csv += `${a.id},${a.type},${fmt(px, 2)},${fmt(py, 2)},${fmt(a.health, 2)},${fmt(a.stress, 2)},` +
+                                `${fmt(g[0], 3)},${fmt(g[1], 3)},${fmt(g[2], 3)},${fmt(g[3], 3)},` +
+                                `${fmt(g[4], 3)},${fmt(g[5], 3)},${fmt(g[6], 3)},${fmt(g[7], 3)},` +
+                                `${fmt(g[8], 3)},${fmt(g[9], 3)}\n`;
+                        }
+
+                        const blob = new Blob([csv], { type: 'text/csv' });
+                        const url = URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = `is-chrp-data-${Date.now()}.csv`;
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                        UI.notify('Data Manager', 'CSV Exported Successfully.', 'suc');
+
+                    } catch (e) {
+                        console.error("CSV Export Failed:", e);
+                        UI.notify('Export Error', e.message, 'err');
+                    }
+                },
+
+                saveState: function () {
+                    const state = {
+                        timestamp: Date.now(),
+                        config: Store.config,
+                        agents: Kernel.agents.map(a => ({
+                            id: a.id,
+                            pos: { x: a.pos.x, y: a.pos.y },
+                            vel: { x: a.vel.x, y: a.vel.y },
+                            type: a.type,
+                            health: a.health,
+                            stress: a.stress,
+                            grn: a.grn.state
+                        }))
+                    };
+                    const blob = new Blob([JSON.stringify(state)], { type: 'application/json' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `is-chrp-state-${Date.now()}.json`;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    UI.notify("SYSTEM SAVED", "Experiment state serialized to JSON", "suc");
+                },
+
+                loadState: function (input) {
+                    const file = input.files[0];
+                    if (!file) return;
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        try {
+                            const data = JSON.parse(e.target.result);
+
+                            // Restore Config
+                            Store.config = { ...Store.config, ...data.config };
+
+                            // Reconstruct Agents
+                            Kernel.agents = [];
+                            data.agents.forEach(d => {
+                                const agent = new CellAgent(d.pos.x, d.pos.y);
+                                agent.id = d.id;
+                                agent.vel = new Vector2(d.vel.x, d.vel.y);
+                                agent.type = d.type;
+                                agent.health = d.health;
+                                agent.stress = d.stress;
+                                agent.grn.state = [...d.grn]; // Deep copy array
+                                Kernel.agents.push(agent);
+                            });
+
+                            // Refresh UI
+                            document.getElementById('header-pop').innerText = Kernel.agents.length;
+                            // Assuming there's an input range for agent count, update it if needed
+                            // document.querySelector('input[type="range"]').value = Kernel.agents.length;
+
+                            UI.notify("SYSTEM RESTORED", `Loaded ${Kernel.agents.length} agents from file`, "suc");
+                        } catch (err) {
+                            console.error(err);
+                            UI.notify("LOAD ERROR", "Corrupt or invalid state file", "err");
+                        }
+                    };
+                    reader.readAsText(file);
+                    input.value = ''; // Reset input
+                },
+                resetView: () => {
+                    Kernel.ctx.fillStyle = '#000';
+                    Kernel.ctx.fillRect(0, 0, Kernel.canvas.width, Kernel.canvas.height);
+                    UI.notify('Viewport', 'Canvas Cleared.', 'inf');
+                },
+
+                generateReport: () => {
+                    if (!Store.state.apiKey) {
+                        UI.notify('AI Error', 'API Key Required for Lab Report.', 'err');
+                        return;
+                    }
+                    const stats = {
+                        ticks: Store.state.tick,
+                        pop: Kernel.agents.length,
+                        ipsc: Kernel.agents.filter(a => a.state === 'IPSC').length,
+                        tumor: Kernel.agents.filter(a => a.state === 'TUMOR').length,
+                        neuro: Kernel.agents.filter(a => a.state === 'NEURO').length,
+                        cardio: Kernel.agents.filter(a => a.state === 'CARDIO').length,
+                        avg_stress: Kernel.agents.reduce((sum, a) => sum + a.grn.state[3], 0) / Kernel.agents.length
+                    };
+                    UI.notify('AI Analyst', 'Generating Experiment Report...', 'inf');
+                    AI.analyzeSim(stats).then(report => {
+                        UI.showReportModal(report);
+                    }).catch(e => UI.notify('AI Error', e.message, 'err'));
+                },
+            };
+
+            const UI = {
+                chart: null,
+                notify: (title, msg, type) => {
+                    const con = document.getElementById('toast-feed');
+                    const t = document.createElement('div');
+                    let color = '#3b82f6';
+                    if (type === 'err') color = '#ef4444';
+                    if (type === 'suc') color = '#10b981';
+                    t.className = 'toast';
+                    t.style.borderLeftColor = color;
+                    t.innerHTML = `<div class="toast-h" style="color:${type === 'inf' ? '#fff' : color}">${title}</div><div class="toast-b">${msg}</div>`;
+                    con.appendChild(t);
+                    const term = document.getElementById('terminal-output');
+                    const ts = new Date().toLocaleTimeString();
+                    term.innerHTML += `<div class="log-line"><span class="log-ts">[${ts}]</span><span class="log-${type}">${msg}</span></div>`;
+                    term.scrollTop = term.scrollHeight;
+                    setTimeout(() => t.remove(), 4000);
+                },
+                initCharts: () => {
+                    const ctx = document.getElementById('chart-main').getContext('2d');
+                    let grad = ctx.createLinearGradient(0, 0, 0, 150);
+                    grad.addColorStop(0, 'rgba(234, 179, 8, 0.2)');
+                    grad.addColorStop(1, 'rgba(234, 179, 8, 0)');
+                    UI.chart = new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: Array(30).fill(''),
+                            datasets: [
+                                { label: 'iPSC', borderColor: '#eab308', backgroundColor: grad, fill: true, data: [], pointRadius: 0, tension: 0.4 },
+                                { label: 'Tumor', borderColor: '#d946ef', borderDash: [5, 5], data: [], pointRadius: 0 }
+                            ]
+                        },
+                        options: {
+                            animation: false, responsive: true, maintainAspectRatio: false,
+                            scales: { x: { display: false }, y: { display: false, min: 0 } },
+                            plugins: { legend: { display: false } }
+                        }
+                    });
+                },
+                updateCharts: (stats) => {
+                    const c = UI.chart.data;
+                    c.datasets[0].data.push(stats.IPSC);
+                    c.datasets[1].data.push(stats.TUMOR);
+                    if (c.datasets[0].data.length > 30) {
+                        c.datasets[0].data.shift();
+                        c.datasets[1].data.shift();
+                    }
+                    UI.chart.update('none');
+                },
+                updateGeneVis: (agent) => {
+                    if (!agent) return;
+                    const genes = ['g0', 'g1', 'g2', 'g3'];
+                    for (let i = 0; i < 4; i++) {
+                        const el = document.getElementById(genes[i]);
+                        const val = (agent.grn.state[i] + 1) / 2;
+                        const b = Math.floor(val * 255);
+                        el.style.backgroundColor = `rgb(${b}, ${b}, ${b})`;
+                        el.style.color = val > 0.5 ? '#000' : '#fff';
+                    }
+                    document.getElementById('insp-id').innerText = `ID_${agent.id}`;
+                    document.getElementById('insp-state').innerText = agent.state;
+                    document.getElementById('insp-onco').innerText = ((agent.grn.state[3] + 1) / 2).toFixed(2);
+                },
+                showReportModal: (report) => {
+                    const msg = `AI INVESTIGATOR REPORT:\n\n${report.summary}\n\nPRESCRIPTION: ${report.action ? report.action.payload : "NONE"}`;
+                    if (report.action && report.action.type === 'INJECT') {
+                        if (confirm(msg + "\n\n[OK] to EXECUTE Protocol.\n[Cancel] to Ignore.")) {
+                            AI.applyAction(report.action);
+                        }
+                    } else {
+                        alert(msg);
+                    }
+                }
+            };
+
+            const AI = {
+                applyAction: (action) => {
+                    if (action.type === 'INJECT') {
+                        Store.state.environment.vector = action.payload;
+                        Store.state.environment.method = "AI_AUTO";
+                        UI.notify('AI AGENT', `Injecting ${action.payload} via Autonomous Protocol.`, 'inf');
+
+                        setTimeout(() => {
+                            Store.state.environment.vector = null;
+                            UI.notify('AI AGENT', 'Protocol Complete. Assessing response.', 'suc');
+                        }, 5000);
+                    }
+                },
+                analyzeSim: async (stats) => {
+                    if (!Store.state.apiKey) throw new Error("No API Key provided.");
+
+                    const prompt = `
+                ACT AS A PRINCIPAL INVESTIGATOR (Altos Labs Mission).
+                Analyze this simulation state (Stem Cell Reprogramming) and PRESCRIBE an intervention.
+                Stats: ${JSON.stringify(stats)}
+
+                Goal: Maximize iPSC (Poly-potent) while minimizing Tumor risk.
+                
+                Available Actions:
+                - "INJECT": "OSKM" (Reprogram), "KINETIN" (Stress Relief), "P53" (Tumor Kill).
+                - "WAIT": Do nothing.
+
+                Return ONLY valid JSON:
+                {
+                    "summary": "Scientific observation...",
+                    "action": { "type": "INJECT", "payload": "OSKM" } 
+                }
+                `;
+
+                    try {
+                        const res = await fetch('https://api.openai.com/v1/chat/completions', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${Store.state.apiKey}`
+                            },
+                            body: JSON.stringify({
+                                model: "gpt-4o-mini",
+                                messages: [{ role: "user", content: prompt }],
+                                temperature: 0.2
+                            })
+                        });
+                        const data = await res.json();
+                        if (data.error) throw new Error(data.error.message);
+                        let content = data.choices[0].message.content;
+                        content = content.replace(/```json/g, '').replace(/```/g, '');
+                        return JSON.parse(content);
+                    } catch (e) {
+                        throw new Error("AI Analysis Failed: " + e.message);
+                    }
+                }
+            };
+
+
+
+            // --- HUD DRAGGING LOGIC ---
+            (function () {
+                const hud = document.getElementById('hud-main');
+                const handle = document.getElementById('hud-drag-handle');
+                let isDragging = false;
+                let startX, startY, initialLeft, initialTop;
+
+                handle.addEventListener('mousedown', (e) => {
+                    isDragging = true;
+                    startX = e.clientX;
+                    startY = e.clientY;
+                    const rect = hud.getBoundingClientRect();
+                    // Get offset relative to offsetParent (which is viewport-container)
+                    initialLeft = hud.offsetLeft;
+                    initialTop = hud.offsetTop;
+                    handle.style.cursor = 'grabbing';
+                });
+
+                document.addEventListener('mousemove', (e) => {
+                    if (!isDragging) return;
+                    const dx = e.clientX - startX;
+                    const dy = e.clientY - startY;
+                    hud.style.left = `${initialLeft + dx}px`;
+                    hud.style.top = `${initialTop + dy}px`;
+                });
+
+                document.addEventListener('mouseup', () => {
+                    isDragging = false;
+                    handle.style.cursor = 'move';
+                });
+            })();
+
+            window.onload = Kernel.init;
+        </script>
+</body>
+
+</html>

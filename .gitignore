@@ -1,0 +1,43 @@
+# Internal drafts and decks (KEEP OFF GIT)
+APOLLO_*.html
+discovery_mockup.html
+AlphaFold_*.json
+*.ipynb
+*.bat
+stress_*
+train_*
+validate_*
+verify_*
+audit_*
+seal_and_push.py
+
+# Data files (too large for GitHub - use download scripts instead)
+*.h5ad
+*.pt
+*.model
+*.weights
+data/hca_full/
+data/real/
+data/trajectories/
+
+# EXCEPTIONS: Download scripts that recreate the data (KEEP IN GIT)
+!download_heart_atlas.py
+!setup_real_data_pipeline.py
+
+# EXCEPTION: 486k scVI model (10.5 MB - small enough for GitHub)
+!models/scvi_model_486k/model.pt
+
+# Temp/debug scripts (not needed in repo)
+probe_cellxgene.py
+debug_cellxgene_api.py
+analyze_heart_index.py
+full_data_audit.py
+download_full_hca_heart.py
+
+# System items
+.DS_Store
+Thumbs.db
+node_modules/
+dist/
+build/
+.env

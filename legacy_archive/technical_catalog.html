@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IS-CHRP v25 Technical Catalog | Altos Labs Research Edition</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg-deep: #050505;
+            --bg-panel: #111111;
+            --accent-primary: #00f2ff;
+            --accent-secondary: #ff00ea;
+            --text-main: #e0e0e0;
+            --text-dim: #999999;
+            --border: #333333;
+            --glass: rgba(20, 20, 20, 0.85);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg-deep);
+            color: var(--text-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        /* --- LAYOUT --- */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 40px;
+        }
+
+        header {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: radial-gradient(circle at center, #1a0033 0%, var(--bg-deep) 70%);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .hero-title {
+            font-size: 5rem;
+            font-weight: 800;
+            letter-spacing: -2px;
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            color: var(--text-dim);
+            max-width: 800px;
+            font-weight: 300;
+        }
+
+        /* --- NAVIGATION --- */
+        nav {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+            padding: 15px 0;
+        }
+
+        nav .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 25px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-dim);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-primary);
+        }
+
+        /* --- SECTIONS --- */
+        section {
+            padding: 100px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        h2 {
+            font-size: 3rem;
+            margin-bottom: 40px;
+            color: var(--accent-primary);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        h2::after {
+            content: "";
+            height: 1px;
+            flex-grow: 1;
+            background: var(--border);
+        }
+
+        h3 {
+            font-size: 1.8rem;
+            margin: 30px 0 20px;
+            color: var(--accent-secondary);
+        }
+
+        p {
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+            color: #ccc;
+        }
+
+        /* --- CARDS & PANELS --- */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+
+        .card {
+            background: var(--bg-panel);
+            padding: 30px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            transition: transform 0.3s, border-color 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-primary);
+        }
+
+        /* --- MATH & CODE --- */
+        .math-block {
+            background: #1a1a1a;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            overflow-x: auto;
+            border-left: 4px solid var(--accent-primary);
+        }
+
+        code {
+            font-family: 'JetBrains Mono', monospace;
+            background: #222;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+
+        pre {
+            background: #111;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            border: 1px solid var(--border);
+            margin: 20px 0;
+        }
+
+        /* --- IMAGES --- */
+        .figure {
+            margin: 60px 0;
+            text-align: center;
+        }
+
+        .figure img {
+            max-width: 100%;
+            border-radius: 20px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border);
+        }
+
+        .caption {
+            margin-top: 15px;
+            color: var(--text-dim);
+            font-style: italic;
+            font-size: 0.95rem;
+        }
+
+        /* --- HIGHLIGHTS --- */
+        .highlight {
+            color: var(--accent-primary);
+            font-weight: 600;
+        }
+
+        .yamanaka-highlight {
+            color: #ffcc00;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            padding: 60px 0;
+            text-align: center;
+            background: #000;
+            color: var(--text-dim);
+            border-top: 1px solid var(--border);
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="container">
+            <h1 class="hero-title">IS-CHRP v25.0</h1>
+            <p class="hero-subtitle">High-Fidelity Synthetic Cellular History & Reprogramming Platform: The Definitive
+                Technical Catalog & Dissertation (Altos Research Edition)</p>
+        </div>
+    </header>
+
+    <nav>
+        <div class="container">
+            <div style="font-weight: 800; color: white;">ALTOS LABS | IoC</div>
+            <ul class="nav-links">
+                <li><a href="#definition">Definition</a></li>
+                <li><a href="#biology">Biology</a></li>
+                <li><a href="#math">Mathematics</a></li>
+                <li><a href="#physics">Physics</a></li>
+                <li><a href="#scvi">Deep AI</a></li>
+                <li><a href="#conclusion">Conclusion</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+
+        <!-- SECTION: DEFINITION -->
+        <section id="definition">
+            <h2>01. Definition & Paradigm</h2>
+            <p>The <span class="highlight">IS-CHRP</span> platform represents a paradigm shift in computational biology.
+                Moving beyond the static "Heat Map" models of the early 2010s, v25 creates a living, breathing synthetic
+                environment where cellular identity is emergent, plastic, and strictly governed by non-linear dynamical
+                principles.</p>
+
+            <div class="card">
+                <h3>What is IS-CHRP?</h3>
+                <p><strong>In-Silico:</strong> All operations are performed within a high-performance computational
+                    substrate (JavaScript/WebGL for front-end, Python/PyTorch for back-end).</p>
+                <p><strong>Cellular Historical:</strong> Unlike Markovian models that ignore previous states, IS-CHRP
+                    tracks the trajectory of every agent through its epigenetic "history," allowing for the modeling of
+                    lag-time in reprogramming and cellular memory.</p>
+                <p><strong>Reprogramming Platform:</strong> The tools allow for the active perturbation of state-space,
+                    enabling the transition of somatic attractors back to pluripotency manifold via <span
+                        class="yamanaka-highlight">Yamanaka Induction</span>.</p>
+            </div>
+
+            <p>The objective of v25 is to provide a "Homeostatic Simulator" for researcher directed engineering. It
+                serves as a precursor to physical synthetic biology experiments, allowing for thousands of iterations on
+                Gene Regulatory Network (GRN) feedback loops before moving to the bench.</p>
+        </section>
+
+        <!-- SECTION: BIOLOGY -->
+        <section id="biology">
+            <h2>02. Biological Foundations</h2>
+            <p>The biological core of IS-CHRP is centered on the <span class="highlight">Pluripotency Regulatory
+                    Circuit</span>. This circuit acts as the "Homeostatic Capacitor" that maintains a cell's identity
+                against the stochastic noise of the environment.</p>
+
+            <div class="figure">
+                <img src="C:/Users/tariq/.gemini/antigravity/brain/c2c18f81-e4e3-462e-9848-09c923b4a18c/gene_regulatory_network_graph_1767162730843.png"
+                    alt="Gene Regulatory Network Diagram">
+                <p class="caption">Figure 1: The Synthetic 12D Gene Regulatory Network. Arrows indicate activation;
+                    bar-ends indicate repression. Central hub shows the OCT4/SOX2/NANOG core.</p>
+            </div>
+
+            <h3>The Yamanaka Paradigm</h3>
+            <p>In 2006, <span class="yamanaka-highlight">Shinya Yamanaka</span> demonstrated that cellular identity is
+                an elastic property. By introducing four factors (OSKM: OCT4, SOX2, KLF4, MYC), one can "actuate" the
+                cellular state-space, forcing a specialized cell (like a fibroblast) to climb back up the <span
+                    class="highlight">Waddington Landscape</span>.</p>
+
+            <div class="grid">
+                <div class="card">
+                    <h4>OCT4 (POU5F1)</h4>
+                    <p>The master regulator. In our simulation, OCT4 acts as the primary attractor for the pluripotent
+                        state. Its concentration determines the "depth" of the stem cell well.</p>
+                </div>
+                <div class="card">
+                    <h4>SOX2 / NANOG</h4>
+                    <p>Partners in stability. These factors form a tri-stable switch with OCT4, creating a robust
+                        feedback loop that rejects differentiation signals unless the "Noise" threshold is exceeded.</p>
+                </div>
+                <div class="card">
+                    <h4>MYC / KLF4</h4>
+                    <p>The metabolic and proliferative engines. These factors increase cellular "energy" and movement,
+                        modeling the high-metabolism state required for successful reprogramming.</p>
+                </div>
+            </div>
+
+            <h3>Homeostatic Wells</h3>
+            <p>We model differentiation as the "capture" of a cell into specific metabolic and transcriptional basins.
+                Once a cell enters a "Cardiac" or "Neural" state, active repression of pluripotency genes begins,
+                marking the end of the iPSC phase and the beginning of committed lineage function.</p>
+        </section>
+
+        <!-- SECTION: MATHEMATICS -->
+        <section id="math">
+            <h2>03. The Mathematical Heart</h2>
+            <p>The engine uses <span class="highlight">Stochastic Differential Equations (SDEs)</span>. This allows us
+                to model both the "Average" behavior of a gene and its "Randomness" (noise), which is critical for
+                understanding why some cells reprogram successfully while others die or become cancer.</p>
+
+            <h3>The Langevin Equation of State</h3>
+            <p>Each of the 12 genes follows a Langevin-style trajectory:</p>
+            <div class="math-block">
+                \[ \frac{dx_i}{dt} = \sum_{j=1}^{12} \text{Hill}(x_j, K_{ij}, n_{ij}) - \gamma_i x_i + \sigma_i
+                \text{Noise}(t) \]
+            </div>
+            <p>Where:</p>
+            <ul>
+                <li>\(Hill(x_j)\) is the non-linear activation/repression function.</li>
+                <li>\(\gamma_i\) is the degradation rate (how fast the protein disappears).</li>
+                <li>\(\sigma_i\) is the noise amplitude (genetic jitter).</li>
+            </ul>
+
+            <h3>Activation Logic: Coupled Hill Functions</h3>
+            <p>We use the standard biochemical Hill Equation to model the "Swiches":</p>
+            <div class="math-block">
+                \[ H(x) = \frac{x^n}{K^n + x^n} \]
+            </div>
+            <p>In IS-CHRP v25, we solve these thousands of equations every frame using the <span
+                    class="highlight">Euler-Maruyama</span> method. This numerical integration happens in parallel for
+                all 2,000 cells, creating a massive real-time calculation of internal biological space.</p>
+
+            <div class="figure">
+                <img src="C:/Users/tariq/.gemini/antigravity/brain/c2c18f81-e4e3-462e-9848-09c923b4a18c/waddington_landscape_diagram_1767162716117.png"
+                    alt="Waddington Landscape Graph">
+                <p class="caption">Figure 2: Potential Energy Surface analysis. Valleys represent stable differentiated
+                    attractors. The peak represents the unstable pluripotent state where OSKM induction is required.</p>
+            </div>
+        </section>
+
+        <!-- SECTION: PHYSICS -->
+        <section id="physics">
+            <h2>04. Physical Dynamics & Optimization</h2>
+            <p>While the internal math handles the "Guts" of the cell, the Physics engine handles the "Body." To achieve
+                high performance, we utilize a <span class="highlight">Spatial Hashing Grid</span>.</p>
+
+            <h3>The Collision Bottleneck</h3>
+            <p>Traditional simulations check every cell against every other cell ($O(N^2)$). For 2,000 cells, that is
+                4,000,000 checks. This would crash any browser. IS-CHRP v25 uses a grid-based approach:</p>
+
+            <pre><code>
+// Conceptual Spatial Hash Logic
+function updatePhysics() {
+    grid.clear();
+    for (cell of agents) {
+        let key = hash(cell.x, cell.y);
+        grid.insert(key, cell);
+    }
+    for (cell of agents) {
+        let nearby = grid.getNeighbors(cell.x, cell.y);
+        for (other of nearby) {
+            checkCollision(cell, other);
+        }
+    }
+}
+            </code></pre>
+
+            <p>This <span class="highlight">O(N)</span> optimization is what allows the simulation to feel like a
+                "Liquid" on your screen, with cells flowing around each other smoothly even under high-density
+                conditions.</p>
+
+            <h3>Brownian Motion & Crowd Dynamics</h3>
+            <p>Cells are subjected to external Brownian force, representing the bombardment of particles in a real fluid
+                environment. This prevents the simulation from becoming static and forces the cells to constantly "work"
+                to maintain their homeostatic position inside the tissue.</p>
+        </section>
+
+        <!-- SECTION: SCVI DEEP AI -->
+        <section id="scvi">
+            <h2>05. Deep AI: scVI Latent Expansion</h2>
+            <p>The most advanced feature of IS-CHRP v25 is the <span class="highlight">Bridge Server</span>. Because a
+                computer cannot easily simulate 20,000 genes at 60 FPS, we use a "Latent Space Mapping" trick.</p>
+
+            <div class="card">
+                <h3>The Variational Autoencoder (VAE) Bridge</h3>
+                <p>1. **Input (12D)**: The simulation tracks 12 core genes.</p>
+                <p>2. **Latent Space (z)**: We use a pre-trained **scVI model** (Single-cell Variational Inference) to
+                    map our 12 genes to a 10-dimensional hidden "ID" in a real human dataset.</p>
+                <p>3. **Decoder (20,000D)**: The AI "decodes" that ID into a full transcriptome reconstruction.</p>
+                <p>Result: You see real biological markers in the sidebar that were never explicitly coded into the
+                    original simulation.</p>
+            </div>
+
+            <p>This bridge represents the "A to Z" of modern science: starting with a simple model (A) and expanding it
+                to the complexity of a full organism (Z) using Deep Learning.</p>
+        </section>
+
+        <!-- SECTION: CONCLUSION -->
+        <section id="conclusion">
+            <h2>06. Conclusion: The Path Forward</h2>
+            <p>IS-CHRP v25 is more than a tool; it is a **Homeostatic Machine**. By combining the Nobel-winning
+                principles of <span class="yamanaka-highlight">Shinya Yamanaka</span> with the modern control theory of
+                <span class="highlight">Dr. Hana El-Samad</span>, we have created a platform that can rationally
+                engineer cellular health.</p>
+
+            <div class="math-block" style="text-align: center; border: none;">
+                <strong>Goal = Control ( ACTUATE [OSKM] + OBSERVE [scVI] + STABILIZE [GRN] )</strong>
+            </div>
+
+            <p>Future iterations will include expanded tumor modeling, real-time single-molecule tracking simulations,
+                and direct integration with lab automation systems, making the IS-CHRP the "Operating System" for the
+                future of medicine at Altos Labs.</p>
+        </section>
+
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Altos Labs | Institute of Computation (IoC)</p>
+            <p>Dr. Hana El-Samad, SVP & Director | Project IS-CHRP Research Edition</p>
+            <p style="margin-top: 10px; font-size: 0.8rem; opacity: 0.5;">Mathematical Verification: SDE/Langevin | AI
+                Engine: scVI Variational Inference</p>
+        </div>
+    </footer>
+
+</body>
+
+</html>

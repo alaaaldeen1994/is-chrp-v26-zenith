@@ -1,0 +1,40 @@
+[
+ {
+  "name": "Refined_Cardiac_Triple_Handshake",
+  "modelSeeds": [],
+  "sequences": [
+   {
+    "proteinChain": {
+     "sequence": "SEGRECVNCGAMSTPLWRRDGTGHYLCNACGLYHKMNGINRPLIKPQRRLSASRRVGLSCANCQTTTTTLWRRNAEGEPVCNACGLYMKLHGVPRPLAMRKEGIQTRKRKPKNLNKSKTPA",
+     "count": 1
+    }
+   },
+   {
+    "proteinChain": {
+     "sequence": "RRKPRVLFSQAQVYELERRFKQQRYLSAPERDQLASVLKLTSTQVKIWFQNRRYKCKRQRQDQTLE",
+     "count": 1
+    }
+   },
+   {
+    "proteinChain": {
+     "sequence": "VGTEMIITKAGRRMFPSYKVKVTGLNPKTKYILLMDIVPADDHRYKFADNKWSVTGKAEPAMPGRLYVHPDSPATGAHWMRQLVSFQKLKLTNNHLDPFGHIILNSMHKYQPRLHIVKADENNGFGSKNTAFCTHVFPETAFIAVTSYQNHKITQLKIENNPFAKGFRGSDDMELHRMSRMQSKEYPVVPRSTVRQKVASNHSPFSSESRALSTSSNLGSQYQCENGVSGPSQDLLPPPNPYPLPQEHSQIYHCTKRKEEECSTTDHPYKKPYMETSPSEEDS",
+     "count": 1
+    }
+   },
+   {
+    "dnaSequence": {
+     "sequence": "CGGGTTCACGCT",
+     "count": 1
+    }
+   },
+   {
+    "ligand": {
+     "ligand": "NAD",
+     "count": 1
+    }
+   }
+  ],
+  "dialect": "alphafoldserver",
+  "version": 1
+ }
+]

@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nilus Lab | Zenith PRO Zenith-102M | 3D Cellular Manifold</title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;500;700&display=swap');
+
+        body {
+            margin: 0;
+            background-color: #010204;
+            overflow: hidden;
+            font-family: 'JetBrains Mono', monospace;
+            color: #00f2ff;
+        }
+
+        canvas {
+            display: block;
+        }
+
+        /* Unified Symmetrical UI Panels */
+        .glass-ui {
+            background: rgba(5, 12, 22, 0.98);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(0, 242, 255, 0.25);
+            box-shadow: 0 0 50px rgba(0, 0, 0, 1);
+            pointer-events: auto;
+            width: 330px;
+            /* Symmetrical Width */
+        }
+
+        .channel-row {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 10px;
+        }
+
+        .color-box {
+            width: 14px;
+            height: 14px;
+            border-radius: 2px;
+        }
+
+        /* Bio-Scanner Line Animation */
+        .scanner-line {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(0, 242, 255, 0.4), transparent);
+            box-shadow: 0 0 15px rgba(0, 242, 255, 0.3);
+            animation: scan 8s linear infinite;
+            z-index: 5;
+            pointer-events: none;
+        }
+
+        @keyframes scan {
+            0% {
+                top: 0%;
+                opacity: 0;
+            }
+
+            5% {
+                opacity: 1;
+            }
+
+            95% {
+                opacity: 1;
+            }
+
+            100% {
+                top: 100%;
+                opacity: 0;
+            }
+        }
+
+        /* Telemetry Log styling */
+        .log-entry {
+            font-size: 9px;
+            margin-bottom: 4px;
+            opacity: 0.6;
+            text-transform: uppercase;
+        }
+
+        input[type='range'] {
+            -webkit-appearance: none;
+            appearance: none;
+            background: #0a1a2a;
+            height: 2px;
+            width: 100%;
+            outline: none;
+        }
+
+        input[type='range']::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            background: #00f2ff;
+            cursor: pointer;
+            border: 2px solid white;
+            box-shadow: 0 0 10px #00f2ff;
+        }
+
+        #ui-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .back-btn {
+            background: rgba(5, 12, 22, 0.98);
+            border: 1px solid rgba(0, 242, 255, 0.25);
+            backdrop-filter: blur(25px);
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: rgba(0, 242, 255, 0.1);
+            border-color: rgba(0, 242, 255, 0.8);
+            box-shadow: 0 0 20px rgba(0, 242, 255, 0.3);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="ui-overlay">
+        <div class="scanner-line"></div>
+
+        <div class="absolute top-10 left-10">
+            <h1 class="text-3xl font-bold tracking-[0.5em] uppercase text-white">Zenith <span
+                    class="text-cyan-400">PRO</span></h1>
+            <p class="text-[9px] opacity-40 tracking-[0.7em] mt-1 uppercase">Zenith-v26.1 Foundation Model (~285M Param)
+                //
+                Latent
+                Manifold</p>
+        </div>
+
+        <div class="absolute left-10 top-[160px] flex flex-col gap-6">
+
+            <div class="glass-ui p-7">
+                <h3
+                    class="text-[10px] font-bold uppercase tracking-[0.3em] mb-7 border-b border-cyan-400/10 pb-3 text-cyan-500/60">
+                    Instructions: Channels</h3>
+
+                <div class="channel-row">
+                    <div class="color-box bg-[#8b5cf6] shadow-[0_0_10px_#8b5cf6]"></div>
+                    <span class="text-[11px] uppercase font-bold text-[#e2e8f0]">Membrane (Lattice)</span>
+                </div>
+
+                <div class="channel-row">
+                    <div class="color-box bg-white shadow-[0_0_8px_rgba(255,255,255,0.5)]"></div>
+                    <span class="text-[11px] uppercase font-bold text-[#e2e8f0]">Actinin (Structural)</span>
+                </div>
+
+                <div class="channel-row">
+                    <div class="color-box bg-[#00f2ff] shadow-[0_0_12px_#00f2ff]"></div>
+                    <span class="text-[11px] uppercase font-bold text-[#e2e8f0]">DNA Core (Nuclear)</span>
+                </div>
+            </div>
+
+            <div class="glass-ui p-7">
+                <div class="flex justify-between items-center mb-8">
+                    <span class="text-[10px] font-bold uppercase tracking-widest text-cyan-400">Population Matrix</span>
+                    <div class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse shadow-[0_0_8px_#00f2ff]"></div>
+                </div>
+
+                <div class="flex justify-between items-baseline mb-5">
+                    <span class="text-[10px] opacity-40 uppercase font-bold text-white tracking-widest">Gene
+                        Density</span>
+                    <span id="gene-label" class="text-3xl font-bold text-white leading-none tracking-tighter">0</span>
+                </div>
+                <input id="gene-slider" type="range" min="100" max="2500" value="2000">
+
+                <div class="flex gap-3 mt-8 border-t border-cyan-400/10 pt-5">
+                    <div class="flex-1 text-center bg-cyan-500/5 p-3 rounded border border-cyan-900/20">
+                        <div class="text-[7px] opacity-30 uppercase tracking-widest mb-1">Status</div>
+                        <div id="status-indicator" class="text-[10px] font-bold text-cyan-300">SYNCING...</div>
+                    </div>
+                    <div class="flex-1 text-center bg-purple-500/5 p-3 rounded border border-purple-900/20">
+                        <div class="text-[7px] opacity-30 uppercase tracking-widest mb-1">Backend</div>
+                        <div id="backend-status" class="text-[10px] font-bold text-purple-300">CONNECTING</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-ui p-5 h-32 overflow-hidden flex flex-col justify-end">
+                <div class="mb-2 border-b border-white/5 pb-1">
+                    <span class="text-[8px] opacity-30">LIVE_LOG_FEED</span>
+                </div>
+                <div id="log-container">
+                    <div class="log-entry">> Initializing Manifold...</div>
+                    <div class="log-entry">> Connecting to BiosimEngine...</div>
+                    <div class="log-entry">> Parallax depth sensors: Online.</div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="absolute top-10 right-10 flex gap-4">
+            <button id="export-btn"
+                class="glass-ui !w-32 py-3 text-[10px] font-bold uppercase tracking-widest hover:bg-cyan-500 hover:text-black transition-colors pointer-events-auto">
+                Export Data
+            </button>
+
+            <button id="back-btn"
+                class="back-btn px-6 py-3 text-[10px] font-bold uppercase tracking-widest pointer-events-auto">
+                ← Back to Main
+            </button>
+        </div>
+
+        <div class="absolute bottom-10 right-10 text-right opacity-20 pointer-events-none">
+            <p class="text-[9px] uppercase tracking-[0.4em]">Scroll to Zoom // Mouse Move for Parallax</p>
+        </div>
+    </div>
+
+    <script src="js/CONFIG.js"></script>
+    <script>
+        // --- 1. BACKEND API CONNECTION (Real-time sync with main page) ---
+        let backendCells = [];
+        let backendReady = false;
+        let frameCount = 0;
+        window.csrfToken = null;
+
+        function fetchCsrfToken() {
+            fetch('/api/csrf-token', { credentials: 'include' })
+                .then(res => res.json())
+                .then(data => {
+                    window.csrfToken = data.csrf_token;
+                    console.log('[Security] CSRF token initialized for 3D View');
+                })
+                .catch(err => console.warn('[Security] Failed to fetch CSRF token:', err));
+        }
+
+        // Fetch live cell data from backend
+        async function fetchBackendCells() {
+            try {
+                const response = await fetch('/api/cells/live', {
+                    headers: { 'X-API-Key': 'DEVELOPER_KEY' }
+                });
+                const data = await response.json();
+
+                if (data.cells && data.cells.length > 0) {
+                    backendCells = data.cells;
+                    backendReady = true;
+
+                    // Update UI
+                    document.getElementById('backend-status').textContent = 'SYNCED';
+                    document.getElementById('status-indicator').textContent = `LIVE (Frame ${data.frame_count})`;
+                    document.getElementById('gene-label').textContent = data.count;
+
+                    if (frameCount === 0) {
+                        addLog('> Backend connected successfully');
+                        addLog(`> Synced with main simulation: ${data.count} cells`);
+                        if (data.target_density) {
+                            document.getElementById('gene-slider').value = data.target_density;
+                        }
+                    }
+                    frameCount++;
+                } else {
+                    // No data yet from main page
+                    document.getElementById('backend-status').textContent = 'WAITING';
+                    document.getElementById('status-indicator').textContent = 'NO DATA';
+                    if (frameCount === 0) {
+                        addLog('> Waiting for main simulation to start...');
+                    }
+                }
+            } catch (error) {
+                console.error('Backend fetch error:', error);
+                document.getElementById('backend-status').textContent = 'ERROR';
+                document.getElementById('status-indicator').textContent = 'OFFLINE';
+                backendReady = false;
+            }
+        }
+
+        // Poll backend every 100ms for smooth updates
+        setInterval(fetchBackendCells, 100);
+        fetchBackendCells(); // Initial fetch
+
+        // --- 2. CONFIGURATION ---
+        const MAX_NODES = 2500;
+        let currentCount = backendReady ? BiosimEngine.agents.length : 600;
+        const mouse = new THREE.Vector2();
+
+        // --- 3. ENGINE INITIALIZATION ---
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x010204);
+        scene.fog = new THREE.FogExp2(0x010204, 0.012);
+
+        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.set(0, 10, 55);
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        document.body.appendChild(renderer.domElement);
+
+        const controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.05;
+
+        // --- 4. LIGHTING ---
+        scene.add(new THREE.AmbientLight(0xffffff, 0.4));
+        const p1 = new THREE.PointLight(0x00f2ff, 2.5, 120); p1.position.set(20, 30, 20); scene.add(p1);
+        const p2 = new THREE.PointLight(0x8b5cf6, 2.0, 100); p2.position.set(-20, 0, 20); scene.add(p2);
+
+        // --- 5. MULTI-LAYER INSTANCING ---
+        // --- 5. MULTI-LAYER INSTANCING (Publication Grade) ---
+        const membraneMesh = new THREE.InstancedMesh(
+            new THREE.SphereGeometry(0.8, 32, 32),
+            new THREE.MeshStandardMaterial({
+                color: 0xffffff,
+                transparent: true,
+                opacity: 0.35,
+                roughness: 0.1,
+                metalness: 0.2,
+                vertexColors: true
+            }),
+            MAX_NODES
+        );
+
+        const dnaMesh = new THREE.InstancedMesh(
+            new THREE.SphereGeometry(0.42, 24, 24),
+            new THREE.MeshStandardMaterial({
+                color: 0xffffff,
+                emissive: 0xffffff,
+                emissiveIntensity: 1.8,
+                vertexColors: true
+            }),
+            MAX_NODES
+        );
+
+        const actininMesh = new THREE.InstancedMesh(
+            new THREE.SphereGeometry(0.1, 10, 10),
+            new THREE.MeshStandardMaterial({ color: 0xffffff, emissive: 0xffffff, emissiveIntensity: 0.6 }),
+            MAX_NODES * 2
+        );
+
+        // CENTER THE CELLS: Move cluster to middle-upper region
+        const manifoldGroup = new THREE.Group();
+        manifoldGroup.position.y = 14;
+        manifoldGroup.add(membraneMesh, dnaMesh, actininMesh);
+        scene.add(manifoldGroup);
+
+        // --- 6. DATA SOURCE (Backend or Synthetic) ---
+        const nodeData = Array.from({ length: MAX_NODES }, (_, i) => ({
+            pos: new THREE.Vector3((Math.random() - 0.5) * 48, (Math.random() - 0.5) * 30, (Math.random() - 0.5) * 20),
+            vel: new THREE.Vector3((Math.random() - 0.5) * 0.012, (Math.random() - 0.5) * 0.012, (Math.random() - 0.5) * 0.012),
+            phase: Math.random() * Math.PI,
+            morphology: new THREE.Vector3(0.9 + Math.random() * 0.2, 0.9 + Math.random() * 0.2, 0.9 + Math.random() * 0.2),
+            backendIndex: i // Link to backend agent if available
+        }));
+
+        // --- 7. ANIMATION ENGINE ---
+        const dummy = new THREE.Object3D();
+        let time = 0;
+        // frameCount already declared above in backend section
+
+        function animate() {
+            requestAnimationFrame(animate);
+            time += 0.015;
+            frameCount++;
+
+
+            // Sync with backend if available
+            if (backendReady && backendCells.length > 0) {
+                currentCount = Math.min(backendCells.length, MAX_NODES);
+
+                // Log every 5 seconds
+                if (frameCount % 300 === 0) {
+                    const types = {};
+                    backendCells.slice(0, currentCount).forEach(cell => {
+                        types[cell.type] = (types[cell.type] || 0) + 1;
+                    });
+                    addLog(`> Population: ${currentCount} cells`);
+                    console.log('🔷 3D Backend Sync:', types);
+                }
+            }
+
+            // Strict GPU Count Control
+            membraneMesh.count = currentCount;
+            dnaMesh.count = currentCount;
+            actininMesh.count = currentCount * 2;
+
+            // Augmented Idea: Mouse Parallax
+            camera.position.x += (mouse.x * 6 - camera.position.x) * 0.03;
+            camera.position.y += (-mouse.y * 6 + 10 - camera.position.y) * 0.03;
+            camera.lookAt(0, manifoldGroup.position.y, 0);
+
+            for (let i = 0; i < currentCount; i++) {
+                const n = nodeData[i];
+
+                // Use backend cell data (Organic Mapping)
+                if (backendReady && backendCells[i]) {
+                    const cell = backendCells[i];
+
+                    // Map 2D backend position (0->1) to 3D space (-30->30)
+                    const targetX = (cell.x - 0.5) * 60;
+                    const targetY = (0.5 - cell.y) * 40; // Flip Y for biological orientation
+
+                    if (!n.synced) {
+                        n.pos.set(targetX, targetY, (Math.random() - 0.5) * 10);
+                        n.synced = true;
+                    } else {
+                        // Smooth interpolation for fluid movement
+                        n.pos.x += (targetX - n.pos.x) * 0.1;
+                        n.pos.y += (targetY - n.pos.y) * 0.1;
+                    }
+
+                    // Type-Specific Color Coding (Clinical Standards)
+                    const colors = {
+                        'IPSC': new THREE.Color(0xfacc15),    // Gold
+                        'PARTIAL': new THREE.Color(0xf59e0b),  // Amber
+                        'TUMOR': new THREE.Color(0xef4444),   // Red
+                        'NEURO': new THREE.Color(0x3b82f6),   // Blue
+                        'TRANSIT_NEU': new THREE.Color(0x60a5fa), // Light Blue
+                        'CARDIO': new THREE.Color(0xf43f5e),  // Rose
+                        'TRANSIT_CAR': new THREE.Color(0xfb7185), // Pink
+                        'ENDO': new THREE.Color(0x10b981),    // Emerald
+                        'SOMATIC': new THREE.Color(0x64748b)  // Slate
+                    };
+                    const cellColor = colors[cell.type] || colors['SOMATIC'];
+                    membraneMesh.setColorAt(i, cellColor);
+                    dnaMesh.setColorAt(i, cellColor);
+
+                    // Apply health-based morphology from backend
+                    const healthScale = 0.8 + (cell.health || 1.0) * 0.4;
+                    n.morphology.set(healthScale, healthScale, healthScale);
+                } else {
+                    // Synthetic mode - use physics
+                    n.pos.add(n.vel);
+                    if (Math.abs(n.pos.x) > 24) n.vel.x *= -1;
+                    if (Math.abs(n.pos.y) > 15) n.vel.y *= -1;
+                }
+
+                // Biological "Breathing" Pulse
+                const healthVal = (backendReady && backendCells[i]) ? backendCells[i].health : 1.0;
+                const pulseFreq = 1.5 + healthVal;
+                const pulseAmp = 0.08 * healthVal;
+                const pulse = 1 + Math.sin(time * pulseFreq + n.phase) * pulseAmp;
+
+                // Membrane Instance
+                dummy.position.copy(n.pos);
+                dummy.scale.set(n.morphology.x * pulse, n.morphology.y * pulse, n.morphology.z * pulse);
+                dummy.updateMatrix();
+                membraneMesh.setMatrixAt(i, dummy.matrix);
+
+                // DNA Core Instance
+                dummy.position.set(n.pos.x, n.pos.y + Math.sin(time * 3 + n.phase) * 0.08, n.pos.z);
+                dummy.scale.set(pulse * 0.8, pulse * 0.8, pulse * 0.8);
+                dummy.updateMatrix();
+                dnaMesh.setMatrixAt(i, dummy.matrix);
+
+                // Actinin Points
+                for (let j = 0; j < 2; j++) {
+                    const offset = (j === 0 ? 0.6 : -0.6) * pulse;
+                    dummy.position.set(n.pos.x + Math.sin(time + j) * offset, n.pos.y + Math.cos(time + j) * offset, n.pos.z);
+                    dummy.updateMatrix();
+                    actininMesh.setMatrixAt(i * 2 + j, dummy.matrix);
+                }
+            }
+
+            membraneMesh.instanceMatrix.needsUpdate = true;
+            dnaMesh.instanceMatrix.needsUpdate = true;
+            actininMesh.instanceMatrix.needsUpdate = true;
+
+            if (membraneMesh.instanceColor) membraneMesh.instanceColor.needsUpdate = true;
+            if (dnaMesh.instanceColor) dnaMesh.instanceColor.needsUpdate = true;
+
+            controls.update();
+            renderer.render(scene, camera);
+        }
+        animate();
+        fetchCsrfToken();
+
+        // --- 8. INTERACTIVE HANDLERS ---
+        const slider = document.getElementById('gene-slider');
+        const label = document.getElementById('gene-label');
+        const logs = document.getElementById('log-container');
+
+        let lastLog = "";
+        function addLog(message) {
+            if (message === lastLog) return; // Prevent spam
+            lastLog = message;
+
+            const entry = document.createElement('div');
+            entry.className = "log-entry";
+            entry.innerText = message;
+            logs.appendChild(entry);
+            if (logs.childNodes.length > 5) logs.removeChild(logs.firstChild);
+        }
+
+        slider.addEventListener('input', (e) => {
+            const count = parseInt(e.target.value);
+            label.innerText = count;
+
+            // Remote control the main simulation via backend
+            if (backendReady) {
+                fetch('/api/simulation/config', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-API-Key': 'DEVELOPER_KEY',
+                        'X-CSRF-Token': window.csrfToken || ''
+                    },
+                    body: JSON.stringify({ target_density: count })
+                }).then(() => {
+                    if (count % 500 === 0) {
+                        addLog(`> Remote density command: ${count} agents`);
+                    }
+                }).catch(err => console.error('Sim command failed:', err));
+            } else {
+                currentCount = count;
+                if (currentCount % 500 === 0) {
+                    addLog(`> Threshold: ${currentCount} nodes`);
+                }
+            }
+        });
+
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+            mouse.y = (e.clientY / window.innerHeight) * 2 - 1;
+        });
+
+        document.getElementById('export-btn').addEventListener('click', () => {
+            const dataURL = renderer.domElement.toDataURL('image/png');
+            const link = document.createElement('a');
+            link.download = 'zenith_v26_capture.png';
+            link.href = dataURL;
+            link.click();
+            addLog('> Image exported successfully');
+        });
+
+        document.getElementById('back-btn').addEventListener('click', () => {
+            window.location.href = 'index.html';
+        });
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+    </script>
+</body>
+
+</html>
