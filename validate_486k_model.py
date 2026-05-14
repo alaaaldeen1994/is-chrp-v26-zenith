@@ -1,19 +1,17 @@
-﻿"""
-â•”â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•—
-â•‘  ZENITH v27.0 GOLD â€” 486k scVI MODEL VALIDATION SUITE            â•‘
-â•‘  Institutional-Grade Scientific Audit                        â•‘
-â•‘                                                              â•‘
-â•‘  Tests:                                                      â•‘
-â•‘    1. Model Loading & Architecture Integrity                 â•‘
-â•‘    2. Yamanaka Factor Gene Presence (6/6 required)           â•‘
-â•‘    3. Latent Space Dimensionality & Statistics                â•‘
-â•‘    4. Generative Sampling Coherence                           â•‘
-â•‘    5. Cardiac Marker Coverage (HCA-specific)                 â•‘
-â•‘    6. Cross-Donor Biological Variance                        â•‘
-â•‘                                                              â•‘
-â•‘  Data: 486,134 cells | LitviÅˆukovÃ¡ et al., Nature 2020      â•‘
-â•‘  DOI:  10.1038/s41586-020-2797-4                             â•‘
-â•šâ•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+"""
+ZENITH v27.0 GOLD - 486k scVI MODEL VALIDATION SUITE            
+Institutional-Grade Scientific Audit                        
+                                                              
+Tests:                                                      
+  1. Model Loading & Architecture Integrity                 
+  2. Yamanaka Factor Gene Presence (6/6 required)           
+  3. Latent Space Dimensionality & Statistics                
+  4. Generative Sampling Coherence                           
+  5. Cardiac Marker Coverage (HCA-specific)                 
+  6. Cross-Donor Biological Variance                        
+                                                              
+Data: 486,134 cells | Litviukov et al., Nature 2020      
+DOI:  10.1038/s41586-020-2797-4                             
 """
 
 import os
@@ -27,59 +25,59 @@ from datetime import datetime
 # CONFIGURATION
 # ============================================================
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-MODEL_DIR = os.path.join(BASE_DIR, "models", "scvi_model_486k")
+MODEL_DIR = os.path.join(BASE_DIR, "models", "scvi_model_hca")
 MODEL_PT = os.path.join(MODEL_DIR, "model.pt")
 OUTPUT_DIR = os.path.join(BASE_DIR, "validation_results")
 
 # Yamanaka + Thomson factors (must all be present in gene vocabulary)
 YAMANAKA_FACTORS = {
-    "POU5F1": "OCT4 â€” Core pluripotency TF, POU domain (Takahashi & Yamanaka, Cell 2006)",
+    "POU5F1": "OCT4 - Core pluripotency TF, POU domain (Takahashi & Yamanaka, Cell 2006)",
     "SOX2":   "HMG-box pioneer TF, cooperative with OCT4 (Boyer et al., Cell 2005)",
-    "KLF4":   "KrÃ¼ppel-like factor 4 â€” barrier eraser (Takahashi & Yamanaka, Cell 2006)",
-    "MYC":    "c-MYC proto-oncogene â€” proliferation driver (Takahashi & Yamanaka, Cell 2006)",
+    "KLF4":   "Krppel-like factor 4 - barrier eraser (Takahashi & Yamanaka, Cell 2006)",
+    "MYC":    "c-MYC proto-oncogene - proliferation driver (Takahashi & Yamanaka, Cell 2006)",
     "NANOG":  "Homeobox pluripotency gatekeeper (Mitsui et al., Cell 2003)",
-    "LIN28A": "RNA-binding protein â€” Thomson reprogramming (Yu et al., Science 2007)",
+    "LIN28A": "RNA-binding protein - Thomson reprogramming (Yu et al., Science 2007)",
 }
 
 # Cardiac markers expected in HCA heart atlas
 CARDIAC_MARKERS = {
-    "TNNT2":  "Cardiac troponin T â€” cardiomyocyte identity",
-    "MYH7":   "Î²-myosin heavy chain â€” ventricular cardiomyocyte",
-    "MYH6":   "Î±-myosin heavy chain â€” atrial cardiomyocyte",
-    "ACTN2":  "Î±-actinin 2 â€” sarcomere structural protein",
-    "TTN":    "Titin â€” largest human protein, sarcomere spring",
-    "RYR2":   "Ryanodine receptor 2 â€” calcium channel",
-    "SCN5A":  "Nav1.5 sodium channel â€” cardiac conduction",
-    "PECAM1": "CD31 â€” endothelial cell marker",
-    "VWF":    "Von Willebrand factor â€” endothelial",
-    "COL1A1": "Collagen type I â€” fibroblast marker",
-    "DCN":    "Decorin â€” fibroblast/ECM",
-    "CD68":   "Macrophage marker â€” immune population",
-    "CD3D":   "T-cell marker â€” immune population",
+    "TNNT2":  "Cardiac troponin T - cardiomyocyte identity",
+    "MYH7":   "-myosin heavy chain - ventricular cardiomyocyte",
+    "MYH6":   "-myosin heavy chain - atrial cardiomyocyte",
+    "ACTN2":  "-actinin 2 - sarcomere structural protein",
+    "TTN":    "Titin - largest human protein, sarcomere spring",
+    "RYR2":   "Ryanodine receptor 2 - calcium channel",
+    "SCN5A":  "Nav1.5 sodium channel - cardiac conduction",
+    "PECAM1": "CD31 - endothelial cell marker",
+    "VWF":    "Von Willebrand factor - endothelial",
+    "COL1A1": "Collagen type I - fibroblast marker",
+    "DCN":    "Decorin - fibroblast/ECM",
+    "CD68":   "Macrophage marker - immune population",
+    "CD3D":   "T-cell marker - immune population",
 }
 
 # Epigenetic / aging markers
 EPIGENETIC_MARKERS = {
-    "TET1":   "DNA demethylase â€” epigenetic reprogramming",
-    "TET2":   "DNA demethylase â€” clonal hematopoiesis",
-    "DNMT3A": "DNA methyltransferase 3A â€” de novo methylation",
-    "DNMT3B": "DNA methyltransferase 3B â€” de novo methylation",
-    "SIRT1":  "NAD-dependent deacetylase â€” longevity (Imai & Guarente 2014)",
-    "TP53":   "p53 tumor suppressor â€” genomic guardian",
+    "TET1":   "DNA demethylase - epigenetic reprogramming",
+    "TET2":   "DNA demethylase - clonal hematopoiesis",
+    "DNMT3A": "DNA methyltransferase 3A - de novo methylation",
+    "DNMT3B": "DNA methyltransferase 3B - de novo methylation",
+    "SIRT1":  "NAD-dependent deacetylase - longevity (Imai & Guarente 2014)",
+    "TP53":   "p53 tumor suppressor - genomic guardian",
 }
 
 
 def print_header(title):
     """Print a formatted section header."""
     width = 60
-    print(f"\n{'â•' * width}")
+    print(f"\n{'' * width}")
     print(f"  {title}")
-    print(f"{'â•' * width}")
+    print(f"{'' * width}")
 
 
 def print_result(label, status, detail=""):
     """Print a formatted test result."""
-    icon = "âœ…" if status else "âŒ"
+    icon = "" if status else ""
     print(f"  {icon} {label}: {detail}")
 
 
@@ -175,7 +173,7 @@ def test_yamanaka_factors(model):
             
             if not var_names:
                 # Scan all keys for anything gene-related
-                print("  âš ï¸ Attempting deep key scan of model.pt...")
+                print("   Attempting deep key scan of model.pt...")
                 for key in state.keys():
                     val = state[key]
                     if isinstance(val, (list, np.ndarray)) and len(val) > 100:
@@ -196,10 +194,10 @@ def test_yamanaka_factors(model):
                     idx = var_names.index(gene)
                     results["factors_found"].append(gene)
                     results["factor_indices"][gene] = idx
-                    print_result(f"{gene}", True, f"index={idx} â€” {description}")
+                    print_result(f"{gene}", True, f"index={idx}  {description}")
                 else:
                     results["factors_missing"].append(gene)
-                    print_result(f"{gene}", False, f"NOT FOUND â€” {description}")
+                    print_result(f"{gene}", False, f"NOT FOUND  {description}")
             
             results["pass"] = len(results["factors_missing"]) == 0
             
@@ -208,7 +206,7 @@ def test_yamanaka_factors(model):
                         "6/6 CONFIRMED" if results["pass"] else 
                         f"MISSING: {', '.join(results['factors_missing'])}")
         else:
-            print("  âš ï¸ Could not extract gene names from model.pt")
+            print("   Could not extract gene names from model.pt")
             print("  NOTE: scvi-tools v1.0+ may store var_names differently when loaded without adata")
             print("  The model WAS trained on 4000 HVGs from the full HCA atlas")
             results["pass"] = None  # Cannot determine
@@ -311,7 +309,7 @@ def test_generative_sampling(model):
         std_ok = 0.5 < z.std() < 2.0
         
         print_result("Latent distribution", mean_ok and std_ok,
-                    f"Î¼={z.mean():.3f}, Ïƒ={z.std():.3f}")
+                    f"={z.mean():.3f}, ={z.std():.3f}")
         
         results["pass"] = True  # Sampling itself succeeded
         
@@ -355,7 +353,7 @@ def test_cardiac_markers(model):
                         break
         
         if not var_names:
-            print("  âš ï¸ Gene names not extractable â€” skipping marker check")
+            print("   Gene names not extractable  skipping marker check")
             print("  NOTE: This does NOT mean markers are absent, only that")
             print("  var_names aren't stored in a format we can read here.")
             results["pass"] = None
@@ -367,7 +365,7 @@ def test_cardiac_markers(model):
                 print_result(gene, True, desc)
             else:
                 results["markers_missing"].append(gene)
-                print_result(gene, False, f"Not in HVG set â€” {desc}")
+                print_result(gene, False, f"Not in HVG set  {desc}")
         
         total = len(CARDIAC_MARKERS)
         found = len(results["markers_found"])
@@ -447,51 +445,51 @@ def test_model_integrity():
 # MAIN VALIDATION RUNNER
 # ============================================================
 def main():
-    print("â•”â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•—")
-    print("â•‘  ZENITH v27.0 GOLD â€” 486k scVI MODEL VALIDATION SUITE           â•‘")
-    print("â•‘  Institutional Scientific Audit                             â•‘")
-    print("â•‘  Date: " + datetime.now().strftime("%Y-%m-%d %H:%M:%S") + "                              â•‘")
-    print("â•šâ•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•")
+    print("")
+    print("  ZENITH v27.0 GOLD  486k scVI MODEL VALIDATION SUITE           ")
+    print("  Institutional Scientific Audit                             ")
+    print("  Date: " + datetime.now().strftime("%Y-%m-%d %H:%M:%S") + "                              ")
+    print("")
     
     all_results = {
         "audit_timestamp": datetime.now().isoformat(),
         "audit_version": "v27.0 GOLD-486k",
         "model_path": MODEL_PT,
-        "data_source": "LitviÅˆukovÃ¡ et al., Nature (2020) â€” DOI: 10.1038/s41586-020-2797-4",
+        "data_source": "Litviukov et al., Nature (2020)  DOI: 10.1038/s41586-020-2797-4",
         "total_cells_in_atlas": 486134,
         "tests": {}
     }
     
-    # â”€â”€ TEST 1: Model Loading â”€â”€
+    #  TEST 1: Model Loading 
     model, t1_results = test_model_loading()
     all_results["tests"]["1_model_loading"] = t1_results
     
     if model is None:
-        print("\nâŒ FATAL: Model failed to load. Remaining tests skipped.")
+        print("\n FATAL: Model failed to load. Remaining tests skipped.")
         save_report(all_results)
         return
     
-    # â”€â”€ TEST 2: Yamanaka Factors â”€â”€
+    #  TEST 2: Yamanaka Factors 
     t2_results = test_yamanaka_factors(model)
     all_results["tests"]["2_yamanaka_factors"] = t2_results
     
-    # â”€â”€ TEST 3: Latent Space â”€â”€
+    #  TEST 3: Latent Space 
     t3_results = test_latent_space(model)
     all_results["tests"]["3_latent_space"] = t3_results
     
-    # â”€â”€ TEST 4: Generative Sampling â”€â”€
+    #  TEST 4: Generative Sampling 
     t4_results = test_generative_sampling(model)
     all_results["tests"]["4_generative_sampling"] = t4_results
     
-    # â”€â”€ TEST 5: Cardiac Markers â”€â”€
+    #  TEST 5: Cardiac Markers 
     t5_results = test_cardiac_markers(model)
     all_results["tests"]["5_cardiac_markers"] = t5_results
     
-    # â”€â”€ TEST 6: Model Integrity â”€â”€
+    #  TEST 6: Model Integrity 
     t6_results = test_model_integrity()
     all_results["tests"]["6_model_integrity"] = t6_results
     
-    # â”€â”€ FINAL SUMMARY â”€â”€
+    #  FINAL SUMMARY 
     print_header("FINAL AUDIT SUMMARY")
     
     test_labels = [
@@ -509,7 +507,7 @@ def main():
     total = len(test_labels)
     
     for label, status in test_labels:
-        icon = "âœ…" if status is True else ("â­ï¸" if status is None else "âŒ")
+        icon = "" if status is True else ("" if status is None else "")
         print(f"  {icon} {label}")
     
     print(f"\n  Results: {passed} passed | {skipped} skipped | {failed} failed | {total} total")
@@ -521,7 +519,7 @@ def main():
     all_results["skipped"] = skipped
     
     print(f"  Overall Grade: {grade}")
-    print(f"\n  Model: 486k scVI (LitviÅˆukovÃ¡ et al., Nature 2020)")
+    print(f"\n  Model: 486k scVI (Litviukov et al., Nature 2020)")
     print(f"  Training: 50 epochs, T4 GPU, 4000 HVGs, 30 latent dims")
     
     # Save report
@@ -557,7 +555,7 @@ def save_report(results):
     with open(output_path, "w", encoding="utf-8") as f:
         json.dump(results, f, indent=2, ensure_ascii=False)
     
-    print(f"\n  ðŸ’¾ Report saved: {output_path}")
+    print(f"\n   Report saved: {output_path}")
 
 
 if __name__ == "__main__":

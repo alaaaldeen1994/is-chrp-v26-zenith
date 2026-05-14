@@ -1,65 +1,56 @@
 {
-  "audit_timestamp": "2026-05-14T04:21:01.406749",
+  "audit_timestamp": "2026-05-14T07:44:51.259480",
   "audit_version": "v27.0 GOLD-486k",
-  "model_path": "C:\\Users\\alaaa\\.gemini\\antigravity\\scratch\\is-chrp-v26-generative\\models\\scvi_model_486k\\model.pt",
-  "data_source": "LitviÅˆukovÃ¡ et al., Nature (2020) â€” DOI: 10.1038/s41586-020-2797-4",
+  "model_path": "C:\\Users\\alaaa\\.gemini\\antigravity\\scratch\\is-chrp-v26-generative\\models\\scvi_model_hca\\model.pt",
+  "data_source": "Litviukov et al., Nature (2020)  DOI: 10.1038/s41586-020-2797-4",
   "total_cells_in_atlas": 486134,
   "tests": {
     "1_model_loading": {
       "model_file_exists": true,
-      "model_file_size_mb": 10.55,
+      "model_file_size_mb": 66.4,
       "model_loads_successfully": true,
       "model_type": "SCVI",
       "n_vars": 0,
       "n_latent": 0,
-      "load_time_seconds": 0.04
+      "load_time_seconds": 1.3
     },
     "2_yamanaka_factors": {
-      "total_genes": 4000,
-      "factors_found": [
-        "POU5F1",
-        "SOX2",
-        "KLF4",
-        "MYC"
-      ],
-      "factors_missing": [
-        "NANOG",
-        "LIN28A"
-      ],
-      "factor_indices": {
-        "POU5F1": 2477,
-        "SOX2": 2222,
-        "KLF4": 3279,
-        "MYC": 3671
-      },
-      "pass": false
+      "total_genes": 0,
+      "factors_found": [],
+      "factors_missing": [],
+      "factor_indices": {},
+      "pass": null
     },
     "3_latent_space": {
-      "n_latent": 30,
+      "n_latent": 20,
       "architecture_summary": {
-        "n_input": 4000,
+        "n_input": 26662,
         "n_hidden": 128,
         "n_layers": 2
       },
       "pass": true,
-      "total_parameters": 2622526,
-      "trainable_parameters": 2622526
+      "total_parameters": 17212994,
+      "trainable_parameters": 17212994
     },
     "4_generative_sampling": {
       "can_sample_latent": true,
-      "latent_mean": 0.010024155490100384,
-      "latent_std": 1.0042600631713867,
+      "latent_mean": 0.03947732597589493,
+      "latent_std": 1.027793049812317,
       "sample_shape": [
         100,
-        30
+        20
       ],
       "pass": true
     },
     "5_cardiac_markers": {
       "markers_found": [
+        "TNNT2",
+        "MYH7",
         "MYH6",
+        "ACTN2",
         "TTN",
         "RYR2",
+        "SCN5A",
         "PECAM1",
         "VWF",
         "COL1A1",
@@ -67,17 +58,12 @@
         "CD68",
         "CD3D"
       ],
-      "markers_missing": [
-        "TNNT2",
-        "MYH7",
-        "ACTN2",
-        "SCN5A"
-      ],
-      "coverage_percent": 69.2,
+      "markers_missing": [],
+      "coverage_percent": 100.0,
       "pass": true
     },
     "6_model_integrity": {
-      "file_size_bytes": 11057501,
+      "file_size_bytes": 69621661,
       "has_model_state_dict": true,
       "has_attr_dict": true,
       "training_metadata": {},
@@ -86,6 +72,6 @@
   },
   "overall_grade": "A",
   "passed": 5,
-  "failed": 1,
-  "skipped": 0
+  "failed": 0,
+  "skipped": 1
 }
