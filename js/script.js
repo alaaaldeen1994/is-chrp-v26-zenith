@@ -1208,7 +1208,7 @@ const BiosimBridge = {
         }
 
         // ============================================================
-        // OSK PARTIAL REPROGRAMMING INTERCEPT (ALAA ALDEEN+)
+        // OSK PARTIAL REPROGRAMMING INTERCEPT (NILUSLAB TEAM)
         // When partial mode is active, route through the dedicated
         // safety-filtered pipeline instead of the standard discovery.
         // ============================================================
@@ -1715,7 +1715,7 @@ const BiosimBridge = {
             af3Panel.classList.add('hidden');
         }
 
-        // --- PARTIAL REPROGRAMMING REPORT (ALAA ALDEEN+) ---
+        // --- PARTIAL REPROGRAMMING REPORT (NILUSLAB TEAM) ---
         if (typeof window.renderPartialReport === 'function') {
             window.renderPartialReport(data);
         }
