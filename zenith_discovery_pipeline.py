@@ -1,4 +1,4 @@
-﻿"""
+"""
 zenith_discovery_pipeline.py
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 IS-v27.0 GOLD - FULL INSTITUTIONAL DISCOVERY WORKFLOW (Hybrid Intuition Edition).
@@ -54,7 +54,7 @@ class ZenithDiscoveryEngine:
     # ============================================================
     def parse_factors_from_prompt(self, prompt: str) -> List[str]:
         """Uses Zenith-AI (OpenAI) to extract target protein symbols."""
-        print(f"ðŸ§¬ Stage 0: Zenith-AI parsing scientific intent...")
+        print(f" Stage 0: Zenith-AI parsing scientific intent...")
         try:
             ai_prompt = (
                 "Identify the top 5 Human gene symbols (e.g. PPARGC1A, HCN4) "
@@ -69,7 +69,7 @@ class ZenithDiscoveryEngine:
             symbols = response.choices[0].message.content.strip().replace(" ", "").split(",")
             return [s.upper() for s in symbols if s]
         except Exception as e:
-            print(f"  âŒ AI Parsing Error: {e}")
+            print(f"   AI Parsing Error: {e}")
             return []
 
     # ============================================================
@@ -80,7 +80,7 @@ class ZenithDiscoveryEngine:
         if factor_symbol in self.uniprot_registry:
             return self.uniprot_registry[factor_symbol]
             
-        print(f"ðŸ§  Stage 2: Mapping '{factor_symbol}' to UniProt Accession...")
+        print(f" Stage 2: Mapping '{factor_symbol}' to UniProt Accession...")
         try:
             response = openai_client.chat.completions.create(
                 model="gpt-4o",
@@ -94,7 +94,7 @@ class ZenithDiscoveryEngine:
             if accession:
                 return accession.group(1)
         except Exception as e:
-            print(f"  âŒ AI Mapping Error for {factor_symbol}: {e}")
+            print(f"   AI Mapping Error for {factor_symbol}: {e}")
         return None
 
     # ============================================================
@@ -104,7 +104,7 @@ class ZenithDiscoveryEngine:
         """Fetches sequence and PTM sites using UniProt."""
         url = f"https://rest.uniprot.org/uniprotkb/{accession}.json"
         try:
-            print(f"ðŸŒ Stage 3: Fetching Data for {factor_symbol} ({accession})...")
+            print(f" Stage 3: Fetching Data for {factor_symbol} ({accession})...")
             response = requests.get(url, timeout=15)
             if response.status_code == 200:
                 data = response.json()
@@ -114,7 +114,8 @@ class ZenithDiscoveryEngine:
                     for f in data.get("features", []) if f.get("type") == "Modified residue"
                 ]
                 return {"id": factor_symbol, "accession": accession, "sequence": sequence, "ptms": ptms}
-        except Exception:
+        except Exception as e:
+            print(f"      [FETCH ERROR] {str(e)}")
             pass
         return None
 
@@ -163,12 +164,12 @@ def main():
     user_prompt = sys.argv[1] if len(sys.argv) > 1 else default_prompt
     
     print(f"\n{'='*60}")
-    print("ðŸš€ ZENITH v27.0 GOLD - INTUITIVE HYBRID DISCOVERY")
+    print(" ZENITH v27.0 GOLD - INTUITIVE HYBRID DISCOVERY")
     print(f"{'='*60}\n")
     
     engine = ZenithDiscoveryEngine()
     symbols = engine.parse_factors_from_prompt(user_prompt)
-    print(f"  ðŸ”Ž Discovered candidates: {', '.join(symbols)}")
+    print(f"   Discovered candidates: {', '.join(symbols)}")
     
     refined_batch = []
     for sym in symbols:
@@ -178,16 +179,16 @@ def main():
             if bio:
                 refined = engine.apply_elite_refinement(bio)
                 if refined:
-                    print(f"  âœ… {refined['id']:8} | ID: {acc:6} | PTMs: {len(refined['ptms'])}")
+                    print(f"   {refined['id']:8} | ID: {acc:6} | PTMs: {len(refined['ptms'])}")
                     refined_batch.append(refined)
 
     if refined_batch:
         manifest = engine.generate_manifest(refined_batch)
         with open("ZENITH_FINAL_VALIDATION_MANIFEST.json", "w") as f:
             json.dump(manifest, f, indent=4)
-        print(f"\nâœ¨ COMPLETE: ZENITH_FINAL_VALIDATION_MANIFEST.json created.")
+        print(f"\n COMPLETE: ZENITH_FINAL_VALIDATION_MANIFEST.json created.")
     else:
-        print("\nâŒ Error: No factors were successfully processed.")
+        print("\n Error: No factors were successfully processed.")
 
 if __name__ == "__main__":
     main()
