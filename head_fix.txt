@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zenith v27.0 GOLD | Nilus Lab Console</title>
+    
+    <!-- FIREBASE AUTH GUARD -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="js/firebase_config.js"></script>
+    <script>
+        const ZENITH_DEMO_BYPASS = localStorage.getItem('ZENITH_DEMO_BYPASS') === 'true';
+        firebase.auth().onAuthStateChanged((user) => {
+            if (!user && !ZENITH_DEMO_BYPASS) {
+                window.location.href = 'profile.html';
+            }
+        });
+
+        function performLogout() {
+            localStorage.removeItem('ZENITH_DEMO_BYPASS');
+            firebase.auth().signOut().then(() => {
+                window.location.href = 'profile.html';
+            });
+        }
+    </script>
+
+    <style>
+        .system-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 2000;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 8px;
+            color: #64748b;
+        }
+
+        .sde-formula {
+            font-style: italic;
+        }
+
+        .validator-badge {
+            color: #10b981;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .system-footer { display: none !important; }
+        }
+    </style>

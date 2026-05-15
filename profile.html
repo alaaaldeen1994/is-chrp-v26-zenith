@@ -2750,7 +2750,13 @@
 
             .stats-grid {
 
-                grid-template-columns: repeat(2, 1fr) !important;
+                flex-wrap: wrap !important;
+
+            }
+
+            .stats-grid > div {
+
+                min-width: 180px !important;
 
             }
 
@@ -2788,9 +2794,13 @@
 
             .stats-grid {
 
-                grid-template-columns: 1fr !important;
-
                 gap: 1rem !important;
+
+            }
+
+            .stats-grid > div {
+
+                min-width: 140px !important;
 
             }
 
@@ -3309,9 +3319,9 @@
 
         <div class="max-w-7xl mx-auto" style="padding: 0 3rem;">
 
-            <div class="stats-grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem;">
+            <div class="stats-grid" style="display: flex; flex-wrap: wrap; gap: 1.5rem; justify-content: center;">
 
-                <div style="background: rgba(255,255,255,0.7); backdrop-filter: blur(20px); border: 1px solid rgba(226,232,240,0.8); border-radius: 24px; padding: 2.5rem 2rem; text-align: center; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); cursor: default; position: relative; overflow: hidden;"
+                <div style="flex: 1; min-width: 200px; background: rgba(255,255,255,0.7); backdrop-filter: blur(20px); border: 1px solid rgba(226,232,240,0.8); border-radius: 24px; padding: 2.5rem 2rem; text-align: center; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); cursor: default; position: relative; overflow: hidden;"
 
                     onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 20px 40px rgba(0,0,0,0.06)'; this.style.borderColor='#bfdbfe';"
 
@@ -3325,7 +3335,7 @@
 
                 </div>
 
-                <div style="background: rgba(255,255,255,0.7); backdrop-filter: blur(20px); border: 1px solid rgba(226,232,240,0.8); border-radius: 24px; padding: 2.5rem 2rem; text-align: center; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); cursor: default; position: relative; overflow: hidden;"
+                <div style="flex: 1; min-width: 200px; background: rgba(255,255,255,0.7); backdrop-filter: blur(20px); border: 1px solid rgba(226,232,240,0.8); border-radius: 24px; padding: 2.5rem 2rem; text-align: center; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); cursor: default; position: relative; overflow: hidden;"
 
                     onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 20px 40px rgba(0,0,0,0.06)'; this.style.borderColor='#bfdbfe';"
 
@@ -3339,7 +3349,7 @@
 
                 </div>
 
-                <div style="background: rgba(255,255,255,0.7); backdrop-filter: blur(20px); border: 1px solid rgba(226,232,240,0.8); border-radius: 24px; padding: 2.5rem 2rem; text-align: center; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); cursor: default; position: relative; overflow: hidden;"
+                <div style="flex: 1; min-width: 200px; background: rgba(255,255,255,0.7); backdrop-filter: blur(20px); border: 1px solid rgba(226,232,240,0.8); border-radius: 24px; padding: 2.5rem 2rem; text-align: center; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); cursor: default; position: relative; overflow: hidden;"
 
                     onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 20px 40px rgba(0,0,0,0.06)'; this.style.borderColor='#bfdbfe';"
 
@@ -3353,7 +3363,7 @@
 
                 </div>
 
-                <div style="background: rgba(255,255,255,0.7); backdrop-filter: blur(20px); border: 1px solid rgba(226,232,240,0.8); border-radius: 24px; padding: 2.5rem 2rem; text-align: center; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); cursor: default; position: relative; overflow: hidden;"
+                <div style="flex: 1; min-width: 200px; background: rgba(255,255,255,0.7); backdrop-filter: blur(20px); border: 1px solid rgba(226,232,240,0.8); border-radius: 24px; padding: 2.5rem 2rem; text-align: center; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); cursor: default; position: relative; overflow: hidden;"
 
                     onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 20px 40px rgba(0,0,0,0.06)'; this.style.borderColor='#bfdbfe';"
 
@@ -5266,17 +5276,9 @@
 
                     }
 
-                    // Redirect to the intended page after success or simply close modal
+                    // Redirect to the console after successful login
 
-                    if (_redirectAfterLogin) {
-
-                        window.location.href = _redirectAfterLogin;
-
-                    } else {
-
-                        closeLoginModal();
-
-                    }
+                    window.location.href = _redirectAfterLogin || 'index.html';
 
                 } catch (error) {
 
@@ -5328,15 +5330,7 @@
 
                     await firebase.auth().signInWithPopup(provider);
 
-                    if (_redirectAfterLogin) {
-
-                        window.location.href = _redirectAfterLogin;
-
-                    } else {
-
-                        closeLoginModal();
-
-                    }
+                    window.location.href = _redirectAfterLogin || 'index.html';
 
                 } catch (error) {
 
