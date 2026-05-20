@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://niluslab.com/sitemap.xml
+Sitemap: https://www.niluslab.com/sitemap.xml
