@@ -87,14 +87,12 @@
 
         firebase.auth().onAuthStateChanged((user) => {
             window._isAuthenticated = !!(user || ZENITH_DEMO_BYPASS);
-            // Do NOT redirect here — discovery view is always accessible
-            // Simulation mode will check auth via enterSimulation()
+            // Auth gate: redirect to profile if not signed in
+            if (!window._isAuthenticated) {
+                window.location.href = 'profile.html';
+                return;
+            }
         });
-
-        // Always set demo bypass so discovery page loads cleanly
-        if (!localStorage.getItem('ZENITH_DEMO_BYPASS')) {
-            localStorage.setItem('ZENITH_DEMO_BYPASS', 'true');
-        }
 
         function performLogout() {
             localStorage.removeItem('ZENITH_DEMO_BYPASS');
