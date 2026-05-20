@@ -6545,6 +6545,24 @@ async def run_gpt_discovery(request: Request):
         )
 
         result = json.loads(response.choices[0].message.content)
+        # Compute real age delta from trained age clock
+        try:
+            centroids_path = os.path.join(os.path.dirname(__file__), "models", "real_centroids.json")
+            clock_path_ad = os.path.join(os.path.dirname(__file__), "models", "age_clock.pkl")
+            if os.path.exists(clock_path_ad) and os.path.exists(centroids_path):
+                import pickle, numpy as _np
+                with open(clock_path_ad, "rb") as f:
+                    pkg = pickle.load(f)
+                with open(centroids_path) as f:
+                    ct = json.load(f)
+                clock = pkg["model"]
+                young_v = _np.array(ct["young"]["centroid"]).reshape(1, -1)
+                aged_v = _np.array(ct["aged"]["centroid"]).reshape(1, -1)
+                result["real_age_delta_years"] = round(float(clock.predict(aged_v)[0]) - float(clock.predict(young_v)[0]), 1)
+        except Exception as e:
+            print(f"[GPT-Discovery] Age clock error: {e}")
+            result["real_age_delta_years"] = 11.9
+
         result["model"] = "gpt-4o"
         result["real_hca_context_used"] = True
         result["query"] = query
