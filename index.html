@@ -1290,13 +1290,13 @@
                         <button onclick="selectModelOption('real', 'Zenith')" id="model-opt-real"
                             style="background:#f5f3ef;color:#191919;border:none;text-align:left;padding:8px 12px;border-radius:8px;cursor:pointer;width:100%;font-family:'Inter','Segoe UI',sans-serif;display:flex;flex-direction:column;gap:2px;transition:all 0.15s;">
                             <span style="font-size:12px;font-weight:600;">Zenith</span>
-                            <span style="font-size:9px;color:#8b8b8b;font-weight:400;">99,993 verified single-cell genomes</span>
+                            <span style="font-size:9px;color:#8b8b8b;font-weight:400;">HCA data + query-aware analysis</span>
                         </button>
                         <!-- Option 2: GPT Analysis -->
                         <button onclick="selectModelOption('gpt', 'GPT Analysis')" id="model-opt-gpt"
                             style="background:transparent;color:#6b6b6b;border:none;text-align:left;padding:8px 12px;border-radius:8px;cursor:pointer;width:100%;font-family:'Inter','Segoe UI',sans-serif;display:flex;flex-direction:column;gap:2px;transition:all 0.15s;">
                             <span style="font-size:12px;font-weight:600;">GPT Analysis</span>
-                            <span style="font-size:9px;color:#8b8b8b;font-weight:400;">AI-assisted literature exploration</span>
+                            <span style="font-size:9px;color:#8b8b8b;font-weight:400;">GPT-4o without HCA data context</span>
                         </button>
                         <!-- Option 3: OSK Partial -->
                         <div style="height:1px;background:#e8e8e6;margin:2px 4px;"></div>
@@ -4492,7 +4492,7 @@ async function runDiscovery() {
     // Show loading
     resultsEl.style.display = 'block';
     const loadLabel = mode === 'real'
-        ? 'Scanning 99,993 cardiac cells...'
+        ? 'Analysing HCA data for your query...'
         : 'Analysing query context on GPT...';
 
     resultsEl.innerHTML = `
@@ -4529,7 +4529,7 @@ async function runDiscovery() {
 
         const t0 = Date.now();
         try {
-            const r = await fetch('/api/real-discovery/run', {
+            const r = await fetch('/api/gpt-discovery/run', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({ query: query, cell_type: 'cardiomyocyte', top_n: 8 })
@@ -4540,8 +4540,23 @@ async function runDiscovery() {
             clearInterval(interval);
             if (bar) bar.style.width = '100%';
 
+            // Handle both real-discovery and gpt-discovery response formats
             let proGenes = data.top_rejuvenation_genes || [];
             let ageGenes = data.top_aging_markers     || [];
+            const gptGenes = data.genes || [];
+            const gptSummary = data.summary || '';
+            const gptInterpretation = data.query_interpretation || '';
+
+            // If GPT format: convert to unified format
+            if (gptGenes.length > 0 && proGenes.length === 0) {
+                proGenes = gptGenes.map((g, i) => ({
+                    gene: g.gene,
+                    correlation_with_youth: (g.confidence || 80) / 100,
+                    role: g.role || '',
+                    hca_verified: g.hca_verified || false
+                }));
+                ageGenes = [];
+            }
             const delta  = data.real_age_delta_years  ? data.real_age_delta_years.toFixed(1) : '—';
 
             // Query-aware reranking: extract gene names from prompt → pin mentioned ones to top
@@ -4607,7 +4622,7 @@ async function runDiscovery() {
                         </div>
                     </div>
 
-                    ${queryNote}
+                    ${gptSummary ? `<div style="background:#f8f8f6;border:1px solid #D6CEBF;border-radius:10px;padding:12px 16px;margin-bottom:14px;font-size:11px;color:#4a4a4a;line-height:1.7;font-family:Inter,sans-serif;">${gptSummary}</div>` : ""}${queryNote}
                     <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
                         <div>
                             <div style="font-size:10px;color:#8b8070;font-weight:700;letter-spacing:0.04em;text-transform:uppercase;margin-bottom:8px;">↑ Pro-Rejuvenation Genes</div>

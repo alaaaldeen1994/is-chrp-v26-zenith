@@ -6505,8 +6505,8 @@ async def run_gpt_discovery(request: Request):
     if os.path.exists(ip_path):
         with open(ip_path) as f:
             ip_data = json.load(f)
-        pro = [g.get("gene_symbol", g["gene"]) for g in ip_data["pro_rejuvenation_genes"][:20]]
-        aging = [g.get("gene_symbol", g["gene"]) for g in ip_data["aging_marker_genes"][:20]]
+        pro = [f"{g.get('gene_symbol', g['gene'])} (r={g['correlation']:.3f})" for g in ip_data["pro_rejuvenation_genes"][:50]]
+        aging = [f"{g.get('gene_symbol', g['gene'])} (r={g['correlation']:.3f})" for g in ip_data["aging_marker_genes"][:50]]
         real_genes_context = (
             f"VERIFIED HCA PRO-REJUVENATION GENES (Pearson r with youth, Litvinukova 2020): {', '.join(pro)}\n"
             f"VERIFIED HCA AGING MARKER GENES (correlated with aging): {', '.join(aging)}"
@@ -6517,7 +6517,7 @@ async def run_gpt_discovery(request: Request):
         client = AsyncOpenAI(api_key=openai_key)
 
         system_prompt = (
-            "You are a computational biology expert in cardiac aging and cellular rejuvenation. "
+            "You are a computational biology expert specialising in cardiac aging, single-cell genomics, and rejuvenation. "
             "You have access to VERIFIED gene expression data from the Human Cardiac Cell Atlas "
             "(Litvinukova et al., Nature 2020, 14 real donors, 99,993 cardiac cells). "
             "When answering, prioritize genes from the verified HCA data. "
