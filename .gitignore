@@ -24,8 +24,10 @@ data/trajectories/
 !download_heart_atlas.py
 !setup_real_data_pipeline.py
 
-# EXCEPTION: 486k scVI model (10.5 MB - small enough for GitHub)
+# EXCEPTIONS: These model files are small enough for GitHub (Railway needs them)
 !models/scvi_model_486k/model.pt
+!models/scvi_model_486k_real/model.pt
+!models/age_clock.pkl
 
 # Temp/debug scripts (not needed in repo)
 probe_cellxgene.py
