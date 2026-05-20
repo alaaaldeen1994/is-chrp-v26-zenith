@@ -3188,6 +3188,38 @@ const BiosimBridge = {
             if (typeof BiosimEngine !== 'undefined' && BiosimEngine.agents && BiosimEngine.agents.length > 0) {
                 this.syncAgents(BiosimEngine.agents);
                 console.info('[MICROSCOPE] Seeded', this.cells.length, 'cells from BiosimEngine');
+            } else {
+                // FALLBACK: Generate colony cells directly (same as standalone demo)
+                const cx = this.mCanvas.width / 2;
+                const cy = this.mCanvas.height / 2;
+                const R = this.mParams.radius;
+                const N = this.mParams.density;
+                for (let i = 0; i < N; i++) {
+                    const ang = Math.random() * Math.PI * 2;
+                    const r = Math.pow(Math.random(), 0.5) * R;
+                    const x = cx + Math.cos(ang) * r;
+                    const y = cy + Math.sin(ang) * r;
+                    const distNorm = r / R;
+                    const isEdge = distNorm > 0.82;
+                    const size = 6 + Math.random() * 8;
+                    this.cells.push({
+                        x, y, size,
+                        pulse: Math.random() * Math.PI * 2,
+                        health: 0.4 + Math.random() * 0.6,
+                        isEdge,
+                        isDeepCenter: distNorm < 0.3,
+                        depth: 0.6 + Math.random() * 0.4,
+                        nx: (Math.random() - 0.5) * 5,
+                        ny: (Math.random() - 0.5) * 5,
+                        membranePoints: 14,
+                        offsets: Array.from({ length: 14 }, () => 0.7 + Math.random() * 0.6),
+                        filoCount: isEdge ? 2 + Math.floor(Math.random() * 4) : 0,
+                        filoAngles: isEdge ? Array.from({ length: 2 + Math.floor(Math.random() * 4) }, () => Math.atan2(y - cy, x - cx) + (Math.random() - 0.5) * 1.8) : [],
+                        filoLengths: isEdge ? Array.from({ length: 2 + Math.floor(Math.random() * 4) }, () => 15 + Math.random() * 25) : [],
+                        color: `rgba(${Math.floor(20 + Math.random() * 40)}, ${Math.floor(180 + Math.random() * 75)}, ${Math.floor(100 + Math.random() * 80)}, 0.9)`
+                    });
+                }
+                console.info('[MICROSCOPE] Generated', this.cells.length, 'colony cells (fallback mode)');
             }
         },
 
