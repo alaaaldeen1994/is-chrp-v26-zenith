@@ -6505,8 +6505,8 @@ async def run_gpt_discovery(request: Request):
     if os.path.exists(ip_path):
         with open(ip_path) as f:
             ip_data = json.load(f)
-        pro = [f"{g.get('gene_symbol', g['gene'])} (r={g['correlation']:.3f})" for g in ip_data["pro_rejuvenation_genes"][:50]]
-        aging = [f"{g.get('gene_symbol', g['gene'])} (r={g['correlation']:.3f})" for g in ip_data["aging_marker_genes"][:50]]
+        pro = [f"{g.get('gene_symbol', g['gene'])} (r={g['correlation']:.3f})" for g in ip_data["pro_rejuvenation_genes"][:200]]
+        aging = [f"{g.get('gene_symbol', g['gene'])} (r={g['correlation']:.3f})" for g in ip_data["aging_marker_genes"][:200]]
         real_genes_context = (
             f"VERIFIED HCA PRO-REJUVENATION GENES (Pearson r with youth, Litvinukova 2020): {', '.join(pro)}\n"
             f"VERIFIED HCA AGING MARKER GENES (correlated with aging): {', '.join(aging)}"
@@ -6520,13 +6520,13 @@ async def run_gpt_discovery(request: Request):
             "You are a computational biology expert specialising in cardiac aging, single-cell genomics, and rejuvenation. "
             "You have access to VERIFIED gene expression data from the Human Cardiac Cell Atlas "
             "(Litvinukova et al., Nature 2020, 14 real donors, 99,993 cardiac cells). "
-            "When answering, prioritize genes from the verified HCA data. "
-            "Be specific, scientific, and honest about what the data supports vs inference."
+            "You MUST ONLY select genes from the provided HCA list below. Do NOT invent genes. "
+            "For each gene, include its exact Pearson correlation from the data. Be specific and scientific."
         )
 
         user_prompt = (
             f"Research question: {query}\n\n"
-            f"Available verified HCA data:\n{real_genes_context}\n\n"
+            f"Below are 400 genes ranked by Pearson correlation with the cardiac rejuvenation vector (young 40-55y vs aged 65-72y). ONLY select genes from this list:\n{real_genes_context}\n\n"
             f"Based on this question and verified HCA gene data, return ONLY valid JSON with:\n"
             f"  'genes': array of 6 objects: {{gene, role (1 sentence), hca_verified (bool), confidence (0-100)}}\n"
             f"  'summary': 2-3 sentence protocol recommendation specific to this query\n"

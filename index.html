@@ -4551,7 +4551,7 @@ async function runDiscovery() {
             if (gptGenes.length > 0 && proGenes.length === 0) {
                 proGenes = gptGenes.map((g, i) => ({
                     gene: g.gene,
-                    correlation_with_youth: (g.confidence || 80) / 100,
+                    correlation_with_youth: g.correlation || (g.confidence || 80) / 100,
                     role: g.role || '',
                     hca_verified: g.hca_verified || false
                 }));
