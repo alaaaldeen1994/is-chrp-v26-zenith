@@ -1,0 +1,2414 @@
+{
+  "source": "Litvinukova et al., Nature 2020",
+  "doi": "10.1038/s41586-020-2797-4",
+  "model": "models/scvi_model_486k_real",
+  "method": "Pearson correlation with latent rejuvenation vector (full gene set)",
+  "n_cells": 99993,
+  "n_genes_total_in_hca": 32383,
+  "n_genes_analysed": 32383,
+  "rejuvenation_vector_magnitude": 1.992535485931795,
+  "pro_rejuvenation_genes": [
+    {
+      "rank": 1,
+      "gene": "CACNA1C",
+      "ensembl_id": "ENSG00000151067",
+      "correlation": 0.5266
+    },
+    {
+      "rank": 2,
+      "gene": "TTN-AS1",
+      "ensembl_id": "ENSG00000237298",
+      "correlation": 0.5152
+    },
+    {
+      "rank": 3,
+      "gene": "TTN",
+      "ensembl_id": "ENSG00000155657",
+      "correlation": 0.4986
+    },
+    {
+      "rank": 4,
+      "gene": "RYR2",
+      "ensembl_id": "ENSG00000198626",
+      "correlation": 0.4948
+    },
+    {
+      "rank": 5,
+      "gene": "PRKG1",
+      "ensembl_id": "ENSG00000185532",
+      "correlation": 0.4863
+    },
+    {
+      "rank": 6,
+      "gene": "DMD",
+      "ensembl_id": "ENSG00000198947",
+      "correlation": 0.4816
+    },
+    {
+      "rank": 7,
+      "gene": "PDE4DIP",
+      "ensembl_id": "ENSG00000178104",
+      "correlation": 0.4813
+    },
+    {
+      "rank": 8,
+      "gene": "LPP",
+      "ensembl_id": "ENSG00000145012",
+      "correlation": 0.479
+    },
+    {
+      "rank": 9,
+      "gene": "LAMA2",
+      "ensembl_id": "ENSG00000196569",
+      "correlation": 0.4705
+    },
+    {
+      "rank": 10,
+      "gene": "PLCL1",
+      "ensembl_id": "ENSG00000115896",
+      "correlation": 0.4556
+    },
+    {
+      "rank": 11,
+      "gene": "PDE3A",
+      "ensembl_id": "ENSG00000172572",
+      "correlation": 0.4519
+    },
+    {
+      "rank": 12,
+      "gene": "SLC8A1",
+      "ensembl_id": "ENSG00000183023",
+      "correlation": 0.4519
+    },
+    {
+      "rank": 13,
+      "gene": "CTNNA3",
+      "ensembl_id": "ENSG00000183230",
+      "correlation": 0.4516
+    },
+    {
+      "rank": 14,
+      "gene": "LINC00486",
+      "ensembl_id": "ENSG00000230876",
+      "correlation": 0.4499
+    },
+    {
+      "rank": 15,
+      "gene": "PALLD",
+      "ensembl_id": "ENSG00000129116",
+      "correlation": 0.4464
+    },
+    {
+      "rank": 16,
+      "gene": "SLC8A1-AS1",
+      "ensembl_id": "ENSG00000227028",
+      "correlation": 0.4439
+    },
+    {
+      "rank": 17,
+      "gene": "FHL2",
+      "ensembl_id": "ENSG00000115641",
+      "correlation": 0.44
+    },
+    {
+      "rank": 18,
+      "gene": "AKAP13",
+      "ensembl_id": "ENSG00000170776",
+      "correlation": 0.4371
+    },
+    {
+      "rank": 19,
+      "gene": "RCAN2",
+      "ensembl_id": "ENSG00000172348",
+      "correlation": 0.4352
+    },
+    {
+      "rank": 20,
+      "gene": "SGCD",
+      "ensembl_id": "ENSG00000170624",
+      "correlation": 0.4332
+    },
+    {
+      "rank": 21,
+      "gene": "PDZD2",
+      "ensembl_id": "ENSG00000133401",
+      "correlation": 0.4316
+    },
+    {
+      "rank": 22,
+      "gene": "PDE1C",
+      "ensembl_id": "ENSG00000154678",
+      "correlation": 0.4298
+    },
+    {
+      "rank": 23,
+      "gene": "MLIP",
+      "ensembl_id": "ENSG00000146147",
+      "correlation": 0.423
+    },
+    {
+      "rank": 24,
+      "gene": "SORBS2",
+      "ensembl_id": "ENSG00000154556",
+      "correlation": 0.4227
+    },
+    {
+      "rank": 25,
+      "gene": "ZBTB16",
+      "ensembl_id": "ENSG00000109906",
+      "correlation": 0.4214
+    },
+    {
+      "rank": 26,
+      "gene": "ARHGAP10",
+      "ensembl_id": "ENSG00000071205",
+      "correlation": 0.4198
+    },
+    {
+      "rank": 27,
+      "gene": "FHOD3",
+      "ensembl_id": "ENSG00000134775",
+      "correlation": 0.4191
+    },
+    {
+      "rank": 28,
+      "gene": "MYOM1",
+      "ensembl_id": "ENSG00000101605",
+      "correlation": 0.4174
+    },
+    {
+      "rank": 29,
+      "gene": "NEXN",
+      "ensembl_id": "ENSG00000162614",
+      "correlation": 0.4173
+    },
+    {
+      "rank": 30,
+      "gene": "SORBS1",
+      "ensembl_id": "ENSG00000095637",
+      "correlation": 0.4152
+    },
+    {
+      "rank": 31,
+      "gene": "PDE7A",
+      "ensembl_id": "ENSG00000205268",
+      "correlation": 0.4148
+    },
+    {
+      "rank": 32,
+      "gene": "FILIP1",
+      "ensembl_id": "ENSG00000118407",
+      "correlation": 0.4137
+    },
+    {
+      "rank": 33,
+      "gene": "PDLIM5",
+      "ensembl_id": "ENSG00000163110",
+      "correlation": 0.4124
+    },
+    {
+      "rank": 34,
+      "gene": "RBM20",
+      "ensembl_id": "ENSG00000203867",
+      "correlation": 0.4124
+    },
+    {
+      "rank": 35,
+      "gene": "FGF12",
+      "ensembl_id": "ENSG00000114279",
+      "correlation": 0.4121
+    },
+    {
+      "rank": 36,
+      "gene": "MLIP-AS1",
+      "ensembl_id": "ENSG00000235050",
+      "correlation": 0.4093
+    },
+    {
+      "rank": 37,
+      "gene": "LDB3",
+      "ensembl_id": "ENSG00000122367",
+      "correlation": 0.4087
+    },
+    {
+      "rank": 38,
+      "gene": "CAMK2D",
+      "ensembl_id": "ENSG00000145349",
+      "correlation": 0.4075
+    },
+    {
+      "rank": 39,
+      "gene": "TNRC6A",
+      "ensembl_id": "ENSG00000090905",
+      "correlation": 0.4072
+    },
+    {
+      "rank": 40,
+      "gene": "CACNB2",
+      "ensembl_id": "ENSG00000165995",
+      "correlation": 0.4067
+    },
+    {
+      "rank": 41,
+      "gene": "LARGE1",
+      "ensembl_id": "ENSG00000133424",
+      "correlation": 0.4066
+    },
+    {
+      "rank": 42,
+      "gene": "FTX",
+      "ensembl_id": "ENSG00000230590",
+      "correlation": 0.4063
+    },
+    {
+      "rank": 43,
+      "gene": "PPP1R12B",
+      "ensembl_id": "ENSG00000077157",
+      "correlation": 0.4038
+    },
+    {
+      "rank": 44,
+      "gene": "CDH2",
+      "ensembl_id": "ENSG00000170558",
+      "correlation": 0.4038
+    },
+    {
+      "rank": 45,
+      "gene": "ZBTB20",
+      "ensembl_id": "ENSG00000181722",
+      "correlation": 0.4025
+    },
+    {
+      "rank": 46,
+      "gene": "PRKN",
+      "ensembl_id": "ENSG00000185345",
+      "correlation": 0.4022
+    },
+    {
+      "rank": 47,
+      "gene": "PTPRG",
+      "ensembl_id": "ENSG00000144724",
+      "correlation": 0.4001
+    },
+    {
+      "rank": 48,
+      "gene": "EXOC6B",
+      "ensembl_id": "ENSG00000144036",
+      "correlation": 0.399
+    },
+    {
+      "rank": 49,
+      "gene": "AKAP6",
+      "ensembl_id": "ENSG00000151320",
+      "correlation": 0.3971
+    },
+    {
+      "rank": 50,
+      "gene": "ABLIM1",
+      "ensembl_id": "ENSG00000099204",
+      "correlation": 0.3969
+    },
+    {
+      "rank": 51,
+      "gene": "PLEKHA5",
+      "ensembl_id": "ENSG00000052126",
+      "correlation": 0.3946
+    },
+    {
+      "rank": 52,
+      "gene": "GALNT17",
+      "ensembl_id": "ENSG00000185274",
+      "correlation": 0.3926
+    },
+    {
+      "rank": 53,
+      "gene": "LRRTM3",
+      "ensembl_id": "ENSG00000198739",
+      "correlation": 0.3907
+    },
+    {
+      "rank": 54,
+      "gene": "CBLB",
+      "ensembl_id": "ENSG00000114423",
+      "correlation": 0.3897
+    },
+    {
+      "rank": 55,
+      "gene": "TRDN-AS1",
+      "ensembl_id": "ENSG00000235535",
+      "correlation": 0.3893
+    },
+    {
+      "rank": 56,
+      "gene": "FKBP5",
+      "ensembl_id": "ENSG00000096060",
+      "correlation": 0.3885
+    },
+    {
+      "rank": 57,
+      "gene": "KANK1",
+      "ensembl_id": "ENSG00000107104",
+      "correlation": 0.388
+    },
+    {
+      "rank": 58,
+      "gene": "MYBPC3",
+      "ensembl_id": "ENSG00000134571",
+      "correlation": 0.3851
+    },
+    {
+      "rank": 59,
+      "gene": "ACACB",
+      "ensembl_id": "ENSG00000076555",
+      "correlation": 0.3843
+    },
+    {
+      "rank": 60,
+      "gene": "OBSCN",
+      "ensembl_id": "ENSG00000154358",
+      "correlation": 0.3833
+    },
+    {
+      "rank": 61,
+      "gene": "NEBL",
+      "ensembl_id": "ENSG00000078114",
+      "correlation": 0.3832
+    },
+    {
+      "rank": 62,
+      "gene": "CMYA5",
+      "ensembl_id": "ENSG00000164309",
+      "correlation": 0.383
+    },
+    {
+      "rank": 63,
+      "gene": "PIK3R1",
+      "ensembl_id": "ENSG00000145675",
+      "correlation": 0.3821
+    },
+    {
+      "rank": 64,
+      "gene": "WDPCP",
+      "ensembl_id": "ENSG00000143951",
+      "correlation": 0.3806
+    },
+    {
+      "rank": 65,
+      "gene": "FRY",
+      "ensembl_id": "ENSG00000073910",
+      "correlation": 0.3805
+    },
+    {
+      "rank": 66,
+      "gene": "ENSG00000274265",
+      "ensembl_id": "ENSG00000274265",
+      "correlation": 0.3793
+    },
+    {
+      "rank": 67,
+      "gene": "ANK2",
+      "ensembl_id": "ENSG00000145362",
+      "correlation": 0.3786
+    },
+    {
+      "rank": 68,
+      "gene": "CERS6",
+      "ensembl_id": "ENSG00000172292",
+      "correlation": 0.378
+    },
+    {
+      "rank": 69,
+      "gene": "TRDN",
+      "ensembl_id": "ENSG00000186439",
+      "correlation": 0.3756
+    },
+    {
+      "rank": 70,
+      "gene": "PLCXD3",
+      "ensembl_id": "ENSG00000182836",
+      "correlation": 0.3753
+    },
+    {
+      "rank": 71,
+      "gene": "THSD4",
+      "ensembl_id": "ENSG00000187720",
+      "correlation": 0.3743
+    },
+    {
+      "rank": 72,
+      "gene": "PSD3",
+      "ensembl_id": "ENSG00000156011",
+      "correlation": 0.3743
+    },
+    {
+      "rank": 73,
+      "gene": "PKP2",
+      "ensembl_id": "ENSG00000057294",
+      "correlation": 0.373
+    },
+    {
+      "rank": 74,
+      "gene": "PARD3",
+      "ensembl_id": "ENSG00000148498",
+      "correlation": 0.3726
+    },
+    {
+      "rank": 75,
+      "gene": "MYOM2",
+      "ensembl_id": "ENSG00000036448",
+      "correlation": 0.3724
+    },
+    {
+      "rank": 76,
+      "gene": "NLGN1",
+      "ensembl_id": "ENSG00000169760",
+      "correlation": 0.3716
+    },
+    {
+      "rank": 77,
+      "gene": "QKI",
+      "ensembl_id": "ENSG00000112531",
+      "correlation": 0.3704
+    },
+    {
+      "rank": 78,
+      "gene": "ZFPM2",
+      "ensembl_id": "ENSG00000169946",
+      "correlation": 0.3704
+    },
+    {
+      "rank": 79,
+      "gene": "TECRL",
+      "ensembl_id": "ENSG00000205678",
+      "correlation": 0.3702
+    },
+    {
+      "rank": 80,
+      "gene": "LMO7",
+      "ensembl_id": "ENSG00000136153",
+      "correlation": 0.37
+    },
+    {
+      "rank": 81,
+      "gene": "AOPEP",
+      "ensembl_id": "ENSG00000148120",
+      "correlation": 0.3697
+    },
+    {
+      "rank": 82,
+      "gene": "TENM2",
+      "ensembl_id": "ENSG00000145934",
+      "correlation": 0.3683
+    },
+    {
+      "rank": 83,
+      "gene": "MAGI1",
+      "ensembl_id": "ENSG00000151276",
+      "correlation": 0.3664
+    },
+    {
+      "rank": 84,
+      "gene": "MYOZ2",
+      "ensembl_id": "ENSG00000172399",
+      "correlation": 0.3641
+    },
+    {
+      "rank": 85,
+      "gene": "MAP4",
+      "ensembl_id": "ENSG00000047849",
+      "correlation": 0.364
+    },
+    {
+      "rank": 86,
+      "gene": "TBC1D4",
+      "ensembl_id": "ENSG00000136111",
+      "correlation": 0.3638
+    },
+    {
+      "rank": 87,
+      "gene": "FHIT",
+      "ensembl_id": "ENSG00000189283",
+      "correlation": 0.3628
+    },
+    {
+      "rank": 88,
+      "gene": "CACNA2D1",
+      "ensembl_id": "ENSG00000153956",
+      "correlation": 0.3621
+    },
+    {
+      "rank": 89,
+      "gene": "ATP1A2",
+      "ensembl_id": "ENSG00000018625",
+      "correlation": 0.3616
+    },
+    {
+      "rank": 90,
+      "gene": "TMEM178B",
+      "ensembl_id": "ENSG00000261115",
+      "correlation": 0.3611
+    },
+    {
+      "rank": 91,
+      "gene": "NCAM1",
+      "ensembl_id": "ENSG00000149294",
+      "correlation": 0.3611
+    },
+    {
+      "rank": 92,
+      "gene": "CCDC141",
+      "ensembl_id": "ENSG00000163492",
+      "correlation": 0.3599
+    },
+    {
+      "rank": 93,
+      "gene": "TENT5A",
+      "ensembl_id": "ENSG00000112773",
+      "correlation": 0.3592
+    },
+    {
+      "rank": 94,
+      "gene": "GPHN",
+      "ensembl_id": "ENSG00000171723",
+      "correlation": 0.359
+    },
+    {
+      "rank": 95,
+      "gene": "PDZRN3",
+      "ensembl_id": "ENSG00000121440",
+      "correlation": 0.3587
+    },
+    {
+      "rank": 96,
+      "gene": "DLG2",
+      "ensembl_id": "ENSG00000150672",
+      "correlation": 0.3582
+    },
+    {
+      "rank": 97,
+      "gene": "SYNPO2",
+      "ensembl_id": "ENSG00000172403",
+      "correlation": 0.3577
+    },
+    {
+      "rank": 98,
+      "gene": "CDH13",
+      "ensembl_id": "ENSG00000140945",
+      "correlation": 0.357
+    },
+    {
+      "rank": 99,
+      "gene": "MUC20-OT1",
+      "ensembl_id": "ENSG00000242086",
+      "correlation": 0.3539
+    },
+    {
+      "rank": 100,
+      "gene": "CBR4",
+      "ensembl_id": "ENSG00000145439",
+      "correlation": 0.3537
+    },
+    {
+      "rank": 101,
+      "gene": "SVIL",
+      "ensembl_id": "ENSG00000197321",
+      "correlation": 0.3536
+    },
+    {
+      "rank": 102,
+      "gene": "XPR1",
+      "ensembl_id": "ENSG00000143324",
+      "correlation": 0.3524
+    },
+    {
+      "rank": 103,
+      "gene": "INPP4B",
+      "ensembl_id": "ENSG00000109452",
+      "correlation": 0.3523
+    },
+    {
+      "rank": 104,
+      "gene": "DTNA",
+      "ensembl_id": "ENSG00000134769",
+      "correlation": 0.3518
+    },
+    {
+      "rank": 105,
+      "gene": "LRRFIP2",
+      "ensembl_id": "ENSG00000093167",
+      "correlation": 0.3513
+    },
+    {
+      "rank": 106,
+      "gene": "TRPM7",
+      "ensembl_id": "ENSG00000092439",
+      "correlation": 0.3509
+    },
+    {
+      "rank": 107,
+      "gene": "VWA8",
+      "ensembl_id": "ENSG00000102763",
+      "correlation": 0.3507
+    },
+    {
+      "rank": 108,
+      "gene": "RBPMS",
+      "ensembl_id": "ENSG00000157110",
+      "correlation": 0.3498
+    },
+    {
+      "rank": 109,
+      "gene": "MITF",
+      "ensembl_id": "ENSG00000187098",
+      "correlation": 0.3482
+    },
+    {
+      "rank": 110,
+      "gene": "SLC1A3",
+      "ensembl_id": "ENSG00000079215",
+      "correlation": 0.346
+    },
+    {
+      "rank": 111,
+      "gene": "SH3D19",
+      "ensembl_id": "ENSG00000109686",
+      "correlation": 0.3459
+    },
+    {
+      "rank": 112,
+      "gene": "ROR1",
+      "ensembl_id": "ENSG00000185483",
+      "correlation": 0.3452
+    },
+    {
+      "rank": 113,
+      "gene": "ENSG00000238273",
+      "ensembl_id": "ENSG00000238273",
+      "correlation": 0.3452
+    },
+    {
+      "rank": 114,
+      "gene": "ZNF638",
+      "ensembl_id": "ENSG00000075292",
+      "correlation": 0.3446
+    },
+    {
+      "rank": 115,
+      "gene": "PPP2R3A",
+      "ensembl_id": "ENSG00000073711",
+      "correlation": 0.3443
+    },
+    {
+      "rank": 116,
+      "gene": "RABGAP1L",
+      "ensembl_id": "ENSG00000152061",
+      "correlation": 0.3442
+    },
+    {
+      "rank": 117,
+      "gene": "CKMT2",
+      "ensembl_id": "ENSG00000131730",
+      "correlation": 0.3438
+    },
+    {
+      "rank": 118,
+      "gene": "IL1RAPL1",
+      "ensembl_id": "ENSG00000169306",
+      "correlation": 0.3434
+    },
+    {
+      "rank": 119,
+      "gene": "PXDNL",
+      "ensembl_id": "ENSG00000147485",
+      "correlation": 0.3412
+    },
+    {
+      "rank": 120,
+      "gene": "TACC2",
+      "ensembl_id": "ENSG00000138162",
+      "correlation": 0.3405
+    },
+    {
+      "rank": 121,
+      "gene": "MAP4K3",
+      "ensembl_id": "ENSG00000011566",
+      "correlation": 0.3397
+    },
+    {
+      "rank": 122,
+      "gene": "PBX1",
+      "ensembl_id": "ENSG00000185630",
+      "correlation": 0.3382
+    },
+    {
+      "rank": 123,
+      "gene": "DST",
+      "ensembl_id": "ENSG00000151914",
+      "correlation": 0.3369
+    },
+    {
+      "rank": 124,
+      "gene": "SOX6",
+      "ensembl_id": "ENSG00000110693",
+      "correlation": 0.3367
+    },
+    {
+      "rank": 125,
+      "gene": "KIF21A",
+      "ensembl_id": "ENSG00000139116",
+      "correlation": 0.3363
+    },
+    {
+      "rank": 126,
+      "gene": "ARHGAP26",
+      "ensembl_id": "ENSG00000145819",
+      "correlation": 0.3362
+    },
+    {
+      "rank": 127,
+      "gene": "ACTN2",
+      "ensembl_id": "ENSG00000077522",
+      "correlation": 0.3342
+    },
+    {
+      "rank": 128,
+      "gene": "MYO18B",
+      "ensembl_id": "ENSG00000133454",
+      "correlation": 0.334
+    },
+    {
+      "rank": 129,
+      "gene": "CDIN1",
+      "ensembl_id": "ENSG00000186073",
+      "correlation": 0.3336
+    },
+    {
+      "rank": 130,
+      "gene": "EFNA5",
+      "ensembl_id": "ENSG00000184349",
+      "correlation": 0.3334
+    },
+    {
+      "rank": 131,
+      "gene": "PCDH7",
+      "ensembl_id": "ENSG00000169851",
+      "correlation": 0.3332
+    },
+    {
+      "rank": 132,
+      "gene": "SAMD4A",
+      "ensembl_id": "ENSG00000020577",
+      "correlation": 0.3331
+    },
+    {
+      "rank": 133,
+      "gene": "CELF2",
+      "ensembl_id": "ENSG00000048740",
+      "correlation": 0.3318
+    },
+    {
+      "rank": 134,
+      "gene": "MTUS2",
+      "ensembl_id": "ENSG00000132938",
+      "correlation": 0.3305
+    },
+    {
+      "rank": 135,
+      "gene": "ARID1B",
+      "ensembl_id": "ENSG00000049618",
+      "correlation": 0.3303
+    },
+    {
+      "rank": 136,
+      "gene": "RASAL2",
+      "ensembl_id": "ENSG00000075391",
+      "correlation": 0.3298
+    },
+    {
+      "rank": 137,
+      "gene": "ESRRG",
+      "ensembl_id": "ENSG00000196482",
+      "correlation": 0.3297
+    },
+    {
+      "rank": 138,
+      "gene": "VCL",
+      "ensembl_id": "ENSG00000035403",
+      "correlation": 0.3294
+    },
+    {
+      "rank": 139,
+      "gene": "MTFR1",
+      "ensembl_id": "ENSG00000066855",
+      "correlation": 0.3285
+    },
+    {
+      "rank": 140,
+      "gene": "MYOM3",
+      "ensembl_id": "ENSG00000142661",
+      "correlation": 0.3284
+    },
+    {
+      "rank": 141,
+      "gene": "GAB1",
+      "ensembl_id": "ENSG00000109458",
+      "correlation": 0.3283
+    },
+    {
+      "rank": 142,
+      "gene": "MSRB3",
+      "ensembl_id": "ENSG00000174099",
+      "correlation": 0.3266
+    },
+    {
+      "rank": 143,
+      "gene": "DANT2",
+      "ensembl_id": "ENSG00000235244",
+      "correlation": 0.3266
+    },
+    {
+      "rank": 144,
+      "gene": "FBXL17",
+      "ensembl_id": "ENSG00000145743",
+      "correlation": 0.3242
+    },
+    {
+      "rank": 145,
+      "gene": "EXOG",
+      "ensembl_id": "ENSG00000157036",
+      "correlation": 0.324
+    },
+    {
+      "rank": 146,
+      "gene": "PTPRK",
+      "ensembl_id": "ENSG00000152894",
+      "correlation": 0.3238
+    },
+    {
+      "rank": 147,
+      "gene": "NIBAN1",
+      "ensembl_id": "ENSG00000135842",
+      "correlation": 0.323
+    },
+    {
+      "rank": 148,
+      "gene": "MYH7",
+      "ensembl_id": "ENSG00000092054",
+      "correlation": 0.3227
+    },
+    {
+      "rank": 149,
+      "gene": "CHPT1",
+      "ensembl_id": "ENSG00000111666",
+      "correlation": 0.322
+    },
+    {
+      "rank": 150,
+      "gene": "ATP2A2",
+      "ensembl_id": "ENSG00000174437",
+      "correlation": 0.3212
+    },
+    {
+      "rank": 151,
+      "gene": "FAF1",
+      "ensembl_id": "ENSG00000185104",
+      "correlation": 0.319
+    },
+    {
+      "rank": 152,
+      "gene": "ENSG00000250258",
+      "ensembl_id": "ENSG00000250258",
+      "correlation": 0.3187
+    },
+    {
+      "rank": 153,
+      "gene": "ANKRD17",
+      "ensembl_id": "ENSG00000132466",
+      "correlation": 0.3183
+    },
+    {
+      "rank": 154,
+      "gene": "MAST4",
+      "ensembl_id": "ENSG00000069020",
+      "correlation": 0.3183
+    },
+    {
+      "rank": 155,
+      "gene": "VPS13D",
+      "ensembl_id": "ENSG00000048707",
+      "correlation": 0.3181
+    },
+    {
+      "rank": 156,
+      "gene": "ACSS3",
+      "ensembl_id": "ENSG00000111058",
+      "correlation": 0.3165
+    },
+    {
+      "rank": 157,
+      "gene": "ENSG00000229618",
+      "ensembl_id": "ENSG00000229618",
+      "correlation": 0.3153
+    },
+    {
+      "rank": 158,
+      "gene": "UBR3",
+      "ensembl_id": "ENSG00000144357",
+      "correlation": 0.3134
+    },
+    {
+      "rank": 159,
+      "gene": "MIR29B2CHG",
+      "ensembl_id": "ENSG00000203709",
+      "correlation": 0.3126
+    },
+    {
+      "rank": 160,
+      "gene": "ST3GAL1",
+      "ensembl_id": "ENSG00000008513",
+      "correlation": 0.3123
+    },
+    {
+      "rank": 161,
+      "gene": "MBNL1",
+      "ensembl_id": "ENSG00000152601",
+      "correlation": 0.3117
+    },
+    {
+      "rank": 162,
+      "gene": "RNF150",
+      "ensembl_id": "ENSG00000170153",
+      "correlation": 0.3114
+    },
+    {
+      "rank": 163,
+      "gene": "STARD13",
+      "ensembl_id": "ENSG00000133121",
+      "correlation": 0.3108
+    },
+    {
+      "rank": 164,
+      "gene": "MEF2A",
+      "ensembl_id": "ENSG00000068305",
+      "correlation": 0.3106
+    },
+    {
+      "rank": 165,
+      "gene": "PLCL2",
+      "ensembl_id": "ENSG00000154822",
+      "correlation": 0.3105
+    },
+    {
+      "rank": 166,
+      "gene": "ANK3",
+      "ensembl_id": "ENSG00000151150",
+      "correlation": 0.3101
+    },
+    {
+      "rank": 167,
+      "gene": "TMEM65",
+      "ensembl_id": "ENSG00000164983",
+      "correlation": 0.31
+    },
+    {
+      "rank": 168,
+      "gene": "RERE",
+      "ensembl_id": "ENSG00000142599",
+      "correlation": 0.3095
+    },
+    {
+      "rank": 169,
+      "gene": "PHACTR1",
+      "ensembl_id": "ENSG00000112137",
+      "correlation": 0.3085
+    },
+    {
+      "rank": 170,
+      "gene": "CRADD",
+      "ensembl_id": "ENSG00000169372",
+      "correlation": 0.308
+    },
+    {
+      "rank": 171,
+      "gene": "PTPRM",
+      "ensembl_id": "ENSG00000173482",
+      "correlation": 0.3078
+    },
+    {
+      "rank": 172,
+      "gene": "CCSER1",
+      "ensembl_id": "ENSG00000184305",
+      "correlation": 0.3072
+    },
+    {
+      "rank": 173,
+      "gene": "DPF3",
+      "ensembl_id": "ENSG00000205683",
+      "correlation": 0.3064
+    },
+    {
+      "rank": 174,
+      "gene": "AUTS2",
+      "ensembl_id": "ENSG00000158321",
+      "correlation": 0.3062
+    },
+    {
+      "rank": 175,
+      "gene": "SESN1",
+      "ensembl_id": "ENSG00000080546",
+      "correlation": 0.3047
+    },
+    {
+      "rank": 176,
+      "gene": "DAPK2",
+      "ensembl_id": "ENSG00000035664",
+      "correlation": 0.3039
+    },
+    {
+      "rank": 177,
+      "gene": "DLC1",
+      "ensembl_id": "ENSG00000164741",
+      "correlation": 0.303
+    },
+    {
+      "rank": 178,
+      "gene": "BMPR1A",
+      "ensembl_id": "ENSG00000107779",
+      "correlation": 0.3021
+    },
+    {
+      "rank": 179,
+      "gene": "MYOCD",
+      "ensembl_id": "ENSG00000141052",
+      "correlation": 0.3021
+    },
+    {
+      "rank": 180,
+      "gene": "MAP3K20",
+      "ensembl_id": "ENSG00000091436",
+      "correlation": 0.3011
+    },
+    {
+      "rank": 181,
+      "gene": "FBXL7",
+      "ensembl_id": "ENSG00000183580",
+      "correlation": 0.3004
+    },
+    {
+      "rank": 182,
+      "gene": "DDX60L",
+      "ensembl_id": "ENSG00000181381",
+      "correlation": 0.2999
+    },
+    {
+      "rank": 183,
+      "gene": "PRKAA2",
+      "ensembl_id": "ENSG00000162409",
+      "correlation": 0.2992
+    },
+    {
+      "rank": 184,
+      "gene": "PPP1R13B",
+      "ensembl_id": "ENSG00000088808",
+      "correlation": 0.2984
+    },
+    {
+      "rank": 185,
+      "gene": "MALAT1",
+      "ensembl_id": "ENSG00000251562",
+      "correlation": 0.2983
+    },
+    {
+      "rank": 186,
+      "gene": "SLC7A6",
+      "ensembl_id": "ENSG00000103064",
+      "correlation": 0.2979
+    },
+    {
+      "rank": 187,
+      "gene": "CUX1",
+      "ensembl_id": "ENSG00000257923",
+      "correlation": 0.2978
+    },
+    {
+      "rank": 188,
+      "gene": "MEIS2",
+      "ensembl_id": "ENSG00000134138",
+      "correlation": 0.2977
+    },
+    {
+      "rank": 189,
+      "gene": "HOMER1",
+      "ensembl_id": "ENSG00000152413",
+      "correlation": 0.2975
+    },
+    {
+      "rank": 190,
+      "gene": "FIGN",
+      "ensembl_id": "ENSG00000182263",
+      "correlation": 0.2957
+    },
+    {
+      "rank": 191,
+      "gene": "ADPRHL1",
+      "ensembl_id": "ENSG00000153531",
+      "correlation": 0.2955
+    },
+    {
+      "rank": 192,
+      "gene": "GBE1",
+      "ensembl_id": "ENSG00000114480",
+      "correlation": 0.2953
+    },
+    {
+      "rank": 193,
+      "gene": "ERC1",
+      "ensembl_id": "ENSG00000082805",
+      "correlation": 0.2952
+    },
+    {
+      "rank": 194,
+      "gene": "THRB",
+      "ensembl_id": "ENSG00000151090",
+      "correlation": 0.294
+    },
+    {
+      "rank": 195,
+      "gene": "PATJ",
+      "ensembl_id": "ENSG00000132849",
+      "correlation": 0.2938
+    },
+    {
+      "rank": 196,
+      "gene": "TRIM54",
+      "ensembl_id": "ENSG00000138100",
+      "correlation": 0.2934
+    },
+    {
+      "rank": 197,
+      "gene": "RNF207",
+      "ensembl_id": "ENSG00000158286",
+      "correlation": 0.2933
+    },
+    {
+      "rank": 198,
+      "gene": "MPP3",
+      "ensembl_id": "ENSG00000161647",
+      "correlation": 0.2925
+    },
+    {
+      "rank": 199,
+      "gene": "PCDH9",
+      "ensembl_id": "ENSG00000184226",
+      "correlation": 0.2924
+    },
+    {
+      "rank": 200,
+      "gene": "PAM",
+      "ensembl_id": "ENSG00000145730",
+      "correlation": 0.292
+    }
+  ],
+  "aging_marker_genes": [
+    {
+      "rank": 1,
+      "gene": "TMSB4X",
+      "ensembl_id": "ENSG00000205542",
+      "correlation": -0.6888
+    },
+    {
+      "rank": 2,
+      "gene": "B2M",
+      "ensembl_id": "ENSG00000166710",
+      "correlation": -0.6705
+    },
+    {
+      "rank": 3,
+      "gene": "RPL41",
+      "ensembl_id": "ENSG00000229117",
+      "correlation": -0.6328
+    },
+    {
+      "rank": 4,
+      "gene": "IFITM3",
+      "ensembl_id": "ENSG00000142089",
+      "correlation": -0.6257
+    },
+    {
+      "rank": 5,
+      "gene": "RPL34",
+      "ensembl_id": "ENSG00000109475",
+      "correlation": -0.6215
+    },
+    {
+      "rank": 6,
+      "gene": "TMSB10",
+      "ensembl_id": "ENSG00000034510",
+      "correlation": -0.6106
+    },
+    {
+      "rank": 7,
+      "gene": "ACTB",
+      "ensembl_id": "ENSG00000075624",
+      "correlation": -0.6102
+    },
+    {
+      "rank": 8,
+      "gene": "RPL13A",
+      "ensembl_id": "ENSG00000142541",
+      "correlation": -0.6094
+    },
+    {
+      "rank": 9,
+      "gene": "RPL21",
+      "ensembl_id": "ENSG00000122026",
+      "correlation": -0.6076
+    },
+    {
+      "rank": 10,
+      "gene": "RPS19",
+      "ensembl_id": "ENSG00000105372",
+      "correlation": -0.6076
+    },
+    {
+      "rank": 11,
+      "gene": "HLA-B",
+      "ensembl_id": "ENSG00000234745",
+      "correlation": -0.6044
+    },
+    {
+      "rank": 12,
+      "gene": "RPS14",
+      "ensembl_id": "ENSG00000164587",
+      "correlation": -0.6007
+    },
+    {
+      "rank": 13,
+      "gene": "RPS18",
+      "ensembl_id": "ENSG00000231500",
+      "correlation": -0.6003
+    },
+    {
+      "rank": 14,
+      "gene": "FTH1",
+      "ensembl_id": "ENSG00000167996",
+      "correlation": -0.5971
+    },
+    {
+      "rank": 15,
+      "gene": "PTMA",
+      "ensembl_id": "ENSG00000187514",
+      "correlation": -0.5966
+    },
+    {
+      "rank": 16,
+      "gene": "RPS27",
+      "ensembl_id": "ENSG00000177954",
+      "correlation": -0.5953
+    },
+    {
+      "rank": 17,
+      "gene": "RPS15",
+      "ensembl_id": "ENSG00000115268",
+      "correlation": -0.5922
+    },
+    {
+      "rank": 18,
+      "gene": "RPLP1",
+      "ensembl_id": "ENSG00000137818",
+      "correlation": -0.5865
+    },
+    {
+      "rank": 19,
+      "gene": "RPL3",
+      "ensembl_id": "ENSG00000100316",
+      "correlation": -0.5787
+    },
+    {
+      "rank": 20,
+      "gene": "RPL32",
+      "ensembl_id": "ENSG00000144713",
+      "correlation": -0.5776
+    },
+    {
+      "rank": 21,
+      "gene": "IFITM2",
+      "ensembl_id": "ENSG00000185201",
+      "correlation": -0.577
+    },
+    {
+      "rank": 22,
+      "gene": "RPL10",
+      "ensembl_id": "ENSG00000147403",
+      "correlation": -0.5764
+    },
+    {
+      "rank": 23,
+      "gene": "RPL13",
+      "ensembl_id": "ENSG00000167526",
+      "correlation": -0.5754
+    },
+    {
+      "rank": 24,
+      "gene": "FTL",
+      "ensembl_id": "ENSG00000087086",
+      "correlation": -0.5736
+    },
+    {
+      "rank": 25,
+      "gene": "RPS6",
+      "ensembl_id": "ENSG00000137154",
+      "correlation": -0.5712
+    },
+    {
+      "rank": 26,
+      "gene": "RPS28",
+      "ensembl_id": "ENSG00000233927",
+      "correlation": -0.5707
+    },
+    {
+      "rank": 27,
+      "gene": "RPL7",
+      "ensembl_id": "ENSG00000147604",
+      "correlation": -0.5704
+    },
+    {
+      "rank": 28,
+      "gene": "SERF2",
+      "ensembl_id": "ENSG00000140264",
+      "correlation": -0.5649
+    },
+    {
+      "rank": 29,
+      "gene": "S100A6",
+      "ensembl_id": "ENSG00000197956",
+      "correlation": -0.5646
+    },
+    {
+      "rank": 30,
+      "gene": "RPLP2",
+      "ensembl_id": "ENSG00000177600",
+      "correlation": -0.5625
+    },
+    {
+      "rank": 31,
+      "gene": "RPL27A",
+      "ensembl_id": "ENSG00000166441",
+      "correlation": -0.562
+    },
+    {
+      "rank": 32,
+      "gene": "RPL36",
+      "ensembl_id": "ENSG00000130255",
+      "correlation": -0.5619
+    },
+    {
+      "rank": 33,
+      "gene": "RPL35A",
+      "ensembl_id": "ENSG00000182899",
+      "correlation": -0.5616
+    },
+    {
+      "rank": 34,
+      "gene": "RPS27A",
+      "ensembl_id": "ENSG00000143947",
+      "correlation": -0.5594
+    },
+    {
+      "rank": 35,
+      "gene": "RPL35",
+      "ensembl_id": "ENSG00000136942",
+      "correlation": -0.5579
+    },
+    {
+      "rank": 36,
+      "gene": "RPL15",
+      "ensembl_id": "ENSG00000174748",
+      "correlation": -0.5548
+    },
+    {
+      "rank": 37,
+      "gene": "RPS2",
+      "ensembl_id": "ENSG00000140988",
+      "correlation": -0.5522
+    },
+    {
+      "rank": 38,
+      "gene": "RPL8",
+      "ensembl_id": "ENSG00000161016",
+      "correlation": -0.552
+    },
+    {
+      "rank": 39,
+      "gene": "RPL23A",
+      "ensembl_id": "ENSG00000198242",
+      "correlation": -0.5502
+    },
+    {
+      "rank": 40,
+      "gene": "RPS15A",
+      "ensembl_id": "ENSG00000134419",
+      "correlation": -0.5471
+    },
+    {
+      "rank": 41,
+      "gene": "RPL18A",
+      "ensembl_id": "ENSG00000105640",
+      "correlation": -0.5457
+    },
+    {
+      "rank": 42,
+      "gene": "IFI27",
+      "ensembl_id": "ENSG00000165949",
+      "correlation": -0.5441
+    },
+    {
+      "rank": 43,
+      "gene": "RPL11",
+      "ensembl_id": "ENSG00000142676",
+      "correlation": -0.5439
+    },
+    {
+      "rank": 44,
+      "gene": "RPL19",
+      "ensembl_id": "ENSG00000108298",
+      "correlation": -0.5411
+    },
+    {
+      "rank": 45,
+      "gene": "SRP14",
+      "ensembl_id": "ENSG00000140319",
+      "correlation": -0.5409
+    },
+    {
+      "rank": 46,
+      "gene": "HLA-C",
+      "ensembl_id": "ENSG00000204525",
+      "correlation": -0.5401
+    },
+    {
+      "rank": 47,
+      "gene": "EEF1A1",
+      "ensembl_id": "ENSG00000156508",
+      "correlation": -0.5385
+    },
+    {
+      "rank": 48,
+      "gene": "RPS29",
+      "ensembl_id": "ENSG00000213741",
+      "correlation": -0.5373
+    },
+    {
+      "rank": 49,
+      "gene": "DUSP1",
+      "ensembl_id": "ENSG00000120129",
+      "correlation": -0.5367
+    },
+    {
+      "rank": 50,
+      "gene": "RPS13",
+      "ensembl_id": "ENSG00000110700",
+      "correlation": -0.5356
+    },
+    {
+      "rank": 51,
+      "gene": "RPS25",
+      "ensembl_id": "ENSG00000118181",
+      "correlation": -0.5354
+    },
+    {
+      "rank": 52,
+      "gene": "RPL26",
+      "ensembl_id": "ENSG00000161970",
+      "correlation": -0.5317
+    },
+    {
+      "rank": 53,
+      "gene": "PFN1",
+      "ensembl_id": "ENSG00000108518",
+      "correlation": -0.5309
+    },
+    {
+      "rank": 54,
+      "gene": "CD63",
+      "ensembl_id": "ENSG00000135404",
+      "correlation": -0.5243
+    },
+    {
+      "rank": 55,
+      "gene": "RPS20",
+      "ensembl_id": "ENSG00000008988",
+      "correlation": -0.5235
+    },
+    {
+      "rank": 56,
+      "gene": "CFL1",
+      "ensembl_id": "ENSG00000172757",
+      "correlation": -0.523
+    },
+    {
+      "rank": 57,
+      "gene": "RPL39",
+      "ensembl_id": "ENSG00000198918",
+      "correlation": -0.522
+    },
+    {
+      "rank": 58,
+      "gene": "RPL37A",
+      "ensembl_id": "ENSG00000197756",
+      "correlation": -0.522
+    },
+    {
+      "rank": 59,
+      "gene": "UBC",
+      "ensembl_id": "ENSG00000150991",
+      "correlation": -0.5213
+    },
+    {
+      "rank": 60,
+      "gene": "UBB",
+      "ensembl_id": "ENSG00000170315",
+      "correlation": -0.5213
+    },
+    {
+      "rank": 61,
+      "gene": "MYL6",
+      "ensembl_id": "ENSG00000092841",
+      "correlation": -0.5201
+    },
+    {
+      "rank": 62,
+      "gene": "RPL31",
+      "ensembl_id": "ENSG00000071082",
+      "correlation": -0.5199
+    },
+    {
+      "rank": 63,
+      "gene": "HLA-A",
+      "ensembl_id": "ENSG00000206503",
+      "correlation": -0.5192
+    },
+    {
+      "rank": 64,
+      "gene": "RPL27",
+      "ensembl_id": "ENSG00000131469",
+      "correlation": -0.5172
+    },
+    {
+      "rank": 65,
+      "gene": "RPS23",
+      "ensembl_id": "ENSG00000186468",
+      "correlation": -0.5169
+    },
+    {
+      "rank": 66,
+      "gene": "RPS3",
+      "ensembl_id": "ENSG00000149273",
+      "correlation": -0.5162
+    },
+    {
+      "rank": 67,
+      "gene": "FABP5",
+      "ensembl_id": "ENSG00000164687",
+      "correlation": -0.5149
+    },
+    {
+      "rank": 68,
+      "gene": "FAU",
+      "ensembl_id": "ENSG00000149806",
+      "correlation": -0.5146
+    },
+    {
+      "rank": 69,
+      "gene": "RPL12",
+      "ensembl_id": "ENSG00000197958",
+      "correlation": -0.5136
+    },
+    {
+      "rank": 70,
+      "gene": "H3-3B",
+      "ensembl_id": "ENSG00000132475",
+      "correlation": -0.5132
+    },
+    {
+      "rank": 71,
+      "gene": "RPS9",
+      "ensembl_id": "ENSG00000170889",
+      "correlation": -0.5129
+    },
+    {
+      "rank": 72,
+      "gene": "LGALS1",
+      "ensembl_id": "ENSG00000100097",
+      "correlation": -0.5127
+    },
+    {
+      "rank": 73,
+      "gene": "RPS8",
+      "ensembl_id": "ENSG00000142937",
+      "correlation": -0.5121
+    },
+    {
+      "rank": 74,
+      "gene": "ATP5F1E",
+      "ensembl_id": "ENSG00000124172",
+      "correlation": -0.5092
+    },
+    {
+      "rank": 75,
+      "gene": "EIF1",
+      "ensembl_id": "ENSG00000173812",
+      "correlation": -0.5091
+    },
+    {
+      "rank": 76,
+      "gene": "S100A11",
+      "ensembl_id": "ENSG00000163191",
+      "correlation": -0.5065
+    },
+    {
+      "rank": 77,
+      "gene": "RPS4X",
+      "ensembl_id": "ENSG00000198034",
+      "correlation": -0.5044
+    },
+    {
+      "rank": 78,
+      "gene": "HLA-E",
+      "ensembl_id": "ENSG00000204592",
+      "correlation": -0.5015
+    },
+    {
+      "rank": 79,
+      "gene": "RPS12",
+      "ensembl_id": "ENSG00000112306",
+      "correlation": -0.5004
+    },
+    {
+      "rank": 80,
+      "gene": "CD74",
+      "ensembl_id": "ENSG00000019582",
+      "correlation": -0.4998
+    },
+    {
+      "rank": 81,
+      "gene": "GAPDH",
+      "ensembl_id": "ENSG00000111640",
+      "correlation": -0.4996
+    },
+    {
+      "rank": 82,
+      "gene": "GNG11",
+      "ensembl_id": "ENSG00000127920",
+      "correlation": -0.4985
+    },
+    {
+      "rank": 83,
+      "gene": "TM4SF1",
+      "ensembl_id": "ENSG00000169908",
+      "correlation": -0.4955
+    },
+    {
+      "rank": 84,
+      "gene": "RPL29",
+      "ensembl_id": "ENSG00000162244",
+      "correlation": -0.4921
+    },
+    {
+      "rank": 85,
+      "gene": "RPL18",
+      "ensembl_id": "ENSG00000063177",
+      "correlation": -0.4918
+    },
+    {
+      "rank": 86,
+      "gene": "MT-ND2",
+      "ensembl_id": "ENSG00000198763",
+      "correlation": -0.4917
+    },
+    {
+      "rank": 87,
+      "gene": "RPL28",
+      "ensembl_id": "ENSG00000108107",
+      "correlation": -0.4903
+    },
+    {
+      "rank": 88,
+      "gene": "RPS16",
+      "ensembl_id": "ENSG00000105193",
+      "correlation": -0.4867
+    },
+    {
+      "rank": 89,
+      "gene": "RPS3A",
+      "ensembl_id": "ENSG00000145425",
+      "correlation": -0.4846
+    },
+    {
+      "rank": 90,
+      "gene": "CALM2",
+      "ensembl_id": "ENSG00000143933",
+      "correlation": -0.4841
+    },
+    {
+      "rank": 91,
+      "gene": "RNASE1",
+      "ensembl_id": "ENSG00000129538",
+      "correlation": -0.4835
+    },
+    {
+      "rank": 92,
+      "gene": "UBA52",
+      "ensembl_id": "ENSG00000221983",
+      "correlation": -0.4823
+    },
+    {
+      "rank": 93,
+      "gene": "JUNB",
+      "ensembl_id": "ENSG00000171223",
+      "correlation": -0.4823
+    },
+    {
+      "rank": 94,
+      "gene": "HSPB1",
+      "ensembl_id": "ENSG00000106211",
+      "correlation": -0.4819
+    },
+    {
+      "rank": 95,
+      "gene": "MT-ND4",
+      "ensembl_id": "ENSG00000198886",
+      "correlation": -0.4817
+    },
+    {
+      "rank": 96,
+      "gene": "RPL38",
+      "ensembl_id": "ENSG00000172809",
+      "correlation": -0.4815
+    },
+    {
+      "rank": 97,
+      "gene": "RPL9",
+      "ensembl_id": "ENSG00000163682",
+      "correlation": -0.4809
+    },
+    {
+      "rank": 98,
+      "gene": "RPS7",
+      "ensembl_id": "ENSG00000171863",
+      "correlation": -0.4783
+    },
+    {
+      "rank": 99,
+      "gene": "CST3",
+      "ensembl_id": "ENSG00000101439",
+      "correlation": -0.4764
+    },
+    {
+      "rank": 100,
+      "gene": "ITM2B",
+      "ensembl_id": "ENSG00000136156",
+      "correlation": -0.4753
+    },
+    {
+      "rank": 101,
+      "gene": "MYL12B",
+      "ensembl_id": "ENSG00000118680",
+      "correlation": -0.4739
+    },
+    {
+      "rank": 102,
+      "gene": "RPS5",
+      "ensembl_id": "ENSG00000083845",
+      "correlation": -0.4729
+    },
+    {
+      "rank": 103,
+      "gene": "RPS24",
+      "ensembl_id": "ENSG00000138326",
+      "correlation": -0.4722
+    },
+    {
+      "rank": 104,
+      "gene": "MT-CO2",
+      "ensembl_id": "ENSG00000198712",
+      "correlation": -0.4709
+    },
+    {
+      "rank": 105,
+      "gene": "FKBP1A",
+      "ensembl_id": "ENSG00000088832",
+      "correlation": -0.4693
+    },
+    {
+      "rank": 106,
+      "gene": "POMP",
+      "ensembl_id": "ENSG00000132963",
+      "correlation": -0.4685
+    },
+    {
+      "rank": 107,
+      "gene": "LY6E",
+      "ensembl_id": "ENSG00000160932",
+      "correlation": -0.4656
+    },
+    {
+      "rank": 108,
+      "gene": "ID3",
+      "ensembl_id": "ENSG00000117318",
+      "correlation": -0.4653
+    },
+    {
+      "rank": 109,
+      "gene": "RPL10A",
+      "ensembl_id": "ENSG00000198755",
+      "correlation": -0.4652
+    },
+    {
+      "rank": 110,
+      "gene": "YBX1",
+      "ensembl_id": "ENSG00000065978",
+      "correlation": -0.464
+    },
+    {
+      "rank": 111,
+      "gene": "RPS11",
+      "ensembl_id": "ENSG00000142534",
+      "correlation": -0.4629
+    },
+    {
+      "rank": 112,
+      "gene": "BST2",
+      "ensembl_id": "ENSG00000130303",
+      "correlation": -0.4628
+    },
+    {
+      "rank": 113,
+      "gene": "FABP4",
+      "ensembl_id": "ENSG00000170323",
+      "correlation": -0.4627
+    },
+    {
+      "rank": 114,
+      "gene": "ELOB",
+      "ensembl_id": "ENSG00000103363",
+      "correlation": -0.4618
+    },
+    {
+      "rank": 115,
+      "gene": "MYL12A",
+      "ensembl_id": "ENSG00000101608",
+      "correlation": -0.4594
+    },
+    {
+      "rank": 116,
+      "gene": "COX6A1",
+      "ensembl_id": "ENSG00000111775",
+      "correlation": -0.4571
+    },
+    {
+      "rank": 117,
+      "gene": "RPL30",
+      "ensembl_id": "ENSG00000156482",
+      "correlation": -0.457
+    },
+    {
+      "rank": 118,
+      "gene": "S100A10",
+      "ensembl_id": "ENSG00000197747",
+      "correlation": -0.4565
+    },
+    {
+      "rank": 119,
+      "gene": "CD59",
+      "ensembl_id": "ENSG00000085063",
+      "correlation": -0.4532
+    },
+    {
+      "rank": 120,
+      "gene": "MT-CO1",
+      "ensembl_id": "ENSG00000198804",
+      "correlation": -0.4528
+    },
+    {
+      "rank": 121,
+      "gene": "RPL37",
+      "ensembl_id": "ENSG00000145592",
+      "correlation": -0.4507
+    },
+    {
+      "rank": 122,
+      "gene": "TAGLN2",
+      "ensembl_id": "ENSG00000158710",
+      "correlation": -0.4502
+    },
+    {
+      "rank": 123,
+      "gene": "OAZ1",
+      "ensembl_id": "ENSG00000104904",
+      "correlation": -0.4498
+    },
+    {
+      "rank": 124,
+      "gene": "RHOC",
+      "ensembl_id": "ENSG00000155366",
+      "correlation": -0.4483
+    },
+    {
+      "rank": 125,
+      "gene": "TMA7",
+      "ensembl_id": "ENSG00000232112",
+      "correlation": -0.4478
+    },
+    {
+      "rank": 126,
+      "gene": "RPL6",
+      "ensembl_id": "ENSG00000089009",
+      "correlation": -0.4476
+    },
+    {
+      "rank": 127,
+      "gene": "TPT1",
+      "ensembl_id": "ENSG00000133112",
+      "correlation": -0.4463
+    },
+    {
+      "rank": 128,
+      "gene": "RPL14",
+      "ensembl_id": "ENSG00000188846",
+      "correlation": -0.4459
+    },
+    {
+      "rank": 129,
+      "gene": "SRGN",
+      "ensembl_id": "ENSG00000122862",
+      "correlation": -0.4445
+    },
+    {
+      "rank": 130,
+      "gene": "UQCR11",
+      "ensembl_id": "ENSG00000127540",
+      "correlation": -0.4419
+    },
+    {
+      "rank": 131,
+      "gene": "GSTP1",
+      "ensembl_id": "ENSG00000084207",
+      "correlation": -0.4404
+    },
+    {
+      "rank": 132,
+      "gene": "H3-3A",
+      "ensembl_id": "ENSG00000163041",
+      "correlation": -0.4356
+    },
+    {
+      "rank": 133,
+      "gene": "RACK1",
+      "ensembl_id": "ENSG00000204628",
+      "correlation": -0.4348
+    },
+    {
+      "rank": 134,
+      "gene": "COX7A2",
+      "ensembl_id": "ENSG00000112695",
+      "correlation": -0.4346
+    },
+    {
+      "rank": 135,
+      "gene": "PFDN5",
+      "ensembl_id": "ENSG00000123349",
+      "correlation": -0.4333
+    },
+    {
+      "rank": 136,
+      "gene": "ANXA2",
+      "ensembl_id": "ENSG00000182718",
+      "correlation": -0.4332
+    },
+    {
+      "rank": 137,
+      "gene": "COX6C",
+      "ensembl_id": "ENSG00000164919",
+      "correlation": -0.4321
+    },
+    {
+      "rank": 138,
+      "gene": "LGALS3",
+      "ensembl_id": "ENSG00000131981",
+      "correlation": -0.4321
+    },
+    {
+      "rank": 139,
+      "gene": "TMEM88",
+      "ensembl_id": "ENSG00000167874",
+      "correlation": -0.4311
+    },
+    {
+      "rank": 140,
+      "gene": "NHERF2",
+      "ensembl_id": "ENSG00000065054",
+      "correlation": -0.4307
+    },
+    {
+      "rank": 141,
+      "gene": "ZFP36",
+      "ensembl_id": "ENSG00000128016",
+      "correlation": -0.4303
+    },
+    {
+      "rank": 142,
+      "gene": "CALM1",
+      "ensembl_id": "ENSG00000198668",
+      "correlation": -0.4291
+    },
+    {
+      "rank": 143,
+      "gene": "RPL22",
+      "ensembl_id": "ENSG00000116251",
+      "correlation": -0.4272
+    },
+    {
+      "rank": 144,
+      "gene": "RPL7A",
+      "ensembl_id": "ENSG00000148303",
+      "correlation": -0.4261
+    },
+    {
+      "rank": 145,
+      "gene": "RPL24",
+      "ensembl_id": "ENSG00000114391",
+      "correlation": -0.4257
+    },
+    {
+      "rank": 146,
+      "gene": "VAMP5",
+      "ensembl_id": "ENSG00000168899",
+      "correlation": -0.4257
+    },
+    {
+      "rank": 147,
+      "gene": "RPS26",
+      "ensembl_id": "ENSG00000197728",
+      "correlation": -0.4246
+    },
+    {
+      "rank": 148,
+      "gene": "RPS10",
+      "ensembl_id": "ENSG00000124614",
+      "correlation": -0.4245
+    },
+    {
+      "rank": 149,
+      "gene": "ACTG1",
+      "ensembl_id": "ENSG00000184009",
+      "correlation": -0.4235
+    },
+    {
+      "rank": 150,
+      "gene": "TUBA1B",
+      "ensembl_id": "ENSG00000123416",
+      "correlation": -0.4227
+    },
+    {
+      "rank": 151,
+      "gene": "NACA",
+      "ensembl_id": "ENSG00000196531",
+      "correlation": -0.4221
+    },
+    {
+      "rank": 152,
+      "gene": "RPS21",
+      "ensembl_id": "ENSG00000171858",
+      "correlation": -0.4205
+    },
+    {
+      "rank": 153,
+      "gene": "RPS17",
+      "ensembl_id": "ENSG00000182774",
+      "correlation": -0.4205
+    },
+    {
+      "rank": 154,
+      "gene": "UBL5",
+      "ensembl_id": "ENSG00000198258",
+      "correlation": -0.4204
+    },
+    {
+      "rank": 155,
+      "gene": "OST4",
+      "ensembl_id": "ENSG00000228474",
+      "correlation": -0.4198
+    },
+    {
+      "rank": 156,
+      "gene": "BTF3",
+      "ensembl_id": "ENSG00000145741",
+      "correlation": -0.4187
+    },
+    {
+      "rank": 157,
+      "gene": "NEDD8",
+      "ensembl_id": "ENSG00000129559",
+      "correlation": -0.4183
+    },
+    {
+      "rank": 158,
+      "gene": "MT-CO3",
+      "ensembl_id": "ENSG00000198938",
+      "correlation": -0.418
+    },
+    {
+      "rank": 159,
+      "gene": "RPL23",
+      "ensembl_id": "ENSG00000125691",
+      "correlation": -0.4155
+    },
+    {
+      "rank": 160,
+      "gene": "MT-CYB",
+      "ensembl_id": "ENSG00000198727",
+      "correlation": -0.4129
+    },
+    {
+      "rank": 161,
+      "gene": "SH3BGRL3",
+      "ensembl_id": "ENSG00000142669",
+      "correlation": -0.4114
+    },
+    {
+      "rank": 162,
+      "gene": "RPL36AL",
+      "ensembl_id": "ENSG00000165502",
+      "correlation": -0.4113
+    },
+    {
+      "rank": 163,
+      "gene": "CRIP2",
+      "ensembl_id": "ENSG00000182809",
+      "correlation": -0.4102
+    },
+    {
+      "rank": 164,
+      "gene": "NDUFA4",
+      "ensembl_id": "ENSG00000189043",
+      "correlation": -0.4086
+    },
+    {
+      "rank": 165,
+      "gene": "CLIC1",
+      "ensembl_id": "ENSG00000213719",
+      "correlation": -0.4085
+    },
+    {
+      "rank": 166,
+      "gene": "DYNLL1",
+      "ensembl_id": "ENSG00000088986",
+      "correlation": -0.4072
+    },
+    {
+      "rank": 167,
+      "gene": "RPL36A",
+      "ensembl_id": "ENSG00000241343",
+      "correlation": -0.4052
+    },
+    {
+      "rank": 168,
+      "gene": "GUK1",
+      "ensembl_id": "ENSG00000143774",
+      "correlation": -0.4026
+    },
+    {
+      "rank": 169,
+      "gene": "ICAM2",
+      "ensembl_id": "ENSG00000108622",
+      "correlation": -0.4015
+    },
+    {
+      "rank": 170,
+      "gene": "CLDN5",
+      "ensembl_id": "ENSG00000184113",
+      "correlation": -0.4012
+    },
+    {
+      "rank": 171,
+      "gene": "TOMM7",
+      "ensembl_id": "ENSG00000196683",
+      "correlation": -0.4011
+    },
+    {
+      "rank": 172,
+      "gene": "RPLP0",
+      "ensembl_id": "ENSG00000089157",
+      "correlation": -0.4001
+    },
+    {
+      "rank": 173,
+      "gene": "RABAC1",
+      "ensembl_id": "ENSG00000105404",
+      "correlation": -0.397
+    },
+    {
+      "rank": 174,
+      "gene": "PSME1",
+      "ensembl_id": "ENSG00000092010",
+      "correlation": -0.3967
+    },
+    {
+      "rank": 175,
+      "gene": "UQCRB",
+      "ensembl_id": "ENSG00000156467",
+      "correlation": -0.3962
+    },
+    {
+      "rank": 176,
+      "gene": "RAC1",
+      "ensembl_id": "ENSG00000136238",
+      "correlation": -0.396
+    },
+    {
+      "rank": 177,
+      "gene": "MT-ATP6",
+      "ensembl_id": "ENSG00000198899",
+      "correlation": -0.3955
+    },
+    {
+      "rank": 178,
+      "gene": "PRDX1",
+      "ensembl_id": "ENSG00000117450",
+      "correlation": -0.3953
+    },
+    {
+      "rank": 179,
+      "gene": "ITM2A",
+      "ensembl_id": "ENSG00000078596",
+      "correlation": -0.3952
+    },
+    {
+      "rank": 180,
+      "gene": "FOS",
+      "ensembl_id": "ENSG00000170345",
+      "correlation": -0.3949
+    },
+    {
+      "rank": 181,
+      "gene": "CHCHD2",
+      "ensembl_id": "ENSG00000106153",
+      "correlation": -0.3936
+    },
+    {
+      "rank": 182,
+      "gene": "PSMA7",
+      "ensembl_id": "ENSG00000101182",
+      "correlation": -0.3919
+    },
+    {
+      "rank": 183,
+      "gene": "CAV1",
+      "ensembl_id": "ENSG00000105974",
+      "correlation": -0.3919
+    },
+    {
+      "rank": 184,
+      "gene": "TXN",
+      "ensembl_id": "ENSG00000136810",
+      "correlation": -0.3915
+    },
+    {
+      "rank": 185,
+      "gene": "EEF1D",
+      "ensembl_id": "ENSG00000104529",
+      "correlation": -0.3907
+    },
+    {
+      "rank": 186,
+      "gene": "ATP5PF",
+      "ensembl_id": "ENSG00000154723",
+      "correlation": -0.39
+    },
+    {
+      "rank": 187,
+      "gene": "CLEC14A",
+      "ensembl_id": "ENSG00000176435",
+      "correlation": -0.3899
+    },
+    {
+      "rank": 188,
+      "gene": "IER2",
+      "ensembl_id": "ENSG00000160888",
+      "correlation": -0.3898
+    },
+    {
+      "rank": 189,
+      "gene": "MT-ND1",
+      "ensembl_id": "ENSG00000198888",
+      "correlation": -0.3895
+    },
+    {
+      "rank": 190,
+      "gene": "RAMP2",
+      "ensembl_id": "ENSG00000131477",
+      "correlation": -0.3892
+    },
+    {
+      "rank": 191,
+      "gene": "JUN",
+      "ensembl_id": "ENSG00000177606",
+      "correlation": -0.3886
+    },
+    {
+      "rank": 192,
+      "gene": "SKP1",
+      "ensembl_id": "ENSG00000113558",
+      "correlation": -0.3885
+    },
+    {
+      "rank": 193,
+      "gene": "COX4I1",
+      "ensembl_id": "ENSG00000131143",
+      "correlation": -0.3881
+    },
+    {
+      "rank": 194,
+      "gene": "TPI1",
+      "ensembl_id": "ENSG00000111669",
+      "correlation": -0.3878
+    },
+    {
+      "rank": 195,
+      "gene": "ESAM",
+      "ensembl_id": "ENSG00000149564",
+      "correlation": -0.3867
+    },
+    {
+      "rank": 196,
+      "gene": "H2AZ1",
+      "ensembl_id": "ENSG00000164032",
+      "correlation": -0.3834
+    },
+    {
+      "rank": 197,
+      "gene": "GIMAP7",
+      "ensembl_id": "ENSG00000179144",
+      "correlation": -0.3833
+    },
+    {
+      "rank": 198,
+      "gene": "NDUFC2",
+      "ensembl_id": "ENSG00000151366",
+      "correlation": -0.3831
+    },
+    {
+      "rank": 199,
+      "gene": "VIM",
+      "ensembl_id": "ENSG00000026025",
+      "correlation": -0.3829
+    },
+    {
+      "rank": 200,
+      "gene": "IL32",
+      "ensembl_id": "ENSG00000008517",
+      "correlation": -0.3825
+    }
+  ]
+}

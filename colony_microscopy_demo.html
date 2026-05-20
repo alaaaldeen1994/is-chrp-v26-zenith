@@ -1,302 +1,204 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kagawea Ultra — Microscopy | Nilus Lab</title>
     <style>
-        :root {
-            --bg: #000000;
-            --panel: rgba(10, 10, 15, 0.95);
-            --accent: #34d399;
-            --text: #f8fafc;
-        }
-
-        body,
-        html {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            background: var(--bg);
-            color: var(--text);
-            font-family: 'JetBrains Mono', monospace;
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body, html {
+            width: 100%; height: 100%;
+            background: #000;
+            color: #f8fafc;
+            font-family: 'JetBrains Mono', 'Courier New', monospace;
             overflow: hidden;
         }
 
-        #viewport {
-            width: 100vw;
-            height: 100vh;
-            filter: contrast(1.3) brightness(1.2) saturate(1.4);
+        canvas#viewport {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            z-index: 1;
         }
 
-        /* Microscopy Effects */
         .scanline-overlay {
-            position: fixed;
-            inset: 0;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.08) 50%);
+            position: fixed; inset: 0;
+            background: linear-gradient(rgba(18,16,16,0) 50%, rgba(0,0,0,0.06) 50%);
             background-size: 100% 4px;
-            pointer-events: none;
-            z-index: 5;
-            opacity: 0.3;
+            pointer-events: none; z-index: 2; opacity: 0.25;
         }
-
         .bloom-overlay {
-            position: fixed;
-            inset: 0;
-            background: radial-gradient(circle at center, transparent 30%, rgba(0, 0, 0, 0.4) 100%);
-            pointer-events: none;
-            z-index: 4;
+            position: fixed; inset: 0;
+            background: radial-gradient(circle at center, transparent 30%, rgba(0,0,0,0.35) 100%);
+            pointer-events: none; z-index: 3;
         }
 
-        .controls {
-            position: fixed;
-            top: 64px;
-            left: 30px;
-            width: min(300px, calc(50% - 40px));
-            max-height: calc(100vh - 80px);
-            background: var(--panel);
+        /* Top Nav */
+        .top-nav {
+            position: fixed; top: 0; left: 0; right: 0;
+            height: 44px;
+            background: rgba(5,5,8,0.92);
             backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 16px;
-            padding: 24px;
-            z-index: 10;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
-            overflow-y: auto;
-            scrollbar-width: none;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 20px; z-index: 200;
         }
-
-        .controls::-webkit-scrollbar {
-            display: none;
-        }
-
-        .header {
-            font-size: 10px;
-            font-weight: 900;
-            letter-spacing: 3px;
-            color: var(--accent);
+        .nav-back {
+            display: flex; align-items: center; gap: 8px;
+            color: #60a5fa; text-decoration: none;
+            font-size: 9px; font-weight: 800; letter-spacing: 1.5px;
             text-transform: uppercase;
-            margin-bottom: 24px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
+            padding: 6px 16px;
+            background: rgba(37,99,235,0.1);
+            border: 1px solid rgba(37,99,235,0.3);
+            border-radius: 6px; transition: all 0.2s;
+        }
+        .nav-back:hover { background: rgba(37,99,235,0.25); border-color: rgba(37,99,235,0.5); }
+        .nav-title {
+            font-size: 9px; font-weight: 900; letter-spacing: 3px;
+            color: #34d399; text-transform: uppercase;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .nav-dot {
+            width: 6px; height: 6px; background: #34d399;
+            border-radius: 50%; box-shadow: 0 0 10px #34d399;
+            animation: pulse 1.5s infinite;
+        }
+        .nav-toggle {
+            display: flex; gap: 4px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 6px; padding: 2px;
+        }
+        .nav-toggle a, .nav-toggle span {
+            padding: 4px 10px; font-size: 8px; font-weight: 700;
+            border-radius: 4px; letter-spacing: 0.5px; text-decoration: none;
         }
 
-        .header-dot {
-            width: 8px;
-            height: 8px;
-            background: var(--accent);
-            border-radius: 50%;
-            box-shadow: 0 0 12px var(--accent);
+        /* Controls Panel */
+        .controls {
+            position: fixed; top: 64px; left: 30px;
+            width: min(280px, calc(50% - 40px));
+            max-height: calc(100vh - 80px);
+            background: rgba(10,10,15,0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 16px; padding: 20px;
+            z-index: 10;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+            overflow-y: auto; scrollbar-width: none;
+        }
+        .controls::-webkit-scrollbar { display: none; }
+        .ctrl-header {
+            font-size: 10px; font-weight: 900; letter-spacing: 3px;
+            color: #34d399; text-transform: uppercase;
+            margin-bottom: 20px;
+            display: flex; align-items: center; gap: 10px;
+        }
+        .ctrl-header-dot {
+            width: 8px; height: 8px; background: #34d399;
+            border-radius: 50%; box-shadow: 0 0 12px #34d399;
             animation: pulse 1.5s infinite;
+        }
+        .ctrl-group { margin-bottom: 16px; }
+        .ctrl-label {
+            display: flex; justify-content: space-between;
+            font-size: 9px; color: #64748b; margin-bottom: 8px;
+            font-weight: 700; text-transform: uppercase;
+        }
+        input[type="range"] {
+            width: 100%; height: 3px; background: #1e293b;
+            border-radius: 2px; appearance: none; outline: none;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            appearance: none; width: 14px; height: 14px;
+            background: #34d399; border: 2px solid #000;
+            border-radius: 50%; cursor: pointer;
+            box-shadow: 0 0 10px rgba(52,211,153,0.4);
+        }
+        .legend {
+            margin-top: 20px; padding-top: 16px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+        .legend-item {
+            display: flex; align-items: center; gap: 10px;
+            font-size: 10px; margin-bottom: 8px; color: #94a3b8;
+        }
+        .swatch {
+            width: 10px; height: 10px; border-radius: 3px;
+        }
+
+        /* Metadata */
+        #meta-data {
+            position: fixed; bottom: 30px; right: 30px;
+            font-size: 9px; color: #475569;
+            text-align: right; line-height: 1.6; z-index: 10;
         }
 
         @keyframes pulse {
-
-            0%,
-            100% {
-                opacity: 0.3;
-                transform: scale(0.8);
-            }
-
-            50% {
-                opacity: 1;
-                transform: scale(1.1);
-            }
-        }
-
-        .control-group {
-            margin-bottom: 20px;
-        }
-
-        .label {
-            display: flex;
-            justify-content: space-between;
-            font-size: 9px;
-            color: #64748b;
-            margin-bottom: 10px;
-            font-weight: 700;
-            text-transform: uppercase;
-        }
-
-        input[type="range"] {
-            width: 100%;
-            height: 3px;
-            background: #1e293b;
-            border-radius: 2px;
-            appearance: none;
-            outline: none;
-        }
-
-        input[type="range"]::-webkit-slider-thumb {
-            appearance: none;
-            width: 14px;
-            height: 14px;
-            background: var(--accent);
-            border: 2px solid #000;
-            border-radius: 50%;
-            cursor: pointer;
-            box-shadow: 0 0 10px rgba(52, 211, 153, 0.4);
-        }
-
-        .legend {
-            margin-top: 24px;
-            padding-top: 24px;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .legend-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 10px;
-            margin-bottom: 10px;
-            color: #94a3b8;
-        }
-
-        .swatch {
-            width: 10px;
-            height: 10px;
-            border-radius: 3px;
-        }
-
-        #meta-data {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 9px;
-            color: #475569;
-            text-align: right;
-            line-height: 1.6;
+            0%, 100% { opacity: 0.3; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.1); }
         }
     </style>
 </head>
-
 <body>
     <div class="scanline-overlay"></div>
     <div class="bloom-overlay"></div>
 
-    <!-- TOP NAV BAR -->
-    <div style="
-        position: fixed;
-        top: 0; left: 0; right: 0;
-        height: 44px;
-        background: rgba(5, 5, 8, 0.92);
-        backdrop-filter: blur(20px);
-        border-bottom: 1px solid rgba(255,255,255,0.06);
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 0 20px;
-        z-index: 200;
-        font-family: 'JetBrains Mono', monospace;
-    ">
-        <!-- Back to Lab -->
-        <a href="index.html" style="
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            color: #60a5fa;
-            text-decoration: none;
-            font-size: 9px;
-            font-weight: 800;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-            padding: 6px 16px;
-            background: rgba(37, 99, 235, 0.1);
-            border: 1px solid rgba(37, 99, 235, 0.3);
-            border-radius: 6px;
-            transition: all 0.2s;
-        " onmouseover="this.style.background='rgba(37, 99, 235, 0.2)';this.style.borderColor='rgba(37, 99, 235, 0.5)'"
-            onmouseout="this.style.background='rgba(37, 99, 235, 0.1)';this.style.borderColor='rgba(37, 99, 235, 0.3)'">
-            ← BACK TO LAB
-        </a>
-
-        <!-- Mode Label -->
-        <div style="
-            font-size: 9px;
-            font-weight: 900;
-            letter-spacing: 3px;
-            color: #34d399;
-            text-transform: uppercase;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        ">
-            <span
-                style="width:6px;height:6px;background:#34d399;border-radius:50%;box-shadow:0 0 10px #34d399;display:inline-block;animation:pulse 1.5s infinite;"></span>
+    <!-- TOP NAV -->
+    <div class="top-nav">
+        <a href="index.html" class="nav-back">← BACK TO LAB</a>
+        <div class="nav-title">
+            <span class="nav-dot"></span>
             KAGAWEA ULTRA — MICROSCOPY (v26.4 GOLD | ~285.4M)
         </div>
-
-        <!-- View Toggle -->
-        <div style="
-            display: flex;
-            gap: 4px;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 6px;
-            padding: 2px;
-        ">
-            <a href="index.html"
-                style="padding:4px 10px;font-size:8px;font-weight:700;color:rgba(255,255,255,0.4);text-decoration:none;border-radius:4px;letter-spacing:0.5px;">2D</a>
-            <span
-                style="padding:4px 10px;font-size:8px;font-weight:700;color:#34d399;border-radius:4px;background:rgba(52,211,153,0.15);border:1px solid rgba(52,211,153,0.3);letter-spacing:0.5px;">Micro</span>
-            <a href="3d_view.html"
-                style="padding:4px 10px;font-size:8px;font-weight:700;color:rgba(255,255,255,0.4);text-decoration:none;border-radius:4px;letter-spacing:0.5px;">3D</a>
+        <div class="nav-toggle">
+            <a href="index.html" style="color:rgba(255,255,255,0.4);">2D</a>
+            <span style="color:#34d399;background:rgba(52,211,153,0.15);border:1px solid rgba(52,211,153,0.3);">Micro</span>
         </div>
     </div>
 
+    <!-- CONTROLS -->
     <div class="controls">
-        <div class="header">
-            <div class="header-dot"></div>
+        <div class="ctrl-header">
+            <div class="ctrl-header-dot"></div>
             Microscopy Analysis
         </div>
-
-        <div class="control-group">
-            <div class="label">
-                <span>COLONY RADIUS</span>
-                <span id="val-radius">380px</span>
-            </div>
+        <div class="ctrl-group">
+            <div class="ctrl-label"><span>COLONY RADIUS</span><span id="val-radius">380px</span></div>
             <input type="range" id="input-radius" min="100" max="600" value="380">
         </div>
-
-        <div class="control-group">
-            <div class="label">
-                <span>CELL DENSITY</span>
-                <span id="val-density">1800</span>
-            </div>
-            <input type="range" id="input-density" min="500" max="4000" value="1800">
+        <div class="ctrl-group">
+            <div class="ctrl-label"><span>CELL DENSITY</span><span id="val-density">2200</span></div>
+            <input type="range" id="input-density" min="500" max="5000" value="2200">
         </div>
-
-        <div class="control-group">
-            <div class="label">
-                <span>CHANNEL: 488nm (GREEN)</span>
-                <span id="val-green">90%</span>
-            </div>
-            <input type="range" id="input-green" min="0" max="150" value="90">
+        <div class="ctrl-group">
+            <div class="ctrl-label"><span>CHANNEL: 488nm (GREEN)</span><span id="val-green">100%</span></div>
+            <input type="range" id="input-green" min="0" max="150" value="100">
         </div>
-
-        <div class="control-group">
-            <div class="label">
-                <span>CHANNEL: DAPI (BLUE)</span>
-                <span id="val-blue">70%</span>
-            </div>
-            <input type="range" id="input-blue" min="0" max="150" value="70">
+        <div class="ctrl-group">
+            <div class="ctrl-label"><span>CHANNEL: DAPI (BLUE)</span><span id="val-blue">85%</span></div>
+            <input type="range" id="input-blue" min="0" max="150" value="85">
         </div>
-
+        <div class="ctrl-group">
+            <div class="ctrl-label"><span>CHANNEL: 594nm (RED/PINK)</span><span id="val-red">90%</span></div>
+            <input type="range" id="input-red" min="0" max="150" value="90">
+        </div>
+        <div class="ctrl-group">
+            <div class="ctrl-label"><span>EXPOSURE</span><span id="val-exposure">120%</span></div>
+            <input type="range" id="input-exposure" min="50" max="200" value="120">
+        </div>
         <div class="legend">
             <div class="legend-item">
-                <div class="swatch" style="background: #10b981; box-shadow: 0 0 10px #10b981;"></div>
+                <div class="swatch" style="background:#10b981;box-shadow:0 0 10px #10b981;"></div>
                 <span>Phalloidin (Actin Filaments)</span>
             </div>
             <div class="legend-item">
-                <div class="swatch" style="background: #f43f5e; box-shadow: 0 0 10px #f43f5e;"></div>
+                <div class="swatch" style="background:#f43f5e;box-shadow:0 0 10px #f43f5e;"></div>
                 <span>mCherry (Cytoplasm)</span>
             </div>
             <div class="legend-item">
-                <div class="swatch" style="background: #6366f1; box-shadow: 0 0 10px #6366f1;"></div>
+                <div class="swatch" style="background:#6366f1;box-shadow:0 0 10px #6366f1;"></div>
                 <span>DAPI (Nuclear DNA)</span>
             </div>
         </div>
@@ -305,7 +207,8 @@
     <div id="meta-data">
         OBJECTIVE: 40X OIL IMMERSION<br>
         EXPOSURE: 180ms<br>
-        STATUS: SCANNING COLONY... 60 FPS
+        PROVENANCE: PROTECTED (Zenith v27.0)<br>
+        STATUS: <span id="fps-counter">SCANNING COLONY... 60 FPS</span>
     </div>
 
     <canvas id="viewport"></canvas>
@@ -316,220 +219,300 @@
 
         const params = {
             radius: 380,
-            density: 1800,
-            green: 0.9,
-            blue: 0.7,
-            red: 0.8
+            density: 2200,
+            green: 1.0,
+            blue: 0.85,
+            red: 0.9,
+            exposure: 1.2
         };
 
         let cells = [];
         let bgFilaments = [];
+        let frameCount = 0;
 
+        // ── CELL CLASS ──────────────────────────────────────────
         class Cell {
-            constructor(x, y) {
+            constructor(x, y, distFromCenter, maxDist) {
                 this.x = x;
                 this.y = y;
-                this.size = 8 + Math.random() * 10;
+                this.size = 6 + Math.random() * 8;
                 this.pulseOffset = Math.random() * Math.PI * 2;
-                this.offsets = Array.from({ length: 12 }, () => 0.8 + Math.random() * 0.5);
                 this.health = Math.random();
-                this.isEdge = false;
+                this.isEdge = distFromCenter > maxDist * 0.82;
+                this.isDeepCenter = distFromCenter < maxDist * 0.3;
+                this.depthFactor = 0.6 + Math.random() * 0.4; // z-depth simulation
 
-                // Nuclear offset
-                this.nx = (Math.random() - 0.5) * 6;
-                this.ny = (Math.random() - 0.5) * 6;
+                // Nuclear offset from cell center
+                this.nx = (Math.random() - 0.5) * 5;
+                this.ny = (Math.random() - 0.5) * 5;
+
+                // Membrane shape (organic irregular polygon)
+                this.membranePoints = 14;
+                this.offsets = Array.from({ length: this.membranePoints }, () => 0.7 + Math.random() * 0.6);
+
+                // Filopodia for edge cells
+                this.filoCount = this.isEdge ? 2 + Math.floor(Math.random() * 4) : 0;
+                this.filoAngles = [];
+                this.filoLengths = [];
+                if (this.isEdge) {
+                    const angToOut = Math.atan2(y - canvas.height / 2, x - canvas.width / 2);
+                    for (let i = 0; i < this.filoCount; i++) {
+                        this.filoAngles.push(angToOut + (Math.random() - 0.5) * 1.8);
+                        this.filoLengths.push(20 + Math.random() * 55);
+                    }
+                }
             }
 
             update() {
-                const centerX = canvas.width / 2;
-                const centerY = canvas.height / 2;
-                const dx = centerX - this.x;
-                const dy = centerY - this.y;
+                // Slow Brownian jitter
+                this.x += Math.sin(Date.now() * 0.0008 + this.pulseOffset) * 0.15;
+                this.y += Math.cos(Date.now() * 0.001 + this.pulseOffset) * 0.15;
+
+                // Gentle drift toward colony center
+                const cx = canvas.width / 2;
+                const cy = canvas.height / 2;
+                const dx = cx - this.x;
+                const dy = cy - this.y;
                 const dist = Math.sqrt(dx * dx + dy * dy);
-
-                this.isEdge = dist > params.radius * 0.85;
-
-                // Brownian Jitter
-                this.x += Math.sin(Date.now() * 0.001 + this.pulseOffset) * 0.2;
-                this.y += Math.cos(Date.now() * 0.0012 + this.pulseOffset) * 0.2;
-
-                // Move toward colony centroid
                 if (dist > params.radius) {
-                    this.x += dx * 0.03;
-                    this.y += dy * 0.03;
+                    this.x += dx * 0.02;
+                    this.y += dy * 0.02;
                 }
             }
 
             draw() {
                 const time = Date.now() * 0.001 + this.pulseOffset;
-                const flicker = 0.9 + Math.sin(time * 5) * 0.1;
+                const flicker = 0.85 + Math.sin(time * 4) * 0.15;
+                const exp = params.exposure;
 
+                ctx.save();
                 ctx.globalCompositeOperation = 'screen';
 
-                // 1. CYTOPLASM (Red/Magenta - Fluorescence Depth)
-                const cytGrad = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.size * 1.8);
-                const a = (this.health > 0.8 ? 0.4 : 0.1) * params.red;
-                cytGrad.addColorStop(0, `rgba(244, 63, 94, ${a})`);
-                cytGrad.addColorStop(1, `rgba(124, 58, 237, 0)`);
-
-                ctx.fillStyle = cytGrad;
+                // ── 1. CYTOPLASM GLOW (Pink/Magenta mCherry) ──
+                const cytoAlpha = (this.health > 0.4 ? 0.35 : 0.15) * params.red * exp * this.depthFactor;
+                const cytoGrad = ctx.createRadialGradient(
+                    this.x, this.y, 0,
+                    this.x, this.y, this.size * 2.2
+                );
+                cytoGrad.addColorStop(0, `rgba(244, 63, 94, ${Math.min(cytoAlpha * 1.2, 0.9)})`);
+                cytoGrad.addColorStop(0.4, `rgba(236, 72, 153, ${cytoAlpha * 0.8})`);
+                cytoGrad.addColorStop(0.7, `rgba(168, 85, 247, ${cytoAlpha * 0.3})`);
+                cytoGrad.addColorStop(1, 'rgba(0,0,0,0)');
+                ctx.fillStyle = cytoGrad;
                 ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size * 2, 0, Math.PI * 2);
+                ctx.arc(this.x, this.y, this.size * 2.2, 0, Math.PI * 2);
                 ctx.fill();
 
-                // 2. NUCLEUS (DAPI Blue - Sharp focus)
-                const nSize = this.size * 0.35;
+                // ── 2. NUCLEUS (DAPI Blue/Purple — sharp) ──
+                const nucSize = this.size * 0.4;
+                const nucAlpha = (this.isDeepCenter ? 0.95 : 0.8) * params.blue * exp * this.depthFactor;
+                const nucGrad = ctx.createRadialGradient(
+                    this.x + this.nx, this.y + this.ny, 0,
+                    this.x + this.nx, this.y + this.ny, nucSize * 1.8
+                );
+                nucGrad.addColorStop(0, `rgba(129, 140, 248, ${Math.min(nucAlpha, 0.95)})`);
+                nucGrad.addColorStop(0.5, `rgba(99, 102, 241, ${nucAlpha * 0.7})`);
+                nucGrad.addColorStop(1, `rgba(67, 56, 202, 0)`);
+                ctx.fillStyle = nucGrad;
                 ctx.beginPath();
-                ctx.fillStyle = `rgba(129, 140, 248, ${0.95 * params.blue})`;
-                // Glow for nucleus
-                ctx.shadowBlur = 10;
-                ctx.shadowColor = '#6366f1';
-                ctx.arc(this.x + this.nx, this.y + this.ny, nSize, 0, Math.PI * 2);
+                ctx.arc(this.x + this.nx, this.y + this.ny, nucSize * 1.8, 0, Math.PI * 2);
                 ctx.fill();
-                ctx.shadowBlur = 0;
 
-                // 3. MEMBRANE (Crisp Green Filaments)
+                // Sharp nucleus core
+                ctx.fillStyle = `rgba(165, 180, 252, ${Math.min(nucAlpha * 1.1, 0.9)})`;
                 ctx.beginPath();
-                ctx.strokeStyle = `rgba(52, 211, 153, ${params.green * flicker * 0.8})`;
-                ctx.lineWidth = 1.2;
+                ctx.arc(this.x + this.nx, this.y + this.ny, nucSize * 0.6, 0, Math.PI * 2);
+                ctx.fill();
 
-                for (let i = 0; i <= 12; i++) {
-                    const ang = (i / 12) * Math.PI * 2;
-                    const r = this.size * this.offsets[i % 12];
+                // ── 3. MEMBRANE (Green Actin Filaments — Phalloidin) ──
+                const memAlpha = params.green * flicker * exp * this.depthFactor;
+                ctx.strokeStyle = `rgba(52, 211, 153, ${Math.min(memAlpha * 0.7, 0.85)})`;
+                ctx.lineWidth = this.isEdge ? 1.6 : 1.0;
+                ctx.beginPath();
+                for (let i = 0; i <= this.membranePoints; i++) {
+                    const ang = (i / this.membranePoints) * Math.PI * 2;
+                    const r = this.size * this.offsets[i % this.membranePoints];
                     const px = this.x + Math.cos(ang) * r;
                     const py = this.y + Math.sin(ang) * r;
                     if (i === 0) ctx.moveTo(px, py);
                     else ctx.lineTo(px, py);
                 }
+                ctx.closePath();
                 ctx.stroke();
 
-                // 4. OUTER FILOPODIA (The "Hairy" Edge)
-                if (this.isEdge && Math.random() > 0.2) {
-                    const angToCenter = Math.atan2(this.y - canvas.height / 2, this.x - canvas.width / 2);
-                    const branches = 1 + Math.floor(Math.random() * 2);
+                // Inner actin network (subtle green fill)
+                if (this.health > 0.5) {
+                    ctx.fillStyle = `rgba(16, 185, 129, ${memAlpha * 0.08})`;
+                    ctx.fill();
+                }
 
-                    for (let b = 0; b < branches; b++) {
-                        const hairAng = angToCenter + (Math.random() - 0.5) * 1.5;
-                        const hairLen = 25 + Math.random() * 40;
+                // ── 4. EDGE FILOPODIA (Long green extensions) ──
+                if (this.isEdge) {
+                    for (let f = 0; f < this.filoCount; f++) {
+                        const fAng = this.filoAngles[f] + Math.sin(time * 0.5 + f) * 0.05;
+                        const fLen = this.filoLengths[f] * (0.9 + Math.sin(time * 2 + f) * 0.1);
+
+                        const sx = this.x + Math.cos(fAng) * this.size * 0.8;
+                        const sy = this.y + Math.sin(fAng) * this.size * 0.8;
+                        const ex = this.x + Math.cos(fAng) * fLen;
+                        const ey = this.y + Math.sin(fAng) * fLen;
+                        const cpx = (sx + ex) / 2 + (Math.random() - 0.5) * 15;
+                        const cpy = (sy + ey) / 2 + (Math.random() - 0.5) * 15;
 
                         ctx.beginPath();
-                        ctx.strokeStyle = `rgba(16, 185, 129, ${0.4 * params.green})`;
-                        ctx.lineWidth = 0.8;
-                        ctx.moveTo(this.x, this.y);
-
-                        const controlX = this.x + Math.cos(hairAng) * hairLen * 0.5 + (Math.random() - 0.5) * 20;
-                        const controlY = this.y + Math.sin(hairAng) * hairLen * 0.5 + (Math.random() - 0.5) * 20;
-
-                        ctx.quadraticCurveTo(controlX, controlY,
-                            this.x + Math.cos(hairAng) * hairLen,
-                            this.y + Math.sin(hairAng) * hairLen);
+                        ctx.strokeStyle = `rgba(52, 211, 153, ${memAlpha * 0.5})`;
+                        ctx.lineWidth = 0.6 + Math.random() * 0.6;
+                        ctx.moveTo(sx, sy);
+                        ctx.quadraticCurveTo(cpx, cpy, ex, ey);
                         ctx.stroke();
+
+                        // Branching tips
+                        if (Math.random() > 0.5) {
+                            const bAng = fAng + (Math.random() - 0.5) * 1.2;
+                            const bLen = fLen * 0.3;
+                            ctx.beginPath();
+                            ctx.strokeStyle = `rgba(52, 211, 153, ${memAlpha * 0.25})`;
+                            ctx.lineWidth = 0.4;
+                            ctx.moveTo(ex, ey);
+                            ctx.lineTo(ex + Math.cos(bAng) * bLen, ey + Math.sin(bAng) * bLen);
+                            ctx.stroke();
+                        }
                     }
                 }
 
-                ctx.globalCompositeOperation = 'source-over';
+                ctx.restore();
             }
         }
 
+        // ── BACKGROUND FILAMENTS ────────────────────────────────
         function initBackground() {
-            bgFilaments = Array.from({ length: 80 }, () => ({
+            bgFilaments = Array.from({ length: 100 }, () => ({
                 x: Math.random() * canvas.width,
                 y: Math.random() * canvas.height,
-                len: 200 + Math.random() * 400,
+                len: 200 + Math.random() * 500,
                 ang: Math.random() * Math.PI * 2,
-                rot: (Math.random() - 0.5) * 0.001
+                rot: (Math.random() - 0.5) * 0.0005
             }));
         }
 
         function drawBackground() {
-            ctx.strokeStyle = 'rgba(52, 211, 153, 0.05)';
-            ctx.lineWidth = 0.5;
+            ctx.globalCompositeOperation = 'screen';
+            ctx.lineWidth = 0.4;
             bgFilaments.forEach(f => {
                 f.ang += f.rot;
+                ctx.strokeStyle = `rgba(52, 211, 153, ${0.02 * params.green})`;
                 ctx.beginPath();
                 ctx.moveTo(f.x, f.y);
                 ctx.lineTo(f.x + Math.cos(f.ang) * f.len, f.y + Math.sin(f.ang) * f.len);
                 ctx.stroke();
             });
+            ctx.globalCompositeOperation = 'source-over';
         }
 
+        // ── COLONY INITIALIZATION ───────────────────────────────
         function initSimulation() {
             cells = [];
             initBackground();
-            const centerX = canvas.width / 2;
-            const centerY = canvas.height / 2;
+            const cx = canvas.width / 2;
+            const cy = canvas.height / 2;
+            const R = params.radius;
 
             for (let i = 0; i < params.density; i++) {
-                // Sphere cluster packing
+                // Organic cluster packing with slight irregularity
                 const ang = Math.random() * Math.PI * 2;
-                const r = Math.sqrt(Math.random()) * params.radius;
-                const x = centerX + Math.cos(ang) * r;
-                const y = centerY + Math.sin(ang) * r;
-                cells.push(new Cell(x, y));
+                const r = Math.sqrt(Math.random()) * R;
+
+                // Add organic edge wobble
+                const edgeNoise = 1.0 + Math.sin(ang * 5) * 0.08 + Math.cos(ang * 3) * 0.05;
+                const clampedR = Math.min(r, R * edgeNoise);
+
+                const x = cx + Math.cos(ang) * clampedR;
+                const y = cy + Math.sin(ang) * clampedR;
+                cells.push(new Cell(x, y, clampedR, R));
             }
+
+            console.log(`[MICROSCOPE] Colony initialized: ${cells.length} cells, radius=${R}`);
         }
 
+        // ── RESIZE ──────────────────────────────────────────────
         function resize() {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
             initSimulation();
         }
 
+        // ── RENDER LOOP ─────────────────────────────────────────
         function animate() {
+            frameCount++;
+
+            // Clear
             ctx.fillStyle = '#000000';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+            // Background filament network
             drawBackground();
 
-            // Atmospheric Glow
-            const atmGrad = ctx.createRadialGradient(
-                canvas.width / 2, canvas.height / 2, 0,
-                canvas.width / 2, canvas.height / 2, params.radius * 2.5
-            );
-            atmGrad.addColorStop(0, 'rgba(124, 58, 237, 0.1)');
-            atmGrad.addColorStop(0.5, 'rgba(16, 185, 129, 0.06)');
+            // Colony atmospheric glow
+            const cx = canvas.width / 2;
+            const cy = canvas.height / 2;
+            const atmGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, params.radius * 2.5);
+            atmGrad.addColorStop(0, `rgba(168, 85, 247, ${0.06 * params.exposure})`);
+            atmGrad.addColorStop(0.3, `rgba(236, 72, 153, ${0.04 * params.exposure})`);
+            atmGrad.addColorStop(0.6, `rgba(16, 185, 129, ${0.03 * params.exposure})`);
             atmGrad.addColorStop(1, 'transparent');
             ctx.fillStyle = atmGrad;
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            // Z-Sort (Simple)
-            cells.sort((a, b) => a.y - b.y);
+            // Z-sort (back to front)
+            cells.sort((a, b) => a.depthFactor - b.depthFactor);
 
-            cells.forEach(cell => {
-                cell.update();
-                cell.draw();
-            });
+            // Draw all cells
+            for (let i = 0; i < cells.length; i++) {
+                cells[i].update();
+                cells[i].draw();
+            }
+
+            // FPS counter
+            if (frameCount % 30 === 0) {
+                document.getElementById('fps-counter').textContent =
+                    `SCANNING COLONY... ${cells.length} cells | 60 FPS`;
+            }
 
             requestAnimationFrame(animate);
         }
 
-        // Interaction
-        document.getElementById('input-radius').addEventListener('input', (e) => {
+        // ── CONTROLS ────────────────────────────────────────────
+        document.getElementById('input-radius').addEventListener('input', e => {
             params.radius = parseInt(e.target.value);
             document.getElementById('val-radius').innerText = params.radius + 'px';
         });
-
-        document.getElementById('input-density').addEventListener('input', (e) => {
+        document.getElementById('input-density').addEventListener('input', e => {
             params.density = parseInt(e.target.value);
             document.getElementById('val-density').innerText = params.density;
             initSimulation();
         });
-
-        document.getElementById('input-green').addEventListener('input', (e) => {
+        document.getElementById('input-green').addEventListener('input', e => {
             params.green = e.target.value / 100;
             document.getElementById('val-green').innerText = e.target.value + '%';
         });
-
-        document.getElementById('input-blue').addEventListener('input', (e) => {
+        document.getElementById('input-blue').addEventListener('input', e => {
             params.blue = e.target.value / 100;
             document.getElementById('val-blue').innerText = e.target.value + '%';
         });
+        document.getElementById('input-red').addEventListener('input', e => {
+            params.red = e.target.value / 100;
+            document.getElementById('val-red').innerText = e.target.value + '%';
+        });
+        document.getElementById('input-exposure').addEventListener('input', e => {
+            params.exposure = e.target.value / 100;
+            document.getElementById('val-exposure').innerText = e.target.value + '%';
+        });
 
+        // ── BOOT ────────────────────────────────────────────────
         window.addEventListener('resize', resize);
         resize();
         animate();
-
+        console.log('[MICROSCOPE] Kagawea Ultra booted successfully');
     </script>
 </body>
-
 </html>

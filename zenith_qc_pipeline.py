@@ -1,4 +1,4 @@
-﻿# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 """ZENITH QC PIPELINE v1.2 â€” Memory-safe, uses pre-computed QC from file"""
 import sys, os, time, json, h5py, numpy as np, gc
 from scipy.sparse import csr_matrix
@@ -8,7 +8,9 @@ sys.stdout.reconfigure(encoding='utf-8')
 def p(msg): print(msg, flush=True)
 
 PROJECT = os.path.dirname(os.path.abspath(__file__))
-INPUT = os.path.join(PROJECT, 'data', 'hca_full', 'heart_9928ad5f-6af.h5ad')
+# CORRECTED: Use the 2020 Litviňuková et al. paper (heart_adult_full.h5ad)
+# NOT heart_9928ad5f-6af.h5ad which is the 2022 CHD disease paper (wrong study)
+INPUT = os.path.join(PROJECT, 'data', 'hca_full', 'heart_adult_full.h5ad')
 OUT_DIR = os.path.join(PROJECT, 'data', 'qc_output')
 os.makedirs(OUT_DIR, exist_ok=True)
 

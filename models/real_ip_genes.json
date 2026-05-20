@@ -1,0 +1,365 @@
+{
+  "source": "Litvinukova et al., Nature 2020",
+  "doi": "10.1038/s41586-020-2797-4",
+  "model": "models/scvi_model_486k_real",
+  "method": "Pearson correlation of gene expression with latent rejuvenation vector",
+  "n_cells": 99993,
+  "n_genes_analysed": 5000,
+  "rejuvenation_vector_magnitude": 1.992535485931795,
+  "pro_rejuvenation_genes": [
+    {
+      "gene": "ENSG00000237298",
+      "correlation": 0.5152,
+      "direction": "UP_IN_YOUNG",
+      "rank": 1,
+      "gene_symbol": "TTN-AS1"
+    },
+    {
+      "gene": "ENSG00000198626",
+      "correlation": 0.4948,
+      "direction": "UP_IN_YOUNG",
+      "rank": 2,
+      "gene_symbol": "RYR2"
+    },
+    {
+      "gene": "ENSG00000227028",
+      "correlation": 0.4439,
+      "direction": "UP_IN_YOUNG",
+      "rank": 3,
+      "gene_symbol": "SLC8A1-AS1"
+    },
+    {
+      "gene": "ENSG00000235050",
+      "correlation": 0.4093,
+      "direction": "UP_IN_YOUNG",
+      "rank": 4,
+      "gene_symbol": "MLIP-AS1"
+    },
+    {
+      "gene": "ENSG00000076555",
+      "correlation": 0.3843,
+      "direction": "UP_IN_YOUNG",
+      "rank": 5,
+      "gene_symbol": "ACACB"
+    },
+    {
+      "gene": "ENSG00000018625",
+      "correlation": 0.3616,
+      "direction": "UP_IN_YOUNG",
+      "rank": 6,
+      "gene_symbol": "ATP1A2"
+    },
+    {
+      "gene": "ENSG00000169851",
+      "correlation": 0.3332,
+      "direction": "UP_IN_YOUNG",
+      "rank": 7,
+      "gene_symbol": "PCDH7"
+    },
+    {
+      "gene": "ENSG00000092054",
+      "correlation": 0.3227,
+      "direction": "UP_IN_YOUNG",
+      "rank": 8,
+      "gene_symbol": "MYH7"
+    },
+    {
+      "gene": "ENSG00000164741",
+      "correlation": 0.303,
+      "direction": "UP_IN_YOUNG",
+      "rank": 9,
+      "gene_symbol": "DLC1"
+    },
+    {
+      "gene": "ENSG00000181381",
+      "correlation": 0.2999,
+      "direction": "UP_IN_YOUNG",
+      "rank": 10,
+      "gene_symbol": "DDX60L"
+    },
+    {
+      "gene": "ENSG00000251562",
+      "correlation": 0.2983,
+      "direction": "UP_IN_YOUNG",
+      "rank": 11,
+      "gene_symbol": "MALAT1"
+    },
+    {
+      "gene": "ENSG00000182263",
+      "correlation": 0.2957,
+      "direction": "UP_IN_YOUNG",
+      "rank": 12,
+      "gene_symbol": "FIGN"
+    },
+    {
+      "gene": "ENSG00000260658",
+      "correlation": 0.2876,
+      "direction": "UP_IN_YOUNG",
+      "rank": 13,
+      "gene_symbol": "ENSG00000260658"
+    },
+    {
+      "gene": "ENSG00000163590",
+      "correlation": 0.2872,
+      "direction": "UP_IN_YOUNG",
+      "rank": 14,
+      "gene_symbol": "PPM1L"
+    },
+    {
+      "gene": "ENSG00000156463",
+      "correlation": 0.2862,
+      "direction": "UP_IN_YOUNG",
+      "rank": 15,
+      "gene_symbol": "SH3RF2"
+    },
+    {
+      "gene": "ENSG00000112530",
+      "correlation": 0.2844,
+      "direction": "UP_IN_YOUNG",
+      "rank": 16,
+      "gene_symbol": "PACRG"
+    },
+    {
+      "gene": "ENSG00000234352",
+      "correlation": 0.2838,
+      "direction": "UP_IN_YOUNG",
+      "rank": 17,
+      "gene_symbol": "ENSG00000234352"
+    },
+    {
+      "gene": "ENSG00000154310",
+      "correlation": 0.2831,
+      "direction": "UP_IN_YOUNG",
+      "rank": 18,
+      "gene_symbol": "TNIK"
+    },
+    {
+      "gene": "ENSG00000153820",
+      "correlation": 0.278,
+      "direction": "UP_IN_YOUNG",
+      "rank": 19,
+      "gene_symbol": "SPHKAP"
+    },
+    {
+      "gene": "ENSG00000256947",
+      "correlation": 0.277,
+      "direction": "UP_IN_YOUNG",
+      "rank": 20,
+      "gene_symbol": "ENSG00000256947"
+    }
+  ],
+  "aging_marker_genes": [
+    {
+      "gene": "ENSG00000205542",
+      "correlation": -0.6888,
+      "direction": "UP_IN_AGED",
+      "rank": 1,
+      "gene_symbol": "TMSB4X"
+    },
+    {
+      "gene": "ENSG00000166710",
+      "correlation": -0.6705,
+      "direction": "UP_IN_AGED",
+      "rank": 2,
+      "gene_symbol": "B2M"
+    },
+    {
+      "gene": "ENSG00000109475",
+      "correlation": -0.6215,
+      "direction": "UP_IN_AGED",
+      "rank": 3,
+      "gene_symbol": "RPL34"
+    },
+    {
+      "gene": "ENSG00000034510",
+      "correlation": -0.6106,
+      "direction": "UP_IN_AGED",
+      "rank": 4,
+      "gene_symbol": "TMSB10"
+    },
+    {
+      "gene": "ENSG00000142541",
+      "correlation": -0.6094,
+      "direction": "UP_IN_AGED",
+      "rank": 5,
+      "gene_symbol": "RPL13A"
+    },
+    {
+      "gene": "ENSG00000122026",
+      "correlation": -0.6076,
+      "direction": "UP_IN_AGED",
+      "rank": 6,
+      "gene_symbol": "RPL21"
+    },
+    {
+      "gene": "ENSG00000234745",
+      "correlation": -0.6044,
+      "direction": "UP_IN_AGED",
+      "rank": 7,
+      "gene_symbol": "HLA-B"
+    },
+    {
+      "gene": "ENSG00000164587",
+      "correlation": -0.6007,
+      "direction": "UP_IN_AGED",
+      "rank": 8,
+      "gene_symbol": "RPS14"
+    },
+    {
+      "gene": "ENSG00000231500",
+      "correlation": -0.6003,
+      "direction": "UP_IN_AGED",
+      "rank": 9,
+      "gene_symbol": "RPS18"
+    },
+    {
+      "gene": "ENSG00000167996",
+      "correlation": -0.5971,
+      "direction": "UP_IN_AGED",
+      "rank": 10,
+      "gene_symbol": "FTH1"
+    },
+    {
+      "gene": "ENSG00000177954",
+      "correlation": -0.5953,
+      "direction": "UP_IN_AGED",
+      "rank": 11,
+      "gene_symbol": "RPS27"
+    },
+    {
+      "gene": "ENSG00000100316",
+      "correlation": -0.5787,
+      "direction": "UP_IN_AGED",
+      "rank": 12,
+      "gene_symbol": "RPL3"
+    },
+    {
+      "gene": "ENSG00000144713",
+      "correlation": -0.5776,
+      "direction": "UP_IN_AGED",
+      "rank": 13,
+      "gene_symbol": "RPL32"
+    },
+    {
+      "gene": "ENSG00000087086",
+      "correlation": -0.5736,
+      "direction": "UP_IN_AGED",
+      "rank": 14,
+      "gene_symbol": "FTL"
+    },
+    {
+      "gene": "ENSG00000140988",
+      "correlation": -0.5522,
+      "direction": "UP_IN_AGED",
+      "rank": 15,
+      "gene_symbol": "RPS2"
+    },
+    {
+      "gene": "ENSG00000165949",
+      "correlation": -0.5441,
+      "direction": "UP_IN_AGED",
+      "rank": 16,
+      "gene_symbol": "IFI27"
+    },
+    {
+      "gene": "ENSG00000213741",
+      "correlation": -0.5373,
+      "direction": "UP_IN_AGED",
+      "rank": 17,
+      "gene_symbol": "RPS29"
+    },
+    {
+      "gene": "ENSG00000120129",
+      "correlation": -0.5367,
+      "direction": "UP_IN_AGED",
+      "rank": 18,
+      "gene_symbol": "DUSP1"
+    },
+    {
+      "gene": "ENSG00000161970",
+      "correlation": -0.5317,
+      "direction": "UP_IN_AGED",
+      "rank": 19,
+      "gene_symbol": "RPL26"
+    },
+    {
+      "gene": "ENSG00000108518",
+      "correlation": -0.5309,
+      "direction": "UP_IN_AGED",
+      "rank": 20,
+      "gene_symbol": "PFN1"
+    }
+  ],
+  "donor_rejuvenation_scores": {
+    "D1": {
+      "score": -0.1191,
+      "age": 52.5,
+      "n_cells": 3167
+    },
+    "D11": {
+      "score": -0.1357,
+      "age": 62.5,
+      "n_cells": 10065
+    },
+    "D2": {
+      "score": -0.1212,
+      "age": 62.5,
+      "n_cells": 8874
+    },
+    "D3": {
+      "score": -0.4532,
+      "age": 57.5,
+      "n_cells": 5558
+    },
+    "D4": {
+      "score": -0.6484,
+      "age": 72.5,
+      "n_cells": 5944
+    },
+    "D5": {
+      "score": -0.7107,
+      "age": 67.5,
+      "n_cells": 5924
+    },
+    "D6": {
+      "score": -1.1794,
+      "age": 72.5,
+      "n_cells": 16384
+    },
+    "D7": {
+      "score": -1.0594,
+      "age": 62.5,
+      "n_cells": 7432
+    },
+    "H2": {
+      "score": 1.0013,
+      "age": 52.5,
+      "n_cells": 4569
+    },
+    "H3": {
+      "score": 1.2976,
+      "age": 52.5,
+      "n_cells": 6676
+    },
+    "H4": {
+      "score": 1.042,
+      "age": 57.5,
+      "n_cells": 5310
+    },
+    "H5": {
+      "score": 1.0993,
+      "age": 52.5,
+      "n_cells": 7899
+    },
+    "H6": {
+      "score": 1.1429,
+      "age": 42.5,
+      "n_cells": 5540
+    },
+    "H7": {
+      "score": 1.1163,
+      "age": 47.5,
+      "n_cells": 6651
+    }
+  }
+}

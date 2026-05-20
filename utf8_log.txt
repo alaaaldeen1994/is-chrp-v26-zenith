@@ -1,0 +1,14 @@
+python : INFO:     Started server process [22792]
+At line:1 char:26
++ ... askkill /F /PID 20920 ; python bridge_server.py > 
+server_log.txt 2>&1
++                             
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (INFO:     Started 
+    server process [22792]:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:9999 (Press 
+CTRL+C to quit)
