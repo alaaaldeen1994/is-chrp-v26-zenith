@@ -6500,6 +6500,7 @@ async def run_gpt_discovery(request: Request):
 
     body = await request.json()
     query = body.get("query", "").strip()
+    cell_type = body.get("cell_type", "all").strip()
     if not query:
         raise HTTPException(status_code=400, detail="query field is required")
 
@@ -6508,23 +6509,42 @@ async def run_gpt_discovery(request: Request):
         raise HTTPException(status_code=401,
             detail="OpenAI API key not configured. Add OPENAI_API_KEY=sk-... to server environment and restart.")
 
-    # ── Step 1: Load ALL 400 real HCA genes ──────────────────────
-    ip_path = os.path.join(os.path.dirname(__file__), "models", "real_ip_genes_full.json")
-    if not os.path.exists(ip_path):
-        ip_path = os.path.join(os.path.dirname(__file__), "models", "real_ip_genes.json")
+    # ── Step 1: Load genes — cell-type-specific OR all ──────────
+    ct_data = None
+    ct_key = cell_type.replace(",", "").replace("-", "_").replace(" ", "_").lower() if cell_type != "all" else None
 
-    with open(ip_path) as f:
-        ip_data = json.load(f)
+    # Try cell-type-specific genes first
+    ct_path = os.path.join(os.path.dirname(__file__), "models", "cell_type_genes.json")
+    if ct_key and os.path.exists(ct_path):
+        with open(ct_path) as f:
+            ct_all = json.load(f)
+        if ct_key in ct_all.get("cell_types", {}):
+            ct_data = ct_all["cell_types"][ct_key]
+            print(f"[Tournament] Using cell-type-specific genes for: {ct_data['cell_type']} ({ct_data['n_cells']} cells)")
 
-    pro_genes = ip_data.get("pro_rejuvenation_genes", [])[:200]
-    aging_genes = ip_data.get("aging_marker_genes", [])[:200]
+    # Load genes: either cell-type-specific or all-cell
+    if ct_data:
+        pro_genes = ct_data.get("pro_rejuvenation_genes", [])[:50]
+        aging_genes = ct_data.get("aging_marker_genes", [])[:50]
+        gene_source_label = f"{ct_data['cell_type']} ({ct_data['n_cells']:,} cells, young={ct_data['n_young']:,}, aged={ct_data['n_aged']:,})"
+        cell_type_age_delta = ct_data.get("age_delta_years")
+    else:
+        ip_path = os.path.join(os.path.dirname(__file__), "models", "real_ip_genes_full.json")
+        if not os.path.exists(ip_path):
+            ip_path = os.path.join(os.path.dirname(__file__), "models", "real_ip_genes.json")
+        with open(ip_path) as f:
+            ip_data = json.load(f)
+        pro_genes = ip_data.get("pro_rejuvenation_genes", [])[:200]
+        aging_genes = ip_data.get("aging_marker_genes", [])[:200]
+        gene_source_label = "All cardiac cells (486,134 cells, 14 donors)"
+        cell_type_age_delta = None
 
     pro_str = ", ".join([
-        f"{g.get('gene', g.get('gene_symbol','?'))} (r={g['correlation']:.3f})"
+        f"{g.get('gene_symbol', g.get('gene','?'))} (r={g['correlation']:.3f})"
         for g in pro_genes
     ])
     aging_str = ", ".join([
-        f"{g.get('gene', g.get('gene_symbol','?'))} (r={g['correlation']:.3f})"
+        f"{g.get('gene_symbol', g.get('gene','?'))} (r={g['correlation']:.3f})"
         for g in aging_genes
     ])
     gene_context = (
@@ -6708,6 +6728,10 @@ async def run_gpt_discovery(request: Request):
         print(f"[GPT-Discovery] Age clock error: {e}")
 
     # ── Build final response ─────────────────────────────────────
+    # Use cell-type-specific age delta if available
+    if cell_type_age_delta is not None:
+        age_delta = cell_type_age_delta
+
     result = {
         "genes": refined.get("genes", []),
         "summary": refined.get("summary", ""),
@@ -6722,11 +6746,42 @@ async def run_gpt_discovery(request: Request):
         "model": "gpt-4o",
         "real_hca_context_used": True,
         "total_hca_genes_provided": len(pro_genes) + len(aging_genes),
+        "cell_type": cell_type,
+        "cell_type_label": gene_source_label,
         "query": query,
         "source_data": "Litvinukova et al., Nature 2020"
     }
 
     return JSONResponse(result)
+
+
+# ============================================================
+# CELL TYPE LISTING ENDPOINT
+# ============================================================
+@app.get("/api/cell-types")
+async def list_cell_types():
+    """Returns available cell types for cell-type-specific discovery."""
+    ct_path = os.path.join(os.path.dirname(__file__), "models", "cell_type_genes.json")
+    if not os.path.exists(ct_path):
+        return {"cell_types": [{"key": "all", "label": "All cardiac cells", "n_cells": 486134}]}
+
+    with open(ct_path) as f:
+        ct_all = json.load(f)
+
+    types = [{"key": "all", "label": "All cardiac cells", "n_cells": 486134, "age_delta": 11.9}]
+    for key, data in ct_all.get("cell_types", {}).items():
+        types.append({
+            "key": key,
+            "label": data["cell_type"],
+            "n_cells": data["n_cells"],
+            "n_young": data.get("n_young", 0),
+            "n_aged": data.get("n_aged", 0),
+            "age_delta": data.get("age_delta_years"),
+            "magnitude": data.get("rejuv_vector_magnitude"),
+            "top_gene": data["pro_rejuvenation_genes"][0]["gene"] if data.get("pro_rejuvenation_genes") else None
+        })
+
+    return {"cell_types": types, "source": "Litvinukova et al., Nature 2020"}
 
 
 if __name__ == "__main__":

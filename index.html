@@ -1320,6 +1320,22 @@
                     </div>
                 </div>
 
+                <!-- Cell Type Dropdown -->
+                <div style="position:relative;display:inline-block;z-index:999;margin-left:8px;margin-right:auto;">
+                    <button id="celltype-select-btn" onclick="toggleCellTypeDropdown(event)"
+                        style="background:transparent;border:1px solid #d5d5d2;color:#1a1a1a;padding:6px 12px;border-radius:18px;font-size:12px;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:4px;font-family:'Inter','Segoe UI',sans-serif;transition:all 0.15s;"
+                        onmouseover="this.style.background='#f7f7f6';this.style.borderColor='#c0c0bd';"
+                        onmouseout="this.style.background='transparent';this.style.borderColor='#d5d5d2';">
+                        <span id="active-celltype-name">All cardiac cells</span>
+                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-top:1px;"><path d="m6 9 6 6 6-6"/></svg>
+                    </button>
+                    <!-- Dropdown List -->
+                    <div id="celltype-dropdown-list"
+                        style="display:none;position:absolute;bottom:calc(100% + 6px);left:0;background:#ffffff;border:1px solid #d5d5d2;border-radius:14px;padding:6px;box-shadow:0 4px 20px rgba(0,0,0,0.08);flex-direction:column;gap:3px;z-index:1000;min-width:260px;max-height:280px;overflow-y:auto;">
+                        <div style="font-size:10px;color:#8b8b8b;padding:8px 12px;text-align:center;">Loading cell types...</div>
+                    </div>
+                </div>
+
                 <!-- Run button -->
                 <button id="disc-run-btn" onclick="runDiscovery()"
                     style="background:#1a1a1a;color:#f8f8f6;border:none;padding:8px;border-radius:50%;width:32px;height:32px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;white-space:nowrap;transition:all 0.15s;font-family:'Inter','Segoe UI',sans-serif;"
@@ -4434,6 +4450,9 @@ function toggleModelDropdown(event) {
     if (!list) return;
     if (list.style.display === 'none' || list.style.display === '') {
         list.style.display = 'flex';
+        // Close cell type list if open
+        const ctList = document.getElementById('celltype-dropdown-list');
+        if (ctList) ctList.style.display = 'none';
     } else {
         list.style.display = 'none';
     }
@@ -4443,6 +4462,114 @@ function selectModelOption(mode, label) {
     setDiscMode(mode);
     const list = document.getElementById('model-dropdown-list');
     if (list) list.style.display = 'none';
+}
+
+// Global selected cell type
+window._selectedCellType = 'all';
+
+function toggleCellTypeDropdown(event) {
+    event.stopPropagation();
+    const list = document.getElementById('celltype-dropdown-list');
+    if (!list) return;
+    if (list.style.display === 'none' || list.style.display === '') {
+        list.style.display = 'flex';
+        // Close model list if open
+        const modelList = document.getElementById('model-dropdown-list');
+        if (modelList) modelList.style.display = 'none';
+    } else {
+        list.style.display = 'none';
+    }
+}
+
+function selectCellTypeOption(key, label) {
+    window._selectedCellType = key;
+    const activeLabel = document.getElementById('active-celltype-name');
+    if (activeLabel) activeLabel.textContent = label;
+    const list = document.getElementById('celltype-dropdown-list');
+    if (list) list.style.display = 'none';
+}
+
+// Fetch and build cell type options dynamically
+async function loadCellTypes() {
+    const list = document.getElementById('celltype-dropdown-list');
+    if (!list) return;
+    try {
+        const r = await fetch('/api/cell-types');
+        if (!r.ok) throw new Error("Failed to load cell types");
+        const data = await r.json();
+        
+        list.innerHTML = '';
+        if (data.cell_types && data.cell_types.length > 0) {
+            data.cell_types.forEach(ct => {
+                const btn = document.createElement('button');
+                btn.onclick = () => selectCellTypeOption(ct.key, ct.label);
+                
+                // Active option styling
+                const isActive = window._selectedCellType === ct.key;
+                btn.style.cssText = `
+                    background: ${isActive ? '#f5f3ef' : 'transparent'};
+                    color: ${isActive ? '#191919' : '#6b6b6b'};
+                    border: none;
+                    text-align: left;
+                    padding: 8px 12px;
+                    border-radius: 8px;
+                    cursor: pointer;
+                    width: 100%;
+                    font-family: 'Inter','Segoe UI',sans-serif;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 2px;
+                    transition: all 0.15s;
+                `;
+                
+                btn.onmouseover = () => {
+                    btn.style.background = '#f5f3ef';
+                    btn.style.color = '#191919';
+                };
+                btn.onmouseout = () => {
+                    const currentActive = window._selectedCellType === ct.key;
+                    btn.style.background = currentActive ? '#f5f3ef' : 'transparent';
+                    btn.style.color = currentActive ? '#191919' : '#6b6b6b';
+                };
+                
+                let cellsLabel = ct.n_cells ? `${ct.n_cells.toLocaleString()} cells` : '';
+                let extraInfo = '';
+                if (ct.age_delta) extraInfo += ` · Rejuvenation Δ: ${ct.age_delta}y`;
+                if (ct.magnitude) extraInfo += ` · Vector Mag: ${ct.magnitude.toFixed(2)}`;
+                
+                btn.innerHTML = `
+                    <span style="font-size: 11px; font-weight: 600;">${ct.label}</span>
+                    <span style="font-size: 8px; color: #8b8b8b; font-weight: 400;">${cellsLabel}${extraInfo}</span>
+                `;
+                list.appendChild(btn);
+            });
+        }
+    } catch (e) {
+        console.error("Error loading cell types:", e);
+        // Fallback to static list
+        list.innerHTML = `
+            <button onclick="selectCellTypeOption('all', 'All cardiac cells')" style="background:#f5f3ef;color:#191919;border:none;text-align:left;padding:8px 12px;border-radius:8px;cursor:pointer;width:100%;font-family:'Inter',sans-serif;display:flex;flex-direction:column;gap:2px;">
+                <span style="font-size:11px;font-weight:600;">All cardiac cells</span>
+                <span style="font-size:8px;color:#8b8b8b;">486,134 cells · Rejuvenation Δ: 11.9y</span>
+            </button>
+            <button onclick="selectCellTypeOption('regular_ventricular_cardiac_myocyte', 'regular ventricular cardiac myocyte')" style="background:transparent;color:#6b6b6b;border:none;text-align:left;padding:8px 12px;border-radius:8px;cursor:pointer;width:100%;font-family:'Inter',sans-serif;display:flex;flex-direction:column;gap:2px;">
+                <span style="font-size:11px;font-weight:600;">regular ventricular cardiac myocyte</span>
+                <span style="font-size:8px;color:#8b8b8b;">125,289 cells</span>
+            </button>
+            <button onclick="selectCellTypeOption('pericyte', 'pericyte')" style="background:transparent;color:#6b6b6b;border:none;text-align:left;padding:8px 12px;border-radius:8px;cursor:pointer;width:100%;font-family:'Inter',sans-serif;display:flex;flex-direction:column;gap:2px;">
+                <span style="font-size:11px;font-weight:600;">pericyte</span>
+                <span style="font-size:8px;color:#8b8b8b;">77,856 cells</span>
+            </button>
+            <button onclick="selectCellTypeOption('fibroblast', 'fibroblast')" style="background:transparent;color:#6b6b6b;border:none;text-align:left;padding:8px 12px;border-radius:8px;cursor:pointer;width:100%;font-family:'Inter',sans-serif;display:flex;flex-direction:column;gap:2px;">
+                <span style="font-size:11px;font-weight:600;">fibroblast</span>
+                <span style="font-size:8px;color:#8b8b8b;">59,341 cells</span>
+            </button>
+            <button onclick="selectCellTypeOption('capillary_endothelial_cell', 'capillary endothelial cell')" style="background:transparent;color:#6b6b6b;border:none;text-align:left;padding:8px 12px;border-radius:8px;cursor:pointer;width:100%;font-family:'Inter',sans-serif;display:flex;flex-direction:column;gap:2px;">
+                <span style="font-size:11px;font-weight:600;">capillary endothelial cell</span>
+                <span style="font-size:8px;color:#8b8b8b;">57,759 cells</span>
+            </button>
+        `;
+    }
 }
 
 function updateSubmitButton(hasText) {
@@ -4464,13 +4591,20 @@ function updateSubmitButton(hasText) {
     }
 }
 
-// Click outside to close dropdown
+// Click outside to close dropdowns
 window.addEventListener('click', function(event) {
     const list = document.getElementById('model-dropdown-list');
     const btn = document.getElementById('model-select-btn');
     if (list && btn && list.style.display === 'flex') {
         if (!btn.contains(event.target) && !list.contains(event.target)) {
             list.style.display = 'none';
+        }
+    }
+    const ctList = document.getElementById('celltype-dropdown-list');
+    const ctBtn = document.getElementById('celltype-select-btn');
+    if (ctList && ctBtn && ctList.style.display === 'flex') {
+        if (!ctBtn.contains(event.target) && !ctList.contains(event.target)) {
+            ctList.style.display = 'none';
         }
     }
 });
@@ -4482,6 +4616,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (query) {
         updateSubmitButton(query.value.trim().length > 0);
     }
+    loadCellTypes();
 });
 
 
@@ -4546,7 +4681,7 @@ async function runDiscovery() {
             const r = await fetch('/api/gpt-discovery/run', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ query: query, cell_type: 'cardiomyocyte', top_n: 8 })
+                body: JSON.stringify({ query: query, cell_type: window._selectedCellType || 'all', top_n: 8 })
             });
             if (!r.ok) throw new Error(`Server returned ${r.status}`);
             const data = await r.json();
@@ -4563,13 +4698,30 @@ async function runDiscovery() {
 
             // If GPT format: convert to unified format
             if (gptGenes.length > 0 && proGenes.length === 0) {
-                proGenes = gptGenes.map((g, i) => ({
-                    gene: g.gene,
-                    correlation_with_youth: g.correlation || (g.confidence || 80) / 100,
-                    role: g.role || '',
-                    hca_verified: g.hca_verified || false
-                }));
-                ageGenes = [];
+                const tempPro = [];
+                const tempAge = [];
+                gptGenes.forEach(g => {
+                    const isAged = g.direction === 'UP_IN_AGED' || (g.correlation && g.correlation < 0);
+                    if (isAged) {
+                        tempAge.push({
+                            gene: g.gene,
+                            correlation_with_aging: Math.abs(g.correlation) || 0.1,
+                            role: g.role || '',
+                            mechanism: g.mechanism || '',
+                            hca_verified: g.hca_verified || false
+                        });
+                    } else {
+                        tempPro.push({
+                            gene: g.gene,
+                            correlation_with_youth: g.correlation || 0.1,
+                            role: g.role || '',
+                            mechanism: g.mechanism || '',
+                            hca_verified: g.hca_verified || false
+                        });
+                    }
+                });
+                proGenes = tempPro;
+                ageGenes = tempAge;
             }
             const delta  = data.real_age_delta_years  ? data.real_age_delta_years.toFixed(1) : '—';
 
@@ -4636,7 +4788,7 @@ async function runDiscovery() {
                                 <span style="width:8px;height:8px;background:#8b8070;border-radius:50%;display:inline-block;"></span>
                                 <span style="color:#8b8070;font-size:10px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;">Zenith Tournament Discovery — Verified</span>
                             </div>
-                            <div style="color:#6b6b6b;font-size:11px;">Litviňuková et al., Nature 2020 · 99,993 cells · 14 donors · ${elapsed}s</div>
+                            <div style="color:#6b6b6b;font-size:11px;">Litviňuková et al., Nature 2020 · ${data.cell_type_label || 'All cardiac cells (486,134 cells)'} · ${elapsed}s</div>
                             <div style="color:#8b8b8b;font-size:10px;margin-top:2px;font-style:italic;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${query}">"${query.substring(0,70)}${query.length>70?'…':''}"</div>
                             <div style="display:flex;gap:6px;margin-top:6px;flex-wrap:wrap;">
                                 <span style="font-size:8px;background:rgba(16,185,129,0.08);color:#059669;border:1px solid rgba(16,185,129,0.2);padding:2px 6px;border-radius:4px;font-weight:600;">${data.competing_panels || 3} panels</span>
@@ -4646,7 +4798,7 @@ async function runDiscovery() {
                             </div>
                         </div>
                         <div style="text-align:center;background:#fafafa;border:1px solid #D6CEBF;border-radius:10px;padding:10px 14px;flex-shrink:0;margin-left:12px;">
-                            <div style="font-size:24px;font-weight:800;color:#191919;line-height:1;">−${delta}y</div>
+                            <div style="font-size:24px;font-weight:800;color:#191919;line-height:1;">${delta !== '—' ? `−${delta}y` : '—'}</div>
                             <div style="font-size:9px;color:#8b8070;font-weight:600;margin-top:2px;">Age Δ (epigenetic)</div>
                         </div>
                     </div>
