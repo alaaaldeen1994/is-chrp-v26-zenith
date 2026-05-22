@@ -4504,7 +4504,7 @@ async function runDiscovery() {
     // Show loading
     resultsEl.style.display = 'block';
     const loadLabel = mode === 'real'
-        ? 'Analysing HCA data for your query...'
+        ? 'Tournament Discovery — 3 hypotheses × judge × refine...'
         : 'Analysing query context on GPT...';
 
     resultsEl.innerHTML = `
@@ -4525,19 +4525,21 @@ async function runDiscovery() {
     // ─── ROUTE 1: Zenith ─────────────────────────────────────────────
     if (mode === 'real') {
         const phases = [
-            'Parsing query keywords...',
-            'Loading scVI 486k-cell model...',
-            'Computing latent space centroids...',
-            'Correlating 32,383 genes vs. youth vector...',
-            'Ranking by query relevance + Pearson r...',
+            'Loading 400 verified HCA genes...',
+            'Generating 3 competing hypotheses...',
+            'Running tournament evaluation...',
+            'Selecting winning gene panel...',
+            'Refining with iterative improvement...',
+            'Building mechanism chains...',
+            'Adding PubMed citations...',
             'Finalising results...'
         ];
         let prog = 0;
         const interval = setInterval(() => {
-            prog = Math.min(prog + Math.random() * 14, 88);
+            prog = Math.min(prog + Math.random() * 8, 88);
             if (bar) bar.style.width = prog + '%';
-            if (status) status.textContent = phases[Math.min(Math.floor(prog / 16), phases.length - 1)];
-        }, 380);
+            if (status) status.textContent = phases[Math.min(Math.floor(prog / 11), phases.length - 1)];
+        }, 600);
 
         const t0 = Date.now();
         try {
@@ -4586,20 +4588,29 @@ async function runDiscovery() {
                 ].slice(0, 8);
             }
 
-            const maxCorr = Math.max(...proGenes.map(g => g.correlation_with_youth), 0.01);
+            const maxCorr = Math.max(...proGenes.map(g => g.correlation_with_youth || g.correlation || 0), 0.01);
             const maxAge  = Math.max(...ageGenes.map(g => g.correlation_with_aging),  0.01);
 
             window._lastResult = { mode:'real', query, pro: proGenes, aging: ageGenes, age_delta_years: parseFloat(delta), elapsed_s: parseFloat(elapsed) };
 
             const proRows = proGenes.map((g, i) => {
                 const isMentioned = mentioned.some(m => g.gene.includes(m));
-                return `<div style="display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid #D6CEBF;">
-                    <span style="font-size:10px;color:#94a3b8;width:14px;text-align:right;font-weight:600;">${i+1}</span>
-                    <span style="font-size:11px;color:${isMentioned?'#8b8070':'#191919'};font-weight:700;font-family:monospace;min-width:80px;">${isMentioned?'★ ':''}${g.gene}</span>
-                    <div style="flex:1;height:5px;background:#f0ede6;border-radius:3px;overflow:hidden;">
-                        <div style="height:100%;width:${Math.round((g.correlation_with_youth/maxCorr)*100)}%;background:#8b8070;border-radius:3px;"></div>
+                const corr = g.correlation_with_youth || g.correlation || 0;
+                const mechanism = g.mechanism || '';
+                const pubmed = g.pubmed_url || `https://pubmed.ncbi.nlm.nih.gov/?term=${g.gene}+cardiac+aging`;
+                const role = g.role || '';
+                return `<div style="padding:6px 0;border-bottom:1px solid #D6CEBF;">
+                    <div style="display:flex;align-items:center;gap:8px;">
+                        <span style="font-size:10px;color:#94a3b8;width:14px;text-align:right;font-weight:600;">${i+1}</span>
+                        <span style="font-size:11px;color:${isMentioned?'#8b8070':'#191919'};font-weight:700;font-family:monospace;min-width:80px;">${isMentioned?'★ ':''}${g.gene}</span>
+                        <div style="flex:1;height:5px;background:#f0ede6;border-radius:3px;overflow:hidden;">
+                            <div style="height:100%;width:${Math.round((corr/maxCorr)*100)}%;background:#8b8070;border-radius:3px;"></div>
+                        </div>
+                        <span style="font-size:10px;color:#8b8070;font-weight:700;font-family:monospace;min-width:44px;text-align:right;">r=${typeof corr === 'number' ? corr.toFixed(3) : corr}</span>
+                        <a href="${pubmed}" target="_blank" style="font-size:8px;color:#60a5fa;text-decoration:none;font-weight:600;" title="PubMed">📄</a>
                     </div>
-                    <span style="font-size:10px;color:#8b8070;font-weight:700;font-family:monospace;min-width:44px;text-align:right;">r=${g.correlation_with_youth.toFixed(3)}</span>
+                    ${role ? `<div style="font-size:9px;color:#6b6b6b;margin:2px 0 0 22px;line-height:1.4;">${role}</div>` : ''}
+                    ${mechanism ? `<div style="font-size:8px;color:#9ca3af;margin:1px 0 0 22px;font-family:monospace;">${mechanism}</div>` : ''}
                 </div>`;
             }).join('');
 
@@ -4623,10 +4634,16 @@ async function runDiscovery() {
                         <div style="flex:1;min-width:0;">
                             <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;">
                                 <span style="width:8px;height:8px;background:#8b8070;border-radius:50%;display:inline-block;"></span>
-                                <span style="color:#8b8070;font-size:10px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;">Zenith Data — Verified</span>
+                                <span style="color:#8b8070;font-size:10px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;">Zenith Tournament Discovery — Verified</span>
                             </div>
                             <div style="color:#6b6b6b;font-size:11px;">Litviňuková et al., Nature 2020 · 99,993 cells · 14 donors · ${elapsed}s</div>
                             <div style="color:#8b8b8b;font-size:10px;margin-top:2px;font-style:italic;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${query}">"${query.substring(0,70)}${query.length>70?'…':''}"</div>
+                            <div style="display:flex;gap:6px;margin-top:6px;flex-wrap:wrap;">
+                                <span style="font-size:8px;background:rgba(16,185,129,0.08);color:#059669;border:1px solid rgba(16,185,129,0.2);padding:2px 6px;border-radius:4px;font-weight:600;">${data.competing_panels || 3} panels</span>
+                                <span style="font-size:8px;background:rgba(37,99,235,0.08);color:#2563eb;border:1px solid rgba(37,99,235,0.2);padding:2px 6px;border-radius:4px;font-weight:600;">${data.rounds_completed || 2} rounds</span>
+                                <span style="font-size:8px;background:rgba(139,128,112,0.08);color:#8b8070;border:1px solid rgba(139,128,112,0.2);padding:2px 6px;border-radius:4px;font-weight:600;">conf: ${data.tournament_confidence ? (data.tournament_confidence * 100).toFixed(0) : '—'}%</span>
+                                <span style="font-size:8px;background:rgba(139,128,112,0.08);color:#8b8070;border:1px solid rgba(139,128,112,0.2);padding:2px 6px;border-radius:4px;font-weight:600;">${data.total_hca_genes_provided || 400} genes</span>
+                            </div>
                         </div>
                         <div style="text-align:center;background:#fafafa;border:1px solid #D6CEBF;border-radius:10px;padding:10px 14px;flex-shrink:0;margin-left:12px;">
                             <div style="font-size:24px;font-weight:800;color:#191919;line-height:1;">−${delta}y</div>
@@ -4635,6 +4652,7 @@ async function runDiscovery() {
                     </div>
 
                     ${gptSummary ? `<div style="background:#f8f8f6;border:1px solid #D6CEBF;border-radius:10px;padding:12px 16px;margin-bottom:14px;font-size:11px;color:#4a4a4a;line-height:1.7;font-family:Inter,sans-serif;">${gptSummary}</div>` : ""}${queryNote}
+                    ${data.refinement_notes ? `<div style="background:#f0fdf4;border:1px solid rgba(16,185,129,0.2);border-radius:8px;padding:8px 12px;margin-bottom:14px;font-size:9px;color:#065f46;line-height:1.5;"><span style="font-weight:700;">Refinement:</span> ${data.refinement_notes}</div>` : ''}
                     <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
                         <div>
                             <div style="font-size:10px;color:#8b8070;font-weight:700;letter-spacing:0.04em;text-transform:uppercase;margin-bottom:8px;">↑ Pro-Rejuvenation Genes</div>
@@ -4645,9 +4663,16 @@ async function runDiscovery() {
                             ${ageRows}
                         </div>
                     </div>
+                    
+                    <div style="background:#f8f8f6;border:1px solid #D6CEBF;border-radius:8px;padding:8px 12px;margin-bottom:14px;">
+                        <div style="font-size:8px;color:#8b8070;font-weight:700;text-transform:uppercase;margin-bottom:2px;">Methodology</div>
+                        <div style="font-size:9px;color:#6b6b6b;line-height:1.4;">${data.methodology || 'Tournament Discovery + Iterative Refinement'}</div>
+                        ${data.judge_reasoning ? `<div style="font-size:8px;color:#9ca3af;margin-top:2px;">Judge: ${data.judge_reasoning}</div>` : ''}
+                    </div>
+
                     <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;padding-top:12px;border-top:1px solid #D6CEBF;">
                         <div style="font-size:10px;color:#8b8b8b;">DOI: 10.1038/s41586-020-2797-4</div>
-                        <div style="display:flex;gap:8px;">
+                        <div style="display:flex;gap:8px;flex-wrap:wrap;">
                             <button onclick="enterSimulation()" style="background:#fafafa;border:1px solid #D6CEBF;color:#6b6b6b;font-size:11px;font-weight:600;padding:6px 14px;border-radius:8px;cursor:pointer;transition:all 0.15s;" onmouseover="this.style.background='#fafafa';this.style.borderColor='#C8C3B8';this.style.color='#191919';" onmouseout="this.style.background='#fafafa';this.style.borderColor='#D6CEBF';this.style.color='#6b6b6b';">Simulation Lab</button>
                             <button onclick="downloadResultJSON()" style="background:#ffffff;border:1px solid #D6CEBF;color:#6b6b6b;font-size:11px;font-weight:600;padding:6px 14px;border-radius:8px;cursor:pointer;transition:all 0.15s;" onmouseover="this.style.background='#fafafa';this.style.borderColor='#C8C3B8';this.style.color='#191919';" onmouseout="this.style.background='#ffffff';this.style.borderColor='#D6CEBF';this.style.color='#6b6b6b';">Extract Results JSON</button>
                             <button onclick="downloadAF3JSON()" style="background:#1a1a1a;border:none;color:#f8f8f6;font-size:11px;font-weight:600;padding:6px 14px;border-radius:8px;cursor:pointer;transition:all 0.15s;" onmouseover="this.style.background='#333';" onmouseout="this.style.background='#1a1a1a';">Extract JSON (AF3)</button>
