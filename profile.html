@@ -3258,16 +3258,16 @@
 
             <!-- Segmented Control Switcher -->
             <div style="display: inline-flex; background: rgba(15, 23, 42, 0.05); border: 1px solid rgba(15, 23, 42, 0.08); padding: 4px; border-radius: 999px; margin-bottom: 2rem; gap: 4px; position: relative; z-index: 20;">
-                <button onclick="switchDiscovery('gmt')" id="btn-gmt" style="border: none; background: transparent; padding: 0.6rem 1.5rem; border-radius: 999px; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; cursor: pointer; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); color: #64748b; outline: none;">
+                <button onclick="switchDiscovery('gmt')" id="btn-gmt" style="border: none; background: white; padding: 0.6rem 1.5rem; border-radius: 999px; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; cursor: pointer; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); color: #0f172a; box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08); outline: none;">
                     GMT-3 (Legacy)
                 </button>
-                <button onclick="switchDiscovery('zenith')" id="btn-zenith" style="border: none; background: white; padding: 0.6rem 1.5rem; border-radius: 999px; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; cursor: pointer; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); color: #0f172a; box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08); outline: none;">
+                <button onclick="switchDiscovery('zenith')" id="btn-zenith" style="border: none; background: transparent; padding: 0.6rem 1.5rem; border-radius: 999px; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; cursor: pointer; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); color: #64748b; outline: none;">
                     Zenith Ultra (Active)
                 </button>
             </div>
 
             <!-- GMT Legacy Panel -->
-            <div id="panel-gmt" style="display: none; transition: opacity 0.4s ease; opacity: 0; width: 100%;">
+            <div id="panel-gmt" style="display: block; transition: opacity 0.4s ease; opacity: 1; width: 100%;">
                 <h1 style="font-size: clamp(36px, 6vw, 56px); font-family: 'Outfit', sans-serif; font-weight: 900; line-height: 1.05; margin-bottom: 1.5rem; letter-spacing: -0.03em; color: #0f172a;">
                     GMT Cardiac <span style="color: #2563eb;">Rejuvenation</span>
                 </h1>
@@ -3312,7 +3312,7 @@
             </div>
 
             <!-- Zenith Ultra Active Panel -->
-            <div id="panel-zenith" style="display: block; transition: opacity 0.4s ease; opacity: 1; width: 100%;">
+            <div id="panel-zenith" style="display: none; transition: opacity 0.4s ease; opacity: 0; width: 100%;">
                 <h1 style="font-size: clamp(36px, 6vw, 56px); font-family: 'Outfit', sans-serif; font-weight: 900; line-height: 1.05; margin-bottom: 1.5rem; letter-spacing: -0.03em; color: #0f172a;">
                     Zenith <span style="color: #2563eb;">Ultra</span>
                 </h1>
