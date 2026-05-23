@@ -5139,9 +5139,17 @@ async def chat_proxy(req: ChatRequest):
 
 # --- ENTERPRISE VIRTUAL TRIALS (PHASE III ENGINE) ---
 
+class DosageRequest(BaseModel):
+
+    target_reduction: Optional[float] = 12.0
+
+    max_stress: Optional[float] = 0.05
+
+
+
 @app.post("/api/v2/dosage_optimization")
 
-async def run_dosage_optimization():
+async def run_dosage_optimization(req: Optional[DosageRequest] = None):
 
     """
 
@@ -5153,9 +5161,15 @@ async def run_dosage_optimization():
 
     try:
 
-        optimizer = get_dosage_optimizer()
+        target = req.target_reduction if (req and req.target_reduction is not None) else 12.0
 
-        final_audit = optimizer.optimize()
+        stress = req.max_stress if (req and req.max_stress is not None) else 0.05
+
+        from dosage_optimization_engine import DosageOptimizer
+
+        optimizer = DosageOptimizer(target_reduction=target, max_stress=stress)
+
+        final_audit = optimizer.optimize(n_iterations=5)
 
         return final_audit
 
@@ -5854,7 +5868,9 @@ async def partial_reprogramming_endpoint(req: PartialReprogrammingRequest):
 
         # STAGE 1: Parse factors from prompt using GPT-4o
 
-        client, has_key = get_openai_client(req.openai_key)
+        provided_key = req.openai_key.strip() if (req.openai_key and req.openai_key.strip() not in ("null", "undefined", "none", "")) else None
+
+        client, has_key = get_openai_client(provided_key)
 
         if not client or not has_key:
 
