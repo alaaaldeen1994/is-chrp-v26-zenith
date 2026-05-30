@@ -620,7 +620,7 @@ openai_client = _env_client
 
 # --- CONFIGURATION ---
 
-scvi_model = None
+zenith_foundation_v1 = None
 
 model_mode = "SIMULATION"
 
@@ -1108,7 +1108,7 @@ class DataSourceIntegrity:
 
 def get_current_integrity():
 
-    if model_mode == "CLINICAL" and not getattr(scvi_model, 'is_mock', False):
+    if model_mode == "CLINICAL" and not getattr(zenith_foundation_v1, 'is_mock', False):
 
         return DataSourceIntegrity.CLINICAL
 
@@ -1249,7 +1249,7 @@ def reassemble_split_files():
 
         "data/real/reprogramming_timecourse.h5ad",
 
-        "models/scvi_model_hca/adata.h5ad"
+        "models/zenith_foundation_v1/adata.h5ad"
 
     ]
 
@@ -1271,7 +1271,7 @@ def reassemble_split_files():
 
             print(f"SUCCESS: Large file already exists: {relative_path}")
 
-            if "scvi_model_hca" in relative_path:
+            if "zenith_foundation_v1" in relative_path:
 
                 print(f"SUCCESS: Clinical HCA Model Loaded (150,000 Mapped Cells)")
 
@@ -1343,7 +1343,7 @@ async def lifespan(app: FastAPI):
 
     
 
-    global scvi_model, model_mode
+    global zenith_foundation_v1, model_mode
 
     base_dir = os.path.abspath(os.path.dirname(__file__))
 
@@ -1367,7 +1367,7 @@ async def lifespan(app: FastAPI):
 
         # --- PRIORITY 1: REAL 486k Full HCA Model (Litvinukova et al. Nature 2020) ---
         # Trained May 2026 on 99,993 cells, 100 epochs, 14 real donors
-        model_dir_486k = os.path.join(base_dir, "models", "scvi_model_486k_real")
+        model_dir_486k = os.path.join(base_dir, "models", "zenith_foundation_v1")
 
         model_pt_486k = os.path.join(model_dir_486k, "model.pt")
 
@@ -1375,7 +1375,7 @@ async def lifespan(app: FastAPI):
 
         # --- PRIORITY 2: Legacy 18k HCA Subsampled Model ---
 
-        model_dir_hca = os.path.join(base_dir, "models", "scvi_model_hca")
+        model_dir_hca = os.path.join(base_dir, "models", "zenith_foundation_v1")
 
         adata_path_hca = os.path.join(model_dir_hca, "adata.h5ad")
 
@@ -1391,7 +1391,7 @@ async def lifespan(app: FastAPI):
 
                 # The newer scvi-tools versions pack everything into model.pt and can load without adata.h5ad!
 
-                scvi_model = SCVI.load(model_dir_486k)
+                zenith_foundation_v1 = SCVI.load(model_dir_486k)
 
                 model_mode = "CLINICAL"
 
@@ -1405,13 +1405,13 @@ async def lifespan(app: FastAPI):
 
                 print("Falling back to Priority 2 (18k model)...")
 
-                scvi_model = None
+                zenith_foundation_v1 = None
 
 
 
         # Try Priority 2 if Priority 1 not available or failed
 
-        if scvi_model is None and os.path.exists(model_dir_hca) and os.path.exists(adata_path_hca):
+        if zenith_foundation_v1 is None and os.path.exists(model_dir_hca) and os.path.exists(adata_path_hca):
 
             try:
 
@@ -1471,7 +1471,7 @@ async def lifespan(app: FastAPI):
 
                 loaded_adata = ad.read_h5ad(adata_path_hca, backed='r')
 
-                scvi_model = SCVI.load(model_dir_hca, adata=loaded_adata)
+                zenith_foundation_v1 = SCVI.load(model_dir_hca, adata=loaded_adata)
 
                 model_mode = "CLINICAL"
 
@@ -1483,7 +1483,7 @@ async def lifespan(app: FastAPI):
 
                 print(f"CRITICAL: Failed to load Legacy HCA Model: {e}")
 
-                scvi_model = None
+                zenith_foundation_v1 = None
 
                 model_mode = "NONE"
 
@@ -1491,13 +1491,13 @@ async def lifespan(app: FastAPI):
 
         # Priority 3: Mock fallback
 
-        if scvi_model is None:
+        if zenith_foundation_v1 is None:
 
             print(f"Warning: No clinical model found.")
 
-            print(f"  To activate: place model in models/scvi_model_486k/ or models/scvi_model_hca/")
+            print(f"  To activate: place model in models/scvi_model_486k/ or models/zenith_foundation_v1/")
 
-            scvi_model = None
+            zenith_foundation_v1 = None
 
             model_mode = "NONE"
 
@@ -1505,7 +1505,7 @@ async def lifespan(app: FastAPI):
 
         print("Warning: scvi-tools/anndata missing.")
 
-        scvi_model = None
+        zenith_foundation_v1 = None
 
         model_mode = "NONE"
 
@@ -1513,7 +1513,7 @@ async def lifespan(app: FastAPI):
 
     yield
 
-    scvi_model = None
+    zenith_foundation_v1 = None
 
     model_mode = "OFFLINE"
 
@@ -2977,15 +2977,15 @@ async def impute_genes(state: CellState):
 
         # CASE 1: CLINICAL MODEL INFERENCE
 
-        if scvi_model is not None and (model_mode == "CLINICAL" or model_mode == "PREVIEW"):
+        if zenith_foundation_v1 is not None and (model_mode == "CLINICAL" or model_mode == "PREVIEW"):
 
-            full_genes = np.zeros(len(scvi_model.adata.var_names))
+            full_genes = np.zeros(len(zenith_foundation_v1.adata.var_names))
 
             for i, gene_symbol in enumerate(GENE_SYMBOLS):
 
-                if gene_symbol in scvi_model.adata.var_names:
+                if gene_symbol in zenith_foundation_v1.adata.var_names:
 
-                    idx = scvi_model.adata.var_names.get_loc(gene_symbol)
+                    idx = zenith_foundation_v1.adata.var_names.get_loc(gene_symbol)
 
                     full_genes[idx] = input_genes[i]
 
@@ -2993,13 +2993,13 @@ async def impute_genes(state: CellState):
 
             adata = ad.AnnData(X=full_genes.reshape(1, -1).astype(np.float32))
 
-            adata.var_names = scvi_model.adata.var_names
+            adata.var_names = zenith_foundation_v1.adata.var_names
 
             
 
-            latent = scvi_model.get_latent_representation(adata)
+            latent = zenith_foundation_v1.get_latent_representation(adata)
 
-            imputed = scvi_model.get_normalized_expression(adata)
+            imputed = zenith_foundation_v1.get_normalized_expression(adata)
 
             
 
@@ -3113,17 +3113,17 @@ async def get_latent_ATLAS():
 
     """Returns a subsampled map of the real Human Cell ATLAS latent space."""
 
-    global scvi_model, model_mode
+    global zenith_foundation_v1, model_mode
 
     
 
-    if scvi_model is not None and model_mode == "CLINICAL":
+    if zenith_foundation_v1 is not None and model_mode == "CLINICAL":
 
         try:
 
             # Sample 400 random points from the training data for background visualization
 
-            adata = scvi_model.adata
+            adata = zenith_foundation_v1.adata
 
             indices = np.random.choice(len(adata), min(400, len(adata)), replace=False)
 
@@ -3131,7 +3131,7 @@ async def get_latent_ATLAS():
 
             
 
-            latent = scvi_model.get_latent_representation(sub_adata)
+            latent = zenith_foundation_v1.get_latent_representation(sub_adata)
 
             # Take top 3 dimensions for 3D visualization
 
@@ -6391,7 +6391,7 @@ async def get_real_discovery(top_n: int = 10):
     return {
         "source": "Litvinukova et al., Nature 2020",
         "doi": "10.1038/s41586-020-2797-4",
-        "model": "scvi_model_486k_real",
+        "model": "zenith_foundation_v1",
         "method": "Pearson correlation with rejuvenation latent vector",
         "n_cells_analysed": ip_data.get("n_cells"),
         "n_genes_analysed": ip_data.get("n_genes_analysed"),

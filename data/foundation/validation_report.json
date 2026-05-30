@@ -1,0 +1,68 @@
+{
+  "silhouette_cell_type": 0.1059684082865715,
+  "batch_mixing_score": 0.030983999999999998,
+  "elbo_gap_pct": 2.99,
+  "final_train_elbo": 1093.5045166015625,
+  "final_val_elbo": 1060.848388671875,
+  "timestamp_utc": "2026-05-30 15:10 UTC",
+  "model_version": "zenith_foundation_v1",
+  "n_cells_validated": 20000,
+  "n_genes": 4908,
+  "n_leiden_clusters": 20,
+  "de_marker_results": {
+    "fibroblast": {
+      "matched_label": "fibroblast",
+      "markers_in_model": [
+        "COL1A1",
+        "COL3A1",
+        "VIM",
+        "DCN",
+        "POSTN"
+      ],
+      "pct_markers_found": 100.0
+    },
+    "endothelial": {
+      "matched_label": "capillary endothelial cell",
+      "markers_in_model": [
+        "PECAM1",
+        "CDH5",
+        "VWF",
+        "CLDN5",
+        "ENG"
+      ],
+      "pct_markers_found": 100.0
+    },
+    "smooth_muscle": {
+      "matched_label": "smooth muscle cell",
+      "markers_in_model": [
+        "ACTA2",
+        "MYH11",
+        "TAGLN",
+        "CNN1"
+      ],
+      "pct_markers_found": 80.0
+    },
+    "macrophage": {
+      "matched_label": "macrophage",
+      "markers_in_model": [
+        "CD68",
+        "CD14",
+        "CSF1R",
+        "AIF1",
+        "MRC1"
+      ],
+      "pct_markers_found": 100.0
+    },
+    "t_cell": {
+      "matched_label": "regular ventricular cardiac myocyte",
+      "markers_in_model": [
+        "CD3D",
+        "CD3E",
+        "CD8A",
+        "IL7R"
+      ],
+      "pct_markers_found": 80.0
+    }
+  },
+  "production_ready": true
+}

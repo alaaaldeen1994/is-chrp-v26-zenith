@@ -1,0 +1,16 @@
+{
+  "timestamp_utc": "2026-05-30 14:39 UTC",
+  "n_cells_input": 500000,
+  "n_cells_output": 500000,
+  "n_genes_input": 36028,
+  "n_genes_output": 4908,
+  "n_hvg_selected": 4908,
+  "n_mt_excluded": 13,
+  "n_ribo_excluded": 108,
+  "min_cells_per_gene": 10,
+  "hvg_method": "seurat_v3",
+  "raw_counts_in_X": true,
+  "raw_counts_in_layer": "counts",
+  "elapsed_minutes": 5.6,
+  "output_file": "data/foundation/cardiac_preprocessed.h5ad"
+}

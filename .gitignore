@@ -27,6 +27,8 @@ data/trajectories/
 # EXCEPTIONS: These model files are small enough for GitHub (Railway needs them)
 !models/scvi_model_486k/model.pt
 !models/scvi_model_486k_real/model.pt
+!models/zenith_foundation_v1/model.pt
+!models/zenith_foundation_v1/var_schema.h5ad
 !models/age_clock.pkl
 
 # Temp/debug scripts (not needed in repo)
