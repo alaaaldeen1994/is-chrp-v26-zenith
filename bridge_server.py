@@ -2337,6 +2337,15 @@ async def get_clinical_report():
 
 
 
+@app.get("/v28_clinical_report.html")
+
+async def get_clinical_report_v28():
+
+    return FileResponse("v28_clinical_report.html")
+
+
+
+
 @app.get("/evidence.html")
 
 async def get_evidence():
