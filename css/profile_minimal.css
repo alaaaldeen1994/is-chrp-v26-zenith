@@ -1,19 +1,19 @@
 /**
  * NilusLab Zenith v28.0 - Profile High-Fidelity Cohesive Redesign
- * Obsidian Dark Mode & Electric Cobalt Accent Styling
+ * Pure White Theme & Electric Cobalt Accent Styling
  */
 
 :root {
-    --bg-agency-pure: #030712; /* Deep Obsidian */
-    --bg-agency-soft: #0b0f19; /* Dark Slate */
-    --text-agency-black: #f8fafc; /* Crisp High-Contrast White */
-    --text-agency-muted: #94a3b8; /* Cool Muted Slate */
-    --dna-blue-glow: rgba(59, 130, 246, 0.15); /* Electric Blue Glow */
+    --bg-agency-pure: #ffffff; /* Pristine White */
+    --bg-agency-soft: #f8fafc; /* Soft Slate-White */
+    --text-agency-black: #0f172a; /* Deep Slate-Black */
+    --text-agency-muted: #64748b; /* Professional Muted Slate */
+    --dna-blue-glow: rgba(37, 99, 235, 0.04); /* Soft Cobalt Glow */
     --dna-teal-accent: #2563eb; /* Cobalt Blue Primary */
-    --dna-teal-hover: #3b82f6; /* Electric Cobalt Hover */
-    --glass-20-bg: rgba(11, 15, 25, 0.65); /* Dark Glassmorphism 2.0 */
-    --glass-20-border: rgba(255, 255, 255, 0.08); /* Clean Thin Highlight */
-    --glass-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.6);
+    --dna-teal-hover: #1d4ed8; /* Electric Cobalt Hover */
+    --glass-20-bg: rgba(255, 255, 255, 0.8); /* Light Glassmorphism 2.0 */
+    --glass-20-border: rgba(15, 23, 42, 0.08); /* Delicate Border */
+    --glass-shadow: 0 30px 60px -15px rgba(15, 23, 42, 0.06);
 }
 
 body.light-mode-profile {
@@ -32,10 +32,10 @@ body.light-mode-profile {
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    background: radial-gradient(circle at 50% 50%, #0c1222 0%, #030712 100%);
+    background: radial-gradient(circle at 50% 50%, #ffffff 0%, #f8fafc 100%);
 }
 
-/* The DNA Focal Point - Glowing screen blend */
+/* The DNA Focal Point - Multiply blend makes white video backdrop disappear completely */
 #dna-focal-layer {
     position: absolute;
     inset: 0;
@@ -43,15 +43,15 @@ body.light-mode-profile {
     display: flex;
     align-items: center;
     justify-content: center;
-    opacity: 0.85;
-    mix-blend-mode: screen; /* Blends neon helix into the deep dark mode background */
+    opacity: 0.95;
+    mix-blend-mode: multiply; /* Dissolves white background of 3D video perfectly */
 }
 
 .dna-visual-asset {
     width: 80%;
     max-width: 1100px;
     height: auto;
-    filter: drop-shadow(0 0 80px rgba(59, 130, 246, 0.25));
+    filter: drop-shadow(0 0 80px rgba(37, 99, 235, 0.05));
     animation: floatingHelix 8s ease-in-out infinite;
 }
 
@@ -73,9 +73,8 @@ body.light-mode-profile {
     font-weight: 800;
     text-transform: uppercase;
     letter-spacing: 0.6em;
-    color: var(--dna-teal-hover);
+    color: var(--dna-teal-accent);
     margin-bottom: 2.5rem;
-    text-shadow: 0 0 12px rgba(59, 130, 246, 0.4);
 }
 
 .agency-title {
@@ -86,7 +85,7 @@ body.light-mode-profile {
     line-height: 0.95;
     color: var(--text-agency-black);
     margin-bottom: 2rem;
-    background: linear-gradient(135deg, #ffffff 30%, #93c5fd 100%);
+    background: linear-gradient(135deg, #0f172a 30%, #2563eb 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
@@ -103,11 +102,11 @@ body.light-mode-profile {
 .serif-accent {
     font-family: 'Playfair Display', serif;
     font-style: italic;
-    color: #93c5fd;
+    color: var(--dna-teal-accent);
     font-weight: 400;
 }
 
-/* DARK GLASSMORPHISM 2.0 */
+/* LIGHT GLASSMORPHISM 2.0 */
 .glass-stat-card {
     background: var(--glass-20-bg);
     backdrop-filter: blur(35px) saturate(180%);
@@ -122,8 +121,8 @@ body.light-mode-profile {
 
 .glass-stat-card:hover {
     transform: translateY(-8px) scale(1.02);
-    box-shadow: 0 40px 80px -15px rgba(0, 0, 0, 0.8), 0 0 30px rgba(59, 130, 246, 0.15);
-    border-color: rgba(59, 130, 246, 0.3);
+    box-shadow: 0 40px 80px -15px rgba(15, 23, 42, 0.12);
+    border-color: rgba(37, 99, 235, 0.25);
 }
 
 .stat-value {
@@ -133,7 +132,7 @@ body.light-mode-profile {
     color: var(--text-agency-black);
     line-height: 1;
     margin-bottom: 0.5rem;
-    background: linear-gradient(135deg, #ffffff 40%, #60a5fa 100%);
+    background: linear-gradient(135deg, #0f172a 40%, #2563eb 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
@@ -158,11 +157,11 @@ body.light-mode-profile {
     letter-spacing: 0.15em;
     transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
     border: 1px solid rgba(255, 255, 255, 0.15);
-    box-shadow: 0 10px 30px rgba(37, 99, 235, 0.3);
+    box-shadow: 0 10px 30px rgba(37, 99, 235, 0.2);
 }
 
 .btn-agency-primary:hover {
     background: linear-gradient(135deg, var(--dna-teal-hover) 0%, var(--dna-teal-accent) 100%);
     transform: scale(1.05) translateY(-2px);
-    box-shadow: 0 20px 40px rgba(37, 99, 235, 0.5), 0 0 20px rgba(59, 130, 246, 0.3);
+    box-shadow: 0 20px 40px rgba(37, 99, 235, 0.35);
 }
