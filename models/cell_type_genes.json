@@ -1,8 +1,8 @@
 {
-  "source": "Litvinukova et al., Nature 2020",
+  "source": "Litvinukova et al. + PERIHEART",
   "doi": "10.1038/s41586-020-2797-4",
-  "total_cells": 486134,
-  "total_genes": 5000,
+  "total_cells": 500000,
+  "total_genes": 4908,
   "n_cell_types": 12,
   "young_age_range": "<=55.0y",
   "aged_age_range": ">=65.0y",

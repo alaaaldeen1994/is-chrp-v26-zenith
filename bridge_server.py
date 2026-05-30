@@ -6561,7 +6561,7 @@ async def run_gpt_discovery(request: Request):
             ip_data = json.load(f)
         pro_genes = ip_data.get("pro_rejuvenation_genes", [])[:200]
         aging_genes = ip_data.get("aging_marker_genes", [])[:200]
-        gene_source_label = "All cardiac cells (486,134 cells, 14 donors)"
+        gene_source_label = "All cardiac cells (500,000 cells, 14 donors · HCA + PERIHEART)"
         cell_type_age_delta = None
 
     pro_str = ", ".join([
@@ -6788,12 +6788,12 @@ async def list_cell_types():
     """Returns available cell types for cell-type-specific discovery."""
     ct_path = os.path.join(os.path.dirname(__file__), "models", "cell_type_genes.json")
     if not os.path.exists(ct_path):
-        return {"cell_types": [{"key": "all", "label": "All cardiac cells", "n_cells": 486134}]}
+        return {"cell_types": [{"key": "all", "label": "All cardiac cells", "n_cells": 500000}]}
 
     with open(ct_path) as f:
         ct_all = json.load(f)
 
-    types = [{"key": "all", "label": "All cardiac cells", "n_cells": 486134, "age_delta": 11.9}]
+    types = [{"key": "all", "label": "All cardiac cells", "n_cells": 500000, "age_delta": 11.9}]
     for key, data in ct_all.get("cell_types", {}).items():
         types.append({
             "key": key,
@@ -6806,7 +6806,7 @@ async def list_cell_types():
             "top_gene": data["pro_rejuvenation_genes"][0]["gene"] if data.get("pro_rejuvenation_genes") else None
         })
 
-    return {"cell_types": types, "source": "Litvinukova et al., Nature 2020"}
+    return {"cell_types": types, "source": "Litvinukova et al. + PERIHEART"}
 
 
 if __name__ == "__main__":
