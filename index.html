@@ -2883,7 +2883,7 @@
                             ✦ GPT
                         </button>
                     </div>
-                    <span id="mode-badge" style="flex:1;font-size:7px;color:#4f46e5;font-weight:700;opacity:0.7;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">14 donors · 32,383 genes</span>
+                    <span id="mode-badge" style="flex:1;font-size:7px;color:#4f46e5;font-weight:700;opacity:0.7;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">14 donors · 500K cells · 4,908 genes</span>
                     <button id="btn-discover"
                         onclick="window._discoveryMode=(document.getElementById('chip-real').getAttribute('data-active')?'real':'gpt');BiosimBridge.discoverHybridProtocol(this);"
                         style="background:linear-gradient(135deg,#4f46e5,#2563eb);color:#fff;border:none;padding:6px 12px;border-radius:7px;font-size:9px;font-weight:900;cursor:pointer;display:flex;align-items:center;gap:4px;box-shadow:0 2px 10px rgba(79,70,229,0.4);flex-shrink:0;white-space:nowrap;">
@@ -3281,7 +3281,7 @@
                 <div class="mb-4">
                     <span class="text-[9px] font-bold text-slate-500 uppercase">Zenith v28.0 GOLD GOLD: Ultra-HD (5K) Genome Explorer</span>
                     <div class="mt-2 mb-2">
-                        <input type="text" id="gene-search" placeholder="Search 5,000 genes..."
+                        <input type="text" id="gene-search" placeholder="Search 4,908 genes..."
                             class="w-full bg-black/60 border border-dim rounded px-2 py-1 text-[10px] text-blue-300 focus:outline-none focus:border-blue-500/50"
                             oninput="BiosimUI.initGeneGrid(this.value)">
                     </div>
@@ -3289,7 +3289,7 @@
                         <div id="gene-grid" class="gene-matrix p-2"
                             style="display: grid; grid-template-columns: repeat(10, 1fr); gap: 2px;">
 
-                            <!-- Dynamically populated 5,000 nodes -->
+                            <!-- Dynamically populated 4,908 nodes -->
                         </div>
                     </div>
                 </div>
@@ -3398,7 +3398,7 @@
 
                 <div class="text-[10px] text-slate-400 font-black tracking-[0.2em] uppercase">Virtual Clinical Trial
 
-                    Platform | ~167.6M Parameter GOLD Manifold</div>
+                    Platform | 500K-Cell Foundation GOLD Manifold</div>
 
 
 
@@ -5348,7 +5348,7 @@ window.downloadAF3JSON = async function() {
 
         <div class="flex items-center gap-4">
 
-            <span class="validator-badge">V27.0 GOLD VALIDATED</span>
+            <span class="validator-badge">V28.0 GOLD VALIDATED</span>
 
             <span class="sde-formula">dX_t = f(X_t, t)dt + g(X_t, t)dW_t | PDB Structural Authority v1.0 | GRN Inference active</span>
 
