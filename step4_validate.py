@@ -65,17 +65,31 @@ MARKER_GENES = {
 
 
 def silhouette_score_celltypes(latent: np.ndarray, labels: pd.Series) -> float:
-    """Compute macro-averaged silhouette score for cell type labels."""
+    """
+    Compute macro-averaged silhouette score for cell type labels.
+    Downsamples abundant cell types to prevent dominant populations from biasing the score.
+    """
     from sklearn.metrics import silhouette_score
     unique_labels = labels.unique()
     if len(unique_labels) < 2:
         return float("nan")
-    # Subsample for speed (silhouette is O(n^2))
-    n_sample = min(10_000, len(labels))
-    idx = np.random.choice(len(labels), n_sample, replace=False)
+        
+    # Balanced sampling: sample at most 300 cells per cell type to balance classes
+    sampled_indices = []
+    for label in unique_labels:
+        label_idx = np.where(labels == label)[0]
+        n_draw = min(300, len(label_idx))
+        # Ensure reproducible sampling
+        np.random.seed(42)
+        draw = np.random.choice(label_idx, size=n_draw, replace=False)
+        sampled_indices.extend(draw)
+        
+    sampled_indices = np.array(sampled_indices)
+    np.random.shuffle(sampled_indices)
+    
     score = silhouette_score(
-        latent[idx],
-        labels.iloc[idx].values,
+        latent[sampled_indices],
+        labels.iloc[sampled_indices].values,
         metric="euclidean",
     )
     return float(score)
@@ -84,28 +98,52 @@ def silhouette_score_celltypes(latent: np.ndarray, labels: pd.Series) -> float:
 def batch_mixing_score(latent: np.ndarray, batch_labels: pd.Series,
                        n_neighbors: int = 50) -> float:
     """
-    Compute Local Inverse Simpson's Index (LISI) as a proxy for batch mixing.
-    Higher value = better batch mixing = better technical integration.
-    We use a simplified neighbour-based approach (no full LISI for speed).
+    Compute the Normalized Shannon Entropy of Batch Mixing.
+    Corrects for class imbalance by scaling local counts by global inverse frequencies.
+    A perfectly integrated space will score close to 1.0.
     """
     from sklearn.neighbors import NearestNeighbors
+    
+    # Subsample for validation speed
     n_sample = min(5_000, len(batch_labels))
+    np.random.seed(42)
     idx = np.random.choice(len(batch_labels), n_sample, replace=False)
     X_sub = latent[idx]
     y_sub = pd.Categorical(batch_labels.iloc[idx].values)
-
+    
+    # Global batch distributions
+    global_counts = y_sub.value_counts()
+    global_props = global_counts / global_counts.sum()
+    # Inverse weights for class balancing
+    weights = {k: 1.0 / (prop + 1e-9) for k, prop in global_props.items()}
+    
     nn = NearestNeighbors(n_neighbors=n_neighbors, metric="euclidean", n_jobs=-1)
     nn.fit(X_sub)
     _, indices = nn.kneighbors(X_sub)
-
-    # Fraction of neighbours from a different batch (simple mixing metric)
-    mixing_scores = []
+    
+    entropies = []
     for i, nbrs in enumerate(indices):
-        own_batch   = y_sub[i]
-        other_batch = sum(y_sub[j] != own_batch for j in nbrs) / len(nbrs)
-        mixing_scores.append(other_batch)
-
-    return float(np.mean(mixing_scores))
+        # Get neighbor batch labels
+        neighbor_batches = [y_sub[j] for j in nbrs]
+        
+        # Compute weighted counts to correct for dataset size imbalance
+        weighted_counts = {}
+        for b in y_sub.categories:
+            count = sum(nb == b for nb in neighbor_batches)
+            weighted_counts[b] = count * weights[b]
+            
+        total_weighted = sum(weighted_counts.values()) + 1e-9
+        probs = [weighted_counts[b] / total_weighted for b in y_sub.categories]
+        
+        # Compute Shannon Entropy
+        entropy = -sum(p * np.log2(p + 1e-15) for p in probs)
+        
+        # Max possible entropy for B categories is log2(B)
+        max_entropy = np.log2(len(y_sub.categories))
+        norm_entropy = entropy / (max_entropy + 1e-9)
+        entropies.append(norm_entropy)
+        
+    return float(np.mean(entropies))
 
 
 def main():

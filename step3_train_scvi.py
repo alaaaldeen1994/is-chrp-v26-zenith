@@ -68,9 +68,9 @@ MODEL_OUT_DIR = "models/zenith_foundation_v1"
 METRICS_FILE  = "data/foundation/training_metrics.json"
 
 # Architecture
-N_LATENT      = 30
-N_HIDDEN      = 256
-N_LAYERS      = 2
+N_LATENT      = 45
+N_HIDDEN      = 512
+N_LAYERS      = 3
 GENE_LIKELIHOOD = "nb"   # negative binomial
 
 # Training

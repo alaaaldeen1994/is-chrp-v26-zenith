@@ -331,34 +331,31 @@ def main():
 
     print(f"\n  Successfully downloaded: {len(download_manifest)} datasets")
 
-    # ── Step 3: Load + harmonise ───────────────────────────────────
-    print(f"\n[3/4] Loading and harmonising datasets...")
-
-    adatas = []
-    total_cells = 0
+    # Balanced load budget per dataset to eliminate representation bias (e.g. 250k HCA + 250k PERIHEART)
+    n_datasets = len(download_manifest)
+    budget_per_dataset = MAX_TOTAL_CELLS // n_datasets if n_datasets > 0 else MAX_TOTAL_CELLS
+    print(f"  Target balanced cell budget per dataset: {budget_per_dataset:,} cells")
 
     for meta in download_manifest:
         if total_cells >= MAX_TOTAL_CELLS:
             print(f"  Memory cap reached ({MAX_TOTAL_CELLS:,}). Stopping load.")
             break
 
-        budget = MAX_TOTAL_CELLS - total_cells
-        adata = load_and_harmonise(meta["path"], meta, max_cells_budget=budget)
+        adata = load_and_harmonise(meta["path"], meta, max_cells_budget=budget_per_dataset)
         if adata is None:
             continue
 
-        # Subsample within a single dataset if it's very large
-        # (preserves diversity when total budget is limited)
-        if adata.n_obs > budget:
+        # Subsample within a single dataset if it exceeds the balanced budget
+        if adata.n_obs > budget_per_dataset:
             np.random.seed(42)
-            idx = np.random.choice(adata.n_obs, size=budget, replace=False)
+            idx = np.random.choice(adata.n_obs, size=budget_per_dataset, replace=False)
             idx.sort()
             adata = adata[idx].copy()
-            print(f"      Downsampled to {adata.n_obs:,} cells (memory budget)")
+            print(f"      Balanced budget cap: Downsampled to {adata.n_obs:,} cells")
 
         adatas.append(adata)
         total_cells += adata.n_obs
-        print(f"      Running total: {total_cells:,} cells\n")
+        print(f"      Running total: {total_cells:,} cells (loaded {adata.n_obs:,} from {meta['dataset_id'][:8]})\n")
 
     if not adatas:
         sys.exit("ERROR: No valid datasets loaded.")

@@ -1,32 +1,30 @@
 {
-  "timestamp_utc": "2026-05-30 21:30 UTC",
+  "timestamp_utc": "2026-05-30 22:37 UTC",
   "model_version": "zenith_foundation_v1",
-  "n_cells_trained": 500000,
+  "n_cells_trained": 10000,
   "n_genes": 4908,
   "n_batches": 2,
   "architecture": {
-    "n_latent": 30,
-    "n_hidden": 256,
-    "n_layers": 2,
+    "n_latent": 45,
+    "n_hidden": 512,
+    "n_layers": 3,
     "gene_likelihood": "nb"
   },
   "training": {
-    "max_epochs": 400,
-    "epochs_trained": 400,
+    "max_epochs": 5,
+    "epochs_trained": 5,
     "batch_size": 256,
     "learning_rate": 0.001,
     "early_stopping": false,
-    "train_val_split": "90/10",
-    "gpu": "NVIDIA T4 (Google Colab)",
-    "training_time_h": 1.84
+    "train_val_split": "90/10"
   },
   "performance": {
-    "final_train_elbo": 909.0,
-    "final_val_elbo": 905.0,
-    "training_time_h": 1.84
+    "final_train_elbo": 1149.3502197265625,
+    "final_val_elbo": 1126.201416015625,
+    "training_time_h": 0.03
   },
   "model_dir": "models/zenith_foundation_v1",
   "ownership": "100% property of project owner",
-  "training_data_license": "CC BY 4.0 — CZI CELLxGENE",
-  "model_license": "Proprietary — no restrictions"
+  "training_data_license": "CC BY 4.0 \u2014 CZI CELLxGENE",
+  "model_license": "Proprietary \u2014 no restrictions"
 }
