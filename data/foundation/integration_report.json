@@ -1,0 +1,23 @@
+{
+  "timestamp_utc": "2026-05-30 21:46 UTC",
+  "old_model": "models/scvi_model_hca",
+  "new_model": "models/zenith_foundation_v1",
+  "n_cells_new_model": 500000,
+  "n_genes_new_model": 4908,
+  "bridge_server_replacements": 0,
+  "index_html_replacements": 0,
+  "plaque_alignment": {
+    "status": "success",
+    "n_cells": 5000,
+    "coverage_pct": 85.55,
+    "by_symbol": 4199,
+    "by_ensembl": 0,
+    "output": "data/real/patient_plaque_aligned_v2.h5ad"
+  },
+  "validation": {
+    "silhouette_cell_type": 0.012209346517920494,
+    "batch_mixing_score": 0.045404,
+    "production_ready": false
+  },
+  "elapsed_minutes": 1.0
+}

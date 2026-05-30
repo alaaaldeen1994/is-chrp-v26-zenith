@@ -1,0 +1,30 @@
+{
+  "timestamp_utc": "2026-05-30 14:33 UTC",
+  "n_datasets": 2,
+  "n_loaded": 2,
+  "n_cells_combined": 500000,
+  "n_genes_combined": 36028,
+  "elapsed_minutes": 16.4,
+  "output_file": "data/foundation\\cardiac_combined_raw.h5ad",
+  "data_license": "CC BY 4.0 \u2014 CZI CELLxGENE",
+  "qc_thresholds": {
+    "min_genes": 200,
+    "max_genes": 7000,
+    "min_counts": 500,
+    "max_pct_mito": 25
+  },
+  "datasets": [
+    {
+      "dataset_id": "d4e69e01-3ba2-4d6b-a15d-e7048f78f22e",
+      "title": "All \u2014 Cells of the adult human heart",
+      "n_cells": 486134,
+      "path": "data/foundation\\raw_datasets\\d4e69e01-3ba2-4d6b-a15d-e7048f78f22e.h5ad"
+    },
+    {
+      "dataset_id": "f1606894-59df-4794-a37f-baa7c6fb6de1",
+      "title": "PERIHEART",
+      "n_cells": 392819,
+      "path": "data/foundation\\raw_datasets\\f1606894-59df-4794-a37f-baa7c6fb6de1.h5ad"
+    }
+  ]
+}

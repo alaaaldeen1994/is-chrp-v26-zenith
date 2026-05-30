@@ -77,8 +77,10 @@ GENE_LIKELIHOOD = "nb"   # negative binomial
 import argparse
 parser = argparse.ArgumentParser(description="Zenith V1 scVI Foundation Model Training")
 parser.add_argument("--epochs", type=int, default=5, help="Number of training epochs (default: 5)")
+parser.add_argument("--subsample", type=int, default=0, help="Subsample cells to this count for speed (default: 0 = no subsample)")
 args, unknown = parser.parse_known_args()
 MAX_EPOCHS    = args.epochs
+SUBSAMPLE     = args.subsample
 
 BATCH_SIZE    = 256       # CPU-safe (reduced from 512)
 LEARNING_RATE = 1e-3
@@ -114,6 +116,12 @@ def main():
         idx.sort()
         adata = adata[idx].copy()
         print(f"  ✓ Subsampled in-memory to 10,000 cells for fast integration test (epochs={MAX_EPOCHS})")
+    elif SUBSAMPLE > 0 and adata.n_obs > SUBSAMPLE:
+        np.random.seed(42)
+        idx = np.random.choice(adata.n_obs, size=SUBSAMPLE, replace=False)
+        idx.sort()
+        adata = adata[idx].copy()
+        print(f"  ✓ Subsampled in-memory to {SUBSAMPLE:,} cells for speed (epochs={MAX_EPOCHS})")
 
     # Verify batch columns
     for col in [BATCH_KEY] + CAT_COVARIATES:

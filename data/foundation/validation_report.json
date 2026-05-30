@@ -1,14 +1,14 @@
 {
-  "silhouette_cell_type": 0.1059684082865715,
-  "batch_mixing_score": 0.030983999999999998,
-  "elbo_gap_pct": 2.99,
-  "final_train_elbo": 1093.5045166015625,
-  "final_val_elbo": 1060.848388671875,
-  "timestamp_utc": "2026-05-30 15:10 UTC",
+  "silhouette_cell_type": 0.012209346517920494,
+  "batch_mixing_score": 0.045404,
+  "elbo_gap_pct": 0.44,
+  "final_train_elbo": 909.0,
+  "final_val_elbo": 905.0,
+  "timestamp_utc": "2026-05-30 21:45 UTC",
   "model_version": "zenith_foundation_v1",
   "n_cells_validated": 20000,
   "n_genes": 4908,
-  "n_leiden_clusters": 20,
+  "n_leiden_clusters": 19,
   "de_marker_results": {
     "fibroblast": {
       "matched_label": "fibroblast",
@@ -64,5 +64,5 @@
       "pct_markers_found": 80.0
     }
   },
-  "production_ready": true
+  "production_ready": false
 }

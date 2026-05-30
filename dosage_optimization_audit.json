@@ -1,0 +1,76 @@
+{
+  "timestamp": "2026-05-25T06:35:55.725724",
+  "target_reduction": 2.2,
+  "optimal_on_hours": 2.42,
+  "optimal_off_hours": 18.53,
+  "predicted_rejuvenation": 19.72,
+  "predicted_stress": 0.0018,
+  "efficiency_ratio": 7.823,
+  "safety_status": "VERIFIED",
+  "optimization_history": [
+    {
+      "iteration": 1,
+      "pulse_on": 8.0,
+      "pulse_off": 16.0,
+      "age_reduction": 6.9,
+      "stress_index": 0.1266,
+      "score": 3.069
+    },
+    {
+      "iteration": 2,
+      "pulse_on": 12.0,
+      "pulse_off": 12.0,
+      "age_reduction": 4.95,
+      "stress_index": 0.2671,
+      "score": -5.901
+    },
+    {
+      "iteration": 3,
+      "pulse_on": 4.0,
+      "pulse_off": 20.0,
+      "age_reduction": 12.72,
+      "stress_index": 0.0086,
+      "score": 12.715
+    },
+    {
+      "iteration": 4,
+      "pulse_on": 3.41,
+      "pulse_off": 21.46,
+      "age_reduction": 14.66,
+      "stress_index": 0.0017,
+      "score": 14.657
+    },
+    {
+      "iteration": 5,
+      "pulse_on": 4.47,
+      "pulse_off": 20.72,
+      "age_reduction": 11.51,
+      "stress_index": 0.0109,
+      "score": 11.508
+    },
+    {
+      "iteration": 6,
+      "pulse_on": 3.56,
+      "pulse_off": 21.02,
+      "age_reduction": 14.09,
+      "stress_index": 0.0029,
+      "score": 14.094
+    },
+    {
+      "iteration": 7,
+      "pulse_on": 2.88,
+      "pulse_off": 20.6,
+      "age_reduction": 17.08,
+      "stress_index": 0.001,
+      "score": 17.079
+    },
+    {
+      "iteration": 8,
+      "pulse_on": 2.42,
+      "pulse_off": 18.53,
+      "age_reduction": 19.72,
+      "stress_index": 0.0018,
+      "score": 19.72
+    }
+  ]
+}

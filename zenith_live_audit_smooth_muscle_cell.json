@@ -1,0 +1,210 @@
+{
+  "timestamp": "2026-05-25T06:35:55.726723",
+  "lineage": "smooth_muscle_cell",
+  "live_metadata": {
+    "key": "smooth_muscle_cell",
+    "label": "smooth muscle cell",
+    "n_cells": 16242,
+    "n_young": 6118,
+    "n_aged": 4451,
+    "age_delta": 2.2,
+    "magnitude": 1.9642,
+    "top_gene": "ENSG00000140836"
+  },
+  "safety_audit": {
+    "mode": "balanced",
+    "bio_age_input": 0.7,
+    "approved": [
+      {
+        "gene": "SIRT1",
+        "safety_score": 95,
+        "longevity_score": 99,
+        "sirtuin_pathway": true,
+        "notes": "NAD-dependent deacetylase - Sinclair's primary target."
+      },
+      {
+        "gene": "FOXO3",
+        "safety_score": 92,
+        "longevity_score": 95,
+        "sirtuin_pathway": true,
+        "notes": "Master longevity TF - stress resistance, autophagy."
+      },
+      {
+        "gene": "KLF4",
+        "safety_score": 79,
+        "longevity_score": 75,
+        "sirtuin_pathway": false,
+        "notes": "Kr\u00fcppel-like barrier eraser - safe at controlled dose."
+      },
+      {
+        "gene": "TET1",
+        "safety_score": 77,
+        "longevity_score": 70,
+        "sirtuin_pathway": false,
+        "notes": "DNA demethylase - epigenetic reprogramming without dediff."
+      }
+    ],
+    "blocked": [
+      {
+        "gene": "MYC",
+        "reason": "Proto-oncogene - drives uncontrolled proliferation",
+        "category": "oncogene_blacklist"
+      }
+    ],
+    "sirtuin_report": {
+      "on_pathway": [
+        "SIRT1",
+        "FOXO3"
+      ],
+      "off_pathway": [
+        "KLF4",
+        "TET1"
+      ],
+      "pathway_score": 50,
+      "nad_boost": false,
+      "caloric_restriction_mimicry": true,
+      "sinclair_relevance": "HIGH"
+    },
+    "horvath_report": {
+      "loci_affected": 6,
+      "total_loci": 8,
+      "genes_hit": [
+        "ELOVL2",
+        "FHL2",
+        "KLF14",
+        "EDARADD",
+        "C1orf132",
+        "TRIM59"
+      ],
+      "regulators_matched": {
+        "ELOVL2": [
+          "SIRT1",
+          "FOXO3"
+        ],
+        "FHL2": [
+          "SIRT1"
+        ],
+        "KLF14": [
+          "SIRT1",
+          "KLF4"
+        ],
+        "EDARADD": [
+          "FOXO3"
+        ],
+        "C1orf132": [
+          "TET1"
+        ],
+        "TRIM59": [
+          "FOXO3"
+        ]
+      },
+      "predicted_shift": "strong",
+      "time_seq_compatible": true
+    },
+    "safety_summary": {
+      "oncogene_clear": false,
+      "dedifferentiation_blocked": false,
+      "partial_ceiling": "enforced",
+      "total_approved": 4,
+      "total_blocked": 1
+    }
+  },
+  "dosage_optimization": {
+    "timestamp": "2026-05-25T06:35:55.725724",
+    "target_reduction": 2.2,
+    "optimal_on_hours": 2.42,
+    "optimal_off_hours": 18.53,
+    "predicted_rejuvenation": 19.72,
+    "predicted_stress": 0.0018,
+    "efficiency_ratio": 7.823,
+    "safety_status": "VERIFIED",
+    "optimization_history": [
+      {
+        "iteration": 1,
+        "pulse_on": 8.0,
+        "pulse_off": 16.0,
+        "age_reduction": 6.9,
+        "stress_index": 0.1266,
+        "score": 3.069
+      },
+      {
+        "iteration": 2,
+        "pulse_on": 12.0,
+        "pulse_off": 12.0,
+        "age_reduction": 4.95,
+        "stress_index": 0.2671,
+        "score": -5.901
+      },
+      {
+        "iteration": 3,
+        "pulse_on": 4.0,
+        "pulse_off": 20.0,
+        "age_reduction": 12.72,
+        "stress_index": 0.0086,
+        "score": 12.715
+      },
+      {
+        "iteration": 4,
+        "pulse_on": 3.41,
+        "pulse_off": 21.46,
+        "age_reduction": 14.66,
+        "stress_index": 0.0017,
+        "score": 14.657
+      },
+      {
+        "iteration": 5,
+        "pulse_on": 4.47,
+        "pulse_off": 20.72,
+        "age_reduction": 11.51,
+        "stress_index": 0.0109,
+        "score": 11.508
+      },
+      {
+        "iteration": 6,
+        "pulse_on": 3.56,
+        "pulse_off": 21.02,
+        "age_reduction": 14.09,
+        "stress_index": 0.0029,
+        "score": 14.094
+      },
+      {
+        "iteration": 7,
+        "pulse_on": 2.88,
+        "pulse_off": 20.6,
+        "age_reduction": 17.08,
+        "stress_index": 0.001,
+        "score": 17.079
+      },
+      {
+        "iteration": 8,
+        "pulse_on": 2.42,
+        "pulse_off": 18.53,
+        "age_reduction": 19.72,
+        "stress_index": 0.0018,
+        "score": 19.72
+      }
+    ]
+  },
+  "af3_manifest": {
+    "name": "Zenith_Live_Audit_smooth_muscle_cell_SIRT1_FOXO3",
+    "modelSeeds": [
+      42
+    ],
+    "sequences": [
+      {
+        "proteinChain": {
+          "sequence": "MGDSHPPSKKRKVEDPHKPPYSYIALIVMAIQSSPTKRLTLSEIYQFLQARFPFFRGAYQGWKNSVRHNLSLNECFIKLPKGLGRPGKGHYWTIDPASEFMDGD",
+          "count": 1
+        }
+      },
+      {
+        "dnaSequence": {
+          "sequence": "CCTGTGACTGTGGGGTTCACGCTCCCGGGTG",
+          "count": 1
+        }
+      }
+    ],
+    "dialect": "alphafold3",
+    "version": 1
+  }
+}
