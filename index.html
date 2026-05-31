@@ -1653,7 +1653,7 @@
 
             </div>
 
-            <button class="mob-exit-btn" onclick="typeof exitSimulation!=='undefined'?exitSimulation():(typeof performLogout!=='undefined'?performLogout():window.location.href='profile.html')">EXIT</button>
+            <button class="mob-exit-btn" onclick="performLogout()">SIGN OUT</button>
 
         </div>
 
@@ -2029,10 +2029,10 @@
                 </button>
                 <div class="h-6 w-px bg-white/10 mx-2"></div>
 
-                <!-- EXIT IN SAME THEME -->
-                <button onclick="exitSimulation()"
+                <!-- SIGN OUT IN SAME THEME -->
+                <button onclick="performLogout()"
                     class="h-7 px-3 bg-blue-600/20 border border-blue-500/50 text-[8px] text-blue-400 rounded flex items-center gap-1.5 hover:bg-blue-600/30 transition-all font-bold font-black">
-                    <i data-lucide="arrow-left" class="w-3 h-3"></i> EXIT
+                    <i data-lucide="log-out" class="w-3 h-3"></i> SIGN OUT
                 </button>
             </div>
         </div>
