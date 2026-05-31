@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scientific Q&A | Nilus Lab Zenith Foundation Model</title>
+    <!-- RESEARCH USE ONLY - NO CLINICAL CLAIMS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;500;600;700;800;900&family=JetBrains+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --zenith-black: #0f172a;
+            --zenith-gray: #64748b;
+            --zenith-cobalt: #2563eb;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: #f8fafc;
+            color: #0f172a;
+            line-height: 1.7;
+            background-image:
+                radial-gradient(circle at 100% 0%, rgba(37, 99, 235, 0.04) 0%, transparent 40%),
+                radial-gradient(circle at 0% 100%, rgba(37, 99, 235, 0.03) 0%, transparent 40%);
+            background-attachment: fixed;
+            min-height: 100vh;
+        }
+
+        .card-elite {
+            background: #ffffff;
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(15, 23, 42, 0.06);
+            border-radius: 2rem;
+            box-shadow: 0 10px 45px -10px rgba(15, 23, 42, 0.04);
+            padding: 2.5rem;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .card-elite:hover {
+            border-color: rgba(37, 99, 235, 0.25);
+            box-shadow: 0 20px 50px rgba(37, 99, 235, 0.06);
+        }
+
+        .qna-accordion {
+            border-bottom: 1px solid rgba(15, 23, 42, 0.06);
+        }
+
+        .qna-trigger {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            padding: 1.75rem 0;
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #0f172a;
+            text-align: left;
+            transition: color 0.3s ease;
+        }
+
+        .qna-trigger:hover {
+            color: #2563eb;
+        }
+
+        .qna-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            color: #475569;
+            font-size: 0.975rem;
+            padding-bottom: 0;
+        }
+
+        .qna-accordion.active .qna-content {
+            max-height: 500px;
+            padding-bottom: 1.75rem;
+        }
+
+        .qna-icon {
+            transition: transform 0.3s ease;
+        }
+
+        .qna-accordion.active .qna-icon {
+            transform: rotate(45deg);
+        }
+
+        #dna-focal-layer {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 60%;
+            height: 100%;
+            background: url('https://images.unsplash.com/photo-1530026405186-ed1f139313f8?q=80&w=2000&auto=format&fit=crop') center/cover no-repeat;
+            opacity: 0.05;
+            mix-blend-mode: multiply;
+            pointer-events: none;
+            z-index: -1;
+            mask-image: linear-gradient(to left, black, transparent);
+            -webkit-mask-image: linear-gradient(to left, black, transparent);
+        }
+
+        .tag-institutional {
+            background: rgba(37, 99, 235, 0.06);
+            color: #2563eb;
+            border: 1px solid rgba(37, 99, 235, 0.15);
+            padding: 6px 16px;
+            border-radius: 999px;
+            font-size: 10px;
+            font-weight: 900;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+
+        #mobile-menu-drawer {
+            transform: translateX(100%);
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        #mobile-menu-drawer.translate-x-0 {
+            transform: translateX(0);
+        }
+
+        @media (max-width: 767px) {
+            .nav-links {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-[#f8fafc] text-[#0f172a]">
+    <div id="dna-focal-layer"></div>
+
+    <!-- Institutional Header -->
+    <nav class="border-b border-slate-100 px-6 md:px-12 py-3 md:py-4 flex items-center justify-between sticky top-0 bg-white/95 backdrop-blur-md z-[1000] mb-12 shadow-sm whitespace-nowrap overflow-visible">
+        <div class="flex items-center gap-8">
+            <div class="flex items-center gap-2">
+                <svg class="w-6 h-6 text-blue-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                <div class="font-sans font-bold tracking-tighter flex items-center uppercase text-slate-900 leading-none">
+                    <span class="text-xl mr-1">NILUS <span class="text-blue-600 ml-1">LAB</span></span>
+                </div>
+            </div>
+            <div class="nav-links hidden md:flex items-center gap-6">
+                <a href="#" onclick="checkAuthAndRedirect('index.html'); return false;" class="text-[12px] font-bold text-slate-500 uppercase tracking-wide hover:text-blue-600 font-semibold">Mainframe</a>
+                <a href="technical_catalog.html" class="text-[12px] font-bold text-slate-500 uppercase tracking-wide hover:text-blue-600 font-semibold">Catalog</a>
+                <a href="evidence.html" class="text-[12px] font-bold text-slate-500 uppercase tracking-wide hover:text-blue-600 font-semibold">Registry</a>
+                <a href="scientific_qna.html" class="text-[12px] font-bold text-blue-600 font-semibold uppercase tracking-wide">Q&A</a>
+                <a href="whitepaper.html" class="text-[12px] font-bold text-slate-500 uppercase tracking-wide hover:text-blue-600 font-semibold">Whitepaper</a>
+            </div>
+        </div>
+        <div class="flex items-center gap-3">
+            <div class="hidden lg:flex bg-slate-50 border border-slate-100 px-3 py-1.5 rounded-full items-center gap-2 scale-90">
+                <span class="w-1.5 h-1.5 bg-slate-400 rounded-full animate-pulse"></span>
+                <span class="text-[8px] font-black text-slate-400 uppercase tracking-widest text-center">LIVE HCA FEED: 500K CELLS</span>
+            </div>
+            <button onclick="openLoginModal()" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-full text-[12px] font-black uppercase tracking-widest flex items-center gap-3 transition-all scale-90">Sign In</button>
+            
+            <button id="mobile-menu-toggle" onclick="toggleMobileMenu()" class="flex md:hidden text-slate-900 hover:text-blue-600 p-2 focus:outline-none transition-colors z-[1001]" aria-label="Toggle Menu">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path id="menu-icon-hamburger" stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Premium Mobile Drawer Menu -->
+    <div id="mobile-menu-drawer" class="fixed inset-y-0 right-0 w-[280px] bg-white/95 backdrop-blur-xl border-l border-slate-100 shadow-2xl z-[999] transform translate-x-full transition-transform duration-300 ease-in-out flex flex-col p-8 justify-between">
+        <div class="flex flex-col gap-6 pt-16">
+            <a href="#" onclick="toggleMobileMenu(); checkAuthAndRedirect('index.html'); return false;" class="text-[14px] font-black text-slate-900 uppercase tracking-widest hover:text-blue-600 transition-colors">Mainframe</a>
+            
+            <div class="flex flex-col gap-3">
+                <span class="text-[11px] font-black text-slate-400 uppercase tracking-widest">Diligence</span>
+                <div class="flex flex-col gap-2 pl-4 border-l border-slate-100">
+                    <a href="evidence.html" class="text-[12px] font-bold text-slate-600 uppercase tracking-wider hover:text-blue-600">Evidence Registry</a>
+                    <a href="scientific_qna.html" class="text-[12px] font-extrabold text-blue-600 uppercase tracking-wider">Scientific Q&A</a>
+                    <a href="whitepaper.html" class="text-[12px] font-bold text-slate-600 uppercase tracking-wider hover:text-blue-600">Research Whitepaper</a>
+                    <a href="regulatory.html" class="text-[12px] font-bold text-slate-600 uppercase tracking-wider hover:text-blue-600">Regulatory Statement</a>
+                    <a href="v28_clinical_report.html" class="text-[12px] font-bold text-slate-600 uppercase tracking-wider hover:text-blue-600">Clinical Report v28.0</a>
+                    <a href="how_it_works.html" class="text-[12px] font-bold text-slate-600 uppercase tracking-wider hover:text-blue-600">How Zenith Works</a>
+                </div>
+            </div>
+            
+            <a href="technical_catalog.html" onclick="toggleMobileMenu()" class="text-[14px] font-black text-slate-900 uppercase tracking-widest hover:text-blue-600 transition-colors">Catalog</a>
+            <a href="trials.html" onclick="toggleMobileMenu()" class="text-[14px] font-black text-slate-900 uppercase tracking-widest hover:text-blue-600 transition-colors">Trials</a>
+        </div>
+        
+        <div class="bg-slate-50 border border-slate-100 px-4 py-3 rounded-2xl flex items-center gap-3">
+            <span class="w-2 h-2 bg-slate-400 rounded-full animate-pulse"></span>
+            <span class="text-[9px] font-bold text-slate-500 uppercase tracking-wider">LIVE HCA FEED: 500K CELLS</span>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <main class="max-w-5xl mx-auto px-6 md:px-12 py-8 pb-24">
+        <!-- Title Header -->
+        <div class="text-center mb-16">
+            <div class="flex justify-center mb-4">
+                <span class="tag-institutional">Scientific Q&A Console</span>
+            </div>
+            <h1 class="text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight mb-4">
+                Methodology & Verification Q&A
+            </h1>
+            <p class="text-slate-500 max-w-2xl mx-auto text-lg">
+                Explore the peer-reviewed mathematical, biological, and deep learning foundations behind the Zenith Generative Reprogramming Engine.
+            </p>
+        </div>
+
+        <!-- Q&A Content Block -->
+        <div class="card-elite mb-16">
+            <!-- Q1 -->
+            <div class="qna-accordion active">
+                <button class="qna-trigger" onclick="toggleAccordion(this)">
+                    <span>Q1: What is the biological dataset of origin for the reference models?</span>
+                    <svg class="qna-icon w-6 h-6 text-blue-600" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path></svg>
+                </button>
+                <div class="qna-content">
+                    <p class="mb-4">
+                        The biological ground truth for the healthy cardiac reference baseline is derived from the landmark publication <strong>"Cells of the adult human heart"</strong> (Litviňuková et al. 2020, <em>Nature</em>). This study sequenced exactly <strong>486,134 single cells and nuclei</strong> across 14 biologically independent healthy donors.
+                    </p>
+                    <p>
+                        To ensure stable local computations, the system maps vectors against a highly curated <strong>18,641-cell representative subset</strong> that retains the full <strong>26,662-gene transcriptome</strong>. This allows your local scripts to retain low-abundance, biologically critical transcription factors and structural markers (such as <code>TNNT2</code> and <code>MYH7</code>) that are lost in pruned models.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Q2 -->
+            <div class="qna-accordion">
+                <button class="qna-trigger" onclick="toggleAccordion(this)">
+                    <span>Q2: What is the computational relationship between HCA and CZI CELLxGENE?</span>
+                    <svg class="qna-icon w-6 h-6 text-blue-600" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path></svg>
+                </button>
+                <div class="qna-content">
+                    <p class="mb-4">
+                        The <strong>Human Cell Atlas (HCA)</strong> is the global scientific consortium of research laboratories that generated the physical biological tissues and sequenced the transcriptomes. 
+                    </p>
+                    <p>
+                        The <strong>Chan Zuckerberg Initiative (CZI) CELLxGENE Discover Portal</strong> is the computational host and data distribution pipeline. It standardizes, indexes, and serves the HCA heart study (specifically under dataset UUID <code>a7f6822d-0e0e-451e-9858-af81392fcb9b</code>). The Zenith platform retrieves HCA biological references programmatically using the official CELLxGENE API.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Q3 -->
+            <div class="qna-accordion">
+                <button class="qna-trigger" onclick="toggleAccordion(this)">
+                    <span>Q3: How was the active 500K-cell foundation model trained?</span>
+                    <svg class="qna-icon w-6 h-6 text-blue-600" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path></svg>
+                </button>
+                <div class="qna-content">
+                    <p class="mb-4">
+                        The active production model (v28.0 GOLD) was trained on the integrated <strong>500,000-cell dataset</strong> (integrating the 486K cell HCA adult heart atlas with cells from the Tabula Sapiens - Heart and PERIHEART datasets). 
+                    </p>
+                    <p class="mb-4">
+                        Due to the computational density of calculating multi-study batch integrations, training was performed using <strong>Google Colab GPU-accelerated cloud systems (NVIDIA T4 GPUs)</strong>. By executing minibatch gradient descent with an optimized batch size of 512, the model compiled the deep 30-dimensional latent manifold ($z=30$, $N_{\text{layers}}=2$, $N_{\text{hidden}}=256$) over 400 epochs in under 25 minutes.
+                    </p>
+                    <p>
+                        The resulting neural network weights (53.7 MB) are loaded actively by the backend to handle real-time user-interface queries.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Q4 -->
+            <div class="qna-accordion">
+                <button class="qna-trigger" onclick="toggleAccordion(this)">
+                    <span>Q4: What is the mathematical basis for in-silico trajectory predictions?</span>
+                    <svg class="qna-icon w-6 h-6 text-blue-600" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path></svg>
+                </button>
+                <div class="qna-content">
+                    <p class="mb-4">
+                        Zenith leverages deep generative models using the <strong>scVI (single-cell Variational Inference)</strong> framework (Lopez et al. 2018). It models discrete gene expression counts ($x_{ig}$) using a <strong>Negative Binomial (NB)</strong> likelihood distribution:
+                        $$\log p(x_{ig} | z_i, s_i) = \text{NB}(x_{ig}; \mu_{ig}(z_i, s_i), \theta_g)$$
+                        where batch effects ($s_i$) are mathematically factored out, leaving a pure biological latent representation ($z_i$).
+                    </p>
+                    <p>
+                        Lineage transitions are modeled using **latent space vector arithmetic** (scGen, Lotfollahi et al. 2019). By computing the vector difference between the Fibroblast and Cardiomyocyte centroids, the system applies optimal-transport trajectories to simulate out-of-sample cellular perturbations under different factor doses.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Q5 -->
+            <div class="qna-accordion">
+                <button class="qna-trigger" onclick="toggleAccordion(this)">
+                    <span>Q5: How does Nilus Lab protect proprietary algorithms (IP)?</span>
+                    <svg class="qna-icon w-6 h-6 text-blue-600" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path></svg>
+                </button>
+                <div class="qna-content">
+                    <p class="mb-4">
+                        The Zenith platform exposes only high-level statistical summaries, latent displacement indices, and gene enrichment scores via public web APIs. All proprietary deep learning weights, PyTorch layer structures, and raw Gene Regulatory Networks (GRNs) containing 133,310 links are securely executed inside our isolated backend containers.
+                    </p>
+                    <p>
+                        This "Digital-to-Biological" (D2B) architecture allows researchers to query predictions and export automated Opentrons Flex robotic protocols without risking the exposure of Nilus Lab's proprietary intellectual property (IP).
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Academic Bibliography -->
+        <div class="border-t border-slate-100 pt-12">
+            <h3 class="text-xs font-black uppercase tracking-widest text-slate-400 mb-6">Peer-Reviewed Bibliography & Evidence</h3>
+            <ul class="space-y-4 text-sm text-slate-500 font-sans">
+                <li>
+                    <strong>[HCA Heart Baseline]</strong> Litviňuková, M., Talavera-López, C., Maatz, H., et al. (2020). <em>Cells of the adult human heart.</em> <strong>Nature</strong>, 588(7837), 337–343. <a href="https://doi.org/10.1038/s41586-020-2797-4" target="_blank" class="text-blue-600 hover:underline">DOI: 10.1038/s41586-020-2797-4</a>
+                </li>
+                <li>
+                    <strong>[scVI VAE Framework]</strong> Lopez, R., Regier, J., Yosef, N., et al. (2018). <em>Deep generative modeling for single-cell transcriptomics.</em> <strong>Nature Methods</strong>, 15(12), 1053–1058. <a href="https://doi.org/10.1038/s41592-018-0229-2" target="_blank" class="text-blue-600 hover:underline">DOI: 10.1038/s41592-018-0229-2</a>
+                </li>
+                <li>
+                    <strong>[Latent Vector Arithmetic]</strong> Lotfollahi, M., Wolf, F.A., & Theis, F.J. (2019). <em>Generative modeling of single-cell responses to perturbations.</em> <strong>Nature Methods</strong>, 16(6), 497–503. <a href="https://doi.org/10.1038/s41592-019-0494-8" target="_blank" class="text-blue-600 hover:underline">DOI: 10.1038/s41592-019-0494-8</a>
+                </li>
+                <li>
+                    <strong>[Optimal Transport Trajectories]</strong> Schiebinger, G., Shu, J., Theis, F.J., et al. (2019). <em>Optimal-Transport Analysis of Single-Cell Gene Regulation.</em> <strong>Cell</strong>, 176(4), 928–943. <a href="https://doi.org/10.1016/j.cell.2019.01.006" target="_blank" class="text-blue-600 hover:underline">DOI: 10.1016/j.cell.2019.01.006</a>
+                </li>
+            </ul>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-100 py-12 bg-white text-center text-xs text-slate-400 font-extrabold uppercase tracking-widest">
+        &copy; 2026 Nilus Lab. Research Use Only. No Clinical Claims.
+    </footer>
+
+    <!-- JS Accordion Logic -->
+    <script>
+        function toggleAccordion(element) {
+            const accordion = element.parentElement;
+            const isActive = accordion.classList.contains('active');
+            
+            // Close all
+            document.querySelectorAll('.qna-accordion').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            if (!isActive) {
+                accordion.classList.add('active');
+            }
+        }
+
+        // Subpage Auth Fallback
+        function checkAuthAndRedirect(targetUrl) {
+            const token = localStorage.getItem('is_chrp_token') || sessionStorage.getItem('is_chrp_token');
+            if (token) {
+                window.location.href = targetUrl;
+            } else {
+                window.location.href = 'profile.html';
+            }
+        }
+        
+        function openLoginModal() {
+            window.location.href = 'profile.html?action=login';
+        }
+
+        function toggleMobileMenu() {
+            const drawer = document.getElementById('mobile-menu-drawer');
+            drawer.classList.toggle('translate-x-0');
+        }
+    </script>
+</body>
+
+</html>
