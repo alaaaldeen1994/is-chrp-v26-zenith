@@ -2399,6 +2399,14 @@ async def serve_how_it_works_root():
 async def serve_how_it_works_file():
     return FileResponse("how_it_works.html")
 
+@app.get("/scientific_qna", response_class=HTMLResponse)
+async def serve_scientific_qna_root():
+    return FileResponse("scientific_qna.html")
+
+@app.get("/scientific_qna.html", response_class=HTMLResponse)
+async def serve_scientific_qna_file():
+    return FileResponse("scientific_qna.html")
+
 
 
 
