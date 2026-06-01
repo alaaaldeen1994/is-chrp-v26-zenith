@@ -391,6 +391,24 @@
                     </p>
                 </div>
             </div>
+
+            <!-- Q10 -->
+            <div class="qna-accordion">
+                <button class="qna-trigger" onclick="toggleAccordion(this)">
+                    <span>Q10: What specific validation guardrails are applied to the GPT-4o / API discovery outputs to ensure scientific credibility?</span>
+                    <svg class="qna-icon w-6 h-6 text-blue-600" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path></svg>
+                </button>
+                <div class="qna-content">
+                    <p class="mb-4">
+                        To prevent non-biological hallucinations and ensure absolute clinical-grade safety, the Zenith platform enforces three systematic verification guardrails on all API and LLM-returned outputs:
+                    </p>
+                    <ul class="list-disc pl-6 space-y-2 mb-4">
+                        <li><strong>Homo sapiens Species Lock (Ontology Guardrail)</strong>: The system validates all returned gene symbols against a strict human whitelist. Any non-human gene (e.g., mouse-specific markers) or hallucinated gene names are immediately blocked. All symbols must map to canonical <em>Homo sapiens</em> entries (UniProt Swiss-Prot organism ID 9606).</li>
+                        <li><strong>Clinical Rejuvenation Sanity Scaling</strong>: To prevent impossible claims (such as standard transient factors returning "45 years" of age reduction), the backend applies mathematical boundary checks ($R_{\text{max}} \le 15$ years for single transient runs) based on empirical published literature (e.g., Lu et al., Ocampo et al.).</li>
+                        <li><strong>Oncogenic Risk Score Assessment (Tumorigenic Guardrail)</strong>: The platform computes a real-time oncogenic hazard rating by evaluating the activation weights of high-risk factors (such as the proto-oncogene <code>MYC</code>) against active tumor suppressors and lineage-stabilizing factors. Protocols exceeding the safety threshold are flagged for manual clinical review before robotic protocol export.</li>
+                    </ul>
+                </div>
+            </div>
         </div>
     </main>
 
