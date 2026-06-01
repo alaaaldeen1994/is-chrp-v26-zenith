@@ -4659,6 +4659,7 @@ function renderOskReport(safetyData, dosageData, elapsed, cellTypeKey, query) {
             ${downloadBtnHtml}
         </div>
     `;
+    resultsEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 function downloadOskAF3Manifest() {
@@ -5082,7 +5083,7 @@ async function runDiscovery() {
                         <a href="${pubmed}" target="_blank" style="font-size:8px;color:#60a5fa;text-decoration:none;font-weight:600;" title="PubMed">📄</a>
                     </div>
                     ${role ? `<div style="font-size:9px;color:#6b6b6b;margin:2px 0 0 22px;line-height:1.4;">${role}</div>` : ''}
-                    ${mechanism ? `<div style="font-size:8px;color:#9ca3af;margin:1px 0 0 22px;font-family:monospace;">${mechanism}</div>` : ''}
+                    ${mechanism ? `<div style="font-size:8.5px;color:#475569;margin:2px 0 0 22px;font-family:monospace;font-weight:500;">${mechanism}</div>` : ''}
                 </div>`;
             }).join('');
 
@@ -5151,6 +5152,7 @@ async function runDiscovery() {
                         </div>
                     </div>
                 </div>`;
+            resultsEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
         } catch (err) {
             clearInterval(interval);
@@ -5240,6 +5242,7 @@ async function runDiscovery() {
                         </div>
                     </div>
                 </div>`;
+            resultsEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
         } catch (err) {
             clearInterval(interval);
