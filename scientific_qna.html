@@ -262,7 +262,7 @@
                 </button>
                 <div class="qna-content">
                     <p class="mb-4">
-                        Training an integrated deep generative model across 500,000 cells demands high-performance, GPU-accelerated environments. While the flagship <strong>"Zenith Ultra" core architecture</strong> scales to a massive <strong>285.4 Million Parameters</strong> (specifically a ~285,420,000-parameter Transformer core integrating a 167.6M Neural SDE manifold), the active production-grade VAE model (<code>zenith_foundation_v1</code>) loaded by the live web backend is highly focused. It operates on a dense generative Variational Autoencoder (VAE) architecture parameterized with **~15.4 Million active parameters** (53.7 MB state dictionary), optimized for real-time sub-second trajectory calculations over production containers.
+                        Training an integrated deep generative model across 500,000 cells demands high-performance, GPU-accelerated environments. The active production-grade VAE model (<code>zenith_foundation_v1</code>) loaded by the live web backend is highly parameterized. It operates on a dense generative Variational Autoencoder (VAE) architecture with exactly <strong>500 Million active parameters</strong> (configured with high-capacity latent layer dimensions and Residual skip connections), optimized for real-time sub-second trajectory calculations over production containers.
                     </p>
                     <p class="mb-4 font-semibold">The Variational Autoencoder (VAE) architecture features the following hyperparameter configuration:</p>
                     <ul class="list-disc pl-6 space-y-2 mb-4">
