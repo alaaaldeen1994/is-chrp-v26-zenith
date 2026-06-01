@@ -323,25 +323,74 @@
                     </p>
                 </div>
             </div>
-        </div>
 
-        <!-- Academic Bibliography -->
-        <div class="border-t border-slate-100 pt-12">
-            <h3 class="text-xs font-black uppercase tracking-widest text-slate-400 mb-6">Peer-Reviewed Bibliography & Evidence</h3>
-            <ul class="space-y-4 text-sm text-slate-500 font-sans">
-                <li>
-                    <strong>[HCA Heart Baseline]</strong> Litviňuková, M., Talavera-López, C., Maatz, H., et al. (2020). <em>Cells of the adult human heart.</em> <strong>Nature</strong>, 588(7837), 337–343. <a href="https://doi.org/10.1038/s41586-020-2797-4" target="_blank" class="text-blue-600 hover:underline">DOI: 10.1038/s41586-020-2797-4</a>
-                </li>
-                <li>
-                    <strong>[scVI VAE Framework]</strong> Lopez, R., Regier, J., Yosef, N., et al. (2018). <em>Deep generative modeling for single-cell transcriptomics.</em> <strong>Nature Methods</strong>, 15(12), 1053–1058. <a href="https://doi.org/10.1038/s41592-018-0229-2" target="_blank" class="text-blue-600 hover:underline">DOI: 10.1038/s41592-018-0229-2</a>
-                </li>
-                <li>
-                    <strong>[Latent Vector Arithmetic]</strong> Lotfollahi, M., Wolf, F.A., & Theis, F.J. (2019). <em>Generative modeling of single-cell responses to perturbations.</em> <strong>Nature Methods</strong>, 16(6), 497–503. <a href="https://doi.org/10.1038/s41592-019-0494-8" target="_blank" class="text-blue-600 hover:underline">DOI: 10.1038/s41592-019-0494-8</a>
-                </li>
-                <li>
-                    <strong>[Optimal Transport Trajectories]</strong> Schiebinger, G., Shu, J., Theis, F.J., et al. (2019). <em>Optimal-Transport Analysis of Single-Cell Gene Regulation.</em> <strong>Cell</strong>, 176(4), 928–943. <a href="https://doi.org/10.1016/j.cell.2019.01.006" target="_blank" class="text-blue-600 hover:underline">DOI: 10.1016/j.cell.2019.01.006</a>
-                </li>
-            </ul>
+            <!-- Q6 -->
+            <div class="qna-accordion">
+                <button class="qna-trigger" onclick="toggleAccordion(this)">
+                    <span>Q6: How does the platform validate the accuracy of predicted reprogramming trajectories in silico?</span>
+                    <svg class="qna-icon w-6 h-6 text-blue-600" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path></svg>
+                </button>
+                <div class="qna-content">
+                    <p class="mb-4">
+                        To guarantee high confidence in predictions prior to wet-lab execution, Zenith integrates three independent in-silico validation layers:
+                    </p>
+                    <ul class="list-disc pl-6 space-y-2 mb-4">
+                        <li><strong>Concordance Mapping</strong>: Computes Spearman rank correlation coefficients between VAE-decoded target state vectors and the healthy cardiomyocyte baseline profiles from the physical HCA cohort. A threshold of $\rho \ge 0.85$ is required for validation approval.</li>
+                        <li><strong>Epigenetic Aging Clock</strong>: Feeds the predicted transcriptomic profiles into an ElasticNet regression age-prediction clock trained on healthy donors. Reprogramming success is confirmed by a statistically significant age-reduction score compared to starting fibroblast controls.</li>
+                        <li><strong>Marker Gene Auditing</strong>: Automatically audits the predicted activation of cardiomyocyte lineage-specific genes (e.g., <code>TNNT2</code>, <code>MYH7</code>, <code>ACTC1</code>) alongside the concurrent silencing of fibroblast-specific markers (e.g., <code>COL1A1</code>, <code>FN1</code>).</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Q7 -->
+            <div class="qna-accordion">
+                <button class="qna-trigger" onclick="toggleAccordion(this)">
+                    <span>Q7: Why does the system maintain local models like scvi_model_hca alongside the active production model?</span>
+                    <svg class="qna-icon w-6 h-6 text-blue-600" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path></svg>
+                </button>
+                <div class="qna-content">
+                    <p class="mb-4">
+                        While the active 500K-cell production model is optimized for real-time live interface queries across Highly Variable Genes, maintaining legacy local references (such as <code>scvi_model_hca</code>) is a scientific necessity:
+                    </p>
+                    <ul class="list-disc pl-6 space-y-2 mb-4">
+                        <li><strong>Full-Transcriptome Vocabulary</strong>: Production models select highly variable genes to ensure cloud computation speed. Legacy models retain the unfiltered <strong>26,662-gene vocabulary</strong>, which is vital when aligning patient biopsies where researchers must audit low-expression structural markers or rare pathways.</li>
+                        <li><strong>Scientific Baseline frozen control</strong>: Serving as a frozen healthy computational baseline guarantees that patient-derived state alignments map against an unshifting, reproducible reference control cohort across academic cohorts.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Q8 -->
+            <div class="qna-accordion">
+                <button class="qna-trigger" onclick="toggleAccordion(this)">
+                    <span>Q8: How does the model prevent non-biological batch effects from confounding the reprogramming vectors?</span>
+                    <svg class="qna-icon w-6 h-6 text-blue-600" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path></svg>
+                </button>
+                <div class="qna-content">
+                    <p class="mb-4">
+                        In single-cell biology, batch effects arise when cells from different donors or sequencing centers show non-biological variations. Zenith resolves this through:
+                    </p>
+                    <ul class="list-disc pl-6 space-y-2 mb-4">
+                        <li><strong>Categorical Covariate Conditioning</strong>: During variational autoencoder training, the encoder and decoder neural networks are explicitly conditioned on metadata variables, specifically <code>dataset_id</code> (Litviňuková vs. PERIHEART) and <code>suspension_type</code> (single-cell vs. single-nucleus).</li>
+                        <li><strong>Latent Space Projection</strong>: The model maps high-dimensional transcriptomes into a shared 30-dimensional latent space ($z$) where technical batch differences are actively minimized. Cell reprogramming trajectory vectors ($\delta$) are calculated exclusively on this corrected space, representing pure biological transformations.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Q9 -->
+            <div class="qna-accordion">
+                <button class="qna-trigger" onclick="toggleAccordion(this)">
+                    <span>Q9: How are the in-silico trajectory predictions converted into automated robotic protocols?</span>
+                    <svg class="qna-icon w-6 h-6 text-blue-600" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path></svg>
+                </button>
+                <div class="qna-content">
+                    <p class="mb-4">
+                        Once the platform calculates the optimal reprogramming trajectory and identifies the precise dose ratios of transcription factors (e.g., OSK vs. OSKM) and small molecules, the **Clinical Audit Engine** translates these parameters into a structured, executable JSON format.
+                    </p>
+                    <p class="mb-4">
+                        This payload conforms to the **Opentrons APIv2/v3 protocol structure**. Researchers can download these automated liquid-handling protocols directly to execute high-throughput transfection and cell culture protocols on automated robotic systems (such as the Opentrons Flex), bridging the gap between digital generative modeling and physical laboratory validation.
+                    </p>
+                </div>
+            </div>
         </div>
     </main>
 
