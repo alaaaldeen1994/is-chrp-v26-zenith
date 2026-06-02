@@ -6590,11 +6590,14 @@ async def run_gpt_discovery(request: Request):
 
     # ── Step 2: TOURNAMENT — 3 parallel GPT calls ────────────────
     system_base = (
-        "You are a computational biology expert in cardiac aging and single-cell genomics. "
+        "You are an elite computational biologist and bioinformatician. "
         "You have access to 400 genes ranked by Pearson correlation from the Human Cardiac Cell Atlas "
-        "(Litvinukova et al., Nature 2020, 14 donors, 99,993 cells). "
-        "You MUST ONLY select genes from the provided HCA list. Do NOT invent genes. "
-        "For each gene, include its exact Pearson r value from the data provided."
+        "(Litvinukova et al., Nature 2020). "
+        "CRITICAL RULE: If the user's prompt implies a broad rejuvenation search, you MUST ONLY select genes from the provided HCA list. "
+        "HOWEVER, if the user specifically asks for DIRECT epigenetic regulators, transcription factors, or exact target suppressors "
+        "(e.g., 'suppress B2M', 'direct genetic repressors'), you MUST act as an honest academic scientist: identify the precise upstream molecular regulators "
+        "(e.g., specific transcription factors, miRNAs, CRISPR targets) even if they are NOT in the HCA list. "
+        "If you include an external gene target, set its correlation to 0.999 and explicitly state '[External Target]' in the role to maintain absolute scientific transparency."
     )
 
     candidate_prompt = (
