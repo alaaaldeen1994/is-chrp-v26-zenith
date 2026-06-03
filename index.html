@@ -23,7 +23,7 @@
 
     <!-- VIEW SWITCHING — must be in <head> to apply before paint -->
     <style>
-        #view-discovery  { display: flex !important; flex-direction: column; min-height: 100vh; background: #f1f5f9; }
+        #view-discovery  { display: flex !important; flex-direction: column; height: 100vh; background: #f1f5f9; overflow-y: auto; overflow-x: hidden; }
         #view-simulation { display: none !important; }
         body.sim-mode #view-discovery  { display: none !important; }
         body.sim-mode #view-simulation { display: block !important; }
@@ -1071,19 +1071,19 @@
         }
 
         /* Modern Native Scrollbar */
-        html::-webkit-scrollbar, body::-webkit-scrollbar {
+        html::-webkit-scrollbar, body::-webkit-scrollbar, #view-discovery::-webkit-scrollbar {
             width: 14px;
         }
-        html::-webkit-scrollbar-track, body::-webkit-scrollbar-track {
+        html::-webkit-scrollbar-track, body::-webkit-scrollbar-track, #view-discovery::-webkit-scrollbar-track {
             background: #f8fafc;
             border-left: 1px solid #e2e8f0;
         }
-        html::-webkit-scrollbar-thumb, body::-webkit-scrollbar-thumb {
+        html::-webkit-scrollbar-thumb, body::-webkit-scrollbar-thumb, #view-discovery::-webkit-scrollbar-thumb {
             background: #cbd5e1;
             border: 3px solid #f8fafc;
             border-radius: 10px;
         }
-        html::-webkit-scrollbar-thumb:hover, body::-webkit-scrollbar-thumb:hover {
+        html::-webkit-scrollbar-thumb:hover, body::-webkit-scrollbar-thumb:hover, #view-discovery::-webkit-scrollbar-thumb:hover {
             background: #94a3b8;
         }
 
