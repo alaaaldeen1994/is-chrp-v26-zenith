@@ -86,7 +86,7 @@ class PitchDeckPDF(FPDF):
 def generate_deck():
     reports_dir = "reports"
     os.makedirs(reports_dir, exist_ok=True)
-    pdf_path = os.path.join(reports_dir, "Nilus_Lab_Deep_Bio_Pitch_Deck.pdf")
+    pdf_path = os.path.join(reports_dir, "Nilus_Lab_Pitch_Deck.pdf")
     
     pdf = PitchDeckPDF()
     
