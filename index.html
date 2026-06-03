@@ -24,6 +24,18 @@
     <!-- VIEW SWITCHING — must be in <head> to apply before paint -->
     <style>
         #view-discovery  { display: flex !important; flex-direction: column; height: 100vh; background: #f1f5f9; overflow-y: auto; overflow-x: hidden; }
+        #disc-hero {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 32px 32px;
+            min-height: calc(100vh - 54px);
+        }
+        #view-discovery.has-results #disc-hero {
+            justify-content: flex-start !important;
+        }
         #view-simulation { display: none !important; }
         body.sim-mode #view-discovery  { display: none !important; }
         body.sim-mode #view-simulation { display: block !important; }
@@ -179,7 +191,7 @@
             #view-discovery > div:first-child {
                 padding: 10px 14px !important;
             }
-            #view-discovery > div:nth-child(2) {
+            #disc-hero {
                 padding: 24px 12px 24px 12px !important;
                 min-height: auto !important;
             }
@@ -1316,7 +1328,7 @@
     </div>
 
     <!-- Hero -->
-    <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 32px 32px;min-height:calc(100vh - 54px);">
+    <div id="disc-hero">
 
         <!-- Title -->
         <div style="text-align:center;margin-bottom:24px;width:100%;max-width:680px;">
@@ -4869,6 +4881,11 @@ async function runDiscovery() {
         resultsEl.innerHTML = `<div style="background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.25);border-radius:12px;padding:14px;text-align:center;color:#f59e0b;font-size:10px;font-weight:700;">
             ⚠ Please enter a research question first</div>`;
         return;
+    }
+
+    document.getElementById('view-discovery').classList.add('has-results');
+    if (typeof updateScrollbar === 'function') {
+        updateScrollbar();
     }
 
     if (window._activeModelMode === 'osk') {
