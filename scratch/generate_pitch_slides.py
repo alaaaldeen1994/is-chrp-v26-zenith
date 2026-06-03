@@ -226,12 +226,12 @@ def generate_deck():
     pdf.cell(60, 6, 'scVI Generative Core', 0, 1)
     
     pdf.set_xy(22, 60)
-    pdf.set_font(pdf.get_font_name(), '', 11) # Adjusted size for readability and spacing
+    pdf.set_font(pdf.get_font_name(), '', 11) 
     pdf.set_text_color(71, 85, 105)
     pdf.multi_cell(col_width - 14, 6.2, 
-        "- Variational Autoencoder (scVI) maps cellular manifolds inside a 20-dimensional latent space.\n\n"
+        "- In-silico modeling & simulation mapping cellular manifolds inside a 20-dimensional latent space.\n\n"
         "- Trained on 500k real human cardiac cells across 4,908 Highly Variable Gene (HVG) dimensions.\n\n"
-        "- Models chromatin accessibility states to predict cell rejuvenation without lineage loss."
+        "- Compresses HCA + PERIHEART data patterns into 53.7MB neural weights for instant inference."
     )
     
     # Card 2: Safety Gating
@@ -255,7 +255,7 @@ def generate_deck():
     pdf.multi_cell(col_width - 14, 6.2, 
         "- Oncogene Blacklist: Screens transcription factor candidates to eliminate MYC/OCT4-related tumor risks.\n\n"
         "- Dedifferentiation Gating: Limits changes to keep structural markers (like TNNT2/ACTN2) stable.\n\n"
-        "- Restricts cell states from entering uncontrolled pluripotency."
+        "- Prevents lineage-loss cell state drift before wetlab translation."
     )
     
     # Card 3: Dosage & Valency
@@ -277,9 +277,9 @@ def generate_deck():
     pdf.set_font(pdf.get_font_name(), '', 11) 
     pdf.set_text_color(71, 85, 105)
     pdf.multi_cell(col_width - 14, 6.2, 
-        "- AlphaFold 3 Valency: Predicts cooperative transcription factor-DNA binding coordinate mechanics.\n\n"
+        "- AlphaFold 3 Valency: Models 3D TF-DNA docking coordinate binding affinities.\n\n"
         "- ElasticNet Clock: Regresses latent scVI spaces against donor age. Yields -11.9y age reset.\n\n"
-        "- Robust Trust: Achieves a cross-validated Mean Absolute Error (MAE) of 6.0 years on real HCA donors."
+        "- Clinical Integrity: Achieves a cross-validated Mean Absolute Error (MAE) of 6.0 years on real HCA donors."
     )
 
     # ----------------------------------------------------
@@ -299,13 +299,13 @@ def generate_deck():
     pdf.cell(130, 6, 'Target Market, Competition & Differentiation', 0, 1)
     
     pdf.set_xy(22, 65)
-    pdf.set_font(pdf.get_font_name(), '', 11) # Increased from 10 to 11
+    pdf.set_font(pdf.get_font_name(), '', 11) 
     pdf.set_text_color(71, 85, 105)
-    pdf.multi_cell(136, 6.2, 
+    pdf.multi_cell(136, 6.0, 
         "- Indication Strategy: Focused on Cardiomyopathy and Heart Failure indication targets ($50B longevity & CVD market indication).\n"
-        "- Competition (Altos/Retro): Giant-scale ventures target broad, systemic multi-tissue rejuvenations (high cost). Nilus targets high-specificity cardiac restoration.\n"
+        "- Competitive Positioning (Altos/Retro): Giant-scale ventures target broad, systemic multi-tissue rejuvenations (high cost). Nilus targets high-specificity cardiac restoration.\n"
         "- Differentiation (Turn Bio): Focuses on skin/dermatology. Nilus specializes in the cardiac lineage utilizing VAE safety ceilings to block cell state drift.\n"
-        "- Business Model: Out-license in-silico vetted cocktails to pharma."
+        "- Business Model: Commercializing high-impact science to bring rejuvenative therapeutics out of the lab and into the market via pharma out-licensing."
     )
     
     # Highlight Box - $1.5M Wetlab Funding Ask
@@ -366,10 +366,10 @@ def generate_deck():
     pdf.set_xy(22, 65)
     pdf.set_font(pdf.get_font_name(), '', 11.5) 
     pdf.set_text_color(71, 85, 105)
-    pdf.multi_cell(106, 6.8, 
+    pdf.multi_cell(106, 6.5, 
         "- Interdisciplinary Founders: Unifies expertise across VAE computational deep learning, software engineering, and wetlab experimental molecular biology.\n\n"
         "- Long-standing Research Partnership: The co-founders have a history of collaborative research in single-cell transcriptomics.\n\n"
-        "- Interview Preparedness: Scheduled video call to align on Zenith's technical architecture, safety thresholds, and program goals."
+        "- BIO 2026 Alignment: Preparing preclinical wetlab validation data to showcase at the Innovation Summit during BIO 2026 in San Diego."
     )
     
     # Right Column: Timeline Card
