@@ -1315,48 +1315,15 @@
         </div>
     </div>
 
-        <!-- Scrollable content area -->
-    <div id="disc-scroll-area" style="flex:1; display:flex; flex-direction:column; align-items:center; padding:40px 32px 180px; overflow-y:auto; overflow-x:hidden;">
-<!-- Title -->
+    <!-- Hero -->
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 32px 32px;min-height:calc(100vh - 54px);">
+
+        <!-- Title -->
         <div style="text-align:center;margin-bottom:24px;width:100%;max-width:680px;">
             <h1 style="color:#1a1a1a;font-size:26px;font-weight:500;letter-spacing:-0.02em;margin:0;line-height:1.3;font-family:'Inter','Segoe UI',sans-serif;">Discover genes that reverse cardiac ageing</h1>
         </div>
 
-        
-<!-- Results area -->
-        <div id="disc-results" style="width:100%;max-width:720px;margin-top:20px;display:none;"></div>
-
-        
-<!-- Suggestion pills -->
-        <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:14px;justify-content:center;width:100%;max-width:640px;">
-            <button class="sugg-pill" onclick="document.getElementById('disc-query').value=this.dataset.q;document.getElementById('disc-query').dispatchEvent(new Event('input'))" data-q="Reverse cardiac aging in HMVEC cells using CACNA1C and RYR2 pathways"
-                style="background:transparent;border:1px solid #d5d5d2;color:#7a7a7a;font-size:12px;font-weight:400;padding:6px 14px;border-radius:20px;cursor:pointer;transition:all 0.15s;font-family:'Inter','Segoe UI',sans-serif;" onmouseover="this.style.borderColor='#bbb8b3';this.style.color='#1a1a1a';this.style.background='#f7f7f6'" onmouseout="this.style.borderColor='#d5d5d2';this.style.color='#7a7a7a';this.style.background='transparent'">
-                Cardiac aging reversal
-            </button>
-            <button class="sugg-pill" onclick="document.getElementById('disc-query').value=this.dataset.q;document.getElementById('disc-query').dispatchEvent(new Event('input'))" data-q="Identify anti-senescence genes that suppress B2M and TMSB4X aging markers"
-                style="background:transparent;border:1px solid #d5d5d2;color:#7a7a7a;font-size:12px;font-weight:400;padding:6px 14px;border-radius:20px;cursor:pointer;transition:all 0.15s;font-family:'Inter','Segoe UI',sans-serif;" onmouseover="this.style.borderColor='#bbb8b3';this.style.color='#1a1a1a';this.style.background='#f7f7f6'" onmouseout="this.style.borderColor='#d5d5d2';this.style.color='#7a7a7a';this.style.background='transparent'">
-                Anti-senescence targets
-            </button>
-            <button class="sugg-pill" onclick="document.getElementById('disc-query').value=this.dataset.q;document.getElementById('disc-query').dispatchEvent(new Event('input'))" data-q="Vascular endothelial rejuvenation: reactivate calcium signalling via PRKG1 and SLC8A1"
-                style="background:transparent;border:1px solid #d5d5d2;color:#7a7a7a;font-size:12px;font-weight:400;padding:6px 14px;border-radius:20px;cursor:pointer;transition:all 0.15s;font-family:'Inter','Segoe UI',sans-serif;" onmouseover="this.style.borderColor='#bbb8b3';this.style.color='#1a1a1a';this.style.background='#f7f7f6'" onmouseout="this.style.borderColor='#d5d5d2';this.style.color='#7a7a7a';this.style.background='transparent'">
-                Vascular endothelial
-            </button>
-            <button class="sugg-pill" onclick="document.getElementById('disc-query').value=this.dataset.q;document.getElementById('disc-query').dispatchEvent(new Event('input'))" data-q="Sarcomere integrity restoration: identify TTN, MYH7, NEXN pathway genes in young donors"
-                style="background:transparent;border:1px solid #d5d5d2;color:#7a7a7a;font-size:12px;font-weight:400;padding:6px 14px;border-radius:20px;cursor:pointer;transition:all 0.15s;font-family:'Inter','Segoe UI',sans-serif;" onmouseover="this.style.borderColor='#bbb8b3';this.style.color='#1a1a1a';this.style.background='#f7f7f6'" onmouseout="this.style.borderColor='#d5d5d2';this.style.color='#7a7a7a';this.style.background='transparent'">
-                Sarcomere integrity
-            </button>
-            <button class="sugg-pill" onclick="document.getElementById('disc-query').value=this.dataset.q;document.getElementById('disc-query').dispatchEvent(new Event('input'))" data-q="Find epigenetic clock reversal genes targeting DNMT3A and TET2 pathways in cardiac fibroblasts"
-                style="background:transparent;border:1px solid #d5d5d2;color:#7a7a7a;font-size:12px;font-weight:400;padding:6px 14px;border-radius:20px;cursor:pointer;transition:all 0.15s;font-family:'Inter','Segoe UI',sans-serif;" onmouseover="this.style.borderColor='#bbb8b3';this.style.color='#1a1a1a';this.style.background='#f7f7f6'" onmouseout="this.style.borderColor='#d5d5d2';this.style.color='#7a7a7a';this.style.background='transparent'">
-                Epigenetic clock reset
-            </button>
-        </div>
-
-        
-    </div>
-    <!-- Fixed Input Area at Bottom -->
-    <div style="position:fixed; bottom:0; left:0; right:0; padding: 20px 32px 24px; background: linear-gradient(transparent, #f1f5f9 20%, #f1f5f9 100%); display:flex; flex-direction:column; align-items:center; z-index:100; pointer-events:none;">
-        <div style="pointer-events:auto; width:100%; max-width:680px; display:flex; flex-direction:column; align-items:center;">
-<!-- Main input card — Claude-style -->
+        <!-- Main input card — Claude-style -->
         <div id="disc-card"
              style="width:100%;max-width:680px;font-family:'Inter','Segoe UI',sans-serif;outline:none;">
 
@@ -1430,8 +1397,7 @@
             </div>
         </div>
 
-        
-<!-- OSK Safety sub-panel (shown when OSK Partial selected) -->
+        <!-- OSK Safety sub-panel (shown when OSK Partial selected) -->
         <div id="disc-osk-sub" style="display:none;width:100%;max-width:680px;margin-top:8px;font-family:'Inter','Segoe UI',sans-serif;">
             <div style="background:#ffffff;border:1px solid #d5d5d2;border-radius:16px;padding:10px 16px;box-shadow:0 1px 2px rgba(0,0,0,0.03);">
                 <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;">
@@ -1469,9 +1435,35 @@
             </div>
         </div>
 
-        
-<!-- Footer -->
-        <div style="margin-top:16px;text-align:center;font-size:8px;color:#bdc1c6;width:100%;max-width:720px;">
+        <!-- Suggestion pills -->
+        <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:14px;justify-content:center;width:100%;max-width:640px;">
+            <button class="sugg-pill" onclick="document.getElementById('disc-query').value=this.dataset.q;document.getElementById('disc-query').dispatchEvent(new Event('input'))" data-q="Reverse cardiac aging in HMVEC cells using CACNA1C and RYR2 pathways"
+                style="background:transparent;border:1px solid #d5d5d2;color:#7a7a7a;font-size:12px;font-weight:400;padding:6px 14px;border-radius:20px;cursor:pointer;transition:all 0.15s;font-family:'Inter','Segoe UI',sans-serif;" onmouseover="this.style.borderColor='#bbb8b3';this.style.color='#1a1a1a';this.style.background='#f7f7f6'" onmouseout="this.style.borderColor='#d5d5d2';this.style.color='#7a7a7a';this.style.background='transparent'">
+                Cardiac aging reversal
+            </button>
+            <button class="sugg-pill" onclick="document.getElementById('disc-query').value=this.dataset.q;document.getElementById('disc-query').dispatchEvent(new Event('input'))" data-q="Identify anti-senescence genes that suppress B2M and TMSB4X aging markers"
+                style="background:transparent;border:1px solid #d5d5d2;color:#7a7a7a;font-size:12px;font-weight:400;padding:6px 14px;border-radius:20px;cursor:pointer;transition:all 0.15s;font-family:'Inter','Segoe UI',sans-serif;" onmouseover="this.style.borderColor='#bbb8b3';this.style.color='#1a1a1a';this.style.background='#f7f7f6'" onmouseout="this.style.borderColor='#d5d5d2';this.style.color='#7a7a7a';this.style.background='transparent'">
+                Anti-senescence targets
+            </button>
+            <button class="sugg-pill" onclick="document.getElementById('disc-query').value=this.dataset.q;document.getElementById('disc-query').dispatchEvent(new Event('input'))" data-q="Vascular endothelial rejuvenation: reactivate calcium signalling via PRKG1 and SLC8A1"
+                style="background:transparent;border:1px solid #d5d5d2;color:#7a7a7a;font-size:12px;font-weight:400;padding:6px 14px;border-radius:20px;cursor:pointer;transition:all 0.15s;font-family:'Inter','Segoe UI',sans-serif;" onmouseover="this.style.borderColor='#bbb8b3';this.style.color='#1a1a1a';this.style.background='#f7f7f6'" onmouseout="this.style.borderColor='#d5d5d2';this.style.color='#7a7a7a';this.style.background='transparent'">
+                Vascular endothelial
+            </button>
+            <button class="sugg-pill" onclick="document.getElementById('disc-query').value=this.dataset.q;document.getElementById('disc-query').dispatchEvent(new Event('input'))" data-q="Sarcomere integrity restoration: identify TTN, MYH7, NEXN pathway genes in young donors"
+                style="background:transparent;border:1px solid #d5d5d2;color:#7a7a7a;font-size:12px;font-weight:400;padding:6px 14px;border-radius:20px;cursor:pointer;transition:all 0.15s;font-family:'Inter','Segoe UI',sans-serif;" onmouseover="this.style.borderColor='#bbb8b3';this.style.color='#1a1a1a';this.style.background='#f7f7f6'" onmouseout="this.style.borderColor='#d5d5d2';this.style.color='#7a7a7a';this.style.background='transparent'">
+                Sarcomere integrity
+            </button>
+            <button class="sugg-pill" onclick="document.getElementById('disc-query').value=this.dataset.q;document.getElementById('disc-query').dispatchEvent(new Event('input'))" data-q="Find epigenetic clock reversal genes targeting DNMT3A and TET2 pathways in cardiac fibroblasts"
+                style="background:transparent;border:1px solid #d5d5d2;color:#7a7a7a;font-size:12px;font-weight:400;padding:6px 14px;border-radius:20px;cursor:pointer;transition:all 0.15s;font-family:'Inter','Segoe UI',sans-serif;" onmouseover="this.style.borderColor='#bbb8b3';this.style.color='#1a1a1a';this.style.background='#f7f7f6'" onmouseout="this.style.borderColor='#d5d5d2';this.style.color='#7a7a7a';this.style.background='transparent'">
+                Epigenetic clock reset
+            </button>
+        </div>
+
+        <!-- Results area -->
+        <div id="disc-results" style="width:100%;max-width:720px;margin-top:20px;display:none;"></div>
+
+        <!-- Footer -->
+        <div style="margin-top:40px;text-align:center;font-size:8px;color:#bdc1c6;width:100%;max-width:720px;">
             Zenith v28.0 GOLD &nbsp;·&nbsp; 500,000 Cells (HCA + PERIHEART) &nbsp;·&nbsp; Research Use Only
         </div>
     </div>
@@ -4670,8 +4662,7 @@ function renderOskReport(safetyData, dosageData, elapsed, cellTypeKey, query) {
             ${downloadBtnHtml}
         </div>
     `;
-    const scrollArea = document.getElementById('disc-scroll-area');
-    if (scrollArea) scrollArea.scrollTo({ top: scrollArea.scrollHeight, behavior: 'smooth' });
+    document.getElementById('view-discovery').scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function downloadOskAF3Manifest() {
@@ -5196,8 +5187,7 @@ async function runDiscovery() {
                         </div>
                     </div>
                 </div>`;
-            const scrollArea = document.getElementById('disc-scroll-area');
-            if (scrollArea) scrollArea.scrollTo({ top: scrollArea.scrollHeight, behavior: 'smooth' });
+            document.getElementById('view-discovery').scrollTo({ top: 0, behavior: 'smooth' });
 
         } catch (err) {
             clearInterval(interval);
@@ -5287,8 +5277,7 @@ async function runDiscovery() {
                         </div>
                     </div>
                 </div>`;
-            const scrollArea = document.getElementById('disc-scroll-area');
-            if (scrollArea) scrollArea.scrollTo({ top: scrollArea.scrollHeight, behavior: 'smooth' });
+            document.getElementById('view-discovery').scrollTo({ top: 0, behavior: 'smooth' });
 
         } catch (err) {
             clearInterval(interval);
