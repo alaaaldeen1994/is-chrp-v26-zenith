@@ -4662,7 +4662,7 @@ function renderOskReport(safetyData, dosageData, elapsed, cellTypeKey, query) {
             ${downloadBtnHtml}
         </div>
     `;
-    resultsEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    document.getElementById('view-discovery').scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function downloadOskAF3Manifest() {
@@ -5187,7 +5187,7 @@ async function runDiscovery() {
                         </div>
                     </div>
                 </div>`;
-            resultsEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            document.getElementById('view-discovery').scrollTo({ top: 0, behavior: 'smooth' });
 
         } catch (err) {
             clearInterval(interval);
@@ -5277,7 +5277,7 @@ async function runDiscovery() {
                         </div>
                     </div>
                 </div>`;
-            resultsEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            document.getElementById('view-discovery').scrollTo({ top: 0, behavior: 'smooth' });
 
         } catch (err) {
             clearInterval(interval);
