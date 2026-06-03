@@ -119,15 +119,15 @@ def build_dossier():
     
     pdf.section_header('1. Executive Summary & Value Proposition')
     pdf.text_block(
-        "Nilus Lab is pioneering therapeutics in longevity by modeling generative cellular reprogramming trajectories "
-        "to reverse cardiac ageing without tumor risk (oncogene-free). Our proprietary platform, Zenith v28.0, leverages "
-        "a deep foundation manifold trained on 500,000+ single cardiac cells from the Human Cell Atlas (HCA) and the "
-        "PERIHEART dataset. By utilizing variational autoencoders (scVI) and molecular docking simulations, Zenith identifies "
-        "combinatorial gene networks that restore youthful chromatin profiles and restore contractility in senescent cells."
+        "Nilus Lab is commercializing high-impact science to reverse cardiac ageing without tumor risk (oncogene-free). "
+        "Our proprietary platform, Zenith v28.0, leverages a deep foundation manifold trained on 500,000+ single cardiac cells "
+        "from the Human Cell Atlas (HCA) and the PERIHEART dataset. By utilizing variational autoencoders (scVI) and "
+        "in-silico modeling & simulation tools, Zenith identifies combinatorial gene networks that restore youthful "
+        "chromatin profiles and contractility in senescent cells, moving biology out of the lab and into the clinic."
     )
     
     pdf.section_header('2. Technology & Platform Validation (Traction)')
-    pdf.bold_label('Generative scVI Core', 'Trained on 500k Verified Human Cardiac Cells, capturing 4,908 highly variable genes across 400 epochs.')
+    pdf.bold_label('In-Silico Modeling', 'Trained on 500k integrated cells across 4,908 Highly Variable Genes (HVGs) using scVI deep learning to compress 50GB matrices into 53.7MB neural weights.')
     pdf.bold_label('Epigenetic Reset', 'Achieved a deterministic -11.9 year epigenetic age reversal in mature cells verified via molecular clocks.')
     pdf.bold_label('Safety Gating', 'Built-in safety ceilings automatically filter out oncogenes and restrict dedifferentiation to protect functional cell identity.')
     pdf.bold_label('AF3 Valency Audit', 'Integrates automated AlphaFold 3 structured motifs to verify target binding affinity (e.g., POU5F1-SOX2 complex).')
@@ -142,17 +142,17 @@ def build_dossier():
     # ----------------------------------------------------
     pdf.add_page()
     
-    pdf.section_header('4. Founder Interview Preparation Guide')
+    pdf.section_header('4. Founder Interview Preparation Guide (Julio de Unamuno IV Focus)')
     pdf.text_block(
-        "The Founder Interview is a highly focused 30-minute video call. The HomeLab team will look to evaluate "
-        "the following core criteria. Anticipated talking points are structured below:"
+        "The Founder Interview is a highly focused 30-minute video call with Julio de Unamuno IV and the HomeLab team. "
+        "Julio\'s background is centered on bringing high-impact science out of the lab and into the market. Key preparation points:"
     )
     
-    pdf.bold_label('Technology Validation', 'Explain the transition from scVI model predictions to in-vitro validation. Highlight the use of real HCA datasets, chromatin-binding valency models, and Horvath Clock verification.')
-    pdf.bold_label('Market indications', 'Position Nilus against the $50B longevity market. Initial clinical focus is on cardiomyopathy and age-induced heart failure, productized as an out-licensing platform for pharma.')
+    pdf.bold_label('In-Silico to Wetlab Transition', 'Julio values in-silico modeling and simulations (Discovery Studio, Maestro). Be prepared to explain how Zenith\'s predictions directly guide your wetlab assay setups.')
+    pdf.bold_label('Market indications & TAM', 'Position Nilus against the $50B longevity market. Initial clinical focus is on cardiomyopathy and age-induced heart failure, productized as an out-licensing platform for pharma.')
     pdf.bold_label('Competition & Barriers', 'Demonstrate how Nilus bypasses Altman-style reprogramming risks (oncogenesis, cell drift) computationally, creating strong IP and high safety barriers compared to Altos/Retro.')
     pdf.bold_label('Team Chemistry & Dynamics', 'Since all co-founders are required to join, show the interdisciplinary synergy across computation (VAE architectures), systems engineering, and molecular biology.')
-    pdf.bold_label('Accelerator Goals', 'Secure next round of funding ($0M - $2M Launch Track parameters), leverage HomeLab lab networks for early animal trials, and expand hospital partnerships for cell samples.')
+    pdf.bold_label('Accelerator Goals', 'Secure next round of funding ($0M - $2M Launch Track parameters), leverage HomeLab lab networks for early animal trials, and target a cohort presentation at the BIO 2026 Innovation Summit in San Diego.')
 
     pdf.section_header('5. HomeLab Contact & Follow-up Details')
     pdf.text_block(
