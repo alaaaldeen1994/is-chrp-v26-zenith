@@ -5154,10 +5154,10 @@ async function runDiscovery() {
                             <div style="color:#64748b;font-size:14px;margin-bottom:16px;">${data.cell_type_label || 'All cardiac cells (10,000 cells)'} • Processed in ${elapsed}s</div>
                             
                             <div style="display:flex;gap:10px;flex-wrap:wrap;">
-                                <span style="font-size:13px;background:#eff6ff;color:#1d4ed8;border:1px solid #bfdbfe;padding:6px 12px;border-radius:8px;font-weight:600;">${data.competing_panels || 3} competing panels</span>
-                                <span style="font-size:13px;background:#eff6ff;color:#1d4ed8;border:1px solid #bfdbfe;padding:6px 12px;border-radius:8px;font-weight:600;">${data.rounds_completed || 2} refinement rounds</span>
-                                <span style="font-size:13px;background:#eff6ff;color:#1d4ed8;border:1px solid #bfdbfe;padding:6px 12px;border-radius:8px;font-weight:600;">Conf: ${data.tournament_confidence ? (data.tournament_confidence * 100).toFixed(0) : '—'}%</span>
-                                <span style="font-size:13px;background:#eff6ff;color:#1d4ed8;border:1px solid #bfdbfe;padding:6px 12px;border-radius:8px;font-weight:600;">${data.total_hca_genes_provided || 400} candidate genes</span>
+                                <span style="font-size:13px;background:#1a1a1a;color:#f8f8f6;border:1px solid #1a1a1a;padding:6px 12px;border-radius:8px;font-weight:600;">${data.competing_panels || 3} competing panels</span>
+                                <span style="font-size:13px;background:#1a1a1a;color:#f8f8f6;border:1px solid #1a1a1a;padding:6px 12px;border-radius:8px;font-weight:600;">${data.rounds_completed || 2} refinement rounds</span>
+                                <span style="font-size:13px;background:#1a1a1a;color:#f8f8f6;border:1px solid #1a1a1a;padding:6px 12px;border-radius:8px;font-weight:600;">Conf: ${data.tournament_confidence ? (data.tournament_confidence * 100).toFixed(0) : '—'}%</span>
+                                <span style="font-size:13px;background:#1a1a1a;color:#f8f8f6;border:1px solid #1a1a1a;padding:6px 12px;border-radius:8px;font-weight:600;">${data.total_hca_genes_provided || 400} candidate genes</span>
                             </div>
                         </div>
                         <div style="text-align:center;background:#f8fafc;border:1px solid #e2e8f0;border-radius:20px;padding:24px 32px;flex-shrink:0;margin-left:32px;box-shadow:inset 0 2px 4px rgba(0,0,0,0.02);">
@@ -5167,7 +5167,7 @@ async function runDiscovery() {
                     </div>
 
                     ${gptSummary ? `<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:16px;padding:20px 24px;margin-bottom:24px;font-size:15px;color:#334155;line-height:1.6;font-family:Inter,sans-serif;">${gptSummary}</div>` : ""}${queryNote}
-                    ${data.refinement_notes ? `<div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:16px;padding:16px 20px;margin-bottom:32px;font-size:14px;color:#1e40af;line-height:1.6;"><span style="font-weight:700;color:#1d4ed8;">Panel Refinement:</span> ${data.refinement_notes}</div>` : ''}
+                    ${data.refinement_notes ? `<div style="background:#1a1a1a;border:1px solid #1a1a1a;border-radius:16px;padding:16px 20px;margin-bottom:32px;font-size:14px;color:#e2e8f0;line-height:1.6;"><span style="font-weight:700;color:#ffffff;">Panel Refinement:</span> ${data.refinement_notes}</div>` : ''}
                     <div style="margin-bottom:40px;">
                         <div style="margin-bottom:40px;">
                             <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;border-bottom:2px solid #e2e8f0;padding-bottom:12px;">
