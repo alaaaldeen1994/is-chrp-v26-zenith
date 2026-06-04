@@ -2033,14 +2033,32 @@ const BiosimBridge = {
 
             // 2. PROTEIN FACTORS — Domain Handshake Linker (DHL) Pipeline (v33 Gold)
             // Using Structural Authority Registry (Verified PDB mappings)
-            const structuralPool = Object.entries(this.lastDiscovery.target_profile || {}).sort((a,b) => b[1]-a[1]);
+            
+            // CARDIAC TF WHITELIST: Only genuine DNA-binding transcription factors
+            // are structurally valid for AlphaFold DNA-protein complex prediction.
+            // Membrane proteins (CACNA1C, TTN, RYR2, DMD) are NOT transcription
+            // factors and must never be submitted - they cause ipTM < 0.15.
+            const TF_WHITELIST = new Set([
+              'GATA4','MEF2C','TBX5','NKX2-5','NKX25','SOX2','KLF4','POU5F1',
+              'OCT4','HAND1','HAND2','MYOCD','SRF','ASCL1','NEUROD1','SNAI1'
+            ]);
+
+            const structuralPool = Object.entries(this.lastDiscovery.target_profile || {})
+              .filter(([gene]) => TF_WHITELIST.has(gene) || TF_WHITELIST.has(gene.toUpperCase()))
+              .sort((a,b) => b[1]-a[1]);
+
+            // If no whitelisted TFs found in discovery output, default to GMT cocktail
+            const gmtFallback = structuralPool.length === 0;
+            const effectivePool = gmtFallback
+              ? [['GATA4', 1.0], ['MEF2C', 0.95], ['TBX5', 0.90]]
+              : structuralPool;
             
             // HIGH-FIDELITY RESTORATION: Set padding to 15aa.
             // This provides the necessary conformational flexibility for the DNA-Binding Domains
             // to rotate and dock correctly without being 'pulled' out of position by the linker.
             const Z_LINKER_PAD = 15; 
 
-            for (const [gene] of structuralPool.slice(0, 2)) {
+            for (const [gene] of effectivePool.slice(0, 2)) {
                 try {
                 let seq = await this.fetchUniProtSequence(gene);
                 if (seq) {
