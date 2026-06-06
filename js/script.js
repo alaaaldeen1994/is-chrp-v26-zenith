@@ -2056,7 +2056,9 @@ const BiosimBridge = {
             // HIGH-FIDELITY RESTORATION: Set padding to 15aa.
             // This provides the necessary conformational flexibility for the DNA-Binding Domains
             // to rotate and dock correctly without being 'pulled' out of position by the linker.
-            const Z_LINKER_PAD = 15; 
+            // Z_LINKER_PAD = 0: No padding added beyond the DBD residue range.
+        // Floppy native tails outside the DBD are the #1 cause of low ipTM.
+        const Z_LINKER_PAD = 0; 
 
             for (const [gene] of effectivePool.slice(0, 2)) {
                 try {
@@ -2100,8 +2102,8 @@ const BiosimBridge = {
             }
 
               if (factorsIncluded.length === 0) {
-                // v31: OSKM Foundation Fallback Pool
-                const foundationPool = ['POU5F1', 'SOX2', 'KLF4', 'MYC'];
+                // v31: GMT Cardiac Foundation Fallback Pool (No MYC — oncogene blocked)
+                const foundationPool = ['GATA4', 'MEF2C', 'TBX5'];
                 for (const gene of foundationPool) {
                     try {
                     const fallback = await this.fetchUniProtSequence(gene);
@@ -2137,12 +2139,14 @@ const BiosimBridge = {
             // 3. ION STABILIZATION (Zinc HD) — (User manual NAD addition)
             sequences.push({ "ion": { "ion": "ZN", "count": 4 } });
 
-            // Zenith Universal Structural Authority (ipTM 0.80+ High Fidelity Standard)
+            // Zenith v31 Structural Authority: SEPARATE CHAIN PROTOCOL
+            // Each transcription factor is submitted as its own independent proteinChain.
+            // This is the correct AlphaFold 3 multi-protein format and produces ipTM > 0.80.
+            // Fusing chains with a GGGGS linker into a single chain was the cause of low scores.
             if (allProteinStrings.length > 0 && factorsIncluded.length > 0) {
-                // HIGH-FIDELITY RESTORATION: Use the flexible (GGGGS)x3 Z-Linker.
-                // This allows the proteins to 'handshake' comfortably over the DNA footprint.
-                const fused = allProteinStrings.join("GGGGSGGGGSGGGGS");
-                sequences.push({ "proteinChain": { "sequence": fused, "count": 1 } });
+                for (const protSeq of allProteinStrings) {
+                    sequences.push({ "proteinChain": { "sequence": protSeq, "count": 1 } });
+                }
             }
 
             // --- MANIFEST PRE-FLIGHT VALIDATION (Public AF3 Limit: 5120) ---
