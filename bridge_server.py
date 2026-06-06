@@ -777,7 +777,7 @@ class ZenithV2DeepDrift(nn.Module):
 
     """
 
-    def __init__(self, input_dim=5000, hidden_dim=1024, depth=12, num_heads=8):
+    def __init__(self, input_dim=4908, hidden_dim=1024, depth=12, num_heads=8):
 
         super().__init__()
 
@@ -857,7 +857,7 @@ class ZenithV2DeepDrift(nn.Module):
 
         # Extract BioAge from the last column of the input vector
 
-        # Input format: [CurrentGenes(5000), TargetGenes(5000), BioAge(1)]
+        # Input format: [CurrentGenes(4908), TargetGenes(4908), BioAge(1)]
 
         bio_age = x[:, -1].unsqueeze(1).unsqueeze(2) # (B, 1, 1) for broadcasting
 
@@ -1204,7 +1204,19 @@ _base_symbols = [
 # Computed from: Litvinukova et al., Nature 2020 (486k cells, 14 donors)
 
 def _load_real_gene_symbols():
-    """Merge curated base symbols with real HCA-ranked genes. No fake padding."""
+    """Load exact 4908 var_names from scVI model schema if available. Otherwise fallback."""
+    path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "models", "zenith_foundation_v1", "gene_index.json")
+    if os.path.exists(path):
+        try:
+            with open(path, "r", encoding="utf-8") as f:
+                data = json.load(f)
+            if "var_names" in data:
+                print(f"GENE REGISTRY: Loaded {len(data['var_names'])} production gene symbols from gene_index.json")
+                return data["var_names"]
+        except Exception as e:
+            print(f"GENE REGISTRY: Failed to load gene_index.json: {e}")
+
+    # Fallback to old behavior if file is missing
     genes = list(_base_symbols)  # Start with 159 curated symbols
     seen = set(g.upper() for g in genes)
 
@@ -1213,10 +1225,10 @@ def _load_real_gene_symbols():
     ip_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "models", "real_ip_genes.json")
 
     loaded_count = 0
-    for path in [ip_full_path, ip_path]:
-        if os.path.exists(path):
+    for p in [ip_full_path, ip_path]:
+        if os.path.exists(p):
             try:
-                with open(path, encoding="utf-8") as f:
+                with open(p, encoding="utf-8") as f:
                     ip_data = json.load(f)
                 # Add pro-rejuvenation genes
                 for g in ip_data.get("pro_rejuvenation_genes", []):
@@ -1232,15 +1244,24 @@ def _load_real_gene_symbols():
                         genes.append(symbol)
                         seen.add(symbol.upper())
                         loaded_count += 1
-                print(f"GENE REGISTRY: Loaded {loaded_count} real HCA genes from {os.path.basename(path)}")
+                print(f"GENE REGISTRY: Loaded {loaded_count} real HCA genes from {os.path.basename(p)}")
                 break  # Use the first file found
             except Exception as e:
-                print(f"GENE REGISTRY: Failed to load {path}: {e}")
+                print(f"GENE REGISTRY: Failed to load {p}: {e}")
 
     print(f"GENE REGISTRY: Total unique gene symbols = {len(genes)} (159 curated + {loaded_count} HCA-ranked)")
     return genes
 
 GENE_SYMBOLS = _load_real_gene_symbols()
+
+# Dynamic lookup map for key gene indices
+GENE_INDICES = {}
+for name in ["POU5F1", "SOX2", "NANOG", "LIN28A", "KLF4", "MYC", "GATA4", "NKX2-5", "TBX5", "TNNT2", "TTN", "TP53", "MKI67", "TET1", "TET2", "EGFR", "LIFR", "NEUROD2", "PAX6", "ASCL1", "SOX1", "TUBB3", "SOX17", "FOXA2"]:
+    if name in GENE_SYMBOLS:
+        GENE_INDICES[name] = GENE_SYMBOLS.index(name)
+    else:
+        # Fallback index to prevent IndexError if missing in dynamic dataset
+        GENE_INDICES[name] = 0
 
 
 
@@ -2695,6 +2716,8 @@ class HybridDiscoveryRequest(BaseModel):
 
     bio_age: Optional[float] = 0.5
 
+    cell_type: Optional[str] = "all"
+
 
 
 class DiscoveryResult(BaseModel):
@@ -3305,6 +3328,13 @@ async def download_report(filename: str):
 
 
 
+@app.get("/api/v2/gene-symbols")
+async def get_gene_symbols():
+    """Returns the list of canonical gene symbols (exactly 4908) used in the v28 model."""
+    return {"gene_symbols": GENE_SYMBOLS}
+
+
+
 @app.post("/simulate_step", response_model=BatchSimulationResult)
 
 async def simulate_step(batch: BatchCellState):
@@ -3331,11 +3361,11 @@ async def simulate_step(batch: BatchCellState):
 
     
 
-    genes_np = np.array(batch.genes, dtype=np.float32).reshape(n_agents, 1000)
+    genes_np = np.array(batch.genes, dtype=np.float32).reshape(n_agents, 4908)
 
-    proteins_np = np.array(batch.proteins, dtype=np.float32).reshape(n_agents, 1000)
+    proteins_np = np.array(batch.proteins, dtype=np.float32).reshape(n_agents, 4908)
 
-    chromatin_tensor = torch.tensor(batch.chromatin, dtype=torch.float32).reshape(n_agents, 1000)
+    chromatin_tensor = torch.tensor(batch.chromatin, dtype=torch.float32).reshape(n_agents, 4908)
 
     ages_tensor = torch.tensor(batch.ages, dtype=torch.float32).reshape(n_agents, 1)
 
@@ -3353,13 +3383,21 @@ async def simulate_step(batch: BatchCellState):
 
     # 2. REAL PARACRINE PHYSICS (Diffusion PDE)
 
-    # Heart Markers: TNNT2 (idx 13), TTN (idx 14)
+    # Get dynamic indices for TTN/TNNT2 and OCT4/NANOG
 
-    # v28: Multi-component signaling (Cardio flux + Stem flux)
+    cardio_idx_1 = GENE_INDICES.get("TNNT2", 0)
 
-    cardio_strength = torch.tensor(proteins_np[:, 13] + proteins_np[:, 14]).clamp(0, 2.0)
+    cardio_idx_2 = GENE_INDICES.get("TTN", 0)
 
-    stem_strength = torch.tensor(proteins_np[:, 0] + proteins_np[:, 2]).clamp(0, 1.0) # OCT4 + NANOG
+    stem_idx_1 = GENE_INDICES.get("POU5F1", 0)
+
+    stem_idx_2 = GENE_INDICES.get("NANOG", 0)
+
+    
+
+    cardio_strength = torch.tensor(proteins_np[:, cardio_idx_1] + proteins_np[:, cardio_idx_2]).clamp(0, 2.0)
+
+    stem_strength = torch.tensor(proteins_np[:, stem_idx_1] + proteins_np[:, stem_idx_2]).clamp(0, 1.0)
 
     
 
@@ -3371,161 +3409,141 @@ async def simulate_step(batch: BatchCellState):
 
     
 
-    # Context Vector: Map field intensity to receptors (EGFR idx 80, LIFR idx 87)
+    # Context Vector: EGFR and LIFR indices dynamically retrieved
 
-    # Optimized: No loops, using direct tensor assignment from field signals
+    context_tensor = torch.zeros(n_agents, 4908)
 
-    context_tensor = torch.zeros(n_agents, 1000)
+    egfr_idx = GENE_INDICES.get("EGFR", 0)
 
-    context_tensor[:, 80] = local_signals 
+    lifr_idx = GENE_INDICES.get("LIFR", 0)
 
-    context_tensor[:, 87] = stem_strength # Direct niche contact
+    context_tensor[:, egfr_idx] = local_signals
 
-    # (Neighbor loop logic removed largely in favor of field approximation for speed)
-
-
-
-    # 3. Zenith Ultra-V4 (HD) (Differentiable Biology)
-
-    # 3. Zenith Ultra-V4 (HD) (Differentiable Biology)
-
-    # FIX: Padding 1000 -> 5000 using 'Biological Baseline Noise' (Not Zeros)
-
-    state_tensor_1k = torch.tensor(genes_np, dtype=torch.float32) # [N, 1000]
+    context_tensor[:, lifr_idx] = stem_strength
 
     
 
-    # Generate Gaussian Noise (Simulating Low-Level Background Transcription)
+    # 3. Model Input Preparation (Strict 4908 Dimensions)
 
-    # Mean=0.1 (Base expression), Std=0.05
+    state_tensor_4908 = torch.tensor(genes_np, dtype=torch.float32)
 
-    noise_mean = 0.1
-
-    noise_std = 0.05
-
-    padding = torch.normal(mean=noise_mean, std=noise_std, size=(n_agents, 4000))
+    input_tensor = torch.cat([state_tensor_4908, context_tensor, ages_tensor], dim=1) # [N, 9817]
 
     
 
-    state_tensor_5k = torch.cat([state_tensor_1k, padding], dim=1) # [N, 5000]
+    # Initialize drift and manifold tensors
 
-    
+    if drift_model is not None:
 
-    # Pad Context to 5k (Context usually represents target/environment)
+        with torch.no_grad():
 
-    context_tensor_1k = context_tensor
+            drift, manifold = drift_model(input_tensor)
 
-    # Context padding can remain zeros as it represents specific signaling inputs
+    else:
 
-    context_padding = torch.zeros(n_agents, 4000) 
+        drift = torch.zeros((n_agents, 4909), dtype=torch.float32)
 
-    context_tensor_5k = torch.cat([context_tensor_1k, context_padding], dim=1) # [N, 5000]
+        manifold = torch.zeros((n_agents, 3), dtype=torch.float32)
 
+        
 
-
-    # Input Construction: [CurrentGenes(5000), ContextGenes(5000), Age(1)] -> [N, 10001]
-
-    input_tensor = torch.cat([state_tensor_5k, context_tensor_5k, ages_tensor], dim=1) # [N, 10001]
-
-    
-
-
-    # v28: VECTOR INJECTION (1000-dim)
-
+    # v28: VECTOR INJECTION (4908-dim)
 
     if batch.vector:
 
         print(f"Applying Vector Pulse: {batch.vector} (Potency: {batch.potency})")
 
-
-
-        vec = np.zeros(1000)
+        vec = np.zeros(4908)
 
         if batch.vector == 'OSKM': 
 
-            vec[:3] = 1.0;  # OCT4, SOX2, NANOG
+            vec[GENE_INDICES.get('POU5F1', 0)] = 1.0
 
-            vec[4] = 1.0;   # KLF4
+            vec[GENE_INDICES.get('SOX2', 0)] = 1.0
 
-            vec[5] = 1.0;   # MYC
+            vec[GENE_INDICES.get('NANOG', 0)] = 1.0
+
+            vec[GENE_INDICES.get('KLF4', 0)] = 1.0
+
+            vec[GENE_INDICES.get('MYC', 0)] = 1.0
 
         elif batch.vector == 'DIRECT_CARDIO': 
 
-            vec[10:15] = 1.0 # Heart block (GATA4, NKX2-5, TBX5, TNNT2, TTN)
+            for g in ['GATA4', 'NKX2-5', 'TBX5', 'TNNT2', 'TTN']:
+
+                vec[GENE_INDICES.get(g, 0)] = 1.0
 
         elif batch.vector == 'DIRECT_NEURO': 
 
-            vec[20:25] = 1.0 # Neural block (NEUROD2, PAX6, etc.)
+            for g in ['NEUROD2', 'PAX6', 'ASCL1', 'SOX1', 'TUBB3']:
+
+                vec[GENE_INDICES.get(g, 0)] = 1.0
 
         elif batch.vector == 'LIN28':
 
-            vec[0:3] = 1.0  # OCT4, SOX2, NANOG
+            vec[GENE_INDICES.get('POU5F1', 0)] = 1.0
 
-            vec[3] = 1.0    # LIN28
+            vec[GENE_INDICES.get('SOX2', 0)] = 1.0
+
+            vec[GENE_INDICES.get('NANOG', 0)] = 1.0
+
+            vec[GENE_INDICES.get('LIN28A', 0)] = 1.0
 
         elif batch.vector == 'MPTR':
 
-            vec[74:76] = 1.0 # TET1/TET2 Boost
+            vec[GENE_INDICES.get('TET1', 0)] = 1.0
 
-            vec[0:2] = 0.4   # Transient OS
+            vec[GENE_INDICES.get('TET2', 0)] = 1.0
 
-        elif batch.vector == 'CLINICAL_COMBO':
+            vec[GENE_INDICES.get('POU5F1', 0)] = 0.4
 
-            # Split protocol handled individually below
-
-            pass
+            vec[GENE_INDICES.get('SOX2', 0)] = 0.4
 
             
 
         mod_tensor = torch.tensor(vec, dtype=torch.float32)
 
-        drift[:, :1000] += mod_tensor * 0.3
+        drift[:, :4908] += mod_tensor * 0.3
 
+        
 
-
-        # v27.0 GOLD: Specialized Multi-Phenotype Vectors
+        # Specialized Multi-Phenotype Vectors
 
         if batch.vector == 'CLINICAL_COMBO':
 
             for idx in range(n_agents):
 
-                # We use a deterministic split based on the batch index
-
-                p_vec = torch.zeros(1000)
+                p_vec = torch.zeros(4908)
 
                 if idx % 2 == 0:
 
-                    p_vec[10:20] = 0.5 # Cardiac Boost (Red)
+                    for g in ['GATA4', 'NKX2-5', 'TBX5', 'TNNT2', 'TTN']:
+
+                        p_vec[GENE_INDICES.get(g, 0)] = 0.5
 
                 else:
 
-                    p_vec[20:30] = 0.5 # Neural Boost (Blue)
+                    for g in ['NEUROD2', 'PAX6', 'ASCL1', 'SOX1', 'TUBB3']:
 
-                drift[idx, :1000] += p_vec
+                        p_vec[GENE_INDICES.get(g, 0)] = 0.5
 
-            
+                drift[idx, :4908] += p_vec
 
-    # v26: ATLAS-VISION (Closed-Loop Phenotypic Stability)
+                
 
-    if batch.vision_feedback:
+    # 4. MUTATIONAL BURDEN
 
-        # Vision-guided identity stabilization
+    tp53_idx = GENE_INDICES.get('TP53', 0)
 
-        # Reduces SDE noise if phenotypic convergence is high.
+    mki67_idx = GENE_INDICES.get('MKI67', 0)
 
-        pass # Stochastic term reduction handled in EM-step
+    myc_idx = GENE_INDICES.get('MYC', 0)
+
+    pou5f1_idx = GENE_INDICES.get('POU5F1', 0)
 
     
 
-    # 4. MUTATIONAL BURDEN (Real Oncogenesis)
-
-    # DNA Repair Capacity = f(TP53, BioAge)
-
-    # High TP53 (idx 50) -> High Repair. High Age -> Low Repair.
-
-    # High TP53 (idx 50) -> High Repair. High Age -> Low Repair.
-
-    tp53_levels = state_tensor_1k[:, 50]
+    tp53_levels = state_tensor_4908[:, tp53_idx]
 
     repair_capacity = (tp53_levels * 2.0) + (1.0 - ages_tensor.squeeze())
 
@@ -3533,19 +3551,13 @@ async def simulate_step(batch: BatchCellState):
 
     
 
-    # Stressors (Replication Stress + Inflammation)
-
-    # MKI67 (idx 51) drives replication stress. Local signaling drives inflammation.
-
-    proliferation_stress = state_tensor_1k[:, 51]
+    proliferation_stress = state_tensor_4908[:, mki67_idx]
 
     inflammation_stress = local_signals * 0.5
 
-    total_stress = proliferation_stress + inflammation_stress + 0.05 # Baseline
+    total_stress = proliferation_stress + inflammation_stress + 0.05
 
     
-
-    # Accumulate Burden
 
     burdens_tensor = torch.tensor(batch.burdens, dtype=torch.float32).reshape(n_agents)
 
@@ -3555,31 +3567,27 @@ async def simulate_step(batch: BatchCellState):
 
     
 
-    # Check for Malignant Transformation (Burden > Threshold)
+    # Malignant transformation
 
     malignant_mask = burdens_tensor > 1.0
 
     if malignant_mask.any():
 
-        # Collapse Identity -> Malignant State
+        state_tensor_4908[malignant_mask, myc_idx] = 1.0
 
-        # High MYC(5), MKI67(51), Low TP53(50)
+        state_tensor_4908[malignant_mask, mki67_idx] = 1.0
 
-        state_tensor_1k[malignant_mask, 5] = 1.0 # MYC
+        state_tensor_4908[malignant_mask, tp53_idx] = 0.0
 
-        state_tensor_1k[malignant_mask, 51] = 1.0 # MKI67
+        state_tensor_4908[malignant_mask, pou5f1_idx] = 0.8
 
-        state_tensor_1k[malignant_mask, 50] = 0.0 # TP53 Loss
+        
 
-        state_tensor_1k[malignant_mask, 0] = 0.8 # Cancer Stem Cell (OCT4)
+    # 5. DYNAMIC CHROMATIN
 
+    sox2_idx = GENE_INDICES.get('SOX2', 0)
 
-
-    # 5. DYNAMIC CHROMATIN (Pioneer Factor Logic)
-
-    # Chromatin Opening = Alpha * (OCT4 + SOX2) - Beta * Age
-
-    pioneer_activity = state_tensor_1k[:, 0] + state_tensor_1k[:, 1]
+    pioneer_activity = state_tensor_4908[:, pou5f1_idx] + state_tensor_4908[:, sox2_idx]
 
     opening_rate = 0.1 * pioneer_activity
 
@@ -3587,7 +3595,7 @@ async def simulate_step(batch: BatchCellState):
 
     
 
-    chromatin_delta = (opening_rate - closing_rate).unsqueeze(1) * dt  # [N] -> [N, 1] for broadcast
+    chromatin_delta = (opening_rate - closing_rate).unsqueeze(1) * dt
 
     chromatin_tensor = torch.clamp(chromatin_tensor + chromatin_delta, 0.0, 1.0)
 
@@ -3595,49 +3603,45 @@ async def simulate_step(batch: BatchCellState):
 
     # 6. Apply Drift (Euler-Maruyama)
 
-    # v27.0 GOLD: GENOMIC KNOCKOUT CONSTRAINTS
-
-    # If a researcher has 'silenced' a gene, we zero its drift and state
-
     scaled_drift = drift * batch.potency
 
     if batch.knockouts:
 
         for gene_idx in batch.knockouts:
 
-            if 0 <= gene_idx < 1000:
+            if 0 <= gene_idx < 4908:
 
                 scaled_drift[:, gene_idx] = 0.0
 
-                state_tensor_1k[:, gene_idx] = 0.0
+                state_tensor_4908[:, gene_idx] = 0.0
 
+                
 
-
-    # Zenith Pro: Vectorized computation for speed
-
-    new_self_state = state_tensor_1k + scaled_drift[:, :1000] * dt
+    new_self_state = state_tensor_4908 + scaled_drift[:, :4908] * dt
 
     
-
-    # Re-apply knockout zeroing to the resulting state to prevent numerical leak
 
     if batch.knockouts:
 
         for gene_idx in batch.knockouts:
 
-            if 0 <= gene_idx < 1000:
+            if 0 <= gene_idx < 4908:
 
                 new_self_state[:, gene_idx] = 0.0
 
-    
+                
 
-    # Bio-Age Drift with Mechanistic Reversal Logic
+    # Bio-Age Drift with TET active epigenetic reversal
 
-    age_drift = scaled_drift[:, 1000] * 5.0 # Sensitivity weight
+    age_drift = scaled_drift[:, 4908] * 5.0
 
-    tet_active = state_tensor_1k[:, 74] + state_tensor_1k[:, 75]
+    tet1_idx = GENE_INDICES.get('TET1', 0)
 
-    rejuv_boost = -0.05 * tet_active # Mechanistic epigenetic reversal
+    tet2_idx = GENE_INDICES.get('TET2', 0)
+
+    tet_active = state_tensor_4908[:, tet1_idx] + state_tensor_4908[:, tet2_idx]
+
+    rejuv_boost = -0.05 * tet_active
 
     
 
@@ -3653,19 +3657,13 @@ async def simulate_step(batch: BatchCellState):
 
     
 
-    # Final Output preparation with clamp
-
     final_output_tensor = torch.clamp(new_self_state, 0.0, 1.0)
 
     drift_mag = float(torch.abs(drift).mean().item())
 
     
 
-    # 8. STABILITY CALCULATION (Professional Safety Metric)
-
-    # Stability = f(Drift Entropy, DNA Burden)
-
-    # High drift + High damage = Low Stability
+    # 8. STABILITY CALCULATION
 
     burden_mean = float(burdens_tensor.mean().item())
 
@@ -3687,13 +3685,13 @@ async def simulate_step(batch: BatchCellState):
 
         burdens=burdens_tensor.flatten().tolist(),
 
-        manifold=manifold.flatten().tolist(), # [N * 3] for 3D Viewport
+        manifold=manifold.flatten().tolist(),
 
         drift_magnitude=float(drift_mag),
 
         stability_index=stability,
 
-        signals=local_signals.flatten().tolist(), # GNN Signaling Flux
+        signals=local_signals.flatten().tolist(),
 
         mode="GENERATIVE"
 
@@ -3787,7 +3785,7 @@ def identify_most_relevant_factors(attribution_map: dict, top_n: int = 12) -> di
 
 
 
-async def get_target_vector_from_query(query: str, api_key: Optional[str] = None) -> Tuple[torch.Tensor, str, Dict[str, float]]:
+async def get_target_vector_from_query(query: str, api_key: Optional[str] = None, cell_type: str = "all", repro_mode: str = "full") -> Tuple[torch.Tensor, str, Dict[str, float]]:
 
     """
 
@@ -3837,9 +3835,31 @@ async def get_target_vector_from_query(query: str, api_key: Optional[str] = None
 
         
 
+        cell_labels = {
+            "all": "cardiac cells",
+            "regular_ventricular_cardiac_myocyte": "regular ventricular cardiac myocyte",
+            "pericyte": "pericytes",
+            "fibroblast": "fibroblasts",
+            "capillary_endothelial_cell": "capillary endothelial cells",
+            "regular_atrial_cardiac_myocyte": "regular atrial cardiac myocyte",
+            "endothelial_cell_of_artery": "endothelial cells of artery",
+            "smooth_muscle_cell": "smooth muscle cells",
+            "macrophage": "macrophages",
+            "endothelial_cell": "endothelial cells",
+            "vein_endothelial_cell": "vein endothelial cells",
+            "neural_cell": "neural cells",
+            "epicardial_adipocyte": "epicardial adipocytes"
+        }
+        ct_label = cell_labels.get(cell_type, cell_type)
+        mode_label = "Partial Reprogramming (Safety-gated)" if repro_mode == "partial" else "Complete Reprogramming (Lineage Conversion)"
+
         prompt = (
 
-            f"You are a computational systems biologist. The user's research goal is: '{query}'.\n\n"
+            f"You are a computational systems biologist. The target cell type is: {ct_label}.\n"
+
+            f"The rejuvenation/reprogramming mode is: {mode_label}.\n"
+
+            f"The user's research goal is: '{query}'.\n\n"
 
             f"STRICT SCIENTIFIC CONSTRAINTS (do not violate):\n"
 
@@ -4265,7 +4285,7 @@ async def discover_hybrid(req: HybridDiscoveryRequest, request: Request):
 
         # 1. Translate Natural Language to Biological Coordinates
 
-        target_vec, gpt_rationale, gpt_gene_data, audit_data, dna_motif, age_reduction, drugs = await get_target_vector_from_query(req.target_query, req.api_key)
+        target_vec, gpt_rationale, gpt_gene_data, audit_data, dna_motif, age_reduction, drugs = await get_target_vector_from_query(req.target_query, req.api_key, cell_type=req.cell_type, repro_mode=req.repro_mode)
 
         target_vec = target_vec.to(dtype=torch.float32)
 
@@ -5908,15 +5928,53 @@ async def partial_reprogramming_endpoint(req: PartialReprogrammingRequest):
 
 
 
+        cell_labels = {
+
+            "all": "cardiac cells",
+
+            "regular_ventricular_cardiac_myocyte": "regular ventricular cardiac myocyte",
+
+            "pericyte": "pericytes",
+
+            "fibroblast": "fibroblasts",
+
+            "capillary_endothelial_cell": "capillary endothelial cells",
+
+            "regular_atrial_cardiac_myocyte": "regular atrial cardiac myocyte",
+
+            "endothelial_cell_of_artery": "endothelial cells of artery",
+
+            "smooth_muscle_cell": "smooth muscle cells",
+
+            "macrophage": "macrophages",
+
+            "endothelial_cell": "endothelial cells",
+
+            "vein_endothelial_cell": "vein endothelial cells",
+
+            "neural_cell": "neural cells",
+
+            "epicardial_adipocyte": "epicardial adipocytes"
+
+        }
+
+        ct_label = cell_labels.get(req.cell_type, req.cell_type)
+
+
+
         ai_prompt = (
 
-            f"You are a computational systems biologist. Analyze this research objective: '{req.prompt}'.\n\n"
+            f"You are a computational systems biologist. The target cell type is: {ct_label}.\n"
+
+            f"The mode is: Partial Reprogramming (Safety Level: {req.mode}, Biological Age: {req.bio_age}).\n"
+
+            f"Analyze this research objective: '{req.prompt}'.\n\n"
 
             f"Return a JSON object with exactly these fields:\n"
 
             f"1. \"genes\": an array of the top 6 official HGNC gene symbols (Homo sapiens only) most relevant "
 
-            f"for this cellular reprogramming or rejuvenation goal.\n"
+            f"for this cellular reprogramming or rejuvenation goal. You MUST prioritize genes that are safe and relevant for {ct_label} in a partial reprogramming context.\n"
 
             f"2. \"age_reduction\": estimated years of DNA methylation age reduction (Horvath/GrimAge clock basis) "
 
@@ -6466,19 +6524,35 @@ async def run_real_discovery(request: Request):
     target_cell_type = body.get("cell_type", "cardiomyocyte")
     top_n = int(body.get("top_n", 10))
 
-    ip_path = os.path.join(os.path.dirname(__file__), "models", "real_ip_genes.json")
-    clock_path = os.path.join(os.path.dirname(__file__), "models", "age_clock.pkl")
-    centroids_path = os.path.join(os.path.dirname(__file__), "models", "real_centroids.json")
+    ct_data = None
+    ct_key = target_cell_type.replace(",", "").replace("-", "_").replace(" ", "_").lower() if target_cell_type != "all" else None
+    ct_path = os.path.join(os.path.dirname(__file__), "models", "cell_type_genes.json")
+    if ct_key and os.path.exists(ct_path):
+        with open(ct_path) as f:
+            ct_all = json.load(f)
+        if ct_key in ct_all.get("cell_types", {}):
+            ct_data = ct_all["cell_types"][ct_key]
+            print(f"[RealDiscovery] Using cell-type-specific genes for: {ct_data['cell_type']}")
 
-    if not os.path.exists(ip_path):
-        raise HTTPException(status_code=503, detail="Run extract_real_ip_genes.py first.")
-
-    with open(ip_path) as f:
-        ip_data = json.load(f)
+    if ct_data:
+        pro_genes = ct_data.get("pro_rejuvenation_genes", [])
+        aging_genes = ct_data.get("aging_marker_genes", [])
+    else:
+        ip_path = os.path.join(os.path.dirname(__file__), "models", "real_ip_genes.json")
+        if not os.path.exists(ip_path):
+            raise HTTPException(status_code=503, detail="Run extract_real_ip_genes.py first.")
+        with open(ip_path) as f:
+            ip_data = json.load(f)
+        pro_genes = ip_data.get("pro_rejuvenation_genes", [])
+        aging_genes = ip_data.get("aging_marker_genes", [])
 
     # Real age delta: difference in age clock score between young and aged centroid
     age_delta = None
-    if os.path.exists(clock_path) and os.path.exists(centroids_path):
+    clock_path = os.path.join(os.path.dirname(__file__), "models", "age_clock.pkl")
+    centroids_path = os.path.join(os.path.dirname(__file__), "models", "real_centroids.json")
+    if ct_data and ct_data.get("age_delta_years") is not None:
+        age_delta = ct_data.get("age_delta_years")
+    elif os.path.exists(clock_path) and os.path.exists(centroids_path):
         try:
             import pickle, numpy as _np
             with open(clock_path, "rb") as f:
@@ -6508,7 +6582,7 @@ async def run_real_discovery(request: Request):
                 "correlation_with_youth": g["correlation"],
                 "rank": g["rank"]
             }
-            for g in ip_data["pro_rejuvenation_genes"][:top_n]
+            for g in pro_genes[:top_n]
         ],
         "top_aging_markers": [
             {
@@ -6516,7 +6590,7 @@ async def run_real_discovery(request: Request):
                 "correlation_with_aging": abs(g["correlation"]),
                 "rank": g["rank"]
             }
-            for g in ip_data["aging_marker_genes"][:top_n]
+            for g in aging_genes[:top_n]
         ]
     }
 
@@ -6602,15 +6676,36 @@ async def run_gpt_discovery(request: Request):
     client = AsyncOpenAI(api_key=openai_key)
 
     # ── Step 2: TOURNAMENT — 3 parallel GPT calls ────────────────
+    mode = body.get("mode", "real").strip()
+    cell_labels = {
+        "all": "cardiac cells",
+        "regular_ventricular_cardiac_myocyte": "regular ventricular cardiac myocyte",
+        "pericyte": "pericytes",
+        "fibroblast": "fibroblasts",
+        "capillary_endothelial_cell": "capillary endothelial cells",
+        "regular_atrial_cardiac_myocyte": "regular atrial cardiac myocyte",
+        "endothelial_cell_of_artery": "endothelial cells of artery",
+        "smooth_muscle_cell": "smooth muscle cells",
+        "macrophage": "macrophages",
+        "endothelial_cell": "endothelial cells",
+        "vein_endothelial_cell": "vein endothelial cells",
+        "neural_cell": "neural cells",
+        "epicardial_adipocyte": "epicardial adipocytes"
+    }
+    ct_label = cell_labels.get(cell_type, cell_type)
+    mode_label = "Complete Reprogramming (Direct Lineage Conversion)" if mode == "real" else "Literature-based GPT Analysis"
+
     system_base = (
-        "You are an elite computational biologist and bioinformatician. "
-        "You have access to 400 genes ranked by Pearson correlation from the Human Cardiac Cell Atlas "
-        "(Litvinukova et al., Nature 2020). "
-        "CRITICAL RULE: If the user's prompt implies a broad rejuvenation search, you MUST ONLY select genes from the provided HCA list. "
-        "HOWEVER, if the user specifically asks for DIRECT epigenetic regulators, transcription factors, or exact target suppressors "
-        "(e.g., 'suppress B2M', 'direct genetic repressors'), you MUST act as an honest academic scientist: identify the precise upstream molecular regulators "
-        "(e.g., specific transcription factors, miRNAs, CRISPR targets) even if they are NOT in the HCA list. "
-        "If you include an external gene target, set its correlation to 0.999 and explicitly state '[External Target]' in the role to maintain absolute scientific transparency."
+        f"You are an elite computational biologist and bioinformatician. "
+        f"The target cell type is: {ct_label}. "
+        f"The reprogramming mode is: {mode_label}. "
+        f"You have access to 400 genes ranked by Pearson correlation from the Human Cardiac Cell Atlas "
+        f"(Litvinukova et al., Nature 2020). "
+        f"CRITICAL RULE: If the user's prompt implies a broad rejuvenation search, you MUST ONLY select genes from the provided HCA list. "
+        f"HOWEVER, if the user specifically asks for DIRECT epigenetic regulators, transcription factors, or exact target suppressors "
+        f"(e.g., 'suppress B2M', 'direct genetic repressors'), you MUST act as an honest academic scientist: identify the precise upstream molecular regulators "
+        f"(e.g., specific transcription factors, miRNAs, CRISPR targets) even if they are NOT in the HCA list. "
+        f"If you include an external gene target, set its correlation to 0.999 and explicitly state '[External Target]' in the role to maintain absolute scientific transparency."
     )
 
     candidate_prompt = (

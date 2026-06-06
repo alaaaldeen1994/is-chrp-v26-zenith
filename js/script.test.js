@@ -50,7 +50,7 @@ const CONFIG = {
         DEATH: { h: 215, s: 10, l: 35 }         // STABLE ASH (Visibility Adjusted for v26.4)
     },
 
-    // 1000 Gene Symbols (Generated or loaded)
+    // 4908 Gene Symbols (Loaded dynamically or pre-generated fallback)
     geneSymbols: (function () {
         const base = [
             "POU5F1", "SOX2", "NANOG", "LIN28A", "KLF4", "MYC", "UTF1", "SALL4", "DNMT3B", "ZFP42",
@@ -68,42 +68,69 @@ const CONFIG = {
         const prefixes = ["ZNF", "KRT", "RPL", "RPS", "SLC", "WNT", "HOX", "PTP", "CYP", "ADAM"];
         prefixes.forEach(prefix => {
             for (let i = 1; i <= 91; i++) {
-                if (genes.length < 5000) {
+                if (genes.length < 4908) {
                     const sym = `${prefix}${i}`;
                     if (!genes.includes(sym)) genes.push(sym);
                 }
             }
         });
-        while (genes.length < 5000) genes.push(`G_EXT_${genes.length}`);
-        return genes.slice(0, 5000);
+        while (genes.length < 4908) genes.push(`G_EXT_${genes.length}`);
+        return genes.slice(0, 4908);
     })(),
 
-    // 5000x5000 GRN Matrix (Sparse)
-    GRN: Array.from({ length: 5000 }, () => new Float32Array(5000).fill(0))
+    // 4908x4908 GRN Matrix (Sparse)
+    GRN: Array.from({ length: 4908 }, () => new Float32Array(4908).fill(0))
 };
 
-// Initialize GRN with some structure
-(function initGRN() {
+// Global lookup map for key gene indices in CONFIG.geneSymbols
+const GENE_INDICES = {};
+
+function initGeneIndices() {
+    const list = ["POU5F1", "SOX2", "NANOG", "LIN28A", "KLF4", "MYC", "GATA4", "NKX2-5", "TBX5", "TNNT2", "TTN", "TP53", "MKI67", "TET1", "TET2", "EGFR", "LIFR", "NEUROD2", "PAX6", "ASCL1", "SOX1", "TUBB3", "SOX17", "FOXA2", "PCNA", "CCND1", "MYCN"];
+    list.forEach(name => {
+        const idx = CONFIG.geneSymbols.indexOf(name);
+        GENE_INDICES[name] = idx !== -1 ? idx : 0;
+    });
+}
+
+// Initialize default index lookup mapping
+initGeneIndices();
+
+// Initialize GRN with structure
+function initGRN() {
+    CONFIG.GRN = Array.from({ length: 4908 }, () => new Float32Array(4908).fill(0));
     // Self-excitation for stability
-    for (let i = 0; i < 5000; i++) CONFIG.GRN[i][i] = 0.8;
+    for (let i = 0; i < 4908; i++) CONFIG.GRN[i][i] = 0.8;
 
     // OSKM Cross-Regulation (The Core Circuit)
-    const core = [0, 1, 2, 4, 5]; // OCT4, SOX2, NANOG, KLF4, MYC
+    const core = [
+        GENE_INDICES['POU5F1'], 
+        GENE_INDICES['SOX2'], 
+        GENE_INDICES['NANOG'], 
+        GENE_INDICES['KLF4'], 
+        GENE_INDICES['MYC']
+    ];
     core.forEach(i => {
         core.forEach(j => {
             if (i !== j) CONFIG.GRN[i][j] = 1.2; // Strong mutual activation
         });
     });
 
-    // c-MYC promotes proliferation (#5)
-    for (let i = 50; i < 150; i++) {
-        CONFIG.GRN[5][i] = 0.5; // MYC activates downstream growth
-    }
+    const mycIdx = GENE_INDICES['MYC'];
+    const tp53Idx = GENE_INDICES['TP53'];
 
-    // p53 Tumor Suppressor Logic (#50)
-    // If MYC (#5) is high, active p53 should repress it
-    CONFIG.GRN[50][5] = -2.0;
-})();
+    // c-MYC promotes proliferation
+    ['MKI67', 'PCNA', 'CCND1', 'MYCN'].forEach(name => {
+        const idx = GENE_INDICES[name];
+        CONFIG.GRN[mycIdx][idx] = 0.5; // MYC activates downstream growth
+    });
+
+    // p53 Tumor Suppressor Logic
+    // If MYC is high, active p53 should repress it
+    CONFIG.GRN[tp53Idx][mycIdx] = -2.0;
+}
+
+initGRN();
 
 
 // --- AGENT (CELL) CLASS ---
@@ -116,9 +143,9 @@ class Agent {
         };
         this.vel = { x: 0, y: 0 };
         this.type = 'SOMATIC'; // Start as fibroblasts
-        this.genes = new Float32Array(5000);
-        this.proteins = new Float32Array(5000);   // PH9
-        this.chromatin = new Float32Array(5000);  // PH9
+        this.genes = new Float32Array(4908);
+        this.proteins = new Float32Array(4908);   // PH9
+        this.chromatin = new Float32Array(4908);  // PH9
         this.bioAge = 1.0; // Starts old (Somatic)
         this.health = 1.0; // 0.0 - 1.0
         this.dnaDamage = 0.0;
@@ -133,7 +160,7 @@ class Agent {
 
     initGenes() {
         // Initialize as SOMATIC (Low OSKM, High differentiation markers)
-        for (let i = 0; i < 5000; i++) {
+        for (let i = 0; i < 4908; i++) {
             const base = CONFIG.geneInit.base + (seededRandom() - 0.5) * CONFIG.geneInit.range;
             this.genes[i] = Math.max(0, base);
             this.proteins[i] = this.genes[i]; // Start synced
@@ -148,61 +175,63 @@ class Agent {
 
         // Apply Reprogramming Vector (if active)
         if (env.vector === 'OSKM') {
-            // FIX: OSKM must boost OCT4(0), SOX2(1), KLF4(4), MYC(5)
-            // Previously incorrectly boosted 0-3 (which includes Nanog/Lin28)
-            [0, 1, 4, 5].forEach(i => {
+            // OSKM must boost OCT4, SOX2, KLF4, MYC
+            [GENE_INDICES['POU5F1'], GENE_INDICES['SOX2'], GENE_INDICES['KLF4'], GENE_INDICES['MYC']].forEach(i => {
                 this.genes[i] += 0.05 * CONFIG.reprogramming.potency;
             });
-            // CRITICAL FIX: Trigger p53 (Index 50) response to balance c-MYC
-            // Without this, high MYC (Index 5) > 0.8 immediately triggers TUMOR
-            this.genes[50] += 0.02 * CONFIG.reprogramming.potency;
+            // Trigger p53 response to balance c-MYC
+            this.genes[GENE_INDICES['TP53']] += 0.02 * CONFIG.reprogramming.potency;
         } else if (env.vector === 'LIN28') {
-            // Thomson Factors: OCT4(0), SOX2(1), NANOG(2), LIN28(3)
-            [0, 1, 2, 3].forEach(i => {
+            // Thomson Factors: OCT4, SOX2, NANOG, LIN28
+            [GENE_INDICES['POU5F1'], GENE_INDICES['SOX2'], GENE_INDICES['NANOG'], GENE_INDICES['LIN28A']].forEach(i => {
                 this.genes[i] += 0.05 * CONFIG.reprogramming.potency;
             });
         } else if (env.vector === 'DIRECT_NEURO') {
-            // FIX: Boost Neural Markers (NEUROD2, PAX6, ASCL1, etc.) at indices 20-29
-            for (let i = 20; i < 30; i++) this.genes[i] += 0.08;
+            // Boost Neural Markers (NEUROD2, PAX6, ASCL1, etc.)
+            ['NEUROD2', 'PAX6', 'ASCL1', 'SOX1', 'TUBB3'].forEach(name => {
+                this.genes[GENE_INDICES[name]] += 0.08;
+            });
         } else if (env.vector === 'DIRECT_CARDIO') {
-            // FIX: Boost Cardiac Markers (GATA4, TBX5, TNNT2, etc.) at indices 10-19
-            for (let i = 10; i < 20; i++) this.genes[i] += 0.08;
+            // Boost Cardiac Markers (GATA4, TBX5, TNNT2, etc.)
+            ['GATA4', 'NKX2-5', 'TBX5', 'TNNT2', 'TTN'].forEach(name => {
+                this.genes[GENE_INDICES[name]] += 0.08;
+            });
         } else if (env.vector === 'CLINICAL_COMBO') {
             // Split population into Heart (Red) and Neural (Blue)
             if (this.id % 2 === 0) {
-                for (let i = 10; i < 20; i++) this.genes[i] += 0.1;
+                ['GATA4', 'NKX2-5', 'TBX5', 'TNNT2', 'TTN'].forEach(name => {
+                    this.genes[GENE_INDICES[name]] += 0.1;
+                });
             } else {
-                for (let i = 20; i < 30; i++) this.genes[i] += 0.1;
+                ['NEUROD2', 'PAX6', 'ASCL1', 'SOX1', 'TUBB3'].forEach(name => {
+                    this.genes[GENE_INDICES[name]] += 0.1;
+                });
             }
         }
 
         // Disease Stress
         if (env.disease === 'TUMOR') {
             this.dnaDamage += 0.001;
-            // FIX: Spike c-MYC (Index 5) to trigger classifier, not LIN28 (Index 3)
-            if (Math.random() < 0.01) this.genes[5] += 0.1;
+            if (Math.random() < 0.01) this.genes[GENE_INDICES['MYC']] += 0.1;
         } else if (env.disease === 'SMA') {
             this.smn -= 0.0005; // SMN decay
             if (this.smn < 0) this.smn = 0;
         }
 
-        // Internal Dynamics (Decay)
-        // v27 FIX: Must loop up to 60 to include differentiation markers (Cardio=13, Neuro=20, TP53=50)
-        for (let i = 0; i < 60; i++) { // Previously 10, preventing protein update for phenotypes
+        // Internal Dynamics (Decay) for all 4908 genes
+        for (let i = 0; i < 4908; i++) {
             this.genes[i] -= 0.01 * this.genes[i]; // Degradation
             this.genes[i] += (Math.random() - 0.5) * CONFIG.stochastic.noiseStrength; // Noise
             this.genes[i] = Math.max(0, Math.min(1, this.genes[i]));
 
             // v27: FEATURE 4 - GENE-TO-PROTEIN FLUX (Translation Delay)
             // Biology Rule: mRNA (Gene) -> Protein takes time (Translation).
-            // If active, protein levels lag behind gene levels.
             if (CONFIG.translationDelay) {
-                // Slow translation rate (alpha = 0.02 means ~50 frames to catch up)
                 const translationRate = 0.02;
                 const diff = this.genes[i] - this.proteins[i];
                 this.proteins[i] += diff * translationRate;
             } else {
-                // Instant translation (Simulated ideal)
+                // Instant translation
                 this.proteins[i] = this.genes[i];
             }
         }
@@ -223,21 +252,20 @@ class Agent {
     }
 
     classifyType() {
-        // Zenith: Exact Index Mapping based on Section 12
-        // v27: FEATURE 4 - Use PROTEINS for Phenotype Logic (Simulating Translation Delay)
-        const oct4 = this.proteins[0];
-        const sox2 = this.proteins[1];
-        const nanog = this.proteins[2];
-        const lin28 = this.proteins[3];
-        const klf4 = this.proteins[4];
-        const myc = this.proteins[5];
+        // Use PROTEINS for Phenotype Logic
+        const oct4 = this.proteins[GENE_INDICES['POU5F1']];
+        const sox2 = this.proteins[GENE_INDICES['SOX2']];
+        const nanog = this.proteins[GENE_INDICES['NANOG']];
+        const lin28 = this.proteins[GENE_INDICES['LIN28A']];
+        const klf4 = this.proteins[GENE_INDICES['KLF4']];
+        const myc = this.proteins[GENE_INDICES['MYC']];
 
-        const cardiac = (this.proteins[13] + this.proteins[14]) / 2; // TNNT2 + TTN
-        const neural = (this.proteins[20] + this.proteins[22]) / 2;  // NEUROD2 + PAX6 (#22)
-        const endo = (this.proteins[30] + this.proteins[32]) / 2;    // SOX17 + FOXA2 (#32)
+        const cardiac = (this.proteins[GENE_INDICES['TNNT2']] + this.proteins[GENE_INDICES['TTN']]) / 2;
+        const neural = (this.proteins[GENE_INDICES['NEUROD2']] + this.proteins[GENE_INDICES['PAX6']]) / 2;
+        const endo = (this.proteins[GENE_INDICES['SOX17']] + this.proteins[GENE_INDICES['FOXA2']]) / 2;
 
-        const tp53 = this.proteins[50];
-        const mki67 = this.proteins[51];
+        const tp53 = this.proteins[GENE_INDICES['TP53']];
+        const mki67 = this.proteins[GENE_INDICES['MKI67']];
 
         // Thresholds based on Clinical Manual
         if (this.dnaDamage > 0.9 || (myc > 0.8 && tp53 < 0.2)) {
@@ -499,5 +527,22 @@ const BiosimHistory = {
             frame,
             timestamp: Date.now(),
             avgAge: totalAge / agents.length,
+            avgHealth: totalHealth / agents.length,
+            populations: counts,
+            entropy: this.calculateEntropy(counts, agents.length)
+        };
 
+        this.snapshots.push(snapshot);
+    },
+
+    calculateEntropy(counts, total) {
+        let entropy = 0;
+        Object.values(counts).forEach(c => {
+            if (c > 0) {
+                const p = c / total;
+                entropy -= p * Math.log2(p);
+            }
+        });
+        return entropy;
+    }
 };

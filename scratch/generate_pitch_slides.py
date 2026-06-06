@@ -140,10 +140,10 @@ def generate_deck():
     pdf.draw_card(15, 38, 128, 152, bg_color=(255, 248, 248), border_color=(254, 202, 202), r=4)
     pdf.draw_badge(22, 44, 'CLINICAL RISK & LIMITS', bg_color=(244, 63, 94), text_color=(255, 255, 255), width=50, height=8, font_size=9)
     
-    pdf.set_xy(22, 55)
-    pdf.set_font(pdf.get_font_name(True), 'B', 18) # Increased from 16 to 18
+    pdf.set_xy(22, 54)
+    pdf.set_font(pdf.get_font_name(True), 'B', 17)
     pdf.set_text_color(159, 18, 57) # Rose 800 (very dark)
-    pdf.cell(100, 6, 'Cardiac Senescence & Reprogramming Limits', 0, 1)
+    pdf.multi_cell(114, 6, 'Cardiac Senescence & Reprogramming Limits')
     
     bullets_problem = [
         ("64M+ Heart Failure Patients", "Epigenetic decay and loss of contractility drive global mortality."),
@@ -154,27 +154,27 @@ def generate_deck():
     y_cursor = 70
     for title, desc in bullets_problem:
         pdf.set_fill_color(244, 63, 94) # Rose 500
-        pdf.ellipse(23, y_cursor + 2, 2.5, 2.5, 'F')
+        pdf.ellipse(23, y_cursor + 1.5, 2.5, 2.5, 'F')
         
         pdf.set_xy(28, y_cursor)
         pdf.set_font(pdf.get_font_name(True), 'B', 14) # Increased from 12 to 14
         pdf.set_text_color(0, 0, 0) # High-contrast black
-        pdf.cell(100, 5, title, 0, 1)
+        pdf.cell(108, 5, title, 0, 1)
         
         pdf.set_x(28)
         pdf.set_font(pdf.get_font_name(), '', 13) # Increased from 11 to 13
         pdf.set_text_color(30, 41, 59) # Slate 800 (very dark)
-        pdf.cell(100, 5, desc, 0, 1)
+        pdf.multi_cell(108, 5, desc) # Multi-cell to wrap lines and avoid truncation
         y_cursor += 30
         
     # Right Column (The Solution) - Indigo Card
     pdf.draw_card(154, 38, 128, 152, bg_color=(239, 246, 255), border_color=(191, 219, 254), r=4)
     pdf.draw_badge(161, 44, 'ZENITH PLATFORM SOLUTION', bg_color=(37, 99, 235), text_color=(255, 255, 255), width=55, height=8, font_size=9)
     
-    pdf.set_xy(161, 55)
-    pdf.set_font(pdf.get_font_name(True), 'B', 18) # Increased from 16 to 18
+    pdf.set_xy(161, 54)
+    pdf.set_font(pdf.get_font_name(True), 'B', 17)
     pdf.set_text_color(30, 58, 138) # Blue 900
-    pdf.cell(100, 6, 'Safe, Target-Specific Rejuvenation', 0, 1)
+    pdf.multi_cell(114, 6, 'Safe, Target-Specific Rejuvenation')
     
     bullets_solution = [
         ("In-Silico Safety Gating", "Dual-threshold gates eliminate oncogenes and preserve lineage."),
@@ -185,17 +185,17 @@ def generate_deck():
     y_cursor = 70
     for title, desc in bullets_solution:
         pdf.set_fill_color(37, 99, 235) # Blue 500
-        pdf.ellipse(162, y_cursor + 2, 2.5, 2.5, 'F')
+        pdf.ellipse(162, y_cursor + 1.5, 2.5, 2.5, 'F')
         
         pdf.set_xy(167, y_cursor)
         pdf.set_font(pdf.get_font_name(True), 'B', 14) # Increased from 12 to 14
         pdf.set_text_color(0, 0, 0) # High-contrast black
-        pdf.cell(100, 5, title, 0, 1)
+        pdf.cell(108, 5, title, 0, 1)
         
         pdf.set_x(167)
         pdf.set_font(pdf.get_font_name(), '', 13) # Increased from 11 to 13
         pdf.set_text_color(30, 41, 59) # Slate 800
-        pdf.cell(100, 5, desc, 0, 1)
+        pdf.multi_cell(108, 5, desc) # Multi-cell to wrap lines and avoid truncation
         y_cursor += 30
 
     # ----------------------------------------------------
@@ -329,15 +329,24 @@ def generate_deck():
     y_c = 68
     for title, desc in bullets_market:
         pdf.set_fill_color(79, 70, 229)
-        pdf.ellipse(23, y_c + 2, 2.5, 2.5, 'F')
+        pdf.ellipse(23, y_c + 1.5, 2.5, 2.5, 'F')
+        
+        # Draw bold title and measure width
         pdf.set_xy(28, y_c)
-        pdf.set_font(pdf.get_font_name(True), 'B', 13.5) # Increased from 11.5 to 13.5
+        pdf.set_font(pdf.get_font_name(True), 'B', 13.5)
         pdf.set_text_color(0, 0, 0)
-        pdf.cell(55, 5, title + " -", 0, 0)
-        pdf.set_font(pdf.get_font_name(), '', 13) # Increased to 13
+        title_text = title + "  —  "
+        title_w = pdf.get_string_width(title_text)
+        pdf.cell(title_w, 5, title_text, 0, 0)
+        
+        # Draw description with multi-cell wrapping
+        pdf.set_font(pdf.get_font_name(), '', 13)
         pdf.set_text_color(30, 41, 59)
-        pdf.cell(75, 5, desc, 0, 1)
-        y_c += 12
+        rem_w = 150 - 13 - title_w - 6 # 150 card width - 13 padding - title_w - 6 padding
+        pdf.multi_cell(rem_w, 5, desc, 0, 'L')
+        
+        # Advance cursor dynamically
+        y_c = pdf.get_y() + 2.5
     
     # Highlight Box - $500,000 Wetlab Funding Ask
     pdf.draw_card(22, 122, 136, 55, bg_color=(240, 244, 255), border_color=(199, 210, 254), r=3)
@@ -403,16 +412,20 @@ def generate_deck():
     y_c = 68
     for title, desc in bullets_team:
         pdf.set_fill_color(79, 70, 229)
-        pdf.rect(22, y_c + 2.5, 2.0, 2.0, 'F')
+        pdf.rect(22, y_c + 1.5, 2.0, 2.0, 'F')
+        
         pdf.set_xy(27, y_c)
-        pdf.set_font(pdf.get_font_name(True), 'B', 13.5) # Increased to 13.5
+        pdf.set_font(pdf.get_font_name(True), 'B', 13.5)
         pdf.set_text_color(0, 0, 0)
-        pdf.cell(50, 5, title + ":", 0, 1)
+        pdf.cell(85, 5, title + ":", 0, 1)
+        
         pdf.set_x(27)
-        pdf.set_font(pdf.get_font_name(), '', 13) # Increased to 13
+        pdf.set_font(pdf.get_font_name(), '', 13)
         pdf.set_text_color(30, 41, 59)
-        pdf.cell(50, 5, desc, 0, 1)
-        y_c += 16
+        pdf.multi_cell(85, 5, desc, 0, 'L')
+        
+        # Dynamically calculate next team member position to prevent layout collisions
+        y_c = pdf.get_y() + 3.5
     
     # Right Column: Timeline Card
     pdf.draw_card(143, 38, 139, 152, bg_color=(255, 255, 255), border_color=(194, 205, 217), r=4)

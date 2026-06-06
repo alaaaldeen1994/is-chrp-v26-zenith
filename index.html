@@ -5022,7 +5022,7 @@ async function runDiscovery() {
             const r = await fetch('/api/gpt-discovery/run', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ query: query, cell_type: window._selectedCellType || 'all', top_n: 8 })
+                body: JSON.stringify({ query: query, cell_type: window._selectedCellType || 'all', top_n: 8, mode: 'real' })
             });
             if (!r.ok) throw new Error(`Server returned ${r.status}`);
             const data = await r.json();
@@ -5236,7 +5236,7 @@ async function runDiscovery() {
             const r = await fetch('/api/gpt-discovery/run', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ query: query, mode: 'gpt4o' })
+                body: JSON.stringify({ query: query, mode: 'gpt4o', cell_type: window._selectedCellType || 'all' })
             });
             if (!r.ok) throw new Error(r.status === 401 ? 'OpenAI API key not configured on server' : `Server returned ${r.status}`);
             const data = await r.json();
