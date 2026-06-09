@@ -1,4 +1,4 @@
-﻿import numpy as np
+import numpy as np
 from perturbation_engine import PerturbationEngine
 
 def test_gmt_bench():
@@ -12,7 +12,7 @@ def test_gmt_bench():
     
     res = pe.predict_factor_effect(factors, source_type="Fibroblast", target_type="Cardiomyocyte", dose=1.0)
     
-    predicted_degs = set(res["top_DEGs"].keys())
+    predicted_degs = set(res["deg_up"])
     
     # Gold Standard (canonical cardiomyocyte markers)
     gmt_gold = {"TNNT2", "MYH7", "NPPA", "ACTN2", "GATA4", "MEF2C", "TBX5", "RYR2", "PLN", "MYL2"}

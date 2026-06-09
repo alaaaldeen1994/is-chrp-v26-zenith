@@ -27,8 +27,22 @@ class PerturbationEngine:
     Uses latent space arithmetic in the scVI manifold (486k cells).
     """
     
-    def __init__(self, model_dir: str = "models/scvi_model_486k"):
-        self.model_dir = model_dir
+    def __init__(self, model_dir: str = None):
+        if model_dir is None:
+            # Dynamic path resolution for local development and production environments
+            candidates = [
+                "models/zenith_foundation_v1",
+                "models/scvi_model_486k",
+                "models/scvi_model_486k_real",
+                "models/scvi_model_hca"
+            ]
+            self.model_dir = "models/scvi_model_486k"  # Default fallback
+            for c in candidates:
+                if os.path.exists(c):
+                    self.model_dir = c
+                    break
+        else:
+            self.model_dir = model_dir
         self.model = None
         self.var_names = []
         self.gene_to_idx = {}

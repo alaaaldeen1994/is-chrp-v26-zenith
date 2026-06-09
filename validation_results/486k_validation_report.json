@@ -1,5 +1,5 @@
 {
-  "audit_timestamp": "2026-05-14T07:44:51.259480",
+  "audit_timestamp": "2026-06-09T03:04:55.652579",
   "audit_version": "v27.0 GOLD-486k",
   "model_path": "C:\\Users\\alaaa\\.gemini\\antigravity\\scratch\\is-chrp-v26-generative\\models\\scvi_model_hca\\model.pt",
   "data_source": "Litviukov et al., Nature (2020)  DOI: 10.1038/s41586-020-2797-4",
@@ -12,7 +12,7 @@
       "model_type": "SCVI",
       "n_vars": 0,
       "n_latent": 0,
-      "load_time_seconds": 1.3
+      "load_time_seconds": 0.59
     },
     "2_yamanaka_factors": {
       "total_genes": 0,
@@ -34,8 +34,8 @@
     },
     "4_generative_sampling": {
       "can_sample_latent": true,
-      "latent_mean": 0.03947732597589493,
-      "latent_std": 1.027793049812317,
+      "latent_mean": -0.04621836915612221,
+      "latent_std": 0.9994177222251892,
       "sample_shape": [
         100,
         20
