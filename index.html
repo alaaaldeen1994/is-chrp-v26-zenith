@@ -5064,7 +5064,7 @@ async function runDiscovery() {
                 proGenes = tempPro;
                 ageGenes = tempAge;
             }
-            const delta  = data.real_age_delta_years  ? data.real_age_delta_years.toFixed(1) : '—';
+            const delta  = data.real_age_delta_years  ? Math.abs(data.real_age_delta_years).toFixed(1) : '—';
 
             // Query-aware reranking: extract gene names from prompt → pin mentioned ones to top
             const queryUpper = query.toUpperCase();
