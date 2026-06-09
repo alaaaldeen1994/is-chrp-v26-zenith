@@ -6097,23 +6097,13 @@ async def partial_reprogramming_endpoint(req: PartialReprogrammingRequest):
                 fused = D2HUtility.generate_z_linker_handshake(seq1[:200], seq2[:200])
 
                 af3_manifest = {
-
                     "name": f"Zenith_Partial_{approved_genes[0]}_{approved_genes[1]}",
-
                     "modelSeeds": [2142086823],
-
                     "sequences": [
-
                         {"proteinChain": {"sequence": fused, "count": 1}},
-
-                        {"dnaSequence": {"sequence": "CCTGTGACTGTGGGGTTCACGCTCCCGGGTG", "count": 1}}
-
-                    ],
-
-                    "dialect": "alphafold3",
-
-                    "version": 1
-
+                        {"dnaSequence": {"sequence": "CCTGTGACTGTGGGGTTCACGCTCCCGGGTG", "count": 1}},
+                        {"dnaSequence": {"sequence": "CACCCGGGAGCGTGAACCCCACAGTCACAGG", "count": 1}}
+                    ]
                 }
 
 
