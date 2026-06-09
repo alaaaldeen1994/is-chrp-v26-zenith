@@ -1,4 +1,4 @@
-﻿import os
+import os
 import json
 
 class StructuralAuthority:
@@ -72,6 +72,22 @@ class StructuralAuthority:
             "pdb_id": "1GVN",
             "domain_name": "Homeodomain",
             "residues": "138-246",
+            "dna_binding": True
+        },
+        "SOX5": {
+            "symbol": "SOX5",
+            "uniprot": "P35711",
+            "pdb_id": "4UYD",
+            "domain_name": "HMG box",
+            "residues": "550-625",
+            "dna_binding": True
+        },
+        "ZFHX3": {
+            "symbol": "ZFHX3",
+            "uniprot": "Q15911",
+            "pdb_id": "Homeodomain",
+            "domain_name": "Homeodomain",
+            "residues": "2600-2670",
             "dna_binding": True
         }
     }

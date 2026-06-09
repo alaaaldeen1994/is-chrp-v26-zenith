@@ -4099,6 +4099,10 @@ async def generate_af3_manifest(req: dict):
 
             "FOXO3":  (156, 256),   # Forkhead DNA-binding domain
 
+            "SOX5":   (550, 625),   # HMG box domain
+
+            "ZFHX3":  (2600, 2670), # Homeodomain
+
         }
 
 
