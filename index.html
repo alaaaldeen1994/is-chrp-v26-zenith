@@ -105,24 +105,54 @@
     <script src="js/firebase_config.js"></script>
     <!-- AUTH GUARD: Discovery page is public. Simulation requires auth. -->
     <script>
-        // Allow discovery view without login — only simulation needs auth
         const ZENITH_DEMO_BYPASS = localStorage.getItem('ZENITH_DEMO_BYPASS') === 'true';
         window._isAuthenticated = false;
 
+        function updateAuthUI(isAuthenticated) {
+            const topBtn = document.getElementById('auth-btn-top');
+            const mobBtn = document.getElementById('auth-btn-mobile');
+            
+            if (topBtn) {
+                if (isAuthenticated) {
+                    topBtn.innerText = 'Sign Out';
+                    topBtn.onclick = performLogout;
+                } else {
+                    topBtn.innerText = 'Sign In';
+                    topBtn.onclick = () => { window.location.href = 'profile.html'; };
+                }
+                topBtn.style.opacity = '1';
+            }
+            
+            if (mobBtn) {
+                if (isAuthenticated) {
+                    mobBtn.innerText = 'SIGN OUT';
+                    mobBtn.onclick = performLogout;
+                } else {
+                    mobBtn.innerText = 'SIGN IN';
+                    mobBtn.onclick = () => { window.location.href = 'profile.html'; };
+                }
+                mobBtn.style.opacity = '1';
+            }
+        }
+
         firebase.auth().onAuthStateChanged((user) => {
             window._isAuthenticated = !!(user || ZENITH_DEMO_BYPASS);
-            // Auth gate: redirect to profile if not signed in
-            if (!window._isAuthenticated) {
-                window.location.href = 'profile.html';
-                return;
+            updateAuthUI(window._isAuthenticated);
+            
+            // Auto-redirect to simulation lab if flag is set
+            if (window._isAuthenticated && localStorage.getItem('auth_redirect') === 'sim') {
+                localStorage.removeItem('auth_redirect');
+                setTimeout(() => {
+                    if (typeof enterSimulation === 'function') enterSimulation();
+                }, 100);
             }
         });
 
         function performLogout() {
             localStorage.removeItem('ZENITH_DEMO_BYPASS');
             firebase.auth().signOut().then(() => {
-                window.location.href = 'profile.html';
-            }).catch(() => { window.location.href = 'profile.html'; });
+                window.location.reload();
+            }).catch(() => { window.location.reload(); });
         }
     </script>
 
@@ -1323,7 +1353,7 @@
         </div>
         <div style="display:flex;align-items:center;gap:6px;">
             <button onclick="enterSimulation()" style="background:transparent;border:1px solid rgba(0,0,0,0.12);color:#6b6b6b;font-size:12px;font-weight:400;padding:5px 14px;border-radius:8px;cursor:pointer;font-family:'Inter','Segoe UI',sans-serif;transition:all 0.15s;" onmouseover="this.style.borderColor='rgba(0,0,0,0.25)';this.style.color='#1a1a1a'" onmouseout="this.style.borderColor='rgba(0,0,0,0.12)';this.style.color='#6b6b6b'">Simulation Lab</button>
-            <button onclick="performLogout()" style="background:transparent;border:none;color:#9b9b9b;font-size:12px;cursor:pointer;padding:4px 8px;font-family:'Inter','Segoe UI',sans-serif;" onmouseover="this.style.color='#1a1a1a'" onmouseout="this.style.color='#9b9b9b'">Sign Out</button>
+            <button id="auth-btn-top" style="opacity:0; transition:opacity 0.25s; background:transparent;border:none;color:#9b9b9b;font-size:12px;cursor:pointer;padding:4px 8px;font-family:'Inter','Segoe UI',sans-serif;" onmouseover="this.style.color='#1a1a1a'" onmouseout="this.style.color='#9b9b9b'">...</button>
         </div>
     </div>
 
@@ -1668,7 +1698,7 @@
 
             </div>
 
-            <button class="mob-exit-btn" onclick="performLogout()">SIGN OUT</button>
+            <button id="auth-btn-mobile" class="mob-exit-btn" style="opacity: 0; transition: opacity 0.25s;">...</button>
 
         </div>
 
@@ -4389,6 +4419,11 @@ window.updateDiscSafetyButtons = updateDiscSafetyButtons;
 // ── View switcher ──────────────────────────────────────────────────
 
 function enterSimulation() {
+    if (!window._isAuthenticated) {
+        localStorage.setItem('auth_redirect', 'sim');
+        window.location.href = 'profile.html';
+        return;
+    }
 
     document.body.classList.add('sim-mode');
 
