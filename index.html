@@ -1504,6 +1504,126 @@
         <!-- Results area -->
         <div id="disc-results" style="width:100%;max-width:720px;margin-top:20px;display:none;"></div>
 
+        <!-- B2B Expansion Panels -->
+        <div id="discovery-b2b-panels" class="w-full max-w-[720px] mt-6 flex flex-col gap-6" style="display:none;">
+            <!-- CARDIAC GRN VISUALIZER (GraphRAG) -->
+            <div id="grn-visualizer-panel" class="p-4 bg-slate-900/80 border border-blue-500/30 rounded-2xl shadow-xl backdrop-blur-xl relative overflow-hidden animation-fade-in">
+                <div class="text-[7.5px] text-blue-300 font-black uppercase tracking-[0.2em] mb-3 flex items-center gap-1.5">
+                    <i data-lucide="network" class="w-3 h-3 text-blue-400"></i>
+                    GraphRAG Network Visualizer
+                    <span class="ml-auto text-[6px] px-1.5 py-0.5 bg-blue-500/10 text-blue-400 border border-blue-500/20 rounded font-black tracking-widest">Cardiac GRN</span>
+                </div>
+                <div class="relative w-full h-[220px] bg-black/60 border border-slate-800 rounded-xl overflow-hidden flex items-center justify-center">
+                    <svg id="grn-canvas-viewport" class="w-full h-full cursor-grab active:cursor-grabbing"></svg>
+                    <div id="grn-tooltip" class="absolute hidden bg-slate-950/95 border border-blue-500/40 px-2 py-1 rounded-md text-[8px] text-white font-mono pointer-events-none z-10 shadow-xl backdrop-blur-md"></div>
+                </div>
+                <div id="grn-pathway-summary" class="mt-2.5 p-3 bg-black/40 border border-slate-800/60 rounded-xl text-[9px] text-slate-400 font-mono leading-normal">
+                    Regulatory pathway chains will be resolved topologically based on the semantic search query context.
+                </div>
+            </div>
+
+            <!-- MULTI-OMICS PERTURBATION PREDICTOR -->
+            <div id="multiomics-predictor-panel" class="p-4 bg-slate-900/80 border border-indigo-500/30 rounded-2xl shadow-xl backdrop-blur-xl relative overflow-hidden animation-fade-in">
+                <div class="text-[7.5px] text-indigo-300 font-black uppercase tracking-[0.2em] mb-3 flex items-center gap-1.5">
+                    <i data-lucide="sliders" class="w-3 h-3 text-indigo-400"></i>
+                    Multi-Omics Perturbation Predictor (scGPT)
+                    <span class="ml-auto text-[6px] px-1.5 py-0.5 bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 rounded font-black tracking-widest">Zero-Shot Mode</span>
+                </div>
+                <!-- Dosages Sliders -->
+                <div class="grid grid-cols-2 gap-3 mb-4 bg-black/40 p-3 rounded-xl border border-slate-800/60">
+                    <div>
+                        <label class="text-[7px] text-slate-400 font-bold block mb-1 uppercase tracking-wider">GATA4 Dosage: <span id="val-gata4" class="text-indigo-400 font-mono font-black">1.0</span></label>
+                        <input id="slider-gata4" type="range" min="0" max="3" step="0.1" value="1.0" class="w-full h-1 bg-slate-800 rounded-lg appearance-none cursor-pointer" style="accent-color:#6366f1;">
+                    </div>
+                    <div>
+                        <label class="text-[7px] text-slate-400 font-bold block mb-1 uppercase tracking-wider">MEF2C Dosage: <span id="val-mef2c" class="text-indigo-400 font-mono font-black">1.0</span></label>
+                        <input id="slider-mef2c" type="range" min="0" max="3" step="0.1" value="1.0" class="w-full h-1 bg-slate-800 rounded-lg appearance-none cursor-pointer" style="accent-color:#6366f1;">
+                    </div>
+                    <div>
+                        <label class="text-[7px] text-slate-400 font-bold block mb-1 uppercase tracking-wider">TBX5 Dosage: <span id="val-tbx5" class="text-indigo-400 font-mono font-black">1.0</span></label>
+                        <input id="slider-tbx5" type="range" min="0" max="3" step="0.1" value="1.0" class="w-full h-1 bg-slate-800 rounded-lg appearance-none cursor-pointer" style="accent-color:#6366f1;">
+                    </div>
+                    <div>
+                        <label class="text-[7px] text-slate-400 font-bold block mb-1 uppercase tracking-wider">NKX2-5 Dosage: <span id="val-nkx25" class="text-indigo-400 font-mono font-black">1.0</span></label>
+                        <input id="slider-nkx25" type="range" min="0" max="3" step="0.1" value="1.0" class="w-full h-1 bg-slate-800 rounded-lg appearance-none cursor-pointer" style="accent-color:#6366f1;">
+                    </div>
+                    <div>
+                        <label class="text-[7px] text-slate-400 font-bold block mb-1 uppercase tracking-wider">MYC Dosage: <span id="val-myc" class="text-red-400 font-mono font-black">0.0</span></label>
+                        <input id="slider-myc" type="range" min="0" max="3" step="0.1" value="0.0" class="w-full h-1 bg-slate-800 rounded-lg appearance-none cursor-pointer" style="accent-color:#ef4444;">
+                    </div>
+                    <div>
+                        <label class="text-[7px] text-slate-400 font-bold block mb-1 uppercase tracking-wider">SNAI1 Dosage: <span id="val-snai1" class="text-amber-400 font-mono font-black">0.0</span></label>
+                        <input id="slider-snai1" type="range" min="0" max="3" step="0.1" value="0.0" class="w-full h-1 bg-slate-800 rounded-lg appearance-none cursor-pointer" style="accent-color:#f59e0b;">
+                    </div>
+                </div>
+                <!-- Prediction Metrics -->
+                <div class="grid grid-cols-2 gap-3 mb-4">
+                    <div class="bg-black/40 border border-slate-800 p-2.5 rounded-xl text-center">
+                        <div class="text-[6px] text-slate-500 font-black uppercase mb-1">Predicted Age Shift</div>
+                        <div id="pred-age-shift" class="text-[11px] text-emerald-400 font-black font-mono">--</div>
+                    </div>
+                    <div class="bg-black/40 border border-slate-800 p-2.5 rounded-xl text-center">
+                        <div class="text-[6px] text-slate-500 font-black uppercase mb-1">Transcriptomic Stability</div>
+                        <div id="pred-stability" class="text-[11px] text-indigo-400 font-black font-mono">--</div>
+                    </div>
+                </div>
+                <!-- Expression Profiles -->
+                <div class="space-y-2">
+                    <div class="text-[6px] text-slate-500 font-black uppercase mb-1.5 tracking-wider">Downstream Expression Profiles</div>
+                    <div id="pred-expressions" class="space-y-2 bg-black/20 p-2.5 rounded-xl border border-slate-800/40">
+                        <!-- Will be dynamically populated -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- LNP DELIVERY OPTIMIZER -->
+            <div id="lnp-optimizer-panel" class="p-4 bg-slate-900/80 border border-teal-500/30 rounded-2xl shadow-xl backdrop-blur-xl relative overflow-hidden animation-fade-in">
+                <div class="text-[7.5px] text-teal-300 font-black uppercase tracking-[0.2em] mb-3 flex items-center gap-1.5">
+                    <i data-lucide="package" class="w-3 h-3 text-teal-400"></i>
+                    mRNA-LNP Formulation Delivery Optimizer
+                    <span class="ml-auto text-[6px] px-1.5 py-0.5 bg-teal-500/10 text-teal-400 border border-teal-500/20 rounded font-black tracking-widest font-sans">Encapsulation</span>
+                </div>
+                <!-- LNP Parameter Sliders -->
+                <div class="grid grid-cols-2 gap-3 mb-4 bg-black/40 p-3 rounded-xl border border-slate-800/60">
+                    <div>
+                        <label class="text-[7px] text-slate-400 font-bold block mb-1 uppercase tracking-wider">Ionizable Molar %: <span id="val-lnp-ion" class="text-teal-400 font-mono font-black">50.0%</span></label>
+                        <input id="slider-lnp-ion" type="range" min="30" max="60" step="1" value="50" class="w-full h-1 bg-slate-800 rounded-lg appearance-none cursor-pointer" style="accent-color:#0d9488;">
+                    </div>
+                    <div>
+                        <label class="text-[7px] text-slate-400 font-bold block mb-1 uppercase tracking-wider">Cholesterol Molar %: <span id="val-lnp-chol" class="text-teal-400 font-mono font-black">38.5%</span></label>
+                        <input id="slider-lnp-chol" type="range" min="20" max="50" step="0.5" value="38.5" class="w-full h-1 bg-slate-800 rounded-lg appearance-none cursor-pointer" style="accent-color:#0d9488;">
+                    </div>
+                    <div>
+                        <label class="text-[7px] text-slate-400 font-bold block mb-1 uppercase tracking-wider">Helper Lipid Molar %: <span id="val-lnp-helper" class="text-teal-400 font-mono font-black">10.0%</span></label>
+                        <input id="slider-lnp-helper" type="range" min="5" max="20" step="0.5" value="10" class="w-full h-1 bg-slate-800 rounded-lg appearance-none cursor-pointer" style="accent-color:#0d9488;">
+                    </div>
+                    <div>
+                        <label class="text-[7px] text-slate-400 font-bold block mb-1 uppercase tracking-wider">PEG-Lipid Molar %: <span id="val-lnp-peg" class="text-teal-400 font-mono font-black">1.5%</span></label>
+                        <input id="slider-lnp-peg" type="range" min="0.5" max="5.0" step="0.1" value="1.5" class="w-full h-1 bg-slate-800 rounded-lg appearance-none cursor-pointer" style="accent-color:#0d9488;">
+                    </div>
+                    <div class="col-span-2">
+                        <label class="text-[7px] text-slate-400 font-bold block mb-1 uppercase tracking-wider">N/P Ratio (Nitrogen/Phosphate): <span id="val-lnp-np" class="text-teal-400 font-mono font-black">6.0</span></label>
+                        <input id="slider-lnp-np" type="range" min="1.0" max="12.0" step="0.1" value="6.0" class="w-full h-1 bg-slate-800 rounded-lg appearance-none cursor-pointer" style="accent-color:#0d9488;">
+                    </div>
+                </div>
+                <!-- LNP Target Tropism Metrics -->
+                <div class="grid grid-cols-2 gap-3 mb-3">
+                    <div class="bg-black/40 border border-slate-800 p-2.5 rounded-xl text-center">
+                        <div class="text-[6px] text-slate-500 font-black uppercase mb-1">Encapsulation Efficiency</div>
+                        <div id="lnp-ee" class="text-[11px] text-emerald-400 font-black font-mono">--</div>
+                    </div>
+                    <div class="bg-black/40 border border-slate-800 p-2.5 rounded-xl text-center">
+                        <div class="text-[6px] text-slate-500 font-black uppercase mb-1">Cardiac Tropism Index</div>
+                        <div id="lnp-tropism" class="text-[11px] text-teal-400 font-black font-mono">--</div>
+                    </div>
+                </div>
+                <div class="flex items-center justify-between text-[7.5px] text-slate-400 font-mono">
+                    <span>Status: <span id="lnp-status-val" class="text-teal-300 font-black uppercase">--</span></span>
+                    <span>Target: Heart (Cardiomyocytes)</span>
+                </div>
+            </div>
+        </div>
+
         <!-- Footer -->
         <div style="margin-top:40px;text-align:center;font-size:8px;color:#bdc1c6;width:100%;max-width:720px;">
             Zenith v28.0 GOLD &nbsp;·&nbsp; 500,000 Cells (HCA + PERIHEART) &nbsp;·&nbsp; Research Use Only
@@ -3227,122 +3347,7 @@
                         </div>
                     </div>
 
-                    <!-- CARDIAC GRN VISUALIZER (GraphRAG) -->
-                    <div id="grn-visualizer-panel" class="p-4 bg-slate-900/80 border border-blue-500/30 rounded-2xl shadow-xl backdrop-blur-xl relative overflow-hidden animation-fade-in">
-                        <div class="text-[7.5px] text-blue-300 font-black uppercase tracking-[0.2em] mb-3 flex items-center gap-1.5">
-                            <i data-lucide="network" class="w-3 h-3 text-blue-400"></i>
-                            GraphRAG Network Visualizer
-                            <span class="ml-auto text-[6px] px-1.5 py-0.5 bg-blue-500/10 text-blue-400 border border-blue-500/20 rounded font-black tracking-widest">Cardiac GRN</span>
-                        </div>
-                        <div class="relative w-full h-[220px] bg-black/60 border border-slate-800 rounded-xl overflow-hidden flex items-center justify-center">
-                            <svg id="grn-canvas-viewport" class="w-full h-full cursor-grab active:cursor-grabbing"></svg>
-                            <div id="grn-tooltip" class="absolute hidden bg-slate-950/95 border border-blue-500/40 px-2 py-1 rounded-md text-[8px] text-white font-mono pointer-events-none z-10 shadow-xl backdrop-blur-md"></div>
-                        </div>
-                        <div id="grn-pathway-summary" class="mt-2.5 p-3 bg-black/40 border border-slate-800/60 rounded-xl text-[9px] text-slate-400 font-mono leading-normal">
-                            Regulatory pathway chains will be resolved topologically based on the semantic search query context.
-                        </div>
-                    </div>
-
-                    <!-- MULTI-OMICS PERTURBATION PREDICTOR -->
-                    <div id="multiomics-predictor-panel" class="p-4 bg-slate-900/80 border border-indigo-500/30 rounded-2xl shadow-xl backdrop-blur-xl relative overflow-hidden animation-fade-in">
-                        <div class="text-[7.5px] text-indigo-300 font-black uppercase tracking-[0.2em] mb-3 flex items-center gap-1.5">
-                            <i data-lucide="sliders" class="w-3 h-3 text-indigo-400"></i>
-                            Multi-Omics Perturbation Predictor (scGPT)
-                            <span class="ml-auto text-[6px] px-1.5 py-0.5 bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 rounded font-black tracking-widest">Zero-Shot Mode</span>
-                        </div>
-                        <!-- Dosages Sliders -->
-                        <div class="grid grid-cols-2 gap-3 mb-4 bg-black/40 p-3 rounded-xl border border-slate-800/60">
-                            <div>
-                                <label class="text-[7px] text-slate-400 font-bold block mb-1 uppercase tracking-wider">GATA4 Dosage: <span id="val-gata4" class="text-indigo-400 font-mono font-black">1.0</span></label>
-                                <input id="slider-gata4" type="range" min="0" max="3" step="0.1" value="1.0" class="w-full h-1 bg-slate-800 rounded-lg appearance-none cursor-pointer" style="accent-color:#6366f1;">
-                            </div>
-                            <div>
-                                <label class="text-[7px] text-slate-400 font-bold block mb-1 uppercase tracking-wider">MEF2C Dosage: <span id="val-mef2c" class="text-indigo-400 font-mono font-black">1.0</span></label>
-                                <input id="slider-mef2c" type="range" min="0" max="3" step="0.1" value="1.0" class="w-full h-1 bg-slate-800 rounded-lg appearance-none cursor-pointer" style="accent-color:#6366f1;">
-                            </div>
-                            <div>
-                                <label class="text-[7px] text-slate-400 font-bold block mb-1 uppercase tracking-wider">TBX5 Dosage: <span id="val-tbx5" class="text-indigo-400 font-mono font-black">1.0</span></label>
-                                <input id="slider-tbx5" type="range" min="0" max="3" step="0.1" value="1.0" class="w-full h-1 bg-slate-800 rounded-lg appearance-none cursor-pointer" style="accent-color:#6366f1;">
-                            </div>
-                            <div>
-                                <label class="text-[7px] text-slate-400 font-bold block mb-1 uppercase tracking-wider">NKX2-5 Dosage: <span id="val-nkx25" class="text-indigo-400 font-mono font-black">1.0</span></label>
-                                <input id="slider-nkx25" type="range" min="0" max="3" step="0.1" value="1.0" class="w-full h-1 bg-slate-800 rounded-lg appearance-none cursor-pointer" style="accent-color:#6366f1;">
-                            </div>
-                            <div>
-                                <label class="text-[7px] text-slate-400 font-bold block mb-1 uppercase tracking-wider">MYC Dosage: <span id="val-myc" class="text-red-400 font-mono font-black">0.0</span></label>
-                                <input id="slider-myc" type="range" min="0" max="3" step="0.1" value="0.0" class="w-full h-1 bg-slate-800 rounded-lg appearance-none cursor-pointer" style="accent-color:#ef4444;">
-                            </div>
-                            <div>
-                                <label class="text-[7px] text-slate-400 font-bold block mb-1 uppercase tracking-wider">SNAI1 Dosage: <span id="val-snai1" class="text-amber-400 font-mono font-black">0.0</span></label>
-                                <input id="slider-snai1" type="range" min="0" max="3" step="0.1" value="0.0" class="w-full h-1 bg-slate-800 rounded-lg appearance-none cursor-pointer" style="accent-color:#f59e0b;">
-                            </div>
-                        </div>
-                        <!-- Prediction Metrics -->
-                        <div class="grid grid-cols-2 gap-3 mb-4">
-                            <div class="bg-black/40 border border-slate-800 p-2.5 rounded-xl text-center">
-                                <div class="text-[6px] text-slate-500 font-black uppercase mb-1">Predicted Age Shift</div>
-                                <div id="pred-age-shift" class="text-[11px] text-emerald-400 font-black font-mono">--</div>
-                            </div>
-                            <div class="bg-black/40 border border-slate-800 p-2.5 rounded-xl text-center">
-                                <div class="text-[6px] text-slate-500 font-black uppercase mb-1">Transcriptomic Stability</div>
-                                <div id="pred-stability" class="text-[11px] text-indigo-400 font-black font-mono">--</div>
-                            </div>
-                        </div>
-                        <!-- Expression Profiles -->
-                        <div class="space-y-2">
-                            <div class="text-[6px] text-slate-500 font-black uppercase mb-1.5 tracking-wider">Downstream Expression Profiles</div>
-                            <div id="pred-expressions" class="space-y-2 bg-black/20 p-2.5 rounded-xl border border-slate-800/40">
-                                <!-- Will be dynamically populated -->
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- LNP DELIVERY OPTIMIZER -->
-                    <div id="lnp-optimizer-panel" class="p-4 bg-slate-900/80 border border-teal-500/30 rounded-2xl shadow-xl backdrop-blur-xl relative overflow-hidden animation-fade-in">
-                        <div class="text-[7.5px] text-teal-300 font-black uppercase tracking-[0.2em] mb-3 flex items-center gap-1.5">
-                            <i data-lucide="package" class="w-3 h-3 text-teal-400"></i>
-                            mRNA-LNP Formulation Delivery Optimizer
-                            <span class="ml-auto text-[6px] px-1.5 py-0.5 bg-teal-500/10 text-teal-400 border border-teal-500/20 rounded font-black tracking-widest font-sans">Encapsulation</span>
-                        </div>
-                        <!-- LNP Parameter Sliders -->
-                        <div class="grid grid-cols-2 gap-3 mb-4 bg-black/40 p-3 rounded-xl border border-slate-800/60">
-                            <div>
-                                <label class="text-[7px] text-slate-400 font-bold block mb-1 uppercase tracking-wider">Ionizable Molar %: <span id="val-lnp-ion" class="text-teal-400 font-mono font-black">50.0%</span></label>
-                                <input id="slider-lnp-ion" type="range" min="30" max="60" step="1" value="50" class="w-full h-1 bg-slate-800 rounded-lg appearance-none cursor-pointer" style="accent-color:#0d9488;">
-                            </div>
-                            <div>
-                                <label class="text-[7px] text-slate-400 font-bold block mb-1 uppercase tracking-wider">Cholesterol Molar %: <span id="val-lnp-chol" class="text-teal-400 font-mono font-black">38.5%</span></label>
-                                <input id="slider-lnp-chol" type="range" min="20" max="50" step="0.5" value="38.5" class="w-full h-1 bg-slate-800 rounded-lg appearance-none cursor-pointer" style="accent-color:#0d9488;">
-                            </div>
-                            <div>
-                                <label class="text-[7px] text-slate-400 font-bold block mb-1 uppercase tracking-wider">Helper Lipid Molar %: <span id="val-lnp-helper" class="text-teal-400 font-mono font-black">10.0%</span></label>
-                                <input id="slider-lnp-helper" type="range" min="5" max="20" step="0.5" value="10" class="w-full h-1 bg-slate-800 rounded-lg appearance-none cursor-pointer" style="accent-color:#0d9488;">
-                            </div>
-                            <div>
-                                <label class="text-[7px] text-slate-400 font-bold block mb-1 uppercase tracking-wider">PEG-Lipid Molar %: <span id="val-lnp-peg" class="text-teal-400 font-mono font-black">1.5%</span></label>
-                                <input id="slider-lnp-peg" type="range" min="0.5" max="5.0" step="0.1" value="1.5" class="w-full h-1 bg-slate-800 rounded-lg appearance-none cursor-pointer" style="accent-color:#0d9488;">
-                            </div>
-                            <div class="col-span-2">
-                                <label class="text-[7px] text-slate-400 font-bold block mb-1 uppercase tracking-wider">N/P Ratio (Nitrogen/Phosphate): <span id="val-lnp-np" class="text-teal-400 font-mono font-black">6.0</span></label>
-                                <input id="slider-lnp-np" type="range" min="1.0" max="12.0" step="0.1" value="6.0" class="w-full h-1 bg-slate-800 rounded-lg appearance-none cursor-pointer" style="accent-color:#0d9488;">
-                            </div>
-                        </div>
-                        <!-- LNP Target Tropism Metrics -->
-                        <div class="grid grid-cols-2 gap-3 mb-3">
-                            <div class="bg-black/40 border border-slate-800 p-2.5 rounded-xl text-center">
-                                <div class="text-[6px] text-slate-500 font-black uppercase mb-1">Encapsulation Efficiency</div>
-                                <div id="lnp-ee" class="text-[11px] text-emerald-400 font-black font-mono">--</div>
-                            </div>
-                            <div class="bg-black/40 border border-slate-800 p-2.5 rounded-xl text-center">
-                                <div class="text-[6px] text-slate-500 font-black uppercase mb-1">Cardiac Tropism Index</div>
-                                <div id="lnp-tropism" class="text-[11px] text-teal-400 font-black font-mono">--</div>
-                            </div>
-                        </div>
-                        <div class="flex items-center justify-between text-[7.5px] text-slate-400 font-mono">
-                            <span>Status: <span id="lnp-status-val" class="text-teal-300 font-black uppercase">--</span></span>
-                            <span>Target: Heart (Cardiomyocytes)</span>
-                        </div>
-                    </div>
+                    <!-- B2B EXPANSIONS RELOCATED TO STANDALONE DISCOVERY TAB -->
                 </div>
 
                 <!-- CLINICAL ANALYTICS (UNIFIED FLOW) -->
@@ -5035,6 +5040,9 @@ async function runDiscovery() {
     const mode  = window._discMode || 'real';
     const query = (document.getElementById('disc-query').value || '').trim();
 
+    const b2bPanels = document.getElementById('discovery-b2b-panels');
+    if (b2bPanels) b2bPanels.style.display = 'none';
+
     if (!query) {
         resultsEl.style.display = 'block';
         resultsEl.innerHTML = `<div style="background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.25);border-radius:12px;padding:14px;text-align:center;color:#f59e0b;font-size:10px;font-weight:700;">
@@ -5363,6 +5371,56 @@ async function runDiscovery() {
                         </div>
                     </div>
                 </div>`;
+            
+            // Display the new B2B panels container
+            const b2bPanels = document.getElementById('discovery-b2b-panels');
+            if (b2bPanels) {
+                b2bPanels.style.display = 'flex';
+                // Trigger B2B engines
+                if (typeof BiosimBridge !== 'undefined') {
+                    // Set GATA4, MEF2C, etc. slider values based on target profile
+                    const sliderIds = {
+                        'GATA4': 'slider-gata4',
+                        'MEF2C': 'slider-mef2c',
+                        'TBX5': 'slider-tbx5',
+                        'NKX2-5': 'slider-nkx25',
+                        'MYC': 'slider-myc',
+                        'SNAI1': 'slider-snai1'
+                    };
+                    // Set all factor sliders to 0 first
+                    Object.values(sliderIds).forEach(id => {
+                        const slider = document.getElementById(id);
+                        if (slider) slider.value = '0.0';
+                    });
+                    
+                    // Build targetProfile from proGenes / gptGenes
+                    const genesToSet = proGenes.length > 0 ? proGenes : gptGenes;
+                    genesToSet.forEach(g => {
+                        const geneName = (g.gene || g.gene_symbol || g).toUpperCase();
+                        // Find match in sliderIds keys (case-insensitive)
+                        const matchedKey = Object.keys(sliderIds).find(k => geneName.includes(k));
+                        if (matchedKey) {
+                            const sliderId = sliderIds[matchedKey];
+                            const slider = document.getElementById(sliderId);
+                            if (slider) {
+                                // Use correlation score as weight, normalize to 0-3 range
+                                const corr = g.correlation_with_youth || g.correlation || 0.5;
+                                slider.value = Math.min(3.0, corr * 3.0).toFixed(1);
+                            }
+                        }
+                    });
+                    
+                    BiosimBridge.renderGraphRAG(query);
+                    BiosimBridge.runMultiOmicsPredictor();
+                    BiosimBridge.runLNPOptimizer();
+                    
+                    // Initialize Lucide icons for new panels
+                    if (typeof lucide !== 'undefined' && lucide.createIcons) {
+                        lucide.createIcons();
+                    }
+                }
+            }
+            
             document.getElementById('view-discovery').scrollTo({ top: 0, behavior: 'smooth' });
 
         } catch (err) {
@@ -5453,6 +5511,56 @@ async function runDiscovery() {
                         </div>
                     </div>
                 </div>`;
+            
+            // Display the new B2B panels container
+            const b2bPanels = document.getElementById('discovery-b2b-panels');
+            if (b2bPanels) {
+                b2bPanels.style.display = 'flex';
+                // Trigger B2B engines
+                if (typeof BiosimBridge !== 'undefined') {
+                    // Set GATA4, MEF2C, etc. slider values based on target profile
+                    const sliderIds = {
+                        'GATA4': 'slider-gata4',
+                        'MEF2C': 'slider-mef2c',
+                        'TBX5': 'slider-tbx5',
+                        'NKX2-5': 'slider-nkx25',
+                        'MYC': 'slider-myc',
+                        'SNAI1': 'slider-snai1'
+                    };
+                    // Set all factor sliders to 0 first
+                    Object.values(sliderIds).forEach(id => {
+                        const slider = document.getElementById(id);
+                        if (slider) slider.value = '0.0';
+                    });
+                    
+                    // Build targetProfile from proGenes / gptGenes
+                    const genesToSet = gptGenes;
+                    genesToSet.forEach(g => {
+                        const geneName = (g.gene || g.gene_symbol || g).toUpperCase();
+                        // Find match in sliderIds keys (case-insensitive)
+                        const matchedKey = Object.keys(sliderIds).find(k => geneName.includes(k));
+                        if (matchedKey) {
+                            const sliderId = sliderIds[matchedKey];
+                            const slider = document.getElementById(sliderId);
+                            if (slider) {
+                                // Use correlation score as weight, normalize to 0-3 range
+                                const corr = g.correlation_with_youth || g.correlation || 0.5;
+                                slider.value = Math.min(3.0, corr * 3.0).toFixed(1);
+                            }
+                        }
+                    });
+                    
+                    BiosimBridge.renderGraphRAG(query);
+                    BiosimBridge.runMultiOmicsPredictor();
+                    BiosimBridge.runLNPOptimizer();
+                    
+                    // Initialize Lucide icons for new panels
+                    if (typeof lucide !== 'undefined' && lucide.createIcons) {
+                        lucide.createIcons();
+                    }
+                }
+            }
+            
             document.getElementById('view-discovery').scrollTo({ top: 0, behavior: 'smooth' });
 
         } catch (err) {
