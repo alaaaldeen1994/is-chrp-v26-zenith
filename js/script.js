@@ -3985,6 +3985,7 @@ const BiosimBridge = {
         // Trigger initial evaluations
         this.runMultiOmicsPredictor();
         this.runLNPOptimizer();
+        this.renderGraphRAG("cardiac rejuvenation");
     },
 
     async exportEchoProtocol() {
