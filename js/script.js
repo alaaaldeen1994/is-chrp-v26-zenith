@@ -3736,23 +3736,23 @@ const BiosimBridge = {
                 stabilityEl.innerText = `${(data.transcriptomic_stability * 100).toFixed(2)}%`;
 
                 if (data.predicted_age_delta_years <= -8.0) {
-                    ageShiftEl.style.color = '#34d399';
+                    ageShiftEl.style.color = '#10b981';
                 } else if (data.predicted_age_delta_years > 0) {
-                    ageShiftEl.style.color = '#f87171';
+                    ageShiftEl.style.color = '#ef4444';
                 } else {
-                    ageShiftEl.style.color = '#fbbf24';
+                    ageShiftEl.style.color = '#d97706';
                 }
 
                 expressionsEl.innerHTML = Object.entries(data.expression_profiles).map(([gene, expr]) => {
                     const maxExpr = 15.0;
                     const pct = Math.round((expr / maxExpr) * 100);
                     return `
-                    <div style="display:flex;align-items:center;gap:8px;">
-                        <span style="font-size:7px;color:#fff;font-family:monospace;width:40px;">${gene}</span>
-                        <div style="flex:1;background:rgba(30,41,59,0.8);height:4px;border-radius:2px;">
-                            <div style="width:${Math.min(100, pct)}%;background:#818cf8;height:100%;border-radius:2px;"></div>
+                    <div style="display:flex;align-items:center;gap:12px;font-family:'Inter',sans-serif;">
+                        <span style="font-size:10px;color:#0f172a;font-weight:600;width:50px;">${gene}</span>
+                        <div style="flex:1;background:#e2e8f0;height:6px;border-radius:3px;overflow:hidden;">
+                            <div style="width:${Math.min(100, pct)}%;background:#3b82f6;height:100%;border-radius:3px;"></div>
                         </div>
-                        <span style="font-size:7px;color:#a5b4fc;font-family:monospace;width:30px;text-align:right;">${expr.toFixed(2)}</span>
+                        <span style="font-size:10px;color:#475569;font-weight:700;font-family:monospace;width:35px;text-align:right;">${expr.toFixed(2)}</span>
                     </div>`;
                 }).join('');
             }
@@ -3879,9 +3879,9 @@ const BiosimBridge = {
                     line.setAttribute('y2', targetNode.y);
                     
                     const isRisk = sourceNode.safety < 0.50;
-                    line.setAttribute('stroke', isRisk ? '#ef4444' : '#6366f1');
-                    line.setAttribute('stroke-width', '1');
-                    line.setAttribute('opacity', '0.5');
+                    line.setAttribute('stroke', isRisk ? '#ef4444' : '#3b82f6');
+                    line.setAttribute('stroke-width', '1.5');
+                    line.setAttribute('opacity', '0.6');
                     if (isRisk) {
                         line.setAttribute('stroke-dasharray', '3,3');
                     }
@@ -3893,40 +3893,40 @@ const BiosimBridge = {
                     const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
                     group.setAttribute('cursor', 'pointer');
 
-                    // Node outer glow / circle
+                    // Node outer circle
                     const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
                     circle.setAttribute('cx', node.x);
                     circle.setAttribute('cy', node.y);
-                    circle.setAttribute('r', node.type === 'TF' ? '10' : '7');
+                    circle.setAttribute('r', node.type === 'TF' ? '12' : '8');
 
-                    let fill = '#475569';
-                    let stroke = '#64748b';
+                    let fill = '#ffffff';
+                    let stroke = '#cbd5e1';
                     if (node.type === 'TF') {
                         if (node.safety < 0.50) {
-                            fill = 'rgba(239,68,68,0.2)';
-                            stroke = '#ef4444';
+                            fill = 'rgba(239,68,68,0.08)';
+                            stroke = '#dc2626';
                         } else {
-                            fill = 'rgba(99,102,241,0.2)';
-                            stroke = '#818cf8';
+                            fill = 'rgba(37,99,235,0.08)';
+                            stroke = '#2563eb';
                         }
                     } else {
-                        fill = 'rgba(30,41,59,0.8)';
+                        fill = '#ffffff';
                         stroke = '#94a3b8';
                     }
 
                     circle.setAttribute('fill', fill);
                     circle.setAttribute('stroke', stroke);
-                    circle.setAttribute('stroke-width', '1.5');
+                    circle.setAttribute('stroke-width', '2');
 
                     // Label
                     const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
                     text.setAttribute('x', node.x);
-                    text.setAttribute('y', node.y + (node.type === 'TF' ? 20 : 16));
+                    text.setAttribute('y', node.y + (node.type === 'TF' ? 24 : 18));
                     text.setAttribute('text-anchor', 'middle');
-                    text.setAttribute('fill', '#e2e8f0');
-                    text.setAttribute('font-size', '6px');
-                    text.setAttribute('font-family', 'monospace');
-                    text.setAttribute('font-weight', 'bold');
+                    text.setAttribute('fill', '#0f172a');
+                    text.setAttribute('font-size', '9px');
+                    text.setAttribute('font-family', "'Inter', sans-serif");
+                    text.setAttribute('font-weight', '600');
                     text.textContent = node.id;
 
                     group.appendChild(circle);
