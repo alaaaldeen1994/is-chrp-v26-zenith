@@ -415,7 +415,7 @@
 
 
 
-        .hero-video {
+        .hero-video, #three-dna-canvas {
 
             width: 100%;
 
@@ -443,7 +443,7 @@
 
         @media (max-width: 1024px) {
 
-            .hero-video {
+            .hero-video, #three-dna-canvas {
 
                 transform: scale(1.6) translate(0, 0) !important;
 
@@ -2151,7 +2151,7 @@
 
 
 
-            .hero-video {
+            .hero-video, #three-dna-canvas {
 
                 transform: scale(1.4) translate(0, 0) !important;
 
@@ -2909,7 +2909,7 @@
         .global-dna-bg {
             background: #ffffff !important;
         }
-        .hero-video {
+        .hero-video, #three-dna-canvas {
             mix-blend-mode: multiply !important;
             opacity: 0.95 !important;
         }
@@ -3143,36 +3143,167 @@
 
     <div class="global-dna-bg">
 
-        <video class="hero-video" id="profile-dna-video" autoplay loop muted playsinline preload="auto">
-
-            <source src="zenith_dna.mp4?v=2" type="video/mp4">
-
-            <source src="/zenith_dna.mp4?v=2" type="video/mp4">
-
-            <source src="assets/9.mp4" type="video/mp4">
-
-            <source src="/assets/9.mp4" type="video/mp4">
-
-        </video>
+        <!-- Interactive 3D DNA Helix Canvas via Three.js -->
+        <canvas id="three-dna-canvas"></canvas>
 
         <div class="hero-overlay"></div>
 
         <script>
+            (function() {
+                const canvas = document.getElementById('three-dna-canvas');
+                if (!canvas) return;
 
-            const v = document.getElementById('profile-dna-video');
+                // Create scene & transparent background
+                const scene = new THREE.Scene();
 
-            if (v) {
+                // Setup perspective camera
+                const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+                camera.position.z = 60;
 
-                v.play().catch(e => {
+                // Setup WebGL Renderer with alpha transparency
+                const renderer = new THREE.WebGLRenderer({
+                    canvas: canvas,
+                    alpha: true,
+                    antialias: true
+                });
+                renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+                renderer.setSize(canvas.clientWidth, canvas.clientHeight);
 
-                    console.warn("Autoplay blocked, attempting interaction play.");
+                // Group container for the helix
+                const helixGroup = new THREE.Group();
+                scene.add(helixGroup);
 
-                    document.body.addEventListener('click', () => v.play(), {once: true});
+                // Helix configuration parameters
+                const numPoints = 85;
+                const helixRadius = 8;
+                const helixLength = 44;
+                const turns = 4.5;
+                
+                const sphereGeo = new THREE.SphereGeometry(0.35, 16, 16);
+                
+                // Color scheme designed symmetrically with the site's accent branding:
+                // - Cobalt Blue (#2563eb)
+                // - Deep Violet/Purple (#8b5cf6)
+                // - Slate Blue rungs (#94a3b8)
+                const colorStrandA = new THREE.Color('#2563eb');
+                const colorStrandB = new THREE.Color('#8b5cf6');
+                const colorRung = new THREE.Color('#94a3b8');
 
+                const matA = new THREE.MeshBasicMaterial({ color: colorStrandA });
+                const matB = new THREE.MeshBasicMaterial({ color: colorStrandB });
+                const lineMat = new THREE.LineBasicMaterial({ 
+                    color: colorRung, 
+                    transparent: true, 
+                    opacity: 0.25
                 });
 
-            }
+                const strandAPoints = [];
+                const strandBPoints = [];
+                const rungs = [];
 
+                // Build DNA strands and base pair rungs
+                for (let i = 0; i < numPoints; i++) {
+                    const t = i / (numPoints - 1);
+                    const y = (t - 0.5) * helixLength;
+                    const angle = t * Math.PI * 2 * turns;
+
+                    const xA = Math.cos(angle) * helixRadius;
+                    const zA = Math.sin(angle) * helixRadius;
+                    
+                    const xB = Math.cos(angle + Math.PI) * helixRadius;
+                    const zB = Math.sin(angle + Math.PI) * helixRadius;
+
+                    // Strand A node
+                    const sphereA = new THREE.Mesh(sphereGeo, matA);
+                    sphereA.position.set(xA, y, zA);
+                    helixGroup.add(sphereA);
+                    strandAPoints.push(sphereA.position);
+
+                    // Strand B node
+                    const sphereB = new THREE.Mesh(sphereGeo, matB);
+                    sphereB.position.set(xB, y, zB);
+                    helixGroup.add(sphereB);
+                    strandBPoints.push(sphereB.position);
+
+                    // Connect strands with base pair rungs at alternate steps
+                    if (i % 2 === 0) {
+                        const points = [sphereA.position, sphereB.position];
+                        const rungGeo = new THREE.BufferGeometry().setFromPoints(points);
+                        const line = new THREE.Line(rungGeo, lineMat);
+                        helixGroup.add(line);
+                        rungs.push({
+                            line: line,
+                            index: i
+                        });
+                    }
+                }
+
+                // Initial orientation tilt
+                helixGroup.rotation.x = 0.4;
+                helixGroup.rotation.z = 0.25;
+
+                let time = 0;
+                let targetRotationX = 0.4;
+                let targetRotationY = 0;
+                let currentRotationX = 0.4;
+                let currentRotationY = 0;
+
+                // Mouse interaction handler
+                window.addEventListener('mousemove', (e) => {
+                    const mouseX = (e.clientX / window.innerWidth) - 0.5;
+                    const mouseY = (e.clientY / window.innerHeight) - 0.5;
+                    targetRotationY = mouseX * 0.4;
+                    targetRotationX = 0.4 + mouseY * 0.3;
+                });
+
+                // Resize handler
+                function onWindowResize() {
+                    const w = canvas.clientWidth;
+                    const h = canvas.clientHeight;
+                    camera.aspect = w / h;
+                    camera.updateProjectionMatrix();
+                    renderer.setSize(w, h, false);
+                }
+                window.addEventListener('resize', onWindowResize);
+
+                // Animation loop
+                function animate() {
+                    requestAnimationFrame(animate);
+                    time += 0.005;
+
+                    // Smooth rotation interpolation
+                    currentRotationX += (targetRotationX - currentRotationX) * 0.05;
+                    currentRotationY += (targetRotationY - currentRotationY) * 0.05;
+
+                    helixGroup.rotation.y = time + currentRotationY;
+                    helixGroup.rotation.x = currentRotationX;
+
+                    // Biological wavy motion (sine sway)
+                    for (let i = 0; i < numPoints; i++) {
+                        const t = i / (numPoints - 1);
+                        const offsetMultiplier = Math.sin(time * 2.5 + t * 6) * 0.7;
+                        const currentAngleA = t * Math.PI * 2 * turns;
+                        const currentAngleB = currentAngleA + Math.PI;
+
+                        const ptA = strandAPoints[i];
+                        ptA.x = Math.cos(currentAngleA) * (helixRadius + offsetMultiplier);
+                        ptA.z = Math.sin(currentAngleA) * (helixRadius + offsetMultiplier);
+
+                        const ptB = strandBPoints[i];
+                        ptB.x = Math.cos(currentAngleB) * (helixRadius + offsetMultiplier);
+                        ptB.z = Math.sin(currentAngleB) * (helixRadius + offsetMultiplier);
+                    }
+
+                    // Update rung connections
+                    for (let j = 0; j < rungs.length; j++) {
+                        const rung = rungs[j];
+                        rung.line.geometry.setFromPoints([strandAPoints[rung.index], strandBPoints[rung.index]]);
+                    }
+
+                    renderer.render(scene, camera);
+                }
+                animate();
+            })();
         </script>
 
     </div>
