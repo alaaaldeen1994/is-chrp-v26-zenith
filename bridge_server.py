@@ -4347,7 +4347,7 @@ async def discover_hybrid(req: HybridDiscoveryRequest, request: Request):
 
         for name, indices in protocols.items():
 
-            proto_vec = np.zeros(5000)
+            proto_vec = np.zeros(len(ideal_vector))
 
             for idx in indices: proto_vec[idx] = 1.0
 
