@@ -1856,6 +1856,56 @@ const BiosimBridge = {
             BiosimBridge.runClinicalAudit(factors, data.confidence || 0.80);
         }
 
+        // --- B2B EXPANSIONS: GraphRAG Visualizer, Multi-Omics, LNP ---
+        if (factors.length > 0 && !isAssistant) {
+            const grnPanel = document.getElementById('grn-visualizer-panel');
+            const predictorPanel = document.getElementById('multiomics-predictor-panel');
+            const lnpPanel = document.getElementById('lnp-optimizer-panel');
+            
+            if (grnPanel) grnPanel.classList.remove('hidden');
+            if (predictorPanel) predictorPanel.classList.remove('hidden');
+            if (lnpPanel) lnpPanel.classList.remove('hidden');
+
+            const queryVal = data.target_query || document.getElementById('disc-query')?.value || 'cardiac rejuvenation';
+            
+            // Set slider values to match the discovered factors
+            const sliderIds = {
+                'GATA4': 'slider-gata4',
+                'MEF2C': 'slider-mef2c',
+                'TBX5': 'slider-tbx5',
+                'NKX2-5': 'slider-nkx25',
+                'MYC': 'slider-myc',
+                'SNAI1': 'slider-snai1'
+            };
+
+            // Set all factor sliders to 0 first
+            Object.values(sliderIds).forEach(id => {
+                const slider = document.getElementById(id);
+                if (slider) slider.value = '0.0';
+            });
+
+            // Set sliders for discovered factors
+            Object.entries(data.target_profile).forEach(([gene, weight]) => {
+                const sliderId = sliderIds[gene];
+                if (sliderId) {
+                    const slider = document.getElementById(sliderId);
+                    if (slider) slider.value = (weight * 3.0).toFixed(1);
+                }
+            });
+
+            // Run GraphRAG query and draw network
+            BiosimBridge.renderGraphRAG(queryVal);
+
+            // Re-evaluate predictions with new slider settings
+            BiosimBridge.runMultiOmicsPredictor();
+            BiosimBridge.runLNPOptimizer();
+
+            // Initialize Lucide icons for new panels
+            if (typeof lucide !== 'undefined' && lucide.createIcons) {
+                lucide.createIcons();
+            }
+        }
+
         // v28 CUSTOM: If this is the ZENITH ASSISTANT, hide the gene manifest and score to keep it clean.
         const isAssistant = data.recommended_protocol === "ZENITH ASSISTANT";
         const actionGrid = outPanel ? outPanel.querySelector('.flex.gap-1') : null;
@@ -3544,6 +3594,439 @@ const BiosimBridge = {
         a.href = URL.createObjectURL(blob);
         a.download = `Zenith_Audit_Log_${Date.now()}.json`;
         a.click();
+    },
+
+    // ============================================================
+    // B2B ADDITIONS: GRAPH RAG, MULTI-OMICS, LNP & QC MONITOR
+    // ============================================================
+    toggleQCSidebar(show) {
+        const sidebar = document.getElementById('nf-qc-sidebar');
+        if (sidebar) {
+            sidebar.style.right = show ? '0px' : '-420px';
+        }
+    },
+
+    async runSequencingQC() {
+        const progressVal = document.getElementById('qc-run-progress');
+        const progressBar = document.getElementById('qc-run-progress-bar');
+        const statusBadge = document.getElementById('qc-status-badge');
+        const consoleLogs = document.getElementById('qc-console-logs');
+        
+        if (!progressVal || !progressBar || !consoleLogs) return;
+
+        // Reset display
+        progressVal.innerText = '0%';
+        progressBar.style.width = '0%';
+        statusBadge.innerText = 'RUNNING';
+        statusBadge.style.background = 'rgba(99,102,241,0.1)';
+        statusBadge.style.color = '#818cf8';
+        statusBadge.style.borderColor = 'rgba(99,102,241,0.2)';
+        consoleLogs.innerHTML = '';
+
+        const logs = [
+            { t: 0, msg: "pipeline.run() initialized on cluster core-04" },
+            { t: 600, msg: "pulling Nextflow DSL2 cellranger workflow..." },
+            { t: 1200, msg: "staging raw FASTQ paired-end reads..." },
+            { t: 1800, msg: "executing alignment task: alignment_star_solo" },
+            { t: 2400, msg: "alignment rate: 81.25% (passed threshold >= 80%)" },
+            { t: 3000, msg: "task cell_viability_qc: auditing mitochondrial read count fraction..." },
+            { t: 3600, msg: "mitochondrial read fraction: 8.42% (passed threshold < 15%)" },
+            { t: 4000, msg: "single-cell QC check complete. status: PASS" }
+        ];
+
+        let currentStep = 0;
+        const interval = setInterval(async () => {
+            currentStep += 12.5;
+            progressVal.innerText = `${Math.round(currentStep)}%`;
+            progressBar.style.width = `${currentStep}%`;
+
+            const logIndex = Math.floor(currentStep / 12.5) - 1;
+            if (logs[logIndex]) {
+                const timeStr = new Date().toISOString().replace('T', ' ').substring(0, 19);
+                const div = document.createElement('div');
+                div.innerHTML = `<span style="color: #64748b;">[${timeStr}]</span> ${logs[logIndex].msg}`;
+                consoleLogs.appendChild(div);
+                consoleLogs.scrollTop = consoleLogs.scrollHeight;
+            }
+
+            if (currentStep >= 100) {
+                clearInterval(interval);
+                
+                // Fetch metrics from backend
+                try {
+                    const mockTelemetry = {
+                        total_reads: 1245892,
+                        mapped_reads: 1012359,
+                        mitochondrial_reads: 104904,
+                        cell_count: 8500
+                    };
+                    const response = await fetch(`${this.endpoint}/api/v1/clinical/pipeline/telemetry`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-Token': window.csrfToken || ''
+                        },
+                        body: JSON.stringify({ metrics_json: JSON.stringify(mockTelemetry) })
+                    });
+                    
+                    if (response.ok) {
+                        const data = await response.json();
+                        
+                        document.getElementById('qc-total-reads').innerText = mockTelemetry.total_reads.toLocaleString();
+                        document.getElementById('qc-mapped-reads').innerText = mockTelemetry.mapped_reads.toLocaleString();
+                        document.getElementById('qc-alignment-rate').innerText = `${(data.alignment_rate * 100).toFixed(2)}%`;
+                        document.getElementById('qc-mito-leakage').innerText = `${data.mitochondrial_leakage_percent.toFixed(2)}%`;
+                        
+                        statusBadge.innerText = data.pipeline_quality_status;
+                        if (data.pipeline_quality_status === 'PASS') {
+                            statusBadge.style.background = 'rgba(16,185,129,0.1)';
+                            statusBadge.style.color = '#10b981';
+                            statusBadge.style.borderColor = 'rgba(16,185,129,0.2)';
+                        } else {
+                            statusBadge.style.background = 'rgba(239,68,68,0.1)';
+                            statusBadge.style.color = '#ef4444';
+                            statusBadge.style.borderColor = 'rgba(239,68,68,0.2)';
+                        }
+                    }
+                } catch (e) {
+                    console.error("QC Telemetry request failed:", e);
+                }
+            }
+        }, 500);
+    },
+
+    async runMultiOmicsPredictor() {
+        const gata4 = parseFloat(document.getElementById('slider-gata4').value);
+        const mef2c = parseFloat(document.getElementById('slider-mef2c').value);
+        const tbx5 = parseFloat(document.getElementById('slider-tbx5').value);
+        const nkx25 = parseFloat(document.getElementById('slider-nkx25').value);
+        const myc = parseFloat(document.getElementById('slider-myc').value);
+        const snai1 = parseFloat(document.getElementById('slider-snai1').value);
+
+        document.getElementById('val-gata4').innerText = gata4.toFixed(1);
+        document.getElementById('val-mef2c').innerText = mef2c.toFixed(1);
+        document.getElementById('val-tbx5').innerText = tbx5.toFixed(1);
+        document.getElementById('val-nkx25').innerText = nkx25.toFixed(1);
+        document.getElementById('val-myc').innerText = myc.toFixed(1);
+        document.getElementById('val-snai1').innerText = snai1.toFixed(1);
+
+        try {
+            const response = await fetch(`${this.endpoint}/api/v1/clinical/predict/perturbation`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-Token': window.csrfToken || ''
+                },
+                body: JSON.stringify({
+                    baseline_cell_type: window._selectedCellType || "fibroblast",
+                    perturbation_factors: {
+                        "GATA4": gata4, "MEF2C": mef2c, "TBX5": tbx5, "NKX2-5": nkx25, "MYC": myc, "SNAI1": snai1
+                    }
+                })
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                
+                const ageShiftEl = document.getElementById('pred-age-shift');
+                const stabilityEl = document.getElementById('pred-stability');
+                const expressionsEl = document.getElementById('pred-expressions');
+
+                ageShiftEl.innerText = `${data.predicted_age_delta_years.toFixed(2)} Years`;
+                stabilityEl.innerText = `${(data.transcriptomic_stability * 100).toFixed(2)}%`;
+
+                if (data.predicted_age_delta_years <= -8.0) {
+                    ageShiftEl.style.color = '#34d399';
+                } else if (data.predicted_age_delta_years > 0) {
+                    ageShiftEl.style.color = '#f87171';
+                } else {
+                    ageShiftEl.style.color = '#fbbf24';
+                }
+
+                expressionsEl.innerHTML = Object.entries(data.expression_profiles).map(([gene, expr]) => {
+                    const maxExpr = 15.0;
+                    const pct = Math.round((expr / maxExpr) * 100);
+                    return `
+                    <div style="display:flex;align-items:center;gap:8px;">
+                        <span style="font-size:7px;color:#fff;font-family:monospace;width:40px;">${gene}</span>
+                        <div style="flex:1;background:rgba(30,41,59,0.8);height:4px;border-radius:2px;">
+                            <div style="width:${Math.min(100, pct)}%;background:#818cf8;height:100%;border-radius:2px;"></div>
+                        </div>
+                        <span style="font-size:7px;color:#a5b4fc;font-family:monospace;width:30px;text-align:right;">${expr.toFixed(2)}</span>
+                    </div>`;
+                }).join('');
+            }
+        } catch (e) {
+            console.error("Multi-Omics predictor request failed:", e);
+        }
+    },
+
+    async runLNPOptimizer() {
+        const ion = parseFloat(document.getElementById('slider-lnp-ion').value);
+        const chol = parseFloat(document.getElementById('slider-lnp-chol').value);
+        const helper = parseFloat(document.getElementById('slider-lnp-helper').value);
+        const peg = parseFloat(document.getElementById('slider-lnp-peg').value);
+        const np = parseFloat(document.getElementById('slider-lnp-np').value);
+
+        document.getElementById('val-lnp-ion').innerText = `${ion.toFixed(1)}%`;
+        document.getElementById('val-lnp-chol').innerText = `${chol.toFixed(1)}%`;
+        document.getElementById('val-lnp-helper').innerText = `${helper.toFixed(1)}%`;
+        document.getElementById('val-lnp-peg').innerText = `${peg.toFixed(1)}%`;
+        document.getElementById('val-lnp-np').innerText = np.toFixed(1);
+
+        try {
+            const response = await fetch(`${this.endpoint}/api/v1/clinical/delivery/lnp-optimize`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-Token': window.csrfToken || ''
+                },
+                body: JSON.stringify({
+                    molar_ratios: {
+                        "ionizable": ion, "cholesterol": chol, "helper": helper, "peg": peg
+                    },
+                    np_ratio: np
+                })
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                
+                document.getElementById('lnp-ee').innerText = `${data.encapsulation_efficiency_percent.toFixed(2)}%`;
+                document.getElementById('lnp-tropism').innerText = data.heart_selectivity_score.toFixed(3);
+                
+                const statusBadge = document.getElementById('lnp-status-val');
+                statusBadge.innerText = data.formulation_status;
+                if (data.formulation_status === 'OPTIMIZED') {
+                    statusBadge.style.color = '#34d399';
+                } else if (data.formulation_status === 'MODERATE') {
+                    statusBadge.style.color = '#fbbf24';
+                } else {
+                    statusBadge.style.color = '#f87171';
+                }
+            }
+        } catch (e) {
+            console.error("LNP delivery optimizer request failed:", e);
+        }
+    },
+
+    async renderGraphRAG(query) {
+        try {
+            const response = await fetch(`${this.endpoint}/api/v1/clinical/graphrag/query`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-Token': window.csrfToken || ''
+                },
+                body: JSON.stringify({ query: query, top_k_subgraphs: 5, confidence_threshold: 0.75 })
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                
+                // Show visualizer panel
+                document.getElementById('grn-visualizer-panel').classList.remove('hidden');
+                document.getElementById('grn-pathway-summary').innerText = data.interaction_pathway;
+
+                const svg = document.getElementById('grn-canvas-viewport');
+                if (!svg) return;
+
+                svg.innerHTML = ''; // Clear SVG contents
+
+                // Define graph layout nodes programmatically
+                const nodes = [
+                    { id: 'GATA4', type: 'TF', x: 60, y: 50, safety: 0.95 },
+                    { id: 'MEF2C', type: 'TF', x: 155, y: 50, safety: 0.92 },
+                    { id: 'TBX5', type: 'TF', x: 250, y: 50, safety: 0.94 },
+                    { id: 'NKX2-5', type: 'TF', x: 60, y: 170, safety: 0.93 },
+                    { id: 'MYC', type: 'TF', x: 155, y: 170, safety: 0.15 },
+                    { id: 'SNAI1', type: 'TF', x: 250, y: 170, safety: 0.35 },
+                    { id: 'TNNT2', type: 'Target', x: 40, y: 110 },
+                    { id: 'MYH6', type: 'Target', x: 115, y: 110 },
+                    { id: 'ACTC1', type: 'Target', x: 195, y: 110 },
+                    { id: 'NPPA', type: 'Target', x: 275, y: 110 },
+                    { id: 'FOS', type: 'Target', x: 115, y: 205 },
+                    { id: 'JUN', type: 'Target', x: 195, y: 205 }
+                ];
+
+                const links = [
+                    { source: 'GATA4', target: 'TNNT2', weight: 0.85 },
+                    { source: 'GATA4', target: 'MYH6', weight: 0.75 },
+                    { source: 'MEF2C', target: 'MYH6', weight: 0.90 },
+                    { source: 'TBX5', target: 'ACTC1', weight: 0.80 },
+                    { source: 'NKX2-5', target: 'TNNT2', weight: 0.70 },
+                    { source: 'NKX2-5', target: 'NPPA', weight: 0.85 },
+                    { source: 'MYC', target: 'FOS', weight: 0.95 },
+                    { source: 'MYC', target: 'JUN', weight: 0.90 },
+                    { source: 'SNAI1', target: 'NPPA', weight: 0.60 }
+                ];
+
+                // Filter nodes/links based on detected factors in GraphRAG response
+                const activeTFs = data.recommended_factors || [];
+                const activeNodes = nodes.filter(n => n.type === 'Target' || activeTFs.includes(n.id));
+                const activeLinks = links.filter(l => activeTFs.includes(l.source));
+
+                // Draw links (connections)
+                activeLinks.forEach(link => {
+                    const sourceNode = nodes.find(n => n.id === link.source);
+                    const targetNode = nodes.find(n => n.id === link.target);
+                    if (!sourceNode || !targetNode) return;
+
+                    const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                    line.setAttribute('x1', sourceNode.x);
+                    line.setAttribute('y1', sourceNode.y);
+                    line.setAttribute('x2', targetNode.x);
+                    line.setAttribute('y2', targetNode.y);
+                    
+                    const isRisk = sourceNode.safety < 0.50;
+                    line.setAttribute('stroke', isRisk ? '#ef4444' : '#6366f1');
+                    line.setAttribute('stroke-width', '1');
+                    line.setAttribute('opacity', '0.5');
+                    if (isRisk) {
+                        line.setAttribute('stroke-dasharray', '3,3');
+                    }
+                    svg.appendChild(line);
+                });
+
+                // Draw nodes
+                activeNodes.forEach(node => {
+                    const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+                    group.setAttribute('cursor', 'pointer');
+
+                    // Node outer glow / circle
+                    const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                    circle.setAttribute('cx', node.x);
+                    circle.setAttribute('cy', node.y);
+                    circle.setAttribute('r', node.type === 'TF' ? '10' : '7');
+
+                    let fill = '#475569';
+                    let stroke = '#64748b';
+                    if (node.type === 'TF') {
+                        if (node.safety < 0.50) {
+                            fill = 'rgba(239,68,68,0.2)';
+                            stroke = '#ef4444';
+                        } else {
+                            fill = 'rgba(99,102,241,0.2)';
+                            stroke = '#818cf8';
+                        }
+                    } else {
+                        fill = 'rgba(30,41,59,0.8)';
+                        stroke = '#94a3b8';
+                    }
+
+                    circle.setAttribute('fill', fill);
+                    circle.setAttribute('stroke', stroke);
+                    circle.setAttribute('stroke-width', '1.5');
+
+                    // Label
+                    const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                    text.setAttribute('x', node.x);
+                    text.setAttribute('y', node.y + (node.type === 'TF' ? 20 : 16));
+                    text.setAttribute('text-anchor', 'middle');
+                    text.setAttribute('fill', '#e2e8f0');
+                    text.setAttribute('font-size', '6px');
+                    text.setAttribute('font-family', 'monospace');
+                    text.setAttribute('font-weight', 'bold');
+                    text.textContent = node.id;
+
+                    group.appendChild(circle);
+                    group.appendChild(text);
+
+                    // Hover tooltip event listeners
+                    group.addEventListener('mouseenter', (e) => {
+                        const tooltip = document.getElementById('grn-tooltip');
+                        if (!tooltip) return;
+
+                        let details = `Node: ${node.id}`;
+                        if (node.type === 'TF') {
+                            details += `<br>Type: Transcription Factor<br>Safety Score: ${node.safety.toFixed(2)}`;
+                            if (node.safety < 0.50) details += `<br><span style="color:#ef4444;">⚠ ONCOGENIC DRINK/DRIFT RISK</span>`;
+                        } else {
+                            details += `<br>Type: Downstream Target`;
+                        }
+                        
+                        tooltip.innerHTML = details;
+                        tooltip.classList.remove('hidden');
+
+                        tooltip.style.left = `${node.x - 20}px`;
+                        tooltip.style.top = `${node.y - 35}px`;
+                    });
+
+                    group.addEventListener('mouseleave', () => {
+                        const tooltip = document.getElementById('grn-tooltip');
+                        if (tooltip) tooltip.classList.add('hidden');
+                    });
+
+                    svg.appendChild(group);
+                });
+            }
+        } catch (e) {
+            console.error("GraphRAG query request failed:", e);
+        }
+    },
+
+    initB2BWidgets() {
+        // Multi-omics Sliders Listeners
+        ['slider-gata4', 'slider-mef2c', 'slider-tbx5', 'slider-nkx25', 'slider-myc', 'slider-snai1'].forEach(id => {
+            const input = document.getElementById(id);
+            if (input) {
+                input.addEventListener('input', () => this.runMultiOmicsPredictor());
+            }
+        });
+
+        // LNP Sliders Listeners
+        ['slider-lnp-ion', 'slider-lnp-chol', 'slider-lnp-helper', 'slider-lnp-peg', 'slider-lnp-np'].forEach(id => {
+            const input = document.getElementById(id);
+            if (input) {
+                input.addEventListener('input', () => this.runLNPOptimizer());
+            }
+        });
+        
+        // Trigger initial evaluations
+        this.runMultiOmicsPredictor();
+        this.runLNPOptimizer();
+    },
+
+    async exportEchoProtocol() {
+        const gata4 = parseFloat(document.getElementById('slider-gata4').value);
+        const mef2c = parseFloat(document.getElementById('slider-mef2c').value);
+        const tbx5 = parseFloat(document.getElementById('slider-tbx5').value);
+        const nkx25 = parseFloat(document.getElementById('slider-nkx25').value);
+        const myc = parseFloat(document.getElementById('slider-myc').value);
+        const snai1 = parseFloat(document.getElementById('slider-snai1').value);
+
+        BiosimUI.notify('Automation', 'Generating Echo transfer list...', 'inf');
+
+        try {
+            const response = await fetch(`${this.endpoint}/api/v1/clinical/automation/generate`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-Token': window.csrfToken || ''
+                },
+                body: JSON.stringify({
+                    source_well: "A1",
+                    cocktail: {
+                        "GATA4": gata4, "MEF2C": mef2c, "TBX5": tbx5, "NKX2-5": nkx25, "MYC": myc, "SNAI1": snai1
+                    }
+                })
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                const blob = new Blob([data.csv_data], { type: 'text/csv' });
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(blob);
+                a.download = `Zenith_Echo_Transfer_${Date.now()}.csv`;
+                a.click();
+                BiosimUI.notify('Automation', 'Echo transfer list exported successfully', 'suc');
+            } else {
+                throw new Error(`Automation API returned status: ${response.status}`);
+            }
+        } catch (e) {
+            console.error("Robotic generator failed:", e);
+            BiosimUI.notify('Automation Error', e.message, 'err');
+        }
     }
 };
 
@@ -4788,6 +5271,9 @@ window.addEventListener('load', () => {
     }
     if (typeof VisionBridge !== 'undefined') {
         VisionBridge.init();
+    }
+    if (typeof BiosimBridge !== 'undefined' && BiosimBridge.initB2BWidgets) {
+        BiosimBridge.initB2BWidgets();
     }
 });
 

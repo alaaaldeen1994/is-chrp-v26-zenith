@@ -6341,8 +6341,24 @@ async def run_clinical_audit(req: AuditRequest):
     report = ClinicalAuditEngine.generate_clinical_report(req.factors, seq_map, req.concordance)
 
     return report
+class GraphRAGRequest(BaseModel):
+    query: str
+    top_k_subgraphs: int = 5
+    confidence_threshold: float = 0.75
 
-
+@app.post("/api/v1/clinical/graphrag/query")
+async def execute_graphrag_query(req: GraphRAGRequest):
+    """
+    PRIORITY 1: GraphRAG Querying.
+    Executes topological search and safety checks on the Cardiac GRN.
+    """
+    from services.graphrag_service import GraphRAGService
+    service = GraphRAGService()
+    return service.execute_semantic_reasoning(
+        query=req.query,
+        top_k_subgraphs=req.top_k_subgraphs,
+        confidence_threshold=req.confidence_threshold
+    )
 
 @app.get("/api/v2/grn_links")
 
@@ -6921,6 +6937,83 @@ async def list_cell_types():
         })
 
     return {"cell_types": types, "source": "Litvinukova et al. + PERIHEART"}
+
+
+# ============================================================
+# MULTI-OMICS PERTURBATION PREDICTOR ENDPOINT
+# ============================================================
+class PerturbationRequest(BaseModel):
+    baseline_cell_type: str = "fibroblast"
+    perturbation_factors: Dict[str, float]
+
+@app.post("/api/v1/clinical/predict/perturbation")
+async def predict_perturbation(req: PerturbationRequest):
+    """
+    PRIORITY 2: Zero-shot Multi-Omics Perturbation Predictor.
+    """
+    from services.multiomics_service import MultiOmicsPredictorService
+    service = MultiOmicsPredictorService()
+    return service.predict_perturbation_trajectory(
+        baseline_cell_type=req.baseline_cell_type,
+        factors=req.perturbation_factors
+    )
+
+
+# ============================================================
+# LNP OPTIMIZATION DELIVERY ENDPOINT
+# ============================================================
+class LNPOptimizeRequest(BaseModel):
+    molar_ratios: Dict[str, float]
+    np_ratio: float = 6.0
+
+@app.post("/api/v1/clinical/delivery/lnp-optimize")
+async def optimize_lnp(req: LNPOptimizeRequest):
+    """
+    PRIORITY 3: mRNA-LNP Formulation Delivery Optimizer.
+    """
+    from services.lnp_optimizer import LNPOptimizerService
+    service = LNPOptimizerService()
+    return service.evaluate_formulation(
+        molar_ratios=req.molar_ratios,
+        np_ratio=req.np_ratio
+    )
+
+
+# ============================================================
+# PIPELINE QC MONITOR TELEMETRY ENDPOINT
+# ============================================================
+class PipelineTelemetryRequest(BaseModel):
+    metrics_json: str
+
+@app.post("/api/v1/clinical/pipeline/telemetry")
+async def process_pipeline_telemetry(req: PipelineTelemetryRequest):
+    """
+    PRIORITY 4: Nextflow QC Run Telemetry Auditor.
+    """
+    from services.pipeline_orchestrator import PipelineOrchestrator
+    service = PipelineOrchestrator()
+    return service.parse_nextflow_telemetry(req.metrics_json)
+
+
+# ============================================================
+# ROBOTIC PROTOCOL GENERATOR ENDPOINT
+# ============================================================
+class AutomationRequest(BaseModel):
+    source_well: str = "A1"
+    cocktail: Dict[str, float]
+
+@app.post("/api/v1/clinical/automation/generate")
+async def generate_automation_protocol(req: AutomationRequest):
+    """
+    PRIORITY 5: Labcyte Echo liquid handler protocol generator.
+    """
+    from services.automation_service import AutomationProtocolService
+    service = AutomationProtocolService()
+    csv_rows = service.generate_echo_transfer_csv(
+        source_well_override=req.source_well,
+        target_cocktail=req.cocktail
+    )
+    return {"csv_data": "\n".join(csv_rows)}
 
 
 if __name__ == "__main__":
