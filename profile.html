@@ -3031,7 +3031,7 @@
         #dash-profile-name {
             color: #0f172a !important;
         }
-        #dashboard-view h2, #dashboard-view h3, #dashboard-view h4 {
+        #dashboard-view h2:not([style*="gradient"]), #dashboard-view h3:not([style*="gradient"]), #dashboard-view h4:not([style*="gradient"]) {
             color: #0f172a !important;
         }
         #dashboard-view p, #dashboard-view span {
@@ -3229,7 +3229,7 @@
                 <div class="w-16 h-16 bg-blue-50 border border-blue-100 rounded-2xl flex items-center justify-center mx-auto mb-5 shadow-sm transition-all hover:scale-105">
                     <i data-lucide="layers" class="w-8 h-8 text-blue-600"></i>
                 </div>
-                <h2 class="text-3xl font-extrabold text-slate-900 tracking-tight mb-2" style="font-family: 'Outfit', sans-serif;" id="modal-title">Welcome Back</h2>
+                <h2 class="text-3xl font-black mb-2 tracking-tight" style="font-family: 'Outfit', sans-serif; background: linear-gradient(135deg, #0f172a 30%, #2563eb 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;" id="modal-title">Welcome Back</h2>
                 <p class="text-slate-500 font-medium text-xs uppercase tracking-widest" id="modal-subtitle">Sign in to access your research dashboard</p>
             </div>
 
@@ -3543,13 +3543,16 @@
     <!-- Hero Section -->
     <section class="hero bg-transparent relative z-10">
         <div class="hero-content px-6 md:px-12 lg:pl-[5%] py-12 md:py-24" style="text-align: left; display: flex; flex-direction: column; align-items: flex-start; max-width: 820px;">
-            <span class="animate-fade-in-up" style="font-size: 11px; font-weight: 900; color: #2563eb; text-transform: uppercase; letter-spacing: 0.45em; margin-bottom: 1.5rem; display: block; text-shadow: 0 0 10px rgba(37, 99, 235, 0.15);">NEURAL PARAMETER MAINFRAME</span>
+            <div class="animate-fade-in-up flex items-center gap-2 px-4 py-1.5 bg-blue-50/50 border border-blue-100/50 rounded-full mb-6">
+                <span class="w-1.5 h-1.5 bg-blue-600 rounded-full animate-pulse"></span>
+                <span style="font-size: 9px; font-weight: 900; color: #2563eb; text-transform: uppercase; letter-spacing: 0.2em; line-height: 1;">NEURAL PARAMETER MAINFRAME</span>
+            </div>
             
-            <h1 class="animate-fade-in-up delay-100" style="font-size: clamp(36px, 7vw, 68px); font-family: 'Outfit', sans-serif; font-weight: 900; line-height: 1.05; margin-bottom: 1.5rem; letter-spacing: -0.04em; color: #0f172a; background: linear-gradient(135deg, #0f172a 40%, #2563eb 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+            <h1 class="animate-fade-in-up delay-100" style="font-size: clamp(36px, 7vw, 68px); font-family: 'Outfit', sans-serif; font-weight: 900; line-height: 1.05; margin-bottom: 1.5rem; letter-spacing: -0.04em; background: linear-gradient(135deg, #0f172a 20%, #1e3a8a 55%, #2563eb 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
                 Zenith Simulation Lab
             </h1>
             
-            <p class="animate-fade-in-up delay-200" style="color: #475569; font-size: clamp(16px, 2.5vw, 19px); line-height: 1.7; font-weight: 500; margin-bottom: 2.5rem; max-width: 620px;">
+            <p class="animate-fade-in-up delay-200 text-slate-500 font-medium text-lg leading-relaxed mb-10 max-w-2xl">
                 Generative cellular reprogramming models for cardiac rejuvenation. Simulating high-fidelity in-silico perturbation trajectories trained on 500,000+ human cells.
             </p>
             
@@ -3581,8 +3584,13 @@
     <section id="discovery-section" class="bg-transparent relative z-10" style="padding: 6rem 5% 4rem;">
         <div class="max-w-7xl mx-auto px-6 md:px-12">
             <div style="text-align: center; margin-bottom: 4rem;">
-                <span style="font-size: 10px; font-weight: 900; color: #2563eb; text-transform: uppercase; letter-spacing: 0.4em; display: block; margin-bottom: 1rem;">PERTURBATION FORECASTING</span>
-                <h2 style="font-family: 'Outfit', sans-serif; font-size: clamp(32px, 5vw, 48px); font-weight: 900; color: #0f172a; letter-spacing: -0.02em; line-height: 1.1; margin-bottom: 1.5rem;">
+                <div style="display: flex; justify-content: center; margin-bottom: 1.25rem;">
+                    <div style="display: inline-flex; align-items: center; gap: 8px; background: rgba(37, 99, 235, 0.06); border: 1px solid rgba(37, 99, 235, 0.15); padding: 6px 16px; border-radius: 999px;">
+                        <span style="width: 6px; height: 6px; background: #2563eb; border-radius: 50%; display: inline-block; animation: pulse 2s infinite;"></span>
+                        <span style="font-size: 9px; font-weight: 900; color: #2563eb; text-transform: uppercase; letter-spacing: 0.15em; line-height: 1;">PERTURBATION FORECASTING</span>
+                    </div>
+                </div>
+                <h2 style="font-family: 'Outfit', sans-serif; font-size: clamp(32px, 5vw, 48px); font-weight: 900; letter-spacing: -0.02em; line-height: 1.1; margin-bottom: 1.5rem; background: linear-gradient(135deg, #0f172a 30%, #2563eb 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
                     Scientific Profiles & Reprogramming Models
                 </h2>
                 <p style="color: #64748b; font-size: 16px; max-width: 700px; margin: 0 auto; line-height: 1.6;">
@@ -3609,7 +3617,7 @@
                 <div id="panel-gmt" style="display: block; transition: opacity 0.4s ease; opacity: 1; width: 100%;">
                     <div style="display: flex; flex-direction: column; gap: 1.5rem;">
                         <div>
-                            <h3 style="font-family: 'Outfit', sans-serif; font-size: 28px; font-weight: 800; color: #0f172a; margin-bottom: 1.25rem;">
+                            <h3 style="font-family: 'Outfit', sans-serif; font-size: 28px; font-weight: 900; margin-bottom: 1.25rem; background: linear-gradient(135deg, #0f172a 30%, #2563eb 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
                                 GMT Cardiac Reprogramming (Legacy)
                             </h3>
                             <p style="color: #475569; font-size: 16px; line-height: 1.75; margin-bottom: 2rem;">
@@ -3652,7 +3660,7 @@
                 <div id="panel-zenith" style="display: none; transition: opacity 0.4s ease; opacity: 0; width: 100%;">
                     <div style="display: flex; flex-direction: column; gap: 1.5rem;">
                         <div>
-                            <h3 style="font-family: 'Outfit', sans-serif; font-size: 28px; font-weight: 800; color: #0f172a; margin-bottom: 1.25rem;">
+                            <h3 style="font-family: 'Outfit', sans-serif; font-size: 28px; font-weight: 900; margin-bottom: 1.25rem; background: linear-gradient(135deg, #0f172a 30%, #2563eb 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
                                 Zenith Ultra (Active Generative Discovery)
                             </h3>
                             <p style="color: #475569; font-size: 16px; line-height: 1.75; margin-bottom: 2rem;">
@@ -3827,7 +3835,7 @@
 
                             </div>
 
-                            <h2 id="dash-profile-name" class="text-3xl font-black text-slate-900 mb-2 uppercase tracking-tighter">RESEARCHER</h2>
+                            <h2 id="dash-profile-name" class="text-3xl font-black mb-2 uppercase tracking-tighter" style="font-family: 'Outfit', sans-serif; background: linear-gradient(135deg, #0f172a 30%, #2563eb 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">RESEARCHER</h2>
 
                             <span class="px-4 py-1.5 bg-blue-100 text-blue-600 text-[10px] font-black rounded-full uppercase tracking-widest">Zenith v28.0 GOLD Lead</span>
 
@@ -3915,7 +3923,7 @@
 
                                 <span class="text-[10px] font-black text-blue-600 uppercase tracking-[0.4em] mb-2 block">Live Operations</span>
 
-                                <h2 class="text-4xl font-black text-slate-900 tracking-tight" style="font-family: 'Outfit', sans-serif;">Research Portfolio.</h2>
+                                <h2 class="text-4xl font-black tracking-tight" style="font-family: 'Outfit', sans-serif; background: linear-gradient(135deg, #0f172a 30%, #2563eb 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Research Portfolio.</h2>
 
                             </div>
 
@@ -4003,7 +4011,7 @@
 
                         <div class="relative z-10">
 
-                            <h3 class="text-xl font-black text-white mb-8" style="font-family: 'Outfit', sans-serif;">Distributed Neural Resources</h3>
+                            <h3 class="text-xl font-black mb-8" style="font-family: 'Outfit', sans-serif; background: linear-gradient(135deg, #ffffff 60%, #93c5fd 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Distributed Neural Resources</h3>
 
                             <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
 
@@ -4141,10 +4149,8 @@
 
                 </div>
 
-                <h2 style="font-size: clamp(32px, 5vw, 48px); font-weight: 900; color: #0f172a; line-height: 1.1; letter-spacing: -0.03em; font-family: 'Outfit', sans-serif;">
-
-                    Built for precision<br><span style="background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">clinical teams.</span>
-
+                <h2 style="font-size: clamp(32px, 5vw, 48px); font-weight: 900; line-height: 1.1; letter-spacing: -0.03em; font-family: 'Outfit', sans-serif; background: linear-gradient(135deg, #0f172a 30%, #2563eb 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                    Built for precision<br>clinical teams.
                 </h2>
 
             </div>
@@ -4207,7 +4213,7 @@
 
                                 <span style="font-size: 10px; font-weight: 900; color: #2563eb; text-transform: uppercase; letter-spacing: 0.25em; display: block; margin-bottom: 8px;">Discovery</span>
 
-                                <h3 style="font-size: 24px; font-weight: 900; color: #0f172a; margin-bottom: 8px; font-family: 'Outfit', sans-serif;">Precision Manifolds</h3>
+                                <h3 style="font-size: 24px; font-weight: 900; margin-bottom: 8px; font-family: 'Outfit', sans-serif; background: linear-gradient(135deg, #0f172a 45%, #2563eb 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Precision Manifolds</h3>
 
                                 <p style="font-size: 15px; color: #475569; line-height: 1.7;">Access high-definition single-cell baselines to benchmark clinical trajectories with 99.8% fidelity.</p>
 
@@ -4241,7 +4247,7 @@
 
                                 <span style="font-size: 10px; font-weight: 900; color: #2563eb; text-transform: uppercase; letter-spacing: 0.25em; display: block; margin-bottom: 8px;">Compliance</span>
 
-                                <h3 style="font-size: 24px; font-weight: 900; color: #0f172a; margin-bottom: 8px; font-family: 'Outfit', sans-serif;">Evidence Registry</h3>
+                                <h3 style="font-size: 24px; font-weight: 900; margin-bottom: 8px; font-family: 'Outfit', sans-serif; background: linear-gradient(135deg, #0f172a 45%, #2563eb 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Evidence Registry</h3>
 
                                 <p style="font-size: 15px; color: #475569; line-height: 1.7;">Full provenance tracking for research use only (RUO) applications, ensuring institutional-grade audit trails.</p>
 
@@ -4275,7 +4281,7 @@
 
                                 <span style="font-size: 10px; font-weight: 900; color: #2563eb; text-transform: uppercase; letter-spacing: 0.25em; display: block; margin-bottom: 8px;">Execution</span>
 
-                                <h3 style="font-size: 24px; font-weight: 900; color: #0f172a; margin-bottom: 8px; font-family: 'Outfit', sans-serif;">Simulation Lab</h3>
+                                <h3 style="font-size: 24px; font-weight: 900; margin-bottom: 8px; font-family: 'Outfit', sans-serif; background: linear-gradient(135deg, #0f172a 45%, #2563eb 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Simulation Lab</h3>
 
                                 <p style="font-size: 15px; color: #475569; line-height: 1.7;">Deploy virtual trials to plan and manage complex reprogramming protocols with clarity and control.</p>
 
@@ -4311,7 +4317,7 @@
 
                                 <span style="font-size: 10px; font-weight: 900; color: #2563eb; text-transform: uppercase; letter-spacing: 0.25em; display: block; margin-bottom: 8px;">Safety</span>
 
-                                <h3 style="font-size: 24px; font-weight: 900; color: #0f172a; margin-bottom: 8px; font-family: 'Outfit', sans-serif;">OSK Partial Mode</h3>
+                                <h3 style="font-size: 24px; font-weight: 900; margin-bottom: 8px; font-family: 'Outfit', sans-serif; background: linear-gradient(135deg, #0f172a 45%, #2563eb 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">OSK Partial Mode</h3>
 
                                 <p style="font-size: 15px; color: #475569; line-height: 1.7;">Computationally constrained partial reprogramming   oncogene blacklist, dedifferentiation ceiling, Sirtuin scoring.</p>
 
@@ -4357,7 +4363,7 @@
 
                                 </div>
 
-                                <h2 style="font-size: clamp(24px, 3vw, 32px); font-weight: 900; color: #0f172a; line-height: 1.15; font-family: 'Outfit', sans-serif;">Rejuvenation <span style="color: #2563eb;">Without Risk.</span></h2>
+                                <h2 style="font-size: clamp(24px, 3vw, 32px); font-weight: 900; line-height: 1.15; font-family: 'Outfit', sans-serif; background: linear-gradient(135deg, #0f172a 40%, #2563eb 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Rejuvenation Without Risk.</h2>
 
                             </div>
 
@@ -4535,7 +4541,7 @@
 
                             </div>
 
-                            <h2 class="text-4xl font-black text-slate-900 mb-6 leading-tight">Achieving Multi-Fidelity <br><span class="text-blue-600">Structural Validation.</span></h2>
+                            <h2 class="text-4xl font-black text-slate-900 mb-6 leading-tight" style="font-family: 'Outfit', sans-serif; background: linear-gradient(135deg, #0f172a 40%, #2563eb 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Achieving Multi-Fidelity <br>Structural Validation.</h2>
 
                             <p class="text-lg text-slate-400 font-medium leading-relaxed mb-8">
 
@@ -4607,7 +4613,7 @@
 
                     <span class="text-[10px] font-black text-blue-600 uppercase tracking-[0.3em] mb-3 block">Platform Modules</span>
 
-                    <h2 class="text-4xl font-black text-slate-900 tracking-tight leading-tight" style="font-family: 'Outfit', sans-serif;">Everything your<br>team needs.</h2>
+                    <h2 class="text-4xl font-black text-slate-900 tracking-tight leading-tight" style="font-family: 'Outfit', sans-serif; background: linear-gradient(135deg, #0f172a 40%, #2563eb 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Everything your<br>team needs.</h2>
 
                 </div>
 
@@ -4637,7 +4643,7 @@
 
                             <div style="flex: 1;">
 
-                                <h3 style="font-size: 20px; font-weight: 900; color: #0f172a; margin-bottom: 4px; font-family: 'Outfit', sans-serif;">Pilot Dashboard</h3>
+                                <h3 style="font-size: 20px; font-weight: 900; margin-bottom: 4px; font-family: 'Outfit', sans-serif; background: linear-gradient(135deg, #0f172a 45%, #2563eb 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Pilot Dashboard</h3>
 
                                 <p style="font-size: 14px; color: #475569; line-height: 1.6;">Real-time tracking of Pilot Funnels, Partnership KPIs, and Risk Registers for Enterprise diligence.</p>
 
@@ -4679,7 +4685,7 @@
 
                             <div style="flex: 1;">
 
-                                <h3 style="font-size: 20px; font-weight: 900; color: #0f172a; margin-bottom: 4px; font-family: 'Outfit', sans-serif;">Virtual Trials</h3>
+                                <h3 style="font-size: 20px; font-weight: 900; margin-bottom: 4px; font-family: 'Outfit', sans-serif; background: linear-gradient(135deg, #0f172a 45%, #2563eb 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Virtual Trials</h3>
 
                                 <p style="font-size: 14px; color: #475569; line-height: 1.6;">Run high-throughput clinical trials on digital cohorts. Test longevity interventions across diverse populations.</p>
 
@@ -4721,7 +4727,7 @@
 
                             <div style="flex: 1;">
 
-                                <h3 style="font-size: 20px; font-weight: 900; color: #0f172a; margin-bottom: 4px; font-family: 'Outfit', sans-serif;">Regulatory Statement</h3>
+                                <h3 style="font-size: 20px; font-weight: 900; margin-bottom: 4px; font-family: 'Outfit', sans-serif; background: linear-gradient(135deg, #0f172a 45%, #2563eb 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Regulatory Statement</h3>
 
                                 <p style="font-size: 14px; color: #475569; line-height: 1.6;">Formal Intended Use Statement and 12-Month Evidence Generation Roadmap for institutional compliance.</p>
 
@@ -4780,17 +4786,9 @@
                     </span>
 
                     <h2 class="text-6xl font-black text-slate-900 mb-8 leading-[1.1]"
-
-                        style="font-family: 'Outfit', sans-serif;">
-
+                        style="font-family: 'Outfit', sans-serif; background: linear-gradient(135deg, #0f172a 40%, #2563eb 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
                         Propelling Life Science with <br>
-
-                        <span
-
-                            class="bg-clip-text text-transparent bg-gradient-to-r from-slate-900 to-slate-500">Generative
-
-                            Trajectory Modeling.</span>
-
+                        Generative Trajectory Modeling.
                     </h2>
 
                     <p class="text-xl text-slate-400 font-medium leading-relaxed mb-12">
@@ -4855,7 +4853,7 @@
 
                 <span class="text-[10px] font-black text-blue-600 uppercase tracking-[0.5em] mb-4 block">Institutional Truth</span>
 
-                <h2 class="text-5xl font-black text-slate-900 mb-6 tracking-tight" style="font-family: 'Outfit', sans-serif;">Autonomous Structural Authority</h2>
+                <h2 class="text-5xl font-black text-slate-900 mb-6 tracking-tight" style="font-family: 'Outfit', sans-serif; background: linear-gradient(135deg, #0f172a 40%, #2563eb 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Autonomous Structural Authority</h2>
 
                 <p class="text-xl text-slate-400 max-w-3xl leading-relaxed font-medium">
 
@@ -4885,7 +4883,7 @@
 
                         </div>
 
-                        <h3 class="text-3xl font-black text-white mb-6" style="font-family: 'Outfit', sans-serif;">Epicardial-to-Myocardial Transformation</h3>
+                        <h3 class="text-3xl font-black mb-6" style="font-family: 'Outfit', sans-serif; background: linear-gradient(135deg, #ffffff 60%, #93c5fd 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Epicardial-to-Myocardial Transformation</h3>
 
                         <p class="text-slate-400 mb-8 leading-relaxed italic border-l-2 border-blue-600 pl-4">
 
@@ -4951,7 +4949,7 @@
 
                         </div>
 
-                        <h3 class="text-3xl font-black text-white mb-6" style="font-family: 'Outfit', sans-serif;">Zenith Ultra Reprogramming</h3>
+                        <h3 class="text-3xl font-black mb-6" style="font-family: 'Outfit', sans-serif; background: linear-gradient(135deg, #ffffff 60%, #93c5fd 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Zenith Ultra Reprogramming</h3>
 
                         <div class="bg-white/5 p-6 rounded-2xl border border-white/10 mb-8">
 
@@ -5027,7 +5025,7 @@
 
                         </div>
 
-                        <h3 class="text-3xl font-black text-slate-900 mb-6" style="font-family: 'Outfit', sans-serif;">High-Fidelity Rejuvenation Manifold</h3>
+                        <h3 class="text-3xl font-black mb-6" style="font-family: 'Outfit', sans-serif; background: linear-gradient(135deg, #0f172a 45%, #2563eb 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">High-Fidelity Rejuvenation Manifold</h3>
 
                         <div class="bg-slate-50 p-6 rounded-2xl border border-slate-100 mb-8">
 
@@ -5123,7 +5121,7 @@
 
                 <span class="text-[11px] font-black text-blue-600 uppercase tracking-[0.4em] mb-4 block">Institutional Core</span>
 
-                <h2 class="text-6xl font-black text-slate-900 leading-[1.05] tracking-tight" style="font-family: 'Outfit', sans-serif;">Platform Capabilities.</h2>
+                <h2 class="text-6xl font-black text-slate-900 leading-[1.05] tracking-tight" style="font-family: 'Outfit', sans-serif; background: linear-gradient(135deg, #0f172a 40%, #2563eb 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Platform Capabilities.</h2>
 
             </div>
 
@@ -5145,7 +5143,7 @@
 
                     <div style="position: relative; z-index: 2;">
 
-                        <h3 class="text-3xl font-black text-slate-900 mb-6" style="font-family: 'Outfit', sans-serif;">Target Identification</h3>
+                        <h3 class="text-3xl font-black mb-6" style="font-family: 'Outfit', sans-serif; background: linear-gradient(135deg, #0f172a 45%, #2563eb 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Target Identification</h3>
 
                         <p class="text-xl text-slate-400 leading-relaxed font-medium max-w-xl">Advanced algorithmic screening to pinpoint high-value genomic targets for therapeutic interventions and state induction.</p>
 
@@ -5175,7 +5173,7 @@
 
                     <div style="position: relative; z-index: 2;">
 
-                        <h3 class="text-2xl font-black text-slate-900 mb-4" style="font-family: 'Outfit', sans-serif;">Generative<br>Dynamics</h3>
+                        <h3 class="text-2xl font-black mb-4" style="font-family: 'Outfit', sans-serif; background: linear-gradient(135deg, #0f172a 45%, #2563eb 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Generative<br>Dynamics</h3>
 
                         <p class="text-base text-slate-400 leading-relaxed font-medium">Utilizing Attention manifolds to model continuous trajectories of cell fate conversion.</p>
 
@@ -5201,7 +5199,7 @@
 
                             </div>
 
-                            <h3 class="text-4xl font-black text-slate-900 mb-6" style="font-family: 'Outfit', sans-serif;">Safety Hardening & Risk Detection</h3>
+                            <h3 class="text-4xl font-black text-slate-900 mb-6" style="font-family: 'Outfit', sans-serif; background: linear-gradient(135deg, #0f172a 40%, #8b5cf6 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Safety Hardening & Risk Detection</h3>
 
                             <p class="text-xl text-slate-400 leading-relaxed font-medium max-w-2xl">Comprehensive monitoring systems designed to detect and mitigate oncogenic risk factors during reprogramming cycles, ensuring genomic stability throughout the trajectory.</p>
 
