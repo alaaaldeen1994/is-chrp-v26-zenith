@@ -2162,7 +2162,7 @@ const BiosimBridge = {
                 BiosimUI.notify('COPIED', 'JSON manifest copied to clipboard!', 'suc');
             } catch(e) {}
 
-            const backupFileName = `${targetTF.toLowerCase()}_af3_manifest.json`;
+            const backupFileName = `Zenith_Full_${targetTF.toUpperCase()}.json`;
 
             // Download file
             const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(jsonStr);
