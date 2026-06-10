@@ -424,6 +424,55 @@
             </div>
         </div>
 
+        <!-- Systems Biology Formulations -->
+        <div class="card-elite mb-16">
+            <h2 class="text-4xl font-black mb-10 flex items-center gap-4 text-slate-900">
+                <span class="w-3 h-3 bg-teal-500 rounded-full"></span> 5. Advanced Systems Biology Formulations
+            </h2>
+            <div class="space-y-12">
+                <div>
+                    <h3 class="text-lg font-black text-slate-900 uppercase mb-4 tracking-wider">I. GraphRAG Message Passing</h3>
+                    <p class="text-sm text-slate-400 leading-relaxed mb-4">Message passing over the heterogeneous Cardiac GRN $G=(V,E)$ to update embedding vectors:</p>
+                    <div class="math-box text-center text-2xl font-black">
+                        $$h_v^{(k)} = \sigma\left(W^{(k)} \cdot \text{CONCAT}\left(h_v^{(k-1)}, \text{AGGREGATE}(\{h_u^{(k-1)} : u \in N(v)\})\right)\right)$$
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-black text-slate-900 uppercase mb-4 tracking-wider">II. Zero-Shot Tabular Multi-Omics Predictor</h3>
+                    <p class="text-sm text-slate-400 leading-relaxed mb-4">Transformer self-attention mechanism computing downstream expression profiles:</p>
+                    <div class="math-box text-center text-2xl font-black">
+                        $$\text{Attention}(Q,K,V) = \text{Softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V$$
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-black text-slate-900 uppercase mb-4 tracking-wider">III. Assay Reproducibility (Z'-Factor)</h3>
+                    <p class="text-sm text-slate-400 leading-relaxed mb-4">Assay validation metric evaluating positive and negative control variance:</p>
+                    <div class="math-box text-center text-2xl font-black">
+                        $$Z' = 1 - \frac{3(\sigma_{pos} + \sigma_{neg})}{|\mu_{pos} - \mu_{neg}|} \quad [\text{Requirement: } Z' \ge 0.5]$$
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-black text-slate-900 uppercase mb-4 tracking-wider">IV. Single-Cell Quality Control</h3>
+                    <p class="text-sm text-slate-400 leading-relaxed mb-4">Mitochondrial leakage read fraction $M_i$ calculation filter:</p>
+                    <div class="math-box text-center text-2xl font-black">
+                        $$M_i = \frac{\sum_{g \in G_{mito}} x_{i,g}}{\sum_{g \in G_{all}} x_{i,g}} \times 100 \quad [\text{Filter Condition: } M_i \le 15\%]$$
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-black text-slate-900 uppercase mb-4 tracking-wider">V. mRNA-LNP Organ tropism & Encapsulation</h3>
+                    <p class="text-sm text-slate-400 leading-relaxed mb-4">Encapsulation efficiency prediction using lipid molar ratios and N/P charge metrics:</p>
+                    <div class="math-box text-center text-2xl font-black">
+                        $$EE\% = \beta_0 + \beta_1 X_{ion} + \beta_2 X_{chol} + \beta_3 \left(\frac{P}{N}\right) + \epsilon$$
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
         <!-- Comparative Specifications -->
         <div class="card-elite mb-16 overflow-hidden">
             <h2 class="text-4xl font-black mb-12 text-slate-900">Comparative Specifications</h2>
