@@ -3838,6 +3838,11 @@ const BiosimBridge = {
                 const width = rect.width || 670;
                 const height = rect.height || 240;
 
+                // Ensure the SVG element has correct scaling viewport attributes
+                svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
+                svg.setAttribute('width', '100%');
+                svg.setAttribute('height', '100%');
+
                 // Define graph layout nodes programmatically
                 const nodes = [
                     { id: 'GATA4', type: 'TF', safety: 0.95 },
@@ -3968,7 +3973,7 @@ const BiosimBridge = {
                 markerActive.setAttribute('orient', 'auto-start-reverse');
                 const pathActive = document.createElementNS('http://www.w3.org/2000/svg', 'path');
                 pathActive.setAttribute('d', 'M 0 1.5 L 8 5 L 0 8.5 z');
-                pathActive.setAttribute('fill', '#3b82f6');
+                pathActive.setAttribute('fill', '#60a5fa');
                 markerActive.appendChild(pathActive);
                 defs.appendChild(markerActive);
 
@@ -3983,7 +3988,7 @@ const BiosimBridge = {
                 markerRisk.setAttribute('orient', 'auto-start-reverse');
                 const pathRisk = document.createElementNS('http://www.w3.org/2000/svg', 'path');
                 pathRisk.setAttribute('d', 'M 0 1.5 L 8 5 L 0 8.5 z');
-                pathRisk.setAttribute('fill', '#ef4444');
+                pathRisk.setAttribute('fill', '#f87171');
                 markerRisk.appendChild(pathRisk);
                 defs.appendChild(markerRisk);
 
@@ -3997,7 +4002,7 @@ const BiosimBridge = {
                 const gridPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
                 gridPath.setAttribute('d', 'M 24 0 L 0 0 0 24');
                 gridPath.setAttribute('fill', 'none');
-                gridPath.setAttribute('stroke', '#f1f5f9');
+                gridPath.setAttribute('stroke', '#141b2d');
                 gridPath.setAttribute('stroke-width', '1');
                 gridPattern.appendChild(gridPath);
                 
@@ -4012,9 +4017,9 @@ const BiosimBridge = {
                 svg.appendChild(gridRect);
 
                 const pathways = [
-                    { id: 'reprogramming', label: 'CORE REPROGRAMMING TFs', nodes: ['GATA4', 'MEF2C', 'TBX5', 'NKX2-5'], fillColor: 'rgba(59,130,246,0.02)', strokeColor: 'rgba(59,130,246,0.3)' },
-                    { id: 'structural', label: 'STRUCTURAL CARDIAC TARGETS', nodes: ['TNNT2', 'MYH6', 'ACTC1', 'NPPA'], fillColor: 'rgba(16,185,129,0.02)', strokeColor: 'rgba(16,185,129,0.3)' },
-                    { id: 'oncogenic', label: 'ONCOGENIC RISK PATHWAY', nodes: ['MYC', 'SNAI1', 'FOS', 'JUN'], fillColor: 'rgba(239,68,68,0.01)', strokeColor: 'rgba(239,68,68,0.2)' }
+                    { id: 'reprogramming', label: 'CORE REPROGRAMMING TFs', nodes: ['GATA4', 'MEF2C', 'TBX5', 'NKX2-5'], fillColor: 'rgba(59,130,246,0.04)', strokeColor: 'rgba(59,130,246,0.45)' },
+                    { id: 'structural', label: 'STRUCTURAL CARDIAC TARGETS', nodes: ['TNNT2', 'MYH6', 'ACTC1', 'NPPA'], fillColor: 'rgba(16,185,129,0.04)', strokeColor: 'rgba(16,185,129,0.45)' },
+                    { id: 'oncogenic', label: 'ONCOGENIC RISK PATHWAY', nodes: ['MYC', 'SNAI1', 'FOS', 'JUN'], fillColor: 'rgba(239,68,68,0.03)', strokeColor: 'rgba(239,68,68,0.35)' }
                 ];
 
                 function updateHulls() {
@@ -4098,13 +4103,13 @@ const BiosimBridge = {
                         const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
                         path.setAttribute('d', `M ${sourceNode.x} ${sourceNode.y} Q ${cx} ${cy} ${targetNode.x} ${targetNode.y}`);
 
-                        let strokeColor = '#e2e8f0';
-                        let opacity = '0.2';
+                        let strokeColor = '#1e293b';
+                        let opacity = '0.35';
                         let strokeWidth = '1';
 
                         if (isActive) {
-                            strokeColor = isRisk ? '#ef4444' : '#3b82f6';
-                            opacity = '0.75';
+                            strokeColor = isRisk ? '#f87171' : '#60a5fa';
+                            opacity = '0.85';
                             strokeWidth = '1.8';
                             path.setAttribute('marker-end', isRisk ? 'url(#arrow-risk)' : 'url(#arrow-active)');
                             if (isRisk) {
@@ -4130,7 +4135,7 @@ const BiosimBridge = {
                             weightText.setAttribute('x', cx);
                             weightText.setAttribute('y', cy - 4);
                             weightText.setAttribute('text-anchor', 'middle');
-                            weightText.setAttribute('fill', isRisk ? '#ef4444' : '#2563eb');
+                            weightText.setAttribute('fill', isRisk ? '#f87171' : '#60a5fa');
                             weightText.setAttribute('font-size', '7px');
                             weightText.setAttribute('font-weight', '700');
                             weightText.setAttribute('font-family', 'monospace');
@@ -4151,7 +4156,7 @@ const BiosimBridge = {
                     const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
                     group.setAttribute('class', `grn-node node-${node.id}`);
                     group.setAttribute('data-id', node.id);
-                    group.setAttribute('opacity', isActive ? '1' : '0.22');
+                    group.setAttribute('opacity', isActive ? '1' : '0.35');
                     group.setAttribute('transform', `translate(${node.x}, ${node.y})`);
 
                     const w = 46;
@@ -4166,20 +4171,20 @@ const BiosimBridge = {
                     rect.setAttribute('rx', '9');
                     rect.setAttribute('ry', '9');
 
-                    let fill = '#ffffff';
-                    let stroke = '#e2e8f0';
+                    let fill = '#111827';
+                    let stroke = '#374151';
 
                     if (isActive) {
                         if (node.type === 'TF') {
                             if (node.safety < 0.50) {
-                                fill = 'rgba(255,235,235,0.7)';
+                                fill = 'rgba(127,29,29,0.45)';
                                 stroke = '#ef4444';
                             } else {
-                                fill = 'rgba(239,246,255,0.7)';
+                                fill = 'rgba(30,58,138,0.45)';
                                 stroke = '#3b82f6';
                             }
                         } else {
-                            fill = 'rgba(240,253,250,0.7)';
+                            fill = 'rgba(6,78,59,0.45)';
                             stroke = '#10b981';
                         }
                     }
@@ -4198,9 +4203,9 @@ const BiosimBridge = {
                         dot.setAttribute('r', '2.5');
                         let dotColor = '#cbd5e1';
                         if (node.type === 'TF') {
-                            dotColor = node.safety < 0.50 ? '#ef4444' : '#3b82f6';
+                            dotColor = node.safety < 0.50 ? '#f87171' : '#60a5fa';
                         } else {
-                            dotColor = '#10b981';
+                            dotColor = '#34d399';
                         }
                         dot.setAttribute('fill', dotColor);
                         group.appendChild(dot);
@@ -4211,7 +4216,7 @@ const BiosimBridge = {
                     text.setAttribute('x', isActive ? 3 : 0);
                     text.setAttribute('y', 3);
                     text.setAttribute('text-anchor', 'middle');
-                    text.setAttribute('fill', isActive ? '#0f172a' : '#94a3b8');
+                    text.setAttribute('fill', isActive ? '#f8fafc' : '#64748b');
                     text.setAttribute('font-size', '8px');
                     text.setAttribute('font-family', "'Outfit', 'Inter', sans-serif");
                     text.setAttribute('font-weight', '700');
@@ -4227,15 +4232,15 @@ const BiosimBridge = {
 
                         let details = `<strong>Node: ${node.id}</strong>`;
                         if (node.type === 'TF') {
-                            details += `<br><span style="color:#64748b;">Type: Pioneer Transcription Factor</span>`;
+                            details += `<br><span style="color:#94a3b8;">Type: Pioneer Transcription Factor</span>`;
                             details += `<br>Safety Index: <strong>${(node.safety * 100).toFixed(0)}%</strong>`;
                             if (node.safety < 0.50) {
-                                details += `<br><span style="color:#ef4444; font-weight:bold;">⚠ Oncogenic Activation Risk</span>`;
+                                details += `<br><span style="color:#f87171; font-weight:bold;">⚠ Oncogenic Activation Risk</span>`;
                             } else {
-                                details += `<br><span style="color:#10b981;">✔ Reprogramming Safety Met</span>`;
+                                details += `<br><span style="color:#34d399;">✔ Reprogramming Safety Met</span>`;
                             }
                         } else {
-                            details += `<br><span style="color:#64748b;">Type: Downstream Target Gene</span>`;
+                            details += `<br><span style="color:#94a3b8;">Type: Downstream Target Gene</span>`;
                             details += `<br>Function: Structural cardiomyocyte protein`;
                         }
 
@@ -4269,14 +4274,14 @@ const BiosimBridge = {
                             const nEl = svg.querySelector(`.node-${n.id}`);
                             if (nEl) {
                                 const isNActive = n.type === 'Target' || activeTFs.includes(n.id);
-                                nEl.setAttribute('opacity', isNActive ? '1' : '0.22');
+                                nEl.setAttribute('opacity', isNActive ? '1' : '0.35');
                             }
                         });
                         links.forEach(l => {
                             const edgeEl = svg.querySelector(`.edge-source-${l.source}.edge-target-${l.target}`);
                             if (edgeEl) {
                                 const isLActive = activeTFs.includes(l.source);
-                                edgeEl.setAttribute('opacity', isLActive ? '0.75' : '0.15');
+                                edgeEl.setAttribute('opacity', isLActive ? '0.85' : '0.35');
                                 edgeEl.setAttribute('stroke-width', isLActive ? '1.8' : '1');
                             }
                         });
@@ -4312,6 +4317,9 @@ const BiosimBridge = {
                             group.setAttribute('cursor', 'grab');
                         }
                     });
+
+                    svg.appendChild(group);
+                });
             }
         } catch (e) {
             console.error("GraphRAG query request failed:", e);
