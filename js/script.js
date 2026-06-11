@@ -3868,12 +3868,21 @@ const BiosimBridge = {
 
                 const activeTFs = data.recommended_factors || [];
 
-                // Initialize node positions (ring distribution around center)
+                // Initialize node positions (regionally grouped)
                 nodes.forEach((node, i) => {
-                    const angle = (i / nodes.length) * 2 * Math.PI;
-                    const radius = 60 + Math.random() * 20;
-                    node.x = width / 2 + Math.cos(angle) * radius;
-                    node.y = height / 2 + Math.sin(angle) * radius;
+                    if (node.id === 'GATA4' || node.id === 'MEF2C' || node.id === 'TBX5' || node.id === 'NKX2-5') {
+                        // Core TFs left
+                        node.x = width * 0.22 + (Math.random() - 0.5) * 40;
+                        node.y = height * 0.45 + (Math.random() - 0.5) * 60;
+                    } else if (node.id === 'TNNT2' || node.id === 'MYH6' || node.id === 'ACTC1' || node.id === 'NPPA') {
+                        // Targets middle
+                        node.x = width * 0.50 + (Math.random() - 0.5) * 40;
+                        node.y = height * 0.45 + (Math.random() - 0.5) * 60;
+                    } else {
+                        // Risk path right
+                        node.x = width * 0.78 + (Math.random() - 0.5) * 40;
+                        node.y = height * 0.50 + (Math.random() - 0.5) * 60;
+                    }
                     node.vx = 0;
                     node.vy = 0;
                 });
@@ -3940,18 +3949,19 @@ const BiosimBridge = {
                         node.vy *= friction;
 
                         // Bounds protection
-                        node.x = Math.max(25, Math.min(width - 25, node.x));
+                        node.x = Math.max(35, Math.min(width - 35, node.x));
                         node.y = Math.max(25, Math.min(height - 25, node.y));
                     });
                 }
 
-                // Define markers (arrowheads) in <defs>
+                // Define defs and arrowheads
                 const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
                 
+                // Active activation arrow
                 const markerActive = document.createElementNS('http://www.w3.org/2000/svg', 'marker');
                 markerActive.setAttribute('id', 'arrow-active');
                 markerActive.setAttribute('viewBox', '0 0 10 10');
-                markerActive.setAttribute('refX', '17'); // Draw tip at target boundary
+                markerActive.setAttribute('refX', '30'); // Position tip exactly at capsule border
                 markerActive.setAttribute('refY', '5');
                 markerActive.setAttribute('markerWidth', '6');
                 markerActive.setAttribute('markerHeight', '6');
@@ -3962,10 +3972,11 @@ const BiosimBridge = {
                 markerActive.appendChild(pathActive);
                 defs.appendChild(markerActive);
 
+                // Active risk arrow
                 const markerRisk = document.createElementNS('http://www.w3.org/2000/svg', 'marker');
                 markerRisk.setAttribute('id', 'arrow-risk');
                 markerRisk.setAttribute('viewBox', '0 0 10 10');
-                markerRisk.setAttribute('refX', '17');
+                markerRisk.setAttribute('refX', '30');
                 markerRisk.setAttribute('refY', '5');
                 markerRisk.setAttribute('markerWidth', '6');
                 markerRisk.setAttribute('markerHeight', '6');
@@ -3976,120 +3987,247 @@ const BiosimBridge = {
                 markerRisk.appendChild(pathRisk);
                 defs.appendChild(markerRisk);
 
+                // Grid Pattern
+                const gridPattern = document.createElementNS('http://www.w3.org/2000/svg', 'pattern');
+                gridPattern.setAttribute('id', 'bg-grid');
+                gridPattern.setAttribute('width', '24');
+                gridPattern.setAttribute('height', '24');
+                gridPattern.setAttribute('patternUnits', 'userSpaceOnUse');
+                
+                const gridPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                gridPath.setAttribute('d', 'M 24 0 L 0 0 0 24');
+                gridPath.setAttribute('fill', 'none');
+                gridPath.setAttribute('stroke', '#f1f5f9');
+                gridPath.setAttribute('stroke-width', '1');
+                gridPattern.appendChild(gridPath);
+                
+                defs.appendChild(gridPattern);
                 svg.appendChild(defs);
 
-                // Draw links (connections)
-                links.forEach(link => {
-                    const sourceNode = nodes.find(n => n.id === link.source);
-                    const targetNode = nodes.find(n => n.id === link.target);
-                    if (!sourceNode || !targetNode) return;
+                // Add grid background rect
+                const gridRect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+                gridRect.setAttribute('width', '100%');
+                gridRect.setAttribute('height', '100%');
+                gridRect.setAttribute('fill', 'url(#bg-grid)');
+                svg.appendChild(gridRect);
 
-                    const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-                    line.setAttribute('x1', sourceNode.x);
-                    line.setAttribute('y1', sourceNode.y);
-                    line.setAttribute('x2', targetNode.x);
-                    line.setAttribute('y2', targetNode.y);
+                const pathways = [
+                    { id: 'reprogramming', label: 'CORE REPROGRAMMING TFs', nodes: ['GATA4', 'MEF2C', 'TBX5', 'NKX2-5'], fillColor: 'rgba(59,130,246,0.02)', strokeColor: 'rgba(59,130,246,0.3)' },
+                    { id: 'structural', label: 'STRUCTURAL CARDIAC TARGETS', nodes: ['TNNT2', 'MYH6', 'ACTC1', 'NPPA'], fillColor: 'rgba(16,185,129,0.02)', strokeColor: 'rgba(16,185,129,0.3)' },
+                    { id: 'oncogenic', label: 'ONCOGENIC RISK PATHWAY', nodes: ['MYC', 'SNAI1', 'FOS', 'JUN'], fillColor: 'rgba(239,68,68,0.01)', strokeColor: 'rgba(239,68,68,0.2)' }
+                ];
 
-                    const isActive = activeTFs.includes(link.source);
-                    const isRisk = sourceNode.safety < 0.50;
+                function updateHulls() {
+                    svg.querySelectorAll('.grn-hull-rect, .grn-hull-label').forEach(el => el.remove());
+                    
+                    pathways.forEach(pathway => {
+                        const groupNodes = nodes.filter(n => pathway.nodes.includes(n.id));
+                        if (groupNodes.length === 0) return;
+                        
+                        let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+                        groupNodes.forEach(n => {
+                            minX = Math.min(minX, n.x);
+                            minY = Math.min(minY, n.y);
+                            maxX = Math.max(maxX, n.x);
+                            maxY = Math.max(maxY, n.y);
+                        });
+                        
+                        const padX = 35;
+                        const padY = 22;
+                        minX -= padX;
+                        minY -= padY;
+                        maxX += padX;
+                        maxY += padY;
+                        
+                        const w = maxX - minX;
+                        const h = maxY - minY;
+                        
+                        const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+                        rect.setAttribute('x', minX);
+                        rect.setAttribute('y', minY);
+                        rect.setAttribute('width', w);
+                        rect.setAttribute('height', h);
+                        rect.setAttribute('rx', '14');
+                        rect.setAttribute('ry', '14');
+                        rect.setAttribute('fill', pathway.fillColor);
+                        rect.setAttribute('stroke', pathway.strokeColor);
+                        rect.setAttribute('stroke-width', '1');
+                        rect.setAttribute('stroke-dasharray', '4,4');
+                        rect.setAttribute('class', 'grn-hull-rect');
+                        
+                        // Insert immediately after grid background
+                        svg.insertBefore(rect, svg.firstChild.nextSibling);
+                        
+                        const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                        text.setAttribute('x', minX + 10);
+                        text.setAttribute('y', minY + 12);
+                        text.setAttribute('fill', pathway.strokeColor);
+                        text.setAttribute('font-size', '7px');
+                        text.setAttribute('font-weight', '800');
+                        text.setAttribute('font-family', "'Outfit', sans-serif");
+                        text.setAttribute('class', 'grn-hull-label');
+                        text.textContent = pathway.label;
+                        
+                        svg.insertBefore(text, svg.firstChild.nextSibling);
+                    });
+                }
 
-                    let strokeColor = '#cbd5e1';
-                    let opacity = '0.15';
-                    let strokeWidth = '1';
+                function updateEdges() {
+                    svg.querySelectorAll('.grn-edge-path, .grn-edge-weight').forEach(el => el.remove());
+                    
+                    links.forEach(link => {
+                        const sourceNode = nodes.find(n => n.id === link.source);
+                        const targetNode = nodes.find(n => n.id === link.target);
+                        if (!sourceNode || !targetNode) return;
 
-                    if (isActive) {
-                        strokeColor = isRisk ? '#ef4444' : '#3b82f6';
-                        opacity = '0.75';
-                        strokeWidth = '1.8';
-                        line.setAttribute('marker-end', isRisk ? 'url(#arrow-risk)' : 'url(#arrow-active)');
-                        if (isRisk) {
-                            line.setAttribute('stroke-dasharray', '4,3');
+                        const isActive = activeTFs.includes(link.source);
+                        const isRisk = sourceNode.safety < 0.50;
+
+                        const dx = targetNode.x - sourceNode.x;
+                        const dy = targetNode.y - sourceNode.y;
+                        const dist = Math.sqrt(dx*dx + dy*dy) || 1;
+
+                        const mx = (sourceNode.x + targetNode.x) / 2;
+                        const my = (sourceNode.y + targetNode.y) / 2;
+                        const px = -dy / dist;
+                        const py = dx / dist;
+                        const offset = 14;
+                        const cx = mx + px * offset;
+                        const cy = my + py * offset;
+
+                        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                        path.setAttribute('d', `M ${sourceNode.x} ${sourceNode.y} Q ${cx} ${cy} ${targetNode.x} ${targetNode.y}`);
+
+                        let strokeColor = '#e2e8f0';
+                        let opacity = '0.2';
+                        let strokeWidth = '1';
+
+                        if (isActive) {
+                            strokeColor = isRisk ? '#ef4444' : '#3b82f6';
+                            opacity = '0.75';
+                            strokeWidth = '1.8';
+                            path.setAttribute('marker-end', isRisk ? 'url(#arrow-risk)' : 'url(#arrow-active)');
+                            if (isRisk) {
+                                path.setAttribute('stroke-dasharray', '4,3');
+                            }
+                        } else {
+                            path.setAttribute('stroke-dasharray', '2,2');
                         }
-                    } else {
-                        line.setAttribute('stroke-dasharray', '2,2');
-                    }
 
-                    line.setAttribute('stroke', strokeColor);
-                    line.setAttribute('stroke-width', strokeWidth);
-                    line.setAttribute('opacity', opacity);
-                    line.setAttribute('class', `grn-edge edge-source-${link.source} edge-target-${link.target}`);
-                    line.setAttribute('data-source', link.source);
-                    line.setAttribute('data-target', link.target);
+                        path.setAttribute('fill', 'none');
+                        path.setAttribute('stroke', strokeColor);
+                        path.setAttribute('stroke-width', strokeWidth);
+                        path.setAttribute('opacity', opacity);
+                        path.setAttribute('class', `grn-edge-path edge-source-${link.source} edge-target-${link.target}`);
+                        path.setAttribute('data-source', link.source);
+                        path.setAttribute('data-target', link.target);
 
-                    svg.appendChild(line);
-                });
+                        // Insert after hulls
+                        svg.appendChild(path);
+
+                        if (isActive) {
+                            const weightText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                            weightText.setAttribute('x', cx);
+                            weightText.setAttribute('y', cy - 4);
+                            weightText.setAttribute('text-anchor', 'middle');
+                            weightText.setAttribute('fill', isRisk ? '#ef4444' : '#2563eb');
+                            weightText.setAttribute('font-size', '7px');
+                            weightText.setAttribute('font-weight', '700');
+                            weightText.setAttribute('font-family', 'monospace');
+                            weightText.setAttribute('class', 'grn-edge-weight');
+                            weightText.textContent = `${link.weight > 0 ? '+' : ''}${link.weight.toFixed(2)}`;
+                            svg.appendChild(weightText);
+                        }
+                    });
+                }
+
+                // Initial hulls and edges render
+                updateHulls();
+                updateEdges();
 
                 // Draw nodes
                 nodes.forEach(node => {
                     const isActive = node.type === 'Target' || activeTFs.includes(node.id);
                     const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-                    group.setAttribute('cursor', 'grab');
                     group.setAttribute('class', `grn-node node-${node.id}`);
                     group.setAttribute('data-id', node.id);
                     group.setAttribute('opacity', isActive ? '1' : '0.22');
+                    group.setAttribute('transform', `translate(${node.x}, ${node.y})`);
 
-                    // Node outer ring / halo for active TFs
-                    if (node.type === 'TF' && isActive) {
-                        const halo = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-                        halo.setAttribute('cx', node.x);
-                        halo.setAttribute('cy', node.y);
-                        halo.setAttribute('r', '15');
-                        halo.setAttribute('fill', 'none');
-                        halo.setAttribute('stroke', node.safety < 0.50 ? 'rgba(239,68,68,0.18)' : 'rgba(59,130,246,0.18)');
-                        halo.setAttribute('stroke-width', '4');
-                        halo.setAttribute('class', 'grn-halo');
-                        group.appendChild(halo);
-                    }
+                    const w = 46;
+                    const h = 18;
 
-                    // Main circle
-                    const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-                    circle.setAttribute('cx', node.x);
-                    circle.setAttribute('cy', node.y);
-                    circle.setAttribute('r', node.type === 'TF' ? '11' : '7.5');
+                    // Main rect capsule
+                    const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+                    rect.setAttribute('x', -w/2);
+                    rect.setAttribute('y', -h/2);
+                    rect.setAttribute('width', w);
+                    rect.setAttribute('height', h);
+                    rect.setAttribute('rx', '9');
+                    rect.setAttribute('ry', '9');
 
                     let fill = '#ffffff';
-                    let stroke = '#cbd5e1';
+                    let stroke = '#e2e8f0';
 
-                    if (node.type === 'TF') {
-                        if (node.safety < 0.50) {
-                            fill = 'rgba(239,68,68,0.06)';
-                            stroke = '#ef4444';
+                    if (isActive) {
+                        if (node.type === 'TF') {
+                            if (node.safety < 0.50) {
+                                fill = 'rgba(255,235,235,0.7)';
+                                stroke = '#ef4444';
+                            } else {
+                                fill = 'rgba(239,246,255,0.7)';
+                                stroke = '#3b82f6';
+                            }
                         } else {
-                            fill = 'rgba(59,130,246,0.06)';
-                            stroke = '#3b82f6';
+                            fill = 'rgba(240,253,250,0.7)';
+                            stroke = '#10b981';
                         }
-                    } else {
-                        fill = '#f8fafc';
-                        stroke = '#64748b';
                     }
 
-                    circle.setAttribute('fill', fill);
-                    circle.setAttribute('stroke', stroke);
-                    circle.setAttribute('stroke-width', '2');
-                    circle.setAttribute('class', 'grn-circle');
-                    group.appendChild(circle);
+                    rect.setAttribute('fill', fill);
+                    rect.setAttribute('stroke', stroke);
+                    rect.setAttribute('stroke-width', '1.5');
+                    rect.setAttribute('class', 'grn-rect');
+                    group.appendChild(rect);
 
-                    // Text label
+                    // Indicator dot for active
+                    if (isActive) {
+                        const dot = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                        dot.setAttribute('cx', -14);
+                        dot.setAttribute('cy', 0);
+                        dot.setAttribute('r', '2.5');
+                        let dotColor = '#cbd5e1';
+                        if (node.type === 'TF') {
+                            dotColor = node.safety < 0.50 ? '#ef4444' : '#3b82f6';
+                        } else {
+                            dotColor = '#10b981';
+                        }
+                        dot.setAttribute('fill', dotColor);
+                        group.appendChild(dot);
+                    }
+
+                    // Label text
                     const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-                    text.setAttribute('x', node.x);
-                    text.setAttribute('y', node.y + (node.type === 'TF' ? 24 : 18));
+                    text.setAttribute('x', isActive ? 3 : 0);
+                    text.setAttribute('y', 3);
                     text.setAttribute('text-anchor', 'middle');
-                    text.setAttribute('fill', '#334155');
-                    text.setAttribute('font-size', '9px');
+                    text.setAttribute('fill', isActive ? '#0f172a' : '#94a3b8');
+                    text.setAttribute('font-size', '8px');
                     text.setAttribute('font-family', "'Outfit', 'Inter', sans-serif");
-                    text.setAttribute('font-weight', '600');
+                    text.setAttribute('font-weight', '700');
                     text.textContent = node.id;
-                    text.setAttribute('class', 'grn-label');
                     group.appendChild(text);
 
-                    // Hover event handlers (highlight neighbors and paths)
-                    group.addEventListener('mouseenter', (e) => {
+                    group.setAttribute('cursor', 'grab');
+
+                    // Tooltip hover
+                    group.addEventListener('mouseenter', () => {
                         const tooltip = document.getElementById('grn-tooltip');
                         if (!tooltip) return;
 
                         let details = `<strong>Node: ${node.id}</strong>`;
                         if (node.type === 'TF') {
-                            details += `<br><span style="color:#64748b;">Type: Transcription Factor</span>`;
+                            details += `<br><span style="color:#64748b;">Type: Pioneer Transcription Factor</span>`;
                             details += `<br>Safety Index: <strong>${(node.safety * 100).toFixed(0)}%</strong>`;
                             if (node.safety < 0.50) {
                                 details += `<br><span style="color:#ef4444; font-weight:bold;">⚠ Oncogenic Activation Risk</span>`;
@@ -4097,8 +4235,8 @@ const BiosimBridge = {
                                 details += `<br><span style="color:#10b981;">✔ Reprogramming Safety Met</span>`;
                             }
                         } else {
-                            details += `<br><span style="color:#64748b;">Type: Target Gene</span>`;
-                            details += `<br>Function: Structural Cardiac protein`;
+                            details += `<br><span style="color:#64748b;">Type: Downstream Target Gene</span>`;
+                            details += `<br>Function: Structural cardiomyocyte protein`;
                         }
 
                         tooltip.innerHTML = details;
@@ -4110,7 +4248,7 @@ const BiosimBridge = {
                         svg.querySelectorAll('.grn-node').forEach(n => {
                             if (n !== group) n.setAttribute('opacity', '0.12');
                         });
-                        svg.querySelectorAll('.grn-edge').forEach(edge => {
+                        svg.querySelectorAll('.grn-edge-path').forEach(edge => {
                             const src = edge.getAttribute('data-source');
                             const tgt = edge.getAttribute('data-target');
                             if (src === node.id || tgt === node.id) {
@@ -4157,41 +4295,15 @@ const BiosimBridge = {
                         node.x = e.clientX - svgRect.left;
                         node.y = e.clientY - svgRect.top;
 
-                        // Constraint boundaries
-                        node.x = Math.max(25, Math.min(width - 25, node.x));
-                        node.y = Math.max(25, Math.min(height - 25, node.y));
+                        node.x = Math.max(30, Math.min(width - 30, node.x));
+                        node.y = Math.max(20, Math.min(height - 20, node.y));
 
-                        // Instantly update elements positions
-                        const haloEl = group.querySelector('.grn-halo');
-                        if (haloEl) {
-                            haloEl.setAttribute('cx', node.x);
-                            haloEl.setAttribute('cy', node.y);
-                        }
-                        const circleEl = group.querySelector('.grn-circle');
-                        if (circleEl) {
-                            circleEl.setAttribute('cx', node.x);
-                            circleEl.setAttribute('cy', node.y);
-                        }
-                        const labelEl = group.querySelector('.grn-label');
-                        if (labelEl) {
-                            labelEl.setAttribute('x', node.x);
-                            labelEl.setAttribute('y', node.y + (node.type === 'TF' ? 24 : 18));
-                        }
+                        // Translate group
+                        group.setAttribute('transform', `translate(${node.x}, ${node.y})`);
 
-                        // Update connected paths/lines
-                        links.forEach(l => {
-                            if (l.source === node.id || l.target === node.id) {
-                                const edgeEl = svg.querySelector(`.edge-source-${l.source}.edge-target-${l.target}`);
-                                if (edgeEl) {
-                                    const srcNode = nodes.find(n => n.id === l.source);
-                                    const tgtNode = nodes.find(n => n.id === l.target);
-                                    edgeEl.setAttribute('x1', srcNode.x);
-                                    edgeEl.setAttribute('y1', srcNode.y);
-                                    edgeEl.setAttribute('x2', tgtNode.x);
-                                    edgeEl.setAttribute('y2', tgtNode.y);
-                                }
-                            }
-                        });
+                        // Update paths and hulls
+                        updateEdges();
+                        updateHulls();
                     });
 
                     window.addEventListener('mouseup', () => {
@@ -4200,9 +4312,6 @@ const BiosimBridge = {
                             group.setAttribute('cursor', 'grab');
                         }
                     });
-
-                    svg.appendChild(group);
-                });
             }
         } catch (e) {
             console.error("GraphRAG query request failed:", e);
