@@ -3833,20 +3833,25 @@ const BiosimBridge = {
 
                 svg.innerHTML = ''; // Clear SVG contents
 
+                // Get SVG client dimensions to center layout
+                const rect = svg.getBoundingClientRect();
+                const width = rect.width || 670;
+                const height = rect.height || 240;
+
                 // Define graph layout nodes programmatically
                 const nodes = [
-                    { id: 'GATA4', type: 'TF', x: 60, y: 50, safety: 0.95 },
-                    { id: 'MEF2C', type: 'TF', x: 155, y: 50, safety: 0.92 },
-                    { id: 'TBX5', type: 'TF', x: 250, y: 50, safety: 0.94 },
-                    { id: 'NKX2-5', type: 'TF', x: 60, y: 170, safety: 0.93 },
-                    { id: 'MYC', type: 'TF', x: 155, y: 170, safety: 0.15 },
-                    { id: 'SNAI1', type: 'TF', x: 250, y: 170, safety: 0.35 },
-                    { id: 'TNNT2', type: 'Target', x: 40, y: 110 },
-                    { id: 'MYH6', type: 'Target', x: 115, y: 110 },
-                    { id: 'ACTC1', type: 'Target', x: 195, y: 110 },
-                    { id: 'NPPA', type: 'Target', x: 275, y: 110 },
-                    { id: 'FOS', type: 'Target', x: 115, y: 205 },
-                    { id: 'JUN', type: 'Target', x: 195, y: 205 }
+                    { id: 'GATA4', type: 'TF', safety: 0.95 },
+                    { id: 'MEF2C', type: 'TF', safety: 0.92 },
+                    { id: 'TBX5', type: 'TF', safety: 0.94 },
+                    { id: 'NKX2-5', type: 'TF', safety: 0.93 },
+                    { id: 'MYC', type: 'TF', safety: 0.15 },
+                    { id: 'SNAI1', type: 'TF', safety: 0.35 },
+                    { id: 'TNNT2', type: 'Target' },
+                    { id: 'MYH6', type: 'Target' },
+                    { id: 'ACTC1', type: 'Target' },
+                    { id: 'NPPA', type: 'Target' },
+                    { id: 'FOS', type: 'Target' },
+                    { id: 'JUN', type: 'Target' }
                 ];
 
                 const links = [
@@ -3861,13 +3866,120 @@ const BiosimBridge = {
                     { source: 'SNAI1', target: 'NPPA', weight: 0.60 }
                 ];
 
-                // Filter nodes/links based on detected factors in GraphRAG response
                 const activeTFs = data.recommended_factors || [];
-                const activeNodes = nodes.filter(n => n.type === 'Target' || activeTFs.includes(n.id));
-                const activeLinks = links.filter(l => activeTFs.includes(l.source));
+
+                // Initialize node positions (ring distribution around center)
+                nodes.forEach((node, i) => {
+                    const angle = (i / nodes.length) * 2 * Math.PI;
+                    const radius = 60 + Math.random() * 20;
+                    node.x = width / 2 + Math.cos(angle) * radius;
+                    node.y = height / 2 + Math.sin(angle) * radius;
+                    node.vx = 0;
+                    node.vy = 0;
+                });
+
+                // Physics Simulation constants
+                const kRepulsion = 3000;
+                const kAttraction = 0.08;
+                const restLength = 65;
+                const kGravity = 0.06;
+                const friction = 0.82;
+
+                // Run simulation ticks synchronously for immediate render layout
+                for (let tick = 0; tick < 160; tick++) {
+                    // 1. Repulsion force
+                    for (let i = 0; i < nodes.length; i++) {
+                        for (let j = i + 1; j < nodes.length; j++) {
+                            const n1 = nodes[i];
+                            const n2 = nodes[j];
+                            const dx = n2.x - n1.x;
+                            const dy = n2.y - n1.y;
+                            const distSq = dx * dx + dy * dy || 1;
+                            const dist = Math.sqrt(distSq);
+                            const force = kRepulsion / distSq;
+                            const fx = (dx / dist) * force;
+                            const fy = (dy / dist) * force;
+                            n1.vx -= fx;
+                            n1.vy -= fy;
+                            n2.vx += fx;
+                            n2.vy += fy;
+                        }
+                    }
+
+                    // 2. Attraction force along edges
+                    links.forEach(link => {
+                        const sourceNode = nodes.find(n => n.id === link.source);
+                        const targetNode = nodes.find(n => n.id === link.target);
+                        if (!sourceNode || !targetNode) return;
+
+                        const dx = targetNode.x - sourceNode.x;
+                        const dy = targetNode.y - sourceNode.y;
+                        const dist = Math.sqrt(dx * dx + dy * dy) || 1;
+                        const isLinkActive = activeTFs.includes(link.source);
+                        const kAttr = isLinkActive ? kAttraction : kAttraction * 0.15;
+                        const force = kAttr * (dist - restLength);
+                        const fx = (dx / dist) * force;
+                        const fy = (dy / dist) * force;
+                        sourceNode.vx += fx;
+                        sourceNode.vy += fy;
+                        targetNode.vx -= fx;
+                        targetNode.vy -= fy;
+                    });
+
+                    // 3. Gravity and position update
+                    nodes.forEach(node => {
+                        const dx = width / 2 - node.x;
+                        const dy = height / 2 - node.y;
+                        const dist = Math.sqrt(dx * dx + dy * dy) || 1;
+                        node.vx += (dx / dist) * kGravity;
+                        node.vy += (dy / dist) * kGravity;
+
+                        node.x += node.vx;
+                        node.y += node.vy;
+                        node.vx *= friction;
+                        node.vy *= friction;
+
+                        // Bounds protection
+                        node.x = Math.max(25, Math.min(width - 25, node.x));
+                        node.y = Math.max(25, Math.min(height - 25, node.y));
+                    });
+                }
+
+                // Define markers (arrowheads) in <defs>
+                const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+                
+                const markerActive = document.createElementNS('http://www.w3.org/2000/svg', 'marker');
+                markerActive.setAttribute('id', 'arrow-active');
+                markerActive.setAttribute('viewBox', '0 0 10 10');
+                markerActive.setAttribute('refX', '17'); // Draw tip at target boundary
+                markerActive.setAttribute('refY', '5');
+                markerActive.setAttribute('markerWidth', '6');
+                markerActive.setAttribute('markerHeight', '6');
+                markerActive.setAttribute('orient', 'auto-start-reverse');
+                const pathActive = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                pathActive.setAttribute('d', 'M 0 1.5 L 8 5 L 0 8.5 z');
+                pathActive.setAttribute('fill', '#3b82f6');
+                markerActive.appendChild(pathActive);
+                defs.appendChild(markerActive);
+
+                const markerRisk = document.createElementNS('http://www.w3.org/2000/svg', 'marker');
+                markerRisk.setAttribute('id', 'arrow-risk');
+                markerRisk.setAttribute('viewBox', '0 0 10 10');
+                markerRisk.setAttribute('refX', '17');
+                markerRisk.setAttribute('refY', '5');
+                markerRisk.setAttribute('markerWidth', '6');
+                markerRisk.setAttribute('markerHeight', '6');
+                markerRisk.setAttribute('orient', 'auto-start-reverse');
+                const pathRisk = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                pathRisk.setAttribute('d', 'M 0 1.5 L 8 5 L 0 8.5 z');
+                pathRisk.setAttribute('fill', '#ef4444');
+                markerRisk.appendChild(pathRisk);
+                defs.appendChild(markerRisk);
+
+                svg.appendChild(defs);
 
                 // Draw links (connections)
-                activeLinks.forEach(link => {
+                links.forEach(link => {
                     const sourceNode = nodes.find(n => n.id === link.source);
                     const targetNode = nodes.find(n => n.id === link.target);
                     if (!sourceNode || !targetNode) return;
@@ -3877,84 +3989,216 @@ const BiosimBridge = {
                     line.setAttribute('y1', sourceNode.y);
                     line.setAttribute('x2', targetNode.x);
                     line.setAttribute('y2', targetNode.y);
-                    
+
+                    const isActive = activeTFs.includes(link.source);
                     const isRisk = sourceNode.safety < 0.50;
-                    line.setAttribute('stroke', isRisk ? '#ef4444' : '#3b82f6');
-                    line.setAttribute('stroke-width', '1.5');
-                    line.setAttribute('opacity', '0.6');
-                    if (isRisk) {
-                        line.setAttribute('stroke-dasharray', '3,3');
+
+                    let strokeColor = '#cbd5e1';
+                    let opacity = '0.15';
+                    let strokeWidth = '1';
+
+                    if (isActive) {
+                        strokeColor = isRisk ? '#ef4444' : '#3b82f6';
+                        opacity = '0.75';
+                        strokeWidth = '1.8';
+                        line.setAttribute('marker-end', isRisk ? 'url(#arrow-risk)' : 'url(#arrow-active)');
+                        if (isRisk) {
+                            line.setAttribute('stroke-dasharray', '4,3');
+                        }
+                    } else {
+                        line.setAttribute('stroke-dasharray', '2,2');
                     }
+
+                    line.setAttribute('stroke', strokeColor);
+                    line.setAttribute('stroke-width', strokeWidth);
+                    line.setAttribute('opacity', opacity);
+                    line.setAttribute('class', `grn-edge edge-source-${link.source} edge-target-${link.target}`);
+                    line.setAttribute('data-source', link.source);
+                    line.setAttribute('data-target', link.target);
+
                     svg.appendChild(line);
                 });
 
                 // Draw nodes
-                activeNodes.forEach(node => {
+                nodes.forEach(node => {
+                    const isActive = node.type === 'Target' || activeTFs.includes(node.id);
                     const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-                    group.setAttribute('cursor', 'pointer');
+                    group.setAttribute('cursor', 'grab');
+                    group.setAttribute('class', `grn-node node-${node.id}`);
+                    group.setAttribute('data-id', node.id);
+                    group.setAttribute('opacity', isActive ? '1' : '0.22');
 
-                    // Node outer circle
+                    // Node outer ring / halo for active TFs
+                    if (node.type === 'TF' && isActive) {
+                        const halo = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                        halo.setAttribute('cx', node.x);
+                        halo.setAttribute('cy', node.y);
+                        halo.setAttribute('r', '15');
+                        halo.setAttribute('fill', 'none');
+                        halo.setAttribute('stroke', node.safety < 0.50 ? 'rgba(239,68,68,0.18)' : 'rgba(59,130,246,0.18)');
+                        halo.setAttribute('stroke-width', '4');
+                        halo.setAttribute('class', 'grn-halo');
+                        group.appendChild(halo);
+                    }
+
+                    // Main circle
                     const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
                     circle.setAttribute('cx', node.x);
                     circle.setAttribute('cy', node.y);
-                    circle.setAttribute('r', node.type === 'TF' ? '12' : '8');
+                    circle.setAttribute('r', node.type === 'TF' ? '11' : '7.5');
 
                     let fill = '#ffffff';
                     let stroke = '#cbd5e1';
+
                     if (node.type === 'TF') {
                         if (node.safety < 0.50) {
-                            fill = 'rgba(239,68,68,0.08)';
-                            stroke = '#dc2626';
+                            fill = 'rgba(239,68,68,0.06)';
+                            stroke = '#ef4444';
                         } else {
-                            fill = 'rgba(37,99,235,0.08)';
-                            stroke = '#2563eb';
+                            fill = 'rgba(59,130,246,0.06)';
+                            stroke = '#3b82f6';
                         }
                     } else {
-                        fill = '#ffffff';
-                        stroke = '#94a3b8';
+                        fill = '#f8fafc';
+                        stroke = '#64748b';
                     }
 
                     circle.setAttribute('fill', fill);
                     circle.setAttribute('stroke', stroke);
                     circle.setAttribute('stroke-width', '2');
+                    circle.setAttribute('class', 'grn-circle');
+                    group.appendChild(circle);
 
-                    // Label
+                    // Text label
                     const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
                     text.setAttribute('x', node.x);
                     text.setAttribute('y', node.y + (node.type === 'TF' ? 24 : 18));
                     text.setAttribute('text-anchor', 'middle');
-                    text.setAttribute('fill', '#0f172a');
+                    text.setAttribute('fill', '#334155');
                     text.setAttribute('font-size', '9px');
-                    text.setAttribute('font-family', "'Inter', sans-serif");
+                    text.setAttribute('font-family', "'Outfit', 'Inter', sans-serif");
                     text.setAttribute('font-weight', '600');
                     text.textContent = node.id;
-
-                    group.appendChild(circle);
+                    text.setAttribute('class', 'grn-label');
                     group.appendChild(text);
 
-                    // Hover tooltip event listeners
+                    // Hover event handlers (highlight neighbors and paths)
                     group.addEventListener('mouseenter', (e) => {
                         const tooltip = document.getElementById('grn-tooltip');
                         if (!tooltip) return;
 
-                        let details = `Node: ${node.id}`;
+                        let details = `<strong>Node: ${node.id}</strong>`;
                         if (node.type === 'TF') {
-                            details += `<br>Type: Transcription Factor<br>Safety Score: ${node.safety.toFixed(2)}`;
-                            if (node.safety < 0.50) details += `<br><span style="color:#ef4444;">⚠ ONCOGENIC DRINK/DRIFT RISK</span>`;
+                            details += `<br><span style="color:#64748b;">Type: Transcription Factor</span>`;
+                            details += `<br>Safety Index: <strong>${(node.safety * 100).toFixed(0)}%</strong>`;
+                            if (node.safety < 0.50) {
+                                details += `<br><span style="color:#ef4444; font-weight:bold;">⚠ Oncogenic Activation Risk</span>`;
+                            } else {
+                                details += `<br><span style="color:#10b981;">✔ Reprogramming Safety Met</span>`;
+                            }
                         } else {
-                            details += `<br>Type: Downstream Target`;
+                            details += `<br><span style="color:#64748b;">Type: Target Gene</span>`;
+                            details += `<br>Function: Structural Cardiac protein`;
                         }
-                        
+
                         tooltip.innerHTML = details;
                         tooltip.classList.remove('hidden');
+                        tooltip.style.left = `${node.x - 40}px`;
+                        tooltip.style.top = `${node.y - 65}px`;
 
-                        tooltip.style.left = `${node.x - 20}px`;
-                        tooltip.style.top = `${node.y - 35}px`;
+                        // Dim unrelated items
+                        svg.querySelectorAll('.grn-node').forEach(n => {
+                            if (n !== group) n.setAttribute('opacity', '0.12');
+                        });
+                        svg.querySelectorAll('.grn-edge').forEach(edge => {
+                            const src = edge.getAttribute('data-source');
+                            const tgt = edge.getAttribute('data-target');
+                            if (src === node.id || tgt === node.id) {
+                                edge.setAttribute('opacity', '0.9');
+                                edge.setAttribute('stroke-width', '2.5');
+                            } else {
+                                edge.setAttribute('opacity', '0.04');
+                            }
+                        });
                     });
 
                     group.addEventListener('mouseleave', () => {
                         const tooltip = document.getElementById('grn-tooltip');
                         if (tooltip) tooltip.classList.add('hidden');
+
+                        // Restore original visibility states
+                        nodes.forEach(n => {
+                            const nEl = svg.querySelector(`.node-${n.id}`);
+                            if (nEl) {
+                                const isNActive = n.type === 'Target' || activeTFs.includes(n.id);
+                                nEl.setAttribute('opacity', isNActive ? '1' : '0.22');
+                            }
+                        });
+                        links.forEach(l => {
+                            const edgeEl = svg.querySelector(`.edge-source-${l.source}.edge-target-${l.target}`);
+                            if (edgeEl) {
+                                const isLActive = activeTFs.includes(l.source);
+                                edgeEl.setAttribute('opacity', isLActive ? '0.75' : '0.15');
+                                edgeEl.setAttribute('stroke-width', isLActive ? '1.8' : '1');
+                            }
+                        });
+                    });
+
+                    // Interactive drag and drop setup
+                    let dragStart = false;
+                    group.addEventListener('mousedown', (e) => {
+                        dragStart = true;
+                        group.setAttribute('cursor', 'grabbing');
+                    });
+
+                    svg.addEventListener('mousemove', (e) => {
+                        if (!dragStart) return;
+                        const svgRect = svg.getBoundingClientRect();
+                        node.x = e.clientX - svgRect.left;
+                        node.y = e.clientY - svgRect.top;
+
+                        // Constraint boundaries
+                        node.x = Math.max(25, Math.min(width - 25, node.x));
+                        node.y = Math.max(25, Math.min(height - 25, node.y));
+
+                        // Instantly update elements positions
+                        const haloEl = group.querySelector('.grn-halo');
+                        if (haloEl) {
+                            haloEl.setAttribute('cx', node.x);
+                            haloEl.setAttribute('cy', node.y);
+                        }
+                        const circleEl = group.querySelector('.grn-circle');
+                        if (circleEl) {
+                            circleEl.setAttribute('cx', node.x);
+                            circleEl.setAttribute('cy', node.y);
+                        }
+                        const labelEl = group.querySelector('.grn-label');
+                        if (labelEl) {
+                            labelEl.setAttribute('x', node.x);
+                            labelEl.setAttribute('y', node.y + (node.type === 'TF' ? 24 : 18));
+                        }
+
+                        // Update connected paths/lines
+                        links.forEach(l => {
+                            if (l.source === node.id || l.target === node.id) {
+                                const edgeEl = svg.querySelector(`.edge-source-${l.source}.edge-target-${l.target}`);
+                                if (edgeEl) {
+                                    const srcNode = nodes.find(n => n.id === l.source);
+                                    const tgtNode = nodes.find(n => n.id === l.target);
+                                    edgeEl.setAttribute('x1', srcNode.x);
+                                    edgeEl.setAttribute('y1', srcNode.y);
+                                    edgeEl.setAttribute('x2', tgtNode.x);
+                                    edgeEl.setAttribute('y2', tgtNode.y);
+                                }
+                            }
+                        });
+                    });
+
+                    window.addEventListener('mouseup', () => {
+                        if (dragStart) {
+                            dragStart = false;
+                            group.setAttribute('cursor', 'grab');
+                        }
                     });
 
                     svg.appendChild(group);
