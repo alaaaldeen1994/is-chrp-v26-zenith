@@ -123,11 +123,11 @@ def generate_deck():
     pdf.set_text_color(203, 213, 225) # Slate 300 (brighter text)
     pdf.multi_cell(220, 9, 'Generative cellular reprogramming therapeutics targeting cardiomyopathy.\nPowered by the Zenith v28.0 GOLD single-cell foundation model.')
     
-    # Accelerator track details
+    # LBF Interview details
     pdf.set_xy(25, 165)
     pdf.set_font(pdf.get_font_name(True), 'B', 12) # Increased from 11 to 12
     pdf.set_text_color(52, 211, 153) # Emerald 400
-    pdf.cell(0, 5, 'DEEP BIO ACCELERATOR - LAUNCH TRACK INTERVIEW PRESENTATION', 0, 1)
+    pdf.cell(0, 5, 'LONGEVITY BIOTECH FELLOWSHIP (LBF) - ADMISSION INTERVIEW PRESENTATION', 0, 1)
     
     # ----------------------------------------------------
     # SLIDE 2: THE PROBLEM & SOLUTION (Clean Dual Columns)
@@ -309,7 +309,7 @@ def generate_deck():
     # ----------------------------------------------------
     pdf.add_page()
     pdf.draw_light_slide_bg()
-    pdf.slide_header('Market Focus, Competition & Wetlab Target', 'TAM & Funding Parameters', 4)
+    pdf.slide_header('Fellowship Goals, Market & Wetlab Target', 'TAM & Fellowship Parameters', 4)
     
     # Left Card - Market Detail
     pdf.draw_card(15, 38, 150, 152, bg_color=(255, 255, 255), border_color=(194, 205, 217), r=4)
@@ -322,9 +322,9 @@ def generate_deck():
     
     bullets_market = [
         ("CVD Longevity Market", "$50B addressable cardiomyopathy indication targets."),
+        ("Fellowship Collaboration", "Synergize with stealth replacement, tissue engineering, and AI founders."),
         ("Altos Bio & Retro Labs", "Broad systemic vectors. Nilus focuses on cardiac specificity."),
-        ("Turn Biotechnologies", "Dermatology focus. Nilus is optimized for cardiac lineages."),
-        ("Wetlab Commercialization", "Bringing science out of the lab and into the market.")
+        ("Robotic Wet-Lab Loop", "Zenith bridges computational models directly to acoustic automation.")
     ]
     y_c = 68
     for title, desc in bullets_market:
@@ -392,7 +392,7 @@ def generate_deck():
     # ----------------------------------------------------
     pdf.add_page()
     pdf.draw_light_slide_bg()
-    pdf.slide_header('Operational Roadmap & Team Dynamics', 'Founding Team & Wetlab Pipeline', 5)
+    pdf.slide_header('Operational Roadmap & Fellowship Strategy', 'Founding Team & Fellowship Pipeline', 5)
     
     # Left Column: Founding Team
     pdf.draw_card(15, 38, 120, 152, bg_color=(255, 255, 255), border_color=(194, 205, 217), r=4)
@@ -405,8 +405,8 @@ def generate_deck():
     
     bullets_team = [
         ("Computational VAE Core", "Expertise in deep latent manifolds."),
-        ("Molecular Biology Lab", "Specialists in cell transfections."),
-        ("Long-Term Synergy", "Collaborated on single-cell research."),
+        ("Replacement Synergies", "Aligning GCN predictions with organ replacement and robotics."),
+        ("Fellowship Engagement", "Partnering with LBF community to accelerate target translation."),
         ("BIO 2026 Summit Target", "Preparing to showcase wetlab data.")
     ]
     y_c = 68
