@@ -177,7 +177,7 @@ def generate_deck():
     pdf.multi_cell(114, 6, 'Safe, Target-Specific Rejuvenation')
     
     bullets_solution = [
-        ("In-Silico Safety Gating", "Dual-threshold gates eliminate oncogenes and preserve lineage."),
+        ("Causal GCN Target Auditing", "PyTorch Causal GCN blocks oncogenic MYC loops and infers safe target links."),
         ("Trained on 500,000 Single Cells", "Maps cardiac manifolds via scVI variational autoencoders."),
         ("-11.9y Epigenetic Age Reversal", "Trained on real donor ages with a cross-validated MAE of 6.0y.")
     ]
@@ -253,14 +253,14 @@ def generate_deck():
     pdf.set_xy(34 + col_width + spacing, 46)
     pdf.set_font(pdf.get_font_name(True), 'B', 16) # Increased from 14 to 16
     pdf.set_text_color(0, 0, 0)
-    pdf.cell(60, 6, 'Safety Auditing', 0, 1)
+    pdf.cell(60, 6, 'Causal GCN Safety Gate', 0, 1)
     
     bullets_t2 = [
-        "Oncogene Blacklist Check",
-        "Blocks MYC / OCT4 factors",
-        "Dedifferentiation limits gated",
-        "Ensures cell identity stability",
-        "Monitors TNNT2 / ACTN2"
+        "Gaussian-Kernel Autoencoder",
+        "Causal Feature Reconstruction",
+        "Laplacian-normalized GCN",
+        "Blocks MYC / SNAI1 pathways",
+        "Dynamic target link prediction"
     ]
     y_c = 64
     for b in bullets_t2:
