@@ -3809,7 +3809,7 @@ async def get_target_vector_from_query(query: str, api_key: Optional[str] = None
 
         fallback_genes = {"POU5F1": 1.0, "SOX2": 1.0, "NANOG": 1.0}
 
-        return torch.tensor([0.8]*5 + [0.0]*995, dtype=torch.float32), "OpenAI Offline: Using canonical pluripotent markers.", fallback_genes
+        return torch.tensor([0.8]*5 + [0.0]*(len(GENE_SYMBOLS)-5), dtype=torch.float32), "OpenAI Offline: Using canonical pluripotent markers.", fallback_genes, {}, "GGGGTCACGGTC", 0.0, []
 
 
 
