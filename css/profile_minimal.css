@@ -745,4 +745,328 @@ body.light-mode-profile {
     to { width: 94%; }
 }
 
+/* ============================================================
+   ROBUST SEMANTIC LAYOUTS (No CDN dependencies)
+   ============================================================ */
+.hero-section {
+    position: relative;
+    z-index: 10;
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    padding: 5rem 0;
+    width: 100%;
+}
+
+.hero-container {
+    width: 100%;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 3rem;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 4rem;
+}
+
+.hero-text-col {
+    width: 58%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+    z-index: 20;
+}
+
+.hero-hud-col {
+    width: 42%;
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+@media (max-width: 1024px) {
+    .hero-container {
+        flex-direction: column;
+        text-align: center;
+        padding: 0 1.5rem;
+        gap: 3rem;
+    }
+    .hero-text-col {
+        width: 100%;
+        align-items: center;
+        text-align: center;
+    }
+    .hero-hud-col {
+        width: 100%;
+        margin-top: 2rem;
+    }
+}
+
+/* ============================================================
+   FLOATING GLASSMORPHIC NAV DOCK
+   ============================================================ */
+.nav-dock-wrapper {
+    position: sticky;
+    top: 1.5rem;
+    left: 0;
+    right: 0;
+    width: 100%;
+    padding: 0 1.5rem;
+    z-index: 1000;
+}
+
+.nav-dock {
+    max-width: 1280px;
+    margin: 0 auto;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(20px) saturate(190%);
+    -webkit-backdrop-filter: blur(20px) saturate(190%);
+    border: 1px solid rgba(15, 23, 42, 0.05);
+    border-radius: var(--radius-full);
+    padding: 0.85rem 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 
+        0 1px 2px rgba(0, 0, 0, 0.01),
+        0 8px 32px rgba(15, 23, 42, 0.05),
+        0 24px 64px rgba(15, 23, 42, 0.04);
+    transition: all 0.4s var(--ease-spring);
+}
+
+.nav-dock:hover {
+    border-color: rgba(15, 23, 42, 0.08);
+    box-shadow: 
+        0 1px 3px rgba(0, 0, 0, 0.01),
+        0 12px 48px rgba(15, 23, 42, 0.07),
+        0 32px 80px rgba(15, 23, 42, 0.05);
+}
+
+/* Nav links styling inside dock */
+.nav-dock-link {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    position: relative;
+    padding: 0.25rem 0;
+    transition: color var(--duration-fast) var(--ease-smooth);
+}
+
+.nav-dock-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--nilus-cobalt);
+    transform: scaleX(0);
+    transition: transform var(--duration-fast) var(--ease-spring);
+    transform-origin: center;
+}
+
+.nav-dock-link:hover {
+    color: var(--text-primary);
+}
+
+.nav-dock-link:hover::after {
+    transform: scaleX(1);
+}
+
+.nav-dock-link.active {
+    color: var(--text-primary);
+}
+
+.nav-dock-link.active::after {
+    transform: scaleX(1);
+}
+
+@media (max-width: 768px) {
+    .nav-dock-wrapper {
+        top: 0.75rem;
+        padding: 0 0.75rem;
+    }
+    .nav-dock {
+        padding: 0.75rem 1.5rem;
+    }
+}
+
+/* ============================================================
+   OBSIDIAN GLASS TERMINAL HUD (Refined Dark Theme)
+   ============================================================ */
+.hero-hud-card.obsidian-theme {
+    background: rgba(15, 23, 42, 0.96) !important;
+    backdrop-filter: blur(25px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(25px) saturate(180%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    box-shadow: 
+        0 30px 70px -15px rgba(0, 0, 0, 0.4),
+        0 0 50px rgba(37, 99, 235, 0.08) !important;
+    color: #f1f5f9;
+}
+
+.hero-hud-card.obsidian-theme:hover {
+    border-color: rgba(37, 99, 235, 0.3) !important;
+    box-shadow: 
+        0 40px 90px -15px rgba(0, 0, 0, 0.5),
+        0 0 60px rgba(37, 99, 235, 0.12) !important;
+}
+
+.hero-hud-card.obsidian-theme .hero-hud-card__title {
+    color: #e2e8f0;
+}
+
+.hero-hud-card.obsidian-theme .hero-hud-card__header {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.hero-hud-card.obsidian-theme .hero-hud-card__logs {
+    background: #090d16 !important;
+    border: 1px solid rgba(255, 255, 255, 0.03) !important;
+    color: #94a3b8 !important;
+}
+
+/* Monospace highlighting styles */
+.log-line-highlight {
+    display: flex;
+    gap: 8px;
+}
+
+.log-time {
+    color: #c084fc; /* soft violet */
+    font-weight: 700;
+}
+
+.log-cmd {
+    color: #38bdf8; /* electric cyan */
+}
+
+.log-success {
+    color: #4ade80; /* bright green */
+}
+
+.log-warning {
+    color: #fbbf24; /* deep amber */
+}
+
+.log-val {
+    color: #60a5fa; /* cobalt blue */
+}
+
+.log-cursor {
+    display: inline-block;
+    width: 6px;
+    height: 12px;
+    background: #4ade80;
+    margin-left: 2px;
+    animation: cursorBlink 1s infinite;
+}
+
+@keyframes cursorBlink {
+    0%, 100% { opacity: 0; }
+    50% { opacity: 1; }
+}
+
+/* Dark mode stats block inside card */
+.hero-hud-card.obsidian-theme .hero-hud-card__stat-box {
+    background: rgba(255, 255, 255, 0.02) !important;
+    border: 1px solid rgba(255, 255, 255, 0.04) !important;
+}
+
+.hero-hud-card.obsidian-theme .hero-hud-card__stat-label {
+    color: #64748b !important;
+}
+
+.hero-hud-card.obsidian-theme .hero-hud-card__stat-value {
+    color: #e2e8f0 !important;
+}
+
+.hero-hud-card.obsidian-theme .hero-hud-card__progress-header {
+    color: #94a3b8;
+}
+
+.hero-hud-card.obsidian-theme .hero-hud-card__progress-bar {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+/* Micro Sparkline Chart Container */
+.hud-sparkline-wrap {
+    background: rgba(255, 255, 255, 0.01);
+    border: 1px solid rgba(255, 255, 255, 0.03);
+    border-radius: var(--radius-sm);
+    padding: 0.5rem 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 0.5rem;
+}
+
+.hud-sparkline-label {
+    font-size: 8px;
+    font-weight: 800;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.hud-sparkline-chart {
+    flex: 1;
+    height: 20px;
+    max-width: 140px;
+}
+
+.hud-sparkline-val {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 700;
+    color: #4ade80;
+}
+
+/* ============================================================
+   PREMIUM GLASSMORPHIC STATS TILES
+   ============================================================ */
+.stats-card-tile {
+    background: rgba(255, 255, 255, 0.8) !important;
+    backdrop-filter: blur(24px) saturate(170%) !important;
+    -webkit-backdrop-filter: blur(24px) saturate(170%) !important;
+    border: 1px solid rgba(15, 23, 42, 0.06) !important;
+    border-radius: 20px !important;
+    padding: 2.25rem 2rem !important;
+    box-shadow: 
+        0 1px 2px rgba(0, 0, 0, 0.01),
+        0 10px 30px rgba(15, 23, 42, 0.03) !important;
+    transition: all 0.4s var(--ease-spring) !important;
+    position: relative;
+    overflow: hidden;
+}
+
+.stats-card-tile:hover {
+    transform: translateY(-6px) scale(1.01) !important;
+    border-color: rgba(37, 99, 235, 0.2) !important;
+    box-shadow: 
+        0 1px 3px rgba(0, 0, 0, 0.01),
+        0 20px 48px rgba(15, 23, 42, 0.08) !important;
+}
+
+.stats-card-tile::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--nilus-gradient);
+    opacity: 0;
+    transition: opacity 0.4s var(--ease-smooth);
+}
+
+.stats-card-tile:hover::before {
+    opacity: 1;
+}
+
 

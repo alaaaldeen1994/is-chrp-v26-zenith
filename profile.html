@@ -2270,6 +2270,10 @@
 
             }
 
+
+
+            .hero p, .hero-description {
+
                 margin-bottom: 2rem !important;
 
                 line-height: 1.6 !important;
@@ -3384,51 +3388,19 @@
 
 
 
-    <!-- Institutional Header (Production Original Items) -->
+    <!-- Floating Glassmorphic Nav Dock -->
+    <div class="nav-dock-wrapper">
+        <nav class="nav-dock">
 
-    <nav
-        class="border-b border-slate-100 px-6 md:px-12 py-3 md:py-4 flex flex-row items-center justify-between sticky top-0 bg-white/95 backdrop-blur-md z-[1000] flex-nowrap whitespace-nowrap overflow-visible">
+            <div class="flex items-center gap-8">
 
-        <div class="flex items-center gap-8">
+                <div class="flex items-center gap-2">
 
-            <div class="flex items-center gap-2">
+                    <i data-lucide="layers" class="w-6 h-6 text-blue-600"></i>
 
-                <i data-lucide="layers" class="w-6 h-6 text-blue-600"></i>
+                    <div class="font-sans font-bold tracking-tighter flex items-center uppercase text-slate-900 leading-none">
 
-                <div class="font-sans font-bold tracking-tighter flex items-center uppercase text-slate-900 leading-none">
-
-                    <span class="text-xl mr-1">NILUS <span class="text-blue-600 ml-1">LAB</span></span>
-
-                </div>
-
-            </div>
-
-
-
-            <div class="nav-links hidden md:flex items-center gap-6">
-
-                <a href="#" onclick="checkAuthAndRedirect('index.html'); return false;" class="text-[12px] font-bold text-slate-900 uppercase tracking-wide">Mainframe</a>
-
-
-
-                <!-- Institutional Diligence with working dropdown -->
-
-                <div class="inst-diligence-wrapper flex items-center gap-1.5 cursor-pointer">
-
-                    <span
-
-                        class="text-[12px] font-bold text-slate-400 uppercase tracking-wide hover:text-slate-900 transition-colors">Diligence</span>
-
-                    <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-400"></i>
-
-                    <div class="inst-dropdown">
-
-                        <a href="evidence.html">Evidence Registry</a>
-                        <a href="scientific_qna.html">Scientific Q&A</a>
-                        <a href="whitepaper.html">Research Whitepaper</a>
-                        <a href="regulatory.html">Regulatory Statement</a>
-                        <a href="v28_clinical_report.html">Clinical Report v28.0 GOLD</a>
-                        <a href="how_it_works.html" class="text-blue-600 font-extrabold">How Zenith Works</a>
+                        <span class="text-xl mr-1">NILUS <span class="text-blue-600 ml-1">LAB</span></span>
 
                     </div>
 
@@ -3436,76 +3408,102 @@
 
 
 
-                <a href="technical_catalog.html"
+                <div class="nav-links hidden md:flex items-center gap-6">
 
-                    class="text-[12px] font-bold text-slate-400 uppercase tracking-wide hover:text-slate-900 transition-colors">Catalog</a>
-
-
-
-                <a href="trials.html"
-
-                    class="text-[12px] font-bold text-slate-400 uppercase tracking-wide hover:text-slate-900 transition-colors">Trials</a>
-
-            </div>
-
-        </div>
+                    <a href="#" onclick="checkAuthAndRedirect('index.html'); return false;" class="nav-dock-link active">Mainframe</a>
 
 
 
-        <div class="flex flex-row items-center gap-3">
+                    <!-- Institutional Diligence with working dropdown -->
 
-            <div class="hidden lg:flex bg-slate-50 border border-slate-100 px-3 py-1.5 rounded-full items-center gap-2 scale-90">
+                    <div class="inst-diligence-wrapper flex items-center gap-1.5 cursor-pointer">
 
-                <span class="w-1.5 h-1.5 bg-slate-400 rounded-full animate-pulse"></span>
+                        <span class="nav-dock-link">Diligence</span>
 
-                <span class="text-[8px] font-black text-slate-400 uppercase tracking-widest text-center">LIVE HCA FEED: 500K+ CELLS · SERIES A $33M</span>
+                        <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-400"></i>
 
-            </div>
+                        <div class="inst-dropdown">
 
-            <div id="auth-btn-login" class="flex flex-col md:flex-row items-center gap-3 w-full md:w-auto">
+                            <a href="evidence.html">Evidence Registry</a>
+                            <a href="scientific_qna.html">Scientific Q&A</a>
+                            <a href="whitepaper.html">Research Whitepaper</a>
+                            <a href="regulatory.html">Regulatory Statement</a>
+                            <a href="v28_clinical_report.html">Clinical Report v28.0 GOLD</a>
+                            <a href="how_it_works.html" class="text-blue-600 font-extrabold">How Zenith Works</a>
 
-                <button onclick="openLoginModal()"
+                        </div>
 
-                    class="w-full md:w-auto bg-slate-900 hover:bg-slate-800 text-white px-8 py-3 rounded-full text-[12px] font-black uppercase tracking-widest flex items-center justify-center gap-3 transition-all">
-
-                    <i data-lucide="log-in" class="w-4 h-4"></i> Sign In
-
-                </button>
+                    </div>
 
 
-            </div>
 
-            <div id="auth-user-status" class="hidden flex flex-row items-center gap-4">
+                    <a href="technical_catalog.html" class="nav-dock-link">Catalog</a>
 
-                <div class="flex items-center gap-3 px-4 py-2 bg-slate-50 border border-slate-100 rounded-full">
 
-                    <div class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
 
-                    <span id="profile-name"
-
-                        class="text-[10px] font-black text-slate-900 uppercase tracking-widest">RESEARCHER</span>
+                    <a href="trials.html" class="nav-dock-link">Trials</a>
 
                 </div>
 
-                <button onclick="performLogout()"
+            </div>
 
-                    class="text-[10px] font-black text-slate-400 hover:text-rose-600 uppercase tracking-widest transition-colors flex items-center gap-2">
 
-                    <i data-lucide="log-out" class="w-3.5 h-3.5"></i> Sign Out
 
+            <div class="flex flex-row items-center gap-3">
+
+                <div class="hidden lg:flex bg-slate-50 border border-slate-100 px-3 py-1.5 rounded-full items-center gap-2 scale-90">
+
+                    <span class="w-1.5 h-1.5 bg-slate-400 rounded-full animate-pulse"></span>
+
+                    <span class="text-[8px] font-black text-slate-400 uppercase tracking-widest text-center">LIVE HCA FEED: 500K+ CELLS · SERIES A $33M</span>
+
+                </div>
+
+                <div id="auth-btn-login" class="flex flex-col md:flex-row items-center gap-3 w-full md:w-auto">
+
+                    <button onclick="openLoginModal()"
+
+                        class="w-full md:w-auto bg-slate-900 hover:bg-slate-800 text-white px-8 py-3 rounded-full text-[12px] font-black uppercase tracking-widest flex items-center justify-center gap-3 transition-all">
+
+                        <i data-lucide="log-in" class="w-4 h-4"></i> Sign In
+
+                    </button>
+
+
+                </div>
+
+                <div id="auth-user-status" class="hidden flex flex-row items-center gap-4">
+
+                    <div class="flex items-center gap-3 px-4 py-2 bg-slate-50 border border-slate-100 rounded-full">
+
+                        <div class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
+
+                        <span id="profile-name"
+
+                            class="text-[10px] font-black text-slate-900 uppercase tracking-widest">RESEARCHER</span>
+
+                    </div>
+
+                    <button onclick="performLogout()"
+
+                        class="text-[10px] font-black text-slate-400 hover:text-rose-600 uppercase tracking-widest transition-colors flex items-center gap-2">
+
+                        <i data-lucide="log-out" class="w-3.5 h-3.5"></i> Sign Out
+
+                    </button>
+
+                </div>
+
+                <!-- Hamburger Button for Mobile Menu Drawer -->
+                <button id="mobile-menu-toggle" onclick="toggleMobileMenu()" class="flex md:hidden text-slate-900 hover:text-blue-600 p-2 focus:outline-none transition-colors z-[1001]" aria-label="Toggle Menu">
+                    <i data-lucide="menu" class="w-6 h-6" id="menu-icon-hamburger"></i>
+                    <i data-lucide="x" class="w-6 h-6 hidden" id="menu-icon-close"></i>
                 </button>
 
             </div>
 
-            <!-- Hamburger Button for Mobile Menu Drawer -->
-            <button id="mobile-menu-toggle" onclick="toggleMobileMenu()" class="flex md:hidden text-slate-900 hover:text-blue-600 p-2 focus:outline-none transition-colors z-[1001]" aria-label="Toggle Menu">
-                <i data-lucide="menu" class="w-6 h-6" id="menu-icon-hamburger"></i>
-                <i data-lucide="x" class="w-6 h-6 hidden" id="menu-icon-close"></i>
-            </button>
-
-        </div>
-
-    </nav>
+        </nav>
+    </div>
 
     <!-- Premium Mobile Drawer Menu -->
     <div id="mobile-menu-drawer" class="fixed inset-y-0 right-0 w-[280px] bg-white/95 backdrop-blur-xl border-l border-slate-100 shadow-2xl z-[999] transform translate-x-full transition-transform duration-300 ease-in-out flex flex-col p-8 justify-between">
@@ -3538,27 +3536,26 @@
     
     <!-- Backdrop Overlay -->
     <div id="mobile-menu-backdrop" onclick="toggleMobileMenu()" class="fixed inset-0 bg-slate-900/10 backdrop-blur-sm z-[998] hidden opacity-0 transition-opacity duration-300"></div>
-
     <!-- Hero Section -->
-    <section class="hero bg-transparent relative z-10 flex items-center min-h-[75vh]" style="padding: 3rem 0;">
-        <div class="max-w-7xl mx-auto w-full px-6 md:px-12 lg:px-16 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+    <section class="hero-section">
+        <div class="hero-container animate-fade-in-up">
             
-            <!-- Left Text Content Column (Col-span 7) -->
-            <div class="lg:col-span-7 flex flex-col items-start text-left z-20">
-                <div class="animate-fade-in-up flex items-center gap-2 px-3 py-1 bg-blue-50/70 border border-blue-100/50 rounded-full mb-6">
+            <!-- Left Text Content Column -->
+            <div class="hero-text-col">
+                <div class="flex items-center gap-2 px-3 py-1 bg-blue-50/70 border border-blue-100/50 rounded-full mb-6">
                     <span class="w-1.5 h-1.5 bg-blue-600 rounded-full animate-pulse"></span>
                     <span style="font-size: 8.5px; font-weight: 900; color: #2563eb; text-transform: uppercase; letter-spacing: 0.25em; line-height: 1;">COMPUTATIONAL EPIGENETICS PLATFORM</span>
                 </div>
                 
-                <h1 class="animate-fade-in-up delay-100" style="font-size: clamp(34px, 5.2vw, 58px); font-family: 'Outfit', sans-serif; font-weight: 900; line-height: 1.1; margin-bottom: 1.5rem; letter-spacing: -0.04em; color: #0f172a;">
-                    Reverse Biological Aging with <span style="background: linear-gradient(135deg, #2563eb 20%, #4f46e5 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Precision Gene Control</span>
+                <h1 style="font-size: clamp(30px, 4.8vw, 56px); font-family: 'Outfit', sans-serif; font-weight: 900; line-height: 1.1; margin-bottom: 1.5rem; letter-spacing: -0.04em; color: #0f172a;">
+                    Reverse Biological Aging with <span class="serif-accent italic text-blue-600 font-normal" style="font-family: 'Playfair Display', serif; font-style: italic; background: linear-gradient(135deg, #2563eb 20%, #4f46e5 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Precision Gene Control</span>
                 </h1>
                 
-                <p class="animate-fade-in-up delay-200 text-slate-500 font-medium text-lg leading-relaxed mb-10" style="max-width: 600px;">
+                <p class="text-slate-500 font-medium text-base md:text-lg leading-relaxed mb-10 max-w-xl">
                     Zenith v28 translates high-throughput chromatin profiles into precise multivalent reprogramming cocktails — reversing biological age while eliminating oncogenic risk.
                 </p>
                 
-                <div class="animate-fade-in-up delay-300" style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                <div class="flex flex-row gap-4 flex-wrap w-full">
                     <a href="#discovery-section" class="hero-btn-primary">
                         <span>Explore the Science</span>
                         <svg class="hero-btn-arrow" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
@@ -3575,9 +3572,9 @@
                 </div>
             </div>
             
-            <!-- Right Telemetry HUD Column (Col-span 5) -->
-            <div class="lg:col-span-5 z-20 flex items-center justify-center w-full animate-fade-in-up delay-300">
-                <div class="hero-hud-card reactive-tilt">
+            <!-- Right Telemetry HUD Column -->
+            <div class="hero-hud-col">
+                <div class="hero-hud-card obsidian-theme reactive-tilt">
                     <div class="hero-hud-card__header">
                         <span class="hero-hud-card__title">Zenith Engine v28.0 // Diagnostics</span>
                         <div class="hero-hud-card__status">
@@ -3589,21 +3586,25 @@
                     <div class="hero-hud-card__grid">
                         <!-- Console Logs -->
                         <div class="hero-hud-card__logs" id="hero-hud-logs">
-                            <div class="hero-hud-card__log-line">
-                                <span class="hero-hud-card__log-time">02:44:14</span>
+                            <div class="hero-hud-card__log-line log-line-highlight">
+                                <span class="log-time">02:44:14</span>
+                                <span class="log-cmd">sys.load</span>
                                 <span class="hero-hud-card__log-text">Chromatin accessibility mapping loaded.</span>
                             </div>
-                            <div class="hero-hud-card__log-line">
-                                <span class="hero-hud-card__log-time">02:44:15</span>
-                                <span class="hero-hud-card__log-text">Running multi-factor perturbation forecasting...</span>
+                            <div class="hero-hud-card__log-line log-line-highlight">
+                                <span class="log-time">02:44:15</span>
+                                <span class="log-cmd">run.forecast</span>
+                                <span class="hero-hud-card__log-text">Simulating Yamanaka factor perturbation...</span>
                             </div>
-                            <div class="hero-hud-card__log-line">
-                                <span class="hero-hud-card__log-time">02:44:16</span>
-                                <span class="hero-hud-card__log-text">Optimal dosage found (2.0h ON / 19.2h OFF).</span>
+                            <div class="hero-hud-card__log-line log-line-highlight">
+                                <span class="log-time">02:44:16</span>
+                                <span class="log-cmd">opt.dosage</span>
+                                <span class="hero-hud-card__log-text">Optimal: <span class="log-val">2.0h ON / 19.2h OFF</span></span>
                             </div>
-                            <div class="hero-hud-card__log-line">
-                                <span class="hero-hud-card__log-time">02:44:17</span>
-                                <span class="hero-hud-card__log-text">Oncogenic risk evaluation: 0.000% [SAFE]</span>
+                            <div class="hero-hud-card__log-line log-line-highlight">
+                                <span class="log-time">02:44:17</span>
+                                <span class="log-cmd">eval.safety</span>
+                                <span class="log-success">Oncogenic risk: 0.000% [SAFE]</span>
                             </div>
                         </div>
                         
@@ -3611,15 +3612,15 @@
                         <div class="hero-hud-card__stats">
                             <div class="hero-hud-card__stat-box">
                                 <div class="hero-hud-card__stat-label">Yield</div>
-                                <div class="hero-hud-card__stat-value text-emerald-600">20.0y</div>
+                                <div class="hero-hud-card__stat-value text-emerald-400">20.0y</div>
                             </div>
                             <div class="hero-hud-card__stat-box">
                                 <div class="hero-hud-card__stat-label">Stability</div>
-                                <div class="hero-hud-card__stat-value">98.4%</div>
+                                <div class="hero-hud-card__stat-value text-blue-400">98.4%</div>
                             </div>
                             <div class="hero-hud-card__stat-box">
                                 <div class="hero-hud-card__stat-label">GPU Load</div>
-                                <div class="hero-hud-card__stat-value text-blue-600">88%</div>
+                                <div class="hero-hud-card__stat-value text-indigo-400">88%</div>
                             </div>
                         </div>
                         
@@ -3633,10 +3634,22 @@
                                 <div class="hero-hud-card__progress-fill"></div>
                             </div>
                         </div>
+
+                        <!-- Sparkline Chart -->
+                        <div class="hud-sparkline-wrap">
+                            <span class="hud-sparkline-label">Horvath Clock Trajectory</span>
+                            <div class="hud-sparkline-chart">
+                                <svg width="100%" height="100%" viewBox="0 0 100 20" preserveAspectRatio="none">
+                                    <path d="M0 18 Q 20 12, 40 14 T 80 5 T 100 2" fill="none" stroke="#4ade80" stroke-width="2" stroke-linecap="round"></path>
+                                    <circle cx="100" cy="2" r="2" fill="#4ade80" style="animation: pulse 2s infinite;"></circle>
+                                </svg>
+                            </div>
+                            <span class="hud-sparkline-val">-11.9y</span>
+                        </div>
                     </div>
                 </div>
             </div>
-            
+
         </div>
     </section>
 
@@ -3840,27 +3853,27 @@
 
     <!-- STATS STRIP (Updated scVI v28 parameters) -->
     <section class="bg-transparent relative z-10" style="padding: 0 0 4rem;">
-        <div class="max-w-7xl mx-auto" style="padding: 0 3rem;">
-            <div class="stats-grid" style="display: flex; flex-wrap: wrap; gap: 1.5rem; justify-content: center;">
-                <div class="reactive-tilt" style="flex: 1; min-width: 220px; background: rgba(255, 255, 255, 0.75); backdrop-filter: blur(24px); border: 1px solid rgba(15, 23, 42, 0.08); border-radius: 24px; padding: 2.5rem 2rem; text-align: center; cursor: default; position: relative; overflow: hidden;">
+        <div class="max-w-7xl mx-auto px-6 md:px-12">
+            <div class="stats-grid flex flex-wrap gap-6 justify-center">
+                <div class="stats-card-tile reactive-tilt flex-1 min-w-[220px] text-center cursor-default">
                     <div style="position: absolute; top: -20px; right: -20px; width: 80px; height: 80px; background: radial-gradient(circle, rgba(37, 99, 235, 0.04) 0%, transparent 70%); border-radius: 50%;"></div>
                     <p style="font-family: 'Outfit', sans-serif; font-size: 36px; font-weight: 900; color: #0f172a; letter-spacing: -0.03em; margin-bottom: 0.5rem; line-height: 1;">$33M</p>
                     <p style="font-size: 10px; font-weight: 800; color: #64748b; text-transform: uppercase; letter-spacing: 0.25em;">Valuation · Pre-Revenue</p>
                 </div>
 
-                <div class="reactive-tilt" style="flex: 1; min-width: 220px; background: rgba(255, 255, 255, 0.75); backdrop-filter: blur(24px); border: 1px solid rgba(15, 23, 42, 0.08); border-radius: 24px; padding: 2.5rem 2rem; text-align: center; cursor: default; position: relative; overflow: hidden;">
+                <div class="stats-card-tile reactive-tilt flex-1 min-w-[220px] text-center cursor-default">
                     <div style="position: absolute; top: -20px; right: -20px; width: 80px; height: 80px; background: radial-gradient(circle, rgba(37, 99, 235, 0.04) 0%, transparent 70%); border-radius: 50%;"></div>
                     <p style="font-family: 'Outfit', sans-serif; font-size: 36px; font-weight: 900; color: #0f172a; letter-spacing: -0.03em; margin-bottom: 0.5rem; line-height: 1;">500K</p>
                     <p style="font-size: 10px; font-weight: 800; color: #64748b; text-transform: uppercase; letter-spacing: 0.25em;">Cells Analyzed · HCA + PERIHEART</p>
                 </div>
 
-                <div class="reactive-tilt" style="flex: 1; min-width: 220px; background: rgba(255, 255, 255, 0.75); backdrop-filter: blur(24px); border: 1px solid rgba(15, 23, 42, 0.08); border-radius: 24px; padding: 2.5rem 2rem; text-align: center; cursor: default; position: relative; overflow: hidden;">
+                <div class="stats-card-tile reactive-tilt flex-1 min-w-[220px] text-center cursor-default">
                     <div style="position: absolute; top: -20px; right: -20px; width: 80px; height: 80px; background: radial-gradient(circle, rgba(37, 99, 235, 0.04) 0%, transparent 70%); border-radius: 50%;"></div>
                     <p style="font-family: 'Outfit', sans-serif; font-size: 36px; font-weight: 900; color: #0f172a; letter-spacing: -0.03em; margin-bottom: 0.5rem; line-height: 1;">98.4%</p>
                     <p style="font-size: 10px; font-weight: 800; color: #64748b; text-transform: uppercase; letter-spacing: 0.25em;">Stability · Zero Oncogenic Risk</p>
                 </div>
 
-                <div class="reactive-tilt" style="flex: 1; min-width: 220px; background: rgba(255, 255, 255, 0.75); backdrop-filter: blur(24px); border: 1px solid rgba(15, 23, 42, 0.08); border-radius: 24px; padding: 2.5rem 2rem; text-align: center; cursor: default; position: relative; overflow: hidden;">
+                <div class="stats-card-tile reactive-tilt flex-1 min-w-[220px] text-center cursor-default">
                     <div style="position: absolute; top: -20px; right: -20px; width: 80px; height: 80px; background: radial-gradient(circle, rgba(37, 99, 235, 0.04) 0%, transparent 70%); border-radius: 50%;"></div>
                     <p style="font-family: 'Outfit', sans-serif; font-size: 36px; font-weight: 900; color: #0f172a; letter-spacing: -0.03em; margin-bottom: 0.5rem; line-height: 1;">T4 GPU</p>
                     <p style="font-size: 10px; font-weight: 800; color: #64748b; text-transform: uppercase; letter-spacing: 0.25em;">Live Training · 400 Epochs</p>
@@ -5976,14 +5989,14 @@
                 if (!logContainer) return;
                 
                 const logStatements = [
-                    "Querying chromatin manifold...",
-                    "Analyzing KLF4 transcriptional binding accessibility.",
-                    "Simulating KLF4/SOX17/OCT4 target vector dynamics.",
-                    "Running dosage optimization audit...",
-                    "Pulse duration optimal: 2.0h ON / 19.2h OFF.",
-                    "Rejuvenation score: 20.0y age-reduction projection.",
-                    "Oncogenic risk evaluation: 0.000% [SAFE].",
-                    "Telemetry state synchronized with HCA network."
+                    { cmd: "sys.query", text: "Querying chromatin accessibility manifold..." },
+                    { cmd: "anal.factors", text: "Analyzing KLF4 transcriptional binding accessibility." },
+                    { cmd: "sim.target", text: "Simulating KLF4/SOX17/OCT4 target vector dynamics." },
+                    { cmd: "run.audit", text: "Running dosage optimization audit..." },
+                    { cmd: "opt.pulse", text: "Pulse duration optimal: <span class=\"log-val\">2.0h ON / 19.2h OFF</span>." },
+                    { cmd: "score.eval", text: "Rejuvenation score: <span class=\"log-val\">20.0y</span> age-reduction projection." },
+                    { cmd: "eval.safety", text: "<span class=\"log-success\">Oncogenic risk evaluation: 0.000% [SAFE]</span>" },
+                    { cmd: "sys.sync", text: "Telemetry state synchronized with HCA network." }
                 ];
                 
                 let index = 0;
@@ -5991,15 +6004,16 @@
                 function addLogLine() {
                     const now = new Date();
                     const timeStr = now.toTimeString().split(' ')[0];
-                    const stmt = logStatements[index];
+                    const item = logStatements[index];
                     
                     const line = document.createElement('div');
-                    line.className = 'hero-hud-card__log-line';
+                    line.className = 'hero-hud-card__log-line log-line-highlight';
                     line.style.opacity = '0';
                     line.style.transition = 'opacity 0.4s ease';
                     line.innerHTML = `
-                        <span class="hero-hud-card__log-time">${timeStr}</span>
-                        <span class="hero-hud-card__log-text">${stmt}</span>
+                        <span class="log-time">${timeStr}</span>
+                        <span class="log-cmd">${item.cmd}</span>
+                        <span class="hero-hud-card__log-text">${item.text}</span>
                     `;
                     
                     logContainer.appendChild(line);
