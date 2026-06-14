@@ -615,11 +615,11 @@ body.light-mode-profile {
 }
 
 .hero-hud-card__title {
-    font-family: var(--font-mono);
-    font-size: 10px;
+    font-family: var(--font-display);
+    font-size: 11px;
     font-weight: 800;
     color: var(--text-primary);
-    letter-spacing: 0.1em;
+    letter-spacing: 0.05em;
     text-transform: uppercase;
 }
 
@@ -694,19 +694,21 @@ body.light-mode-profile {
 }
 
 .hero-hud-card__stat-label {
+    font-family: var(--font-display);
     font-size: 8px;
     font-weight: 800;
     color: var(--text-tertiary);
+    letter-spacing: 0.1em;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
     margin-bottom: 0.25rem;
 }
 
 .hero-hud-card__stat-value {
-    font-family: var(--font-mono);
-    font-size: 14px;
-    font-weight: 700;
+    font-family: var(--font-display);
+    font-size: 22px;
+    font-weight: 900;
     color: var(--text-primary);
+    letter-spacing: -0.02em;
 }
 
 .hero-hud-card__progress-container {
@@ -714,13 +716,14 @@ body.light-mode-profile {
 }
 
 .hero-hud-card__progress-header {
+    font-family: var(--font-display);
     display: flex;
     justify-content: space-between;
-    font-size: 9px;
+    font-size: 9.5px;
     font-weight: 800;
     color: var(--text-secondary);
     text-transform: uppercase;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.1em;
     margin-bottom: 0.35rem;
 }
 
@@ -1007,11 +1010,12 @@ body.light-mode-profile {
 }
 
 .hud-sparkline-label {
-    font-size: 8px;
+    font-family: var(--font-display);
+    font-size: 8.5px;
     font-weight: 800;
     color: #64748b;
-    text-transform: uppercase;
     letter-spacing: 0.05em;
+    text-transform: uppercase;
 }
 
 .hud-sparkline-chart {
@@ -1021,10 +1025,11 @@ body.light-mode-profile {
 }
 
 .hud-sparkline-val {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    font-weight: 700;
+    font-family: var(--font-display);
+    font-size: 15px;
+    font-weight: 900;
     color: #4ade80;
+    letter-spacing: -0.02em;
 }
 
 /* ============================================================
