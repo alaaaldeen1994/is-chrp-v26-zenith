@@ -577,3 +577,172 @@ body.light-mode-profile {
     50% { opacity: 1; }
 }
 
+/* ============================================================
+   HERO HUD CARD — Frosted Diagnostic Console
+   ============================================================ */
+.hero-hud-card {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(20px) saturate(160%);
+    -webkit-backdrop-filter: blur(20px) saturate(160%);
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    border-radius: var(--radius-lg);
+    padding: 1.75rem;
+    box-shadow: 0 30px 60px -15px rgba(15, 23, 42, 0.08), 
+                0 0 50px rgba(37, 99, 235, 0.03);
+    width: 100%;
+    max-width: 480px;
+    margin: 0 auto;
+    font-family: var(--font-body);
+    transition: all var(--duration-normal) var(--ease-spring);
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-hud-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 40px 80px -15px rgba(15, 23, 42, 0.12),
+                0 0 60px rgba(37, 99, 235, 0.06);
+    border-color: var(--border-accent);
+}
+
+.hero-hud-card__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(15, 23, 42, 0.06);
+    padding-bottom: 0.85rem;
+    margin-bottom: 1rem;
+}
+
+.hero-hud-card__title {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 800;
+    color: var(--text-primary);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.hero-hud-card__status {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 9px;
+    font-weight: 800;
+    color: var(--status-healthy);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.hero-hud-card__dot {
+    width: 6px;
+    height: 6px;
+    background-color: var(--status-healthy);
+    border-radius: 50%;
+    box-shadow: 0 0 8px var(--status-healthy);
+    animation: pulse 1.8s infinite;
+}
+
+.hero-hud-card__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+}
+
+.hero-hud-card__logs {
+    background: rgba(15, 23, 42, 0.03);
+    border: 1px solid rgba(15, 23, 42, 0.04);
+    border-radius: var(--radius-md);
+    padding: 1rem;
+    font-family: var(--font-mono);
+    font-size: 9.5px;
+    line-height: 1.6;
+    color: var(--text-secondary);
+    max-height: 125px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.hero-hud-card__log-line {
+    display: flex;
+    gap: 6px;
+}
+
+.hero-hud-card__log-time {
+    color: var(--nilus-cobalt);
+    font-weight: 700;
+}
+
+.hero-hud-card__log-text {
+    word-break: break-all;
+}
+
+.hero-hud-card__stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem;
+}
+
+.hero-hud-card__stat-box {
+    background: rgba(255, 255, 255, 0.6);
+    border: 1px solid rgba(15, 23, 42, 0.05);
+    border-radius: var(--radius-sm);
+    padding: 0.75rem;
+    text-align: center;
+}
+
+.hero-hud-card__stat-label {
+    font-size: 8px;
+    font-weight: 800;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.25rem;
+}
+
+.hero-hud-card__stat-value {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.hero-hud-card__progress-container {
+    margin-top: 0.25rem;
+}
+
+.hero-hud-card__progress-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 9px;
+    font-weight: 800;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.35rem;
+}
+
+.hero-hud-card__progress-bar {
+    width: 100%;
+    height: 6px;
+    background: rgba(15, 23, 42, 0.05);
+    border-radius: var(--radius-full);
+    overflow: hidden;
+}
+
+.hero-hud-card__progress-fill {
+    height: 100%;
+    background: var(--nilus-gradient);
+    width: 94%;
+    border-radius: var(--radius-full);
+    animation: fillProgress 2.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes fillProgress {
+    from { width: 0%; }
+    to { width: 94%; }
+}
+
+

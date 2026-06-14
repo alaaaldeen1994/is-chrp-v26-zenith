@@ -428,7 +428,7 @@
 
             mask-image: radial-gradient(circle at center, black 60%, transparent 95%);
 
-            transform: scale(0.8) translate(28vw, 0);
+            transform: scale(1.2) translate(15vw, 0);
 
             opacity: 1;
 
@@ -3540,36 +3540,103 @@
     <div id="mobile-menu-backdrop" onclick="toggleMobileMenu()" class="fixed inset-0 bg-slate-900/10 backdrop-blur-sm z-[998] hidden opacity-0 transition-opacity duration-300"></div>
 
     <!-- Hero Section -->
-    <section class="hero bg-transparent relative z-10">
-        <div class="hero-content px-6 md:px-12 lg:pl-[5%] py-12 md:py-24" style="text-align: left; display: flex; flex-direction: column; align-items: flex-start; max-width: 720px;">
-            <div class="animate-fade-in-up flex items-center gap-2 px-4 py-1.5 bg-blue-50/50 border border-blue-100/50 rounded-full mb-6">
-                <span class="w-1.5 h-1.5 bg-blue-600 rounded-full animate-pulse"></span>
-                <span style="font-size: 9px; font-weight: 900; color: #2563eb; text-transform: uppercase; letter-spacing: 0.2em; line-height: 1;">COMPUTATIONAL EPIGENETICS PLATFORM</span>
-            </div>
+    <section class="hero bg-transparent relative z-10 flex items-center min-h-[75vh]" style="padding: 3rem 0;">
+        <div class="max-w-7xl mx-auto w-full px-6 md:px-12 lg:px-16 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
             
-            <h1 class="animate-fade-in-up delay-100" style="font-size: clamp(34px, 5.5vw, 60px); font-family: 'Outfit', sans-serif; font-weight: 900; line-height: 1.1; margin-bottom: 1.5rem; letter-spacing: -0.04em; background: linear-gradient(135deg, #0f172a 20%, #1e3a8a 55%, #2563eb 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
-                Reverse Biological Aging with Precision Gene Control
-            </h1>
-            
-            <p class="animate-fade-in-up delay-200 text-slate-500 font-medium text-lg leading-relaxed mb-10" style="max-width: 600px;">
-                Zenith v28 translates high-throughput chromatin profiles into precise multivalent reprogramming cocktails — reversing biological age while eliminating oncogenic risk.
-            </p>
-            
-            <div class="animate-fade-in-up delay-300" style="display: flex; gap: 1rem; flex-wrap: wrap;">
-                <a href="#discovery-section" class="hero-btn-primary">
-                    <span>Explore the Science</span>
-                    <svg class="hero-btn-arrow" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M5 12h14" /><path d="m12 5 7 7-7 7" />
-                    </svg>
-                </a>
+            <!-- Left Text Content Column (Col-span 7) -->
+            <div class="lg:col-span-7 flex flex-col items-start text-left z-20">
+                <div class="animate-fade-in-up flex items-center gap-2 px-3 py-1 bg-blue-50/70 border border-blue-100/50 rounded-full mb-6">
+                    <span class="w-1.5 h-1.5 bg-blue-600 rounded-full animate-pulse"></span>
+                    <span style="font-size: 8.5px; font-weight: 900; color: #2563eb; text-transform: uppercase; letter-spacing: 0.25em; line-height: 1;">COMPUTATIONAL EPIGENETICS PLATFORM</span>
+                </div>
                 
-                <a href="javascript:void(0)" onclick="openLoginModal()" class="hero-btn-secondary" title="Launch Zenith Platform">
-                    <span>Launch Console</span>
-                    <svg class="hero-btn-terminal" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-                        <polyline points="4 17 10 11 4 5" /><line x1="12" y1="19" x2="20" y2="19" />
-                    </svg>
-                </a>
+                <h1 class="animate-fade-in-up delay-100" style="font-size: clamp(34px, 5.2vw, 58px); font-family: 'Outfit', sans-serif; font-weight: 900; line-height: 1.1; margin-bottom: 1.5rem; letter-spacing: -0.04em; color: #0f172a;">
+                    Reverse Biological Aging with <span style="background: linear-gradient(135deg, #2563eb 20%, #4f46e5 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Precision Gene Control</span>
+                </h1>
+                
+                <p class="animate-fade-in-up delay-200 text-slate-500 font-medium text-lg leading-relaxed mb-10" style="max-width: 600px;">
+                    Zenith v28 translates high-throughput chromatin profiles into precise multivalent reprogramming cocktails — reversing biological age while eliminating oncogenic risk.
+                </p>
+                
+                <div class="animate-fade-in-up delay-300" style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                    <a href="#discovery-section" class="hero-btn-primary">
+                        <span>Explore the Science</span>
+                        <svg class="hero-btn-arrow" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M5 12h14" /><path d="m12 5 7 7-7 7" />
+                        </svg>
+                    </a>
+                    
+                    <a href="javascript:void(0)" onclick="openLoginModal()" class="hero-btn-secondary" title="Launch Zenith Platform">
+                        <span>Launch Console</span>
+                        <svg class="hero-btn-terminal" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="4 17 10 11 4 5" /><line x1="12" y1="19" x2="20" y2="19" />
+                        </svg>
+                    </a>
+                </div>
             </div>
+            
+            <!-- Right Telemetry HUD Column (Col-span 5) -->
+            <div class="lg:col-span-5 z-20 flex items-center justify-center w-full animate-fade-in-up delay-300">
+                <div class="hero-hud-card reactive-tilt">
+                    <div class="hero-hud-card__header">
+                        <span class="hero-hud-card__title">Zenith Engine v28.0 // Diagnostics</span>
+                        <div class="hero-hud-card__status">
+                            <span class="hero-hud-card__dot"></span>
+                            <span>Live</span>
+                        </div>
+                    </div>
+                    
+                    <div class="hero-hud-card__grid">
+                        <!-- Console Logs -->
+                        <div class="hero-hud-card__logs" id="hero-hud-logs">
+                            <div class="hero-hud-card__log-line">
+                                <span class="hero-hud-card__log-time">02:44:14</span>
+                                <span class="hero-hud-card__log-text">Chromatin accessibility mapping loaded.</span>
+                            </div>
+                            <div class="hero-hud-card__log-line">
+                                <span class="hero-hud-card__log-time">02:44:15</span>
+                                <span class="hero-hud-card__log-text">Running multi-factor perturbation forecasting...</span>
+                            </div>
+                            <div class="hero-hud-card__log-line">
+                                <span class="hero-hud-card__log-time">02:44:16</span>
+                                <span class="hero-hud-card__log-text">Optimal dosage found (2.0h ON / 19.2h OFF).</span>
+                            </div>
+                            <div class="hero-hud-card__log-line">
+                                <span class="hero-hud-card__log-time">02:44:17</span>
+                                <span class="hero-hud-card__log-text">Oncogenic risk evaluation: 0.000% [SAFE]</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Core Telemetry Metrics -->
+                        <div class="hero-hud-card__stats">
+                            <div class="hero-hud-card__stat-box">
+                                <div class="hero-hud-card__stat-label">Yield</div>
+                                <div class="hero-hud-card__stat-value text-emerald-600">20.0y</div>
+                            </div>
+                            <div class="hero-hud-card__stat-box">
+                                <div class="hero-hud-card__stat-label">Stability</div>
+                                <div class="hero-hud-card__stat-value">98.4%</div>
+                            </div>
+                            <div class="hero-hud-card__stat-box">
+                                <div class="hero-hud-card__stat-label">GPU Load</div>
+                                <div class="hero-hud-card__stat-value text-blue-600">88%</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Reprogramming Progress -->
+                        <div class="hero-hud-card__progress-container">
+                            <div class="hero-hud-card__progress-header">
+                                <span>Reprogramming Trajectory</span>
+                                <span>94%</span>
+                            </div>
+                            <div class="hero-hud-card__progress-bar">
+                                <div class="hero-hud-card__progress-fill"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
         </div>
     </section>
 
@@ -5902,6 +5969,58 @@
                     card.style.borderColor = '';
                 });
             });
+
+            // --- HERO HUD LIVE LOG FEED ---
+            (function() {
+                const logContainer = document.getElementById('hero-hud-logs');
+                if (!logContainer) return;
+                
+                const logStatements = [
+                    "Querying chromatin manifold...",
+                    "Analyzing KLF4 transcriptional binding accessibility.",
+                    "Simulating KLF4/SOX17/OCT4 target vector dynamics.",
+                    "Running dosage optimization audit...",
+                    "Pulse duration optimal: 2.0h ON / 19.2h OFF.",
+                    "Rejuvenation score: 20.0y age-reduction projection.",
+                    "Oncogenic risk evaluation: 0.000% [SAFE].",
+                    "Telemetry state synchronized with HCA network."
+                ];
+                
+                let index = 0;
+                
+                function addLogLine() {
+                    const now = new Date();
+                    const timeStr = now.toTimeString().split(' ')[0];
+                    const stmt = logStatements[index];
+                    
+                    const line = document.createElement('div');
+                    line.className = 'hero-hud-card__log-line';
+                    line.style.opacity = '0';
+                    line.style.transition = 'opacity 0.4s ease';
+                    line.innerHTML = `
+                        <span class="hero-hud-card__log-time">${timeStr}</span>
+                        <span class="hero-hud-card__log-text">${stmt}</span>
+                    `;
+                    
+                    logContainer.appendChild(line);
+                    
+                    // Fade in the line
+                    setTimeout(() => line.style.opacity = '1', 50);
+                    
+                    // Scroll to bottom
+                    logContainer.scrollTop = logContainer.scrollHeight;
+                    
+                    // Limit number of lines in HUD log viewer
+                    if (logContainer.children.length > 20) {
+                        logContainer.removeChild(logContainer.firstChild);
+                    }
+                    
+                    index = (index + 1) % logStatements.length;
+                }
+                
+                // Add a new log line every 4.5 seconds
+                setInterval(addLogLine, 4500);
+            })();
         </script>
 
 </body>
