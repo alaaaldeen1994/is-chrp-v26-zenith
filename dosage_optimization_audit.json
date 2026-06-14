@@ -1,76 +1,76 @@
 {
-  "timestamp": "2026-05-25T06:35:55.725724",
+  "timestamp": "2026-06-11T15:27:39.644747",
   "target_reduction": 2.2,
-  "optimal_on_hours": 2.42,
-  "optimal_off_hours": 18.53,
-  "predicted_rejuvenation": 19.72,
-  "predicted_stress": 0.0018,
-  "efficiency_ratio": 7.823,
+  "optimal_on_hours": 2.0,
+  "optimal_off_hours": 19.2,
+  "predicted_rejuvenation": 20.0,
+  "predicted_stress": 0.0004,
+  "efficiency_ratio": 9.524,
   "safety_status": "VERIFIED",
   "optimization_history": [
     {
       "iteration": 1,
       "pulse_on": 8.0,
       "pulse_off": 16.0,
-      "age_reduction": 6.9,
-      "stress_index": 0.1266,
-      "score": 3.069
+      "age_reduction": 6.93,
+      "stress_index": 0.1269,
+      "score": 3.089
     },
     {
       "iteration": 2,
       "pulse_on": 12.0,
       "pulse_off": 12.0,
-      "age_reduction": 4.95,
-      "stress_index": 0.2671,
-      "score": -5.901
+      "age_reduction": 4.99,
+      "stress_index": 0.2667,
+      "score": -5.848
     },
     {
       "iteration": 3,
       "pulse_on": 4.0,
       "pulse_off": 20.0,
-      "age_reduction": 12.72,
+      "age_reduction": 12.69,
       "stress_index": 0.0086,
-      "score": 12.715
+      "score": 12.689
     },
     {
       "iteration": 4,
-      "pulse_on": 3.41,
-      "pulse_off": 21.46,
-      "age_reduction": 14.66,
-      "stress_index": 0.0017,
-      "score": 14.657
+      "pulse_on": 2.23,
+      "pulse_off": 17.99,
+      "age_reduction": 20.0,
+      "stress_index": 0.0011,
+      "score": 19.999
     },
     {
       "iteration": 5,
-      "pulse_on": 4.47,
-      "pulse_off": 20.72,
-      "age_reduction": 11.51,
-      "stress_index": 0.0109,
-      "score": 11.508
+      "pulse_on": 2.0,
+      "pulse_off": 19.2,
+      "age_reduction": 20.0,
+      "stress_index": 0.0004,
+      "score": 20.0
     },
     {
       "iteration": 6,
-      "pulse_on": 3.56,
-      "pulse_off": 21.02,
-      "age_reduction": 14.09,
-      "stress_index": 0.0029,
-      "score": 14.094
+      "pulse_on": 2.0,
+      "pulse_off": 17.77,
+      "age_reduction": 20.0,
+      "stress_index": 0.0011,
+      "score": 20.0
     },
     {
       "iteration": 7,
-      "pulse_on": 2.88,
-      "pulse_off": 20.6,
-      "age_reduction": 17.08,
-      "stress_index": 0.001,
-      "score": 17.079
+      "pulse_on": 2.0,
+      "pulse_off": 18.49,
+      "age_reduction": 20.0,
+      "stress_index": 0.0008,
+      "score": 20.0
     },
     {
       "iteration": 8,
-      "pulse_on": 2.42,
-      "pulse_off": 18.53,
-      "age_reduction": 19.72,
-      "stress_index": 0.0018,
-      "score": 19.72
+      "pulse_on": 2.7,
+      "pulse_off": 19.15,
+      "age_reduction": 18.13,
+      "stress_index": 0.0017,
+      "score": 18.134
     }
   ]
 }
