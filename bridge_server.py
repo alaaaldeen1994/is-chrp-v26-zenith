@@ -1201,7 +1201,7 @@ _base_symbols = [
 
 # Load REAL gene symbols from HCA scVI model output (no padding, no fakes)
 # Source: real_ip_genes_full.json — 200 genes ranked by correlation with rejuvenation vector
-# Computed from: Litvinukova et al., Nature 2020 (1.94M cells, 83 donors)
+# Computed from: Litvinukova et al., Nature 2020 (2M cells, 83 donors)
 
 def _load_real_gene_symbols():
     """Load exact 5858 var_names from scVI model schema if available. Otherwise fallback."""
@@ -1399,7 +1399,7 @@ async def lifespan(app: FastAPI):
 
 
 
-        # --- PRIORITY 1: REAL 1.94M Foundation Model (Litvinukova et al. Nature 2020) ---
+        # --- PRIORITY 1: REAL 2M Foundation Model (Litvinukova et al. Nature 2020) ---
         # Trained May 2026 on 99,993 cells, 100 epochs, 14 real donors
         model_dir_486k = os.path.join(base_dir, "models", "zenith_foundation_v1")
 
@@ -1421,7 +1421,7 @@ async def lifespan(app: FastAPI):
 
             try:
 
-                print("[ZENITH v29.0 GOLD] Detected 1.94M Foundation Model  --  upgrading...")
+                print("[ZENITH v29.0 GOLD] Detected 2M Foundation Model  --  upgrading...")
 
                 # The newer scvi-tools versions pack everything into model.pt and can load without adata.h5ad!
 
@@ -1435,7 +1435,7 @@ async def lifespan(app: FastAPI):
 
             except Exception as e:
 
-                print(f"WARNING: 1.94M model found but failed to load: {e}")
+                print(f"WARNING: 2M model found but failed to load: {e}")
 
                 print("Falling back to Priority 2 (18k model)...")
 
@@ -1511,7 +1511,7 @@ async def lifespan(app: FastAPI):
 
                 print("SUCCESS: Legacy HCA Model Loaded (18,641 cells).")
 
-                print("  NOTE: To upgrade, place 1.94M model in models/scvi_model_194M/")
+                print("  NOTE: To upgrade, place 2M model in models/scvi_model_194M/")
 
             except Exception as e:
 

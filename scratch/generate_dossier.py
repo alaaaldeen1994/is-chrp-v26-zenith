@@ -120,7 +120,7 @@ def build_dossier():
     pdf.section_header('1. Executive Summary & Value Proposition')
     pdf.text_block(
         "Nilus Lab is commercializing high-impact science to reverse cardiac ageing without tumor risk (oncogene-free). "
-        "Our proprietary platform, Zenith v29.0, leverages a deep foundation manifold trained on 1.94M single cardiac cells "
+        "Our proprietary platform, Zenith v29.0, leverages a deep foundation manifold trained on 2M single cardiac cells "
         "from the Human Cell Atlas (HCA) and the PERIHEART dataset. By utilizing variational autoencoders (scVI) and "
         "in-silico modeling & simulation tools, Zenith identifies combinatorial gene networks that restore youthful "
         "chromatin profiles and contractility in senescent cells, moving biology out of the lab and into the clinic."

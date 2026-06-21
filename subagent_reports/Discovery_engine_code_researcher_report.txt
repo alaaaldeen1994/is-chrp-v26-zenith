@@ -1,0 +1,131 @@
+--- LAST MODEL RESPONSE ---
+Created At: 2026-06-06T13:40:35Z
+Completed At: 2026-06-06T13:40:35Z
+File Path: `file:///C:/Users/alaaa/.gemini/antigravity/scratch/is-chrp-v26-generative/bridge_server.py`
+Total Lines: 6847
+Total Bytes: 173148
+Showing lines 3200 to 3999
+The following code has been modified to include a line number before every line, in the format: <line_number>: <original_line>. Please note that any changes targeting the original code should remove the line number, colon, and leading space.
+3200:             print(f"ATLAS Generation Error: {e}")
+3201: 
+3202:     
+3203: 
+3204:     # STRICT MODE: No Fallback
+3205: 
+3206:     raise HTTPException(status_code=500, detail="ATLAS Error: Clinical Model Unavailable.")
+3207: 
+3208: 
+3209: 
+3210: 
+3211: 
+3212: 
+3213: 
+3214: @app.post("/generate_report", response_model=ReportResponse)
+3215: 
+3216: async def generate_report(report_data: ReportRequest):
+3217: 
+3218:     """Generate a clinical PDF report from session data"""
+3219: 
+3220:     try:
+3221: 
+3222:         from report_generator import generate_clinical_report
+3223: 
+3224:         
+3225: 
+3226:         # Add model_mode and bio_age if not provided
+3227: 
+3228:         session_data = report_data.dict()
+3229: 
+3230:         if session_data.get('model_mode') is None:
+3231: 
+3232:             session_data['model_mode'] = model_mode
+3233: 
+3234:         
+3235: 
+3236:         # Generate the PDF
+3237: 
+3238:         pdf_path = generate_clinical_report(session_data)
+3239: 
+3240:         
+3241: 
+3242:         # Get relative path for download URL
+3243: 
+3244:         filename = os.path.basename(pdf_path)
+3245: 
+3246:         download_url = f"/download_report/{filename}"
+3247: 
+3248:         
+3249: 
+3250:         return {
+3251: 
+3252:             "success": True,
+3253: 
+3254:             "report_path": pdf_path,
+3255: 
+3256:             "download_url": download_url
+3257: 
+3258:         }
+3259: 
+3260:     except Exception as e:
+3261: 
+3262:         print(f"Report generation error: {e}")
+<truncated 21907 bytes>
+get("age_reduction", 0.0))
+3943: 
+3944:         age_reduction = min(raw_age, MAX_AGE_REDUCTION_YEARS)
+3945: 
+3946:         if raw_age > MAX_AGE_REDUCTION_YEARS:
+3947: 
+3948:             print(f"       GPT returned age_reduction={raw_age}y  --  capped at {MAX_AGE_REDUCTION_YEARS}y (max published, Sarkar 2020)")
+3949: 
+3950:         drugs = data.get("drugs", [])
+3951: 
+3952:         
+3953: 
+3954:         target_vec = torch.zeros(len(GENE_SYMBOLS))
+3955: 
+3956:         filtered_gene_data = {}
+3957: 
+3958:         for genename, weight in gene_data.items():
+3959: 
+3960:             g_upper = genename.strip().upper()
+3961: 
+3962:             if g_upper in GENE_SYMBOLS:
+3963: 
+3964:                 idx = GENE_SYMBOLS.index(g_upper)
+3965: 
+3966:                 target_vec[idx] = float(weight)
+3967: 
+3968:                 filtered_gene_data[g_upper] = float(weight)
+3969: 
+3970:         
+3971: 
+3972:         # Apply the pLDDT > 90 High-Fidelity filter (Pruning 25 down to Top 12 for UI)
+3973: 
+3974:         top_factors = identify_most_relevant_factors(filtered_gene_data)
+3975: 
+3976: 
+3977: 
+3978:         return target_vec, explanation, top_factors, audit_data, dna_motif, age_reduction, drugs
+3979: 
+3980:     except Exception as e:
+3981: 
+3982:         import traceback
+3983: 
+3984:         error_type = type(e).__name__
+3985: 
+3986:         error_msg = str(e)
+3987: 
+3988:         print(f"Hybrid Semantic Translation Error [{error_type}]: {error_msg}")
+3989: 
+3990:         return torch.tensor([0.5]*10 + [0.0]*(len(GENE_SYMBOLS)-10), dtype=torch.float32), f"Translation Error ({error_type}): {error_msg}", {}, {}, "GGGGTCACGGTC", 0.0, []
+3991: 
+3992: 
+3993: 
+3994: @app.post("/api/v1/clinical/af3-manifest")
+3995: 
+3996: async def generate_af3_manifest(req: dict):
+3997: 
+3998:     """
+3999: 
+The above content does NOT show the entire file contents. If you need to view any lines of the file which were not shown to complete your task, call this tool again to view those lines.

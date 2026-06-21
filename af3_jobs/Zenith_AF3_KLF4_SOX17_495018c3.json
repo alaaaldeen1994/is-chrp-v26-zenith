@@ -1,0 +1,22 @@
+{
+  "name": "Zenith_AF3_KLF4_SOX17_495018c3",
+  "modelSeeds": [
+    42
+  ],
+  "sequences": [
+    {
+      "proteinChain": {
+        "sequence": "PPGSCMPEEPKPKRGRRSWPRKRTATHTCDYAGCGKTYTKSSHLKAHLRTHTGEKPYHCDWDGCGWKFARSDELTRHYRKHTGHRPFQCQKCDRAFSRSDHLALHMKRHF",
+        "count": 1
+      }
+    },
+    {
+      "dnaSequence": {
+        "sequence": "CCTGTGACTGTGGGGTTCACGCTCCCGGGTG",
+        "count": 1
+      }
+    }
+  ],
+  "dialect": "alphafold3",
+  "version": 1
+}

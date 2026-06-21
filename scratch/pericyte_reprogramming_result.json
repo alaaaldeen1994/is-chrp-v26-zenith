@@ -1,0 +1,84 @@
+{
+  "genes": [
+    {
+      "gene": "DLC1",
+      "correlation": 0.674,
+      "direction": "UP_IN_YOUNG",
+      "role": "Tumor suppressor involved in cell migration and cytoskeletal organization.",
+      "mechanism": "DLC1 → Rho GTPase-activating protein → RhoA signaling → Reduced cell migration and stabilization of endothelial phenotype.",
+      "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/?term=DLC1+cardiac+aging+rejuvenation"
+    },
+    {
+      "gene": "SOX5",
+      "correlation": 0.497,
+      "direction": "UP_IN_YOUNG",
+      "role": "Transcription factor involved in cell differentiation.",
+      "mechanism": "SOX5 → Transcription regulation → Mesenchymal to endothelial transition → Endothelial cell differentiation.",
+      "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/?term=SOX5+cardiac+aging+rejuvenation"
+    },
+    {
+      "gene": "FRMD3",
+      "correlation": 0.479,
+      "direction": "UP_IN_YOUNG",
+      "role": "Involved in cytoskeletal organization and cell adhesion.",
+      "mechanism": "FRMD3 → FERM domain-containing protein → Cytoskeletal stabilization → Enhanced endothelial cell adhesion.",
+      "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/?term=FRMD3+cardiac+aging+rejuvenation"
+    },
+    {
+      "gene": "MALAT1",
+      "correlation": 0.459,
+      "direction": "UP_IN_YOUNG",
+      "role": "Long non-coding RNA involved in gene expression regulation.",
+      "mechanism": "MALAT1 → RNA-protein interactions → Regulation of endothelial cell proliferation → Promotion of vascular integrity.",
+      "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/?term=MALAT1+cardiac+aging+rejuvenation"
+    },
+    {
+      "gene": "NR2F2-AS1",
+      "correlation": 0.432,
+      "direction": "UP_IN_YOUNG",
+      "role": "Antisense RNA potentially regulating NR2F2 expression.",
+      "mechanism": "NR2F2-AS1 → Antisense RNA → Modulation of NR2F2 → Endothelial cell differentiation.",
+      "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/?term=NR2F2-AS1+cardiac+aging+rejuvenation"
+    },
+    {
+      "gene": "EGFLAM",
+      "correlation": 0.362,
+      "direction": "UP_IN_YOUNG",
+      "role": "Involved in cell adhesion and extracellular matrix interactions.",
+      "mechanism": "EGFLAM → Extracellular matrix protein → Cell adhesion → Enhanced endothelial cell stability.",
+      "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/?term=EGFLAM+cardiac+aging+rejuvenation"
+    },
+    {
+      "gene": "PDGFRB",
+      "correlation": 0.286,
+      "direction": "UP_IN_YOUNG",
+      "role": "Receptor tyrosine kinase involved in cell proliferation and migration.",
+      "mechanism": "PDGFRB → PDGF signaling → Cell proliferation and migration → Vascular remodeling.",
+      "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/?term=PDGFRB+cardiac+aging+rejuvenation"
+    },
+    {
+      "gene": "ZEB2",
+      "correlation": 0.27,
+      "direction": "UP_IN_YOUNG",
+      "role": "Transcription factor involved in epithelial-mesenchymal transition.",
+      "mechanism": "ZEB2 → Transcription regulation → Mesenchymal to endothelial transition → Endothelial cell differentiation.",
+      "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/?term=ZEB2+cardiac+aging+rejuvenation"
+    }
+  ],
+  "summary": "The refined gene panel focuses on enhancing endothelial cell differentiation and stability by selecting genes with higher correlations to youth and known roles in cell adhesion, migration, and differentiation. This approach aims to reprogram pericytes into functional endothelial cells to restore blood flow and reduce microvascular leakage.",
+  "query_interpretation": "Reprogram mural pericytes into capillary endothelial cells to improve vascular function and integrity.",
+  "refinement_notes": "FRMD3 and MALAT1 were added due to their higher correlation with youth and roles in cytoskeletal organization and gene expression regulation, respectively. BMP5 and ROCK1 were removed due to lower correlations and less direct roles in endothelial differentiation.",
+  "real_age_delta_years": 0.1,
+  "tournament_confidence": 0.8,
+  "judge_reasoning": "Panel B provides a coherent gene set with a clear focus on endothelial cell identity and function, incorporating genes like DLC1, SOX5, and NR2F2-AS1, while also addressing vascular stability through PDGFRB and BMP5. The inclusion of EGFLAM suggests attention to cell adhesion, enhancing the mechanistic explanation for reducing microvascular leakage.",
+  "rounds_completed": 2,
+  "competing_panels": 3,
+  "methodology": "Tournament Discovery (Co-Scientist, Nature 2026) + Iterative Refinement (Robin, Nature 2026)",
+  "model": "gpt-4o",
+  "real_hca_context_used": true,
+  "total_hca_genes_provided": 100,
+  "cell_type": "pericyte",
+  "cell_type_label": "pericyte (77,856 cells, young=32,227, aged=17,839)",
+  "query": "Reprogram mural pericytes into functional capillary endothelial cells to restore blood flow and reduce microvascular leakage.",
+  "source_data": "Litvinukova et al., Nature 2020"
+}

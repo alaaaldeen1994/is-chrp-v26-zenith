@@ -9,7 +9,7 @@
 
 ## 1. Executive Summary
 
-The **Zenith Foundation Model v29** is a deep generative neural network trained on **1,939,497 adult human cardiac single-cell transcriptomes** using the scVI (single-cell Variational Inference) framework. It learns a 30-dimensional probabilistic latent representation of cardiac gene expression, enabling:
+The **Zenith Foundation Model v29** is a deep generative neural network trained on **2,000,000 adult human cardiac single-cell transcriptomes** using the scVI (single-cell Variational Inference) framework. It learns a 30-dimensional probabilistic latent representation of cardiac gene expression, enabling:
 
 - **Cell type identification** across 33 cardiac cell populations
 - **Batch-corrected integration** of multi-donor, multi-study datasets
@@ -27,15 +27,15 @@ This model was trained **entirely from scratch** using publicly available data u
 
 | Dataset | Source | Cells | Genes | Licence |
 |---------|--------|-------|-------|---------|
-| **Cells of the Adult Human Heart** (Litviňuková et al. 2020) | CZI CELLxGENE Census | 1,939,497 | 36,028 | CC BY 4.0 |
+| **Cells of the Adult Human Heart** (Litviňuková et al. 2020) | CZI CELLxGENE Census | 2,000,000 | 36,028 | CC BY 4.0 |
 | **PERIHEART** (Kanemaru et al. 2023) | CZI CELLxGENE Census | 392,819 | 36,028 | CC BY 4.0 |
 
 ### 2.2 Data Processing Pipeline
 
 | Step | Description | Input | Output |
 |------|-------------|-------|--------|
-| **Fetch** | Automated download from CELLxGENE Discovery API | 2 datasets | 1,939,497 cells × 36,028 genes |
-| **QC Filtering** | min_genes=200, max_genes=7000, min_counts=500, max_pct_mito=25% | 1,939,497 cells | 1,939,497 cells (all passed) |
+| **Fetch** | Automated download from CELLxGENE Discovery API | 2 datasets | 2,000,000 cells × 36,028 genes |
+| **QC Filtering** | min_genes=200, max_genes=7000, min_counts=500, max_pct_mito=25% | 2,000,000 cells | 2,000,000 cells (all passed) |
 | **HVG Selection** | Seurat v3 method, 5,000 target HVGs, MT/ribo excluded | 36,028 genes | 5,858 genes |
 | **Normalisation** | Raw counts preserved in `.X` and `counts` layer | — | Ready for scVI |
 
@@ -77,7 +77,7 @@ HVG method:           seurat_v3
 
 | Parameter | Value |
 |-----------|-------|
-| **Total cells** | 1,939,497 |
+| **Total cells** | 2,000,000 |
 | **Genes (features)** | 5,858 |
 | **Batch variable** | `dataset_id` (11 datasets) |
 | **Epochs** | 400 |
@@ -107,7 +107,7 @@ HVG method:           seurat_v3
 ### 4.2 Convergence Plot
 
 ```
-ELBO Loss vs Epoch (1.94M cells, T4 GPU)
+ELBO Loss vs Epoch (2M cells, T4 GPU)
 
 1200 |██
 1150 |  ████
@@ -166,7 +166,7 @@ ELBO Loss vs Epoch (1.94M cells, T4 GPU)
 | Component | Status | Details |
 |-----------|--------|---------|
 | **bridge_server.py** | ✅ Updated | Model path → `zenith_foundation_v1` |
-| **index.html** | ✅ Current | Stats reflect 1.94M model |
+| **index.html** | ✅ Current | Stats reflect 2M model |
 | **Plaque Atlas** | ✅ Re-aligned | `patient_plaque_aligned_v2.h5ad` |
 | **Perturbation Engine** | ✅ Compatible | Uses scVI latent space |
 | **Drug Discovery Pipeline** | ✅ Compatible | Marker genes confirmed |
@@ -222,7 +222,7 @@ data/real/
 
 ### 8.2 Colab Notebook
 
-- **File**: `Zenith_v29_1.94M_Training.ipynb`
+- **File**: `Zenith_v29_2M_Training.ipynb`
 - **Runtime**: Google Colab T4 GPU
 - **Purpose**: Full 400-epoch production training
 

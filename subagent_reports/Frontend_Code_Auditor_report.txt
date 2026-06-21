@@ -1,0 +1,71 @@
+--- LAST MODEL RESPONSE ---
+Created At: 2026-06-07T05:47:36Z
+Completed At: 2026-06-07T05:47:36Z
+File Path: `file:///C:/Users/alaaa/.gemini/antigravity/scratch/is-chrp-v26-generative/js/script.js`
+Total Lines: 4871
+Total Bytes: 231881
+Showing lines 1600 to 2399
+The following code has been modified to include a line number before every line, in the format: <line_number>: <original_line>. Please note that any changes targeting the original code should remove the line number, colon, and leading space.
+1600:                     // Real age delta from the age clock
+1601:                     const realAgeDelta = realData.real_age_delta_years || null;
+1602:                     const ageDeltaDisplay = realAgeDelta ? parseFloat(realAgeDelta.toFixed(1)) : null;
+1603: 
+1604:                     // Build rationale from actual data — no GPT
+1605:                     const proGenes = (realData.top_rejuvenation_genes || []).slice(0, 5).map(g => g.gene).join(', ');
+1606:                     const agingGenes = (realData.top_aging_markers || []).slice(0, 3).map(g => g.gene).join(', ');
+1607:                     const rationale = `[REAL HCA DISCOVERY — Litviňuková et al., Nature 2020 | DOI: 10.1038/s41586-020-2797-4] ` +
+1608:                         `Analysis of ${realData.source || 'HCA 2020'} using the trained scVI model (486k cells, 14 real donors). ` +
+1609:                         `Top pro-rejuvenation genes measured from 40-55y donors: ${proGenes}. ` +
+1610:                         `Aging markers elevated in 65-72y donors: ${agingGenes}. ` +
+1611:                         `Method: Pearson correlation of 32,383 gene expressions with the latent rejuvenation vector ` +
+1612:                         `(young centroid − aged centroid, magnitude = 1.9925). ` +
+1613:                         `Age clock prediction from real ElasticNet model (MAE = 6.0 years). ` +
+1614:                         `NO GPT WAS USED. All values computed from measured single-cell RNA data.`;
+1615: 
+1616:                     data = {
+1617:                         r
+<truncated 45282 bytes>
+st url = window.URL.createObjectURL(blob);
+2278:             const a = document.createElement('a');
+2279:             a.href = url;
+2280:             a.download = `IS-CHRP_Clinical_Report_${Date.now()}.pdf`;
+2281:             document.body.appendChild(a);
+2282:             a.click();
+2283:             a.remove();
+2284:             BiosimUI.notify('System', 'Report Downloaded', 'suc');
+2285:         } catch (e) {
+2286:             console.error(e);
+2287:             BiosimUI.notify('Error', 'Failed to generate report. Check API Key.', 'err');
+2288:         }
+2289:     },
+2290: 
+2291:     toggleCatalog() {
+2292:         const el = document.getElementById('catalog-overlay');
+2293:         if (el) {
+2294:             el.style.display = (el.style.display === 'none') ? 'block' : 'none';
+2295:         }
+2296:     },
+2297: 
+2298:     updateCharts() {
+2299:         const popEl = document.getElementById('header-pop');
+2300:         if (popEl) popEl.innerText = BiosimEngine.agents.length;
+2301: 
+2302:         // 1. Calculate Population Counts
+2303:         const counts = [0, 0, 0, 0, 0, 0];
+2304:         BiosimEngine.agents.forEach(a => {
+2305:             if (a.type === 'SOMATIC') counts[0]++;
+2306:             if (a.type === 'IPSC' || a.type === 'PARTIAL') counts[1]++;
+2307:             if (a.type === 'NEURO' || a.type === 'TRANSIT_NEU') counts[2]++;
+2308:             if (a.type === 'CARDIO' || a.type === 'TRANSIT_CAR') counts[3]++;
+2309:             if (a.type === 'ENDO') counts[4]++;
+2310:             if (a.type === 'TUMOR') counts[5]++;
+2311:         });
+2312: 
+2313:         // 2. Bar Chart Sync (Population)
+2314:         const ctxMain = document.getElementById('chart-main');
+2315:         if (ctxMain) {
+2316:             const chartLabels = ['Somatic', 'iPSC', 'Neural', 'Cardio', 'Endo', 'Tumor'];
+2317:             const ch
+<truncated 5358 bytes>
+
+NOTE: The output was truncated because it was too long. Use a more targeted query or a smaller range to get the information you need.

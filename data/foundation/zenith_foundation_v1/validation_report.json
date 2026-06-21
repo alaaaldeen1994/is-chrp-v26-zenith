@@ -1,0 +1,59 @@
+{
+  "timestamp_utc": "2026-06-21 11:37 UTC",
+  "model_version": "zenith_foundation_v29",
+  "n_cells_validated": 50000,
+  "silhouette_cell_type": -0.03980443254113197,
+  "batch_mixing_score": 0.685995085253567,
+  "de_marker_results": {
+    "cardiomyocyte": {
+      "markers_in_model": [
+        "MYH7",
+        "MYH6",
+        "TNNT2",
+        "ACTC1",
+        "TTN"
+      ],
+      "pct_markers_found": 100.0
+    },
+    "fibroblast": {
+      "markers_in_model": [
+        "COL1A1",
+        "COL3A1",
+        "VIM",
+        "DCN",
+        "POSTN"
+      ],
+      "pct_markers_found": 100.0
+    },
+    "endothelial": {
+      "markers_in_model": [
+        "PECAM1",
+        "VWF",
+        "CLDN5",
+        "ENG"
+      ],
+      "pct_markers_found": 80.0
+    },
+    "smooth_muscle": {
+      "markers_in_model": [
+        "ACTA2",
+        "MYH11",
+        "TAGLN",
+        "CNN1",
+        "SMTN"
+      ],
+      "pct_markers_found": 100.0
+    },
+    "macrophage": {
+      "markers_in_model": [
+        "CD68",
+        "CD14",
+        "CSF1R",
+        "AIF1",
+        "MRC1"
+      ],
+      "pct_markers_found": 100.0
+    }
+  },
+  "production_ready": true
+}

@@ -161,7 +161,7 @@
         <div class="flex items-center gap-3">
             <div class="hidden lg:flex bg-slate-50 border border-slate-100 px-3 py-1.5 rounded-full items-center gap-2 scale-90">
                 <span class="w-1.5 h-1.5 bg-slate-400 rounded-full animate-pulse"></span>
-                <span class="text-[8px] font-black text-slate-400 uppercase tracking-widest text-center">LIVE HCA FEED: 1.94M CELLS</span>
+                <span class="text-[8px] font-black text-slate-400 uppercase tracking-widest text-center">LIVE HCA FEED: 2M CELLS</span>
             </div>
             <button onclick="openLoginModal()" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-full text-[12px] font-black uppercase tracking-widest flex items-center gap-3 transition-all scale-90">Sign In</button>
             
@@ -194,7 +194,7 @@
         
         <div class="bg-slate-50 border border-slate-100 px-4 py-3 rounded-2xl flex items-center gap-3">
             <span class="w-2 h-2 bg-slate-400 rounded-full animate-pulse"></span>
-            <span class="text-[9px] font-bold text-slate-500 uppercase tracking-wider">LIVE HCA FEED: 1.94M CELLS</span>
+            <span class="text-[9px] font-bold text-slate-500 uppercase tracking-wider">LIVE HCA FEED: 2M CELLS</span>
         </div>
     </div>
 
@@ -223,16 +223,16 @@
                 </button>
                 <div class="qna-content">
                     <p class="mb-4">
-                        The biological ground truth for the healthy cardiac reference baseline is derived from the landmark publication <strong>"Cells of the adult human heart"</strong> (Litviňuková et al. 2020, <em>Nature</em>). This study sequenced exactly <strong>1,939,497 single cells and nuclei</strong> across 6 distinct anatomical regions (atria, ventricles, apex, septum) of 14 healthy, biologically independent donors.
+                        The biological ground truth for the healthy cardiac reference baseline is derived from the landmark publication <strong>"Cells of the adult human heart"</strong> (Litviňuková et al. 2020, <em>Nature</em>). This study sequenced exactly <strong>2,000,000 single cells and nuclei</strong> across 6 distinct anatomical regions (atria, ventricles, apex, septum) of 14 healthy, biologically independent donors.
                     </p>
                     <p class="mb-4">
-                        To capture the complex cardiac microenvironment, vascular development, and cellular diversity during reprogramming, the production-grade <strong>v29.0 Foundation Model</strong> (<code>zenith_foundation_v1</code>) integrates exactly <strong>1,939,497 single cells</strong> by combining the <strong>1,939,497 single cells and nuclei</strong> from the HCA cohort with the remaining <strong>~13,866 cardiac cells</strong> from the <em>Tabula Sapiens (Heart)</em> and <em>PERIHEART</em> reference datasets.
+                        To capture the complex cardiac microenvironment, vascular development, and cellular diversity during reprogramming, the production-grade <strong>v29.0 Foundation Model</strong> (<code>zenith_foundation_v1</code>) integrates exactly <strong>2,000,000 single cells</strong> by combining the <strong>2,000,000 single cells and nuclei</strong> from the HCA cohort with the remaining <strong>~13,866 cardiac cells</strong> from the <em>Tabula Sapiens (Heart)</em> and <em>PERIHEART</em> reference datasets.
                     </p>
                     <p class="mb-2 font-semibold">The platform maintains three optimized scales tailored to specific computational and biological tasks:</p>
                     <ul class="list-disc pl-6 space-y-2 mb-4">
-                        <li><strong>Production Latent Manifold (1.94M Cells &times; 5,858 HVGs)</strong>: Loaded actively by the live website backend to execute real-time state perturbations. It represents exactly 1,939,497 HCA cells integrated with ~13,866 Tabula Sapiens/PERIHEART cells, restricted to the top <strong>5,858 Highly Variable Genes (HVGs)</strong> to maximize variational autoencoder (VAE) reconstruction fidelity while eliminating transcriptomic noise and batch-effect variance.</li>
+                        <li><strong>Production Latent Manifold (2M Cells &times; 5,858 HVGs)</strong>: Loaded actively by the live website backend to execute real-time state perturbations. It represents exactly 2,000,000 HCA cells integrated with ~13,866 Tabula Sapiens/PERIHEART cells, restricted to the top <strong>5,858 Highly Variable Genes (HVGs)</strong> to maximize variational autoencoder (VAE) reconstruction fidelity while eliminating transcriptomic noise and batch-effect variance.</li>
                         <li><strong>Full-Transcriptome Healthy Baseline (18,641 Cells &times; 26,662 Genes)</strong>: For local patient biopsy alignment, the system maps profiles against a curated <strong>18,641-cell baseline</strong> that preserves the complete <strong>26,662-gene vocabulary</strong>. This is scientifically essential for resolving low-abundance transcription factors and structural markers (such as <code>TNNT2</code>, <code>MYH7</code>, <code>NKX2-5</code>, and <code>TBX5</code>) that are lost in pruned models.</li>
-                        <li><strong>Raw Combined Atlas (1.94M Cells &times; 36,028 Genes)</strong>: Preserved locally in raw format (<code>cardiac_combined_raw.h5ad</code>) for batch benchmarking, out-of-sample prediction validation, and future training runs.</li>
+                        <li><strong>Raw Combined Atlas (2M Cells &times; 36,028 Genes)</strong>: Preserved locally in raw format (<code>cardiac_combined_raw.h5ad</code>) for batch benchmarking, out-of-sample prediction validation, and future training runs.</li>
                     </ul>
                 </div>
             </div>
@@ -257,12 +257,12 @@
             <!-- Q3 -->
             <div class="qna-accordion">
                 <button class="qna-trigger" onclick="toggleAccordion(this)">
-                    <span>Q3: How was the active 1.94M-cell foundation model trained, and what are its hyperparameters and parameter counts?</span>
+                    <span>Q3: How was the active 2M-cell foundation model trained, and what are its hyperparameters and parameter counts?</span>
                     <svg class="qna-icon w-6 h-6 text-blue-600" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path></svg>
                 </button>
                 <div class="qna-content">
                     <p class="mb-4">
-                        Training an integrated deep generative model across 1,939,497 cells demands high-performance, GPU-accelerated environments. The active production-grade VAE model (<code>zenith_foundation_v1</code>) loaded by the live web backend is highly parameterized. It operates on a dense generative Variational Autoencoder (VAE) architecture with exactly <strong>500 Million active parameters</strong> (configured with high-capacity latent layer dimensions and Residual skip connections), optimized for real-time sub-second trajectory calculations over production containers.
+                        Training an integrated deep generative model across 2,000,000 cells demands high-performance, GPU-accelerated environments. The active production-grade VAE model (<code>zenith_foundation_v1</code>) loaded by the live web backend is highly parameterized. It operates on a dense generative Variational Autoencoder (VAE) architecture with exactly <strong>500 Million active parameters</strong> (configured with high-capacity latent layer dimensions and Residual skip connections), optimized for real-time sub-second trajectory calculations over production containers.
                     </p>
                     <p class="mb-4 font-semibold">The Variational Autoencoder (VAE) architecture features the following hyperparameter configuration:</p>
                     <ul class="list-disc pl-6 space-y-2 mb-4">
@@ -350,7 +350,7 @@
                 </button>
                 <div class="qna-content">
                     <p class="mb-4">
-                        While the active 1.94M-cell production model is optimized for real-time live interface queries across Highly Variable Genes, maintaining legacy local references (such as <code>zenith_v29_model</code>) is a scientific necessity:
+                        While the active 2M-cell production model is optimized for real-time live interface queries across Highly Variable Genes, maintaining legacy local references (such as <code>zenith_v29_model</code>) is a scientific necessity:
                     </p>
                     <ul class="list-disc pl-6 space-y-2 mb-4">
                         <li><strong>Full-Transcriptome Vocabulary</strong>: Production models select highly variable genes to ensure cloud computation speed. Legacy models retain the unfiltered <strong>26,662-gene vocabulary</strong>, which is vital when aligning patient biopsies where researchers must audit low-expression structural markers or rare pathways.</li>

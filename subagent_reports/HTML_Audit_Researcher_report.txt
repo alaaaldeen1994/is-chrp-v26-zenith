@@ -1,0 +1,130 @@
+--- LAST MODEL RESPONSE ---
+Created At: 2026-05-31T18:56:12Z
+Completed At: 2026-05-31T18:56:12Z
+File Path: `file:///C:/Users/alaaa/.gemini/antigravity/scratch/is-chrp-v26-generative/technical_catalog.html`
+Total Lines: 13801
+Total Bytes: 253937
+Showing lines 1 to 800
+The following code has been modified to include a line number before every line, in the format: <line_number>: <original_line>. Please note that any changes targeting the original code should remove the line number, colon, and leading space.
+1:  <!DOCTYPE html>
+2: 
+3: <html lang="en">
+4: 
+5: 
+6: 
+7: <head>
+8: 
+9:     <meta charset="UTF-8">
+10: 
+11:     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+12: 
+13:     <title>Zenith v27.0 GOLD | Institutional Technical Catalog</title>
+14: 
+15:     <script src="https://cdn.tailwindcss.com"></script>
+16: 
+17:     <script src="https://unpkg.com/lucide@latest"></script>
+18: 
+19:     <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+20: 
+21:     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+22: 
+23:     <style>
+24: 
+25:         :root {
+26: 
+27:             --brand-blue: #3b82f6;
+28: 
+29:             --brand-dark: #0f172a;
+30: 
+31:             --brand-emerald: #10b981;
+32: 
+33:             --brand-gold: #f59e0b;
+34: 
+35:         }
+36: 
+37: 
+38: 
+39:         body {
+40: 
+41:             font-family: 'Inter', sans-serif;
+42: 
+43:             background-color: #020617;
+44: 
+45:             color: #f8fafc;
+46: 
+47:             overflow-x: hidden;
+48: 
+49:             scroll-behavior: smooth;
+50: 
+51:         }
+52: 
+53: 
+54: 
+55:         .font-mono {
+56: 
+57:             font-family: 'JetBrains Mono', monospace;
+58: 
+59:         }
+60: 
+61: 
+62: 
+63:         .reveal {
+64: 
+65:             opacity: 0;
+66: 
+67:             transform: translateY(30px);
+68: 
+69:             transition: all 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+70: 
+71:         }
+72: 
+73: 
+74: 
+75:         .reveal.active {
+76:
+<truncated 26404 bytes>
+ \cdot \sigma(z)$$</div>
+758: 
+759:                         </div>
+760: 
+761:                     </div>
+762: 
+763:                 </div>
+764: 
+765:             </div>
+766: 
+767:         </section>
+768: 
+769: 
+770: 
+771:         <!-- Section 1.7: Clinical Safety & Toxicity Auditing -->
+772: 
+773:         <section id="clinical-safety" class="reveal mb-12 scroll-mt-24">
+774: 
+775:             <h2 class="text-[11px] font-black tracking-[0.4em] uppercase text-emerald-500 mb-8 font-bold">Section 1.7: Clinical Safety Auditing</h2>
+776: 
+777:             <div class="card-elite border-emerald-500/20">
+778: 
+779:                 <div class="flex flex-col md:flex-row gap-16 items-start">
+780: 
+781:                     <div class="flex-1">
+782: 
+783:                         <h4 class="text-3xl font-black text-white mb-6">ProtParam & Oncogenic Guardrails</h4>
+784: 
+785:                         <p class="text-slate-400 mb-8 leading-relaxed">
+786: 
+787:                             Zenith v27.0 implements a research-grade **Clinical Safety Auditor** that screens all discovery protocols for proteotoxic stress and tumorigenic risk. This module utilizes established physicochemical parameters to predict in-vivo stability.
+788: 
+789:                         </p>
+790: 
+791:                         
+792: 
+793:                         <div class="space-y-6">
+794: 
+795:                             <div class="border-l-2 border-emerald-500/30 pl-4 py-2">
+796: 
+797:                                 <div class="text-emerald-400 font-bold mb-1">Proteotoxic Stress (Instability Index)</div>
+798: 
+799:                                 <p class="text-slate-400 text-sm">Calculates the Guruprasad et al. (1990) instability index for every factor. Scores > 40 trigger a "Proteotoxic Stress" warning, indicating likely protein degradation and cellular burden.</p>
+800: 
+The above content does NOT show the entire file contents. If you need to view any lines of the file which were not shown to complete your task, call this tool again to view those lines.
