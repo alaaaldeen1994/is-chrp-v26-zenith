@@ -121,7 +121,7 @@ def generate_deck():
     pdf.set_xy(25, 118)
     pdf.set_font(pdf.get_font_name(), '', 16) # Increased from 14.5 to 16
     pdf.set_text_color(203, 213, 225) # Slate 300 (brighter text)
-    pdf.multi_cell(220, 9, 'Generative cellular reprogramming therapeutics targeting cardiomyopathy.\nPowered by the Zenith v28.0 GOLD single-cell foundation model.')
+    pdf.multi_cell(220, 9, 'Generative cellular reprogramming therapeutics targeting cardiomyopathy.\nPowered by the Zenith v29.0 GOLD single-cell foundation model.')
     
     # LBF Interview details
     pdf.set_xy(25, 165)

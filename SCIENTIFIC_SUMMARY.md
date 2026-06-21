@@ -1,4 +1,4 @@
-# 🧪 Nilus Lab | Zenith v26.1: The Operating System for Human Rejuvenation
+# 🧪 Nilus Lab | Zenith v29.0: The Operating System for Human Rejuvenation
 **Target Recipients:** Longevity Research Partners, Strategic Investors
 **Classification:** Confidential Institutional Strategy
 
@@ -6,10 +6,10 @@
 
 ## Slide 1: The Thesis – Geroscience as Precision Engineering
 *   **The Problem:** Cellular reprogramming is currently a "stochastic lottery" (low efficiency, high metabolic cost).
-*   **The Vision:** Nilus Lab has built the first industrial-grade foundation model (Zenith v26.1) that transforms biological discovery into a deterministic engineering problem.
+*   **The Vision:** Nilus Lab has built the first industrial-grade foundation model (Zenith v29.0) that transforms biological discovery into a deterministic engineering problem.
 *   **Headline:** Moving from 21-day "Wet-Lab" failure cycles to 0.12s "In-Silico" success trajectories.
 
-## Slide 2: Zenith v26.1 – The Foundation Engine
+## Slide 2: Zenith v29.0 – The Foundation Engine
 *   **Technical Spec:** ~285M Parameter Epigenetic-Aware Transformer.
 *   **Competitive Moat:** Trained on 150,000 real-world HCA (Human Cell Atlas) cardiac observations.
 *   **Key Capability:** High-definition mapping of 5,000 genes simultaneously to verify true epigenetic state, not just surface markers.
@@ -54,5 +54,5 @@
 
 ---
 **Status:** Institutional Review Ready
-**Engine:** Zenith v26.1 [PHASE 4]
+**Engine:** Zenith v29.0 [PHASE 4]
 **Contact:** Nilus Lab | Institute of Computation

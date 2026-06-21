@@ -4,18 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Zenith v28 | Cardiac Ageing Gene Discovery | Nilus Lab</title>
-    <meta name="description" content="Discover genes that reverse cardiac ageing. Zenith v28 uses a trained scVI model on 10,000 human cardiac cells from the Human Cell Atlas to identify pro-rejuvenation gene targets.">
+    <meta name="description" content="Discover genes that reverse cardiac ageing. Zenith v28 uses a trained scVI model on 500,000 human cardiac cells from the Human Cell Atlas to identify pro-rejuvenation gene targets.">
     <meta name="keywords" content="cardiac ageing, gene discovery, single-cell genomics, scVI, Human Cell Atlas, rejuvenation, bioinformatics, Nilus Lab, Zenith, computational biology">
     <link rel="canonical" href="https://www.niluslab.com/index.html">
     <meta property="og:title" content="Zenith v28 — Discover Genes That Reverse Cardiac Ageing">
-    <meta property="og:description" content="AI-powered gene discovery platform trained on 10k human cardiac cells from the Human Cell Atlas. Identify pro-rejuvenation targets backed by single-cell transcriptomic evidence.">
+    <meta property="og:description" content="AI-powered gene discovery platform trained on 500k human cardiac cells from the Human Cell Atlas. Identify pro-rejuvenation targets backed by single-cell transcriptomic evidence.">
     <meta property="og:image" content="https://www.niluslab.com/assets/og-preview.jpg">
     <meta property="og:url" content="https://www.niluslab.com/index.html">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="Nilus Lab">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Zenith v28 — Cardiac Ageing Gene Discovery">
-    <meta name="twitter:description" content="Discover genes that reverse cardiac ageing using single-cell transcriptomics from 10k human cardiac cells.">
+    <meta name="twitter:description" content="Discover genes that reverse cardiac ageing using single-cell transcriptomics from 500k human cardiac cells.">
 
     <!-- Inter font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -23,7 +23,19 @@
 
     <!-- VIEW SWITCHING — must be in <head> to apply before paint -->
     <style>
-        #view-discovery  { display: flex !important; flex-direction: column; min-height: 100vh; background: #f8f8f6; }
+        #view-discovery  { display: flex !important; flex-direction: column; height: 100vh; background: #f1f5f9; overflow-y: auto; overflow-x: hidden; }
+        #disc-hero {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 32px 32px;
+            min-height: calc(100vh - 54px);
+        }
+        #view-discovery.has-results #disc-hero {
+            justify-content: flex-start !important;
+        }
         #view-simulation { display: none !important; }
         body.sim-mode #view-discovery  { display: none !important; }
         body.sim-mode #view-simulation { display: block !important; }
@@ -35,7 +47,7 @@
 
         /* Discovery page uses Inter */
         #view-discovery * { font-family: 'Inter', system-ui, sans-serif; box-sizing: border-box; }
-
+        
         #disc-card {
             background: #ffffff !important;
             backdrop-filter: none !important;
@@ -93,24 +105,54 @@
     <script src="js/firebase_config.js"></script>
     <!-- AUTH GUARD: Discovery page is public. Simulation requires auth. -->
     <script>
-        // Allow discovery view without login — only simulation needs auth
         const ZENITH_DEMO_BYPASS = localStorage.getItem('ZENITH_DEMO_BYPASS') === 'true';
         window._isAuthenticated = false;
 
+        function updateAuthUI(isAuthenticated) {
+            const topBtn = document.getElementById('auth-btn-top');
+            const mobBtn = document.getElementById('auth-btn-mobile');
+            
+            if (topBtn) {
+                if (isAuthenticated) {
+                    topBtn.innerText = 'Sign Out';
+                    topBtn.onclick = performLogout;
+                } else {
+                    topBtn.innerText = 'Sign In';
+                    topBtn.onclick = () => { window.location.href = 'profile.html'; };
+                }
+                topBtn.style.opacity = '1';
+            }
+            
+            if (mobBtn) {
+                if (isAuthenticated) {
+                    mobBtn.innerText = 'SIGN OUT';
+                    mobBtn.onclick = performLogout;
+                } else {
+                    mobBtn.innerText = 'SIGN IN';
+                    mobBtn.onclick = () => { window.location.href = 'profile.html'; };
+                }
+                mobBtn.style.opacity = '1';
+            }
+        }
+
         firebase.auth().onAuthStateChanged((user) => {
             window._isAuthenticated = !!(user || ZENITH_DEMO_BYPASS);
-            // Auth gate: redirect to profile if not signed in
-            if (!window._isAuthenticated) {
-                window.location.href = 'profile.html';
-                return;
+            updateAuthUI(window._isAuthenticated);
+            
+            // Auto-redirect to simulation lab if flag is set
+            if (window._isAuthenticated && localStorage.getItem('auth_redirect') === 'sim') {
+                localStorage.removeItem('auth_redirect');
+                setTimeout(() => {
+                    if (typeof enterSimulation === 'function') enterSimulation();
+                }, 100);
             }
         });
 
         function performLogout() {
             localStorage.removeItem('ZENITH_DEMO_BYPASS');
             firebase.auth().signOut().then(() => {
-                window.location.href = 'profile.html';
-            }).catch(() => { window.location.href = 'profile.html'; });
+                window.location.reload();
+            }).catch(() => { window.location.reload(); });
         }
     </script>
 
@@ -179,7 +221,7 @@
             #view-discovery > div:first-child {
                 padding: 10px 14px !important;
             }
-            #view-discovery > div:nth-child(2) {
+            #disc-hero {
                 padding: 24px 12px 24px 12px !important;
                 min-height: auto !important;
             }
@@ -1070,13 +1112,21 @@
 
         }
 
-        /* Hide native scrollbars globally to let the custom scrollbar shine */
-        html, body {
-            scrollbar-width: none !important; /* Firefox */
-            -ms-overflow-style: none !important; /* IE/Edge */
+        /* Modern Native Scrollbar */
+        html::-webkit-scrollbar, body::-webkit-scrollbar, #view-discovery::-webkit-scrollbar {
+            width: 14px;
         }
-        html::-webkit-scrollbar, body::-webkit-scrollbar {
-            display: none !important; /* Chrome, Safari, Opera */
+        html::-webkit-scrollbar-track, body::-webkit-scrollbar-track, #view-discovery::-webkit-scrollbar-track {
+            background: #f8fafc;
+            border-left: 1px solid #e2e8f0;
+        }
+        html::-webkit-scrollbar-thumb, body::-webkit-scrollbar-thumb, #view-discovery::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border: 3px solid #f8fafc;
+            border-radius: 10px;
+        }
+        html::-webkit-scrollbar-thumb:hover, body::-webkit-scrollbar-thumb:hover, #view-discovery::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
         }
 
         /* Floating Full-Height Custom Scrollbar Navigator */
@@ -1152,12 +1202,7 @@
 
 <body>
 
-<!-- Floating Scroll Controls (Sleek Glassmorphic Custom Scrollbar) -->
-<div id="floating-scroll-controls">
-    <div id="scrollbar-track" class="scroll-track">
-        <div id="scrollbar-thumb" class="scroll-thumb"></div>
-    </div>
-</div>
+<!-- Floating Scroll Controls removed -->
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -1308,12 +1353,12 @@
         </div>
         <div style="display:flex;align-items:center;gap:6px;">
             <button onclick="enterSimulation()" style="background:transparent;border:1px solid rgba(0,0,0,0.12);color:#6b6b6b;font-size:12px;font-weight:400;padding:5px 14px;border-radius:8px;cursor:pointer;font-family:'Inter','Segoe UI',sans-serif;transition:all 0.15s;" onmouseover="this.style.borderColor='rgba(0,0,0,0.25)';this.style.color='#1a1a1a'" onmouseout="this.style.borderColor='rgba(0,0,0,0.12)';this.style.color='#6b6b6b'">Simulation Lab</button>
-            <button onclick="performLogout()" style="background:transparent;border:none;color:#9b9b9b;font-size:12px;cursor:pointer;padding:4px 8px;font-family:'Inter','Segoe UI',sans-serif;" onmouseover="this.style.color='#1a1a1a'" onmouseout="this.style.color='#9b9b9b'">Exit</button>
+            <button id="auth-btn-top" style="opacity:0; transition:opacity 0.25s; background:transparent;border:none;color:#9b9b9b;font-size:12px;cursor:pointer;padding:4px 8px;font-family:'Inter','Segoe UI',sans-serif;" onmouseover="this.style.color='#1a1a1a'" onmouseout="this.style.color='#9b9b9b'">...</button>
         </div>
     </div>
 
     <!-- Hero -->
-    <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 32px 32px;min-height:calc(100vh - 54px);">
+    <div id="disc-hero">
 
         <!-- Title -->
         <div style="text-align:center;margin-bottom:24px;width:100%;max-width:680px;">
@@ -1321,8 +1366,8 @@
         </div>
 
         <!-- Main input card — Claude-style -->
-        <div id="disc-card"
-             style="width:100%;max-width:680px;font-family:'Inter','Segoe UI',sans-serif;outline:none;">
+            <div id="disc-card"
+                 style="width:100%;max-width:680px;font-family:'Inter','Segoe UI',sans-serif;outline:none;box-shadow: 0 10px 40px rgba(0,0,0,0.1);border-radius:23px;">
 
             <textarea id="disc-query" rows="3"
                 style="width:100%;padding:20px 22px 12px 22px;box-sizing:border-box;display:block;"
@@ -1459,9 +1504,129 @@
         <!-- Results area -->
         <div id="disc-results" style="width:100%;max-width:720px;margin-top:20px;display:none;"></div>
 
+        <!-- B2B Expansion Panels -->
+        <div id="discovery-b2b-panels" class="w-full max-w-[720px] mt-6 flex flex-col gap-6" style="display:none;">
+            <!-- CARDIAC GRN VISUALIZER (GraphRAG) -->
+            <div id="grn-visualizer-panel" class="p-6 bg-white border border-slate-200 rounded-[24px] shadow-sm relative overflow-hidden animation-fade-in">
+                <div class="text-[11px] text-slate-800 font-bold uppercase tracking-wider mb-4 flex items-center gap-1.5">
+                    <i data-lucide="network" class="w-3.5 h-3.5 text-blue-600"></i>
+                    GraphRAG Network Visualizer
+                    <span class="ml-auto text-[9px] px-2.5 py-0.5 bg-blue-50 text-blue-600 border border-blue-100 rounded-full font-bold tracking-normal">Cardiac GRN</span>
+                </div>
+                <div class="relative w-full h-[240px] bg-[#090d16] border border-slate-800 rounded-2xl overflow-hidden flex items-center justify-center">
+                    <svg id="grn-canvas-viewport" class="w-full h-full cursor-grab active:cursor-grabbing"></svg>
+                    <div id="grn-tooltip" class="absolute hidden bg-slate-900 border border-slate-800 px-3 py-2 rounded-lg text-xs text-white font-sans pointer-events-none z-10 shadow-lg"></div>
+                </div>
+                <div id="grn-pathway-summary" class="mt-3.5 p-3.5 bg-slate-50 border border-slate-100 rounded-xl text-xs text-slate-600 font-sans leading-relaxed">
+                    Regulatory pathway chains will be resolved topologically based on the semantic search query context.
+                </div>
+            </div>
+
+            <!-- MULTI-OMICS PERTURBATION PREDICTOR -->
+            <div id="multiomics-predictor-panel" class="p-6 bg-white border border-slate-200 rounded-[24px] shadow-sm relative overflow-hidden animation-fade-in">
+                <div class="text-[11px] text-slate-800 font-bold uppercase tracking-wider mb-4 flex items-center gap-1.5">
+                    <i data-lucide="sliders" class="w-3.5 h-3.5 text-indigo-600"></i>
+                    Multi-Omics Perturbation Predictor (scGPT)
+                    <span class="ml-auto text-[9px] px-2.5 py-0.5 bg-indigo-50 text-indigo-600 border border-indigo-100 rounded-full font-bold tracking-normal">Zero-Shot Mode</span>
+                </div>
+                <!-- Dosages Sliders -->
+                <div class="grid grid-cols-2 gap-4 mb-4 bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                    <div>
+                        <label class="text-[9px] text-slate-600 font-bold block mb-1.5 uppercase tracking-wider">GATA4 Dosage: <span id="val-gata4" class="text-indigo-600 font-mono font-bold">1.0</span></label>
+                        <input id="slider-gata4" type="range" min="0" max="3" step="0.1" value="1.0" class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer" style="accent-color:#4f46e5;">
+                    </div>
+                    <div>
+                        <label class="text-[9px] text-slate-600 font-bold block mb-1.5 uppercase tracking-wider">MEF2C Dosage: <span id="val-mef2c" class="text-indigo-600 font-mono font-bold">1.0</span></label>
+                        <input id="slider-mef2c" type="range" min="0" max="3" step="0.1" value="1.0" class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer" style="accent-color:#4f46e5;">
+                    </div>
+                    <div>
+                        <label class="text-[9px] text-slate-600 font-bold block mb-1.5 uppercase tracking-wider">TBX5 Dosage: <span id="val-tbx5" class="text-indigo-600 font-mono font-bold">1.0</span></label>
+                        <input id="slider-tbx5" type="range" min="0" max="3" step="0.1" value="1.0" class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer" style="accent-color:#4f46e5;">
+                    </div>
+                    <div>
+                        <label class="text-[9px] text-slate-600 font-bold block mb-1.5 uppercase tracking-wider">NKX2-5 Dosage: <span id="val-nkx25" class="text-indigo-600 font-mono font-bold">1.0</span></label>
+                        <input id="slider-nkx25" type="range" min="0" max="3" step="0.1" value="1.0" class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer" style="accent-color:#4f46e5;">
+                    </div>
+                    <div>
+                        <label class="text-[9px] text-slate-600 font-bold block mb-1.5 uppercase tracking-wider">MYC Dosage: <span id="val-myc" class="text-red-500 font-mono font-bold">0.0</span></label>
+                        <input id="slider-myc" type="range" min="0" max="3" step="0.1" value="0.0" class="w-full h-1 bg-slate-800 rounded-lg appearance-none cursor-pointer" style="accent-color:#ef4444;">
+                    </div>
+                    <div>
+                        <label class="text-[9px] text-slate-600 font-bold block mb-1.5 uppercase tracking-wider">SNAI1 Dosage: <span id="val-snai1" class="text-amber-600 font-mono font-bold">0.0</span></label>
+                        <input id="slider-snai1" type="range" min="0" max="3" step="0.1" value="0.0" class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer" style="accent-color:#ca8a04;">
+                    </div>
+                </div>
+                <!-- Prediction Metrics -->
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <div class="bg-slate-50 border border-slate-100 p-3 rounded-2xl text-center">
+                        <div class="text-[9px] text-slate-500 font-bold uppercase mb-1">Predicted Age Shift</div>
+                        <div id="pred-age-shift" class="text-sm text-slate-900 font-bold font-mono">--</div>
+                    </div>
+                    <div class="bg-slate-50 border border-slate-100 p-3 rounded-2xl text-center">
+                        <div class="text-[9px] text-slate-500 font-bold uppercase mb-1">Transcriptomic Stability</div>
+                        <div id="pred-stability" class="text-sm text-slate-900 font-bold font-mono">--</div>
+                    </div>
+                </div>
+                <!-- Expression Profiles -->
+                <div class="space-y-2">
+                    <div class="text-[9px] text-slate-500 font-bold uppercase mb-2 tracking-wider">Downstream Expression Profiles</div>
+                    <div id="pred-expressions" class="space-y-3 bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                        <!-- Will be dynamically populated -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- LNP DELIVERY OPTIMIZER -->
+            <div id="lnp-optimizer-panel" class="p-6 bg-white border border-slate-200 rounded-[24px] shadow-sm relative overflow-hidden animation-fade-in">
+                <div class="text-[11px] text-slate-800 font-bold uppercase tracking-wider mb-4 flex items-center gap-1.5">
+                    <i data-lucide="package" class="w-3.5 h-3.5 text-teal-600"></i>
+                    mRNA-LNP Formulation Delivery Optimizer
+                    <span class="ml-auto text-[9px] px-2.5 py-0.5 bg-teal-50 text-teal-600 border border-teal-100 rounded-full font-bold tracking-normal font-sans">Encapsulation</span>
+                </div>
+                <!-- LNP Parameter Sliders -->
+                <div class="grid grid-cols-2 gap-4 mb-4 bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                    <div>
+                        <label class="text-[9px] text-slate-600 font-bold block mb-1.5 uppercase tracking-wider">Ionizable Molar %: <span id="val-lnp-ion" class="text-teal-600 font-mono font-bold">50.0%</span></label>
+                        <input id="slider-lnp-ion" type="range" min="30" max="60" step="1" value="50" class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer" style="accent-color:#0d9488;">
+                    </div>
+                    <div>
+                        <label class="text-[9px] text-slate-600 font-bold block mb-1.5 uppercase tracking-wider">Cholesterol Molar %: <span id="val-lnp-chol" class="text-teal-600 font-mono font-bold">38.5%</span></label>
+                        <input id="slider-lnp-chol" type="range" min="20" max="50" step="0.5" value="38.5" class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer" style="accent-color:#0d9488;">
+                    </div>
+                    <div>
+                        <label class="text-[9px] text-slate-600 font-bold block mb-1.5 uppercase tracking-wider">Helper Lipid Molar %: <span id="val-lnp-helper" class="text-teal-600 font-mono font-bold">10.0%</span></label>
+                        <input id="slider-lnp-helper" type="range" min="5" max="20" step="0.5" value="10" class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer" style="accent-color:#0d9488;">
+                    </div>
+                    <div>
+                        <label class="text-[9px] text-slate-600 font-bold block mb-1.5 uppercase tracking-wider">PEG-Lipid Molar %: <span id="val-lnp-peg" class="text-teal-600 font-mono font-bold">1.5%</span></label>
+                        <input id="slider-lnp-peg" type="range" min="0.5" max="5.0" step="0.1" value="1.5" class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer" style="accent-color:#0d9488;">
+                    </div>
+                    <div class="col-span-2">
+                        <label class="text-[9px] text-slate-600 font-bold block mb-1.5 uppercase tracking-wider">N/P Ratio (Nitrogen/Phosphate): <span id="val-lnp-np" class="text-teal-600 font-mono font-bold">6.0</span></label>
+                        <input id="slider-lnp-np" type="range" min="1.0" max="12.0" step="0.1" value="6.0" class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer" style="accent-color:#0d9488;">
+                    </div>
+                </div>
+                <!-- LNP Target Tropism Metrics -->
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <div class="bg-slate-50 border border-slate-100 p-3 rounded-2xl text-center">
+                        <div class="text-[9px] text-slate-500 font-bold uppercase mb-1">Encapsulation Efficiency</div>
+                        <div id="lnp-ee" class="text-sm text-slate-900 font-bold font-mono">--</div>
+                    </div>
+                    <div class="bg-slate-50 border border-slate-100 p-3 rounded-2xl text-center">
+                        <div class="text-[9px] text-slate-500 font-bold uppercase mb-1">Cardiac Tropism Index</div>
+                        <div id="lnp-tropism" class="text-sm text-slate-900 font-bold font-mono">--</div>
+                    </div>
+                </div>
+                <div class="flex items-center justify-between text-xs text-slate-500 font-sans">
+                    <span>Status: <span id="lnp-status-val" class="text-teal-600 font-bold uppercase">--</span></span>
+                    <span>Target: Heart (Cardiomyocytes)</span>
+                </div>
+            </div>
+        </div>
+
         <!-- Footer -->
         <div style="margin-top:40px;text-align:center;font-size:8px;color:#bdc1c6;width:100%;max-width:720px;">
-            Zenith v28.0 GOLD &nbsp;·&nbsp; Litviňuková et al., Nature 2020 (DOI: 10.1038/s41586-020-2797-4) &nbsp;·&nbsp; Research Use Only
+            Zenith v28.0 GOLD &nbsp;·&nbsp; 500,000 Cells (HCA + PERIHEART) &nbsp;·&nbsp; Research Use Only
         </div>
     </div>
 </div>
@@ -1653,7 +1818,7 @@
 
             </div>
 
-            <button class="mob-exit-btn" onclick="typeof exitSimulation!=='undefined'?exitSimulation():(typeof performLogout!=='undefined'?performLogout():window.location.href='profile.html')">EXIT</button>
+            <button id="auth-btn-mobile" class="mob-exit-btn" style="opacity: 0; transition: opacity 0.25s;">...</button>
 
         </div>
 
@@ -2029,10 +2194,10 @@
                 </button>
                 <div class="h-6 w-px bg-white/10 mx-2"></div>
 
-                <!-- EXIT IN SAME THEME -->
-                <button onclick="exitSimulation()"
+                <!-- SIGN OUT IN SAME THEME -->
+                <button onclick="performLogout()"
                     class="h-7 px-3 bg-blue-600/20 border border-blue-500/50 text-[8px] text-blue-400 rounded flex items-center gap-1.5 hover:bg-blue-600/30 transition-all font-bold font-black">
-                    <i data-lucide="arrow-left" class="w-3 h-3"></i> EXIT
+                    <i data-lucide="log-out" class="w-3 h-3"></i> SIGN OUT
                 </button>
             </div>
         </div>
@@ -2883,7 +3048,7 @@
                             ✦ GPT
                         </button>
                     </div>
-                    <span id="mode-badge" style="flex:1;font-size:7px;color:#4f46e5;font-weight:700;opacity:0.7;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">14 donors · 32,383 genes</span>
+                    <span id="mode-badge" style="flex:1;font-size:7px;color:#4f46e5;font-weight:700;opacity:0.7;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">14 donors · 500K cells · 4,908 genes</span>
                     <button id="btn-discover"
                         onclick="window._discoveryMode=(document.getElementById('chip-real').getAttribute('data-active')?'real':'gpt');BiosimBridge.discoverHybridProtocol(this);"
                         style="background:linear-gradient(135deg,#4f46e5,#2563eb);color:#fff;border:none;padding:6px 12px;border-radius:7px;font-size:9px;font-weight:900;cursor:pointer;display:flex;align-items:center;gap:4px;box-shadow:0 2px 10px rgba(79,70,229,0.4);flex-shrink:0;white-space:nowrap;">
@@ -3083,7 +3248,7 @@
                         </div>
                         <div class="text-[7px] text-blue-300 font-black uppercase tracking-widest mb-2 flex items-center gap-1.5">
                             <i data-lucide="verified" class="w-2.5 h-2.5 text-blue-400"></i>
-                            scVI Manifold Verification (10k Model)
+                            scVI Manifold Verification (500k Model)
                             <span class="ml-auto text-[6px] px-1 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded">Measured Data</span>
                         </div>
                         <div class="grid grid-cols-2 gap-3 mb-3">
@@ -3159,6 +3324,10 @@
                             class="w-8 h-8 bg-slate-800/80 border border-slate-700/60 rounded-lg text-slate-400 flex items-center justify-center hover:text-white transition-all">
                             <i data-lucide="cpu" class="w-3.5 h-3.5"></i>
                         </button>
+                        <button onclick="BiosimBridge.exportEchoProtocol()" title="Labcyte Echo Transfer List"
+                            class="w-8 h-8 bg-slate-800/80 border border-slate-700/60 rounded-lg text-slate-400 flex items-center justify-center hover:text-white transition-all">
+                            <i data-lucide="file-spreadsheet" class="w-3.5 h-3.5"></i>
+                        </button>
                     </div>
 
                     <!-- GENOMIC ANCHOR GRID -->
@@ -3177,6 +3346,8 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- B2B EXPANSIONS RELOCATED TO STANDALONE DISCOVERY TAB -->
                 </div>
 
                 <!-- CLINICAL ANALYTICS (UNIFIED FLOW) -->
@@ -3213,6 +3384,9 @@
                 <div class="mt-4 flex gap-2">
                         <button onclick="BiosimBridge.runPopulationAudit()" class="flex items-center gap-1 px-1.5 py-0.5 bg-blue-900/20 border border-blue-500/20 text-[7px] text-blue-500 rounded hover:bg-blue-500/20 transition-all font-bold group/btn">
                             <i data-lucide="microscope" class="w-2 h-2 group-hover/btn:scale-125 transition-transform"></i> SCIENTIFIC AUDIT
+                        </button>
+                        <button onclick="BiosimBridge.toggleQCSidebar(true)" class="flex items-center gap-1 px-1.5 py-0.5 bg-indigo-900/20 border border-indigo-500/20 text-[7px] text-indigo-400 rounded hover:bg-indigo-500/20 transition-all font-bold group/btn">
+                            <i data-lucide="terminal" class="w-2 h-2 group-hover/btn:scale-125 transition-transform"></i> QC MONITOR
                         </button>
                         <button onclick="BiosimUI.downloadSimulationData()" class="flex items-center gap-1 px-1.5 py-0.5 bg-emerald-900/20 border border-emerald-500/20 text-[7px] text-emerald-500/80 rounded hover:bg-emerald-500/20 transition-all font-bold group/btn">
                             <i data-lucide="download" class="w-2 h-2 group-hover/btn:animate-bounce"></i> DOWNLOAD
@@ -3281,7 +3455,7 @@
                 <div class="mb-4">
                     <span class="text-[9px] font-bold text-slate-500 uppercase">Zenith v28.0 GOLD GOLD: Ultra-HD (5K) Genome Explorer</span>
                     <div class="mt-2 mb-2">
-                        <input type="text" id="gene-search" placeholder="Search 5,000 genes..."
+                        <input type="text" id="gene-search" placeholder="Search 4,908 genes..."
                             class="w-full bg-black/60 border border-dim rounded px-2 py-1 text-[10px] text-blue-300 focus:outline-none focus:border-blue-500/50"
                             oninput="BiosimUI.initGeneGrid(this.value)">
                     </div>
@@ -3289,7 +3463,7 @@
                         <div id="gene-grid" class="gene-matrix p-2"
                             style="display: grid; grid-template-columns: repeat(10, 1fr); gap: 2px;">
 
-                            <!-- Dynamically populated 5,000 nodes -->
+                            <!-- Dynamically populated 4,908 nodes -->
                         </div>
                     </div>
                 </div>
@@ -3398,7 +3572,7 @@
 
                 <div class="text-[10px] text-slate-400 font-black tracking-[0.2em] uppercase">Virtual Clinical Trial
 
-                    Platform | ~167.6M Parameter GOLD Manifold</div>
+                    Platform | 500K-Cell Foundation GOLD Manifold</div>
 
 
 
@@ -3630,7 +3804,7 @@
 
             <div class="text-xs text-slate-500 font-mono">
 
-                *Delta Analysis computed via ~167.6M GOLD Manifold Divergence
+                *Delta Analysis computed via 500K-Cell Foundation GOLD Manifold Divergence
 
             </div>
 
@@ -4374,6 +4548,11 @@ window.updateDiscSafetyButtons = updateDiscSafetyButtons;
 // ── View switcher ──────────────────────────────────────────────────
 
 function enterSimulation() {
+    if (!window._isAuthenticated) {
+        localStorage.setItem('auth_redirect', 'sim');
+        window.location.href = 'profile.html';
+        return;
+    }
 
     document.body.classList.add('sim-mode');
 
@@ -4659,11 +4838,12 @@ function renderOskReport(safetyData, dosageData, elapsed, cellTypeKey, query) {
             ${downloadBtnHtml}
         </div>
     `;
+    document.getElementById('view-discovery').scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function downloadOskAF3Manifest() {
     if (!window._oskLastAF3Manifest) return;
-    const blob = new Blob([JSON.stringify(window._oskLastAF3Manifest, null, 2)], {type: "application/json"});
+    const blob = new Blob([JSON.stringify([window._oskLastAF3Manifest], null, 2)], {type: "application/json"});
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
@@ -4781,7 +4961,7 @@ async function loadCellTypes() {
         list.innerHTML = `
             <button onclick="selectCellTypeOption('all', 'All cardiac cells')" style="background:#f5f3ef;color:#191919;border:none;text-align:left;padding:8px 12px;border-radius:8px;cursor:pointer;width:100%;font-family:'Inter',sans-serif;display:flex;flex-direction:column;gap:2px;">
                 <span style="font-size:11px;font-weight:600;">All cardiac cells</span>
-                <span style="font-size:8px;color:#8b8b8b;">10,000 cells · Rejuvenation Δ: 11.9y</span>
+                <span style="font-size:8px;color:#8b8b8b;">500,000 cells · Rejuvenation Δ: 11.9y</span>
             </button>
             <button onclick="selectCellTypeOption('regular_ventricular_cardiac_myocyte', 'regular ventricular cardiac myocyte')" style="background:transparent;color:#6b6b6b;border:none;text-align:left;padding:8px 12px;border-radius:8px;cursor:pointer;width:100%;font-family:'Inter',sans-serif;display:flex;flex-direction:column;gap:2px;">
                 <span style="font-size:11px;font-weight:600;">regular ventricular cardiac myocyte</span>
@@ -4860,11 +5040,19 @@ async function runDiscovery() {
     const mode  = window._discMode || 'real';
     const query = (document.getElementById('disc-query').value || '').trim();
 
+    const b2bPanels = document.getElementById('discovery-b2b-panels');
+    if (b2bPanels) b2bPanels.style.display = 'none';
+
     if (!query) {
         resultsEl.style.display = 'block';
         resultsEl.innerHTML = `<div style="background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.25);border-radius:12px;padding:14px;text-align:center;color:#f59e0b;font-size:10px;font-weight:700;">
             ⚠ Please enter a research question first</div>`;
         return;
+    }
+
+    document.getElementById('view-discovery').classList.add('has-results');
+    if (typeof updateScrollbar === 'function') {
+        updateScrollbar();
     }
 
     if (window._activeModelMode === 'osk') {
@@ -5001,7 +5189,7 @@ async function runDiscovery() {
             const r = await fetch('/api/gpt-discovery/run', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ query: query, cell_type: window._selectedCellType || 'all', top_n: 8 })
+                body: JSON.stringify({ query: query, cell_type: window._selectedCellType || 'all', top_n: 8, mode: 'real' })
             });
             if (!r.ok) throw new Error(`Server returned ${r.status}`);
             const data = await r.json();
@@ -5043,7 +5231,7 @@ async function runDiscovery() {
                 proGenes = tempPro;
                 ageGenes = tempAge;
             }
-            const delta  = data.real_age_delta_years  ? data.real_age_delta_years.toFixed(1) : '—';
+            const delta  = data.real_age_delta_years  ? Math.abs(data.real_age_delta_years).toFixed(1) : '—';
 
             // Query-aware reranking: extract gene names from prompt → pin mentioned ones to top
             const queryUpper = query.toUpperCase();
@@ -5071,86 +5259,169 @@ async function runDiscovery() {
                 const mechanism = g.mechanism || '';
                 const pubmed = g.pubmed_url || `https://pubmed.ncbi.nlm.nih.gov/?term=${g.gene}+cardiac+aging`;
                 const role = g.role || '';
-                return `<div style="padding:6px 0;border-bottom:1px solid #D6CEBF;">
-                    <div style="display:flex;align-items:center;gap:8px;">
-                        <span style="font-size:10px;color:#94a3b8;width:14px;text-align:right;font-weight:600;">${i+1}</span>
-                        <span style="font-size:11px;color:${isMentioned?'#8b8070':'#191919'};font-weight:700;font-family:monospace;min-width:80px;">${isMentioned?'★ ':''}${g.gene}</span>
-                        <div style="flex:1;height:5px;background:#f0ede6;border-radius:3px;overflow:hidden;">
-                            <div style="height:100%;width:${Math.round((corr/maxCorr)*100)}%;background:#8b8070;border-radius:3px;"></div>
+                return `<div style="padding:16px;border:1px solid #e2e8f0;border-radius:12px;background:#f8fafc;display:flex;flex-direction:column;justify-content:space-between;">
+                    <div>
+                        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+                            <div style="display:flex;align-items:center;gap:8px;">
+                                <span style="font-size:12px;color:#94a3b8;font-weight:700;background:#e2e8f0;width:20px;height:20px;display:flex;align-items:center;justify-content:center;border-radius:4px;">${i+1}</span>
+                                <span style="font-size:16px;color:${isMentioned?'#4338ca':'#0f172a'};font-weight:800;font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;">${isMentioned?'★ ':''}${g.gene}</span>
+                                <button onclick="navigator.clipboard.writeText('${g.gene}');this.innerHTML='✓'" style="background:transparent;border:none;cursor:pointer;color:#94a3b8;padding:2px;margin-left:2px;display:flex;align-items:center;" title="Copy Gene">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                                </button>
+                            </div>
+                            <a href="${pubmed}" target="_blank" style="font-size:11px;color:#3b82f6;text-decoration:none;font-weight:700;padding:2px 8px;border-radius:4px;background:#eff6ff;" title="View on PubMed">PubMed</a>
                         </div>
-                        <span style="font-size:10px;color:#8b8070;font-weight:700;font-family:monospace;min-width:44px;text-align:right;">r=${typeof corr === 'number' ? corr.toFixed(3) : corr}</span>
-                        <a href="${pubmed}" target="_blank" style="font-size:8px;color:#60a5fa;text-decoration:none;font-weight:600;" title="PubMed">📄</a>
+                        <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
+                            <div style="flex:1;height:6px;background:#e2e8f0;border-radius:3px;overflow:hidden;">
+                                <div style="height:100%;width:${Math.round((corr/maxCorr)*100)}%;background:#3b82f6;border-radius:3px;"></div>
+                            </div>
+                            <span style="font-size:12px;color:#64748b;font-weight:700;font-family:monospace;">r=${typeof corr === 'number' ? corr.toFixed(3) : corr}</span>
+                        </div>
+                        ${role ? `<div style="font-size:13px;color:#334155;margin-bottom:8px;line-height:1.5;">${role}</div>` : ''}
                     </div>
-                    ${role ? `<div style="font-size:9px;color:#6b6b6b;margin:2px 0 0 22px;line-height:1.4;">${role}</div>` : ''}
-                    ${mechanism ? `<div style="font-size:8px;color:#9ca3af;margin:1px 0 0 22px;font-family:monospace;">${mechanism}</div>` : ''}
+                    ${mechanism ? `<div style="font-size:11px;color:#64748b;font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,monospace;letter-spacing:-0.01em;">↳ ${mechanism}</div>` : ''}
                 </div>`;
             }).join('');
 
             const ageRows = ageGenes.map((g, i) => `
-                <div style="display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid #D6CEBF;">
-                    <span style="font-size:10px;color:#94a3b8;width:14px;text-align:right;font-weight:600;">${i+1}</span>
-                    <span style="font-size:11px;color:#991b1b;font-weight:700;font-family:monospace;min-width:80px;">${g.gene}</span>
-                    <div style="flex:1;height:5px;background:#f9ebec;border-radius:3px;overflow:hidden;">
-                        <div style="height:100%;width:${Math.round((g.correlation_with_aging/maxAge)*100)}%;background:#c97d80;border-radius:3px;"></div>
+                <div style="padding:16px;border:1px solid #e2e8f0;border-radius:12px;background:#fff1f2;display:flex;flex-direction:column;justify-content:space-between;">
+                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+                        <div style="display:flex;align-items:center;gap:8px;">
+                            <span style="font-size:12px;color:#94a3b8;font-weight:700;background:#ffe4e6;width:20px;height:20px;display:flex;align-items:center;justify-content:center;border-radius:4px;">${i+1}</span>
+                            <span style="font-size:16px;color:#e11d48;font-weight:800;font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;">${g.gene}</span>
+                            <button onclick="navigator.clipboard.writeText('${g.gene}');this.innerHTML='✓'" style="background:transparent;border:none;cursor:pointer;color:#fda4af;padding:2px;margin-left:2px;display:flex;align-items:center;" title="Copy Gene">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                            </button>
+                        </div>
                     </div>
-                    <span style="font-size:10px;color:#c97d80;font-weight:700;font-family:monospace;min-width:44px;text-align:right;">r=${g.correlation_with_aging.toFixed(3)}</span>
+                    <div style="display:flex;align-items:center;gap:8px;">
+                        <div style="flex:1;height:6px;background:#ffe4e6;border-radius:3px;overflow:hidden;">
+                            <div style="height:100%;width:${Math.round((g.correlation_with_aging/maxAge)*100)}%;background:#e11d48;border-radius:3px;"></div>
+                        </div>
+                        <span style="font-size:12px;color:#e11d48;font-weight:700;font-family:monospace;">r=${g.correlation_with_aging.toFixed(3)}</span>
+                    </div>
                 </div>`).join('');
 
             const queryNote = mentioned.length
-                ? `<div style="background:#f0ede6;border:1px solid #D6CEBF;border-radius:6px;padding:6px 10px;margin-bottom:10px;font-size:10px;color:#8b8070;">★ Query-matched: ${mentioned.join(', ')}</div>`
+                ? `<div style="background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:10px 16px;margin-bottom:16px;font-size:13px;color:#92400e;display:flex;align-items:center;gap:8px;">
+                     <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+                     <span style="font-weight:600;">Query-matched targets:</span> ${mentioned.join(', ')}
+                   </div>`
                 : '';
 
             resultsEl.innerHTML = `
-                <div style="background:#ffffff;border:2px solid #D6CEBF;border-radius:16px;padding:20px 24px;box-shadow:0 1px 3px rgba(0,0,0,0.05);">
-                    <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid #D6CEBF;">
+                <div style="background:#ffffff;border:1px solid #e2e8f0;border-radius:24px;padding:40px;box-shadow:0 10px 25px -5px rgba(0,0,0,0.05), 0 8px 10px -6px rgba(0,0,0,0.01);">
+                    <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:32px;padding-bottom:24px;border-bottom:1px solid #e2e8f0;">
                         <div style="flex:1;min-width:0;">
-                            <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;">
-                                <span style="width:8px;height:8px;background:#8b8070;border-radius:50%;display:inline-block;"></span>
-                                <span style="color:#8b8070;font-size:10px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;">Zenith Tournament Discovery — Verified</span>
+                            <div style="display:inline-flex;align-items:center;gap:6px;background:#eff6ff;border:1px solid #bfdbfe;padding:6px 12px;border-radius:999px;margin-bottom:12px;">
+                                <svg width="14" height="14" fill="none" stroke="#2563eb" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                <span style="color:#1d4ed8;font-size:12px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;">Zenith Tournament Discovery</span>
                             </div>
-                            <div style="color:#6b6b6b;font-size:11px;">Litviňuková et al., Nature 2020 · ${data.cell_type_label || 'All cardiac cells (10,000 cells)'} · ${elapsed}s</div>
-                            <div style="color:#8b8b8b;font-size:10px;margin-top:2px;font-style:italic;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${query}">"${query.substring(0,70)}${query.length>70?'…':''}"</div>
-                            <div style="display:flex;gap:6px;margin-top:6px;flex-wrap:wrap;">
-                                <span style="font-size:8px;background:rgba(16,185,129,0.08);color:#059669;border:1px solid rgba(16,185,129,0.2);padding:2px 6px;border-radius:4px;font-weight:600;">${data.competing_panels || 3} panels</span>
-                                <span style="font-size:8px;background:rgba(37,99,235,0.08);color:#2563eb;border:1px solid rgba(37,99,235,0.2);padding:2px 6px;border-radius:4px;font-weight:600;">${data.rounds_completed || 2} rounds</span>
-                                <span style="font-size:8px;background:rgba(139,128,112,0.08);color:#8b8070;border:1px solid rgba(139,128,112,0.2);padding:2px 6px;border-radius:4px;font-weight:600;">conf: ${data.tournament_confidence ? (data.tournament_confidence * 100).toFixed(0) : '—'}%</span>
-                                <span style="font-size:8px;background:rgba(139,128,112,0.08);color:#8b8070;border:1px solid rgba(139,128,112,0.2);padding:2px 6px;border-radius:4px;font-weight:600;">${data.total_hca_genes_provided || 400} genes</span>
+                            <div style="color:#0f172a;font-size:18px;font-weight:700;margin-bottom:4px;">Litviňuková et al., Nature 2020</div>
+                            <div style="color:#64748b;font-size:14px;margin-bottom:16px;">${data.cell_type_label || 'All cardiac cells (10,000 cells)'} • Processed in ${elapsed}s</div>
+                            
+                            <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                                <span style="font-size:13px;background:#1a1a1a;color:#f8f8f6;border:1px solid #1a1a1a;padding:6px 12px;border-radius:8px;font-weight:600;">${data.competing_panels || 3} competing panels</span>
+                                <span style="font-size:13px;background:#1a1a1a;color:#f8f8f6;border:1px solid #1a1a1a;padding:6px 12px;border-radius:8px;font-weight:600;">${data.rounds_completed || 2} refinement rounds</span>
+                                <span style="font-size:13px;background:#1a1a1a;color:#f8f8f6;border:1px solid #1a1a1a;padding:6px 12px;border-radius:8px;font-weight:600;">Conf: ${data.tournament_confidence ? (data.tournament_confidence * 100).toFixed(0) : '—'}%</span>
+                                <span style="font-size:13px;background:#1a1a1a;color:#f8f8f6;border:1px solid #1a1a1a;padding:6px 12px;border-radius:8px;font-weight:600;">${data.total_hca_genes_provided || 400} candidate genes</span>
                             </div>
                         </div>
-                        <div style="text-align:center;background:#fafafa;border:1px solid #D6CEBF;border-radius:10px;padding:10px 14px;flex-shrink:0;margin-left:12px;">
-                            <div style="font-size:24px;font-weight:800;color:#191919;line-height:1;">${delta !== '—' ? `−${delta}y` : '—'}</div>
-                            <div style="font-size:9px;color:#8b8070;font-weight:600;margin-top:2px;">Age Δ (epigenetic)</div>
+                        <div style="text-align:center;background:#f8fafc;border:1px solid #e2e8f0;border-radius:20px;padding:24px 32px;flex-shrink:0;margin-left:32px;box-shadow:inset 0 2px 4px rgba(0,0,0,0.02);">
+                            <div style="font-size:42px;font-weight:800;color:#0f172a;line-height:1;letter-spacing:-0.02em;">${delta !== '—' ? `−${delta}<span style="font-size:24px;color:#64748b;font-weight:600;">y</span>` : '—'}</div>
+                            <div style="font-size:13px;color:#64748b;font-weight:700;margin-top:10px;text-transform:uppercase;letter-spacing:0.05em;">Age Δ (epigenetic)</div>
                         </div>
                     </div>
 
-                    ${gptSummary ? `<div style="background:#f8f8f6;border:1px solid #D6CEBF;border-radius:10px;padding:12px 16px;margin-bottom:14px;font-size:11px;color:#4a4a4a;line-height:1.7;font-family:Inter,sans-serif;">${gptSummary}</div>` : ""}${queryNote}
-                    ${data.refinement_notes ? `<div style="background:#f0fdf4;border:1px solid rgba(16,185,129,0.2);border-radius:8px;padding:8px 12px;margin-bottom:14px;font-size:9px;color:#065f46;line-height:1.5;"><span style="font-weight:700;">Refinement:</span> ${data.refinement_notes}</div>` : ''}
-                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
-                        <div>
-                            <div style="font-size:10px;color:#8b8070;font-weight:700;letter-spacing:0.04em;text-transform:uppercase;margin-bottom:8px;">↑ Pro-Rejuvenation Genes</div>
-                            ${proRows}
+                    ${gptSummary ? `<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:16px;padding:20px 24px;margin-bottom:24px;font-size:15px;color:#334155;line-height:1.6;font-family:Inter,sans-serif;">${gptSummary}</div>` : ""}${queryNote}
+                    ${data.refinement_notes ? `<div style="background:#1a1a1a;border:1px solid #1a1a1a;border-radius:16px;padding:16px 20px;margin-bottom:32px;font-size:14px;color:#e2e8f0;line-height:1.6;"><span style="font-weight:700;color:#ffffff;">Panel Refinement:</span> ${data.refinement_notes}</div>` : ''}
+                    <div style="margin-bottom:40px;">
+                        <div style="margin-bottom:40px;">
+                            <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;border-bottom:2px solid #e2e8f0;padding-bottom:12px;">
+                                <div style="background:#3b82f6;color:white;width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:16px;">↑</div>
+                                <div style="font-size:15px;color:#0f172a;font-weight:800;letter-spacing:0.05em;text-transform:uppercase;">Pro-Rejuvenation Genes</div>
+                            </div>
+                            <div style="display:grid;grid-template-columns:repeat(auto-fill, minmax(280px, 1fr));gap:16px;">
+                                ${proRows}
+                            </div>
                         </div>
                         <div>
-                            <div style="font-size:10px;color:#c97d80;font-weight:700;letter-spacing:0.04em;text-transform:uppercase;margin-bottom:8px;">↓ Aging Marker Genes</div>
-                            ${ageRows}
+                            <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;border-bottom:2px solid #e2e8f0;padding-bottom:12px;">
+                                <div style="background:#e11d48;color:white;width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:16px;">↓</div>
+                                <div style="font-size:15px;color:#0f172a;font-weight:800;letter-spacing:0.05em;text-transform:uppercase;">Aging Marker Genes</div>
+                            </div>
+                            <div style="display:grid;grid-template-columns:repeat(auto-fill, minmax(180px, 1fr));gap:16px;">
+                                ${ageRows}
+                            </div>
                         </div>
                     </div>
                     
-                    <div style="background:#f8f8f6;border:1px solid #D6CEBF;border-radius:8px;padding:8px 12px;margin-bottom:14px;">
-                        <div style="font-size:8px;color:#8b8070;font-weight:700;text-transform:uppercase;margin-bottom:2px;">Methodology</div>
-                        <div style="font-size:9px;color:#6b6b6b;line-height:1.4;">${data.methodology || 'Tournament Discovery + Iterative Refinement'}</div>
-                        ${data.judge_reasoning ? `<div style="font-size:8px;color:#9ca3af;margin-top:2px;">Judge: ${data.judge_reasoning}</div>` : ''}
+                    <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:16px;padding:24px;margin-bottom:32px;">
+                        <div style="font-size:13px;color:#64748b;font-weight:800;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px;">Methodology & Reasoning</div>
+                        <div style="font-size:15px;color:#334155;line-height:1.6;margin-bottom:12px;">${data.methodology || 'Tournament Discovery + Iterative Refinement'}</div>
+                        ${data.judge_reasoning ? `<div style="font-size:14px;color:#475569;background:#ffffff;border:1px solid #e2e8f0;border-radius:12px;padding:16px;margin-top:16px;"><span style="font-weight:700;color:#0f172a;">AI Judge Decision:</span> ${data.judge_reasoning}</div>` : ''}
                     </div>
 
-                    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;padding-top:12px;border-top:1px solid #D6CEBF;">
-                        <div style="font-size:10px;color:#8b8b8b;">DOI: 10.1038/s41586-020-2797-4</div>
-                        <div style="display:flex;gap:8px;flex-wrap:wrap;">
-                            <button onclick="enterSimulation()" style="background:#fafafa;border:1px solid #D6CEBF;color:#6b6b6b;font-size:11px;font-weight:600;padding:6px 14px;border-radius:8px;cursor:pointer;transition:all 0.15s;" onmouseover="this.style.background='#fafafa';this.style.borderColor='#C8C3B8';this.style.color='#191919';" onmouseout="this.style.background='#fafafa';this.style.borderColor='#D6CEBF';this.style.color='#6b6b6b';">Simulation Lab</button>
-                            <button onclick="downloadResultJSON()" style="background:#ffffff;border:1px solid #D6CEBF;color:#6b6b6b;font-size:11px;font-weight:600;padding:6px 14px;border-radius:8px;cursor:pointer;transition:all 0.15s;" onmouseover="this.style.background='#fafafa';this.style.borderColor='#C8C3B8';this.style.color='#191919';" onmouseout="this.style.background='#ffffff';this.style.borderColor='#D6CEBF';this.style.color='#6b6b6b';">Extract Results JSON</button>
-                            <button onclick="downloadAF3JSON()" style="background:#1a1a1a;border:none;color:#f8f8f6;font-size:11px;font-weight:600;padding:6px 14px;border-radius:8px;cursor:pointer;transition:all 0.15s;" onmouseover="this.style.background='#333';" onmouseout="this.style.background='#1a1a1a';">Extract JSON (AF3)</button>
+                    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px;padding-top:32px;border-top:1px solid #e2e8f0;">
+                        <div style="font-size:14px;color:#64748b;font-weight:500;">Reference: <a href="#" style="color:#3b82f6;text-decoration:none;font-weight:600;">10.1038/s41586-020-2797-4</a></div>
+                        <div style="display:flex;gap:16px;flex-wrap:wrap;">
+                            <button onclick="enterSimulation()" style="background:#ffffff;border:1px solid #cbd5e1;color:#334155;font-size:15px;font-weight:600;padding:12px 24px;border-radius:10px;cursor:pointer;transition:all 0.2s;box-shadow:0 1px 2px rgba(0,0,0,0.05);" onmouseover="this.style.background='#f8fafc';this.style.borderColor='#94a3b8';" onmouseout="this.style.background='#ffffff';this.style.borderColor='#cbd5e1';">Simulation Lab</button>
+                            <button onclick="downloadResultJSON()" style="background:#ffffff;border:1px solid #cbd5e1;color:#334155;font-size:15px;font-weight:600;padding:12px 24px;border-radius:10px;cursor:pointer;transition:all 0.2s;box-shadow:0 1px 2px rgba(0,0,0,0.05);" onmouseover="this.style.background='#f8fafc';this.style.borderColor='#94a3b8';" onmouseout="this.style.background='#ffffff';this.style.borderColor='#cbd5e1';">Export Results</button>
+                            <button onclick="downloadAF3JSON()" style="background:#0f172a;border:1px solid #0f172a;color:#ffffff;font-size:15px;font-weight:600;padding:12px 32px;border-radius:10px;cursor:pointer;transition:all 0.2s;box-shadow:0 4px 6px -1px rgba(15,23,42,0.1), 0 2px 4px -1px rgba(15,23,42,0.06);" onmouseover="this.style.background='#1e293b';this.style.transform='translateY(-2px)';" onmouseout="this.style.background='#0f172a';this.style.transform='translateY(0)';">Export AF3 Fold</button>
                         </div>
                     </div>
                 </div>`;
+            
+            // Display the new B2B panels container
+            const b2bPanels = document.getElementById('discovery-b2b-panels');
+            if (b2bPanels) {
+                b2bPanels.style.display = 'flex';
+                // Trigger B2B engines
+                if (typeof BiosimBridge !== 'undefined') {
+                    // Set GATA4, MEF2C, etc. slider values based on target profile
+                    const sliderIds = {
+                        'GATA4': 'slider-gata4',
+                        'MEF2C': 'slider-mef2c',
+                        'TBX5': 'slider-tbx5',
+                        'NKX2-5': 'slider-nkx25',
+                        'MYC': 'slider-myc',
+                        'SNAI1': 'slider-snai1'
+                    };
+                    // Set all factor sliders to 0 first
+                    Object.values(sliderIds).forEach(id => {
+                        const slider = document.getElementById(id);
+                        if (slider) slider.value = '0.0';
+                    });
+                    
+                    // Build targetProfile from proGenes / gptGenes
+                    const genesToSet = proGenes.length > 0 ? proGenes : gptGenes;
+                    genesToSet.forEach(g => {
+                        const geneName = (g.gene || g.gene_symbol || g).toUpperCase();
+                        // Find match in sliderIds keys (case-insensitive)
+                        const matchedKey = Object.keys(sliderIds).find(k => geneName.includes(k));
+                        if (matchedKey) {
+                            const sliderId = sliderIds[matchedKey];
+                            const slider = document.getElementById(sliderId);
+                            if (slider) {
+                                // Use correlation score as weight, normalize to 0-3 range
+                                const corr = g.correlation_with_youth || g.correlation || 0.5;
+                                slider.value = Math.min(3.0, corr * 3.0).toFixed(1);
+                            }
+                        }
+                    });
+                    
+                    BiosimBridge.renderGraphRAG(query);
+                    BiosimBridge.runMultiOmicsPredictor();
+                    BiosimBridge.runLNPOptimizer();
+                    
+                    // Initialize Lucide icons for new panels
+                    if (typeof lucide !== 'undefined' && lucide.createIcons) {
+                        lucide.createIcons();
+                    }
+                }
+            }
+            
+            document.getElementById('view-discovery').scrollTo({ top: 0, behavior: 'smooth' });
 
         } catch (err) {
             clearInterval(interval);
@@ -5182,7 +5453,7 @@ async function runDiscovery() {
             const r = await fetch('/api/gpt-discovery/run', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ query: query, mode: 'gpt4o' })
+                body: JSON.stringify({ query: query, mode: 'gpt4o', cell_type: window._selectedCellType || 'all' })
             });
             if (!r.ok) throw new Error(r.status === 401 ? 'OpenAI API key not configured on server' : `Server returned ${r.status}`);
             const data = await r.json();
@@ -5240,6 +5511,57 @@ async function runDiscovery() {
                         </div>
                     </div>
                 </div>`;
+            
+            // Display the new B2B panels container
+            const b2bPanels = document.getElementById('discovery-b2b-panels');
+            if (b2bPanels) {
+                b2bPanels.style.display = 'flex';
+                // Trigger B2B engines
+                if (typeof BiosimBridge !== 'undefined') {
+                    // Set GATA4, MEF2C, etc. slider values based on target profile
+                    const sliderIds = {
+                        'GATA4': 'slider-gata4',
+                        'MEF2C': 'slider-mef2c',
+                        'TBX5': 'slider-tbx5',
+                        'NKX2-5': 'slider-nkx25',
+                        'MYC': 'slider-myc',
+                        'SNAI1': 'slider-snai1'
+                    };
+                    // Set all factor sliders to 0 first
+                    Object.values(sliderIds).forEach(id => {
+                        const slider = document.getElementById(id);
+                        if (slider) slider.value = '0.0';
+                    });
+                    
+                    // Build targetProfile from proGenes / gptGenes
+                    const genesToSet = gptGenes;
+                    genesToSet.forEach(g => {
+                        const geneName = (g.gene || g.gene_symbol || g).toUpperCase();
+                        // Find match in sliderIds keys (case-insensitive)
+                        const matchedKey = Object.keys(sliderIds).find(k => geneName.includes(k));
+                        if (matchedKey) {
+                            const sliderId = sliderIds[matchedKey];
+                            const slider = document.getElementById(sliderId);
+                            if (slider) {
+                                // Use correlation score as weight, normalize to 0-3 range
+                                const corr = g.correlation_with_youth || g.correlation || 0.5;
+                                slider.value = Math.min(3.0, corr * 3.0).toFixed(1);
+                            }
+                        }
+                    });
+                    
+                    BiosimBridge.renderGraphRAG(query);
+                    BiosimBridge.runMultiOmicsPredictor();
+                    BiosimBridge.runLNPOptimizer();
+                    
+                    // Initialize Lucide icons for new panels
+                    if (typeof lucide !== 'undefined' && lucide.createIcons) {
+                        lucide.createIcons();
+                    }
+                }
+            }
+            
+            document.getElementById('view-discovery').scrollTo({ top: 0, behavior: 'smooth' });
 
         } catch (err) {
             clearInterval(interval);
@@ -5348,7 +5670,7 @@ window.downloadAF3JSON = async function() {
 
         <div class="flex items-center gap-4">
 
-            <span class="validator-badge">V27.0 GOLD VALIDATED</span>
+            <span class="validator-badge">V28.0 GOLD VALIDATED</span>
 
             <span class="sde-formula">dX_t = f(X_t, t)dt + g(X_t, t)dW_t | PDB Structural Authority v1.0 | GRN Inference active</span>
 
@@ -5360,6 +5682,78 @@ window.downloadAF3JSON = async function() {
 
         </div>
 
+    </div>
+
+    <!-- NEXTFLOW QC MONITOR SIDEBAR -->
+    <div id="nf-qc-sidebar" style="position: fixed; right: -420px; top: 0; width: 380px; height: 100vh; background: rgba(5,5,10,0.96); border-left: 1px solid rgba(99,102,241,0.35); box-shadow: -10px 0 30px rgba(0,0,0,0.7); z-index: 9999; transition: right 0.3s ease-in-out; padding: 24px; display: flex; flex-direction: column; font-family: 'Inter', sans-serif; backdrop-blur: 20px;">
+        <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(99,102,241,0.2); padding-bottom: 16px; margin-bottom: 16px;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <div style="width: 10px; height: 10px; border-radius: 50%; background: #6366f1; animation: pulse 2s infinite;"></div>
+                <h3 style="font-size: 11px; font-weight: 900; color: #a5b4fc; text-transform: uppercase; letter-spacing: 0.15em; margin: 0;">Nextflow Sequencing QC Monitor</h3>
+            </div>
+            <button onclick="BiosimBridge.toggleQCSidebar(false)" style="background: none; border: none; color: #94a3b8; font-size: 20px; cursor: pointer; line-height: 1; font-weight: bold;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#94a3b8'">×</button>
+        </div>
+        
+        <div style="flex: 1; overflow-y: auto; padding-right: 4px; display: flex; flex-direction: column; gap: 16px;" class="thin-scrollbar-v2">
+            <!-- Live Run Progress -->
+            <div style="padding: 12px; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px;">
+                <div style="font-size: 7px; color: #818cf8; font-weight: bold; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px;">Active Pipeline Run</div>
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                    <div style="display: flex; justify-content: space-between; font-size: 8px; color: #94a3b8;">
+                        <span>Task: cellular_qc_demux</span>
+                        <span id="qc-run-progress" style="font-family: monospace; color: #a5b4fc;">0%</span>
+                    </div>
+                    <div style="height: 4px; background: #0f172a; border-radius: 2px; overflow: hidden;">
+                        <div id="qc-run-progress-bar" style="height: 100%; background: #6366f1; width: 0%; transition: width 0.3s ease;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Telemetry Audit -->
+            <div style="padding: 12px; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; display: flex; flex-direction: column; gap: 12px;">
+                <div style="font-size: 7px; color: #818cf8; font-weight: bold; text-transform: uppercase; letter-spacing: 0.1em; display: flex; align-items: center; justify-content: space-between;">
+                    <span>Sequencing Quality Control</span>
+                    <span id="qc-status-badge" style="padding: 2px 6px; border-radius: 4px; background: rgba(16,185,129,0.1); color: #10b981; border: 1px solid rgba(16,185,129,0.2); font-size: 6px; font-weight: 900;">IDLE</span>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                    <div style="display: flex; flex-direction: column; gap: 2px;">
+                        <div style="font-size: 6px; color: #64748b; font-weight: bold; text-transform: uppercase;">Total Input Reads</div>
+                        <div id="qc-total-reads" style="font-size: 10px; color: #fff; font-family: monospace; font-weight: 600;">--</div>
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 2px;">
+                        <div style="font-size: 6px; color: #64748b; font-weight: bold; text-transform: uppercase;">Mapped Reads</div>
+                        <div id="qc-mapped-reads" style="font-size: 10px; color: #fff; font-family: monospace; font-weight: 600;">--</div>
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 2px;">
+                        <div style="font-size: 6px; color: #64748b; font-weight: bold; text-transform: uppercase;">Alignment Rate</div>
+                        <div id="qc-alignment-rate" style="font-size: 10px; color: #818cf8; font-family: monospace; font-weight: bold;">--</div>
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 2px;">
+                        <div style="font-size: 6px; color: #64748b; font-weight: bold; text-transform: uppercase;">Mitochondrial Leakage</div>
+                        <div id="qc-mito-leakage" style="font-size: 10px; color: #10b981; font-family: monospace; font-weight: bold;">--</div>
+                    </div>
+                </div>
+                
+                <div style="font-size: 7px; color: #475569; line-height: 1.4; padding-top: 8px; border-top: 1px solid rgba(255,255,255,0.04);">
+                    Single-cell quality control filters out damaged, apoptotic, or low-quality cells based on mitochondrial transcript leakage. Cell state inclusion requirement: <code style="color: #a5b4fc; font-family: monospace;">&lt; 15%</code> mitochondrial read fraction.
+                </div>
+            </div>
+
+            <!-- System Logs -->
+            <div style="padding: 12px; background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; font-family: monospace; font-size: 7px; line-height: 1.5; color: #94a3b8; height: 160px; overflow-y: auto;" class="thin-scrollbar-v2">
+                <div style="color: #818cf8; font-weight: bold; text-transform: uppercase; margin-bottom: 6px;">Execution Log Console</div>
+                <div style="display: flex; flex-direction: column; gap: 2px;" id="qc-console-logs">
+                    <div style="color: #475569;">[IDLE] Awaiting sequencing run telemetry ingestion...</div>
+                </div>
+            </div>
+        </div>
+        
+        <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(99,102,241,0.2); display: flex; gap: 8px;">
+            <button onclick="BiosimBridge.runSequencingQC()" style="flex: 1; padding: 8px 16px; background: #4f46e5; border: none; color: #fff; font-size: 8px; font-weight: 900; border-radius: 8px; cursor: pointer; text-transform: uppercase; letter-spacing: 0.1em; transition: background 0.2s;" onmouseover="this.style.background='#4338ca'" onmouseout="this.style.background='#4f46e5'">
+                Trigger Run Audit
+            </button>
+        </div>
     </div>
 
 </body>

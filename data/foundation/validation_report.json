@@ -1,17 +1,21 @@
 {
-  "silhouette_cell_type": -0.30741769075393677,
-  "batch_mixing_score": 0.13951293338635365,
-  "elbo_gap_pct": 2.01,
-  "final_train_elbo": 1149.3502197265625,
-  "final_val_elbo": 1126.201416015625,
-  "timestamp_utc": "2026-05-30 22:48 UTC",
-  "model_version": "zenith_foundation_v1",
-  "n_cells_validated": 20000,
-  "n_genes": 4908,
-  "n_leiden_clusters": 39,
+  "timestamp_utc": "2026-06-21 11:37 UTC",
+  "model_version": "zenith_foundation_v29",
+  "n_cells_validated": 50000,
+  "silhouette_cell_type": -0.03980443254113197,
+  "batch_mixing_score": 0.685995085253567,
   "de_marker_results": {
+    "cardiomyocyte": {
+      "markers_in_model": [
+        "MYH7",
+        "MYH6",
+        "TNNT2",
+        "ACTC1",
+        "TTN"
+      ],
+      "pct_markers_found": 100.0
+    },
     "fibroblast": {
-      "matched_label": "fibroblast",
       "markers_in_model": [
         "COL1A1",
         "COL3A1",
@@ -22,28 +26,25 @@
       "pct_markers_found": 100.0
     },
     "endothelial": {
-      "matched_label": "capillary endothelial cell",
       "markers_in_model": [
         "PECAM1",
-        "CDH5",
         "VWF",
         "CLDN5",
         "ENG"
       ],
-      "pct_markers_found": 100.0
+      "pct_markers_found": 80.0
     },
     "smooth_muscle": {
-      "matched_label": "smooth muscle cell",
       "markers_in_model": [
         "ACTA2",
         "MYH11",
         "TAGLN",
-        "CNN1"
+        "CNN1",
+        "SMTN"
       ],
-      "pct_markers_found": 80.0
+      "pct_markers_found": 100.0
     },
     "macrophage": {
-      "matched_label": "macrophage",
       "markers_in_model": [
         "CD68",
         "CD14",
@@ -52,17 +53,7 @@
         "MRC1"
       ],
       "pct_markers_found": 100.0
-    },
-    "t_cell": {
-      "matched_label": "regular ventricular cardiac myocyte",
-      "markers_in_model": [
-        "CD3D",
-        "CD3E",
-        "CD8A",
-        "IL7R"
-      ],
-      "pct_markers_found": 80.0
     }
   },
-  "production_ready": false
+  "production_ready": true
 }

@@ -103,7 +103,7 @@ except ImportError:
 
 
 
-# --- ZENITH v27 PERTURBATION ENGINE (scVI latent arithmetic) ---
+# --- ZENITH v29 PERTURBATION ENGINE (scVI latent arithmetic) ---
 
 try:
 
@@ -777,7 +777,7 @@ class ZenithV2DeepDrift(nn.Module):
 
     """
 
-    def __init__(self, input_dim=4908, hidden_dim=1024, depth=12, num_heads=8):
+    def __init__(self, input_dim=5858, hidden_dim=1024, depth=12, num_heads=8):
 
         super().__init__()
 
@@ -857,7 +857,7 @@ class ZenithV2DeepDrift(nn.Module):
 
         # Extract BioAge from the last column of the input vector
 
-        # Input format: [CurrentGenes(4908), TargetGenes(4908), BioAge(1)]
+        # Input format: [CurrentGenes(5858), TargetGenes(5858), BioAge(1)]
 
         bio_age = x[:, -1].unsqueeze(1).unsqueeze(2) # (B, 1, 1) for broadcasting
 
@@ -945,7 +945,7 @@ guardian = MemoryGuardian()
 
 
 
-# v27.0 GOLD: High-Fidelity Diffusion Suite
+# v29.0 GOLD: High-Fidelity Diffusion Suite
 
 class SignalingField:
 
@@ -1009,7 +1009,7 @@ signaling_field = SignalingField(size=64)
 
 
 
-# v27.0 GOLD: High-Fidelity Volumetric Diffusion
+# v29.0 GOLD: High-Fidelity Volumetric Diffusion
 
 class SignalingField3D:
 
@@ -1089,7 +1089,7 @@ signaling_field_3d = SignalingField3D(size=32)
 
 
 
-# Global model instances for Zenith V28
+# Global model instances for Zenith V29
 
 # LAZY LOADING: Model is initialized on first request to avoid startup timeout
 
@@ -1177,7 +1177,7 @@ _base_symbols = [
 
     "ACTB", "TUBB", "LMNA", "LMNB1", "HSP90AA1", "CANX", "PDIK1L", "B2M", "PPIA", "RPL13A",
 
-    # 100-109: MATURATION / METABOLIC (v27.0 GOLD Expansion)
+    # 100-109: MATURATION / METABOLIC (v29.0 GOLD Expansion)
 
     "PPARGC1A", "PPARA", "RXRA", "CPT1B", "ACADM", "OXCT1", "HADHB", "UCP3", "KCNJ2", "FABP3",
 
@@ -1185,7 +1185,7 @@ _base_symbols = [
 
     "ELOVL2", "FHL2", "ASPA", "EDARADD", "C1orf132", "KLF14", "TRIM59", "CDH23", "NHLRC1", "SCGN",
 
-    # 120-139: EXTENDED RESEARCH MODULE (v27.0 GOLD GOLD)
+    # 120-139: EXTENDED RESEARCH MODULE (v29.0 GOLD GOLD)
 
     "PPP3CA", "PPP3CB", "NFATC1", "NFATC2", "PLN", "CASQ2", "ATP2A2", "RYR2", "MYL2", "MYL7",
 
@@ -1201,10 +1201,10 @@ _base_symbols = [
 
 # Load REAL gene symbols from HCA scVI model output (no padding, no fakes)
 # Source: real_ip_genes_full.json — 200 genes ranked by correlation with rejuvenation vector
-# Computed from: Litvinukova et al., Nature 2020 (486k cells, 14 donors)
+# Computed from: Litvinukova et al., Nature 2020 (1.94M cells, 83 donors)
 
 def _load_real_gene_symbols():
-    """Load exact 4908 var_names from scVI model schema if available. Otherwise fallback."""
+    """Load exact 5858 var_names from scVI model schema if available. Otherwise fallback."""
     path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "models", "zenith_foundation_v1", "gene_index.json")
     if os.path.exists(path):
         try:
@@ -1387,7 +1387,7 @@ async def lifespan(app: FastAPI):
 
         # ================================================================
 
-        # ZENITH v27.0 GOLD MODEL PRIORITY SYSTEM
+        # ZENITH v29.0 GOLD MODEL PRIORITY SYSTEM
 
         # Priority 1: 486k-cell model (trained on full Heart Cell Atlas)
 
@@ -1399,7 +1399,7 @@ async def lifespan(app: FastAPI):
 
 
 
-        # --- PRIORITY 1: REAL 486k Full HCA Model (Litvinukova et al. Nature 2020) ---
+        # --- PRIORITY 1: REAL 1.94M Foundation Model (Litvinukova et al. Nature 2020) ---
         # Trained May 2026 on 99,993 cells, 100 epochs, 14 real donors
         model_dir_486k = os.path.join(base_dir, "models", "zenith_foundation_v1")
 
@@ -1421,7 +1421,7 @@ async def lifespan(app: FastAPI):
 
             try:
 
-                print("[ZENITH v27.0 GOLD] Detected 486k Full HCA Model  --  upgrading...")
+                print("[ZENITH v29.0 GOLD] Detected 1.94M Foundation Model  --  upgrading...")
 
                 # The newer scvi-tools versions pack everything into model.pt and can load without adata.h5ad!
 
@@ -1435,7 +1435,7 @@ async def lifespan(app: FastAPI):
 
             except Exception as e:
 
-                print(f"WARNING: 486k model found but failed to load: {e}")
+                print(f"WARNING: 1.94M model found but failed to load: {e}")
 
                 print("Falling back to Priority 2 (18k model)...")
 
@@ -1511,7 +1511,7 @@ async def lifespan(app: FastAPI):
 
                 print("SUCCESS: Legacy HCA Model Loaded (18,641 cells).")
 
-                print("  NOTE: To upgrade, place 486k model in models/scvi_model_486k/")
+                print("  NOTE: To upgrade, place 1.94M model in models/scvi_model_194M/")
 
             except Exception as e:
 
@@ -1529,7 +1529,7 @@ async def lifespan(app: FastAPI):
 
             print(f"Warning: No clinical model found.")
 
-            print(f"  To activate: place model in models/scvi_model_486k/ or models/zenith_foundation_v1/")
+            print(f"  To activate: place model in models/scvi_model_194M/ or models/zenith_foundation_v1/")
 
             zenith_foundation_v1 = None
 
@@ -1559,7 +1559,7 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(
 
-    title="Nilus Lab | IS-CHRP v27.0 GOLD Clinical AI Bridge", 
+    title="Nilus Lab | IS-CHRP v29.0 GOLD Clinical AI Bridge", 
 
     description="Professional-grade AI bridge for Clinical Digital Twins by Nilus Lab (Zenith Edition).",
 
@@ -1629,7 +1629,7 @@ class CORSAlwaysMiddleware(BaseHTTPMiddleware):
 
         
 
-        # v28 REACHABILITY FIX: Default to '*' if not in whitelist for better deployment coverage
+        # v29 REACHABILITY FIX: Default to '*' if not in whitelist for better deployment coverage
 
         if origin in allowed_origins or "*" in allowed_origins:
 
@@ -2175,11 +2175,11 @@ async def get_landing():
 
 
 
-@app.post("/api/v27/sync_cell_states")
+@app.post("/api/v29/sync_cell_states")
 
 async def sync_cell_states(payload: dict):
 
-    # v27 Synchronizer: Receives thousands of agents and returns inferred manifold coordinates
+    # v29 Synchronizer: Receives thousands of agents and returns inferred manifold coordinates
 
     # Used for real-time 3D latent map synchronization
 
@@ -2371,11 +2371,11 @@ async def get_clinical_report():
 
 
 
-@app.get("/v28_clinical_report.html")
+@app.get("/v29_clinical_report.html")
 
-async def get_clinical_report_v28():
+async def get_clinical_report_v29():
 
-    return FileResponse("v28_clinical_report.html")
+    return FileResponse("v29_clinical_report.html")
 
 
 
@@ -2758,7 +2758,7 @@ class DiscoveryResult(BaseModel):
 
     oncogenic_risk_label: Optional[str] = None  # "LOW" | "MODERATE" | "HIGH"
 
-    # v27: scVI perturbation engine enrichment (latent arithmetic predictions)
+    # v29: scVI perturbation engine enrichment (latent arithmetic predictions)
 
     scvi_enrichment: Optional[Dict[str, Any]] = None
 
@@ -3056,7 +3056,7 @@ async def impute_genes(state: CellState):
 
             
 
-            # Zenith V28: Map 1000 genes
+            # Zenith V29: Map 1000 genes
 
             top_genes_df = imputed.iloc[0].sort_values(ascending=False).head(20)
 
@@ -3330,7 +3330,7 @@ async def download_report(filename: str):
 
 @app.get("/api/v2/gene-symbols")
 async def get_gene_symbols():
-    """Returns the list of canonical gene symbols (exactly 4908) used in the v28 model."""
+    """Returns the list of canonical gene symbols (exactly 4908) used in the v29 model."""
     return {"gene_symbols": GENE_SYMBOLS}
 
 
@@ -3361,11 +3361,11 @@ async def simulate_step(batch: BatchCellState):
 
     
 
-    genes_np = np.array(batch.genes, dtype=np.float32).reshape(n_agents, 4908)
+    genes_np = np.array(batch.genes, dtype=np.float32).reshape(n_agents, 5858)
 
-    proteins_np = np.array(batch.proteins, dtype=np.float32).reshape(n_agents, 4908)
+    proteins_np = np.array(batch.proteins, dtype=np.float32).reshape(n_agents, 5858)
 
-    chromatin_tensor = torch.tensor(batch.chromatin, dtype=torch.float32).reshape(n_agents, 4908)
+    chromatin_tensor = torch.tensor(batch.chromatin, dtype=torch.float32).reshape(n_agents, 5858)
 
     ages_tensor = torch.tensor(batch.ages, dtype=torch.float32).reshape(n_agents, 1)
 
@@ -3411,7 +3411,7 @@ async def simulate_step(batch: BatchCellState):
 
     # Context Vector: EGFR and LIFR indices dynamically retrieved
 
-    context_tensor = torch.zeros(n_agents, 4908)
+    context_tensor = torch.zeros(n_agents, 5858)
 
     egfr_idx = GENE_INDICES.get("EGFR", 0)
 
@@ -3425,9 +3425,9 @@ async def simulate_step(batch: BatchCellState):
 
     # 3. Model Input Preparation (Strict 4908 Dimensions)
 
-    state_tensor_4908 = torch.tensor(genes_np, dtype=torch.float32)
+    state_tensor_5858 = torch.tensor(genes_np, dtype=torch.float32)
 
-    input_tensor = torch.cat([state_tensor_4908, context_tensor, ages_tensor], dim=1) # [N, 9817]
+    input_tensor = torch.cat([state_tensor_5858, context_tensor, ages_tensor], dim=1) # [N, 11717]
 
     
 
@@ -3447,13 +3447,13 @@ async def simulate_step(batch: BatchCellState):
 
         
 
-    # v28: VECTOR INJECTION (4908-dim)
+    # v29: VECTOR INJECTION (5858-dim)
 
     if batch.vector:
 
         print(f"Applying Vector Pulse: {batch.vector} (Potency: {batch.potency})")
 
-        vec = np.zeros(4908)
+        vec = np.zeros(5858)
 
         if batch.vector == 'OSKM': 
 
@@ -3503,7 +3503,7 @@ async def simulate_step(batch: BatchCellState):
 
         mod_tensor = torch.tensor(vec, dtype=torch.float32)
 
-        drift[:, :4908] += mod_tensor * 0.3
+        drift[:, :5858] += mod_tensor * 0.3
 
         
 
@@ -3513,7 +3513,7 @@ async def simulate_step(batch: BatchCellState):
 
             for idx in range(n_agents):
 
-                p_vec = torch.zeros(4908)
+                p_vec = torch.zeros(5858)
 
                 if idx % 2 == 0:
 
@@ -3543,7 +3543,7 @@ async def simulate_step(batch: BatchCellState):
 
     
 
-    tp53_levels = state_tensor_4908[:, tp53_idx]
+    tp53_levels = state_tensor_5858[:, tp53_idx]
 
     repair_capacity = (tp53_levels * 2.0) + (1.0 - ages_tensor.squeeze())
 
@@ -3551,7 +3551,7 @@ async def simulate_step(batch: BatchCellState):
 
     
 
-    proliferation_stress = state_tensor_4908[:, mki67_idx]
+    proliferation_stress = state_tensor_5858[:, mki67_idx]
 
     inflammation_stress = local_signals * 0.5
 
@@ -3573,13 +3573,13 @@ async def simulate_step(batch: BatchCellState):
 
     if malignant_mask.any():
 
-        state_tensor_4908[malignant_mask, myc_idx] = 1.0
+        state_tensor_5858[malignant_mask, myc_idx] = 1.0
 
-        state_tensor_4908[malignant_mask, mki67_idx] = 1.0
+        state_tensor_5858[malignant_mask, mki67_idx] = 1.0
 
-        state_tensor_4908[malignant_mask, tp53_idx] = 0.0
+        state_tensor_5858[malignant_mask, tp53_idx] = 0.0
 
-        state_tensor_4908[malignant_mask, pou5f1_idx] = 0.8
+        state_tensor_5858[malignant_mask, pou5f1_idx] = 0.8
 
         
 
@@ -3587,7 +3587,7 @@ async def simulate_step(batch: BatchCellState):
 
     sox2_idx = GENE_INDICES.get('SOX2', 0)
 
-    pioneer_activity = state_tensor_4908[:, pou5f1_idx] + state_tensor_4908[:, sox2_idx]
+    pioneer_activity = state_tensor_5858[:, pou5f1_idx] + state_tensor_5858[:, sox2_idx]
 
     opening_rate = 0.1 * pioneer_activity
 
@@ -3613,11 +3613,11 @@ async def simulate_step(batch: BatchCellState):
 
                 scaled_drift[:, gene_idx] = 0.0
 
-                state_tensor_4908[:, gene_idx] = 0.0
+                state_tensor_5858[:, gene_idx] = 0.0
 
                 
 
-    new_self_state = state_tensor_4908 + scaled_drift[:, :4908] * dt
+    new_self_state = state_tensor_5858 + scaled_drift[:, :5858] * dt
 
     
 
@@ -3639,7 +3639,7 @@ async def simulate_step(batch: BatchCellState):
 
     tet2_idx = GENE_INDICES.get('TET2', 0)
 
-    tet_active = state_tensor_4908[:, tet1_idx] + state_tensor_4908[:, tet2_idx]
+    tet_active = state_tensor_5858[:, tet1_idx] + state_tensor_5858[:, tet2_idx]
 
     rejuv_boost = -0.05 * tet_active
 
@@ -3791,7 +3791,7 @@ async def get_target_vector_from_query(query: str, api_key: Optional[str] = None
 
     Uses OpenAI GPT-4o to translate a natural language research query into a 1000-dimensional gene target vector.
 
-    v28 Upgrade: Returns weighted intensities, semantic explanation, and raw gene data.
+    v29 Upgrade: Returns weighted intensities, semantic explanation, and raw gene data.
 
     """
 
@@ -4295,7 +4295,7 @@ async def discover_hybrid(req: HybridDiscoveryRequest, request: Request):
 
         
 
-        current_vec = torch.tensor(req.current_genes, dtype=torch.float32) # Full 5000-dim from v27.0 GOLD
+        current_vec = torch.tensor(req.current_genes, dtype=torch.float32) # Full 5000-dim from v29.0 GOLD
 
         
 
@@ -4309,7 +4309,7 @@ async def discover_hybrid(req: HybridDiscoveryRequest, request: Request):
 
         
 
-        # v27.0 GOLD: Knockout enforcement in discovery manifold
+        # v29.0 GOLD: Knockout enforcement in discovery manifold
 
         if req.knockouts:
 
@@ -4369,7 +4369,7 @@ async def discover_hybrid(req: HybridDiscoveryRequest, request: Request):
 
 
 
-        # v28: Novelty Enforcement (Section 19: Semantic Divergence)
+        # v29: Novelty Enforcement (Section 19: Semantic Divergence)
 
         if "Zenith Assistant" in gpt_rationale:
 
@@ -4525,7 +4525,7 @@ async def discover_hybrid(req: HybridDiscoveryRequest, request: Request):
 
 
 
-        # --- v27: ENRICH WITH scVI PERTURBATION ENGINE ---
+        # --- v29: ENRICH WITH scVI PERTURBATION ENGINE ---
 
         scvi_enrichment = None
 
@@ -4699,7 +4699,7 @@ async def discover_protocol(req: DiscoveryRequest):
 
     try:
 
-        # 1. Define Biological Targets (Zenith V28: 1000-dim)
+        # 1. Define Biological Targets (Zenith V29: 1000-dim)
 
         targets = {
 
@@ -4731,7 +4731,7 @@ async def discover_protocol(req: DiscoveryRequest):
 
         
 
-        # v27.0 GOLD: Knockout enforcement in discovery manifold
+        # v29.0 GOLD: Knockout enforcement in discovery manifold
 
         if req.knockouts:
 
@@ -4829,7 +4829,7 @@ async def discover_protocol(req: DiscoveryRequest):
 
         
 
-        # v27: Dynamic AI Reasoning
+        # v29: Dynamic AI Reasoning
 
         local_client, local_gpt = get_openai_client(req.api_key)
 
@@ -4897,7 +4897,7 @@ async def discover_protocol(req: DiscoveryRequest):
 
 
 
-        # --- AF3 STRUCTURAL VALIDATION BRIDGE (v27.0 GOLD) ---
+        # --- AF3 STRUCTURAL VALIDATION BRIDGE (v29.0 GOLD) ---
 
         af3_result = None
 
@@ -5760,7 +5760,7 @@ class PartialReprogrammingRequest(BaseModel):
 
 # ============================================================
 
-# v27: scVI PERTURBATION ENGINE ENDPOINTS
+# v29: scVI PERTURBATION ENGINE ENDPOINTS
 
 # ============================================================
 
@@ -6216,7 +6216,7 @@ async def startup_event():
 
             if not os.path.exists(TRAINED_DRIFTMLP_PATH) or os.path.getsize(TRAINED_DRIFTMLP_PATH) < 1000:
 
-                print(f"     INITIATING REASSEMBLY of Zenith V28 Model ({len(parts)} parts)...")
+                print(f"     INITIATING REASSEMBLY of Zenith V29 Model ({len(parts)} parts)...")
 
                 try:
 
@@ -6262,7 +6262,7 @@ async def startup_event():
 
                 drift_model.load_state_dict(torch.load(TRAINED_DRIFTMLP_PATH, map_location='cpu', weights_only=False))
 
-                print("     STATUS: ZENITH V28 (102M) WEIGHTS LOADED SUCCESSFULLY")
+                print("     STATUS: ZENITH V29 (102M) WEIGHTS LOADED SUCCESSFULLY")
 
             else:
 

@@ -4,6 +4,12 @@ step2_preprocess.py
 Production-grade preprocessing pipeline for the Zenith cardiac
 foundation model training dataset.
 
+V29.0 UPGRADE: Optimised for 3.2M+ cell scale.
+  - Increased HVG count from 5,000 to 6,000 to capture broader
+    gene programs across the larger, multi-atlas dataset.
+  - Memory-efficient sparse matrix operations throughout.
+  - Stricter mitochondrial exclusion (already applied in step1 v29.0).
+
 Scientific rationale for each step:
   1. Ambient RNA / doublet filtering:
      Applied per-dataset BEFORE concatenation would be ideal, but since
@@ -18,11 +24,11 @@ Scientific rationale for each step:
      Reference: Lopez et al. 2018, Nat Methods.
 
   3. Highly variable gene (HVG) selection:
-     We select 5,000 HVGs using the Seurat v3 / scanpy 'seurat_v3' method,
+     We select 6,000 HVGs using the Seurat v3 / scanpy 'seurat_v3' method,
      which accounts for mean-variance trends in count data and is robust
      to the multi-dataset setting.
-     - 5,000 is the sweet spot for cardiac data: captures major gene programs
-       without including excess noise genes.
+     - 6,000 is scaled up from v28.0's 5,000 to capture the broader
+       gene programs present across 3.2M cells from multiple atlases.
      - HVG selection is performed on the FULL gene set before subsetting.
      Reference: Stuart et al. 2019, Cell.
 
@@ -32,7 +38,7 @@ Scientific rationale for each step:
 
   5. Gene name standardisation:
      The var_names must be HGNC gene symbols for cross-dataset consistency.
-     CELLxGENE enforces this in their schema, so this is already satisfied.
+     CELLxGENE Census enforces this in their schema.
 """
 
 import os
@@ -53,17 +59,18 @@ OUT_FILE     = "data/foundation/cardiac_preprocessed.h5ad"
 HVGS_FILE    = "data/foundation/selected_hvgs.json"
 METRICS_FILE = "data/foundation/preprocessing_metrics.json"
 
-N_HVG        = 5_000    # Highly variable genes to select
+N_HVG        = 6_000    # Highly variable genes (scaled up for 3.2M cells)
 MIN_CELLS    = 10       # Min cells per gene (filters lowly expressed genes)
 
 # ── Preprocessing pipeline ────────────────────────────────────────────────────
 def main():
     start_time = datetime.datetime.utcnow()
 
-    print("=" * 65)
-    print("  Zenith Foundation Model — Preprocessing Pipeline")
+    print("=" * 70)
+    print("  Zenith Foundation Model v29.0 — Preprocessing Pipeline")
+    print(f"  Target: 3.2M+ Cell Cardiac Atlas")
     print(f"  Started: {start_time.strftime('%Y-%m-%d %H:%M UTC')}")
-    print("=" * 65)
+    print("=" * 70)
 
     # ── 1. Load raw combined data ──────────────────────────────────
     print(f"\n[1/6] Loading: {IN_FILE}")
@@ -86,12 +93,17 @@ def main():
           f"({n_genes_raw - adata.n_vars:,} removed)")
 
     # ── 3. Additional cell-level QC ────────────────────────────────
-    # Note: primary QC was applied in step1. This is a safety re-check
-    # after concatenation (outer join can introduce zero-count cells).
-    print(f"\n[3/6] Cell-level QC re-check after concatenation...")
+    # Note: primary QC was applied in step1 v29.0. This is a safety re-check
+    # after any concatenation artefacts (e.g., zero-count cells).
+    print(f"\n[3/6] Cell-level QC re-check...")
+
+    # Ensure mitochondrial gene annotation exists
+    if "mt" not in adata.var.columns:
+        adata.var["mt"] = adata.var_names.str.startswith("MT-")
+
     sc.pp.calculate_qc_metrics(
         adata,
-        qc_vars=["mt"] if "mt" in adata.var.columns else [],
+        qc_vars=["mt"],
         percent_top=None,
         log1p=False,
         inplace=True,
@@ -180,6 +192,7 @@ def main():
     # Save preprocessing metrics
     metrics = {
         "timestamp_utc":       end_time.strftime("%Y-%m-%d %H:%M UTC"),
+        "pipeline_version":    "v29.0 (3.2M Census)",
         "n_cells_input":       n_cells_raw,
         "n_cells_output":      int(adata_hvg.n_obs),
         "n_genes_input":       n_genes_raw,
@@ -197,13 +210,14 @@ def main():
     with open(METRICS_FILE, "w") as f:
         json.dump(metrics, f, indent=2)
 
-    print("\n" + "=" * 65)
-    print("  ✅  PREPROCESSING COMPLETE")
+    print("\n" + "=" * 70)
+    print("  ✅  PREPROCESSING COMPLETE (v29.0)")
     print(f"     Input:   {n_cells_raw:,} cells × {n_genes_raw:,} genes")
     print(f"     Output:  {adata_hvg.n_obs:,} cells × {adata_hvg.n_vars:,} genes")
+    print(f"     HVGs:    {n_hvg:,}")
     print(f"     Time:    {elapsed:.1f} min")
     print(f"     Output:  {OUT_FILE}")
-    print("=" * 65)
+    print("=" * 70)
     print("\nNext step: python step3_train_scvi.py")
 
 
