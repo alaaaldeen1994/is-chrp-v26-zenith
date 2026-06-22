@@ -1403,26 +1403,33 @@ async def lifespan(app: FastAPI):
 
         # --- HUGGING FACE DYNAMIC MODEL DOWNLOADER ---
         import httpx
+        import time
+        import json
         
-        def download_hf_file(repo_id: str, file_path: str, local_path: str):
+        def download_hf_file(repo_id: str, file_path: str, local_path: str, retries=3):
             # If the file exists and is larger than 5KB, it's a real model. If < 5KB, it's a Git LFS pointer.
             if os.path.exists(local_path) and os.path.getsize(local_path) > 5120:
                 return
             
-            print(f"[ZENITH DOWNLOADER] Fetching {file_path} from Hugging Face (Bypassing Git LFS)...")
             url = f"https://huggingface.co/datasets/{repo_id}/resolve/main/{file_path}?download=true"
-            try:
-                # Ensure directory exists
-                os.makedirs(os.path.dirname(local_path), exist_ok=True)
-                with httpx.Client(timeout=600.0, follow_redirects=True) as client:
-                    with client.stream("GET", url) as response:
-                        response.raise_for_status()
-                        with open(local_path, "wb") as f:
-                            for chunk in response.iter_bytes(chunk_size=8192):
-                                f.write(chunk)
-                print(f"[ZENITH DOWNLOADER] Successfully downloaded {file_path}")
-            except Exception as e:
-                print(f"[ZENITH DOWNLOADER] Failed to download {file_path}: {e}")
+            os.makedirs(os.path.dirname(local_path), exist_ok=True)
+            
+            for attempt in range(retries):
+                print(f"[ZENITH DOWNLOADER] Fetching {file_path} from Hugging Face (Attempt {attempt+1}/{retries})...")
+                try:
+                    with httpx.Client(timeout=600.0, follow_redirects=True) as client:
+                        with client.stream("GET", url) as response:
+                            response.raise_for_status()
+                            with open(local_path, "wb") as f:
+                                for chunk in response.iter_bytes(chunk_size=8192):
+                                    f.write(chunk)
+                    print(f"[ZENITH DOWNLOADER] Successfully downloaded {file_path}")
+                    return
+                except Exception as e:
+                    print(f"[ZENITH DOWNLOADER] Error on attempt {attempt+1}: {e}")
+                    if attempt < retries - 1:
+                        time.sleep(2)
+            print(f"[ZENITH DOWNLOADER] Failed to download {file_path} after {retries} attempts.")
 
         # Download necessary models
         hf_repo = "alaaaldeen1994/zenith-models"
@@ -1464,7 +1471,16 @@ async def lifespan(app: FastAPI):
         if os.path.exists(model_pt_486k):
             try:
                 print("[ZENITH ENSEMBLE] Loading 486k Pure Baseline Specialist Model...")
-                zenith_foundation_486k = SCVI.load(model_dir_486k)
+                import anndata as ad
+                index_path = os.path.join(model_dir_486k, "gene_index.json")
+                if os.path.exists(index_path):
+                    with open(index_path, "r") as f:
+                        genes = json.load(f).get("var_names", [])
+                    blank_adata = ad.AnnData(X=np.zeros((1, len(genes)), dtype=np.float32))
+                    blank_adata.var_names = genes
+                    zenith_foundation_486k = SCVI.load(model_dir_486k, adata=blank_adata)
+                else:
+                    zenith_foundation_486k = SCVI.load(model_dir_486k)
                 print("SUCCESS: 486k Model loaded.")
             except Exception as e:
                 print(f"WARNING: 486k model failed to load: {e}")
