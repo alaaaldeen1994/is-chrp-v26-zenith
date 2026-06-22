@@ -3542,29 +3542,54 @@ const BiosimBridge = {
                 statusEl.className = data.model_mode === 'CLINICAL' ? 'w-1.5 h-1.5 rounded-full bg-emerald-400' : 'w-1.5 h-1.5 rounded-full bg-blue-500';
             }
 
-            // HUD Marker
+            // HUD Marker & ESI
             const markerEl = document.getElementById('insp-marker');
             if (markerEl && data.top_genes.length > 0) markerEl.innerText = data.top_genes[0].name;
 
-            // Update Analytical Grid (12 genes like in screenshot)
-            listEl.innerHTML = data.top_genes.slice(0, 12).map(g => `
+            const esiEl = document.getElementById('insp-esi');
+            if (esiEl && data.epigenetic_stability_index !== undefined) {
+                esiEl.innerText = (data.epigenetic_stability_index * 100).toFixed(1) + '%';
+            }
+
+            // Update Analytical Grid (1.94M Generalist)
+            listEl.innerHTML = data.top_genes.slice(0, 10).map(g => `
                 <div class="flex justify-between items-center text-[8px] p-1 bg-black/40 border border-white/5 rounded mb-0.5">
                     <span class="text-slate-400 font-bold">${g.name}</span>
                     <span class="text-blue-400 font-mono">${g.value.toFixed(1)}%</span>
                 </div>
             `).join('');
 
+            // Update Analytical Grid (500k Pure Baseline)
+            const list486kEl = document.getElementById('latent-projection-list-486k');
+            if (list486kEl && data.top_genes_486k) {
+                list486kEl.innerHTML = data.top_genes_486k.slice(0, 10).map(g => `
+                    <div class="flex justify-between items-center text-[8px] p-1 bg-black/40 border border-white/5 rounded mb-0.5">
+                        <span class="text-slate-400 font-bold">${g.name}</span>
+                        <span class="text-emerald-400 font-mono">${g.value.toFixed(1)}%</span>
+                    </div>
+                `).join('');
+            } else if (list486kEl) {
+                list486kEl.innerHTML = '<div class="text-[8px] text-slate-600 italic">No baseline data</div>';
+            }
+
             // AI Insights
             const summaryEl = document.getElementById('scvi-summary');
             const summaryText = document.getElementById('scvi-summary-text');
+            const expertInsight = document.getElementById('ai-expert-insight');
+            
             if (summaryEl && data.scientific_summary) {
                 summaryEl.classList.remove('hidden');
                 summaryText.innerText = data.scientific_summary;
+                if (expertInsight && data.ai_expert_insight) {
+                    expertInsight.innerText = data.ai_expert_insight;
+                }
             }
 
         } catch (err) {
             statusEl.className = 'w-1.5 h-1.5 rounded-full bg-red-500';
             listEl.innerHTML = `<div class="text-[8px] text-red-500/70 italic">SCVI Offline. Run bridge_server.py.</div>`;
+            const list486kEl = document.getElementById('latent-projection-list-486k');
+            if(list486kEl) list486kEl.innerHTML = `<div class="text-[8px] text-red-500/70 italic">Offline.</div>`;
         }
     },
 

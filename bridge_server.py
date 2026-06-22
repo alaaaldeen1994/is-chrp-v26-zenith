@@ -634,6 +634,7 @@ openai_client = _env_client
 # --- CONFIGURATION ---
 
 zenith_foundation_v1 = None
+zenith_foundation_486k = None
 
 model_mode = "SIMULATION"
 
@@ -1377,75 +1378,65 @@ async def lifespan(app: FastAPI):
 
     
 
-    global zenith_foundation_v1, model_mode
-
+    global zenith_foundation_v1, zenith_foundation_486k, model_mode
     base_dir = os.path.abspath(os.path.dirname(__file__))
 
-
-
     if SCVI_AVAILABLE:
-
+        # ================================================================
+        # ZENITH v29.0 ENSEMBLE MODEL SYSTEM (2-Model Architecture)
+        # 1. 1.94M-cell Global Generalist Model
+        # 2. 486k-cell Pure Baseline Specialist Model
         # ================================================================
 
-        # ZENITH v29.0 GOLD MODEL PRIORITY SYSTEM
+        model_dir_1_94m = os.path.join(base_dir, "models", "zenith_foundation_v1")
+        model_pt_1_94m = os.path.join(model_dir_1_94m, "model.pt")
 
-        # Priority 1: 486k-cell model (trained on full Heart Cell Atlas)
-
-        # Priority 2: 18k-cell model (legacy HCA subsampled)
-
-        # Priority 3: Mock SCVI (preview/fallback mode)
-
-        # ================================================================
-
-
-
-        # --- PRIORITY 1: REAL 2M Foundation Model (Litvinukova et al. Nature 2020) ---
-        # Trained May 2026 on 99,993 cells, 100 epochs, 14 real donors
-        model_dir_486k = os.path.join(base_dir, "models", "zenith_foundation_v1")
-
+        model_dir_486k = os.path.join(base_dir, "models", "scvi_model_486k_real")
         model_pt_486k = os.path.join(model_dir_486k, "model.pt")
 
-
-
-        # --- PRIORITY 2: Legacy 18k HCA Subsampled Model ---
-
-        model_dir_hca = os.path.join(base_dir, "models", "zenith_foundation_v1")
-
-        adata_path_hca = os.path.join(model_dir_hca, "adata.h5ad")
-
-
-
-        # Try Priority 1 first
-
-        if os.path.exists(model_pt_486k):
-
+        # --- Load 1.94M Model ---
+        if os.path.exists(model_pt_1_94m):
             try:
-
-                print("[ZENITH v29.0 GOLD] Detected 2M Foundation Model  --  upgrading...")
-
-                # The newer scvi-tools versions pack everything into model.pt and can load without adata.h5ad!
-
-                zenith_foundation_v1 = SCVI.load(model_dir_486k)
-
-                model_mode = "CLINICAL"
-
-                print("SUCCESS: Full HCA Model loaded.")
-
-                print("  Yamanaka factors: POU5F1, SOX2, NANOG, KLF4, MYC, LIN28A  --  6/6 confirmed.")
-
+                print("[ZENITH ENSEMBLE] Loading 1.94M Global Generalist Model...")
+                import anndata as ad
+                import pandas as pd
+                schema_path = os.path.join(model_dir_1_94m, "var_schema.h5ad")
+                if os.path.exists(schema_path):
+                    adata_schema = ad.read_h5ad(schema_path)
+                    obs_df = pd.DataFrame(index=adata_schema.obs_names)
+                    obs_df['dataset_id'] = pd.Categorical(['1c739a3e-c3f5-49d5-98e0-73975e751201'], 
+                        categories=['1c739a3e-c3f5-49d5-98e0-73975e751201', '2adb1f8a-a6b1-4909-8ee8-484814e2d4bf', '2e9d2f32-4cfb-49b5-b990-cbf4c241214e', '364bd0c7-f7fd-48ed-99c1-ae26872b1042', '43245158-5ae1-4e71-a9a6-67eef49c26bc', '53d208b0-2cfd-4366-9866-c3c6114081bc', '65badd7a-9262-4fd1-9ce2-eb5dc0ca8039', '72955cdb-bd92-4135-aa52-21f33f9640db', 'd4e69e01-3ba2-4d6b-a15d-e7048f78f22e', 'd567b692-c374-4628-a508-8008f6778f22'])
+                    obs_df['donor_id'] = pd.Categorical(['10_Chowdhury'], 
+                        categories=['10_Chowdhury', '11_Chowdhury', '1221', '12_Chowdhury', '1600', '1666', '1681', '1702', '1708', '1723'])
+                    obs_df['suspension_type'] = pd.Categorical(['cell'], 
+                        categories=['cell', 'nucleus'])
+                    obs_df['disease'] = pd.Categorical(['normal'], 
+                        categories=['arrhythmogenic right ventricular cardiomyopathy', 'atherosclerosis', 'dilated cardiomyopathy', 'hypertrophic cardiomyopathy', 'myocardial infarction', 'myocarditis', 'non-compaction cardiomyopathy', 'normal'])
+                    adata_schema.obs = obs_df
+                    adata_schema.layers['counts'] = adata_schema.X.copy()
+                    zenith_foundation_v1 = SCVI.load(model_dir_1_94m, adata=adata_schema)
+                else:
+                    zenith_foundation_v1 = SCVI.load(model_dir_1_94m)
+                print("SUCCESS: 1.94M Model loaded.")
             except Exception as e:
-
-                print(f"WARNING: 2M model found but failed to load: {e}")
-
-                print("Falling back to Priority 2 (18k model)...")
-
+                print(f"WARNING: 1.94M model failed to load: {e}")
                 zenith_foundation_v1 = None
 
+        # --- Load 486k Model ---
+        if os.path.exists(model_pt_486k):
+            try:
+                print("[ZENITH ENSEMBLE] Loading 486k Pure Baseline Specialist Model...")
+                zenith_foundation_486k = SCVI.load(model_dir_486k)
+                print("SUCCESS: 486k Model loaded.")
+            except Exception as e:
+                print(f"WARNING: 486k model failed to load: {e}")
+                zenith_foundation_486k = None
 
+        if zenith_foundation_v1 is not None or zenith_foundation_486k is not None:
+            model_mode = "CLINICAL"
 
         # Try Priority 2 if Priority 1 not available or failed
-
-        if zenith_foundation_v1 is None and os.path.exists(model_dir_hca) and os.path.exists(adata_path_hca):
+        if zenith_foundation_v1 is None and zenith_foundation_486k is None and os.path.exists(model_dir_hca) and os.path.exists(adata_path_hca):
 
             try:
 
@@ -2602,6 +2593,8 @@ class ImputationResult(BaseModel):
 
     top_genes: List[GeneValue]
 
+    top_genes_486k: Optional[List[GeneValue]] = None
+
     latent_coords: List[float]
 
     model_mode: str
@@ -2930,7 +2923,7 @@ async def send_email(email_req: ContactEmailRequest):
 
 # --- EXPERT REASONING ENGINE (Nilus Lab Research Division) ---
 
-async def get_expert_reasoning(top_markers: list, cell_type: str, summary: str, mode: str = "SIMULATION") -> str:
+async def get_expert_reasoning(top_markers: list, top_markers_486k: list, cell_type: str, summary: str, mode: str = "SIMULATION") -> str:
 
     # Always check if client is available (it might have been updated via API key)
 
@@ -2943,20 +2936,20 @@ async def get_expert_reasoning(top_markers: list, cell_type: str, summary: str, 
     try:
 
         marker_str = ", ".join([f"{m['name']} ({m['value']:.1f}%)" for m in top_markers])
+        marker_str_486k = ", ".join([f"{m['name']} ({m['value']:.1f}%)" for m in top_markers_486k]) if top_markers_486k else "N/A"
 
         
 
         system_prompt = (
 
-            "You are a Senior Principal Scientist at an advanced longevity research lab (ATLAS style). "
-
-            "You are conducting a Clinical Single-Cell Audit of a digital twin cell. "
-
-            "Provide a concise (4-5 sentence) academic-grade summary focusing on metabolic trajectory, "
-
-            "genomic stability, and risk of malignant transformation. Be extremely serious and professional. "
-
-            "Use Latin names or specific biological terms where appropriate."
+            "You are a rigid data interpreter and Senior Principal Scientist at an advanced longevity research lab. "
+            "You are conducting a Clinical Single-Cell Audit comparing two validated scVI models: "
+            "1. A Global Generalist Model (1.94M cells, captures broad human diversity). "
+            "2. A Pure Baseline Specialist Model (486k cells, highly curated healthy baseline). "
+            "CRITICAL ETHICAL CONSTRAINT: You must NOT hallucinate or invent any genes. "
+            "You must NOT make unsupported medical diagnoses. "
+            "Your ONLY job is to write a concise (4-5 sentence) academic summary comparing where the two models agree (consensus) "
+            "and where they diverge mathematically (anomalies). Be extremely serious and professional."
 
         )
 
@@ -2972,11 +2965,13 @@ async def get_expert_reasoning(top_markers: list, cell_type: str, summary: str, 
 
             f"Cell Type: {cell_type}\n"
 
-            f"Detected Markers: {marker_str}\n"
+            f"Global Model (1.94M) Markers: {marker_str}\n"
+
+            f"Pure Baseline (486k) Markers: {marker_str_486k}\n"
 
             f"Initial Summary: {summary}\n\n"
 
-            f"Generate a deep expert insight for the researcher's clinical log."
+            f"Generate the mathematical consensus and divergence report for the clinical log."
 
         )
 
@@ -3029,101 +3024,95 @@ async def impute_genes(state: CellState):
 
 
         # CASE 1: CLINICAL MODEL INFERENCE
+        if (zenith_foundation_v1 is not None or zenith_foundation_486k is not None) and (model_mode == "CLINICAL" or model_mode == "PREVIEW"):
+            top_markers_1_94m = []
+            top_markers_486k = []
+            latent = np.zeros((1, 10))
+            esi = 0.0
+            primary_marker = "Unknown"
 
-        if zenith_foundation_v1 is not None and (model_mode == "CLINICAL" or model_mode == "PREVIEW"):
+            # --- RUN 1.94M GENERALIST MODEL ---
+            if zenith_foundation_v1 is not None:
+                full_genes = np.zeros(len(zenith_foundation_v1.adata.var_names))
+                for i, val in enumerate(input_genes):
+                    if i < len(GENE_SYMBOLS):
+                        gene_symbol = GENE_SYMBOLS[i]
+                        if gene_symbol in zenith_foundation_v1.adata.var_names:
+                            idx = zenith_foundation_v1.adata.var_names.get_loc(gene_symbol)
+                            full_genes[idx] = val
+                
+                adata = ad.AnnData(X=full_genes.reshape(1, -1).astype(np.float32))
+                adata.var_names = zenith_foundation_v1.adata.var_names
+                import pandas as pd
+                obs_df = pd.DataFrame(index=adata.obs_names)
+                obs_df['dataset_id'] = pd.Categorical(['1c739a3e-c3f5-49d5-98e0-73975e751201'], categories=list(zenith_foundation_v1.adata.obs['dataset_id'].dtype.categories))
+                obs_df['donor_id'] = pd.Categorical(['10_Chowdhury'], categories=list(zenith_foundation_v1.adata.obs['donor_id'].dtype.categories))
+                obs_df['suspension_type'] = pd.Categorical(['cell'], categories=list(zenith_foundation_v1.adata.obs['suspension_type'].dtype.categories))
+                obs_df['disease'] = pd.Categorical(['normal'], categories=list(zenith_foundation_v1.adata.obs['disease'].dtype.categories))
+                adata.obs = obs_df
+                adata.layers['counts'] = adata.X.copy()
+                
+                latent = zenith_foundation_v1.get_latent_representation(adata)
+                imputed = zenith_foundation_v1.get_normalized_expression(adata)
+                top_genes_df = imputed.iloc[0].sort_values(ascending=False).head(20)
+                top_markers_1_94m = [{"name": name, "value": float(val * 100)} for name, val in top_genes_df.items()]
+                primary_marker = top_markers_1_94m[0]["name"] if top_markers_1_94m else "Unknown"
 
-            full_genes = np.zeros(len(zenith_foundation_v1.adata.var_names))
+                latent_norm = np.linalg.norm(latent)
+                stability_base = 0.95 if model_mode == "CLINICAL" else 0.70
+                esi = min(1.0, stability_base * (1.0 - (latent_norm % 0.1)))
 
-            for i, gene_symbol in enumerate(GENE_SYMBOLS):
+            # --- RUN 486k SPECIALIST MODEL ---
+            if zenith_foundation_486k is not None:
+                base_dir = os.path.abspath(os.path.dirname(__file__))
+                if hasattr(zenith_foundation_486k, 'registry_') and 'var_names' in zenith_foundation_486k.registry_:
+                    genes_486k = zenith_foundation_486k.registry_['var_names']
+                else:
+                    import json
+                    with open(os.path.join(base_dir, "models", "scvi_model_486k_real", "gene_index.json"), "r") as f:
+                        genes_486k = json.load(f).get("var_names", [])
 
-                if gene_symbol in zenith_foundation_v1.adata.var_names:
+                full_genes_486 = np.zeros(len(genes_486k))
+                for i, val in enumerate(input_genes):
+                    if i < len(GENE_SYMBOLS):
+                        gene_symbol = GENE_SYMBOLS[i]
+                        if gene_symbol in genes_486k:
+                            idx = genes_486k.index(gene_symbol)
+                            full_genes_486[idx] = val
 
-                    idx = zenith_foundation_v1.adata.var_names.get_loc(gene_symbol)
+                adata_486 = ad.AnnData(X=full_genes_486.reshape(1, -1).astype(np.float32))
+                adata_486.var_names = genes_486k
+                
+                try:
+                    imputed_486 = zenith_foundation_486k.get_normalized_expression(adata_486)
+                    top_genes_486_df = imputed_486.iloc[0].sort_values(ascending=False).head(20)
+                    top_markers_486k = [{"name": name, "value": float(val * 100)} for name, val in top_genes_486_df.items()]
+                except Exception as e:
+                    print(f"486k Model Inference Error: {e}")
 
-                    full_genes[idx] = input_genes[i]
-
-            
-
-            adata = ad.AnnData(X=full_genes.reshape(1, -1).astype(np.float32))
-
-            adata.var_names = zenith_foundation_v1.adata.var_names
-
-            
-
-            latent = zenith_foundation_v1.get_latent_representation(adata)
-
-            imputed = zenith_foundation_v1.get_normalized_expression(adata)
-
-            
-
-            # Zenith V29: Map 1000 genes
-
-            top_genes_df = imputed.iloc[0].sort_values(ascending=False).head(20)
-
-            top_markers = [{"name": name, "value": float(val * 100)} for name, val in top_genes_df.items()]
-
-            
-
-            primary_marker = top_markers[0]["name"] if top_markers else "Unknown"
-
-            
-
-            # PHASE 4: Calculate Epigenetic Stability Index (ESI)
-
-            # This represents the alignment between the target state and current chromatin plasticity
-
-            # High ESI (>0.85) means the cell is effectively reprogrammed beyond just RNA.
-
-            latent_norm = np.linalg.norm(latent)
-
-            stability_base = 0.95 if model_mode == "CLINICAL" else 0.70
-
-            esi = min(1.0, stability_base * (1.0 - (latent_norm % 0.1)))
-
-            
-
-            scientific_summary = f"ZENITH ULTRA-5K (HD-TRANSCRIPTOME): Expansion successful. Primary marker: **{primary_marker}**. "
-
-            scientific_summary += f"Benchmarking against HCA reference identifies {esi*100:.1f}% Epigenetic Stability."
-
-
+            scientific_summary = f"ZENITH ENSEMBLE SYSTEM: Multi-resolution analysis completed. Primary marker: **{primary_marker}**. "
+            scientific_summary += f"Benchmarking identifies {esi*100:.1f}% Epigenetic Stability."
 
             ai_expert_insight = await get_expert_reasoning(
-
-                top_markers=top_markers,
-
+                top_markers=top_markers_1_94m if top_markers_1_94m else top_markers_486k,
+                top_markers_486k=top_markers_486k,
                 cell_type="Heart Cell ATLAS (Human Dataset)",
-
                 summary=scientific_summary,
-
                 mode=model_mode
-
             )
 
-
-
             return {
-
-                "top_genes": top_markers,
-
-                "latent_coords": latent.flatten().tolist(),
-
+                "top_genes": top_markers_1_94m if top_markers_1_94m else top_markers_486k,
+                "top_genes_486k": top_markers_486k if top_markers_486k else None,
+                "latent_coords": latent.flatten().tolist() if latent is not None else [],
                 "model_mode": model_mode,
-
                 "data_integrity": get_current_integrity(),
-
                 "epigenetic_stability_index": float(esi),
-
                 "scientific_summary": scientific_summary,
-
                 "ai_expert_insight": ai_expert_insight
-
             }
-
         else:
-
             # No scVI model available
-
             raise HTTPException(
 
                 status_code=503,
@@ -3176,33 +3165,65 @@ async def get_latent_ATLAS():
 
             # Sample 400 random points from the training data for background visualization
 
-            adata = zenith_foundation_v1.adata
+            import os
 
-            indices = np.random.choice(len(adata), min(400, len(adata)), replace=False)
+            import anndata as ad
 
-            sub_adata = adata[indices].copy()
+            base_dir = os.path.abspath(os.path.dirname(__file__))
 
-            
-
-            latent = zenith_foundation_v1.get_latent_representation(sub_adata)
-
-            # Take top 3 dimensions for 3D visualization
-
-            points = latent[:, :3].tolist()
+            umap_latent_path = os.path.join(base_dir, "models", "zenith_foundation_v1", "umap_latent.h5ad")
 
             
 
-            # Use 'cell_type' or similar if available, otherwise generic
+            if os.path.exists(umap_latent_path):
 
-            labels = ["HCA_Reference"] * len(points)
+                umap_adata = ad.read_h5ad(umap_latent_path)
 
-            if 'cell_type' in sub_adata.obs:
+                indices = np.random.choice(len(umap_adata), min(400, len(umap_adata)), replace=False)
 
-                labels = sub_adata.obs['cell_type'].tolist()
+                sub_adata = umap_adata[indices]
 
-            elif 'cell_type_ontology_term_id' in sub_adata.obs:
+                latent = sub_adata.obsm['X_scVI']
 
-                labels = sub_adata.obs['cell_type_ontology_term_id'].tolist()
+                points = latent[:, :3].tolist()
+
+                
+
+                labels = ["HCA_Reference"] * len(points)
+
+                if 'cell_type' in sub_adata.obs:
+
+                    labels = sub_adata.obs['cell_type'].tolist()
+
+            else:
+
+                adata = zenith_foundation_v1.adata
+
+                indices = np.random.choice(len(adata), min(400, len(adata)), replace=False)
+
+                sub_adata = adata[indices].copy()
+
+                
+
+                latent = zenith_foundation_v1.get_latent_representation(sub_adata)
+
+                # Take top 3 dimensions for 3D visualization
+
+                points = latent[:, :3].tolist()
+
+                
+
+                # Use 'cell_type' or similar if available, otherwise generic
+
+                labels = ["HCA_Reference"] * len(points)
+
+                if 'cell_type' in sub_adata.obs:
+
+                    labels = sub_adata.obs['cell_type'].tolist()
+
+                elif 'cell_type_ontology_term_id' in sub_adata.obs:
+
+                    labels = sub_adata.obs['cell_type_ontology_term_id'].tolist()
 
 
 
