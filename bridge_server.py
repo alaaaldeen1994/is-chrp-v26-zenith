@@ -1394,8 +1394,15 @@ async def lifespan(app: FastAPI):
         model_dir_486k = os.path.join(base_dir, "models", "scvi_model_486k_real")
         model_pt_486k = os.path.join(model_dir_486k, "model.pt")
 
+        import psutil
+        total_ram_gb = psutil.virtual_memory().total / (1024**3)
+        load_1_94m = True
+        if total_ram_gb < 1.5:
+            print(f"[SYSTEM] Low memory detected ({total_ram_gb:.1f}GB). Skipping 1.94M model to prevent OOM.")
+            load_1_94m = False
+
         # --- Load 1.94M Model ---
-        if os.path.exists(model_pt_1_94m):
+        if load_1_94m and os.path.exists(model_pt_1_94m):
             try:
                 print("[ZENITH ENSEMBLE] Loading 1.94M Global Generalist Model...")
                 import anndata as ad
