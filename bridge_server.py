@@ -1401,6 +1401,37 @@ async def lifespan(app: FastAPI):
             print(f"[SYSTEM] Low memory detected ({total_ram_gb:.1f}GB). Skipping 1.94M model to prevent OOM.")
             load_1_94m = False
 
+        # --- HUGGING FACE DYNAMIC MODEL DOWNLOADER ---
+        import httpx
+        
+        def download_hf_file(repo_id: str, file_path: str, local_path: str):
+            # If the file exists and is larger than 5KB, it's a real model. If < 5KB, it's a Git LFS pointer.
+            if os.path.exists(local_path) and os.path.getsize(local_path) > 5120:
+                return
+            
+            print(f"[ZENITH DOWNLOADER] Fetching {file_path} from Hugging Face (Bypassing Git LFS)...")
+            url = f"https://huggingface.co/datasets/{repo_id}/resolve/main/{file_path}?download=true"
+            try:
+                # Ensure directory exists
+                os.makedirs(os.path.dirname(local_path), exist_ok=True)
+                with httpx.Client(timeout=600.0, follow_redirects=True) as client:
+                    with client.stream("GET", url) as response:
+                        response.raise_for_status()
+                        with open(local_path, "wb") as f:
+                            for chunk in response.iter_bytes(chunk_size=8192):
+                                f.write(chunk)
+                print(f"[ZENITH DOWNLOADER] Successfully downloaded {file_path}")
+            except Exception as e:
+                print(f"[ZENITH DOWNLOADER] Failed to download {file_path}: {e}")
+
+        # Download necessary models
+        hf_repo = "alaaaldeen1994/zenith-models"
+        download_hf_file(hf_repo, "models/scvi_model_486k_real/model.pt", model_pt_486k)
+        if load_1_94m:
+            download_hf_file(hf_repo, "models/zenith_foundation_v1/model.pt", model_pt_1_94m)
+            download_hf_file(hf_repo, "models/zenith_foundation_v1/var_schema.h5ad", os.path.join(model_dir_1_94m, "var_schema.h5ad"))
+            download_hf_file(hf_repo, "models/zenith_foundation_v1/umap_latent.h5ad", os.path.join(model_dir_1_94m, "umap_latent.h5ad"))
+
         # --- Load 1.94M Model ---
         if load_1_94m and os.path.exists(model_pt_1_94m):
             try:
