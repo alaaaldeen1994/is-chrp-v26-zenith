@@ -1446,8 +1446,20 @@ async def lifespan(app: FastAPI):
             if not os.path.exists(model_pt_path): return
             try:
                 sd = torch.load(model_pt_path, map_location='cpu')
+                patched = False
+                
+                # It might be at the top level
                 if 'pyro_param_store' in sd:
                     del sd['pyro_param_store']
+                    patched = True
+                
+                # Or it might be inside the 'model_state_dict' (scvi-tools standard)
+                if 'model_state_dict' in sd and isinstance(sd['model_state_dict'], dict):
+                    if 'pyro_param_store' in sd['model_state_dict']:
+                        del sd['model_state_dict']['pyro_param_store']
+                        patched = True
+                
+                if patched:
                     torch.save(sd, model_pt_path)
                     print(f"[ZENITH HOTFIX] Cleaned incompatible state_dict keys in {model_pt_path}")
             except Exception as e:
