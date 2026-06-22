@@ -1439,6 +1439,23 @@ async def lifespan(app: FastAPI):
             download_hf_file(hf_repo, "models/zenith_foundation_v1/var_schema.h5ad", os.path.join(model_dir_1_94m, "var_schema.h5ad"))
             download_hf_file(hf_repo, "models/zenith_foundation_v1/umap_latent.h5ad", os.path.join(model_dir_1_94m, "umap_latent.h5ad"))
 
+        # --- HUGGING FACE PYTORCH HOTFIX ---
+        # scvi-tools versions sometimes add a blank 'pyro_param_store' to the state_dict which crashes newer/older versions on load
+        def patch_scvi_state_dict(model_pt_path):
+            import torch
+            if not os.path.exists(model_pt_path): return
+            try:
+                sd = torch.load(model_pt_path, map_location='cpu')
+                if 'pyro_param_store' in sd:
+                    del sd['pyro_param_store']
+                    torch.save(sd, model_pt_path)
+                    print(f"[ZENITH HOTFIX] Cleaned incompatible state_dict keys in {model_pt_path}")
+            except Exception as e:
+                print(f"[ZENITH HOTFIX] Failed to patch {model_pt_path}: {e}")
+                
+        patch_scvi_state_dict(model_pt_486k)
+        patch_scvi_state_dict(model_pt_1_94m)
+
         # --- Load 1.94M Model ---
         if load_1_94m and os.path.exists(model_pt_1_94m):
             try:
