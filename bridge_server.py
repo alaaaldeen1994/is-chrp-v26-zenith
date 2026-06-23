@@ -1385,7 +1385,7 @@ async def lifespan(app: FastAPI):
         # ================================================================
         # ZENITH v29.0 ENSEMBLE MODEL SYSTEM (2-Model Architecture)
         # 1. 1.94M-cell Global Generalist Model
-        # 2. 486k-cell Pure Baseline Specialist Model
+        # 2. 486k-cell HCA Specialist Model
         # ================================================================
 
         model_dir_1_94m = os.path.join(base_dir, "models", "zenith_foundation_v1")
@@ -1499,7 +1499,7 @@ async def lifespan(app: FastAPI):
         # --- Load 486k Model ---
         if os.path.exists(model_pt_486k):
             try:
-                print("[ZENITH ENSEMBLE] Loading 486k Pure Baseline Specialist Model...")
+                print("[ZENITH ENSEMBLE] Loading 486k HCA Specialist Model...")
                 import anndata as ad
                 index_path = os.path.join(model_dir_486k, "gene_index.json")
                 if os.path.exists(index_path):
@@ -2949,7 +2949,7 @@ async def get_expert_reasoning(top_markers: list, top_markers_486k: list, cell_t
             "You are a rigid data interpreter and Senior Principal Scientist at an advanced longevity research lab. "
             "You are conducting a Clinical Single-Cell Audit comparing two validated scVI models: "
             "1. A Global Generalist Model (1.94M cells, captures broad human diversity). "
-            "2. A Pure Baseline Specialist Model (486k cells, highly curated healthy baseline). "
+            "2. A Human Cell Atlas (HCA) Specialist Model (486k cells, highly curated healthy baseline). "
             "CRITICAL ETHICAL CONSTRAINT: You must NOT hallucinate or invent any genes. "
             "You must NOT make unsupported medical diagnoses. "
             "Your ONLY job is to write a concise (4-5 sentence) academic summary comparing where the two models agree (consensus) "
@@ -2971,7 +2971,7 @@ async def get_expert_reasoning(top_markers: list, top_markers_486k: list, cell_t
 
             f"Global Model (1.94M) Markers: {marker_str}\n"
 
-            f"Pure Baseline (486k) Markers: {marker_str_486k}\n"
+            f"HCA Specialist (486k) Markers: {marker_str_486k}\n"
 
             f"Initial Summary: {summary}\n\n"
 
@@ -6949,12 +6949,12 @@ async def list_cell_types():
         ct_all = json.load(f)
 
     # Total Ensemble size is ~2.44M. 
-    # Individual cell counts are derived from the 486k Pure Baseline because we do not have HCA distribution.
-    types = [{"key": "all", "label": "All cardiac cells (Ensemble)", "n_cells": 2440000, "age_delta": 11.9}]
+    # Individual cell counts are derived from the 486k Human Cell Atlas (HCA) dataset.
+    types = [{"key": "all", "label": "All cardiac cells (Ensemble)", "n_cells": 2426000, "age_delta": 11.9}]
     for key, data in ct_all.get("cell_types", {}).items():
         types.append({
             "key": key,
-            "label": data["cell_type"] + " (Baseline)",
+            "label": data["cell_type"] + " (HCA)",
             "n_cells": data["n_cells"],
             "n_young": data.get("n_young", 0),
             "n_aged": data.get("n_aged", 0),
@@ -6963,7 +6963,7 @@ async def list_cell_types():
             "top_gene": data["pro_rejuvenation_genes"][0]["gene"] if data.get("pro_rejuvenation_genes") else None
         })
 
-    return {"cell_types": types, "source": "Litvinukova (Baseline) + HCA Ensemble"}
+    return {"cell_types": types, "source": "HCA Specialist (486k) + Global Generalist (1.94M)"}
 
 
 # ============================================================

@@ -4,18 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Zenith v29 | Cardiac Rejuvenation | Nilus Lab</title>
-    <meta name="description" content="Discover genes that reverse cardiac ageing. Zenith v29 uses a trained scVI model on 2,000,000 human cardiac cells from the Human Cell Atlas to identify pro-rejuvenation gene targets.">
+    <meta name="description" content="Discover genes that reverse cardiac ageing. Zenith v29 uses a dual-model ensemble of 2.42M cells (1.94M Global Generalist + 486k HCA Specialist) to identify pro-rejuvenation gene targets.">
     <meta name="keywords" content="cardiac ageing, gene discovery, single-cell genomics, scVI, Human Cell Atlas, rejuvenation, bioinformatics, Nilus Lab, Zenith, computational biology">
     <link rel="canonical" href="https://www.niluslab.com/index.html">
     <meta property="og:title" content="Zenith v29 — Discover Genes That Reverse Cardiac Ageing">
-    <meta property="og:description" content="AI-powered gene discovery platform trained on 500k human cardiac cells from the Human Cell Atlas. Identify pro-rejuvenation targets backed by single-cell transcriptomic evidence.">
+    <meta property="og:description" content="AI-powered gene discovery platform trained on 486k human cardiac cells from the Human Cell Atlas. Identify pro-rejuvenation targets backed by single-cell transcriptomic evidence.">
     <meta property="og:image" content="https://www.niluslab.com/assets/og-preview.jpg">
     <meta property="og:url" content="https://www.niluslab.com/index.html">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="Nilus Lab">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Zenith v29 — Cardiac Ageing Gene Discovery">
-    <meta name="twitter:description" content="Discover genes that reverse cardiac ageing using single-cell transcriptomics from 500k human cardiac cells.">
+    <meta name="twitter:description" content="Discover genes that reverse cardiac ageing using single-cell transcriptomics from 486k Human Cell Atlas (HCA) cells.">
 
     <!-- Inter font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1394,7 +1394,7 @@
                         <button onclick="selectModelOption('real', 'Zenith Ensemble')" id="model-opt-real"
                             style="background:#f5f3ef;color:#191919;border:none;text-align:left;padding:8px 12px;border-radius:8px;cursor:pointer;width:100%;font-family:'Inter','Segoe UI',sans-serif;display:flex;flex-direction:column;gap:2px;transition:all 0.15s;">
                             <span style="font-size:12px;font-weight:600;">Zenith Ensemble</span>
-                            <span style="font-size:9px;color:#8b8b8b;font-weight:400;">1.94M Generalist + 500K Pure Baseline</span>
+                            <span style="font-size:9px;color:#8b8b8b;font-weight:400;">1.94M Generalist + 486k HCA Specialist</span>
                         </button>
                         <!-- Option 2: GPT Analysis -->
                         <button onclick="selectModelOption('gpt', 'GPT-4o Clinical Log')" id="model-opt-gpt"
@@ -1626,7 +1626,7 @@
 
         <!-- Footer -->
         <div style="margin-top:40px;text-align:center;font-size:8px;color:#bdc1c6;width:100%;max-width:720px;">
-            Zenith v29.0 &nbsp;·&nbsp; ~2.5M Cells (1.94M Generalist + 500k Pure Baseline) &nbsp;·&nbsp; Research Use Only
+            Zenith v29.0 &nbsp;·&nbsp; ~2.42M Cells (1.94M Generalist + 486k HCA Specialist) &nbsp;·&nbsp; Research Use Only
         </div>
     </div>
 </div>
@@ -3431,7 +3431,7 @@
                             </div>
                         </div>
                         <div>
-                            <div class="text-[7px] font-bold text-slate-400 uppercase mb-1">500K Pure Baseline</div>
+                            <div class="text-[7px] font-bold text-slate-400 uppercase mb-1">486K HCA Specialist</div>
                             <div id="latent-projection-list-486k" class="space-y-1 max-h-48 overflow-y-auto pr-1">
                                 <div class="text-[8px] text-slate-600 italic">Select a cell...</div>
                             </div>
