@@ -6705,7 +6705,7 @@ async def run_gpt_discovery(request: Request):
             ip_data = json.load(f)
         pro_genes = ip_data.get("pro_rejuvenation_genes", [])[:200]
         aging_genes = ip_data.get("aging_marker_genes", [])[:200]
-        gene_source_label = "All cardiac cells (500,000 cells, 14 donors · HCA + PERIHEART)"
+        gene_source_label = "All cardiac cells (500,000 cells, 14 donors · Specialist + PERIHEART)"
         cell_type_age_delta = None
 
     pro_str = ", ".join([
@@ -6748,9 +6748,9 @@ async def run_gpt_discovery(request: Request):
         f"You are an elite computational biologist and bioinformatician. "
         f"The target cell type is: {ct_label}. "
         f"The reprogramming mode is: {mode_label}. "
-        f"You have access to 400 genes ranked by Pearson correlation from the Human Cardiac Cell Atlas "
+        f"You have access to 400 genes ranked by Pearson correlation from the Specialist Cardiac Atlas "
         f"(Litvinukova et al., Nature 2020). "
-        f"CRITICAL RULE: If the user's prompt implies a broad rejuvenation search, you MUST ONLY select genes from the provided HCA list. "
+        f"CRITICAL RULE: If the user's prompt implies a broad rejuvenation search, you MUST ONLY select genes from the provided Specialist list. "
         f"HOWEVER, if the user specifically asks for DIRECT epigenetic regulators, transcription factors, or exact target suppressors "
         f"(e.g., 'suppress B2M', 'direct genetic repressors'), you MUST act as an honest academic scientist: identify the precise upstream molecular regulators "
         f"(e.g., specific transcription factors, miRNAs, CRISPR targets) even if they are NOT in the HCA list. "
@@ -6819,7 +6819,7 @@ async def run_gpt_discovery(request: Request):
         judge_prompt = (
             f"You are a senior reviewer evaluating 3 competing gene panels for this research question:\n"
             f"\"{query}\"\n\n"
-            f"Each panel selected 8 genes from verified HCA cardiac aging data.\n"
+            f"Each panel selected 8 genes from verified Specialist cardiac aging data.\n"
             f"{panels_summary}\n\n"
             f"Evaluate: which panel best answers the research question? Consider:\n"
             f"- Relevance of genes to the specific query\n"
@@ -6861,9 +6861,9 @@ async def run_gpt_discovery(request: Request):
     try:
         refine_prompt = (
             f"Research question: \"{query}\"\n\n"
-            f"A tournament selected these 8 genes from HCA cardiac data:\n"
+            f"A tournament selected these 8 genes from Specialist cardiac data:\n"
             f"{', '.join(winner_genes)}\n\n"
-            f"Review this selection against the full HCA gene list below. "
+            f"Review this selection against the full Specialist gene list below. "
             f"Are there better candidates that were missed? If so, swap them in. "
             f"Keep the best genes from the original panel.\n\n"
             f"{gene_context}\n\n"
@@ -6968,7 +6968,7 @@ async def list_cell_types():
     for key, data in ct_all.get("cell_types", {}).items():
         types.append({
             "key": key,
-            "label": data["cell_type"] + " (HCA)",
+            "label": data["cell_type"] + " (Specialist)",
             "n_cells": data["n_cells"],
             "n_young": data.get("n_young", 0),
             "n_aged": data.get("n_aged", 0),
@@ -6977,7 +6977,7 @@ async def list_cell_types():
             "top_gene": data["pro_rejuvenation_genes"][0]["gene"] if data.get("pro_rejuvenation_genes") else None
         })
 
-    return {"cell_types": types, "source": "HCA Specialist (486k) + Global Generalist (1.94M)"}
+    return {"cell_types": types, "source": "Specialist (486k) + Global Generalist (1.94M)"}
 
 
 # ============================================================
