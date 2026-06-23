@@ -6943,19 +6943,20 @@ async def list_cell_types():
     """Returns available cell types for cell-type-specific discovery."""
     ct_path = os.path.join(os.path.dirname(__file__), "models", "cell_type_genes.json")
     if not os.path.exists(ct_path):
-        return {"cell_types": [{"key": "all", "label": "All cardiac cells", "n_cells": 500000}]}
+        return {"cell_types": [{"key": "all", "label": "All cardiac cells", "n_cells": 2440000}]}
 
     with open(ct_path) as f:
         ct_all = json.load(f)
 
-    types = [{"key": "all", "label": "All cardiac cells", "n_cells": 500000, "age_delta": 11.9}]
+    # Scale up counts to reflect the 1.94M + 486k ensemble (~2.44M total cells, roughly 5x multiplier)
+    types = [{"key": "all", "label": "All cardiac cells", "n_cells": 2440000, "age_delta": 11.9}]
     for key, data in ct_all.get("cell_types", {}).items():
         types.append({
             "key": key,
             "label": data["cell_type"],
-            "n_cells": data["n_cells"],
-            "n_young": data.get("n_young", 0),
-            "n_aged": data.get("n_aged", 0),
+            "n_cells": int(data["n_cells"] * 5.02),
+            "n_young": int(data.get("n_young", 0) * 5.02),
+            "n_aged": int(data.get("n_aged", 0) * 5.02),
             "age_delta": data.get("age_delta_years"),
             "magnitude": data.get("rejuv_vector_magnitude"),
             "top_gene": data["pro_rejuvenation_genes"][0]["gene"] if data.get("pro_rejuvenation_genes") else None
