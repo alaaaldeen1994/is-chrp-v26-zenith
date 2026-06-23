@@ -2086,6 +2086,20 @@ async def get_robots():
 
 
 
+@app.get("/dosage_optimization_audit.json")
+
+async def get_dosage_audit():
+
+    path = "dosage_optimization_audit.json"
+
+    if os.path.exists(path):
+
+        return FileResponse(path, media_type="application/json")
+
+    return Response(status_code=404)
+
+
+
 @app.get("/logo_transparent.png")
 
 async def get_logo():
