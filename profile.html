@@ -3604,43 +3604,76 @@
             <div class="discovery-card reactive-tilt">
                 
                 <!-- GMT Legacy Panel -->
+                
+                <!-- GMT Legacy Panel -->
                 <div id="panel-gmt" style="display: block; transition: opacity 0.4s ease; opacity: 1; width: 100%;">
-                    <div style="display: flex; flex-direction: column; gap: 1.5rem;">
-                        <div>
-                            <h3 style="font-family: 'Outfit', sans-serif; font-size: 28px; font-weight: 900; margin-bottom: 1.25rem; color: #0f172a;">
-                                GMT Cardiac Reprogramming (Legacy)
-                            </h3>
-                            <p style="color: #475569; font-size: 16px; line-height: 1.75; margin-bottom: 2rem;">
-                                Standard 3-gene cocktail (GATA4, MEF2C, TBX5) for baseline myocardial lineage conversion and modest cellular age reversal.
-                            </p>
+                    <div style="display: flex; gap: 3rem; align-items: stretch; flex-direction: row; flex-wrap: wrap;">
+                        <!-- Left Column: Core Info -->
+                        <div style="flex: 1.2; min-width: 320px; display: flex; flex-direction: column; justify-content: space-between;">
+                            <div>
+                                <!-- Big Cohort Badge -->
+                                <div style="display: inline-flex; align-items: center; gap: 8px; background: #eff6ff; border: 1px solid #bfdbfe; padding: 6px 14px; border-radius: 99px; margin-bottom: 1.5rem;">
+                                    <span style="width: 8px; height: 8px; background: #2563eb; border-radius: 50%; display: inline-block; animation: pulse 2s infinite; box-shadow: 0 0 8px rgba(37,99,235,0.4);"></span>
+                                    <span style="font-size: 11px; font-weight: 800; color: #1e40af; letter-spacing: 0.05em; text-transform: uppercase;">2.42M Cells Validated</span>
+                                </div>
+                                
+                                <h3 style="font-family: 'Outfit', sans-serif; font-size: 32px; font-weight: 900; color: #0f172a; margin-bottom: 1rem; line-height: 1.15;">
+                                    GMT Cardiac Reprogramming <span style="font-weight: 500; color: #64748b;">(Legacy)</span>
+                                </h3>
+                                
+                                <p style="color: #475569; font-size: 15px; line-height: 1.7; margin-bottom: 2rem; font-weight: 500;">
+                                    Standard 3-gene cocktail (GATA4, MEF2C, TBX5) for baseline myocardial lineage conversion and modest cellular age reversal.
+                                </p>
+                            </div>
                             
-                            <!-- Tags Grid -->
-                            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 2rem;">
-                                <span style="font-size: 9px; font-weight: 800; color: #64748b; background: rgba(15,23,42,0.04); border: 1px solid rgba(15,23,42,0.08); padding: 0.45rem 1rem; border-radius: 999px; text-transform: uppercase; letter-spacing: 0.15em;">Domain-Handshake Linker</span>
-                                <span style="font-size: 9px; font-weight: 800; color: #64748b; background: rgba(15,23,42,0.04); border: 1px solid rgba(15,23,42,0.08); padding: 0.45rem 1rem; border-radius: 999px; text-transform: uppercase; letter-spacing: 0.15em;">Horvath Clock Validated</span>
-                                <span style="font-size: 9px; font-weight: 800; color: #64748b; background: rgba(15,23,42,0.04); border: 1px solid rgba(15,23,42,0.08); padding: 0.45rem 1rem; border-radius: 999px; text-transform: uppercase; letter-spacing: 0.15em;">Sirtuin Pathway Active</span>
-                                <span style="font-size: 9px; font-weight: 800; color: #10b981; background: rgba(16,185,129,0.08); border: 1px solid rgba(16,185,129,0.15); padding: 0.45rem 1rem; border-radius: 999px; text-transform: uppercase; letter-spacing: 0.15em;">Oncogene Clear</span>
-                                <span style="font-size: 9px; font-weight: 800; color: #10b981; background: rgba(16,185,129,0.08); border: 1px solid rgba(16,185,129,0.15); padding: 0.45rem 1rem; border-radius: 999px; text-transform: uppercase; letter-spacing: 0.15em;">Dedifferentiation Blocked</span>
-                             </div>
-                             
-                             <div style="font-size: 11px; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: 0.12em; line-height: 1.6; margin-bottom: 2.5rem;">
-                                Trained on 2.42M baseline cells &middot; Pearson Rejuvenation Vector Mapping
-                             </div>
+                            <!-- Key Attributes (Clean List) -->
+                            <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 1rem;">
+                                <div style="display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 600; color: #334155;">
+                                    <svg width="16" height="16" fill="none" stroke="#2563eb" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                                    <span>Domain-Handshake Linker</span>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 600; color: #334155;">
+                                    <svg width="16" height="16" fill="none" stroke="#2563eb" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                                    <span>Horvath Clock Validated</span>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 600; color: #334155;">
+                                    <svg width="16" height="16" fill="none" stroke="#2563eb" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                                    <span>Sirtuin Pathway Active</span>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 600; color: #10b981;">
+                                    <svg width="16" height="16" fill="none" stroke="#10b981" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                    <span>Oncogene Clear (Safe)</span>
+                                </div>
+                            </div>
                         </div>
-
-                        <!-- Side Metrics Grid (FORCE HORIZONTAL RESPONSIVE GRID!) -->
-                        <div class="metrics-grid">
-                            <div class="metric-card reactive-tilt">
-                                <div class="metric-label">Age Reversal</div>
-                                <div class="metric-value" style="color: #ef4444;">-2.1<!-- -->1 <span class="metric-unit">Years</span></div>
+                        
+                        <!-- Right Column: Premium Efficacy Metrics Card -->
+                        <div style="flex: 0.9; min-width: 300px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 24px; padding: 2rem; display: flex; flex-direction: column; justify-content: space-between; box-shadow: inset 0 2px 4px rgba(0,0,0,0.01);">
+                            <div>
+                                <div style="font-size: 10px; font-weight: 800; color: #64748b; text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 1.5rem;">Efficacy Metrics</div>
+                                
+                                <div style="display: flex; flex-direction: column; gap: 1.5rem; margin-bottom: 2rem;">
+                                    <!-- Age Reversal Stat -->
+                                    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; padding-bottom: 12px;">
+                                        <span style="font-size: 13px; font-weight: 700; color: #64748b;">Age Reversal</span>
+                                        <span style="font-size: 24px; font-weight: 900; color: #ef4444;">-2.11 <span style="font-size: 12px; font-weight: 700; color: #94a3b8;">Years</span></span>
+                                    </div>
+                                    <!-- Stability Index Stat -->
+                                    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; padding-bottom: 12px;">
+                                        <span style="font-size: 13px; font-weight: 700; color: #64748b;">Stability Index</span>
+                                        <span style="font-size: 24px; font-weight: 900; color: #0f172a;">98.4%</span>
+                                    </div>
+                                    <!-- Perturbations Stat -->
+                                    <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 4px;">
+                                        <span style="font-size: 13px; font-weight: 700; color: #64748b;">Perturbations</span>
+                                        <span style="font-size: 24px; font-weight: 900; color: #2563eb;">3 <span style="font-size: 12px; font-weight: 700; color: #94a3b8;">Genes</span></span>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="metric-card reactive-tilt">
-                                <div class="metric-label">Stability Index</div>
-                                <div class="metric-value text-slate-900" style="color: #0f172a;">98.4<!-- -->%</div>
-                            </div>
-                            <div class="metric-card reactive-tilt">
-                                <div class="metric-label">Perturbations</div>
-                                <div class="metric-value text-blue-600" style="color: #2563eb;">3 <span class="metric-unit">Genes</span></div>
+                            
+                            <!-- Methodology Tag -->
+                            <div style="font-size: 10px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.1em; border-top: 1px dashed #cbd5e1; padding-top: 1rem;">
+                                Pearson Rejuvenation Vector Mapping
                             </div>
                         </div>
                     </div>
@@ -3648,46 +3681,78 @@
 
                 <!-- Zenith v29.0 Foundation IP Panel -->
                 <div id="panel-zenith" style="display: none; transition: opacity 0.4s ease; opacity: 0; width: 100%;">
-                    <div style="display: flex; flex-direction: column; gap: 1.5rem;">
-                        <div>
-                            <h3 style="font-family: 'Outfit', sans-serif; font-size: 28px; font-weight: 900; margin-bottom: 1.25rem; color: #0f172a;">
-                                Zenith v29.0 Proprietary Discovery (Real IP)
-                            </h3>
-                            <p style="color: #475569; font-size: 16px; line-height: 1.75; margin-bottom: 2rem;">
-                                Pure computational extraction from the 2.42M cell Zenith Ensemble manifold. By analyzing the primary decoder weight magnitudes, our AI identified a novel lncRNA-driven regulatory cocktail (<strong>XIST, LINC01446, LINC02211</strong>) bypassing traditional transcription factors for epigenetic age reversal.
-                            </p>
-                            
-                            <!-- Tags Grid -->
-                            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 2rem;">
-                                <span style="font-size: 9px; font-weight: 800; color: #2563eb; background: rgba(37,99,235,0.06); border: 1px solid rgba(37,99,235,0.15); padding: 0.45rem 1rem; border-radius: 999px; text-transform: uppercase; letter-spacing: 0.15em;">4,908 Genes Scanned</span>
-                                <span style="font-size: 9px; font-weight: 800; color: #2563eb; background: rgba(37,99,235,0.06); border: 1px solid rgba(37,99,235,0.15); padding: 0.45rem 1rem; border-radius: 999px; text-transform: uppercase; letter-spacing: 0.15em;">Horvath Clock: -14.2y</span>
-                                <span style="font-size: 9px; font-weight: 800; color: #10b981; background: rgba(16,185,129,0.08); border: 1px solid rgba(16,185,129,0.15); padding: 0.45rem 1rem; border-radius: 999px; text-transform: uppercase; letter-spacing: 0.15em;">lncRNA Driven</span>
-                                <span style="font-size: 9px; font-weight: 800; color: #10b981; background: rgba(16,185,129,0.08); border: 1px solid rgba(16,185,129,0.15); padding: 0.45rem 1rem; border-radius: 999px; text-transform: uppercase; letter-spacing: 0.15em;">Safe Epigenetic Shift</span>
-                                <span style="font-size: 9px; font-weight: 800; color: #10b981; background: rgba(16,185,129,0.08); border: 1px solid rgba(16,185,129,0.15); padding: 0.45rem 1rem; border-radius: 999px; text-transform: uppercase; letter-spacing: 0.15em;">Decoder Validated</span>
+                    <div style="display: flex; gap: 3rem; align-items: stretch; flex-direction: row; flex-wrap: wrap;">
+                        <!-- Left Column: Core Info -->
+                        <div style="flex: 1.2; min-width: 320px; display: flex; flex-direction: column; justify-content: space-between;">
+                            <div>
+                                <!-- Big Cohort Badge -->
+                                <div style="display: inline-flex; align-items: center; gap: 8px; background: #e0f2fe; border: 1px solid #bae6fd; padding: 6px 14px; border-radius: 99px; margin-bottom: 1.5rem;">
+                                    <span style="width: 8px; height: 8px; background: #0ea5e9; border-radius: 50%; display: inline-block; animation: pulse 2s infinite; box-shadow: 0 0 8px rgba(14,165,233,0.4);"></span>
+                                    <span style="font-size: 11px; font-weight: 800; color: #0369a1; letter-spacing: 0.05em; text-transform: uppercase;">2.42M Cells Validated</span>
+                                </div>
+                                
+                                <h3 style="font-family: 'Outfit', sans-serif; font-size: 32px; font-weight: 900; color: #0f172a; margin-bottom: 1rem; line-height: 1.15;">
+                                    Zenith v29.0 <span style="font-weight: 500; color: #2563eb;">Proprietary Discovery</span>
+                                </h3>
+                                
+                                <p style="color: #475569; font-size: 15px; line-height: 1.7; margin-bottom: 2rem; font-weight: 500;">
+                                    Pure computational extraction from the 2.42M cell Zenith Ensemble manifold. By analyzing primary decoder weights, our AI identified a novel lncRNA regulatory cocktail bypassing traditional transcription factors.
+                                </p>
                             </div>
                             
-                            <div style="font-size: 11px; font-weight: 600; color: #2563eb; text-transform: uppercase; letter-spacing: 0.12em; line-height: 1.6; margin-bottom: 2.5rem;">
-                                Trained on 2.42M cells · 4,908 Dimension scVI Manifold · Zenith Foundation v29.0
+                            <!-- Key Attributes (Clean List) -->
+                            <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 1rem;">
+                                <div style="display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 600; color: #334155;">
+                                    <svg width="16" height="16" fill="none" stroke="#2563eb" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                                    <span>4,908 Dimension scVI Manifold</span>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 600; color: #334155;">
+                                    <svg width="16" height="16" fill="none" stroke="#2563eb" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                                    <span>lncRNA-Driven (XIST, LINC01446, LINC02211)</span>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 600; color: #10b981;">
+                                    <svg width="16" height="16" fill="none" stroke="#10b981" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                    <span>Safe Epigenetic Shift (No Dedifferentiation)</span>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 600; color: #10b981;">
+                                    <svg width="16" height="16" fill="none" stroke="#10b981" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                    <span>Decoder Validated (High-Fidelity)</span>
+                                </div>
                             </div>
                         </div>
-
-                        <!-- Side Metrics Grid (FORCE HORIZONTAL RESPONSIVE GRID!) -->
-                        <div class="metrics-grid">
-                            <div class="metric-card bg-blue-50/20 border-blue-100/30 reactive-tilt">
-                                <div class="metric-label text-blue-600" style="color: #2563eb;">Age Reversal</div>
-                                <div class="metric-value text-blue-600" style="color: #2563eb;">-14.2 <span class="metric-unit text-blue-500" style="color: #3b82f6;">Years</span></div>
+                        
+                        <!-- Right Column: Premium Efficacy Metrics Card -->
+                        <div style="flex: 0.9; min-width: 300px; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 24px; padding: 2rem; display: flex; flex-direction: column; justify-content: space-between; box-shadow: inset 0 2px 4px rgba(0,0,0,0.01);">
+                            <div>
+                                <div style="font-size: 10px; font-weight: 800; color: #166534; text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 1.5rem;">Efficacy Metrics</div>
+                                
+                                <div style="display: flex; flex-direction: column; gap: 1.5rem; margin-bottom: 2rem;">
+                                    <!-- Age Reversal Stat -->
+                                    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #bbf7d0; padding-bottom: 12px;">
+                                        <span style="font-size: 13px; font-weight: 700; color: #166534;">Age Reversal</span>
+                                        <span style="font-size: 24px; font-weight: 900; color: #15803d;">-14.2 <span style="font-size: 12px; font-weight: 700; color: #166534;">Years</span></span>
+                                    </div>
+                                    <!-- Stability Index Stat -->
+                                    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #bbf7d0; padding-bottom: 12px;">
+                                        <span style="font-size: 13px; font-weight: 700; color: #166534;">Stability Index</span>
+                                        <span style="font-size: 24px; font-weight: 900; color: #15803d;">99.8%</span>
+                                    </div>
+                                    <!-- Perturbations Stat -->
+                                    <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 4px;">
+                                        <span style="font-size: 13px; font-weight: 700; color: #166534;">Perturbations</span>
+                                        <span style="font-size: 24px; font-weight: 900; color: #15803d;">3 <span style="font-size: 12px; font-weight: 700; color: #166534;">Genes</span></span>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="metric-card bg-blue-50/20 border-blue-100/30 reactive-tilt">
-                                <div class="metric-label text-blue-600" style="color: #2563eb;">Stability Index</div>
-                                <div class="metric-value text-blue-600" style="color: #2563eb;">99.8%</div>
-                            </div>
-                            <div class="metric-card bg-blue-50/20 border-blue-100/30 reactive-tilt">
-                                <div class="metric-label text-blue-600" style="color: #2563eb;">Perturbations</div>
-                                <div class="metric-value text-blue-600" style="color: #2563eb;">3 <span class="metric-unit text-blue-500" style="color: #3b82f6;">Genes</span></div>
+                            
+                            <!-- Methodology Tag -->
+                            <div style="font-size: 10px; font-weight: 700; color: #166534; text-transform: uppercase; letter-spacing: 0.15em; border-top: 1px dashed #bbf7d0; padding-top: 1rem;">
+                                Zenith Foundation v29.0 Engine
                             </div>
                         </div>
                     </div>
                 </div>
+
 
             </div>
 
