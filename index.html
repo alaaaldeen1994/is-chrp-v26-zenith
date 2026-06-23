@@ -2445,7 +2445,7 @@
 
                     <div class="space-y-3">
 
-                        <!-- v28.1: FEATURE 4 - FLUX TOGGLE -->
+                        <!-- v29.0: FEATURE 4 - FLUX TOGGLE -->
 
                         <div
 
@@ -2509,7 +2509,7 @@
                                 oninput="BiosimLab.updateConfig('stochastic.mutationRate', this.value, 'val-mut', true)">
                         </div>
 
-                        <!-- v28.1: ORGANOID CLUSTERING CONTROL -->
+                        <!-- v29.0: ORGANOID CLUSTERING CONTROL -->
                         <div>
                             <div class="flex justify-between text-[8px] text-blue-400 font-bold mb-1">
                                 <span>TISSUE COHESION (ORGANOIDS)</span>
@@ -3052,7 +3052,7 @@
                             ✦ GPT
                         </button>
                     </div>
-                    <span id="mode-badge" style="flex:1;font-size:7px;color:#4f46e5;font-weight:700;opacity:0.7;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">83 donors · 2M cells · 5,858 genes</span>
+                    <span id="mode-badge" style="flex:1;font-size:7px;color:#4f46e5;font-weight:700;opacity:0.7;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">83 donors · 2.42M cells · 4,908 genes</span>
                     <button id="btn-discover"
                         onclick="window._discoveryMode=(document.getElementById('chip-real').getAttribute('data-active')?'real':'gpt');BiosimBridge.discoverHybridProtocol(this);"
                         style="background:linear-gradient(135deg,#4f46e5,#2563eb);color:#fff;border:none;padding:6px 12px;border-radius:7px;font-size:9px;font-weight:900;cursor:pointer;display:flex;align-items:center;gap:4px;box-shadow:0 2px 10px rgba(79,70,229,0.4);flex-shrink:0;white-space:nowrap;">
@@ -3245,14 +3245,14 @@
                         </div>
                     </div>
 
-                    <!-- v28: scVI LATENT VERIFICATION (scGen methodology) -->
+                    <!-- v29.0: scVI LATENT VERIFICATION (scGen methodology) -->
                     <div id="scvi-latent-panel" class="hidden mt-2 p-3 bg-blue-950/20 border border-blue-500/30 rounded-xl animation-fade-in relative overflow-hidden">
                         <div class="absolute top-0 right-0 p-1 opacity-20">
                             <i data-lucide="microscope" class="w-8 h-8 text-blue-400"></i>
                         </div>
                         <div class="text-[7px] text-blue-300 font-black uppercase tracking-widest mb-2 flex items-center gap-1.5">
                             <i data-lucide="verified" class="w-2.5 h-2.5 text-blue-400"></i>
-                            scVI Manifold Verification (500k Model)
+                            scVI Manifold Verification (486k HCA Model)
                             <span class="ml-auto text-[6px] px-1 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded">Measured Data</span>
                         </div>
                         <div class="grid grid-cols-2 gap-3 mb-3">
@@ -3558,7 +3558,7 @@
     </div>
     <script src="js/script.js?v=14.0.0"></script>
 
-    <!-- v28.0 GOLD GOLD VISION BRIDGE OVERLAY -->
+    <!-- v29.0 GOLD VISION BRIDGE OVERLAY -->
     <div id="vision-overlay"
         class="fixed inset-0 bg-black/80 backdrop-blur-md z-[2000] hidden flex items-center justify-center">
         <div
@@ -3588,7 +3588,7 @@
 
                 <div class="text-[10px] text-slate-400 font-black tracking-[0.2em] uppercase">Virtual Clinical Trial
 
-                    Platform | 2M-Cell Foundation Manifold</div>
+                    Platform | 2.42M-Cell Ensemble Manifold</div>
 
 
 
@@ -3670,7 +3670,7 @@
 
 
 
-    <!-- v28.1: TIME-SERIES AUDIT COMPARATOR -->
+    <!-- v29.0: TIME-SERIES AUDIT COMPARATOR -->
 
     <div id="audit-overlay" class="fixed inset-0 bg-black/90 backdrop-blur-lg z-[3000] hidden flex flex-col p-8">
 
@@ -3820,7 +3820,7 @@
 
             <div class="text-xs text-slate-500 font-mono">
 
-                *Delta Analysis computed via 2M-Cell Foundation Manifold Divergence
+                *Delta Analysis computed via 2.42M-Cell Ensemble Manifold Divergence
 
             </div>
 
@@ -5686,7 +5686,7 @@ window.downloadAF3JSON = async function() {
 
         <div class="flex items-center gap-4">
 
-            <span class="validator-badge">V28.0 GOLD VALIDATED</span>
+            <span class="validator-badge">V29.0 GOLD VALIDATED</span>
 
             <span class="sde-formula">dX_t = f(X_t, t)dt + g(X_t, t)dW_t | PDB Structural Authority v1.0 | GRN Inference active</span>
 

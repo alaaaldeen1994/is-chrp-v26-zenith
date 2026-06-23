@@ -510,7 +510,7 @@
 
                             <h3 class="text-2xl font-black text-white mb-4">HCA Data Foundation</h3>
 
-                            <p class="text-slate-500 leading-relaxed mb-6">Trained on 500,000 real cardiac cells from the
+                            <p class="text-slate-500 leading-relaxed mb-6">Trained on 486,134 real human cardiac cells from the
 
                                 Human Cell Atlas (HCA) &mdash; Production model: 400 epochs on T4 GPU.</p>
 
@@ -560,7 +560,7 @@
 
                             <div class="text-emerald-400 font-bold mb-1">Human Heart Cell Atlas</div>
 
-                            <p class="text-slate-400 leading-relaxed">Zenith's training foundation derives from the Human Cell Atlas heart dataset, comprising 500,000 real human cardiac cells across 2 datasets (Litviňuková + PERIHEART). The production model was trained using scVI generative architecture for 400 epochs on an NVIDIA T4 GPU. This dataset provides single-cell transcriptomic baselines across ventricular, atrial, fibroblast, endothelial, and immune cell types from healthy donors.</p>
+                            <p class="text-slate-400 leading-relaxed">Zenith's training foundation derives from the Human Cell Atlas heart dataset, comprising 486,134 real human cardiac cells from the Litviňuková et al. 2020 study. The production model was trained using scVI generative architecture for 400 epochs on an NVIDIA T4 GPU. This dataset provides single-cell transcriptomic baselines across ventricular, atrial, fibroblast, endothelial, and immune cell types from healthy donors.</p>
 
                             <div class="text-[10px] text-slate-500 mt-2 italic">Litvinukova et al., Nature (2020). DOI: 10.1038/s41586-020-2797-4</div>
 
@@ -3474,71 +3474,63 @@
 
 
 
+
+
+
+
+                    <div class="mt-8 bg-blue-500/10 border border-blue-500/30 rounded-xl p-6">
+
+
+
+                        <h5 class="text-lg font-bold text-blue-400 mb-3">  Observing Spatial Dynamics</h5>
+
+
+
+                        <p class="text-sm text-slate-300 mb-3">To see these behaviors in action:</p>
+
+
+
+                        <ol class="text-sm text-slate-300 space-y-2">
+
+
+
+                            <li><strong>1.</strong> Apply OSKM protocol and watch cells migrate toward each other to form
+
+
+
+                                iPSC colonies</li>
+
+
+
+                            <li><strong>2.</strong> Toggle the <strong class="text-red-400">Malignancy Heatmap</strong> to
+
+
+
+                                see paracrine field concentrations</li>
+
+
+
+                            <li><strong>3.</strong> Switch to <strong class="text-purple-400">3D KAGAWEA</strong> view to
+
+
+
+                                observe clustering in latent space</li>
+
+
+
+                            <li><strong>4.</strong> Click individual cells to track their migration paths over time</li>
+
+
+
+                        </ol>
+
+
+
+                    </div>
+
+
+
                 </div>
-
-
-
-
-
-
-
-                <div class="mt-8 bg-blue-500/10 border border-blue-500/30 rounded-xl p-6">
-
-
-
-                    <h5 class="text-lg font-bold text-blue-400 mb-3">  Observing Spatial Dynamics</h5>
-
-
-
-                    <p class="text-sm text-slate-300 mb-3">To see these behaviors in action:</p>
-
-
-
-                    <ol class="text-sm text-slate-300 space-y-2">
-
-
-
-                        <li><strong>1.</strong> Apply OSKM protocol and watch cells migrate toward each other to form
-
-
-
-                            iPSC colonies</li>
-
-
-
-                        <li><strong>2.</strong> Toggle the <strong class="text-red-400">Malignancy Heatmap</strong> to
-
-
-
-                            see paracrine field concentrations</li>
-
-
-
-                        <li><strong>3.</strong> Switch to <strong class="text-purple-400">3D KAGAWEA</strong> view to
-
-
-
-                            observe clustering in latent space</li>
-
-
-
-                        <li><strong>4.</strong> Click individual cells to track their migration paths over time</li>
-
-
-
-                    </ol>
-
-
-
-                </div>
-
-
-
-            </div>
-
-
-
-        </section>
 
 
 
@@ -4450,7 +4442,7 @@
 
 
 
-                                <td class="text-sm">Nilus Lab Zenith V28</td>
+                                <td class="text-sm">Nilus Lab Zenith V29.0</td>
 
 
 
@@ -5462,7 +5454,7 @@
 
 
 
-                    reasoning with deep epigenetic latent space navigation across **500k Mapped Cells**.
+                    reasoning with deep epigenetic latent space navigation across **486k Mapped Cells**.
 
 
 
@@ -6870,7 +6862,7 @@
 
 
 
-                    SUCCESS: Clinical HCA Model Loaded (500,000 Mapped Cells)
+                    SUCCESS: Clinical HCA Model Loaded (486,134 Mapped Cells)
 
 
 
@@ -13498,7 +13490,7 @@ RATE_LIMITS = {
 
 
 
-                        <li class="flex gap-2"><span class="text-emerald-400">+</span> 5,000-gene HD manifold (HCA 500K cells)</li>
+                        <li class="flex gap-2"><span class="text-emerald-400">+</span> 4,908-gene HD manifold (HCA 486k cells)</li>
 
 
 
