@@ -381,32 +381,35 @@
         /* Global fixed DNA video background */
 
         .global-dna-bg {
+
             position: fixed;
+
             top: 0;
+
             left: 0;
+
             right: 0;
+
             bottom: 0;
+
             z-index: 0;
+
             pointer-events: none;
+
             display: flex;
+
             align-items: center;
+
             justify-content: center;
+
             overflow: hidden;
-            background: radial-gradient(circle at 80% 20%, rgba(37, 99, 235, 0.04), transparent 50%),
-                        radial-gradient(circle at 20% 80%, rgba(99, 102, 241, 0.04), transparent 50%),
-                        #f8fafc;
+
+            background: #ffffff; /* This is the base color under the video */
+
             width: 100vw;
+
             height: 100vh;
-        }
-        .global-dna-bg::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background-image: linear-gradient(rgba(15, 23, 42, 0.015) 1px, transparent 1px),
-                              linear-gradient(90deg, rgba(15, 23, 42, 0.015) 1px, transparent 1px);
-            background-size: 50px 50px;
-            background-position: center center;
-            opacity: 0.8;
+
         }
 
 
@@ -2907,9 +2910,7 @@
             color: #0f172a !important;
         }
         .global-dna-bg {
-            background: radial-gradient(circle at 80% 20%, rgba(37, 99, 235, 0.04), transparent 50%),
-                        radial-gradient(circle at 20% 80%, rgba(99, 102, 241, 0.04), transparent 50%),
-                        #f8fafc !important;
+            background: #ffffff !important;
         }
         .hero-video {
             mix-blend-mode: multiply !important;
@@ -3170,15 +3171,19 @@
     <!-- GLOBAL DNA BACKGROUND (BULLETPROOF LOCAL CASCADE) -->
 
     <div class="global-dna-bg">
-        <!-- Background DNA Video disabled to improve page load speed and professional aesthetic -->
-        <!--
+
         <video class="hero-video" id="profile-dna-video" autoplay loop muted playsinline preload="auto">
+
             <source src="zenith_dna.mp4?v=2" type="video/mp4">
+
             <source src="/zenith_dna.mp4?v=2" type="video/mp4">
+
             <source src="assets/9.mp4" type="video/mp4">
+
             <source src="/assets/9.mp4" type="video/mp4">
+
         </video>
-        -->
+
         <div class="hero-overlay"></div>
 
         <script>
@@ -3877,7 +3882,7 @@
 
     <!-- RESEARCHER DASHBOARD (HIDDEN UNTIL LOGIN) -->
 
-    <section id="dashboard-view" class="hidden py-16 bg-slate-50/50 border-t border-slate-100 relative z-20">
+    <section id="dashboard-view" class="hidden py-16 bg-white relative z-20">
 
         <div class="max-w-7xl mx-auto px-12">
 
@@ -5495,31 +5500,25 @@
                     },
 
                     options: {
-                        layout: {
-                            padding: {
-                                left: 20,
-                                right: 20,
-                                top: 10,
-                                bottom: 10
-                            }
-                        },
+
                         scales: {
+
                             r: {
+
                                 angleLines: { display: false },
+
                                 suggestedMin: 0,
+
                                 suggestedMax: 100,
-                                ticks: { display: false },
-                                pointLabels: {
-                                    font: {
-                                        family: "'Outfit', sans-serif",
-                                        size: 9,
-                                        weight: '700'
-                                    },
-                                    color: '#64748b'
-                                }
+
+                                ticks: { display: false }
+
                             }
+
                         },
+
                         plugins: { legend: { display: false } }
+
                     }
 
                 });
