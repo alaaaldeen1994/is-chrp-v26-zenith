@@ -14,15 +14,25 @@ class AutomationProtocolService:
         self.cols = 24 if plate_type == "384_well" else 12
         self.rows = 16 if plate_type == "384_well" else 8
         
-        # Fixed source plate well coordinates for transcription factor reservoirs (384PP Source Plate)
+        # Fixed source plate well coordinates for transcription factor and chemical reservoirs (384PP Source Plate)
         self.source_wells = {
             "GATA4": "A1",
             "MEF2C": "A2",
             "TBX5": "A3",
             "NKX2-5": "A4",
             "MYC": "A5",
-            "SNAI1": "A6"
+            "SNAI1": "A6",
+            "OCT4": "C1",
+            "SOX2": "C2",
+            "KLF4": "C3",
+            "CHIR99021": "B1",
+            "RepSox": "B2",
+            "Forskolin": "B3",
+            "NMN": "B4",
+            "Metformin": "B5",
+            "SRT1720": "B6"
         }
+
 
     def generate_echo_transfer_csv(self, source_well_override: str, target_cocktail: Dict[str, float]) -> List[str]:
         """

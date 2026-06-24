@@ -3725,13 +3725,22 @@ const BiosimBridge = {
         const mef2c = parseFloat(document.getElementById('slider-mef2c').value);
         const tbx5 = parseFloat(document.getElementById('slider-tbx5').value);
         const nkx25 = parseFloat(document.getElementById('slider-nkx25').value);
+        const oct4 = parseFloat(document.getElementById('slider-oct4').value);
+        const sox2 = parseFloat(document.getElementById('slider-sox2').value);
+        const klf4 = parseFloat(document.getElementById('slider-klf4').value);
+        const nmn = parseFloat(document.getElementById('slider-nmn').value);
         const myc = parseFloat(document.getElementById('slider-myc').value);
         const snai1 = parseFloat(document.getElementById('slider-snai1').value);
+        const oralAdmin = document.getElementById('chk-oral-admin').checked ? 1.0 : 0.0;
 
         document.getElementById('val-gata4').innerText = gata4.toFixed(1);
         document.getElementById('val-mef2c').innerText = mef2c.toFixed(1);
         document.getElementById('val-tbx5').innerText = tbx5.toFixed(1);
         document.getElementById('val-nkx25').innerText = nkx25.toFixed(1);
+        document.getElementById('val-oct4').innerText = oct4.toFixed(1);
+        document.getElementById('val-sox2').innerText = sox2.toFixed(1);
+        document.getElementById('val-klf4').innerText = klf4.toFixed(1);
+        document.getElementById('val-nmn').innerText = nmn.toFixed(1);
         document.getElementById('val-myc').innerText = myc.toFixed(1);
         document.getElementById('val-snai1').innerText = snai1.toFixed(1);
 
@@ -3745,7 +3754,9 @@ const BiosimBridge = {
                 body: JSON.stringify({
                     baseline_cell_type: window._selectedCellType || "fibroblast",
                     perturbation_factors: {
-                        "GATA4": gata4, "MEF2C": mef2c, "TBX5": tbx5, "NKX2-5": nkx25, "MYC": myc, "SNAI1": snai1
+                        "GATA4": gata4, "MEF2C": mef2c, "TBX5": tbx5, "NKX2-5": nkx25,
+                        "OCT4": oct4, "SOX2": sox2, "KLF4": klf4, "NMN": nmn,
+                        "MYC": myc, "SNAI1": snai1, "oral_administration": oralAdmin
                     }
                 })
             });
@@ -3755,11 +3766,32 @@ const BiosimBridge = {
                 
                 const ageShiftEl = document.getElementById('pred-age-shift');
                 const stabilityEl = document.getElementById('pred-stability');
+                const sirtEl = document.getElementById('pred-sirt-index');
+                const endoEl = document.getElementById('pred-endo-score');
+                const syncEl = document.getElementById('pred-sync-safety');
+                const afraidEl = document.getElementById('pred-afraid-age');
                 const expressionsEl = document.getElementById('pred-expressions');
+                
+                const hazardBanner = document.getElementById('pred-hazard-banner');
+                const hazardText = document.getElementById('pred-hazard-text');
 
+                // Display main indicators
                 ageShiftEl.innerText = `${data.predicted_age_delta_years.toFixed(2)} Years`;
                 stabilityEl.innerText = `${(data.transcriptomic_stability * 100).toFixed(2)}%`;
+                sirtEl.innerText = data.sirtuin_activity_index.toFixed(3);
+                endoEl.innerText = `${(data.endothelial_rejuvenation_score * 100).toFixed(1)}%`;
+                syncEl.innerText = `${(data.syncytial_safety_index * 100).toFixed(1)}%`;
+                afraidEl.innerText = `${data.afraid_fright_clocks.afraid_phenotypic_age_years.toFixed(1)} Yrs`;
 
+                // Handle hazard warning banner
+                if (data.drug_interaction_hazard) {
+                    hazardText.innerText = data.drug_interaction_hazard;
+                    hazardBanner.classList.remove('hidden');
+                } else {
+                    hazardBanner.classList.add('hidden');
+                }
+
+                // Coloring age shift
                 if (data.predicted_age_delta_years <= -8.0) {
                     ageShiftEl.style.color = '#10b981';
                 } else if (data.predicted_age_delta_years > 0) {
@@ -3771,11 +3803,22 @@ const BiosimBridge = {
                 expressionsEl.innerHTML = Object.entries(data.expression_profiles).map(([gene, expr]) => {
                     const maxExpr = 15.0;
                     const pct = Math.round((expr / maxExpr) * 100);
+                    
+                    // Style sirtuins, gap junctions, and structural markers differently
+                    let barColor = '#3b82f6'; // default blue
+                    if (gene.startsWith('SIRT')) {
+                        barColor = '#10b981'; // green for Sirtuins
+                    } else if (gene === 'GJA1' || gene === 'KCNJ2' || gene === 'SCN5A') {
+                        barColor = '#0284c7'; // sky blue for electrophysiology
+                    } else if (gene === 'NPPA') {
+                        barColor = expr > 1.5 ? '#f59e0b' : '#3b82f6'; // orange if high stress
+                    }
+                    
                     return `
                     <div style="display:flex;align-items:center;gap:12px;font-family:'Inter',sans-serif;">
                         <span style="font-size:10px;color:#0f172a;font-weight:600;width:50px;">${gene}</span>
                         <div style="flex:1;background:#e2e8f0;height:6px;border-radius:3px;overflow:hidden;">
-                            <div style="width:${Math.min(100, pct)}%;background:#3b82f6;height:100%;border-radius:3px;"></div>
+                            <div style="width:${Math.min(100, pct)}%;background:${barColor};height:100%;border-radius:3px;"></div>
                         </div>
                         <span style="font-size:10px;color:#475569;font-weight:700;font-family:monospace;width:35px;text-align:right;">${expr.toFixed(2)}</span>
                     </div>`;
@@ -3786,12 +3829,14 @@ const BiosimBridge = {
         }
     },
 
+
     async runLNPOptimizer() {
         const ion = parseFloat(document.getElementById('slider-lnp-ion').value);
         const chol = parseFloat(document.getElementById('slider-lnp-chol').value);
         const helper = parseFloat(document.getElementById('slider-lnp-helper').value);
         const peg = parseFloat(document.getElementById('slider-lnp-peg').value);
         const np = parseFloat(document.getElementById('slider-lnp-np').value);
+        const activeConjugation = document.getElementById('chk-lnp-active').checked;
 
         document.getElementById('val-lnp-ion').innerText = `${ion.toFixed(1)}%`;
         document.getElementById('val-lnp-chol').innerText = `${chol.toFixed(1)}%`;
@@ -3810,15 +3855,35 @@ const BiosimBridge = {
                     molar_ratios: {
                         "ionizable": ion, "cholesterol": chol, "helper": helper, "peg": peg
                     },
-                    np_ratio: np
+                    np_ratio: np,
+                    active_ligand_conjugation: activeConjugation
                 })
             });
 
             if (response.ok) {
                 const data = await response.json();
                 
-                document.getElementById('lnp-ee').innerText = `${data.encapsulation_efficiency_percent.toFixed(2)}%`;
+                document.getElementById('lnp-ee').innerText = `${data.encapsulation_efficiency_percent.toFixed(1)}%`;
                 document.getElementById('lnp-tropism').innerText = data.heart_selectivity_score.toFixed(3);
+                document.getElementById('lnp-liver-seq').innerText = `${(data.liver_sequestration * 100).toFixed(1)}%`;
+                
+                const mechBanner = document.getElementById('lnp-mechanism-banner');
+                if (mechBanner && data.mechanism_note) {
+                    mechBanner.innerText = data.mechanism_note;
+                    if (data.formulation_status === 'OPTIMIZED') {
+                        mechBanner.style.background = 'rgba(16,185,129,0.05)';
+                        mechBanner.style.color = '#065f46';
+                        mechBanner.style.borderColor = 'rgba(16,185,129,0.1)';
+                    } else if (data.formulation_status === 'MODERATE') {
+                        mechBanner.style.background = 'rgba(245,158,11,0.05)';
+                        mechBanner.style.color = '#92400e';
+                        mechBanner.style.borderColor = 'rgba(245,158,11,0.1)';
+                    } else {
+                        mechBanner.style.background = 'rgba(239,68,68,0.05)';
+                        mechBanner.style.color = '#991b1b';
+                        mechBanner.style.borderColor = 'rgba(239,68,68,0.1)';
+                    }
+                }
                 
                 const statusBadge = document.getElementById('lnp-status-val');
                 statusBadge.innerText = data.formulation_status;
@@ -3834,6 +3899,7 @@ const BiosimBridge = {
             console.error("LNP delivery optimizer request failed:", e);
         }
     },
+
 
     async renderGraphRAG(query) {
         try {
@@ -4352,13 +4418,18 @@ const BiosimBridge = {
     },
 
     initB2BWidgets() {
-        // Multi-omics Sliders Listeners
-        ['slider-gata4', 'slider-mef2c', 'slider-tbx5', 'slider-nkx25', 'slider-myc', 'slider-snai1'].forEach(id => {
+        // Multi-omics Sliders Listeners (including Sinclair factors)
+        ['slider-gata4', 'slider-mef2c', 'slider-tbx5', 'slider-nkx25', 'slider-oct4', 'slider-sox2', 'slider-klf4', 'slider-nmn', 'slider-myc', 'slider-snai1'].forEach(id => {
             const input = document.getElementById(id);
             if (input) {
                 input.addEventListener('input', () => this.runMultiOmicsPredictor());
             }
         });
+
+        const oralChk = document.getElementById('chk-oral-admin');
+        if (oralChk) {
+            oralChk.addEventListener('change', () => this.runMultiOmicsPredictor());
+        }
 
         // LNP Sliders Listeners
         ['slider-lnp-ion', 'slider-lnp-chol', 'slider-lnp-helper', 'slider-lnp-peg', 'slider-lnp-np'].forEach(id => {
@@ -4367,6 +4438,11 @@ const BiosimBridge = {
                 input.addEventListener('input', () => this.runLNPOptimizer());
             }
         });
+
+        const activeLnpChk = document.getElementById('chk-lnp-active');
+        if (activeLnpChk) {
+            activeLnpChk.addEventListener('change', () => this.runLNPOptimizer());
+        }
         
         // Trigger initial evaluations
         this.runMultiOmicsPredictor();
@@ -4379,6 +4455,10 @@ const BiosimBridge = {
         const mef2c = parseFloat(document.getElementById('slider-mef2c').value);
         const tbx5 = parseFloat(document.getElementById('slider-tbx5').value);
         const nkx25 = parseFloat(document.getElementById('slider-nkx25').value);
+        const oct4 = parseFloat(document.getElementById('slider-oct4').value);
+        const sox2 = parseFloat(document.getElementById('slider-sox2').value);
+        const klf4 = parseFloat(document.getElementById('slider-klf4').value);
+        const nmn = parseFloat(document.getElementById('slider-nmn').value);
         const myc = parseFloat(document.getElementById('slider-myc').value);
         const snai1 = parseFloat(document.getElementById('slider-snai1').value);
 
@@ -4394,10 +4474,13 @@ const BiosimBridge = {
                 body: JSON.stringify({
                     source_well: "A1",
                     cocktail: {
-                        "GATA4": gata4, "MEF2C": mef2c, "TBX5": tbx5, "NKX2-5": nkx25, "MYC": myc, "SNAI1": snai1
+                        "GATA4": gata4, "MEF2C": mef2c, "TBX5": tbx5, "NKX2-5": nkx25,
+                        "OCT4": oct4, "SOX2": sox2, "KLF4": klf4, "NMN": nmn,
+                        "MYC": myc, "SNAI1": snai1
                     }
                 })
             });
+
 
             if (response.ok) {
                 const data = await response.json();
