@@ -6747,7 +6747,7 @@ async def run_gpt_discovery(request: Request):
             ip_data = json.load(f)
         pro_genes = ip_data.get("pro_rejuvenation_genes", [])[:200]
         aging_genes = ip_data.get("aging_marker_genes", [])[:200]
-        gene_source_label = "All cardiac cells (500,000 cells, 14 donors · Specialist + PERIHEART)"
+        gene_source_label = "All cardiac cells (~2.42M cells, 14 donors · Generalist + Specialist)"
         cell_type_age_delta = None
 
     pro_str = ", ".join([
