@@ -6137,9 +6137,9 @@ async def partial_reprogramming_endpoint(req: PartialReprogrammingRequest):
                     "name": f"Zenith_Partial_{approved_genes[0]}_{approved_genes[1]}",
                     "modelSeeds": [2142086823],
                     "sequences": [
-                        {"proteinChain": {"sequence": fused, "count": 1}},
-                        {"dnaSequence": {"sequence": "CCTGTGACTGTGGGGTTCACGCTCCCGGGTG", "count": 1}},
-                        {"dnaSequence": {"sequence": "CACCCGGGAGCGTGAACCCCACAGTCACAGG", "count": 1}}
+                        {"protein": {"sequence": fused, "count": 1}},
+                        {"dna": {"sequence": "CCTGTGACTGTGGGGTTCACGCTCCCGGGTG", "count": 1}},
+                        {"dna": {"sequence": "CACCCGGGAGCGTGAACCCCACAGTCACAGG", "count": 1}}
                     ]
                 }
 
