@@ -1858,7 +1858,7 @@ async def serve_index_html():
 
 async def serve_profile():
 
-    return FileResponse("profile.html")
+    return FileResponse("index.html")
 
 
 
@@ -1866,7 +1866,23 @@ async def serve_profile():
 
 async def serve_profile_html():
 
-    return FileResponse("profile.html")
+    return FileResponse("index.html")
+
+
+
+@app.get("/discovery", response_class=HTMLResponse)
+
+async def serve_discovery():
+
+    return FileResponse("discovery.html")
+
+
+
+@app.get("/discovery.html", response_class=HTMLResponse)
+
+async def serve_discovery_html():
+
+    return FileResponse("discovery.html")
 
 
 
@@ -2254,7 +2270,7 @@ async def health_check():
 
 async def get_landing():
 
-    return FileResponse("profile.html")
+    return FileResponse("index.html")
 
 
 
@@ -2378,7 +2394,7 @@ async def get_whitepaper():
 
 async def get_profile():
 
-    return FileResponse("profile.html")
+    return FileResponse("index.html")
 
 
 
@@ -2386,7 +2402,23 @@ async def get_profile():
 
 async def get_profile_path():
 
-    return FileResponse("profile.html")
+    return FileResponse("index.html")
+
+
+
+@app.get("/discovery.html")
+
+async def get_discovery():
+
+    return FileResponse("discovery.html")
+
+
+
+@app.get("/discovery")
+
+async def get_discovery_path():
+
+    return FileResponse("discovery.html")
 
 
 
@@ -2454,11 +2486,27 @@ async def get_clinical_report():
 
 
 
+@app.get("/v30_clinical_report.html")
+
+async def get_clinical_report_v30():
+
+    return FileResponse("v30_clinical_report.html")
+
+
+
+@app.get("/v30_clinical_report")
+
+async def get_clinical_report_v30_path():
+
+    return FileResponse("v30_clinical_report.html")
+
+
+
 @app.get("/v29_clinical_report.html")
 
 async def get_clinical_report_v29():
 
-    return FileResponse("v29_clinical_report.html")
+    return FileResponse("v30_clinical_report.html")
 
 
 
