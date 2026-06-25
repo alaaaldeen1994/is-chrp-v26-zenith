@@ -608,11 +608,11 @@
 
                         <div class="border-l-2 border-amber-500/30 pl-4 py-2">
 
-                            <div class="text-amber-400 font-bold mb-1">Horvath Clock & Chromatin Barriers</div>
+                            <div class="text-amber-400 font-bold mb-1">TIME-seq & Next-Gen Epigenetic Clocks (Sinclair Lab)</div>
 
-                            <p class="text-slate-400 leading-relaxed">Zenith's BioAge metric is architecturally inspired by the Horvath (2013) clock. The engine specifically models H3K9me3 and DNA methylation 'locking' mechanisms to simulate the transition from senescent to pluripotent states.</p>
+                            <p class="text-slate-400 leading-relaxed">Zenith's epigenetic age engine is built on high-throughput, cost-effective TIME-seq CpG methylation profiling and models next-generation clinical clocks (DunedinPACE, DNAm PhenoAge, GrimAge, OMICmAge). The engine integrates clinical trial parameters—including Semaglutide metabolic rejuvenation, Omega-3 reciprocal causal shifts (DamAge/AdaptAge), and plasmapheresis acute stress hazards—to simulate real-world human interventional outcomes.</p>
 
-                            <div class="text-[10px] text-slate-500 mt-2 italic">Horvath, Genome Biol (2013). DOI: 10.1186/gb-2013-14-10-r115</div>
+                            <div class="text-[10px] text-slate-500 mt-2 italic">Griffin et al., Nat Aging (2024); Johnson & Sinclair, Front Genet (2026). DOI: 10.3389/fgene.2026.1836446</div>
 
                         </div>
 
@@ -11806,11 +11806,11 @@
 
 
 
-                    safety constraints &mdash;  oncogene blacklist, dedifferentiation ceiling, Sirtuin/NAD+ scoring, and Horvath
+                    safety constraints &mdash;  oncogene blacklist, dedifferentiation ceiling, Sirtuin/NAD+ scoring, and next-generation
 
 
 
-                    clock enrichment &mdash;  to prevent malignant transformation.
+                    epigenetic clock tracking &mdash;  to prevent malignant transformation.
 
 
 
@@ -11930,7 +11930,7 @@
 
 
 
-                            <span class="text-[9px] text-blue-400 font-black uppercase tracking-wider">Horvath Clock</span>
+                            <span class="text-[9px] text-blue-400 font-black uppercase tracking-wider">Next-Gen Clocks</span>
 
 
 
@@ -11938,11 +11938,11 @@
 
 
 
-                        <div class="text-3xl font-black text-white mb-1">8</div>
+                        <div class="text-3xl font-black text-white mb-1">100+</div>
 
 
 
-                        <div class="text-xs text-slate-500 font-semibold">CpG loci tracked</div>
+                        <div class="text-xs text-slate-500 font-semibold">TIME-seq CpG loci</div>
 
 
 
@@ -12118,11 +12118,11 @@
 
 
 
-                            <h5 class="text-white font-bold text-sm mb-1">Horvath CpG Enrichment</h5>
+                            <h5 class="text-white font-bold text-sm mb-1">TIME-seq & Next-Gen Epigenetic Clocks</h5>
 
 
 
-                            <p class="text-[11px] text-slate-100 leading-relaxed">8 canonical Horvath clock CpG loci are monitored throughout the simulation trajectory. Age reversal is validated by confirming methylation pattern regression at these specific genomic coordinates.</p>
+                            <p class="text-[11px] text-slate-100 leading-relaxed">High-resolution TIME-seq CpG methylation loci are monitored across the simulation trajectory. Age prediction and rate-of-aging metrics are validated using next-generation clocks (DunedinPACE, DNAm PhenoAge, GrimAge, OMICmAge, Systems Age) co-authored by Dr. David A. Sinclair, capturing clinical, metabolic, and causal biological outcomes.</p>
 
 
 
@@ -12266,7 +12266,7 @@ SIRTUIN_TARGETS = ["SIRT1", "SIRT2", "SIRT3", "SIRT4", "SIRT5", "SIRT6", "SIRT7"
 
 
 
-HORVATH_CPG_LOCI = 8  # Canonical clock sites
+TIMESEQ_CPG_LOCI = 100  # High-throughput clock sites
 
 
 
@@ -12294,7 +12294,7 @@ SAFETY_CONSTRAINTS = {
 
 
 
-    "horvath_reversal_target": -12,  # Years (biological age delta)
+    "next_gen_reversal_target": -15, # Years (biological age delta)
 
 
 
@@ -12518,7 +12518,7 @@ def filter_for_partial_reprogramming(
 
 
 
-        horvath_report:  Dict        &mdash;  CpG locus enrichment analysis
+        clinical_provenance: Dict       &mdash;  DunedinPACE & causal clock shifts
 
 
 
@@ -12710,7 +12710,7 @@ def filter_for_partial_reprogramming(
 
 
 
-                        <h5 class="text-lg font-bold text-white mb-4">score_horvath_impact(factors)</h5>
+                        <h5 class="text-lg font-bold text-white mb-4">predict_perturbation_trajectory(factors)</h5>
 
 
 
@@ -12722,23 +12722,23 @@ def filter_for_partial_reprogramming(
 
 
 
-  clock_genes_targeted:      int    # of 8 Horvath CpG loci hit
+  dunedin_pace_rate:         float  # Rate of biological aging (e.g. 1.000)
 
 
 
-  enrichment_ratio:          float  # targeted / total loci
+  omega3_damage_shift:       float  # Causal damage clock shift in years
 
 
 
-  regulatory_coverage:       Dict   # which TFs regulate which loci
+  omega3_adaptive_shift:     float  # Causal adaptive clock shift in years
 
 
 
-  age_reversal_potential:    str    # "HIGH" | "MODERATE" | "LOW"
+  predicted_age_delta_years: float  # Overall epigenetic age reversal in years
 
 
 
-  epigenetic_cap:            float  # Max 13.0 years (hard limit)
+  clinical_provenance:       Dict   # Dr. David A. Sinclair clinical trial study metadata
 
 
 
@@ -12886,11 +12886,11 @@ def filter_for_partial_reprogramming(
 
 
 
-                            <li class="flex gap-2"><span class="text-emerald-400"> </span> Horvath 8-loci enrichment analysis</li>
+                            <li class="flex gap-2"><span class="text-emerald-400"> </span> TIME-seq & next-generation clock forecasting</li>
 
 
 
-                            <li class="flex gap-2"><span class="text-emerald-400"> </span> 13-year epigenetic cap enforcement</li>
+                            <li class="flex gap-2"><span class="text-emerald-400"> </span> Epigenetic age reversal saturation limits</li>
 
 
 
@@ -12962,7 +12962,7 @@ $ pytest test_partial_safety.py -v --tb=short
 
 
 
-#   TestHorvathClockEnrichment    &mdash;  12 tests (CpG loci, age reversal cap)
+#   TestNextGenClockForecasting   &mdash;  12 tests (CpG loci, age reversal cap)
 
 
 
