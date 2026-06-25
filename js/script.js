@@ -3732,6 +3732,16 @@ const BiosimBridge = {
         const myc = parseFloat(document.getElementById('slider-myc').value);
         const snai1 = parseFloat(document.getElementById('slider-snai1').value);
         const oralAdmin = document.getElementById('chk-oral-admin').checked ? 1.0 : 0.0;
+        
+        // Extract new clinical trial interventions (Johnson & Sinclair, 2026)
+        const semaglutide = document.getElementById('chk-semaglutide').checked ? 1.0 : 0.0;
+        const omega3 = document.getElementById('chk-omega3').checked ? 1.0 : 0.0;
+        const plasmapheresis = document.getElementById('chk-plasmapheresis').checked ? 1.0 : 0.0;
+        const decitabine = document.getElementById('chk-decitabine').checked ? 1.0 : 0.0;
+        const ketamine = document.getElementById('chk-ketamine').checked ? 1.0 : 0.0;
+        const bezisterim = document.getElementById('chk-bezisterim').checked ? 1.0 : 0.0;
+        const pitavastatin = document.getElementById('chk-pitavastatin').checked ? 1.0 : 0.0;
+        const multivitamin = document.getElementById('chk-multivitamin').checked ? 1.0 : 0.0;
 
         document.getElementById('val-gata4').innerText = gata4.toFixed(1);
         document.getElementById('val-mef2c').innerText = mef2c.toFixed(1);
@@ -3756,7 +3766,10 @@ const BiosimBridge = {
                     perturbation_factors: {
                         "GATA4": gata4, "MEF2C": mef2c, "TBX5": tbx5, "NKX2-5": nkx25,
                         "OCT4": oct4, "SOX2": sox2, "KLF4": klf4, "NMN": nmn,
-                        "MYC": myc, "SNAI1": snai1, "oral_administration": oralAdmin
+                        "MYC": myc, "SNAI1": snai1, "oral_administration": oralAdmin,
+                        "Semaglutide": semaglutide, "Omega3": omega3, "Plasmapheresis": plasmapheresis,
+                        "Decitabine": decitabine, "Ketamine": ketamine, "Bezisterim": bezisterim,
+                        "Pitavastatin": pitavastatin, "Multivitamin": multivitamin
                     }
                 })
             });
@@ -3772,6 +3785,10 @@ const BiosimBridge = {
                 const afraidEl = document.getElementById('pred-afraid-age');
                 const expressionsEl = document.getElementById('pred-expressions');
                 
+                const dunedinPaceEl = document.getElementById('pred-dunedin-pace');
+                const damageShiftEl = document.getElementById('pred-damage-shift');
+                const adaptiveShiftEl = document.getElementById('pred-adaptive-shift');
+                
                 const hazardBanner = document.getElementById('pred-hazard-banner');
                 const hazardText = document.getElementById('pred-hazard-text');
 
@@ -3782,6 +3799,19 @@ const BiosimBridge = {
                 endoEl.innerText = `${(data.endothelial_rejuvenation_score * 100).toFixed(1)}%`;
                 syncEl.innerText = `${(data.syncytial_safety_index * 100).toFixed(1)}%`;
                 afraidEl.innerText = `${data.afraid_fright_clocks.afraid_phenotypic_age_years.toFixed(1)} Yrs`;
+
+                // Display clinical outcomes from Sinclair 2026 database
+                if (data.clinical_provenance) {
+                    dunedinPaceEl.innerText = data.clinical_provenance.dunedin_pace_rate.toFixed(3);
+                    
+                    const dmg = data.clinical_provenance.omega3_damage_clock_shift_years;
+                    damageShiftEl.innerText = `${dmg >= 0 ? '+' : ''}${dmg.toFixed(2)} Yrs`;
+                    damageShiftEl.style.color = dmg < 0 ? '#10b981' : (dmg > 0 ? '#ef4444' : '#475569');
+                    
+                    const adp = data.clinical_provenance.omega3_adaptive_clock_shift_years;
+                    adaptiveShiftEl.innerText = `${adp >= 0 ? '+' : ''}${adp.toFixed(2)} Yrs`;
+                    adaptiveShiftEl.style.color = adp > 0 ? '#10b981' : (adp < 0 ? '#ef4444' : '#475569');
+                }
 
                 // Handle hazard warning banner
                 if (data.drug_interaction_hazard) {
@@ -4426,10 +4456,12 @@ const BiosimBridge = {
             }
         });
 
-        const oralChk = document.getElementById('chk-oral-admin');
-        if (oralChk) {
-            oralChk.addEventListener('change', () => this.runMultiOmicsPredictor());
-        }
+        ['chk-oral-admin', 'chk-semaglutide', 'chk-omega3', 'chk-plasmapheresis', 'chk-decitabine', 'chk-ketamine', 'chk-bezisterim', 'chk-pitavastatin', 'chk-multivitamin'].forEach(id => {
+            const chk = document.getElementById(id);
+            if (chk) {
+                chk.addEventListener('change', () => this.runMultiOmicsPredictor());
+            }
+        });
 
         // LNP Sliders Listeners
         ['slider-lnp-ion', 'slider-lnp-chol', 'slider-lnp-helper', 'slider-lnp-peg', 'slider-lnp-np'].forEach(id => {

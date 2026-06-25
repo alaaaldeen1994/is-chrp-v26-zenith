@@ -1571,9 +1571,43 @@
                         <label class="text-[9px] text-slate-600 font-bold block mb-1.5 uppercase tracking-wider">SNAI1 (EMT): <span id="val-snai1" class="text-amber-600 font-mono font-bold">0.0</span></label>
                         <input id="slider-snai1" type="range" min="0" max="3" step="0.1" value="0.0" class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer" style="accent-color:#ca8a04;">
                     </div>
-                    <div class="col-span-2 flex items-center gap-2 mt-2 pt-2 border-t border-slate-200/60">
-                        <input id="chk-oral-admin" type="checkbox" class="rounded text-indigo-600 focus:ring-indigo-500 h-3.5 w-3.5 cursor-pointer">
-                        <label for="chk-oral-admin" class="text-[9px] text-slate-500 font-bold uppercase tracking-wider cursor-pointer">Oral Route (Applies Gut deamidation penalty)</label>
+                    <div class="col-span-2 flex flex-wrap items-center gap-x-4 gap-y-2 mt-2 pt-2 border-t border-slate-200/60">
+                        <div class="flex items-center gap-2">
+                            <input id="chk-oral-admin" type="checkbox" class="rounded text-indigo-600 focus:ring-indigo-500 h-3.5 w-3.5 cursor-pointer">
+                            <label for="chk-oral-admin" class="text-[9px] text-slate-500 font-bold uppercase tracking-wider cursor-pointer">Oral Route (NMN deamidation penalty)</label>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <input id="chk-semaglutide" type="checkbox" class="rounded text-emerald-600 focus:ring-emerald-500 h-3.5 w-3.5 cursor-pointer">
+                            <label for="chk-semaglutide" class="text-[9px] text-emerald-600 font-bold uppercase tracking-wider cursor-pointer" title="Clinical Target: -4.9 years PhenoAge, -2.2 years OMICmAge, -9% DunedinPACE">Semaglutide (GLP-1)</label>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <input id="chk-omega3" type="checkbox" class="rounded text-sky-600 focus:ring-sky-500 h-3.5 w-3.5 cursor-pointer">
+                            <label for="chk-omega3" class="text-[9px] text-sky-600 font-bold uppercase tracking-wider cursor-pointer" title="Causal Target: -6.1 years DamAge, +6.2 years AdaptAge">Omega-3 Fatty Acids</label>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <input id="chk-plasmapheresis" type="checkbox" class="rounded text-red-600 focus:ring-red-500 h-3.5 w-3.5 cursor-pointer">
+                            <label for="chk-plasmapheresis" class="text-[9px] text-red-500 font-bold uppercase tracking-wider cursor-pointer" title="Toxicity Risk: +0.26 years GrimAge, +0.003 DunedinPACE (Borsky et al., 2025)">Plasmapheresis (Stress Penalty)</label>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <input id="chk-decitabine" type="checkbox" class="rounded text-purple-600 focus:ring-purple-500 h-3.5 w-3.5 cursor-pointer">
+                            <label for="chk-decitabine" class="text-[9px] text-purple-600 font-bold uppercase tracking-wider cursor-pointer" title="Chemotherapy: -5.92 years AdaptAge, +2.4 years DamAge">Decitabine (AML)</label>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <input id="chk-ketamine" type="checkbox" class="rounded text-blue-600 focus:ring-blue-500 h-3.5 w-3.5 cursor-pointer">
+                            <label for="chk-ketamine" class="text-[9px] text-blue-600 font-bold uppercase tracking-wider cursor-pointer" title="Clinical Target: -1.81 years OMICmAge">Ketamine Infusion</label>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <input id="chk-bezisterim" type="checkbox" class="rounded text-yellow-600 focus:ring-yellow-500 h-3.5 w-3.5 cursor-pointer">
+                            <label for="chk-bezisterim" class="text-[9px] text-amber-600 font-bold uppercase tracking-wider cursor-pointer" title="Clinical Target: -4.77 years InflammAge">Bezisterim</label>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <input id="chk-pitavastatin" type="checkbox" class="rounded text-indigo-600 focus:ring-indigo-500 h-3.5 w-3.5 cursor-pointer">
+                            <label for="chk-pitavastatin" class="text-[9px] text-indigo-600 font-bold uppercase tracking-wider cursor-pointer" title="Statin Target: -0.035 DunedinPACE">Pitavastatin</label>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <input id="chk-multivitamin" type="checkbox" class="rounded text-teal-600 focus:ring-teal-500 h-3.5 w-3.5 cursor-pointer">
+                            <label for="chk-multivitamin" class="text-[9px] text-teal-600 font-bold uppercase tracking-wider cursor-pointer" title="Clinical Target: -0.44 years PhenoAge, -0.21 years GrimAge">Multivitamin</label>
+                        </div>
                     </div>
                 </div>
                 
@@ -1608,6 +1642,32 @@
                     <div class="bg-slate-50 border border-slate-100 p-2.5 rounded-2xl text-center">
                         <div class="text-[8px] text-slate-500 font-bold uppercase mb-1">AFRAID Frailty Age</div>
                         <div id="pred-afraid-age" class="text-xs text-slate-900 font-bold font-mono">--</div>
+                    </div>
+                </div>
+                
+                <!-- Clinical Trial Metrics Card -->
+                <div id="clinical-metrics-card" class="mb-4 p-3.5 bg-indigo-50/60 border border-indigo-100/80 rounded-2xl animation-fade-in">
+                    <div class="text-[7px] text-indigo-600 font-black uppercase mb-2 tracking-widest flex items-center gap-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" class="text-indigo-500"><circle cx="12" cy="8" r="7"/><path d="M8.21 13.89L7 23l5-3 5 3-1.21-9.12"/></svg>
+                        Clinical Trial Outcomes & Provenance (David A. Sinclair)
+                    </div>
+                    <div class="grid grid-cols-3 gap-2 text-center mb-2">
+                        <div class="bg-white border border-indigo-100/40 p-2 rounded-xl">
+                            <div class="text-[6px] text-slate-500 font-bold uppercase mb-0.5">DunedinPACE Rate</div>
+                            <div id="pred-dunedin-pace" class="text-[10px] text-indigo-600 font-mono font-black">1.000</div>
+                        </div>
+                        <div class="bg-white border border-indigo-100/40 p-2 rounded-xl">
+                            <div class="text-[6px] text-slate-500 font-bold uppercase mb-0.5">Causal DamAge</div>
+                            <div id="pred-damage-shift" class="text-[10px] text-red-500 font-mono font-black">0.00 Yrs</div>
+                        </div>
+                        <div class="bg-white border border-indigo-100/40 p-2 rounded-xl">
+                            <div class="text-[6px] text-slate-500 font-bold uppercase mb-0.5">Causal AdaptAge</div>
+                            <div id="pred-adaptive-shift" class="text-[10px] text-emerald-500 font-mono font-black">0.00 Yrs</div>
+                        </div>
+                    </div>
+                    <div class="text-[7px] text-indigo-600/70 font-medium italic leading-relaxed flex gap-1.5 items-start bg-white/50 p-1.5 rounded-lg border border-indigo-50/30">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="text-indigo-400 shrink-0 mt-0.5"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+                        <span id="pred-clinical-citation">Source: Adiv A. Johnson & David A. Sinclair, Frontiers in Genetics, 2026. Systematic review of 41 human trials.</span>
                     </div>
                 </div>
                 <!-- Expression Profiles -->

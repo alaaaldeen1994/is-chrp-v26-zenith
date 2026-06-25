@@ -57,6 +57,16 @@ class MultiOmicsPredictorService:
         forskolin = max(0.0, float(factors.get("Forskolin", 0.0)))
         nmn = max(0.0, float(factors.get("NMN", 0.0)))
         
+        # Extract paper-specific clinical interventions (Johnson & Sinclair, Front. Genet. 2026)
+        semaglutide = max(0.0, float(factors.get("Semaglutide", 0.0)))
+        omega3 = max(0.0, float(factors.get("Omega3", 0.0)))
+        plasmapheresis = max(0.0, float(factors.get("Plasmapheresis", 0.0)))
+        decitabine = max(0.0, float(factors.get("Decitabine", 0.0)))
+        ketamine = max(0.0, float(factors.get("Ketamine", 0.0)))
+        bezisterim = max(0.0, float(factors.get("Bezisterim", 0.0)))
+        pitavastatin = max(0.0, float(factors.get("Pitavastatin", 0.0)))
+        multivitamin = max(0.0, float(factors.get("Multivitamin", 0.0)))
+        
         # Check oral route for gut microbiome deamidation penalty (Kim et al., 2023)
         oral_admin = float(factors.get("oral_administration", 0.0)) > 0.5
         nmn_effective = nmn * 0.60 if oral_admin else nmn
@@ -166,10 +176,43 @@ class MultiOmicsPredictorService:
         # Resetting chromatin noise via pioneer factors (OSK) and Sirtuin metabolic activity
         rejuvenation_potential = (0.45 * reprogramming_tf_sum) + (0.25 * structural_tf_sum) + (0.35 * (sirt_activity_index - 1.0))
         aging_drift = (2.20 * myc_eff) + (1.50 * snai1_eff)
-        latent_shift_score = rejuvenation_potential - aging_drift
         
-        # Rejuvenation potential saturates at -15.0 years under optimal OSK+Sirtuin conditions
-        predicted_age_delta = float(np.round(-15.0 * np.tanh(latent_shift_score / 3.5), 2))
+        # Integrate clinical intervention shifts from Adiv A. Johnson & David A. Sinclair (Front. Genet. 2026)
+        clinical_rejuvenation_boost = (
+            -4.90 * np.tanh(semaglutide / 1.5) +   # Semaglutide PhenoAge reduction
+            -0.32 * np.tanh(omega3 / 1.5) +        # Omega-3 DO-HEALTH clock reduction
+            -1.81 * np.tanh(ketamine / 1.5) +      # Ketamine OMICmAge reduction
+            -4.77 * np.tanh(bezisterim / 1.5) +    # Bezisterim InflammAge reduction
+            -0.50 * np.tanh(pitavastatin / 1.5) +  # Pitavastatin statin reduction
+            -0.44 * np.tanh(multivitamin / 1.5)    # Multivitamin PhenoAge reduction
+        )
+        
+        clinical_aging_drift = (
+            0.26 * np.tanh(plasmapheresis / 1.5)   # Plasmapheresis accelerated aging (Borsky et al., 2025)
+        )
+        
+        latent_shift_score = rejuvenation_potential - aging_drift
+        base_age_delta = -15.0 * np.tanh(latent_shift_score / 3.5)
+        
+        predicted_age_delta = float(np.round(base_age_delta + clinical_rejuvenation_boost + clinical_aging_drift, 2))
+        
+        # Causal clock shifts (DamAge/AdaptAge) from Ying & Sinclair et al.
+        damage_shift = float(np.round(-6.10 * np.tanh(omega3 / 1.5) + 2.40 * np.tanh(decitabine / 1.5), 2))
+        adaptive_shift = float(np.round(6.20 * np.tanh(omega3 / 1.5) - 5.92 * np.tanh(decitabine / 1.5), 2))
+        
+        # DunedinPACE rate of aging shift
+        pace_base = 1.0 + 0.10 * np.tanh(aging_drift / 2.0) - 0.15 * np.tanh(rejuvenation_potential / 3.0)
+        pace_clinical_boost = (
+            -0.09 * np.tanh(semaglutide / 1.5) +    # Semaglutide 9% drop
+            -0.022 * np.tanh(omega3 / 1.5) +        # Omega-3 reduction
+            -0.035 * np.tanh(pitavastatin / 1.5) +  # Pitavastatin reduction
+            -0.025 * np.tanh(nmn_effective / 2.0)   # Caloric restriction mimicry
+        )
+        pace_clinical_drift = (
+            0.003 * np.tanh(plasmapheresis / 1.5) + # Plasmapheresis increase (Borsky et al., 2025)
+            0.050 * np.tanh(decitabine / 1.5)       # Decitabine / cytidine stress
+        )
+        dunedin_pace = float(np.round(pace_base + pace_clinical_boost + pace_clinical_drift, 3))
         
         # 8. Chromatin accessibility status
         chromatin_status = "RESTRICTED"
@@ -210,6 +253,14 @@ class MultiOmicsPredictorService:
                 "afraid_frailty_index": frailty_score,
                 "afraid_phenotypic_age_years": afraid_age,
                 "fright_chronological_prediction_years": fright_age
+            },
+            "clinical_provenance": {
+                "provenance_study": "Adiv A. Johnson & David A. Sinclair, Frontiers in Genetics, 2026",
+                "study_details": "Systematic review of 41 human clinical interventional trials modifying next-generation clocks",
+                "doi": "10.3389/fgene.2026.1836446",
+                "dunedin_pace_rate": dunedin_pace,
+                "omega3_damage_clock_shift_years": damage_shift,
+                "omega3_adaptive_clock_shift_years": adaptive_shift
             }
         }
         
