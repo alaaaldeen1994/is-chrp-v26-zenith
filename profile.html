@@ -3161,7 +3161,23 @@
             will-change: transform, box-shadow, border-color;
         }
     </style>
-
+    <!-- Global Mobile Responsiveness Patch -->
+    <style>
+        @media (max-width: 768px) {
+            html, body { overflow-x: hidden !important; width: 100vw !important; }
+            .px-12, .px-24, .px-8, .px-6 { padding-left: 1.5rem !important; padding-right: 1.5rem !important; }
+            .py-24, .py-16 { padding-top: 4rem !important; padding-bottom: 4rem !important; }
+            .text-5xl { font-size: 2.25rem !important; line-height: 1.1 !important; }
+            .text-6xl { font-size: 2.5rem !important; line-height: 1.1 !important; }
+            .text-7xl { font-size: 2.75rem !important; line-height: 1.1 !important; }
+            .grid { gap: 1.5rem !important; }
+            .lg\:grid-cols-2, .lg\:grid-cols-3, .lg\:grid-cols-4 { grid-template-columns: 1fr !important; }
+            .nav-links { display: none !important; }
+            .hero { padding: 4rem 1.5rem !important; min-height: auto !important; }
+            .cap-bento { display: flex !important; flex-direction: column !important; }
+            .cap-card { padding: 2rem !important; }
+        }
+    </style>
 </head>
 
 
