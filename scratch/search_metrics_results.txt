@@ -1,0 +1,16 @@
+index.html: line 5315: <span style="font-size:8px;color:#8b8b8b;">~2.5M cells (Dual Model) · Rejuvenation Δ: 11.9y</span>
+index.html: line 5448: let targetReduction = 11.9;
+profile.html: line 3271: d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z" />
+profile.html: line 4940: <div class="text-xl font-black text-slate-800">0.70 <span class="text-blue-600 text-[10px] font-bold">ipTM</span></div>
+profile.html: line 4953: <span class="text-[9px] font-black text-blue-600 uppercase tracking-wider">0.70 ipTM</span>
+profile.html: line 4993: <span class="text-[9px] font-black text-blue-600 uppercase tracking-wider">0.61 ipTM</span>
+profile.html: line 5013: "Tournament-discovered 4-factor OSKM cocktail with Bayesian dosage optimization for -11.9y cell rejuvenation."
+profile.html: line 5020: <div class="text-lg font-black text-slate-800">-11.9 <span class="text-blue-600 text-[9px] font-bold">y</span></div>
+profile.html: line 5043: <span style="background: white; border: 1px solid rgba(15,23,42,0.05); color: #475569; padding: 0.25rem 0.5rem; border-radius: 999px; font-size: 8px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; font-family: 'Outfit', sans-serif;">Horvath: -11.9y</span>
+technical_catalog.html: line 6001: <div class="px-4 py-2 bg-blue-500/10 border border-blue-500 text-blue-400 rounded-xl text-xs font-black">ipTM: 0.70</div>
+technical_catalog.html: line 6029: "For years, simulating the conversion of adult epicardial cells to a myocardial fate was a 'Big Fail' (ipTM < 0.25). Today, we reached the 0.70 Blue Zone."
+technical_catalog.html: line 6141: <div class="px-4 py-2 bg-emerald-500/10 border border-emerald-500 text-emerald-400 rounded-xl text-xs font-black">ipTM: 0.61</div>
+v26_clinical_report.html: line 152: <div class="text-2xl font-black text-emerald-500">0.61 (Confident)</div>
+v28_clinical_report.html: line 155: <p class="text-sm text-slate-500 mb-6 leading-relaxed">Structural confirmation of the <strong class="text-white">Reprogramming CRC Complex</strong>. 99%+ ESI maintained for -11.9 year reset.</p>
+v29_clinical_report.html: line 155: <p class="text-sm text-slate-500 mb-6 leading-relaxed">Structural confirmation of the <strong class="text-white">Reprogramming CRC Complex</strong>. 99%+ ESI maintained for -11.9 year reset.</p>
+whitepaper.html: line 309: of rejuvenation markers (ipTM 0.61)

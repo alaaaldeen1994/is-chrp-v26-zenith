@@ -183,7 +183,7 @@
                     <a href="scientific_qna.html" class="text-[12px] font-extrabold text-blue-600 uppercase tracking-wider">Scientific Q&A</a>
                     <a href="whitepaper.html" class="text-[12px] font-bold text-slate-600 uppercase tracking-wider hover:text-blue-600">Research Whitepaper</a>
                     <a href="regulatory.html" class="text-[12px] font-bold text-slate-600 uppercase tracking-wider hover:text-blue-600">Regulatory Statement</a>
-                    <a href="v29_clinical_report.html" class="text-[12px] font-bold text-slate-600 uppercase tracking-wider hover:text-blue-600">Clinical Report v30.0</a>
+                    <a href="v30_clinical_report.html" class="text-[12px] font-bold text-slate-600 uppercase tracking-wider hover:text-blue-600">Clinical Report v30.0</a>
                     <a href="how_it_works.html" class="text-[12px] font-bold text-slate-600 uppercase tracking-wider hover:text-blue-600">How Zenith Works</a>
                 </div>
             </div>
@@ -345,12 +345,12 @@
             <!-- Q7 -->
             <div class="qna-accordion">
                 <button class="qna-trigger" onclick="toggleAccordion(this)">
-                    <span>Q7: Why does the system maintain local models like zenith_v29_model alongside the active production model?</span>
+                    <span>Q7: Why does the system maintain local models like zenith_v30_model alongside the active production model?</span>
                     <svg class="qna-icon w-6 h-6 text-blue-600" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path></svg>
                 </button>
                 <div class="qna-content">
                     <p class="mb-4">
-                        While the active 2.42M-cell production ensemble is optimized for real-time live interface queries across Highly Variable Genes, maintaining legacy local references (such as <code>zenith_v29_model</code>) is a scientific necessity:
+                        While the active 2.42M-cell production ensemble is optimized for real-time live interface queries across Highly Variable Genes, maintaining legacy local references (such as <code>zenith_v30_model</code>) is a scientific necessity:
                     </p>
                     <ul class="list-disc pl-6 space-y-2 mb-4">
                         <li><strong>Full-Transcriptome Vocabulary</strong>: Production models select highly variable genes to ensure cloud computation speed. Legacy models retain the unfiltered <strong>26,662-gene vocabulary</strong>, which is vital when aligning patient biopsies where researchers must audit low-expression structural markers or rare pathways.</li>
