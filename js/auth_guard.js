@@ -7,7 +7,7 @@ auth.onAuthStateChanged(user => {
     if (!user && !isDemo) {
         // No user is signed in and no demo bypass — redirect to profile page
         console.warn("Unauthorized access. Redirecting to institutional profile...");
-        window.location.href = "profile.html";
+        window.location.href = "index.html";
     } else if (user) {
         // Real Firebase authenticated user
         console.log("Authenticated Researcher:", user.email);
@@ -33,7 +33,7 @@ function performLogout() {
     auth.signOut().then(() => {
         localStorage.removeItem('ZENITH_DEMO_BYPASS');
         console.log("Signed out successfully");
-        window.location.href = "profile.html";
+        window.location.href = "index.html";
     }).catch((error) => {
         console.error("Sign out error", error);
     });
