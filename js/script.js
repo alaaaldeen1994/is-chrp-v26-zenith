@@ -3713,8 +3713,14 @@ const BiosimBridge = {
                             statusBadge.style.borderColor = 'rgba(239,68,68,0.2)';
                         }
                     }
-              // New biophysical and pharmacokinetic helper methods for Zenith v30
-    simulatePKPDJS(compoundName, doseMg, frequencyHours) {
+                } catch (err) {
+                    console.error("QC telemetry failed:", err);
+                }
+            }
+            }, 100);
+        },
+        // New biophysical and pharmacokinetic helper methods for Zenith v30
+        simulatePKPDJS(compoundName, doseMg, frequencyHours) {
         const params = {
             "Semaglutide": { F: 0.89, ka: 0.015, ke: 0.0041, kin: 0.05, kout: 0.02, Vd: 12.5 },
             "Omega3": { F: 0.50, ka: 0.40, ke: 0.029, kin: 0.12, kout: 0.08, Vd: 60.0 },

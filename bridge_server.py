@@ -209,9 +209,57 @@ class D2HUtility:
 
         "SIRT1":  "Q96EB6",  # NAD-dependent deacetylase (epigenetic rejuvenation)
 
-        "FOXO3":  "O43524",  # Forkhead longevity TF
-
     }
+
+    DYNAMIC_DOMAINS = {}
+
+    FUNCTIONAL_DOMAINS = {
+        "POU5F1": (134, 360),   # POU-specific + homeodomain (UniProt Q01860 feature)
+        "OCT4":   (134, 360),   # Alias
+        "SOX2":   (41, 120),    # HMG box DNA-binding domain (UniProt P48431)
+        "KLF4":   (352, 479),   # Three C2H2 zinc finger domains
+        "MYC":    (367, 439),   # bHLH-LZ transactivation domain (oncogenic core)
+        "NANOG":  (96, 248),    # Homeodomain + WR domain
+        "GATA4":  (217, 330),   # Two GATA zinc-finger domains
+        "TBX5":   (57, 239),    # T-box DNA-binding domain
+        "NKX2-5": (138, 197),   # NK2 homeodomain
+        "MEF2C":  (1, 86),      # MADS-box + MEF2 domain
+        "NEUROD2":(1, 100),     # bHLH domain
+        "ASCL1":  (107, 164),   # bHLH domain
+        "SOX17":  (100, 178),   # HMG box
+        "FOXA2":  (84, 172),    # Forkhead domain
+        "PAX6":   (4, 128),     # Paired domain
+        "TP53":   (102, 292),   # DNA-binding domain (tumour suppressor core)
+        "TERT":   (601, 900),   # Reverse transcriptase domain (trim  --  full = 1132aa)
+        "SIRT1":  (229, 498),   # Deacetylase domain
+        "FOXO3":  (156, 256),   # Forkhead DNA-binding domain
+        "SOX5":   (550, 625),   # HMG box domain
+        "ZFHX3":  (2600, 2670), # Homeodomain
+    }
+
+    @staticmethod
+    def extract_domain(seq: str, gene: str) -> str:
+        """Trim full-length sequence to functional domain only.
+        Returns domain-only segment if known, otherwise returns full sequence.
+        """
+        if not seq or seq.startswith("SEQUENCE_NOT_FOUND"):
+            return seq
+        gene_upper = gene.strip().upper()
+        # 1. Check pre-defined functional domains
+        domain_range = D2HUtility.FUNCTIONAL_DOMAINS.get(gene_upper)
+        if domain_range:
+            start, end = domain_range
+            segment = seq[start - 1 : end]  # Convert 1-indexed to 0-indexed
+            if len(segment) >= 30:  # Sanity check
+                return segment
+        # 2. Check dynamically parsed domains
+        dynamic_range = D2HUtility.DYNAMIC_DOMAINS.get(gene_upper)
+        if dynamic_range:
+            start, end = dynamic_range
+            segment = seq[start - 1 : end]  # Convert 1-indexed to 0-indexed
+            if len(segment) >= 30:
+                return segment
+        return seq
 
 
 
@@ -266,6 +314,32 @@ class D2HUtility:
                                 source = f"UniProt/{accession} (Tier1-Accession)"
 
                                 print(f"    UniProt TIER1: {gene_upper}  ->  {accession} ({len(sequence)} aa)")
+
+                                # Parse dynamic domains if not already in pre-defined FUNCTIONAL_DOMAINS
+                                if gene_upper not in D2HUtility.FUNCTIONAL_DOMAINS:
+                                    try:
+                                        features = data.get("features", [])
+                                        domain_start = None
+                                        domain_end = None
+                                        for f in features:
+                                            f_type = f.get("type")
+                                            if f_type in ("Domain", "DNA binding", "Zinc finger"):
+                                                loc = f.get("location", {})
+                                                start_val = loc.get("start", {}).get("value")
+                                                end_val = loc.get("end", {}).get("value")
+                                                if start_val and end_val:
+                                                    if f_type in ("Domain", "DNA binding"):
+                                                        domain_start = start_val
+                                                        domain_end = end_val
+                                                        break
+                                                    elif f_type == "Zinc finger" and not domain_start:
+                                                        domain_start = start_val
+                                                        domain_end = end_val
+                                        if domain_start and domain_end:
+                                            D2HUtility.DYNAMIC_DOMAINS[gene_upper] = (domain_start, domain_end)
+                                            print(f"       UniProt DYNAMIC DOMAIN for {gene_upper}: residues {domain_start}-{domain_end}")
+                                    except Exception as ex:
+                                        print(f"       Failed to parse dynamic domain features for {gene_upper}: {ex}")
 
                     except Exception as e:
 
@@ -4098,93 +4172,9 @@ async def generate_af3_manifest(req: dict):
 
         # Known functional domain residue ranges (from UniProt reviewed annotations):
 
-        FUNCTIONAL_DOMAINS = {
+        seq_a = D2HUtility.extract_domain(sequences.get(factors[0], ""), factors[0])
 
-            "POU5F1": (134, 360),   # POU-specific + homeodomain (UniProt Q01860 feature)
-
-            "OCT4":   (134, 360),   # Alias
-
-            "SOX2":   (41, 120),    # HMG box DNA-binding domain (UniProt P48431)
-
-            "KLF4":   (352, 479),   # Three C2H2 zinc finger domains
-
-            "MYC":    (367, 439),   # bHLH-LZ transactivation domain (oncogenic core)
-
-            "NANOG":  (96, 248),    # Homeodomain + WR domain
-
-            "GATA4":  (217, 330),   # Two GATA zinc-finger domains
-
-            "TBX5":   (57, 239),    # T-box DNA-binding domain
-
-            "NKX2-5": (138, 197),   # NK2 homeodomain
-
-            "MEF2C":  (1, 86),      # MADS-box + MEF2 domain
-
-            "NEUROD2":(1, 100),     # bHLH domain
-
-            "ASCL1":  (107, 164),   # bHLH domain
-
-            "SOX17":  (100, 178),   # HMG box
-
-            "FOXA2":  (84, 172),    # Forkhead domain
-
-            "PAX6":   (4, 128),     # Paired domain
-
-            "TP53":   (102, 292),   # DNA-binding domain (tumour suppressor core)
-
-            "TERT":   (601, 900),   # Reverse transcriptase domain (trim  --  full = 1132aa)
-
-            "SIRT1":  (229, 498),   # Deacetylase domain
-
-            "FOXO3":  (156, 256),   # Forkhead DNA-binding domain
-
-            "SOX5":   (550, 625),   # HMG box domain
-
-            "ZFHX3":  (2600, 2670), # Homeodomain
-
-        }
-
-
-
-        def extract_domain(seq: str, gene: str) -> str:
-
-            """Trim full-length sequence to functional domain only.
-
-            Returns domain-only segment if known, otherwise returns full sequence
-
-            (provided it is within the 2000aa AF3 per-chain limit).
-
-            """
-
-            if not seq or seq.startswith("SEQUENCE_NOT_FOUND"):
-
-                return seq
-
-            domain_range = FUNCTIONAL_DOMAINS.get(gene.upper())
-
-            if domain_range:
-
-                start, end = domain_range
-
-                segment = seq[start - 1 : end]  # Convert 1-indexed to 0-indexed
-
-                if len(segment) >= 30:  # Sanity check: domain must be at least 30aa
-
-                    return segment
-
-            # No domain info: return full sequence (already verified against chain limit above)
-
-            if len(seq) > 1000:
-
-                print(f"       {gene}: No domain annotation, full sequence is {len(seq)}aa  --  may exceed AF3 limit")
-
-            return seq
-
-
-
-        seq_a = extract_domain(sequences.get(factors[0], ""), factors[0])
-
-        seq_b = extract_domain(sequences.get(factors[1], ""), factors[1]) if len(factors) >= 2 else ""
+        seq_b = D2HUtility.extract_domain(sequences.get(factors[1], ""), factors[1]) if len(factors) >= 2 else ""
 
 
 
@@ -6137,7 +6127,11 @@ async def partial_reprogramming_endpoint(req: PartialReprogrammingRequest):
 
             if seq1 and seq2 and not seq1.startswith("SEQUENCE_NOT_FOUND"):
 
-                fused = D2HUtility.generate_z_linker_handshake(seq1[:200], seq2[:200])
+                seq1_dom = D2HUtility.extract_domain(seq1, approved_genes[0])
+
+                seq2_dom = D2HUtility.extract_domain(seq2, approved_genes[1])
+
+                fused = D2HUtility.generate_z_linker_handshake(seq1_dom, seq2_dom)
 
                 af3_manifest = {
                     "name": f"Zenith_Partial_{approved_genes[0]}_{approved_genes[1]}",
