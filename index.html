@@ -5897,6 +5897,19 @@
 
 
 
+            // Automatically open login modal if redirected for login or simulation access
+            window.addEventListener('DOMContentLoaded', () => {
+                const urlParams = new URLSearchParams(window.location.search);
+                const action = urlParams.get('action');
+                const hasSimRedirect = localStorage.getItem('auth_redirect') === 'sim';
+                
+                if (action === 'login' || hasSimRedirect) {
+                    openLoginModal(false);
+                }
+            });
+
+
+
             // --- REVEAL ANIMATION OBSERVER (Robust Fix) ---
 
             const revealObserver = new IntersectionObserver((entries) => {

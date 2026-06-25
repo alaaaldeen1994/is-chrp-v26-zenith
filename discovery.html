@@ -135,17 +135,20 @@
             }
         }
 
-        firebase.auth().onAuthStateChanged((user) => {
-            window._isAuthenticated = !!(user || ZENITH_DEMO_BYPASS);
-            updateAuthUI(window._isAuthenticated);
-            
-            // Auto-redirect to simulation lab if flag is set
-            if (window._isAuthenticated && localStorage.getItem('auth_redirect') === 'sim') {
-                localStorage.removeItem('auth_redirect');
-                setTimeout(() => {
-                    if (typeof enterSimulation === 'function') enterSimulation();
-                }, 100);
-            }
+        // Wrap in DOMContentLoaded to prevent race conditions with DOM elements
+        window.addEventListener('DOMContentLoaded', () => {
+            firebase.auth().onAuthStateChanged((user) => {
+                window._isAuthenticated = !!(user || ZENITH_DEMO_BYPASS);
+                updateAuthUI(window._isAuthenticated);
+                
+                // Auto-redirect to simulation lab if flag is set
+                if (window._isAuthenticated && localStorage.getItem('auth_redirect') === 'sim') {
+                    localStorage.removeItem('auth_redirect');
+                    setTimeout(() => {
+                        if (typeof enterSimulation === 'function') enterSimulation();
+                    }, 100);
+                }
+            });
         });
 
         function performLogout() {
