@@ -1376,7 +1376,7 @@ const BiosimBridge = {
                     scientific_rationale: `[ZENITH OSK v1] Partial reprogramming pipeline activated. `
                         + `${approvedFactors.length} factors approved, ${partialData.blocked_count || 0} blocked. `
                         + `Sirtuin pathway engagement: ${sirtReport.pathway_score || 0}% `
-                        + `(Sinclair relevance: ${sirtReport.sinclair_relevance || 'N/A'}). `
+                        + `(Sinclair relevance: ${sirtReport.sirtuin_relevance || 'N/A'}). `
                         + `Horvath clock impact: ${horvReport.loci_affected || 0}/${horvReport.total_loci || 8} loci `
                         + `(predicted shift: ${horvReport.predicted_shift || 'minimal'}). `
                         + `NAD+ boost: ${sirtReport.nad_boost ? 'YES' : 'NO'}. `
@@ -1417,7 +1417,7 @@ const BiosimBridge = {
                         ],
                         sirtuin_report: {
                             pathway_score: 85,
-                            sinclair_relevance: "HIGH",
+                            sirtuin_relevance: "HIGH",
                             nad_boost: true,
                             caloric_restriction_mimicry: true
                         },
@@ -3989,7 +3989,7 @@ const BiosimBridge = {
                 syncEl.innerText = `${(data.syncytial_safety_index * 100).toFixed(1)}%`;
                 afraidEl.innerText = `${data.afraid_fright_clocks.afraid_phenotypic_age_years.toFixed(1)} Yrs`;
 
-                // Display clinical outcomes from Sinclair 2026 database
+                // Display clinical outcomes from Zenith 2026 database
                 if (data.clinical_provenance) {
                     dunedinPaceEl.innerText = data.clinical_provenance.dunedin_pace_rate.toFixed(3);
                     
@@ -4642,7 +4642,7 @@ const BiosimBridge = {
     },
 
     initB2BWidgets() {
-        // Multi-omics Sliders Listeners (including Sinclair factors)
+        // Multi-omics Sliders Listeners (including Longevity factors)
         ['slider-gata4', 'slider-mef2c', 'slider-tbx5', 'slider-nkx25', 'slider-oct4', 'slider-sox2', 'slider-klf4', 'slider-nmn', 'slider-myc', 'slider-snai1'].forEach(id => {
             const input = document.getElementById(id);
             if (input) {

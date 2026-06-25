@@ -6787,7 +6787,7 @@ async def run_gpt_discovery(request: Request):
     mode_label = "Complete Reprogramming (Direct Lineage Conversion)" if mode == "real" else "Literature-based GPT Analysis"
 
     system_base = (
-        f"You are an elite computational biologist and bioinformatician at the Sinclair Lab, Blavatnik Institute, Genetics. "
+        f"You are an elite computational biologist and bioinformatician specializing in epigenetic rejuvenation and cell state modeling. "
         f"The target cell type is: {ct_label}. "
         f"The reprogramming mode is: {mode_label}. "
         f"You have access to 400 genes ranked by Pearson correlation from the Specialist Cardiac Atlas (Litvinukova et al., Nature 2020). "

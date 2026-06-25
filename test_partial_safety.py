@@ -21,7 +21,7 @@ Test Categories:
 
 References:
     - Sarkar et al. (2020) Nature Cell Biology â€” 13-year rejuvenation limit
-    - Sinclair DA et al. (2020) Nature 588:124-129 â€” OSK vision restoration
+    - Lu et al. (2020) Nature 588:124-129 â€” OSK vision restoration
     - Horvath S (2013) Genome Biology 14:R115 â€” Epigenetic clock
 
 Author: Nilus Lab â€” Quality Assurance Division
@@ -259,7 +259,7 @@ class TestSirtuinPathway(unittest.TestCase):
     def test_pure_sirtuin_100_percent(self):
         report = score_sirtuin_pathway(["SIRT1", "FOXO3", "NAMPT"])
         self.assertEqual(report["pathway_score"], 100)
-        self.assertEqual(report["sinclair_relevance"], "HIGH")
+        self.assertEqual(report["sirtuin_relevance"], "HIGH")
 
     def test_mixed_50_percent(self):
         report = score_sirtuin_pathway(["SIRT1", "FOXO3", "GATA4", "TBX5"])
@@ -268,7 +268,7 @@ class TestSirtuinPathway(unittest.TestCase):
     def test_zero_percent_no_sirtuin(self):
         report = score_sirtuin_pathway(["GATA4", "TBX5", "NKX2-5"])
         self.assertEqual(report["pathway_score"], 0)
-        self.assertEqual(report["sinclair_relevance"], "LOW")
+        self.assertEqual(report["sirtuin_relevance"], "LOW")
 
     def test_nad_boost_with_nampt(self):
         self.assertTrue(score_sirtuin_pathway(["NAMPT"])["nad_boost"])
@@ -287,13 +287,13 @@ class TestSirtuinPathway(unittest.TestCase):
     def test_empty_input(self):
         report = score_sirtuin_pathway([])
         self.assertEqual(report["pathway_score"], 0)
-        self.assertEqual(report["sinclair_relevance"], "LOW")
+        self.assertEqual(report["sirtuin_relevance"], "LOW")
         self.assertFalse(report["nad_boost"])
 
-    def test_sinclair_high_with_sirt1_foxo3(self):
+    def test_sirtuin_high_with_sirt1_foxo3(self):
         """SIRT1+FOXO3 should always trigger HIGH sinclair relevance."""
         report = score_sirtuin_pathway(["SIRT1", "FOXO3"])
-        self.assertEqual(report["sinclair_relevance"], "HIGH")
+        self.assertEqual(report["sirtuin_relevance"], "HIGH")
 
     def test_on_off_pathway_separation(self):
         report = score_sirtuin_pathway(["SIRT1", "GATA4"])

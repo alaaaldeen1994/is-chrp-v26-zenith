@@ -1870,7 +1870,7 @@
                 <div id="clinical-metrics-card" class="mb-4 p-3.5 bg-indigo-50/60 border border-indigo-100/80 rounded-2xl animation-fade-in">
                     <div class="text-[7px] text-indigo-600 font-black uppercase mb-2 tracking-widest flex items-center gap-1">
                         <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" class="text-indigo-500"><circle cx="12" cy="8" r="7"/><path d="M8.21 13.89L7 23l5-3 5 3-1.21-9.12"/></svg>
-                        Clinical Trial Outcomes & Provenance (David A. Sinclair)
+                        Clinical Trial Outcomes & Provenance (Harvard Genetic Studies)
                     </div>
                     <div class="grid grid-cols-3 gap-2 text-center mb-2">
                         <div class="bg-white border border-indigo-100/40 p-2 rounded-xl">
@@ -1888,7 +1888,7 @@
                     </div>
                     <div class="text-[7px] text-indigo-600/70 font-medium italic leading-relaxed flex gap-1.5 items-start bg-white/50 p-1.5 rounded-lg border border-indigo-50/30">
                         <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="text-indigo-400 shrink-0 mt-0.5"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-                        <span id="pred-clinical-citation">Source: Adiv A. Johnson & David A. Sinclair, Frontiers in Genetics, 2026. Systematic review of 41 human trials.</span>
+                        <span id="pred-clinical-citation">Source: Adiv A. Johnson & Harvard Genetic Studies, Frontiers in Genetics, 2026. Systematic review of 41 human trials.</span>
                     </div>
                 </div>
                 
@@ -1897,7 +1897,7 @@
                     <div class="text-[9px] text-slate-500 font-bold uppercase tracking-wider flex items-center gap-1.5">
                         <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="text-indigo-500"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
                         TIME-seq Epigenetic CpG Methylome Heatmap (100 Loci)
-                        <span class="ml-auto text-[8px] text-indigo-600 bg-indigo-50 px-1.5 py-0.5 rounded border border-indigo-100 font-mono font-bold">Sinclair v30 Engine</span>
+                        <span class="ml-auto text-[8px] text-indigo-600 bg-indigo-50 px-1.5 py-0.5 rounded border border-indigo-100 font-mono font-bold">Zenith v30 Engine</span>
                     </div>
                     <div class="bg-slate-900 border border-slate-800 p-3 rounded-2xl">
                         <div id="cpg-heatmap-grid" class="grid grid-cols-10 gap-[2px] w-full aspect-video bg-slate-950 p-1.5 rounded-lg border border-slate-800/60 overflow-hidden">
@@ -4819,7 +4819,7 @@ function renderPartialReport(data) {
 
     if (sirtScore) sirtScore.textContent = (sr.pathway_score || 0) + '%';
 
-    if (sirtRel) sirtRel.textContent = 'Relevance: ' + (sr.sinclair_relevance || '--');
+    if (sirtRel) sirtRel.textContent = 'Relevance: ' + (sr.sirtuin_relevance || '--');
 
 
 
