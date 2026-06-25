@@ -1,5 +1,6 @@
 import numpy as np
 from typing import Dict, Any, List
+from services.pkpd_engine import PKPDEngine
 
 class MultiOmicsPredictorService:
     """
@@ -50,26 +51,52 @@ class MultiOmicsPredictorService:
     def predict_perturbation_trajectory(self, baseline_cell_type: str, factors: Dict[str, float]) -> Dict[str, Any]:
         """
         Calculates cell-type-specific developmental transition trajectories under factor cocktails.
+        Mechanistic simulation incorporating 2-compartment PK/PD models, non-linear pathway synergies,
+        and explicit 100-loci CpG methylation kinetics.
         """
+        # Helper to get dose and frequency, supporting both custom slider values and binary toggles
+        def get_dose_and_freq(name):
+            is_checked = float(factors.get(name, 0.0)) > 0.5
+            default_params = PKPDEngine.COMPOUND_PARAMS.get(name, {})
+            if not default_params:
+                return 0.0, 0.0
+            
+            # Check if custom values are provided in the payload (with defaults if not)
+            custom_dose = factors.get(f"{name}_dose", None)
+            custom_freq = factors.get(f"{name}_freq", None)
+            
+            if is_checked:
+                dose = float(custom_dose) if custom_dose is not None else default_params["default_dose"]
+                freq = float(custom_freq) if custom_freq is not None else default_params["default_freq_hrs"]
+                return dose, freq
+            else:
+                return 0.0, default_params["default_freq_hrs"]
+
+        # Compute PK/PD concentrations (steady-state tissue averages in ug/L)
+        _, _, semaglutide_conc = PKPDEngine.simulate_dosing("Semaglutide", *get_dose_and_freq("Semaglutide"))
+        _, _, omega3_conc = PKPDEngine.simulate_dosing("Omega3", *get_dose_and_freq("Omega3"))
+        _, _, plasmapheresis_conc = PKPDEngine.simulate_dosing("Plasmapheresis", *get_dose_and_freq("Plasmapheresis"))
+        _, _, decitabine_conc = PKPDEngine.simulate_dosing("Decitabine", *get_dose_and_freq("Decitabine"))
+        _, _, ketamine_conc = PKPDEngine.simulate_dosing("Ketamine", *get_dose_and_freq("Ketamine"))
+        _, _, bezisterim_conc = PKPDEngine.simulate_dosing("Bezisterim", *get_dose_and_freq("Bezisterim"))
+        _, _, pitavastatin_conc = PKPDEngine.simulate_dosing("Pitavastatin", *get_dose_and_freq("Pitavastatin"))
+        _, _, multivitamin_conc = PKPDEngine.simulate_dosing("Multivitamin", *get_dose_and_freq("Multivitamin"))
+
         # Extract chemical reprogramming inputs (Yang et al., Aging 2023)
         chir = max(0.0, float(factors.get("CHIR99021", 0.0)))
         repsox = max(0.0, float(factors.get("RepSox", 0.0)))
         forskolin = max(0.0, float(factors.get("Forskolin", 0.0)))
         nmn = max(0.0, float(factors.get("NMN", 0.0)))
         
-        # Extract paper-specific clinical interventions (Johnson & Sinclair, Front. Genet. 2026)
-        semaglutide = max(0.0, float(factors.get("Semaglutide", 0.0)))
-        omega3 = max(0.0, float(factors.get("Omega3", 0.0)))
-        plasmapheresis = max(0.0, float(factors.get("Plasmapheresis", 0.0)))
-        decitabine = max(0.0, float(factors.get("Decitabine", 0.0)))
-        ketamine = max(0.0, float(factors.get("Ketamine", 0.0)))
-        bezisterim = max(0.0, float(factors.get("Bezisterim", 0.0)))
-        pitavastatin = max(0.0, float(factors.get("Pitavastatin", 0.0)))
-        multivitamin = max(0.0, float(factors.get("Multivitamin", 0.0)))
-        
         # Check oral route for gut microbiome deamidation penalty (Kim et al., 2023)
         oral_admin = float(factors.get("oral_administration", 0.0)) > 0.5
-        nmn_effective = nmn * 0.60 if oral_admin else nmn
+        
+        # Calculate NMN concentration using PK/PD
+        nmn_dose = nmn * 100.0  # scale slider value (0-10) to mg dose (0-1000mg)
+        nmn_freq = 24.0  # daily
+        _, _, nmn_conc = PKPDEngine.simulate_dosing("NMN", nmn_dose, nmn_freq)
+        if oral_admin:
+            nmn_conc = nmn_conc * 0.60
         
         # Translate chemical inputs to effective pioneer factor transcription levels
         gata4_eff = max(0.0, float(factors.get("GATA4", 0.0))) + 0.65 * chir
@@ -86,6 +113,17 @@ class MultiOmicsPredictorService:
         if repsox > 0.0:
             snai1_eff = max(0.0, snai1_eff - 0.80 * repsox)
             
+        # Upgraded non-linear Pathway Synergy Matrix (AMPK-NAMPT-SIRT1 network)
+        # Semaglutide activates AMPK, which phosphorylates and activates NAMPT and SIRT1
+        ampk_activity = 1.0 + 1.2 * (semaglutide_conc / (semaglutide_conc + 50.0))
+        nampt_activity = 1.0 + 0.80 * (ampk_activity - 1.0)
+        
+        # NAD+ availability is fueled by NAMPT salvage capacity and NMN substrate
+        nad_availability = 1.0 + 1.5 * np.tanh((nmn_conc * nampt_activity) / 500.0)
+        
+        # SIRT1 activity is boosted by active AMPK
+        s1_boosted = 1.5 * (ampk_activity - 1.0)
+
         # Compile effective factor dictionary for target gene calculations
         effective_factors = {
             "GATA4": gata4_eff, "MEF2C": mef2c_eff, "TBX5": tbx5_eff, "NKX2-5": nkx25_eff,
@@ -114,57 +152,45 @@ class MultiOmicsPredictorService:
                 
             expression_profiles[gene] = float(np.round(max(0.0, acc_val), 2))
             
-        # Retrieve computed epigenetic gene levels
-        s1 = expression_profiles["SIRT1"]
+        # Retrieve computed epigenetic gene levels, with SIRT1 boosted by AMPK
+        s1 = expression_profiles["SIRT1"] + s1_boosted
         s5 = expression_profiles["SIRT5"]
         s6 = expression_profiles["SIRT6"]
         gja1 = expression_profiles["GJA1"]
         kcnj2 = expression_profiles["KCNJ2"]
         scn5a = expression_profiles["SCN5A"]
         
-        # 2. Differentiated Sirtuin Activity Index (Guo et al., 2022; Wu et al., 2023; Osborne et al., 2023)
-        # SIRT1 (genomic silencer/vascular integrity) -> 0.45 weight
-        # SIRT5 (cardiac anti-fibrosis) -> 0.35 weight in cardiac cells
-        # SIRT6 (DNA double-strand break repair) -> 0.20 weight
-        # SIRT2 and SIRT3 (localized metabolic regulators) -> 0.05 weight (omitted from core gene list but modeled as minor constants)
+        # 2. Differentiated Sirtuin Activity Index using upgraded AMPK-NAMPT-SIRT1 parameters
         sirt_sum = (0.45 * s1) + (0.35 * s5) + (0.20 * s6) + 0.10
-        nad_availability = 1.0 + 0.80 * np.tanh(nmn_effective / 2.0)
         sirt_activity_index = float(np.round((sirt_sum / 3.0) * nad_availability, 3))
         
-        # 3. Endothelial Rejuvenation Score (NAD+-H2S signaling & EndMT prevention)
-        # Das et al., Cell 2018; Pernomian et al., 2024
-        # Requires SIRT1 and NAD+ availability, penalized by EndMT driver SNAI1
-        endothelial_score = 0.50 * np.tanh(s1 - 1.2) + 0.40 * np.tanh(nmn_effective) - 0.30 * np.tanh(snai1_eff)
+        # 3. Endothelial Rejuvenation Score (incorporates SIRT1 and NMN concentration)
+        endothelial_score = 0.50 * np.tanh(s1 - 1.2) + 0.40 * np.tanh(nmn_conc / 300.0) - 0.30 * np.tanh(snai1_eff)
         endothelial_score = float(np.round(max(0.0, min(1.0, endothelial_score)), 3))
         
         # 4. Syncytial Safety Index (Arrhythmia Risk)
-        # Assess gap junctions (GJA1/Connexin 43) and electrophysiological ion channels (KCNJ2/Kir2.1, SCN5A/Nav1.5)
-        # Heterogeneity and downregulation by c-Myc or SNAI1 create conduction block/re-entry risk
         syncytial_safety = 1.0 / (1.0 + np.exp(-2.5 * (gja1 - 1.2) - 1.5 * (kcnj2 - 0.8) - 1.5 * (scn5a - 0.9)))
         syncytial_safety = float(np.round(max(0.0, min(1.0, syncytial_safety)), 3))
         
-        # 5. Transcriptomic state stability index calculation with Metformin/SRT1720 Hazard
-        # Excessive dosages or oncogene induction cause transcriptome dysregulation and noise
+        # 5. Transcriptomic state stability index calculation
         dose_penalty = 0.02 * max(0.0, (structural_tf_sum + reprogramming_tf_sum) - 6.0)
         risk_penalty = 0.35 * np.tanh(risk_tf_sum / 2.0)
         stability = 0.992 - dose_penalty - risk_penalty
         
-        # Drug-Interaction Hazard Filter (Palliyaguru et al., 2020)
-        # Metformin + SIRT1 activator SRT1720 under high-fat diet causes lifespan reduction/toxicity
+        # Drug-Interaction Hazard Filter (Metformin + SRT1720 + High Fat Diet)
         metformin = max(0.0, float(factors.get("Metformin", 0.0)))
         srt1720 = max(0.0, float(factors.get("SRT1720", 0.0)))
         high_fat_diet = float(factors.get("high_fat_diet", 0.0)) > 0.5
         
         hazard_detected = None
         if metformin > 1.5 and srt1720 > 1.5 and high_fat_diet:
-            stability *= 0.40  # Drastic transcriptomic stability collapse
+            stability *= 0.40
             hazard_detected = "HAZARDOUS_METFORMIN_SRT1720_SYNERGY: Combined high-dose Metformin and SIRT1 activation (SRT1720) under high-fat diet conditions accelerates metabolic collapse and reduces lifespan (Palliyaguru et al., 2020)."
             
         stability = float(np.round(stability, 4))
         stability = max(0.100, min(0.999, stability))
         
-        # 6. Non-Equilibrium Thermodynamics (Stochastic Langevin Dynamics)
-        # Introduce Gaussian noise scaled by cellular instability to represent transcriptional bursting
+        # Stochastic Langevin Dynamics ( transcriptional noise)
         if stability < 0.90:
             stochastic_fluctuation = np.random.normal(0.0, 0.03 * (1.0 - stability))
             stability = float(np.round(max(0.100, min(0.999, stability + stochastic_fluctuation)), 4))
@@ -172,23 +198,22 @@ class MultiOmicsPredictorService:
                 gene_noise = np.random.normal(0.0, 0.05 * (1.0 - stability) * expression_profiles[gene])
                 expression_profiles[gene] = float(np.round(max(0.0, expression_profiles[gene] + gene_noise), 2))
         
-        # 7. Epigenetic clock shift prediction (Information Theory of Aging)
-        # Resetting chromatin noise via pioneer factors (OSK) and Sirtuin metabolic activity
+        # 6. Rejuvenation and aging drift dynamics
         rejuvenation_potential = (0.45 * reprogramming_tf_sum) + (0.25 * structural_tf_sum) + (0.35 * (sirt_activity_index - 1.0))
         aging_drift = (2.20 * myc_eff) + (1.50 * snai1_eff)
         
-        # Integrate clinical intervention shifts from Adiv A. Johnson & David A. Sinclair (Front. Genet. 2026)
+        # Integrate clinical intervention shifts using active tissue concentrations
         clinical_rejuvenation_boost = (
-            -4.90 * np.tanh(semaglutide / 1.5) +   # Semaglutide PhenoAge reduction
-            -0.32 * np.tanh(omega3 / 1.5) +        # Omega-3 DO-HEALTH clock reduction
-            -1.81 * np.tanh(ketamine / 1.5) +      # Ketamine OMICmAge reduction
-            -4.77 * np.tanh(bezisterim / 1.5) +    # Bezisterim InflammAge reduction
-            -0.50 * np.tanh(pitavastatin / 1.5) +  # Pitavastatin statin reduction
-            -0.44 * np.tanh(multivitamin / 1.5)    # Multivitamin PhenoAge reduction
+            -4.90 * np.tanh(semaglutide_conc / 80.0) +   # Semaglutide PhenoAge reduction
+            -0.32 * np.tanh(omega3_conc / 400.0) +       # Omega-3 DO-HEALTH clock reduction
+            -1.81 * np.tanh(ketamine_conc / 120.0) +     # Ketamine OMICmAge reduction
+            -4.77 * np.tanh(bezisterim_conc / 40.0) +    # Bezisterim InflammAge reduction
+            -0.50 * np.tanh(pitavastatin_conc / 30.0) +  # Pitavastatin statin reduction
+            -0.44 * np.tanh(multivitamin_conc / 20.0)    # Multivitamin PhenoAge reduction
         )
         
         clinical_aging_drift = (
-            0.26 * np.tanh(plasmapheresis / 1.5)   # Plasmapheresis accelerated aging (Borsky et al., 2025)
+            0.26 * np.tanh(plasmapheresis_conc / 15.0)   # Plasmapheresis accelerated aging (Borsky et al., 2025)
         )
         
         latent_shift_score = rejuvenation_potential - aging_drift
@@ -196,41 +221,80 @@ class MultiOmicsPredictorService:
         
         predicted_age_delta = float(np.round(base_age_delta + clinical_rejuvenation_boost + clinical_aging_drift, 2))
         
-        # Causal clock shifts (DamAge/AdaptAge) from Ying & Sinclair et al.
-        damage_shift = float(np.round(-6.10 * np.tanh(omega3 / 1.5) + 2.40 * np.tanh(decitabine / 1.5), 2))
-        adaptive_shift = float(np.round(6.20 * np.tanh(omega3 / 1.5) - 5.92 * np.tanh(decitabine / 1.5), 2))
+        # 7. Decoupled Causal Clock Shifts (DamAge/AdaptAge) from Ying & Sinclair et al.
+        # Epigenetic damage (DamAge) increases with decitabine and inflammation, and decreases with Sirtuins
+        damage_shift = float(np.round(
+            -6.10 * np.tanh(omega3_conc / 400.0) + 
+            2.40 * np.tanh(decitabine_conc / 30.0) + 
+            1.50 * np.tanh(aging_drift / 2.0) - 
+            1.20 * np.tanh(sirt_activity_index - 1.0), 2
+        ))
+        
+        # Epigenetic adaptation (AdaptAge) represents homeostatic response, depleted by chemotherapy
+        adaptive_shift = float(np.round(
+            6.20 * np.tanh(omega3_conc / 350.0) + 
+            2.10 * np.tanh(semaglutide_conc / 80.0) - 
+            5.92 * np.tanh(decitabine_conc / 25.0), 2
+        ))
         
         # DunedinPACE rate of aging shift
         pace_base = 1.0 + 0.10 * np.tanh(aging_drift / 2.0) - 0.15 * np.tanh(rejuvenation_potential / 3.0)
         pace_clinical_boost = (
-            -0.09 * np.tanh(semaglutide / 1.5) +    # Semaglutide 9% drop
-            -0.022 * np.tanh(omega3 / 1.5) +        # Omega-3 reduction
-            -0.035 * np.tanh(pitavastatin / 1.5) +  # Pitavastatin reduction
-            -0.025 * np.tanh(nmn_effective / 2.0)   # Caloric restriction mimicry
+            -0.09 * np.tanh(semaglutide_conc / 80.0) +    # Semaglutide 9% drop
+            -0.022 * np.tanh(omega3_conc / 400.0) +       # Omega-3 reduction
+            -0.035 * np.tanh(pitavastatin_conc / 30.0) +  # Pitavastatin reduction
+            -0.025 * np.tanh(nmn_conc / 300.0)            # Caloric restriction mimicry
         )
         pace_clinical_drift = (
-            0.003 * np.tanh(plasmapheresis / 1.5) + # Plasmapheresis increase (Borsky et al., 2025)
-            0.050 * np.tanh(decitabine / 1.5)       # Decitabine / cytidine stress
+            0.003 * np.tanh(plasmapheresis_conc / 15.0) + # Plasmapheresis increase
+            0.050 * np.tanh(decitabine_conc / 30.0)       # Decitabine / cytidine stress
         )
         dunedin_pace = float(np.round(pace_base + pace_clinical_boost + pace_clinical_drift, 3))
         
-        # 8. Chromatin accessibility status
+        # 8. Explicit 100-loci CpG Methylation Kinetics Solver (TIME-seq)
+        # We simulate 100 CpG sites with baseline methylation. 
+        # Groups: 0-29 (reprogramming), 30-59 (damage), 60-89 (adaptive), 90-99 (stable control)
+        cpg_states = []
+        baseline_age = 55.0
+        
+        for k in range(100):
+            # Define baseline writer (DNMT) and eraser (TET) rates for locus k
+            if k < 30:  # Reprogramming-sensitive
+                Wk0, Ek0 = 0.40, 0.60
+                # Reprogramming factors recruit erasers (TETs)
+                Ek = Ek0 + 3.0 * (oct4_eff + sox2_eff + klf4_eff)
+                Wk = Wk0
+            elif k < 60:  # Age-associated damage
+                Wk0, Ek0 = 0.30, 0.70
+                # Inflammation and decitabine recruit writers (DNMTs)
+                Wk = Wk0 + 2.5 * np.tanh(aging_drift / 2.0) + 2.0 * np.tanh(decitabine_conc / 30.0)
+                # SIRT1/NMN/Semaglutide recruit erasers (TETs) to restore youthful low methylation
+                Ek = Ek0 + 1.8 * np.tanh(sirt_activity_index - 1.0) + 1.2 * np.tanh(semaglutide_conc / 80.0)
+            elif k < 90:  # Adaptive
+                Wk0, Ek0 = 0.80, 0.20
+                # Metabolic support recruits writers to maintain methylation
+                Wk = Wk0 + 1.5 * np.tanh(omega3_conc / 400.0) + 1.0 * np.tanh(nmn_conc / 300.0)
+                # Stress/decitabine recruits erasers/loss of methylation
+                Ek = Ek0 + 3.0 * np.tanh(decitabine_conc / 25.0)
+            else:  # Stable control
+                Wk0, Ek0 = 0.50, 0.50
+                Wk, Ek = Wk0, Ek0
+                
+            # Steady-state methylation fraction
+            Mk = Wk / (Wk + Ek)
+            cpg_states.append(float(np.round(Mk, 4)))
+            
+        timeseq_age = baseline_age + predicted_age_delta
+        cpg_restoration = float(np.round(100.0 * np.tanh(max(0.0, latent_shift_score) / 3.0), 2))
+        
         chromatin_status = "RESTRICTED"
         if oct4_eff > 0.8 and sox2_eff > 0.8:
             chromatin_status = "OPEN_ACCESSIBLE_REPROGRAMMED"
         elif (structural_tf_sum + reprogramming_tf_sum) > 2.5:
             chromatin_status = "PARTIALLY_ACCESSIBLE"
             
-        # 9. Sinclair Epigenetic & Phenotypic Clock Integrations (Griffin et al., 2024; Schultz et al., 2020)
-        # TIME-seq CpG Methylation Clock calculations
-        baseline_age = 55.0  # Simulated patient baseline age in years
-        timeseq_age = baseline_age + predicted_age_delta
-        cpg_restoration = float(np.round(100.0 * np.tanh(max(0.0, latent_shift_score) / 3.0), 2))
-        
-        # AFRAID and FRIGHT frailty clocks (0.0 = robust, 1.0 = frail)
         frailty_score = 0.20 + 0.40 * (1.0 - stability) + 0.30 * np.tanh(myc_eff + snai1_eff) - 0.15 * np.tanh(sirt_activity_index)
         frailty_score = float(np.round(max(0.05, min(0.95, frailty_score)), 3))
-        # AFRAID Phenotypic Age scales with frailty index
         afraid_age = float(np.round(baseline_age + 28.0 * (frailty_score - 0.25), 1))
         fright_age = float(np.round(baseline_age + 24.0 * (frailty_score - 0.22), 1))
         
@@ -247,7 +311,8 @@ class MultiOmicsPredictorService:
                 "predicted_cpg_methylation_age_years": float(np.round(timeseq_age, 2)),
                 "cpg_methylation_reversal_years": predicted_age_delta,
                 "cpg_sites_rejuvenated_percent": cpg_restoration,
-                "sequencing_cost_reduction_factor": 100.0  # Griffin et al., 2024 cost reduction detail
+                "sequencing_cost_reduction_factor": 100.0,
+                "cpg_methylation_vector": cpg_states  # Real-time 100-loci methylation vector for heatmap drawing
             },
             "afraid_fright_clocks": {
                 "afraid_frailty_index": frailty_score,

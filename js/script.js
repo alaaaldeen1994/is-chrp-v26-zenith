@@ -3713,11 +3713,153 @@ const BiosimBridge = {
                             statusBadge.style.borderColor = 'rgba(239,68,68,0.2)';
                         }
                     }
-                } catch (e) {
-                    console.error("QC Telemetry request failed:", e);
-                }
+              // New biophysical and pharmacokinetic helper methods for Zenith v30
+    simulatePKPDJS(compoundName, doseMg, frequencyHours) {
+        const params = {
+            "Semaglutide": { F: 0.89, ka: 0.015, ke: 0.0041, kin: 0.05, kout: 0.02, Vd: 12.5 },
+            "Omega3": { F: 0.50, ka: 0.40, ke: 0.029, kin: 0.12, kout: 0.08, Vd: 60.0 },
+            "Plasmapheresis": { F: 1.00, ka: 10.0, ke: 0.001, kin: 0.01, kout: 0.01, Vd: 5.0 },
+            "Decitabine": { F: 1.00, ka: 5.0, ke: 1.38, kin: 0.80, kout: 0.70, Vd: 35.0 },
+            "Ketamine": { F: 0.93, ka: 4.0, ke: 0.28, kin: 0.50, kout: 0.45, Vd: 150.0 },
+            "Bezisterim": { F: 0.65, ka: 0.50, ke: 0.058, kin: 0.18, kout: 0.15, Vd: 80.0 },
+            "Pitavastatin": { F: 0.51, ka: 0.80, ke: 0.063, kin: 0.22, kout: 0.18, Vd: 95.0 },
+            "Multivitamin": { F: 0.75, ka: 0.60, ke: 0.115, kin: 0.25, kout: 0.20, Vd: 50.0 }
+        }[compoundName];
+        
+        if (!params) return { time: [], tissue: [] };
+        
+        const totalHours = Math.max(24.0, frequencyHours) * 2;
+        const stepsPerHour = 4;
+        const dt = 1.0 / stepsPerHour;
+        const numSteps = totalHours * stepsPerHour;
+        
+        let Depot = 0;
+        let Cp = 0;
+        let Ci = 0;
+        
+        let timePoints = [];
+        let tissueConc = [];
+        
+        for (let step = 0; step < numSteps; step++) {
+            const t = step * dt;
+            
+            if (step % (frequencyHours * stepsPerHour) === 0 && doseMg > 0) {
+                Depot += doseMg;
             }
-        }, 500);
+            
+            const dDepot = -params.ka * Depot * dt;
+            Depot += dDepot;
+            
+            const absorptionRate = params.F * params.ka * (-dDepot / dt);
+            const dCp = ((absorptionRate / params.Vd) - (params.ke * Cp) - (params.kin * Cp) + (params.kout * Ci)) * dt;
+            Cp += dCp;
+            
+            const dCi = ((params.kin * Cp) - (params.kout * Ci)) * dt;
+            Ci += dCi;
+            
+            timePoints.push(t);
+            tissueConc.push(Math.max(0.0, Ci * 1000.0));
+        }
+        
+        const sparkTime = [];
+        const sparkTissue = [];
+        const stepSize = Math.max(1, Math.floor(tissueConc.length / 30));
+        for (let i = 0; i < tissueConc.length; i += stepSize) {
+            sparkTime.push(timePoints[i]);
+            sparkTissue.push(tissueConc[i]);
+            if (sparkTime.length >= 30) break;
+        }
+        
+        return { time: sparkTime, tissue: sparkTissue };
+    },
+
+    drawPKPDSparkline(svgId, timePoints, concentrationValues) {
+        const svg = document.getElementById(svgId);
+        if (!svg) return;
+        
+        svg.innerHTML = '';
+        if (!timePoints || timePoints.length === 0) return;
+        
+        const width = svg.clientWidth || 150;
+        const height = svg.clientHeight || 20;
+        
+        const minTime = Math.min(...timePoints);
+        const maxTime = Math.max(...timePoints);
+        const minConc = 0;
+        const maxConc = Math.max(...concentrationValues, 1.0);
+        
+        let pathD = '';
+        for (let i = 0; i < timePoints.length; i++) {
+            const x = ((timePoints[i] - minTime) / (maxTime - minTime)) * width;
+            const y = height - ((concentrationValues[i] - minConc) / (maxConc - minConc)) * (height - 4) - 2;
+            if (i === 0) {
+                pathD += `M ${x} ${y}`;
+            } else {
+                pathD += ` L ${x} ${y}`;
+            }
+        }
+        
+        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        path.setAttribute('d', pathD);
+        path.setAttribute('fill', 'none');
+        path.setAttribute('stroke-width', '1.5');
+        path.setAttribute('stroke-linecap', 'round');
+        path.setAttribute('stroke-linejoin', 'round');
+        
+        let color = '#10b981'; // default emerald
+        if (svgId.includes('omega3') || svgId.includes('ketamine')) color = '#0284c7';
+        else if (svgId.includes('decitabine')) color = '#a855f7';
+        else if (svgId.includes('plasmapheresis')) color = '#ef4444';
+        else if (svgId.includes('bezisterim')) color = '#ca8a04';
+        else if (svgId.includes('pitavastatin')) color = '#4f46e5';
+        else if (svgId.includes('multivitamin')) color = '#0d9488';
+        
+        path.setAttribute('stroke', color);
+        svg.appendChild(path);
+    },
+
+    drawCpGHeatmap(methylationVector) {
+        const grid = document.getElementById('cpg-heatmap-grid');
+        if (!grid) return;
+        
+        grid.innerHTML = '';
+        
+        for (let k = 0; k < 100; k++) {
+            const val = methylationVector ? methylationVector[k] : (0.50 + 0.30 * Math.sin(k / 5));
+            const block = document.createElement('div');
+            block.className = 'w-full h-full rounded-[2px] transition-all duration-300 cursor-pointer border border-slate-950/20';
+            
+            const hue = 142 + (271 - 142) * val;
+            const sat = 70 + (80 - 70) * val;
+            const light = 45;
+            block.style.backgroundColor = `hsl(${hue}, ${sat}%, ${light}%)`;
+            
+            let grp = "Stable Control";
+            let locusDetail = `Chr${Math.floor(k/8) + 1}:${10000000 + k * 234891}`;
+            if (k < 30) {
+                grp = "Reprogramming-Sensitive";
+                locusDetail += " (OCT4/SOX2 target)";
+            } else if (k < 60) {
+                grp = "Age-Associated Damage";
+                locusDetail += " (SIRT1/Inflammation target)";
+            } else if (k < 90) {
+                grp = "Adaptive Homeostasis";
+                locusDetail += " (NMN/Omega-3 target)";
+            }
+            
+            block.title = `Site #${k+1} [${grp}]\nLocus: ${locusDetail}\nMethylation: ${(val * 100).toFixed(1)}%`;
+            
+            block.addEventListener('mouseenter', () => {
+                block.style.transform = 'scale(1.35)';
+                block.style.zIndex = '10';
+            });
+            block.addEventListener('mouseleave', () => {
+                block.style.transform = 'scale(1)';
+                block.style.zIndex = '1';
+            });
+            
+            grid.appendChild(block);
+        }
     },
 
     async runMultiOmicsPredictor() {
@@ -3733,15 +3875,27 @@ const BiosimBridge = {
         const snai1 = parseFloat(document.getElementById('slider-snai1').value);
         const oralAdmin = document.getElementById('chk-oral-admin').checked ? 1.0 : 0.0;
         
-        // Extract new clinical trial interventions (Johnson & Sinclair, 2026)
-        const semaglutide = document.getElementById('chk-semaglutide').checked ? 1.0 : 0.0;
-        const omega3 = document.getElementById('chk-omega3').checked ? 1.0 : 0.0;
-        const plasmapheresis = document.getElementById('chk-plasmapheresis').checked ? 1.0 : 0.0;
-        const decitabine = document.getElementById('chk-decitabine').checked ? 1.0 : 0.0;
-        const ketamine = document.getElementById('chk-ketamine').checked ? 1.0 : 0.0;
-        const bezisterim = document.getElementById('chk-bezisterim').checked ? 1.0 : 0.0;
-        const pitavastatin = document.getElementById('chk-pitavastatin').checked ? 1.0 : 0.0;
-        const multivitamin = document.getElementById('chk-multivitamin').checked ? 1.0 : 0.0;
+        // Extract clinical dosing values via helper
+        const getDosingParams = (name) => {
+            const isChecked = document.getElementById(`chk-${name}`).checked ? 1.0 : 0.0;
+            const doseSlider = document.getElementById(`slider-dose-${name}`);
+            const freqSlider = document.getElementById(`slider-freq-${name}`);
+            
+            return {
+                checked: isChecked,
+                dose: doseSlider ? parseFloat(doseSlider.value) : 0.0,
+                freq: freqSlider ? parseFloat(freqSlider.value) : 0.0
+            };
+        };
+
+        const sema = getDosingParams("semaglutide");
+        const o3 = getDosingParams("omega3");
+        const plasma = getDosingParams("plasmapheresis");
+        const decit = getDosingParams("decitabine");
+        const keta = getDosingParams("ketamine");
+        const bezis = getDosingParams("bezisterim");
+        const pitav = getDosingParams("pitavastatin");
+        const multi = getDosingParams("multivitamin");
 
         document.getElementById('val-gata4').innerText = gata4.toFixed(1);
         document.getElementById('val-mef2c').innerText = mef2c.toFixed(1);
@@ -3767,9 +3921,38 @@ const BiosimBridge = {
                         "GATA4": gata4, "MEF2C": mef2c, "TBX5": tbx5, "NKX2-5": nkx25,
                         "OCT4": oct4, "SOX2": sox2, "KLF4": klf4, "NMN": nmn,
                         "MYC": myc, "SNAI1": snai1, "oral_administration": oralAdmin,
-                        "Semaglutide": semaglutide, "Omega3": omega3, "Plasmapheresis": plasmapheresis,
-                        "Decitabine": decitabine, "Ketamine": ketamine, "Bezisterim": bezisterim,
-                        "Pitavastatin": pitavastatin, "Multivitamin": multivitamin
+                        
+                        "Semaglutide": sema.checked,
+                        "Semaglutide_dose": sema.dose,
+                        "Semaglutide_freq": sema.freq,
+                        
+                        "Omega3": o3.checked,
+                        "Omega3_dose": o3.dose,
+                        "Omega3_freq": o3.freq,
+                        
+                        "Plasmapheresis": plasma.checked,
+                        "Plasmapheresis_dose": plasma.dose,
+                        "Plasmapheresis_freq": plasma.freq,
+                        
+                        "Decitabine": decit.checked,
+                        "Decitabine_dose": decit.dose,
+                        "Decitabine_freq": decit.freq,
+                        
+                        "Ketamine": keta.checked,
+                        "Ketamine_dose": keta.dose,
+                        "Ketamine_freq": keta.freq,
+                        
+                        "Bezisterim": bezis.checked,
+                        "Bezisterim_dose": bezis.dose,
+                        "Bezisterim_freq": bezis.freq,
+                        
+                        "Pitavastatin": pitav.checked,
+                        "Pitavastatin_dose": pitav.dose,
+                        "Pitavastatin_freq": pitav.freq,
+                        
+                        "Multivitamin": multi.checked,
+                        "Multivitamin_dose": multi.dose,
+                        "Multivitamin_freq": multi.freq
                     }
                 })
             });
@@ -3813,6 +3996,11 @@ const BiosimBridge = {
                     adaptiveShiftEl.style.color = adp > 0 ? '#10b981' : (adp < 0 ? '#ef4444' : '#475569');
                 }
 
+                // Render the interactive TIME-seq epigenetic CpG Heatmap
+                if (data.timeseq_data && data.timeseq_data.cpg_methylation_vector) {
+                    this.drawCpGHeatmap(data.timeseq_data.cpg_methylation_vector);
+                }
+
                 // Handle hazard warning banner
                 if (data.drug_interaction_hazard) {
                     hazardText.innerText = data.drug_interaction_hazard;
@@ -3846,11 +4034,11 @@ const BiosimBridge = {
                     
                     return `
                     <div style="display:flex;align-items:center;gap:12px;font-family:'Inter',sans-serif;">
-                        <span style="font-size:10px;color:#0f172a;font-weight:600;width:50px;">${gene}</span>
-                        <div style="flex:1;background:#e2e8f0;height:6px;border-radius:3px;overflow:hidden;">
-                            <div style="width:${Math.min(100, pct)}%;background:${barColor};height:100%;border-radius:3px;"></div>
-                        </div>
-                        <span style="font-size:10px;color:#475569;font-weight:700;font-family:monospace;width:35px;text-align:right;">${expr.toFixed(2)}</span>
+                         <span style="font-size:10px;color:#0f172a;font-weight:600;width:50px;">${gene}</span>
+                         <div style="flex:1;background:#e2e8f0;height:6px;border-radius:3px;overflow:hidden;">
+                             <div style="width:${Math.min(100, pct)}%;background:${barColor};height:100%;border-radius:3px;"></div>
+                         </div>
+                         <span style="font-size:10px;color:#475569;font-weight:700;font-family:monospace;width:35px;text-align:right;">${expr.toFixed(2)}</span>
                     </div>`;
                 }).join('');
             }
@@ -4462,6 +4650,45 @@ const BiosimBridge = {
                 chk.addEventListener('change', () => this.runMultiOmicsPredictor());
             }
         });
+
+        // Bind clinical dosing sliders to update labels, run real-time JS PK/PD sparkline, and trigger forecast re-evaluation
+        ['semaglutide', 'omega3', 'plasmapheresis', 'decitabine', 'ketamine', 'bezisterim', 'pitavastatin', 'multivitamin'].forEach(name => {
+            const doseSlider = document.getElementById(`slider-dose-${name}`);
+            const freqSlider = document.getElementById(`slider-freq-${name}`);
+            
+            const updateSparklineAndLabels = () => {
+                if (!doseSlider || !freqSlider) return;
+                const dose = parseFloat(doseSlider.value);
+                const freq = parseFloat(freqSlider.value);
+                
+                // Update labels
+                const valDoseEl = document.getElementById(`val-dose-${name}`);
+                const valFreqEl = document.getElementById(`val-freq-${name}`);
+                const doseUnit = name === 'plasmapheresis' ? 'unit' : (name === 'multivitamin' ? 'tab' : 'mg');
+                if (valDoseEl) valDoseEl.innerText = `${dose.toFixed(1)} ${doseUnit}`;
+                if (valFreqEl) valFreqEl.innerText = `${freq} hrs`;
+                
+                // Redraw sparkline instantly in JS
+                const sim = this.simulatePKPDJS(name.charAt(0).toUpperCase() + name.slice(1), dose, freq);
+                this.drawPKPDSparkline(`sparkline-${name}`, sim.time, sim.tissue);
+            };
+            
+            if (doseSlider && freqSlider) {
+                doseSlider.addEventListener('input', () => {
+                    updateSparklineAndLabels();
+                    this.runMultiOmicsPredictor();
+                });
+                freqSlider.addEventListener('input', () => {
+                    updateSparklineAndLabels();
+                    this.runMultiOmicsPredictor();
+                });
+                // Initial sparkline render
+                updateSparklineAndLabels();
+            }
+        });
+
+        // Initial CpG Heatmap Grid draw (Baseline)
+        this.drawCpGHeatmap(null);
 
         // LNP Sliders Listeners
         ['slider-lnp-ion', 'slider-lnp-chol', 'slider-lnp-helper', 'slider-lnp-peg', 'slider-lnp-np'].forEach(id => {

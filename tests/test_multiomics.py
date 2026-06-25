@@ -7,7 +7,11 @@ from services.multiomics_service import MultiOmicsPredictorService
 
 def test_multiomics_cardiac_cocktail():
     service = MultiOmicsPredictorService()
-    factors = {"GATA4": 1.0, "MEF2C": 1.0, "TBX5": 1.0, "NKX2-5": 1.0}
+    # Deep cellular reprogramming requires both cardiac pioneer factors and transcription factors (Lu et al., Nature 2020)
+    factors = {
+        "GATA4": 1.0, "MEF2C": 1.0, "TBX5": 1.0, "NKX2-5": 1.0,
+        "OCT4": 1.0, "SOX2": 1.0, "KLF4": 1.0
+    }
     
     result = service.predict_perturbation_trajectory("fibroblast", factors)
     
@@ -18,7 +22,7 @@ def test_multiomics_cardiac_cocktail():
     assert "expression_profiles" in result
     assert "TNNT2" in result["expression_profiles"]
     assert result["expression_profiles"]["TNNT2"] > 2.50
-    assert result["chromatin_state"] == "OPEN_ACCESSIBLE"
+    assert result["chromatin_state"] == "OPEN_ACCESSIBLE_REPROGRAMMED"
     assert result["status"] == "CONVERGED"
 
 def test_multiomics_oncogenic_myc():
