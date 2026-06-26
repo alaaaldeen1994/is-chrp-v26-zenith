@@ -67,6 +67,7 @@ class LNPOptimizerService:
     """
     
     def __init__(self):
+        import os
         print("Initializing Zenith LNP Optimizer Service...")
         
         # Instantiate the PyTorch model
@@ -78,8 +79,27 @@ class LNPOptimizerService:
         self.y_mean = np.zeros(4)
         self.y_std = np.ones(4)
         
-        # Train the surrogate model on startup
-        self._calibrate_and_train()
+        # Check for pre-trained weights to eliminate production training overhead
+        base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        weights_path = os.path.join(base_dir, 'models', 'lnp_surrogate.pt')
+        
+        if os.path.exists(weights_path):
+            print(f"Loading pre-trained LNP weights from: {weights_path}")
+            try:
+                # Load with weights_only=True for secure, warning-free loading
+                checkpoint = torch.load(weights_path, map_location='cpu', weights_only=True)
+                self.model.load_state_dict(checkpoint['model_state_dict'])
+                self.x_mean = checkpoint['x_mean'].numpy()
+                self.x_std = checkpoint['x_std'].numpy()
+                self.y_mean = checkpoint['y_mean'].numpy()
+                self.y_std = checkpoint['y_std'].numpy()
+                print("[SUCCESS] Pre-trained LNP surrogate model loaded. Zero training overhead.")
+            except Exception as e:
+                print(f"[WARNING] Failed to load pre-trained weights: {e}. Falling back to active calibration...")
+                self._calibrate_and_train()
+        else:
+            print("[INFO] Pre-trained weights not found. Calibrating on-the-fly...")
+            self._calibrate_and_train()
         
     def _synthesize_dataset(self, num_samples: int = 2000) -> Tuple[np.ndarray, np.ndarray]:
         """
