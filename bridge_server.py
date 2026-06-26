@@ -7048,16 +7048,29 @@ async def predict_perturbation(req: PerturbationRequest):
 class LNPOptimizeRequest(BaseModel):
     molar_ratios: Dict[str, float]
     np_ratio: float = 6.0
+    active_ligand_conjugation: bool = False
+    ligand_density: float = 0.0
+    peg_mw: float = 2000.0
 
 @app.post("/api/v1/clinical/delivery/lnp-optimize")
 async def optimize_lnp(req: LNPOptimizeRequest):
     """
-    PRIORITY 3: mRNA-LNP Formulation Delivery Optimizer.
+    PRIORITY 3: mRNA-LNP Formulation Delivery Optimizer with PyTorch Surrogate Model.
     """
     from services.lnp_optimizer import LNPOptimizerService
     service = LNPOptimizerService()
+    
+    # Merge top-level request parameters into molar_ratios for compatibility with PyTorch service
+    molar_ratios = dict(req.molar_ratios)
+    if "active_targeting" not in molar_ratios:
+        if req.ligand_density > 0.0:
+            molar_ratios["active_targeting"] = req.ligand_density
+        else:
+            molar_ratios["active_targeting"] = 2.5 if req.active_ligand_conjugation else 0.0
+    molar_ratios["peg_mw"] = req.peg_mw
+    
     return service.evaluate_formulation(
-        molar_ratios=req.molar_ratios,
+        molar_ratios=molar_ratios,
         np_ratio=req.np_ratio
     )
 

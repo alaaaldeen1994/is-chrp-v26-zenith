@@ -4061,12 +4061,36 @@ const BiosimBridge = {
         const peg = parseFloat(document.getElementById('slider-lnp-peg').value);
         const np = parseFloat(document.getElementById('slider-lnp-np').value);
         const activeConjugation = document.getElementById('chk-lnp-active').checked;
+        
+        // New high-fidelity inputs
+        const ligandDensitySlider = document.getElementById('slider-lnp-ligand');
+        const ligandDensity = ligandDensitySlider ? parseFloat(ligandDensitySlider.value) : 0.0;
+        const pegMwSlider = document.getElementById('slider-lnp-peg-mw');
+        const pegMw = pegMwSlider ? parseFloat(pegMwSlider.value) : 2000.0;
 
         document.getElementById('val-lnp-ion').innerText = `${ion.toFixed(1)}%`;
         document.getElementById('val-lnp-chol').innerText = `${chol.toFixed(1)}%`;
         document.getElementById('val-lnp-helper').innerText = `${helper.toFixed(1)}%`;
         document.getElementById('val-lnp-peg').innerText = `${peg.toFixed(1)}%`;
         document.getElementById('val-lnp-np').innerText = np.toFixed(1);
+        
+        // Update new slider text labels
+        if (document.getElementById('val-lnp-ligand')) {
+            document.getElementById('val-lnp-ligand').innerText = `${ligandDensity.toFixed(1)}%`;
+        }
+        if (document.getElementById('val-lnp-peg-mw')) {
+            document.getElementById('val-lnp-peg-mw').innerText = `${pegMw.toFixed(0)} Da`;
+        }
+
+        // Toggle ligand density slider visibility based on active targeting
+        const ligandContainer = document.getElementById('lnp-ligand-density-container');
+        if (ligandContainer) {
+            if (activeConjugation) {
+                ligandContainer.classList.remove('hidden');
+            } else {
+                ligandContainer.classList.add('hidden');
+            }
+        }
 
         try {
             const response = await fetch(`${this.endpoint}/api/v1/clinical/delivery/lnp-optimize`, {
@@ -4080,25 +4104,60 @@ const BiosimBridge = {
                         "ionizable": ion, "cholesterol": chol, "helper": helper, "peg": peg
                     },
                     np_ratio: np,
-                    active_ligand_conjugation: activeConjugation
+                    active_ligand_conjugation: activeConjugation,
+                    ligand_density: activeConjugation ? ligandDensity : 0.0,
+                    peg_mw: pegMw
                 })
             });
 
             if (response.ok) {
                 const data = await response.json();
                 
+                // Base metrics
                 document.getElementById('lnp-ee').innerText = `${data.encapsulation_efficiency_percent.toFixed(1)}%`;
                 document.getElementById('lnp-tropism').innerText = data.heart_selectivity_score.toFixed(3);
-                document.getElementById('lnp-liver-seq').innerText = `${(data.liver_sequestration * 100).toFixed(1)}%`;
+                
+                // Handle liver sequestration dynamically to prevent key mismatch
+                const liverSeq = data.liver_sequestration_score !== undefined ? data.liver_sequestration_score : data.liver_sequestration;
+                document.getElementById('lnp-liver-seq').innerText = `${(liverSeq * 100).toFixed(1)}%`;
+                
+                // New ML-predicted metrics
+                if (document.getElementById('lnp-escape-rate') && data.endosomal_escape_percent !== undefined) {
+                    document.getElementById('lnp-escape-rate').innerText = `${data.endosomal_escape_percent.toFixed(1)}%`;
+                    const escapeElem = document.getElementById('lnp-escape-rate');
+                    if (data.endosomal_escape_percent >= 10.0) {
+                        escapeElem.style.color = '#10b981'; // Green
+                    } else if (data.endosomal_escape_percent >= 3.0) {
+                        escapeElem.style.color = '#f59e0b'; // Orange
+                    } else {
+                        escapeElem.style.color = '#ef4444'; // Red
+                    }
+                }
+                
+                if (document.getElementById('lnp-half-life') && data.circulation_half_life_hours !== undefined) {
+                    document.getElementById('lnp-half-life').innerText = `${data.circulation_half_life_hours.toFixed(1)}h`;
+                }
+                
+                if (document.getElementById('lnp-toxicity') && data.cytotoxicity_index !== undefined) {
+                    document.getElementById('lnp-toxicity').innerText = `${(data.cytotoxicity_index * 100).toFixed(1)}%`;
+                    const toxElem = document.getElementById('lnp-toxicity');
+                    if (data.cytotoxicity_index < 0.20) {
+                        toxElem.style.color = '#10b981'; // Safe
+                    } else if (data.cytotoxicity_index < 0.50) {
+                        toxElem.style.color = '#f59e0b'; // Moderate
+                    } else {
+                        toxElem.style.color = '#ef4444'; // High toxicity
+                    }
+                }
                 
                 const mechBanner = document.getElementById('lnp-mechanism-banner');
                 if (mechBanner && data.mechanism_note) {
                     mechBanner.innerText = data.mechanism_note;
-                    if (data.formulation_status === 'OPTIMIZED') {
+                    if (data.formulation_status.includes('OPTIMIZED')) {
                         mechBanner.style.background = 'rgba(16,185,129,0.05)';
                         mechBanner.style.color = '#065f46';
                         mechBanner.style.borderColor = 'rgba(16,185,129,0.1)';
-                    } else if (data.formulation_status === 'MODERATE') {
+                    } else if (data.formulation_status.includes('MODERATE')) {
                         mechBanner.style.background = 'rgba(245,158,11,0.05)';
                         mechBanner.style.color = '#92400e';
                         mechBanner.style.borderColor = 'rgba(245,158,11,0.1)';
@@ -4111,9 +4170,9 @@ const BiosimBridge = {
                 
                 const statusBadge = document.getElementById('lnp-status-val');
                 statusBadge.innerText = data.formulation_status;
-                if (data.formulation_status === 'OPTIMIZED') {
+                if (data.formulation_status.includes('OPTIMIZED')) {
                     statusBadge.style.color = '#34d399';
-                } else if (data.formulation_status === 'MODERATE') {
+                } else if (data.formulation_status.includes('MODERATE')) {
                     statusBadge.style.color = '#fbbf24';
                 } else {
                     statusBadge.style.color = '#f87171';
@@ -4697,7 +4756,7 @@ const BiosimBridge = {
         this.drawCpGHeatmap(null);
 
         // LNP Sliders Listeners
-        ['slider-lnp-ion', 'slider-lnp-chol', 'slider-lnp-helper', 'slider-lnp-peg', 'slider-lnp-np'].forEach(id => {
+        ['slider-lnp-ion', 'slider-lnp-chol', 'slider-lnp-helper', 'slider-lnp-peg', 'slider-lnp-np', 'slider-lnp-ligand', 'slider-lnp-peg-mw'].forEach(id => {
             const input = document.getElementById(id);
             if (input) {
                 input.addEventListener('input', () => this.runLNPOptimizer());
