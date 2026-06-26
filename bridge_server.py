@@ -7052,13 +7052,22 @@ class LNPOptimizeRequest(BaseModel):
     ligand_density: float = 0.0
     peg_mw: float = 2000.0
 
+_lnp_optimizer_service = None
+
+def get_lnp_optimizer_service():
+    global _lnp_optimizer_service
+    if _lnp_optimizer_service is None:
+        from services.lnp_optimizer import LNPOptimizerService
+        _lnp_optimizer_service = LNPOptimizerService()
+    return _lnp_optimizer_service
+
 @app.post("/api/v1/clinical/delivery/lnp-optimize")
 async def optimize_lnp(req: LNPOptimizeRequest):
     """
     PRIORITY 3: mRNA-LNP Formulation Delivery Optimizer with PyTorch Surrogate Model.
+    Reuses a pre-trained global singleton to run instant sub-millisecond inference, preventing event loop blocking.
     """
-    from services.lnp_optimizer import LNPOptimizerService
-    service = LNPOptimizerService()
+    service = get_lnp_optimizer_service()
     
     # Merge top-level request parameters into molar_ratios for compatibility with PyTorch service
     molar_ratios = dict(req.molar_ratios)
