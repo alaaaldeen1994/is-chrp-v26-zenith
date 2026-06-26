@@ -81,7 +81,7 @@ class LNPOptimizerService:
         
         # Check for pre-trained weights to eliminate production training overhead
         base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-        weights_path = os.path.join(base_dir, 'models', 'lnp_surrogate.pt')
+        weights_path = os.path.join(base_dir, 'models', 'lnp_surrogate.weights')
         
         if os.path.exists(weights_path):
             print(f"Loading pre-trained LNP weights from: {weights_path}")

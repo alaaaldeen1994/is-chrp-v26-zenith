@@ -30,7 +30,7 @@ data/trajectories/
 !models/zenith_foundation_v1/model.pt
 !models/zenith_foundation_v1/var_schema.h5ad
 !models/age_clock.pkl
-!models/lnp_surrogate.pt
+!models/lnp_surrogate.weights
 
 # Temp/debug scripts (not needed in repo)
 probe_cellxgene.py
