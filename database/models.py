@@ -33,3 +33,14 @@ class AuditLog(Base):
 
     # Relationships
     api_key = relationship("APIKey", back_populates="audit_logs")
+
+class WebhookSubscription(Base):
+    __tablename__ = "webhook_subscriptions"
+
+    id = Column(Integer, primary_key=True, index=True)
+    api_key_id = Column(Integer, ForeignKey("api_keys.id"), nullable=False)
+    url = Column(String, nullable=False)
+    secret = Column(String, nullable=False)  # HMAC signing secret specific to this endpoint
+    is_active = Column(Boolean, default=True, nullable=False)
+    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+

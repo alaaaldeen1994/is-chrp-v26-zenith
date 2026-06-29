@@ -1791,12 +1791,14 @@ from middleware.logger import StructuredLoggingMiddleware
 from middleware.api_auth import APIKeyAuthMiddleware
 from middleware.rate_limiter import APIRateLimiterMiddleware
 from routers.api_v1 import router as api_v1_router
+from routers.webhooks import router as webhooks_router
 
 app.add_middleware(APIRateLimiterMiddleware)
 app.add_middleware(APIKeyAuthMiddleware)
 app.add_middleware(StructuredLoggingMiddleware)
 
 app.include_router(api_v1_router)
+app.include_router(webhooks_router)
 
 
 

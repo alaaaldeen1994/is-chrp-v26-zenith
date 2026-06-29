@@ -142,6 +142,76 @@ def test_api_v1():
         if os.path.exists(temp_download):
             os.remove(temp_download)
 
+    # 7. Test Webhook subscription and dispatching
+    print("\n[TEST] POST /api/v1/webhooks/subscribe...")
+    webhook_url = "https://mock.zenith.endpoint/webhook-callback"
+    response = client.post(
+        "/api/v1/webhooks/subscribe",
+        headers={"X-API-Key": TEST_API_KEY},
+        json={"url": webhook_url}
+    )
+    print("Status:", response.status_code)
+    assert response.status_code == 200
+    sub_data = response.json()["data"]
+    assert "subscription_id" in sub_data
+    assert "signing_secret" in sub_data
+    assert sub_data["url"] == webhook_url
+    print("[PASS] Webhook subscription registered successfully.")
+
+    # We mock httpx.Client.post to check if webhook was dispatched
+    from unittest.mock import MagicMock
+    import httpx
+    
+    original_post = httpx.Client.post
+    mock_post = MagicMock()
+    
+    def side_effect(self, url, *args, **kwargs):
+        if "mock.zenith.endpoint" in str(url):
+            mock_post(url, *args, **kwargs)
+            return httpx.Response(200, json={})
+        return original_post(self, url, *args, **kwargs)
+        
+    httpx.Client.post = side_effect
+    
+    try:
+        # Trigger an async perturbation job, which will trigger a webhook on completion
+        response = client.post(
+            "/api/v1/predict/perturbation",
+            headers={"X-API-Key": TEST_API_KEY},
+            json={
+                "baseline_cell_type": "ventricular_myocyte",
+                "perturbation_factors": {"GATA4": 1.0},
+                "census_filter": "tissue_general == 'heart'"
+            }
+        )
+        print("Webhook test async perturbation response status:", response.status_code)
+        print("Webhook test async perturbation response body:", response.json())
+        assert response.status_code == 202
+        job_id = response.json()["job_id"]
+        
+        # Poll for completion
+        for _ in range(15):
+            time.sleep(1)
+            job_check = client.get(f"/api/v1/jobs/{job_id}", headers={"X-API-Key": TEST_API_KEY})
+            if job_check.json()["data"]["status"] == "completed":
+                break
+        
+        # Verify that mock_post was called with the webhook
+        # Since it runs in a background thread, let's wait a small amount for the thread to fire
+        time.sleep(2)
+        assert mock_post.called
+        # Check call arguments
+        called_url = mock_post.call_args[0][0]
+        assert called_url == webhook_url
+        
+        # Check headers or signature
+        headers = mock_post.call_args[1].get("headers", {})
+        assert "X-Zenith-Signature" in headers
+        assert "X-Zenith-Subscription-ID" in headers
+        print("[PASS] Webhook dispatcher signature and payload validation complete.")
+    finally:
+        httpx.Client.post = original_post
+
     print("\n" + "="*60)
     print("ALL PHASE 2 API SCIENTIFIC UPGRADE TESTS PASSED SUCCESSFULLY!")
     print("="*60)

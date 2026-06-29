@@ -164,7 +164,8 @@ def run_local_census_perturbation_task(
     job_id: str, 
     payload: PerturbationRequest, 
     census_client, 
-    predictor
+    predictor,
+    api_key_id: int = None
 ):
     jobs_db[job_id]["status"] = "running"
     try:
@@ -229,19 +230,50 @@ def run_local_census_perturbation_task(
             obs_metadata=metadata_list
         )
         
-        jobs_db[job_id]["status"] = "completed"
-        jobs_db[job_id]["filepath"] = filepath
-        jobs_db[job_id]["result"] = {
+        result_payload = {
             "cell_count": num_cells,
             "genes_count": len(genes),
             "source_dataset": census_data["source"],
             "download_url": f"/api/v1/jobs/{job_id}/download"
         }
+        
+        jobs_db[job_id]["status"] = "completed"
+        jobs_db[job_id]["filepath"] = filepath
+        jobs_db[job_id]["result"] = result_payload
         print(f"[CensusPerturbation] Completed! AnnData serialized to: {filepath}")
+        
+        # Dispatch webhook completion notification
+        if api_key_id:
+            from routers.webhooks import dispatch_webhook_sync
+            dispatch_webhook_sync(
+                api_key_id=api_key_id,
+                event_type="job.completed",
+                data={
+                    "job_id": job_id,
+                    "status": "completed",
+                    "result": result_payload
+                }
+            )
         
     except Exception as e:
         jobs_db[job_id]["status"] = "failed"
         jobs_db[job_id]["error"] = str(e)
+        
+        # Dispatch webhook failure notification
+        if api_key_id:
+            try:
+                from routers.webhooks import dispatch_webhook_sync
+                dispatch_webhook_sync(
+                    api_key_id=api_key_id,
+                    event_type="job.failed",
+                    data={
+                        "job_id": job_id,
+                        "status": "failed",
+                        "error": str(e)
+                    }
+                )
+            except Exception:
+                pass
 
 # --- Multi-Omics Perturbation ---
 @router.post("/predict/perturbation")
@@ -261,6 +293,9 @@ def post_predict_perturbation(
         job_id = str(uuid.uuid4())
         status_url = f"{request.base_url}api/v1/jobs/{job_id}"
         
+        api_key = getattr(request.state, "api_key", None)
+        api_key_id = api_key.id if api_key else None
+        
         jobs_db[job_id] = {
             "job_id": job_id,
             "status": "pending",
@@ -273,7 +308,8 @@ def post_predict_perturbation(
             job_id,
             payload,
             census_client,
-            predictor
+            predictor,
+            api_key_id
         )
         
         duration = int((time.time() - start_time) * 1000)
