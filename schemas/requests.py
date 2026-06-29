@@ -19,9 +19,11 @@ class PerturbationRequest(BaseModel):
         example={"GATA4": 1.0, "SIRT1": 2.0},
         description="Map of candidate gene symbols or compounds and their dosage/activation level"
     )
+    census_filter: Optional[str] = Field(None, example="tissue_general == 'heart' and disease == 'normal'", description="Chan Zuckerberg Cellxgene Census query filter to extract baseline cell profiles")
 
 class SafetyAuditRequest(BaseModel):
     factors: List[str] = Field(..., example=["GATA4", "TBX5", "OCT4"], description="List of gene symbols to evaluate for safety")
+    cpg_methylation: Optional[Dict[str, float]] = Field(None, example={"cg00000292": 0.45, "cg00050873": 0.12}, description="Map of CpG site probe IDs and their methylation beta-values")
 
 class DiscoveryRequest(BaseModel):
     target_query: str = Field(..., example="cardiac myocyte rejuvenation", description="Text description of the desired cell state transition")
@@ -35,3 +37,6 @@ class VirtualTrialRequest(BaseModel):
     variance: float = Field(0.1, ge=0.0, le=1.0, description="Stochastic biological variance across cohort")
     nmn_dosage: float = Field(500.0, description="Dosage of NMN in mg")
     oral_administration: bool = Field(True, description="Whether compound is orally administered (applies gut deamidation penalty)")
+
+class ProteinFoldingRequest(BaseModel):
+    sequence: str = Field(..., example="MAPL...", description="Amino acid sequence (letters) to fold into 3D atomic coordinates")

@@ -1,6 +1,9 @@
+import os
 import time
 import uuid
-from fastapi import APIRouter, Depends, Request, BackgroundTasks, HTTPException
+import numpy as np
+from fastapi import APIRouter, Depends, Request, Response, BackgroundTasks, HTTPException
+from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
 from database.connection import get_db
 from database.models import AuditLog
@@ -9,7 +12,8 @@ from schemas.requests import (
     PerturbationRequest,
     SafetyAuditRequest,
     DiscoveryRequest,
-    VirtualTrialRequest
+    VirtualTrialRequest,
+    ProteinFoldingRequest
 )
 from schemas.responses import APIEnvelope, AsyncJobResponse
 from config.settings import settings
@@ -17,6 +21,9 @@ from config.settings import settings
 # Lazy import services to prevent startup memory overhead
 _lnp_optimizer = None
 _multiomics_service = None
+_horvath_clock = None
+_structural_folder = None
+_census_client = None
 
 def get_lnp_optimizer():
     global _lnp_optimizer
@@ -31,6 +38,27 @@ def get_multiomics_service():
         from services.multiomics_service import MultiOmicsPredictorService
         _multiomics_service = MultiOmicsPredictorService()
     return _multiomics_service
+
+def get_horvath_clock():
+    global _horvath_clock
+    if _horvath_clock is None:
+        from services.horvath_clock import HorvathClockService
+        _horvath_clock = HorvathClockService()
+    return _horvath_clock
+
+def get_structural_folder():
+    global _structural_folder
+    if _structural_folder is None:
+        from services.structural_folder import StructuralFolderService
+        _structural_folder = StructuralFolderService()
+    return _structural_folder
+
+def get_census_client():
+    global _census_client
+    if _census_client is None:
+        from utils.census_client import CensusClient
+        _census_client = CensusClient()
+    return _census_client
 
 router = APIRouter(prefix="/api/v1", tags=["API v1"])
 
@@ -131,15 +159,134 @@ def post_lnp_optimize(
     return APIEnvelope(data=data, meta={"compute_time_ms": duration, "credits_used": 1})
 
 # --- Multi-Omics Perturbation ---
-@router.post("/predict/perturbation", response_model=APIEnvelope)
+# --- Async Census Perturbation Task Runner ---
+def run_local_census_perturbation_task(
+    job_id: str, 
+    payload: PerturbationRequest, 
+    census_client, 
+    predictor
+):
+    jobs_db[job_id]["status"] = "running"
+    try:
+        # 1. Fetch cell vectors from Census (falls back to synthetic cardiac cells if offline)
+        census_data = census_client.fetch_donor_cells(
+            organism="homo_sapiens",
+            value_filter=payload.census_filter or "tissue_general == 'heart'",
+            max_cells=50
+        )
+        
+        expression_matrix = census_data["expression_matrix"]
+        metadata_list = census_data["metadata"]
+        genes = census_data["genes"]
+        
+        # 2. Simulate perturbation across the cell matrix
+        # For each cell, we calculate regulatory shifts based on MultiOmicsPredictorService
+        perturbed_matrix = expression_matrix.copy()
+        
+        for gene_name, dosage in payload.perturbation_factors.items():
+            if gene_name in genes:
+                col_idx = genes.index(gene_name)
+                # Over-express the factor
+                perturbed_matrix[:, col_idx] += float(dosage)
+                
+            # Cascade transcriptional activation matching Jasper PWM targets in predictor
+            if gene_name in predictor.factor_regulatory_weights:
+                weights = predictor.factor_regulatory_weights[gene_name]
+                for target_gene, weight in weights.items():
+                    if target_gene in genes:
+                        target_idx = genes.index(target_gene)
+                        perturbed_matrix[:, target_idx] += float(dosage) * weight
+                        
+        # Bound matrix values
+        perturbed_matrix = np.clip(perturbed_matrix, 0.0, 50.0)
+        
+        # 3. Simulate latent UMAP coordinates (dim 2)
+        num_cells = perturbed_matrix.shape[0]
+        latent_coords = np.random.normal(0, 1.0, size=(num_cells, 2))
+        # Project cardiac structural markers on UMAP space for visualization separation
+        if "TNNT2" in genes:
+            tnnt2_idx = genes.index("TNNT2")
+            latent_coords[:, 0] += perturbed_matrix[:, tnnt2_idx] * 2.0
+            
+        # 4. Update metadata with predicted clock outcomes
+        for i in range(num_cells):
+            cell_factors = {k: float(v) for k, v in payload.perturbation_factors.items()}
+            # Calculate single-cell metrics
+            single_cell_report = predictor.predict_perturbation_trajectory(
+                baseline_cell_type=payload.baseline_cell_type,
+                factors=cell_factors
+            )
+            metadata_list[i]["predicted_age_delta"] = single_cell_report.get("predicted_age_delta", 0.0)
+            metadata_list[i]["endothelial_rejuvenation_score"] = single_cell_report.get("endothelial_rejuvenation_score", 0.0)
+            metadata_list[i]["sirtuin_activity_index"] = single_cell_report.get("sirtuin_activity_index", 0.0)
+            
+        # 5. Serialize matrix to AnnData (.h5ad) file
+        from utils.anndata_helper import serialize_to_h5ad
+        filepath = serialize_to_h5ad(
+            genes=genes,
+            expression_matrix=perturbed_matrix,
+            latent_coords=latent_coords,
+            obs_metadata=metadata_list
+        )
+        
+        jobs_db[job_id]["status"] = "completed"
+        jobs_db[job_id]["filepath"] = filepath
+        jobs_db[job_id]["result"] = {
+            "cell_count": num_cells,
+            "genes_count": len(genes),
+            "source_dataset": census_data["source"],
+            "download_url": f"/api/v1/jobs/{job_id}/download"
+        }
+        print(f"[CensusPerturbation] Completed! AnnData serialized to: {filepath}")
+        
+    except Exception as e:
+        jobs_db[job_id]["status"] = "failed"
+        jobs_db[job_id]["error"] = str(e)
+
+# --- Multi-Omics Perturbation ---
+@router.post("/predict/perturbation")
 def post_predict_perturbation(
     payload: PerturbationRequest, 
     request: Request, 
+    background_tasks: BackgroundTasks,
+    response: Response,
     db: Session = Depends(get_db),
-    predictor = Depends(get_multiomics_service)
+    predictor = Depends(get_multiomics_service),
+    census_client = Depends(get_census_client)
 ):
     start_time = time.time()
     
+    # If census_filter is provided, run asynchronously and serialize to .h5ad
+    if payload.census_filter:
+        job_id = str(uuid.uuid4())
+        status_url = f"{request.base_url}api/v1/jobs/{job_id}"
+        
+        jobs_db[job_id] = {
+            "job_id": job_id,
+            "status": "pending",
+            "status_url": status_url,
+            "eta_seconds": 6.0
+        }
+        
+        background_tasks.add_task(
+            run_local_census_perturbation_task,
+            job_id,
+            payload,
+            census_client,
+            predictor
+        )
+        
+        duration = int((time.time() - start_time) * 1000)
+        log_api_call(db, request, 202, duration, 5)
+        response.status_code = 202
+        return AsyncJobResponse(
+            job_id=job_id,
+            status="pending",
+            status_url=status_url,
+            eta_seconds=6.0
+        )
+        
+    # Otherwise, run the default synchronous projection
     result = predictor.predict_perturbation_trajectory(
         baseline_cell_type=payload.baseline_cell_type,
         factors=payload.perturbation_factors
@@ -154,7 +301,8 @@ def post_predict_perturbation(
 def post_safety_audit(
     payload: SafetyAuditRequest, 
     request: Request, 
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    horvath_clock = Depends(get_horvath_clock)
 ):
     start_time = time.time()
     
@@ -174,8 +322,13 @@ def post_safety_audit(
     # 2. Sirtuin engagement
     sirt_report = score_sirtuin_pathway(payload.factors)
     
-    # 3. Horvath clock loci hit rate
-    horvath_report = score_horvath_impact(payload.factors)
+    # 3. Horvath clock calculation
+    if payload.cpg_methylation:
+        # Run actual 353-CpG Horvath mathematical predictor
+        horvath_report = horvath_clock.calculate_age(payload.cpg_methylation)
+    else:
+        # Fallback to heuristic loci hit rate
+        horvath_report = score_horvath_impact(payload.factors)
     
     data = {
         "approved_factors": [item["gene"] for item in audit_report.get("approved", [])],
@@ -335,4 +488,50 @@ def post_trials_run(
     duration = int((time.time() - start_time) * 1000)
     log_api_call(db, request, 202, duration, 10)
     return AsyncJobResponse(job_id=job_id, status="pending", status_url=status_url, eta_seconds=6.0)
+
+# --- ESMFold 3D Structure Folding ---
+@router.post("/structure/fold", response_model=APIEnvelope)
+def post_structure_fold(
+    payload: ProteinFoldingRequest,
+    request: Request,
+    db: Session = Depends(get_db),
+    folder = Depends(get_structural_folder)
+):
+    start_time = time.time()
+    
+    result = folder.fold_sequence(payload.sequence)
+    if result["status"] == "error":
+        raise HTTPException(status_code=400, detail=result["message"])
+        
+    duration = int((time.time() - start_time) * 1000)
+    log_api_call(db, request, 200, duration, 10)
+    return APIEnvelope(data=result, meta={"compute_time_ms": duration, "credits_used": 10})
+
+# --- AnnData File Download Endpoint ---
+@router.get("/jobs/{job_id}/download")
+def get_job_download(
+    job_id: str,
+    request: Request,
+    db: Session = Depends(get_db)
+):
+    start_time = time.time()
+    
+    job = jobs_db.get(job_id)
+    if not job or "filepath" not in job:
+        raise HTTPException(status_code=404, detail="AnnData download file not found for this job")
+        
+    filepath = job["filepath"]
+    if not os.path.exists(filepath):
+        raise HTTPException(status_code=404, detail="AnnData file has expired or was deleted from server cache")
+        
+    duration = int((time.time() - start_time) * 1000)
+    log_api_call(db, request, 200, duration, 0)
+    
+    filename = os.path.basename(filepath)
+    return FileResponse(
+        path=filepath,
+        media_type="application/octet-stream",
+        filename=filename
+    )
+
 
