@@ -175,7 +175,7 @@
         }
 
         .validator-badge {
-            color: #10b981;
+            color: #0f172a;
             font-weight: bold;
         }
 
@@ -1803,24 +1803,24 @@
                         <!-- Card 8: Multivitamin -->
                         <div class="flex flex-col p-2.5 bg-slate-50 border border-slate-100 rounded-xl">
                             <div class="flex items-center gap-2">
-                                <input id="chk-multivitamin" type="checkbox" class="rounded text-teal-600 focus:ring-teal-500 h-3.5 w-3.5 cursor-pointer">
-                                <label for="chk-multivitamin" class="text-[9px] text-teal-600 font-black uppercase tracking-wider cursor-pointer" title="Clinical Target: -0.44 years PhenoAge, -0.21 years GrimAge">Multivitamin</label>
+                                <input id="chk-multivitamin" type="checkbox" class="rounded text-blue-600 focus:ring-blue-500 h-3.5 w-3.5 cursor-pointer">
+                                <label for="chk-multivitamin" class="text-[9px] text-blue-600 font-black uppercase tracking-wider cursor-pointer" title="Clinical Target: -0.44 years PhenoAge, -0.21 years GrimAge">Multivitamin</label>
                                 <button type="button" onclick="document.getElementById('dose-panel-multivitamin').classList.toggle('hidden')" class="ml-auto text-slate-400 hover:text-slate-600 cursor-pointer" title="Adjust Pharmacokinetics">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.1a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
                                 </button>
                             </div>
                             <div id="dose-panel-multivitamin" class="hidden flex flex-col gap-2 mt-2 pt-2 border-t border-slate-200/60">
                                 <div class="flex items-center justify-between text-[8px] text-slate-500 font-bold font-mono">
-                                    <span>DOSE: <span id="val-dose-multivitamin" class="text-teal-600 font-bold">1.0 tab</span></span>
-                                    <span>FREQ: <span id="val-freq-multivitamin" class="text-teal-600 font-bold">24 hrs</span></span>
+                                    <span>DOSE: <span id="val-dose-multivitamin" class="text-blue-600 font-bold">1.0 tab</span></span>
+                                    <span>FREQ: <span id="val-freq-multivitamin" class="text-blue-600 font-bold">24 hrs</span></span>
                                 </div>
                                 <div>
                                     <label class="text-[7px] text-slate-400 font-bold uppercase block mb-0.5">Dose (tabs)</label>
-                                    <input id="slider-dose-multivitamin" type="range" min="0.5" max="5.0" step="0.5" value="1.0" class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer" style="accent-color:#0d9488;">
+                                    <input id="slider-dose-multivitamin" type="range" min="0.5" max="5.0" step="0.5" value="1.0" class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer" style="accent-color:#2563eb;">
                                 </div>
                                 <div>
                                     <label class="text-[7px] text-slate-400 font-bold uppercase block mb-0.5">Frequency (hours)</label>
-                                    <input id="slider-freq-multivitamin" type="range" min="12" max="168" step="12" value="24" class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer" style="accent-color:#0d9488;">
+                                    <input id="slider-freq-multivitamin" type="range" min="12" max="168" step="12" value="24" class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer" style="accent-color:#2563eb;">
                                 </div>
                                 <div class="flex items-center gap-1.5 mt-0.5">
                                     <span class="text-[7px] text-slate-400 uppercase font-bold shrink-0">PK/PD Wave:</span>
@@ -1924,43 +1924,43 @@
             <!-- LNP DELIVERY OPTIMIZER -->
             <div id="lnp-optimizer-panel" class="p-6 bg-white border border-slate-200 rounded-[24px] shadow-sm relative overflow-hidden animation-fade-in">
                 <div class="text-[11px] text-slate-800 font-bold uppercase tracking-wider mb-4 flex items-center gap-1.5">
-                    <i data-lucide="package" class="w-3.5 h-3.5 text-teal-600"></i>
+                    <i data-lucide="package" class="w-3.5 h-3.5 text-blue-600"></i>
                     mRNA-LNP Formulation Delivery Optimizer
-                    <span class="ml-auto text-[9px] px-2.5 py-0.5 bg-teal-50 text-teal-600 border border-teal-100 rounded-full font-bold tracking-normal font-sans">Encapsulation</span>
+                    <span class="ml-auto text-[9px] px-2.5 py-0.5 bg-blue-50 text-blue-600 border border-blue-100 rounded-full font-bold tracking-normal font-sans">Encapsulation</span>
                 </div>
                 <!-- LNP Parameter Sliders -->
                 <div class="grid grid-cols-2 gap-4 mb-4 bg-slate-50 p-4 rounded-2xl border border-slate-100">
                     <div>
-                        <label class="text-[9px] text-slate-600 font-bold block mb-1.5 uppercase tracking-wider">Ionizable Molar %: <span id="val-lnp-ion" class="text-teal-600 font-mono font-bold">50.0%</span></label>
-                        <input id="slider-lnp-ion" type="range" min="30" max="60" step="1" value="50" class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer" style="accent-color:#0d9488;">
+                        <label class="text-[9px] text-slate-600 font-bold block mb-1.5 uppercase tracking-wider">Ionizable Molar %: <span id="val-lnp-ion" class="text-blue-600 font-mono font-bold">50.0%</span></label>
+                        <input id="slider-lnp-ion" type="range" min="30" max="60" step="1" value="50" class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer" style="accent-color:#2563eb;">
                     </div>
                     <div>
-                        <label class="text-[9px] text-slate-600 font-bold block mb-1.5 uppercase tracking-wider">Cholesterol Molar %: <span id="val-lnp-chol" class="text-teal-600 font-mono font-bold">38.5%</span></label>
-                        <input id="slider-lnp-chol" type="range" min="20" max="50" step="0.5" value="38.5" class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer" style="accent-color:#0d9488;">
+                        <label class="text-[9px] text-slate-600 font-bold block mb-1.5 uppercase tracking-wider">Cholesterol Molar %: <span id="val-lnp-chol" class="text-blue-600 font-mono font-bold">38.5%</span></label>
+                        <input id="slider-lnp-chol" type="range" min="20" max="50" step="0.5" value="38.5" class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer" style="accent-color:#2563eb;">
                     </div>
                     <div>
-                        <label class="text-[9px] text-slate-600 font-bold block mb-1.5 uppercase tracking-wider">Helper Lipid Molar %: <span id="val-lnp-helper" class="text-teal-600 font-mono font-bold">10.0%</span></label>
-                        <input id="slider-lnp-helper" type="range" min="5" max="20" step="0.5" value="10" class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer" style="accent-color:#0d9488;">
+                        <label class="text-[9px] text-slate-600 font-bold block mb-1.5 uppercase tracking-wider">Helper Lipid Molar %: <span id="val-lnp-helper" class="text-blue-600 font-mono font-bold">10.0%</span></label>
+                        <input id="slider-lnp-helper" type="range" min="5" max="20" step="0.5" value="10" class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer" style="accent-color:#2563eb;">
                     </div>
                     <div>
-                        <label class="text-[9px] text-slate-600 font-bold block mb-1.5 uppercase tracking-wider">PEG-Lipid Molar %: <span id="val-lnp-peg" class="text-teal-600 font-mono font-bold">1.5%</span></label>
-                        <input id="slider-lnp-peg" type="range" min="0.5" max="5.0" step="0.1" value="1.5" class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer" style="accent-color:#0d9488;">
+                        <label class="text-[9px] text-slate-600 font-bold block mb-1.5 uppercase tracking-wider">PEG-Lipid Molar %: <span id="val-lnp-peg" class="text-blue-600 font-mono font-bold">1.5%</span></label>
+                        <input id="slider-lnp-peg" type="range" min="0.5" max="5.0" step="0.1" value="1.5" class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer" style="accent-color:#2563eb;">
                     </div>
                     <div class="col-span-2">
-                        <label class="text-[9px] text-slate-600 font-bold block mb-1.5 uppercase tracking-wider">N/P Ratio (Nitrogen/Phosphate): <span id="val-lnp-np" class="text-teal-600 font-mono font-bold">6.0</span></label>
-                        <input id="slider-lnp-np" type="range" min="1.0" max="15.0" step="0.1" value="6.0" class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer" style="accent-color:#0d9488;">
+                        <label class="text-[9px] text-slate-600 font-bold block mb-1.5 uppercase tracking-wider">N/P Ratio (Nitrogen/Phosphate): <span id="val-lnp-np" class="text-blue-600 font-mono font-bold">6.0</span></label>
+                        <input id="slider-lnp-np" type="range" min="1.0" max="15.0" step="0.1" value="6.0" class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer" style="accent-color:#2563eb;">
                     </div>
                     <div class="col-span-2 flex items-center gap-2 mt-2 pt-2 border-t border-slate-200/60">
-                        <input id="chk-lnp-active" type="checkbox" class="rounded text-teal-600 focus:ring-teal-500 h-3.5 w-3.5 cursor-pointer">
+                        <input id="chk-lnp-active" type="checkbox" class="rounded text-blue-600 focus:ring-blue-500 h-3.5 w-3.5 cursor-pointer">
                         <label for="chk-lnp-active" class="text-[9px] text-slate-500 font-bold uppercase tracking-wider cursor-pointer">Active Ligand Conjugation (Bypasses liver barrier)</label>
                     </div>
                     <div id="lnp-ligand-density-container" class="col-span-2 hidden transition-all duration-300">
-                        <label class="text-[9px] text-slate-600 font-bold block mb-1.5 uppercase tracking-wider">Ligand Conjugation Density (%): <span id="val-lnp-ligand" class="text-teal-600 font-mono font-bold">2.5%</span></label>
-                        <input id="slider-lnp-ligand" type="range" min="0.1" max="10.0" step="0.1" value="2.5" class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer" style="accent-color:#0d9488;">
+                        <label class="text-[9px] text-slate-600 font-bold block mb-1.5 uppercase tracking-wider">Ligand Conjugation Density (%): <span id="val-lnp-ligand" class="text-blue-600 font-mono font-bold">2.5%</span></label>
+                        <input id="slider-lnp-ligand" type="range" min="0.1" max="10.0" step="0.1" value="2.5" class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer" style="accent-color:#2563eb;">
                     </div>
                     <div class="col-span-2">
-                        <label class="text-[9px] text-slate-600 font-bold block mb-1.5 uppercase tracking-wider">PEG Molecular Weight (Da): <span id="val-lnp-peg-mw" class="text-teal-600 font-mono font-bold">2000 Da</span></label>
-                        <input id="slider-lnp-peg-mw" type="range" min="1000" max="5000" step="500" value="2000" class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer" style="accent-color:#0d9488;">
+                        <label class="text-[9px] text-slate-600 font-bold block mb-1.5 uppercase tracking-wider">PEG Molecular Weight (Da): <span id="val-lnp-peg-mw" class="text-blue-600 font-mono font-bold">2000 Da</span></label>
+                        <input id="slider-lnp-peg-mw" type="range" min="1000" max="5000" step="500" value="2000" class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer" style="accent-color:#2563eb;">
                     </div>
                 </div>
                 <!-- LNP Target Tropism Metrics -->
@@ -1991,7 +1991,7 @@
                     </div>
                 </div>
                 <div class="flex items-center justify-between text-xs text-slate-500 font-sans mb-3">
-                    <span>Status: <span id="lnp-status-val" class="text-teal-600 font-bold uppercase">--</span></span>
+                    <span>Status: <span id="lnp-status-val" class="text-blue-600 font-bold uppercase">--</span></span>
                     <span>Target: Heart (Cardiomyocytes)</span>
                 </div>
                 <!-- Biophysical Mechanism Banner -->
@@ -3958,7 +3958,7 @@
 
                 <h1 class="font-black text-sm tracking-widest text-slate-900 uppercase">Nilus Lab <span
 
-                        class="text-teal-600">Zenith v30.0</span></h1>
+                        class="text-blue-600">Zenith v30.1</span></h1>
 
                 <div class="text-[10px] text-slate-400 font-black tracking-[0.2em] uppercase">Virtual Clinical Trial
 
@@ -6058,7 +6058,7 @@ window.downloadAF3JSON = async function() {
 
         <div class="flex items-center gap-4">
 
-            <span class="validator-badge">V30.0 GOLD VALIDATED</span>
+            <span class="validator-badge">V30.1 GOLD VALIDATED</span>
 
             <span class="sde-formula">dX_t = f(X_t, t)dt + g(X_t, t)dW_t | PDB Structural Authority v1.0 | GRN Inference active</span>
 
