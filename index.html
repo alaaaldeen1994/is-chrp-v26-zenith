@@ -5417,7 +5417,7 @@
                     font-family: 'SF Mono', 'Fira Code', monospace;
                     letter-spacing: 0.05em;
                 }
-                .api-method-post { background: #dcfce7; color: #166534; }
+                .api-method-post { background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; }
                 .api-method-get { background: #dbeafe; color: #1e40af; }
                 .api-endpoint {
                     font-family: 'SF Mono', 'Fira Code', 'Courier New', monospace;
@@ -5504,14 +5504,14 @@
                 <!-- Card 2: Structure Fold -->
                 <div class="api-card">
                     <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 1.5rem;">
-                        <div style="width: 40px; height: 40px; border-radius: 14px; background: linear-gradient(135deg, #f0fdf4, #dcfce7); border: 1px solid #bbf7d0; display: flex; align-items: center; justify-content: center;">
-                            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <div style="width: 40px; height: 40px; border-radius: 14px; background: linear-gradient(135deg, #fdf2f8, #fce7f3); border: 1px solid #fbcfe8; display: flex; align-items: center; justify-content: center;">
+                            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="#db2777" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2z"/>
                                 <path d="M8 14s1.5 2 4 2 4-2 4-2"/>
                                 <line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/>
                             </svg>
                         </div>
-                        <span class="api-badge" style="background: #f0fdf4; border: 1px solid #bbf7d0; color: #16a34a;">ESMFold</span>
+                        <span class="api-badge" style="background: #fdf2f8; border: 1px solid #fbcfe8; color: #db2777;">ESMFold</span>
                     </div>
                     <h3 class="text-lg font-black text-slate-900 mb-3" style="font-family: 'Outfit', sans-serif;">Protein Structure Prediction</h3>
                     <p class="text-sm text-slate-400 leading-relaxed font-medium mb-5">Submit amino acid sequences and receive predicted 3D coordinates in PDB format via ESMFold — with synthetic fallback for high availability.</p>
@@ -5585,14 +5585,14 @@
                 <!-- Card 6: Job Status + Download -->
                 <div class="api-card">
                     <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 1.5rem;">
-                        <div style="width: 40px; height: 40px; border-radius: 14px; background: linear-gradient(135deg, #f0fdfa, #ccfbf1); border: 1px solid #99f6e4; display: flex; align-items: center; justify-content: center;">
-                            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="#0d9488" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <div style="width: 40px; height: 40px; border-radius: 14px; background: linear-gradient(135deg, #f8fafc, #f1f5f9); border: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: center;">
+                            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="#475569" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
                                 <polyline points="7 10 12 15 17 10"/>
                                 <line x1="12" y1="15" x2="12" y2="3"/>
                             </svg>
                         </div>
-                        <span class="api-badge" style="background: #f0fdfa; border: 1px solid #99f6e4; color: #0f172a; text-transform: uppercase; font-weight: 900; letter-spacing: 0.05em;">ANNDATA</span>
+                        <span class="api-badge" style="background: #f8fafc; border: 1px solid #e2e8f0; color: #0f172a; text-transform: uppercase; font-weight: 900; letter-spacing: 0.05em;">ANNDATA</span>
                     </div>
                     <h3 class="text-lg font-black text-slate-900 mb-3" style="font-family: 'Outfit', sans-serif;">Job Polling & .h5ad Download</h3>
                     <p class="text-sm text-slate-400 leading-relaxed font-medium mb-5">Poll async job status and download Scanpy-compatible AnnData binary matrices directly from completed perturbation simulations.</p>
