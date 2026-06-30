@@ -2356,6 +2356,23 @@ async def get_catalog_path():
 
 
 
+@app.get("/api.html")
+
+async def get_api_file():
+
+    return FileResponse("api.html")
+
+
+
+@app.get("/api")
+
+async def get_api_path():
+
+    return FileResponse("api.html")
+
+
+
+
 @app.get("/login.html")
 
 async def get_login():
