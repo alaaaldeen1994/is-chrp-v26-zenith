@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <title>Developer API Reference | Nilus Lab</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body {
+            background-color: #020205;
+            color: #e2e8f0;
+            font-family: 'Inter', sans-serif;
+        }
+        .font-outfit {
+            font-family: 'Outfit', sans-serif;
+        }
+        .font-mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+        /* Custom scrollbar for dark black console style */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+            background: transparent;
+        }
+        ::-webkit-scrollbar-track {
+            background: #020205;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #27272a;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #3f3f46;
+        }
+        /* Custom styles to override the header dock for a dark theme */
+        .dark-nav-dock {
+            background: rgba(9, 9, 11, 0.9) !important;
+            border: 1px solid rgba(255, 255, 255, 0.08) !important;
+        }
+        .dark-nav-dock-link {
+            color: #a1a1aa !important;
+        }
+        .dark-nav-dock-link:hover, .dark-nav-dock-link.active {
+            color: #ffffff !important;
+        }
+        .dark-nav-dock-link::after {
+            background: #ffffff !important;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <!-- Floating Glassmorphic Nav Dock (Dark Overrides) -->
+    <div class="nav-dock-wrapper sticky top-6 left-0 right-0 w-full px-6 z-[1000] mt-6">
+        <nav class="nav-dock max-w-7xl mx-auto dark-nav-dock rounded-full px-10 py-3.5 flex items-center justify-between shadow-2xl backdrop-blur-xl">
+            <div class="flex items-center gap-8">
+                <a href="index.html" class="flex items-center gap-2">
+                    <i data-lucide="layers" class="w-6 h-6 text-white"></i>
+                    <div class="font-outfit font-bold tracking-tighter flex items-center uppercase text-white leading-none">
+                        <span class="text-xl mr-1">NILUS <span class="text-zinc-500 ml-1">LAB</span></span>
+                    </div>
+                </a>
+
+                <div class="nav-links hidden md:flex items-center gap-6">
+                    <a href="index.html" class="dark-nav-dock-link text-[11px] font-bold uppercase tracking-widest transition-all">Mainframe</a>
+                    <a href="technical_catalog.html" class="dark-nav-dock-link text-[11px] font-bold uppercase tracking-widest transition-all">Catalog</a>
+                    <a href="trials.html" class="dark-nav-dock-link text-[11px] font-bold uppercase tracking-widest transition-all">Trials</a>
+                    <a href="api.html" class="dark-nav-dock-link text-[11px] font-bold uppercase tracking-widest transition-all active relative">API</a>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <a href="index.html" class="bg-white hover:bg-zinc-200 text-black px-6 py-2 rounded-full text-[11px] font-bold uppercase tracking-wider transition-all flex items-center gap-2">
+                    <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i> Back to Home
+                </a>
+            </div>
+        </nav>
+    </div>
+
+    <!-- Main Sidebar + Content Layout -->
+    <div class="max-w-7xl mx-auto px-6 py-12 flex-1 w-full grid grid-cols-1 lg:grid-cols-4 gap-12 relative">
+        
+        <!-- Sticky Sidebar Navigation -->
+        <aside class="hidden lg:block lg:col-span-1">
+            <div class="sticky top-28 space-y-8 text-sm">
+                <div>
+                    <h3 class="font-outfit text-xs font-black uppercase tracking-wider text-zinc-500 mb-3">Getting Started</h3>
+                    <ul class="space-y-2.5 font-medium text-zinc-400">
+                        <li><a href="#introduction" class="hover:text-white transition-colors">Introduction</a></li>
+                        <li><a href="#installation" class="hover:text-white transition-colors">Installation</a></li>
+                        <li><a href="#authentication" class="hover:text-white transition-colors">Authentication</a></li>
+                        <li><a href="#rate-limiting" class="hover:text-white transition-colors">Rate Limits</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-outfit text-xs font-black uppercase tracking-wider text-zinc-500 mb-3">Endpoints</h3>
+                    <ul class="space-y-2.5 font-medium text-zinc-400 font-mono text-xs">
+                        <li><a href="#endpoint-safety" class="hover:text-white transition-colors">POST /safety/audit</a></li>
+                        <li><a href="#endpoint-fold" class="hover:text-white transition-colors">POST /structure/fold</a></li>
+                        <li><a href="#endpoint-perturbation" class="hover:text-white transition-colors">POST /predict/perturbation</a></li>
+                        <li><a href="#endpoint-lnp" class="hover:text-white transition-colors">POST /lnp/optimize</a></li>
+                        <li><a href="#endpoint-webhooks" class="hover:text-white transition-colors">POST /webhooks/subscribe</a></li>
+                        <li><a href="#endpoint-jobs" class="hover:text-white transition-colors">GET /jobs/{id}/status</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-outfit text-xs font-black uppercase tracking-wider text-zinc-500 mb-3">Security</h3>
+                    <ul class="space-y-2.5 font-medium text-zinc-400">
+                        <li><a href="#webhook-verification" class="hover:text-white transition-colors">HMAC Webhook Verification</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-outfit text-xs font-black uppercase tracking-wider text-zinc-500 mb-3">Examples</h3>
+                    <ul class="space-y-2.5 font-medium text-zinc-400">
+                        <li><a href="#code-python" class="hover:text-white transition-colors">Python SDK Code</a></li>
+                        <li><a href="#code-js" class="hover:text-white transition-colors">Node.js Integration</a></li>
+                        <li><a href="#code-curl" class="hover:text-white transition-colors">Raw cURL Commands</a></li>
+                    </ul>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Panel -->
+        <main class="lg:col-span-3 space-y-20">
+
+            <!-- Title & Introduction -->
+            <section id="introduction" class="space-y-6">
+                <div class="inline-flex items-center gap-2 border border-zinc-800 bg-zinc-900/50 px-3 py-1 rounded-full text-xs font-bold text-zinc-400 uppercase tracking-widest">
+                    <span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
+                    Zenith REST API v30.1
+                </div>
+                <h1 class="font-outfit text-5xl font-black tracking-tight text-white">Developer API Reference</h1>
+                <p class="text-zinc-400 leading-relaxed text-lg font-medium">
+                    The Nilus Lab REST API provides biotechnology research institutions with programmatic access to the Zenith v30 foundation engines. Integrate cellular reprogramming models, methylation-based biological clocks, protein structure folds, and targeted LNP formulations directly into your bioinformatics pipelines.
+                </p>
+                <div class="border border-zinc-800 bg-zinc-950 p-5 rounded-2xl space-y-2">
+                    <span class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest font-outfit">Base URL</span>
+                    <div class="font-mono text-white text-sm bg-black/40 px-4 py-2.5 rounded-lg border border-zinc-900 select-all">
+                        https://niluslab.com/api/v1
+                    </div>
+                </div>
+            </section>
+
+            <!-- Installation -->
+            <section id="installation" class="space-y-6 border-t border-zinc-900 pt-16">
+                <h2 class="font-outfit text-2xl font-black text-white">1. Installation & Environment</h2>
+                <p class="text-zinc-400 leading-relaxed font-medium">
+                    Use standard packages like HTTP libraries and binary file handling tools to communicate with the REST API. For scientific matrix serialization, you will need the standard python libraries:
+                </p>
+                <div class="bg-zinc-950 border border-zinc-900 rounded-2xl p-6 font-mono text-xs text-zinc-300 leading-relaxed space-y-4">
+                    <span class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest font-outfit">CLI Setup</span>
+                    <pre class="bg-black/50 p-4 rounded-xl border border-zinc-900 overflow-x-auto text-zinc-100"><code>pip install requests numpy pandas anndata cellxgene-census</code></pre>
+                </div>
+            </section>
+
+            <!-- Authentication -->
+            <section id="authentication" class="space-y-6 border-t border-zinc-900 pt-16">
+                <h2 class="font-outfit text-2xl font-black text-white">2. Authentication</h2>
+                <p class="text-zinc-400 leading-relaxed font-medium">
+                    All requests to the Zenith API must contain the standard developer header <code class="bg-zinc-900 px-1.5 py-0.5 rounded font-mono text-xs text-white">X-API-Key</code>. Keys are issued through the Nilus Lab Console for validated institutional research credentials. Keep private keys secure; do not share them in frontend repositories.
+                </p>
+                <div class="bg-zinc-950 border border-zinc-900 rounded-2xl p-6 font-mono text-xs text-zinc-300 leading-relaxed space-y-4">
+                    <span class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest font-outfit">Header Format</span>
+                    <pre class="bg-black/50 p-4 rounded-xl border border-zinc-900 overflow-x-auto text-zinc-100"><code>X-API-Key: zk_live_your_institutional_key_here</code></pre>
+                </div>
+            </section>
+
+            <!-- Rate Limiting -->
+            <section id="rate-limiting" class="space-y-6 border-t border-zinc-900 pt-16">
+                <h2 class="font-outfit text-2xl font-black text-white">3. Rate Limiting & Throttling</h2>
+                <p class="text-zinc-400 leading-relaxed font-medium">
+                    The API uses a Redis-backed token bucket algorithm to enforce fair usage limits per key. The standard limits are:
+                </p>
+                <ul class="list-disc pl-5 text-zinc-400 space-y-2 font-medium">
+                    <li><strong class="text-white">Standard Institutional Keys:</strong> 60 requests per minute</li>
+                    <li><strong class="text-white">Discovery Cluster Nodes:</strong> 300 requests per minute</li>
+                </ul>
+                <p class="text-zinc-400 leading-relaxed font-medium">
+                    Each response includes standard headers indicating current quota status:
+                </p>
+                <div class="bg-zinc-950 border border-zinc-900 rounded-2xl overflow-hidden">
+                    <table class="w-full text-left border-collapse text-xs font-mono">
+                        <thead>
+                            <tr class="border-b border-zinc-900 bg-zinc-900/35">
+                                <th class="p-4 text-zinc-400 font-bold uppercase tracking-wider">Header</th>
+                                <th class="p-4 text-zinc-400 font-bold uppercase tracking-wider">Description</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-zinc-900 text-zinc-300">
+                            <tr>
+                                <td class="p-4 font-bold text-white">X-RateLimit-Limit</td>
+                                <td class="p-4">The maximum number of requests allowed in the current window.</td>
+                            </tr>
+                            <tr>
+                                <td class="p-4 font-bold text-white">X-RateLimit-Remaining</td>
+                                <td class="p-4">The number of remaining requests allowed before blocking.</td>
+                            </tr>
+                            <tr>
+                                <td class="p-4 font-bold text-white">X-RateLimit-Reset</td>
+                                <td class="p-4">Unix epoch time indicating when the current window resets.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Endpoints Guide -->
+            <section class="space-y-12 border-t border-zinc-900 pt-16">
+                <h2 class="font-outfit text-2xl font-black text-white">4. Endpoint References</h2>
+
+                <!-- POST /safety/audit -->
+                <div id="endpoint-safety" class="border border-zinc-900 bg-zinc-950/40 rounded-3xl p-8 space-y-6">
+                    <div class="flex items-center gap-3">
+                        <span class="border border-white bg-white text-black font-mono font-bold text-[10px] px-2 py-0.5 rounded tracking-widest uppercase">POST</span>
+                        <span class="font-mono text-white font-bold">/api/v1/safety/audit</span>
+                    </div>
+                    <p class="text-zinc-400 text-sm leading-relaxed">
+                        Evaluates biological sequences or epigenetic datasets for oncogenic safety compliance and calculates true biological age using the 353-CpG Horvath Epigenetic Clock model coefficients.
+                    </p>
+                    
+                    <div class="space-y-3">
+                        <span class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest font-outfit">Request Schema</span>
+                        <pre class="bg-black border border-zinc-900 p-4 rounded-xl font-mono text-xs text-zinc-300 overflow-x-auto"><code>{
+  "cpg_methylation": {
+    "cg00000292": 0.12,
+    "cg00002033": 0.85,
+    "cg00005847": 0.04
+    // Contains array of 353 float values
+  }
+}</code></pre>
+                    </div>
+
+                    <div class="space-y-3">
+                        <span class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest font-outfit">Response Schema</span>
+                        <pre class="bg-black border border-zinc-900 p-4 rounded-xl font-mono text-xs text-zinc-300 overflow-x-auto"><code>{
+  "status": "success",
+  "audit_passed": true,
+  "predicted_age": 42.15,
+  "oncogene_risk": "negligible"
+}</code></pre>
+                    </div>
+                </div>
+
+                <!-- POST /structure/fold -->
+                <div id="endpoint-fold" class="border border-zinc-900 bg-zinc-950/40 rounded-3xl p-8 space-y-6">
+                    <div class="flex items-center gap-3">
+                        <span class="border border-white bg-white text-black font-mono font-bold text-[10px] px-2 py-0.5 rounded tracking-widest uppercase">POST</span>
+                        <span class="font-mono text-white font-bold">/api/v1/structure/fold</span>
+                    </div>
+                    <p class="text-zinc-400 text-sm leading-relaxed">
+                        Folds the provided amino acid sequence using ESMFold, returning 3D atomic coordinates in standard Protein Data Bank (.pdb) output structure.
+                    </p>
+
+                    <div class="space-y-3">
+                        <span class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest font-outfit">Request Schema</span>
+                        <pre class="bg-black border border-zinc-900 p-4 rounded-xl font-mono text-xs text-zinc-300 overflow-x-auto"><code>{
+  "sequence": "MGDVEKGKKIFIMKCSQCHTVEKGGKHKTGPNLHGLFGRKTGQAPGYSYTAANKNKGIIWGEDTLMEYLENPKKYIPGTKMIFVGIKKKEERADLIAYLKKATNE"
+}</code></pre>
+                    </div>
+
+                    <div class="space-y-3">
+                        <span class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest font-outfit">Response Schema</span>
+                        <pre class="bg-black border border-zinc-900 p-4 rounded-xl font-mono text-xs text-zinc-300 overflow-x-auto"><code>{
+  "status": "success",
+  "pdb_format_string": "HEADER    PROTEIN BINDING                         27-JUN-26\nTITLE     ESMFOLD PREDICTED STRUCTURE\nATOM      1  N   MET A   1      12.420  15.106  23.840  1.00 20.00           N\nATOM      2  CA  MET A   1      13.500  14.280  24.120  1.00 20.00           C\n..."
+}</code></pre>
+                    </div>
+                </div>
+
+                <!-- POST /predict/perturbation -->
+                <div id="endpoint-perturbation" class="border border-zinc-900 bg-zinc-950/40 rounded-3xl p-8 space-y-6">
+                    <div class="flex items-center gap-3">
+                        <span class="border border-white bg-white text-black font-mono font-bold text-[10px] px-2 py-0.5 rounded tracking-widest uppercase">POST</span>
+                        <span class="font-mono text-white font-bold">/api/v1/predict/perturbation</span>
+                    </div>
+                    <p class="text-zinc-400 text-sm leading-relaxed">
+                        Queries live datasets from the Chan Zuckerberg Cellxgene Census, feeds the expression vectors into the scVI specialist models, executes transcriptomic perturbations, and prepares results in standard AnnData format.
+                    </p>
+
+                    <div class="space-y-3">
+                        <span class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest font-outfit">Request Schema</span>
+                        <pre class="bg-black border border-zinc-900 p-4 rounded-xl font-mono text-xs text-zinc-300 overflow-x-auto"><code>{
+  "baseline_cell_type": "ventricular_myocyte",
+  "perturbation_factors": {
+    "GATA4": 1.5,
+    "SIRT1": 2.0
+  },
+  "census_filter": "tissue_general == 'heart' and disease == 'normal'"
+}</code></pre>
+                    </div>
+
+                    <div class="space-y-3">
+                        <span class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest font-outfit">Response Schema</span>
+                        <pre class="bg-black border border-zinc-900 p-4 rounded-xl font-mono text-xs text-zinc-300 overflow-x-auto"><code>{
+  "status": "queued",
+  "job_id": "job_01h26c483aefd28e",
+  "estimated_compute_seconds": 12.5
+}</code></pre>
+                    </div>
+                </div>
+
+                <!-- POST /lnp/optimize -->
+                <div id="endpoint-lnp" class="border border-zinc-900 bg-zinc-950/40 rounded-3xl p-8 space-y-6">
+                    <div class="flex items-center gap-3">
+                        <span class="border border-white bg-white text-black font-mono font-bold text-[10px] px-2 py-0.5 rounded tracking-widest uppercase">POST</span>
+                        <span class="font-mono text-white font-bold">/api/v1/lnp/optimize</span>
+                    </div>
+                    <p class="text-zinc-400 text-sm leading-relaxed">
+                        Simulates lipid nanoparticle encapsulation models to optimize structural targeting efficiency for heart tissues.
+                    </p>
+
+                    <div class="space-y-3">
+                        <span class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest font-outfit">Request Schema</span>
+                        <pre class="bg-black border border-zinc-900 p-4 rounded-xl font-mono text-xs text-zinc-300 overflow-x-auto"><code>{
+  "lipid_ratio_ionizable": 50.0,
+  "lipid_ratio_helper": 38.5,
+  "lipid_ratio_pegylated": 1.5,
+  "cargo_nucleic_acid": "mRNA"
+}</code></pre>
+                    </div>
+
+                    <div class="space-y-3">
+                        <span class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest font-outfit">Response Schema</span>
+                        <pre class="bg-black border border-zinc-900 p-4 rounded-xl font-mono text-xs text-zinc-300 overflow-x-auto"><code>{
+  "status": "success",
+  "encapsulation_efficiency": 94.2,
+  "particle_size_nm": 82.5,
+  "cardiac_organ_tropism_index": 0.88
+}</code></pre>
+                    </div>
+                </div>
+
+                <!-- POST /webhooks/subscribe -->
+                <div id="endpoint-webhooks" class="border border-zinc-900 bg-zinc-950/40 rounded-3xl p-8 space-y-6">
+                    <div class="flex items-center gap-3">
+                        <span class="border border-white bg-white text-black font-mono font-bold text-[10px] px-2 py-0.5 rounded tracking-widest uppercase">POST</span>
+                        <span class="font-mono text-white font-bold">/api/v1/webhooks/subscribe</span>
+                    </div>
+                    <p class="text-zinc-400 text-sm leading-relaxed">
+                        Subscribes callback URLs to real-time async job completion notifications. All triggers are dispatched with an HMAC-SHA256 signature calculated against the payload.
+                    </p>
+
+                    <div class="space-y-3">
+                        <span class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest font-outfit">Request Schema</span>
+                        <pre class="bg-black border border-zinc-900 p-4 rounded-xl font-mono text-xs text-zinc-300 overflow-x-auto"><code>{
+  "target_url": "https://your-institutional-server.edu/webhooks/zenith",
+  "subscribed_events": ["job.completed", "job.failed"]
+}</code></pre>
+                    </div>
+
+                    <div class="space-y-3">
+                        <span class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest font-outfit">Response Schema</span>
+                        <pre class="bg-black border border-zinc-900 p-4 rounded-xl font-mono text-xs text-zinc-300 overflow-x-auto"><code>{
+  "status": "success",
+  "subscription_id": "sub_9841f32a0b12",
+  "secret_key": "whsec_your_hmac_signing_secret_here"
+}</code></pre>
+                    </div>
+                </div>
+
+                <!-- GET /jobs/{id}/status -->
+                <div id="endpoint-jobs" class="border border-zinc-900 bg-zinc-950/40 rounded-3xl p-8 space-y-6">
+                    <div class="flex items-center gap-3">
+                        <span class="border border-zinc-750 bg-transparent text-white font-mono font-bold text-[10px] px-2 py-0.5 rounded tracking-widest uppercase">GET</span>
+                        <span class="font-mono text-white font-bold">/api/v1/jobs/{job_id}/status</span>
+                    </div>
+                    <p class="text-zinc-400 text-sm leading-relaxed">
+                        Retrieves the status of an asynchronous simulation job. If completed, provides download capability for the target AnnData .h5ad binary payload.
+                    </p>
+
+                    <div class="space-y-3">
+                        <span class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest font-outfit">Response Schema (Running)</span>
+                        <pre class="bg-black border border-zinc-900 p-4 rounded-xl font-mono text-xs text-zinc-300 overflow-x-auto"><code>{
+  "job_id": "job_01h26c483aefd28e",
+  "status": "running",
+  "progress_percentage": 64.0
+}</code></pre>
+                    </div>
+
+                    <div class="space-y-3">
+                        <span class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest font-outfit">Response Schema (Completed)</span>
+                        <pre class="bg-black border border-zinc-900 p-4 rounded-xl font-mono text-xs text-zinc-300 overflow-x-auto"><code>{
+  "job_id": "job_01h26c483aefd28e",
+  "status": "completed",
+  "download_url": "/api/v1/jobs/job_01h26c483aefd28e/download"
+}</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Webhook HMAC-SHA256 Verification Guide -->
+            <section id="webhook-verification" class="space-y-6 border-t border-zinc-900 pt-16">
+                <h2 class="font-outfit text-2xl font-black text-white">5. Webhook HMAC-SHA256 Signature Verification</h2>
+                <p class="text-zinc-400 leading-relaxed font-medium">
+                    To prevent replay and spoofing attacks, Zenith signs all webhook callback requests with a cryptographic HMAC-SHA256 signature using the secret key returned at subscription time. 
+                </p>
+                <p class="text-zinc-400 leading-relaxed font-medium">
+                    The signature is transmitted in the header:
+                </p>
+                <pre class="bg-zinc-950 border border-zinc-900 p-4 rounded-xl font-mono text-xs text-zinc-300"><code>X-Zenith-Signature: t=1780272000,v1=f14c2789...</code></pre>
+                <p class="text-zinc-400 leading-relaxed font-medium">
+                    To verify the payload, calculate the HMAC signature against the concatenation of the timestamp (<code class="bg-zinc-900 px-1 py-0.5 rounded text-white text-xs font-mono">t</code>) and request body using the raw secret key. Below is the complete, production-ready Python verification snippet:
+                </p>
+                <pre class="bg-zinc-950 border border-zinc-900 p-5 rounded-2xl font-mono text-xs text-zinc-200 overflow-x-auto"><code>import hmac
+import hashlib
+
+def verify_signature(payload_body: bytes, signature_header: str, secret_key: str) -> bool:
+    # 1. Parse header components
+    parts = dict(x.split('=') for x in signature_header.split(','))
+    timestamp = parts.get('t')
+    signature = parts.get('v1')
+    
+    if not timestamp or not signature:
+        return False
+        
+    # 2. Concatenate timestamp and raw body
+    signed_payload = f"{timestamp}.".encode('utf-8') + payload_body
+    
+    # 3. Compute local HMAC-SHA256 hash using the secret key
+    computed_sig = hmac.new(
+        secret_key.encode('utf-8'),
+        signed_payload,
+        hashlib.sha256
+    ).hexdigest()
+    
+    # 4. Compare signature arrays in constant-time
+    return hmac.compare_digest(computed_sig, signature)</code></pre>
+            </section>
+
+            <!-- Complete Code Examples -->
+            <section class="space-y-12 border-t border-zinc-900 pt-16">
+                <h2 class="font-outfit text-2xl font-black text-white">6. SDK Integration Examples</h2>
+
+                <!-- Python SDK -->
+                <div id="code-python" class="space-y-4">
+                    <h3 class="font-outfit text-lg font-bold text-white">Python Pipeline Integration</h3>
+                    <p class="text-zinc-400 text-sm font-medium">
+                        Complete script to launch a cell perturbation simulation, poll until completion, download the `.h5ad` file, and load it into Scanpy/AnnData:
+                    </p>
+                    <pre class="bg-zinc-950 border border-zinc-900 p-5 rounded-2xl font-mono text-xs text-zinc-200 overflow-x-auto"><code>import time
+import requests
+import anndata as ad
+
+API_KEY = "zk_live_your_key_here"
+BASE_URL = "https://niluslab.com/api/v1"
+HEADERS = {"X-API-Key": API_KEY}
+
+def run_cohort_perturbation():
+    # 1. Launch the async simulation job
+    payload = {
+        "baseline_cell_type": "ventricular_myocyte",
+        "perturbation_factors": {"GATA4": 1.5, "SIRT1": 2.0},
+        "census_filter": "tissue == 'heart' and disease == 'normal'"
+    }
+    
+    res = requests.post(f"{BASE_URL}/predict/perturbation", headers=HEADERS, json=payload)
+    job = res.json()
+    job_id = job["job_id"]
+    print(f"Launched job {job_id}. Polling status...")
+
+    # 2. Poll until completed
+    while True:
+        status_res = requests.get(f"{BASE_URL}/jobs/{job_id}/status", headers=HEADERS)
+        status_data = status_res.json()
+        status = status_data["status"]
+        
+        if status == "completed":
+            break
+        elif status == "failed":
+            raise Exception("Calculation failed on computing cluster.")
+            
+        print(f"Job status: {status_data.get('progress_percentage', 0)}%... waiting.")
+        time.sleep(2)
+
+    # 3. Stream binary AnnData download
+    download_url = f"{BASE_URL}/jobs/{job_id}/download"
+    file_path = f"perturbation_{job_id}.h5ad"
+    
+    with requests.get(download_url, headers=HEADERS, stream=True) as stream:
+        stream.raise_for_status()
+        with open(file_path, 'wb') as f:
+            for chunk in stream.iter_content(chunk_size=8192):
+                f.write(chunk)
+                
+    print(f"Successfully downloaded results to {file_path}")
+    
+    # 4. Read matrix into AnnData
+    adata = ad.read_h5ad(file_path)
+    print(f"Matrix Dimension: {adata.shape}")
+    print(adata.X[:5, :5])
+
+if __name__ == "__main__":
+    run_cohort_perturbation()</code></pre>
+                </div>
+
+                <!-- JS SDK -->
+                <div id="code-js" class="space-y-4">
+                    <h3 class="font-outfit text-lg font-bold text-white">JavaScript / Node.js Integration</h3>
+                    <p class="text-zinc-400 text-sm font-medium">
+                        Node.js script using fetch syntax to request ESMFold structure coordinates:
+                    </p>
+                    <pre class="bg-zinc-950 border border-zinc-900 p-5 rounded-2xl font-mono text-xs text-zinc-200 overflow-x-auto"><code>const apiKey = 'zk_live_your_key_here';
+const baseUrl = 'https://niluslab.com/api/v1';
+
+async function fetchProteinFold(sequence) {
+  try {
+    const response = await fetch(`${baseUrl}/structure/fold`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-API-Key': apiKey
+      },
+      body: JSON.stringify({ sequence })
+    });
+
+    const data = await response.json();
+    if (data.status === 'success') {
+      console.log('Coordinates loaded:');
+      console.log(data.pdb_format_string.substring(0, 500) + '\n...');
+    } else {
+      console.error('ESMFold failed:', data);
+    }
+  } catch (err) {
+    console.error('Request Error:', err);
+  }
+}
+
+fetchProteinFold('MGDVEKGKKIFIMKCSQCHTVEKGGKHKTGPNLHGLFG');</code></pre>
+                </div>
+
+                <!-- Raw cURL -->
+                <div id="code-curl" class="space-y-4">
+                    <h3 class="font-outfit text-lg font-bold text-white">Raw cURL Shell Execution</h3>
+                    <p class="text-zinc-400 text-sm font-medium">
+                        Raw HTTP commands to query formulation optimizations:
+                    </p>
+                    <pre class="bg-zinc-950 border border-zinc-900 p-5 rounded-2xl font-mono text-xs text-zinc-200 overflow-x-auto"><code>curl -X POST "https://niluslab.com/api/v1/lnp/optimize" \
+  -H "X-API-Key: zk_live_your_key_here" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "lipid_ratio_ionizable": 50.0,
+    "lipid_ratio_helper": 38.5,
+    "lipid_ratio_pegylated": 1.5,
+    "cargo_nucleic_acid": "mRNA"
+  }'</code></pre>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Platform Status Footer -->
+    <footer class="border-t border-zinc-900 bg-black/60 py-12 mt-20 relative z-10 text-xs">
+        <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-6">
+            <div class="flex items-center gap-4 text-zinc-500 font-medium">
+                <span>© 2026 Nilus Lab, Inc.</span>
+                <span class="w-1 h-1 bg-zinc-800 rounded-full"></span>
+                <span>All computational simulations subject to compliance protocols.</span>
+            </div>
+            <div class="flex items-center gap-6 font-mono text-zinc-500">
+                <span class="flex items-center gap-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-zinc-500 animate-pulse"></span>
+                    API Node Status: Operational
+                </span>
+                <span>v30.1 GOLD</span>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Init Lucide icons
+        lucide.createIcons();
+    </script>
+</body>
+</html>
