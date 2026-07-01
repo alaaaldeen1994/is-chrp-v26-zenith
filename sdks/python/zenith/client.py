@@ -14,11 +14,12 @@ class ZenithClient:
     """
     Official Python Client SDK for the Nilus Lab Zenith Computational Biology Platform.
     """
-    def __init__(self, api_key: Optional[str] = None, base_url: str = "https://niluslab.com/api/v1"):
+    def __init__(self, api_key: Optional[str] = None, base_url: Optional[str] = None):
         self.api_key = api_key or os.getenv("ZENITH_API_KEY")
         if not self.api_key:
             raise AuthenticationError("API Key is required. Set it during initialization or in the ZENITH_API_KEY environment variable.")
-        self.base_url = base_url.rstrip("/")
+        env_url = os.getenv("ZENITH_API_URL")
+        self.base_url = (base_url or env_url or "https://niluslab.com/api/v1").rstrip("/")
         self.client = httpx.Client(
             base_url=self.base_url,
             headers={"X-API-Key": self.api_key},
@@ -146,7 +147,8 @@ class ZenithClient:
             
         # Handle relative pathing
         if download_url.startswith("/"):
-            url = f"{self.base_url}{download_url}"
+            from urllib.parse import urljoin
+            url = urljoin(self.base_url, download_url)
         else:
             url = download_url
             
