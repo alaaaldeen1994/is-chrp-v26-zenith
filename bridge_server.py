@@ -1450,6 +1450,34 @@ async def lifespan(app: FastAPI):
 
     reassemble_split_files()
 
+    # 2. Auto-create database tables if they don't exist (fixes fresh container deploys)
+    try:
+        from database.connection import engine, Base, SessionLocal
+        from database.models import APIKey, AuditLog, WebhookSubscription  # noqa: F401 - import to register models
+        Base.metadata.create_all(bind=engine)
+        print("[DATABASE] Tables verified/created successfully.")
+
+        # 3. Seed default API keys if table is empty (fresh deploy)
+        import hashlib
+        db = SessionLocal()
+        try:
+            if db.query(APIKey).count() == 0:
+                default_keys = [
+                    {"key": "zk_live_bd5bdbf38a1c5ce3c8fa0b18a67ae168", "owner": "Waed Lab", "tier": "enterprise"},
+                    {"key": "zk_live_c43349c9f8f86cd9df05dcf8e45bcff0", "owner": "Waed Lab", "tier": "enterprise"},
+                ]
+                for k in default_keys:
+                    key_hash = hashlib.sha256(k["key"].encode()).hexdigest()
+                    db.add(APIKey(key_hash=key_hash, prefix=k["key"][:14] + "..." + k["key"][-4:], owner=k["owner"], tier=k["tier"]))
+                db.commit()
+                print(f"[DATABASE] Seeded {len(default_keys)} default API keys.")
+            else:
+                print(f"[DATABASE] API keys already exist ({db.query(APIKey).count()} keys).")
+        finally:
+            db.close()
+    except Exception as e:
+        print(f"[DATABASE] Warning: Could not initialize database: {e}")
+
     
 
     global zenith_foundation_v1, zenith_foundation_486k, model_mode
