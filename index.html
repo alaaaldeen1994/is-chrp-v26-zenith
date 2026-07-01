@@ -5621,42 +5621,48 @@
 
 
                 if (user) {
-
-                    if (loginBtn) loginBtn.classList.add('hidden');
-
-                    if (userStatus) userStatus.classList.remove('hidden');
-
+                    if (loginBtn) {
+                        loginBtn.classList.add('hidden');
+                        loginBtn.style.display = 'none';
+                    }
+                    if (userStatus) {
+                        userStatus.classList.remove('hidden');
+                        userStatus.style.display = 'flex';
+                    }
                     if (dashboardView) {
-
                         dashboardView.classList.remove('hidden');
-
+                        dashboardView.style.display = 'block';
                         initImpactChart();
-
+                    }
+                    if (coreModules) {
+                        coreModules.classList.add('hidden');
+                        coreModules.style.display = 'none';
                     }
 
-                    // Hero stays visible when logged in
-                    if (coreModules) coreModules.classList.add('hidden');
-
-
-
                     const displayName = "NILUSLAB TEAM";
-
                     if (nameEl) nameEl.innerText = displayName;
-
                     if (dashNameEl) dashNameEl.innerText = displayName;
-
                 } else {
-
-                    if (loginBtn) loginBtn.classList.remove('hidden');
-
-                    if (userStatus) userStatus.classList.add('hidden');
-
-                    if (dashboardView) dashboardView.classList.add('hidden');
-
-                    if (heroSection) heroSection.classList.remove('hidden');
-
-                    if (coreModules) coreModules.classList.remove('hidden');
-
+                    if (loginBtn) {
+                        loginBtn.classList.remove('hidden');
+                        loginBtn.style.display = 'flex';
+                    }
+                    if (userStatus) {
+                        userStatus.classList.add('hidden');
+                        userStatus.style.display = 'none';
+                    }
+                    if (dashboardView) {
+                        dashboardView.classList.add('hidden');
+                        dashboardView.style.display = 'none';
+                    }
+                    if (heroSection) {
+                        heroSection.classList.remove('hidden');
+                        heroSection.style.display = 'block';
+                    }
+                    if (coreModules) {
+                        coreModules.classList.remove('hidden');
+                        coreModules.style.display = 'block';
+                    }
                 }
 
                 lucide.createIcons();
