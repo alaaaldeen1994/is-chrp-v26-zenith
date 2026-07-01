@@ -1519,7 +1519,7 @@ async def lifespan(app: FastAPI):
             import torch
             if not os.path.exists(model_pt_path): return
             try:
-                sd = torch.load(model_pt_path, map_location='cpu')
+                sd = torch.load(model_pt_path, map_location='cpu', weights_only=False)
                 patched = False
                 
                 # It might be at the top level
