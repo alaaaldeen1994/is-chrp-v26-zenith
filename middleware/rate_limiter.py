@@ -28,6 +28,15 @@ class APIRateLimiterMiddleware(BaseHTTPMiddleware):
         else:  # free
             return 10, 1
 
+    def _add_rate_limit_headers(self, response, hourly_limit: int, request_count: int, current_hour: int):
+        """Add standard X-RateLimit-* headers to the response."""
+        remaining = max(0, hourly_limit - request_count)
+        reset_timestamp = (current_hour + 1) * 3600  # Next hour boundary
+        response.headers["X-RateLimit-Limit"] = str(hourly_limit)
+        response.headers["X-RateLimit-Remaining"] = str(remaining)
+        response.headers["X-RateLimit-Reset"] = str(reset_timestamp)
+        return response
+
     async def dispatch(self, request: Request, call_next):
         # Only rate-limit public v1 API routes, excluding health check
         path = request.url.path
@@ -49,6 +58,7 @@ class APIRateLimiterMiddleware(BaseHTTPMiddleware):
         # Concurrency and hourly keys
         hourly_key = f"ratelimit:{key_id}:{current_hour}"
         concurrency_key = f"concurrency:{key_id}"
+        request_count = 0
 
         if self.use_redis:
             try:
@@ -59,19 +69,21 @@ class APIRateLimiterMiddleware(BaseHTTPMiddleware):
                 request_count, _ = pipe.execute()
 
                 if request_count > hourly_limit:
-                    return JSONResponse(
+                    error_resp = JSONResponse(
                         status_code=429,
                         content={"status": "error", "message": "Hourly API rate limit exceeded. Upgrade your tier to increase quota."}
                     )
+                    return self._add_rate_limit_headers(error_resp, hourly_limit, request_count, current_hour)
 
                 # 2. Concurrency check
                 active_connections = self.redis_client.incr(concurrency_key)
                 if active_connections > max_concurrent:
                     self.redis_client.decr(concurrency_key)
-                    return JSONResponse(
+                    error_resp = JSONResponse(
                         status_code=429,
                         content={"status": "error", "message": "Too many concurrent requests running. Please serialize your API calls."}
                     )
+                    return self._add_rate_limit_headers(error_resp, hourly_limit, request_count, current_hour)
 
             except redis.RedisError as e:
                 # Fallback to call_next on Redis error to maintain availability
@@ -79,15 +91,22 @@ class APIRateLimiterMiddleware(BaseHTTPMiddleware):
                 return await call_next(request)
         else:
             # Local fallback (Fixed window hourly + simple concurrency)
+            # Cleanup stale keys from previous hours
+            stale_keys = [k for k in self.local_limits if ":" in k and not k.startswith("con:") and not k.endswith(str(current_hour))]
+            for k in stale_keys:
+                del self.local_limits[k]
+
             # 1. Hourly check
             local_hourly_key = f"{key_id}:{current_hour}"
             self.local_limits.setdefault(local_hourly_key, 0)
             self.local_limits[local_hourly_key] += 1
-            if self.local_limits[local_hourly_key] > hourly_limit:
-                return JSONResponse(
+            request_count = self.local_limits[local_hourly_key]
+            if request_count > hourly_limit:
+                error_resp = JSONResponse(
                     status_code=429,
                     content={"status": "error", "message": "Hourly API rate limit exceeded."}
                 )
+                return self._add_rate_limit_headers(error_resp, hourly_limit, request_count, current_hour)
 
             # 2. Concurrency check
             local_concurrency_key = f"con:{key_id}"
@@ -95,14 +114,17 @@ class APIRateLimiterMiddleware(BaseHTTPMiddleware):
             self.local_limits[local_concurrency_key] += 1
             if self.local_limits[local_concurrency_key] > max_concurrent:
                 self.local_limits[local_concurrency_key] -= 1
-                return JSONResponse(
+                error_resp = JSONResponse(
                     status_code=429,
                     content={"status": "error", "message": "Too many concurrent requests running."}
                 )
+                return self._add_rate_limit_headers(error_resp, hourly_limit, request_count, current_hour)
 
         # Proceed with request execution
         try:
             response = await call_next(request)
+            # Attach rate limit headers to successful responses
+            self._add_rate_limit_headers(response, hourly_limit, request_count, current_hour)
         finally:
             # Decrement concurrency counter when request completes
             if self.use_redis:

@@ -1781,27 +1781,17 @@ class CORSAlwaysMiddleware(BaseHTTPMiddleware):
             return response
 
         except Exception as e:
-
             import traceback
-
-            traceback.print_exc()
-
+            traceback.print_exc()  # Log full trace server-side only
             return Response(
-
-                content=str(e),
-
+                content='{"status": "error", "message": "Internal server error"}',
                 status_code=500,
-
+                media_type="application/json",
                 headers={
-
                     "Access-Control-Allow-Origin": effective_origin,
-
                     "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-
                     "Access-Control-Allow-Headers": "Content-Type, X-API-Key, X-CSRF-Token, Authorization",
-
                 }
-
             )
 
 
@@ -1810,7 +1800,7 @@ class CORSAlwaysMiddleware(BaseHTTPMiddleware):
 
 app.add_middleware(CORSAlwaysMiddleware)       # CORS handling
 
-# app.add_middleware(CSRFMiddleware)             # CSRF protection (DISABLED for restoration)
+app.add_middleware(CSRFMiddleware)              # CSRF protection for browser forms
 
 app.add_middleware(SecurityHeadersMiddleware)  # Security headers
 
@@ -3519,31 +3509,31 @@ async def generate_report(report_data: ReportRequest):
 
 
 @app.get("/download_report/{filename}")
-
 async def download_report(filename: str):
-
-    """Serve a generated PDF report for download"""
-
-    reports_dir = os.path.join(os.path.dirname(__file__), "reports")
-
-    file_path = os.path.join(reports_dir, filename)
-
+    """Serve a generated PDF report for download.
     
-
+    Security: Path traversal protection via basename sanitization
+    and realpath confinement check.
+    """
+    reports_dir = os.path.realpath(os.path.join(os.path.dirname(__file__), "reports"))
+    # Sanitize: strip any directory components from filename
+    safe_filename = os.path.basename(filename)
+    if not safe_filename or safe_filename != filename:
+        raise HTTPException(status_code=400, detail="Invalid filename")
+    
+    file_path = os.path.realpath(os.path.join(reports_dir, safe_filename))
+    
+    # Confinement check: resolved path must be inside reports_dir
+    if not file_path.startswith(reports_dir + os.sep) and file_path != reports_dir:
+        raise HTTPException(status_code=403, detail="Access denied")
+    
     if not os.path.exists(file_path):
-
         raise HTTPException(status_code=404, detail="Report not found")
-
     
-
     return FileResponse(
-
         path=file_path,
-
         media_type="application/pdf",
-
-        filename=filename
-
+        filename=safe_filename
     )
 
 

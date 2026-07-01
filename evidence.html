@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Scientific Evidence Registry | Nilus Lab Zenith v30.0</title>
+    <meta name="description" content="Scientific evidence registry for Zenith v30.0. Benchmarks, validation metrics, and reproducibility data for cardiac reprogramming trajectory models.">
     <!-- RESEARCH USE ONLY - NO CLINICAL CLAIMS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;500;600;700;800;900&family=JetBrains+Mono&display=swap" rel="stylesheet">
@@ -232,7 +233,7 @@
     <div class="grid md:grid-cols-3 gap-10 mb-32">
         <div class="card-elite">
             <div class="text-teal-600 text-[10px] font-black uppercase tracking-[0.3em] mb-8">Manifold Fidelity (R²)</div>
-            <div class="text-6xl font-black text-slate-900 mb-6">0.998</div>
+            <div class="text-6xl font-black text-slate-900 mb-6">0.998</div> <!-- Manifold reconstruction fidelity R² (different metric from 0.942 cross-validated prediction accuracy) -->
             <div class="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden mb-8">
                 <div class="bg-teal-500 h-full w-[99.8%] shadow-[0_0_20px_rgba(13,148,136,0.3)]"></div>
             </div>
@@ -406,7 +407,7 @@
                     <ul class="space-y-6">
                         <li class="flex justify-between border-b border-white/5 pb-4">
                             <span class="text-slate-500 font-bold uppercase text-[10px] tracking-widest">R² Accuracy</span>
-                            <span class="text-slate-800 font-mono">0.9421</span>
+                            <span class="text-slate-800 font-mono">0.942</span> <!-- Cross-validated prediction accuracy (different metric from 0.998 manifold reconstruction fidelity) -->
                         </li>
                         <li class="flex justify-between border-b border-white/5 pb-4">
                             <span class="text-slate-500 font-bold uppercase text-[10px] tracking-widest">Lineage Retention</span>

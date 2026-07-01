@@ -1,4 +1,4 @@
-﻿"""
+"""
 Security Middleware for Nilus Lab Platform
 Implements XSS, CSRF, and Rate Limiting Protection
 """
@@ -198,15 +198,15 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
         response.headers["X-XSS-Protection"] = "1; mode=block"
         response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains"
         
-        # BROAD CSP: Restoration Priority
+        # Production CSP: Restrict to known trusted domains
         response.headers["Content-Security-Policy"] = (
-            "default-src 'self' * data: blob: 'unsafe-inline' 'unsafe-eval'; "
-            "script-src 'self' 'unsafe-inline' 'unsafe-eval' *; "
-            "style-src 'self' 'unsafe-inline' *; "
-            "img-src 'self' data: blob: *; "
-            "font-src 'self' data: *; "
-            "connect-src 'self' * wss: ws:; "
-            "frame-src 'self' *; "
+            "default-src 'self'; "
+            "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://apis.google.com https://www.gstatic.com https://unpkg.com; "
+            "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net https://unpkg.com; "
+            "img-src 'self' data: blob: https:; "
+            "font-src 'self' data: https://fonts.gstatic.com https://cdn.jsdelivr.net; "
+            "connect-src 'self' https://api.esm.metainfrastructure.org https://api.openai.com https://cellxgene.cziscience.com wss:; "
+            "frame-src 'self' https://alphafoldserver.com; "
             "worker-src 'self' blob:; "
             "child-src 'self' blob:; "
             "object-src 'none';"

@@ -8,14 +8,14 @@ class Settings(BaseSettings):
     ENV: str = "development"
     PROJECT_NAME: str = "Zenith Computational Biology API"
     VERSION: str = "1.0.0"
-    DEBUG: bool = True
+    DEBUG: bool = False
 
     # Database & Cache
     DATABASE_URL: str = "sqlite:///./zenith_api.db"
     REDIS_URL: str = "redis://localhost:6379/0"
 
     # Cryptography / Security
-    SECRET_KEY: str = "supersecretkeychangeinproduction"
+    SECRET_KEY: str = "CHANGE-ME-IN-PRODUCTION-OR-SET-ENV-VAR"
     API_KEY_HEADER: str = "X-API-Key"
     
     # CORS config - typed as Any to prevent Pydantic-settings complex decoding crash

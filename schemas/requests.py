@@ -39,4 +39,4 @@ class VirtualTrialRequest(BaseModel):
     oral_administration: bool = Field(True, description="Whether compound is orally administered (applies gut deamidation penalty)")
 
 class ProteinFoldingRequest(BaseModel):
-    sequence: str = Field(..., example="MAPL...", description="Amino acid sequence (letters) to fold into 3D atomic coordinates")
+    sequence: str = Field(..., min_length=5, max_length=2048, example="MAPL...", description="Amino acid sequence (5-2048 letters) to fold into 3D atomic coordinates")
