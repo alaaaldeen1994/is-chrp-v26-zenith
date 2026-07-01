@@ -104,7 +104,7 @@
                         <li><a href="#endpoint-perturbation" class="hover:text-white transition-colors">POST /predict/perturbation</a></li>
                         <li><a href="#endpoint-lnp" class="hover:text-white transition-colors">POST /lnp/optimize</a></li>
                         <li><a href="#endpoint-webhooks" class="hover:text-white transition-colors">POST /webhooks/subscribe</a></li>
-                        <li><a href="#endpoint-jobs" class="hover:text-white transition-colors">GET /jobs/{id}/status</a></li>
+                        <li><a href="#endpoint-jobs" class="hover:text-white transition-colors">GET /jobs/{id}</a></li>
                     </ul>
                 </div>
                 <div>
@@ -225,11 +225,15 @@
                     <div class="space-y-3">
                         <span class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest font-outfit">Request Schema</span>
                         <pre class="bg-black border border-zinc-900 p-4 rounded-xl font-mono text-xs text-zinc-300 overflow-x-auto"><code>{
+  "factors": [
+    "GATA4",
+    "TBX5",
+    "OCT4"
+  ],
   "cpg_methylation": {
     "cg00000292": 0.12,
     "cg00002033": 0.85,
     "cg00005847": 0.04
-    // Contains array of 353 float values
   }
 }</code></pre>
                     </div>
@@ -238,9 +242,34 @@
                         <span class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest font-outfit">Response Schema</span>
                         <pre class="bg-black border border-zinc-900 p-4 rounded-xl font-mono text-xs text-zinc-300 overflow-x-auto"><code>{
   "status": "success",
-  "audit_passed": true,
-  "predicted_age": 42.15,
-  "oncogene_risk": "negligible"
+  "data": {
+    "approved_factors": [
+      "GATA4",
+      "TBX5"
+    ],
+    "blocked_factors": [
+      "OCT4"
+    ],
+    "sirtuin_engagement": {
+      "pathway_score": 0.82,
+      "targeted_sirtuins": [
+        "SIRT1",
+        "SIRT6"
+      ]
+    },
+    "horvath_clock_impact": {
+      "predicted_biological_age": 42.15,
+      "probes_matched": 120,
+      "probes_defaulted": 233,
+      "total_clock_probes": 353
+    },
+    "safety_summary": "Passed pioneer safety gate. Blocked potential oncogene: OCT4."
+  },
+  "meta": {
+    "model_version": "zenith-v30.0",
+    "credits_used": 1,
+    "compute_time_ms": 12
+  }
 }</code></pre>
                     </div>
                 </div>
@@ -266,7 +295,21 @@
                         <span class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest font-outfit">Response Schema</span>
                         <pre class="bg-black border border-zinc-900 p-4 rounded-xl font-mono text-xs text-zinc-300 overflow-x-auto"><code>{
   "status": "success",
-  "pdb_format_string": "HEADER    PROTEIN BINDING                         27-JUN-26\nTITLE     ESMFOLD PREDICTED STRUCTURE\nATOM      1  N   MET A   1      12.420  15.106  23.840  1.00 20.00           N\nATOM      2  CA  MET A   1      13.500  14.280  24.120  1.00 20.00           C\n..."
+  "data": {
+    "status": "success",
+    "source": "ESMFold-v1",
+    "pdb_data": "HEADER    PROTEIN BINDING                         27-JUN-26\nTITLE     ESMFOLD PREDICTED STRUCTURE\nATOM      1  N   MET A   1      12.420  15.106  23.840  1.00 20.00           N\nATOM      2  CA  MET A   1      13.500  14.280  24.120  1.00 20.00           C\n...",
+    "metrics": {
+      "length": 105,
+      "compute_time_sec": 1.25,
+      "predicted_lddt": 84.5
+    }
+  },
+  "meta": {
+    "model_version": "zenith-v30.0",
+    "credits_used": 10,
+    "compute_time_ms": 1250
+  }
 }</code></pre>
                     </div>
                 </div>
@@ -296,9 +339,10 @@
                     <div class="space-y-3">
                         <span class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest font-outfit">Response Schema</span>
                         <pre class="bg-black border border-zinc-900 p-4 rounded-xl font-mono text-xs text-zinc-300 overflow-x-auto"><code>{
-  "status": "queued",
   "job_id": "job_01h26c483aefd28e",
-  "estimated_compute_seconds": 12.5
+  "status": "pending",
+  "status_url": "https://niluslab.com/api/v1/jobs/job_01h26c483aefd28e",
+  "eta_seconds": 6.0
 }</code></pre>
                     </div>
                 </div>
@@ -316,10 +360,16 @@
                     <div class="space-y-3">
                         <span class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest font-outfit">Request Schema</span>
                         <pre class="bg-black border border-zinc-900 p-4 rounded-xl font-mono text-xs text-zinc-300 overflow-x-auto"><code>{
-  "lipid_ratio_ionizable": 50.0,
-  "lipid_ratio_helper": 38.5,
-  "lipid_ratio_pegylated": 1.5,
-  "cargo_nucleic_acid": "mRNA"
+  "molar_ratios": {
+    "ionizable": 0.50,
+    "helper": 0.10,
+    "cholesterol": 0.385,
+    "peg": 0.015
+  },
+  "np_ratio": 6.0,
+  "active_ligand_conjugation": true,
+  "ligand_density": 2.5,
+  "peg_mw": 2000.0
 }</code></pre>
                     </div>
 
@@ -327,9 +377,24 @@
                         <span class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest font-outfit">Response Schema</span>
                         <pre class="bg-black border border-zinc-900 p-4 rounded-xl font-mono text-xs text-zinc-300 overflow-x-auto"><code>{
   "status": "success",
-  "encapsulation_efficiency": 94.2,
-  "particle_size_nm": 82.5,
-  "cardiac_organ_tropism_index": 0.88
+  "data": {
+    "circulation_half_life_hours": 12.5,
+    "heart_selectivity_score": 0.88,
+    "liver_sequestration_score": 0.12,
+    "endosomal_escape_percent": 34.2,
+    "particle_size_nm": 82.5,
+    "zeta_potential_mv": -14.2,
+    "encapsulation_efficiency_percent": 94.2,
+    "cytotoxicity_index": 0.15,
+    "formulation_status": "OPTIMAL",
+    "delivery_mechanism": "receptor_mediated_endocytosis",
+    "mechanism_note": "Targeted ApoE-mediated receptor path verified."
+  },
+  "meta": {
+    "model_version": "zenith-v30.0",
+    "credits_used": 1,
+    "compute_time_ms": 45
+  }
 }</code></pre>
                     </div>
                 </div>
@@ -347,8 +412,7 @@
                     <div class="space-y-3">
                         <span class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest font-outfit">Request Schema</span>
                         <pre class="bg-black border border-zinc-900 p-4 rounded-xl font-mono text-xs text-zinc-300 overflow-x-auto"><code>{
-  "target_url": "https://your-institutional-server.edu/webhooks/zenith",
-  "subscribed_events": ["job.completed", "job.failed"]
+  "url": "https://your-institutional-server.edu/webhooks/zenith"
 }</code></pre>
                     </div>
 
@@ -356,17 +420,27 @@
                         <span class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest font-outfit">Response Schema</span>
                         <pre class="bg-black border border-zinc-900 p-4 rounded-xl font-mono text-xs text-zinc-300 overflow-x-auto"><code>{
   "status": "success",
-  "subscription_id": "sub_9841f32a0b12",
-  "secret_key": "whsec_your_hmac_signing_secret_here"
+  "data": {
+    "subscription_id": 1,
+    "url": "https://your-institutional-server.edu/webhooks/zenith",
+    "signing_secret": "whsec_your_hmac_signing_secret_here",
+    "status": "active",
+    "created_at": "2026-07-01T04:19:38.256Z"
+  },
+  "meta": {
+    "model_version": "zenith-v30.0",
+    "credits_used": 0,
+    "compute_time_ms": 5
+  }
 }</code></pre>
                     </div>
                 </div>
 
-                <!-- GET /jobs/{id}/status -->
+                <!-- GET /jobs/{id} -->
                 <div id="endpoint-jobs" class="border border-zinc-900 bg-zinc-950/40 rounded-3xl p-8 space-y-6">
                     <div class="flex items-center gap-3">
-                        <span class="border border-zinc-750 bg-transparent text-white font-mono font-bold text-[10px] px-2 py-0.5 rounded tracking-widest uppercase">GET</span>
-                        <span class="font-mono text-white font-bold">/api/v1/jobs/{job_id}/status</span>
+                        <span class="border border-zinc-700 bg-transparent text-white font-mono font-bold text-[10px] px-2 py-0.5 rounded tracking-widest uppercase">GET</span>
+                        <span class="font-mono text-white font-bold">/api/v1/jobs/{job_id}</span>
                     </div>
                     <p class="text-zinc-400 text-sm leading-relaxed">
                         Retrieves the status of an asynchronous simulation job. If completed, provides download capability for the target AnnData .h5ad binary payload.
@@ -375,18 +449,41 @@
                     <div class="space-y-3">
                         <span class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest font-outfit">Response Schema (Running)</span>
                         <pre class="bg-black border border-zinc-900 p-4 rounded-xl font-mono text-xs text-zinc-300 overflow-x-auto"><code>{
-  "job_id": "job_01h26c483aefd28e",
-  "status": "running",
-  "progress_percentage": 64.0
+  "status": "success",
+  "data": {
+    "job_id": "job_01h26c483aefd28e",
+    "status": "running",
+    "status_url": "https://niluslab.com/api/v1/jobs/job_01h26c483aefd28e",
+    "eta_seconds": 6.0
+  },
+  "meta": {
+    "model_version": "zenith-v30.0",
+    "credits_used": 0,
+    "compute_time_ms": 1
+  }
 }</code></pre>
                     </div>
 
                     <div class="space-y-3">
                         <span class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest font-outfit">Response Schema (Completed)</span>
                         <pre class="bg-black border border-zinc-900 p-4 rounded-xl font-mono text-xs text-zinc-300 overflow-x-auto"><code>{
-  "job_id": "job_01h26c483aefd28e",
-  "status": "completed",
-  "download_url": "/api/v1/jobs/job_01h26c483aefd28e/download"
+  "status": "success",
+  "data": {
+    "job_id": "job_01h26c483aefd28e",
+    "status": "completed",
+    "filepath": "/tmp/job_01h26c483aefd28e.h5ad",
+    "result": {
+      "cell_count": 50,
+      "genes_count": 4908,
+      "source_dataset": "HCA Specialist (486k cells)",
+      "download_url": "/api/v1/jobs/job_01h26c483aefd28e/download"
+    }
+  },
+  "meta": {
+    "model_version": "zenith-v30.0",
+    "credits_used": 0,
+    "compute_time_ms": 1
+  }
 }</code></pre>
                     </div>
                 </div>
@@ -396,39 +493,31 @@
             <section id="webhook-verification" class="space-y-6 border-t border-zinc-900 pt-16">
                 <h2 class="font-outfit text-2xl font-black text-white">5. Webhook HMAC-SHA256 Signature Verification</h2>
                 <p class="text-zinc-400 leading-relaxed font-medium">
-                    To prevent replay and spoofing attacks, Zenith signs all webhook callback requests with a cryptographic HMAC-SHA256 signature using the secret key returned at subscription time. 
+                    To prevent replay and spoofing attacks, Zenith signs all webhook callback requests with a cryptographic HMAC-SHA256 signature calculated against the raw request body payload bytes using the secret key returned at subscription time. 
                 </p>
                 <p class="text-zinc-400 leading-relaxed font-medium">
                     The signature is transmitted in the header:
                 </p>
-                <pre class="bg-zinc-950 border border-zinc-900 p-4 rounded-xl font-mono text-xs text-zinc-300"><code>X-Zenith-Signature: t=1780272000,v1=f14c2789...</code></pre>
+                <pre class="bg-zinc-950 border border-zinc-900 p-4 rounded-xl font-mono text-xs text-zinc-300"><code>X-Zenith-Signature: 6e9e4f21...</code></pre>
                 <p class="text-zinc-400 leading-relaxed font-medium">
-                    To verify the payload, calculate the HMAC signature against the concatenation of the timestamp (<code class="bg-zinc-900 px-1 py-0.5 rounded text-white text-xs font-mono">t</code>) and request body using the raw secret key. Below is the complete, production-ready Python verification snippet:
+                    To verify the payload, calculate the HMAC signature directly against the request body using the raw secret key. Below is the complete, production-ready Python verification snippet:
                 </p>
                 <pre class="bg-zinc-950 border border-zinc-900 p-5 rounded-2xl font-mono text-xs text-zinc-200 overflow-x-auto"><code>import hmac
 import hashlib
 
 def verify_signature(payload_body: bytes, signature_header: str, secret_key: str) -> bool:
-    # 1. Parse header components
-    parts = dict(x.split('=') for x in signature_header.split(','))
-    timestamp = parts.get('t')
-    signature = parts.get('v1')
-    
-    if not timestamp or not signature:
-        return False
-        
-    # 2. Concatenate timestamp and raw body
-    signed_payload = f"{timestamp}.".encode('utf-8') + payload_body
-    
-    # 3. Compute local HMAC-SHA256 hash using the secret key
+    """
+    Verifies the Zenith HMAC-SHA256 signature calculated against the raw payload bytes.
+    """
+    # 1. Compute local HMAC-SHA256 hash using the secret key
     computed_sig = hmac.new(
         secret_key.encode('utf-8'),
-        signed_payload,
+        payload_body,
         hashlib.sha256
     ).hexdigest()
     
-    # 4. Compare signature arrays in constant-time
-    return hmac.compare_digest(computed_sig, signature)</code></pre>
+    # 2. Compare signature arrays in constant-time
+    return hmac.compare_digest(computed_sig, signature_header)</code></pre>
             </section>
 
             <!-- Complete Code Examples -->
@@ -454,7 +543,7 @@ def run_cohort_perturbation():
     payload = {
         "baseline_cell_type": "ventricular_myocyte",
         "perturbation_factors": {"GATA4": 1.5, "SIRT1": 2.0},
-        "census_filter": "tissue == 'heart' and disease == 'normal'"
+        "census_filter": "tissue_general == 'heart' and disease == 'normal'"
     }
     
     res = requests.post(f"{BASE_URL}/predict/perturbation", headers=HEADERS, json=payload)
@@ -464,22 +553,26 @@ def run_cohort_perturbation():
 
     # 2. Poll until completed
     while True:
-        status_res = requests.get(f"{BASE_URL}/jobs/{job_id}/status", headers=HEADERS)
+        status_res = requests.get(f"{BASE_URL}/jobs/{job_id}", headers=HEADERS)
         status_data = status_res.json()
-        status = status_data["status"]
+        status = status_data["data"]["status"]
         
         if status == "completed":
             break
         elif status == "failed":
             raise Exception("Calculation failed on computing cluster.")
             
-        print(f"Job status: {status_data.get('progress_percentage', 0)}%... waiting.")
+        print(f"Job status: {status}... waiting.")
         time.sleep(2)
 
     # 3. Stream binary AnnData download
-    download_url = f"{BASE_URL}/jobs/{job_id}/download"
+    download_url = status_data["data"]["result"]["download_url"]
     file_path = f"perturbation_{job_id}.h5ad"
     
+    # Prepend base domain if url returned is relative
+    if download_url.startswith("/"):
+        download_url = f"https://niluslab.com{download_url}"
+        
     with requests.get(download_url, headers=HEADERS, stream=True) as stream:
         stream.raise_for_status()
         with open(file_path, 'wb') as f:
@@ -517,12 +610,12 @@ async function fetchProteinFold(sequence) {
       body: JSON.stringify({ sequence })
     });
 
-    const data = await response.json();
-    if (data.status === 'success') {
+    const envelope = await response.json();
+    if (envelope.status === 'success' && envelope.data.status === 'success') {
       console.log('Coordinates loaded:');
-      console.log(data.pdb_format_string.substring(0, 500) + '\n...');
+      console.log(envelope.data.pdb_data.substring(0, 500) + '\n...');
     } else {
-      console.error('ESMFold failed:', data);
+      console.error('ESMFold failed:', envelope);
     }
   } catch (err) {
     console.error('Request Error:', err);
@@ -542,10 +635,16 @@ fetchProteinFold('MGDVEKGKKIFIMKCSQCHTVEKGGKHKTGPNLHGLFG');</code></pre>
   -H "X-API-Key: zk_live_your_key_here" \
   -H "Content-Type: application/json" \
   -d '{
-    "lipid_ratio_ionizable": 50.0,
-    "lipid_ratio_helper": 38.5,
-    "lipid_ratio_pegylated": 1.5,
-    "cargo_nucleic_acid": "mRNA"
+    "molar_ratios": {
+      "ionizable": 0.50,
+      "helper": 0.10,
+      "cholesterol": 0.385,
+      "peg": 0.015
+    },
+    "np_ratio": 6.0,
+    "active_ligand_conjugation": true,
+    "ligand_density": 2.5,
+    "peg_mw": 2000.0
   }'</code></pre>
                 </div>
             </section>
