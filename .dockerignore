@@ -1,0 +1,226 @@
+# ==============================================================================
+# .dockerignore — Nilus Lab / Zenith Platform
+# Reduces Docker build context by excluding dev-only, temp, and secret files.
+# CRITICAL: Do NOT exclude files required by bridge_server.py at runtime.
+# ==============================================================================
+
+# ── Version Control ──────────────────────────────────────────────────────────
+.git
+.gitignore
+.gitattributes
+.github
+
+# ── Secrets & Environment ────────────────────────────────────────────────────
+.env
+.env.*
+*.pem
+*.key
+
+# ── Python Caches ────────────────────────────────────────────────────────────
+__pycache__
+*.pyc
+*.pyo
+*.egg-info
+.pytest_cache
+.mypy_cache
+.ruff_cache
+
+# ── Virtual Environments ─────────────────────────────────────────────────────
+.venv
+venv
+env
+
+# ── IDE & Editor ─────────────────────────────────────────────────────────────
+.vscode
+.idea
+*.swp
+*.swo
+*~
+.agent
+
+# ── Notebooks (not needed at runtime) ────────────────────────────────────────
+*.ipynb
+.ipynb_checkpoints
+
+# ── Local Database (auto-created on startup) ─────────────────────────────────
+zenith_api.db
+
+# ── Dev/Debug Scripts (not part of runtime) ──────────────────────────────────
+scratch/
+legacy_archive/
+subagent_reports/
+validation_results/
+reports/
+
+# ── One-off utility scripts ──────────────────────────────────────────────────
+search_*.py
+find_*.py
+fix_*.py
+print_lines_*.py
+check_*.py
+inspect_*.py
+remove_*.py
+rename_*.py
+clean_*.py
+extract_*.py
+map_*.py
+deploy_*.py
+prove_*.py
+mobile_*.py
+nav_fix.py
+add_routes.py
+seal_and_push.py
+catalog_fix.py
+read_log.py
+read_subagent_reports.py
+process_logo.py
+prompt_zenith_v29.py
+update_case_study.py
+update_html_metrics.py
+
+# ── Training scripts (runtime uses pre-trained models) ───────────────────────
+train_*.py
+step1_*.py
+step2_*.py
+step3_*.py
+step4_*.py
+step5_*.py
+fetch_*.py
+download_*.py
+
+# ── Test & validation scripts (not runtime) ──────────────────────────────────
+test_*.py
+tests/
+validate_*.py
+verify_*.py
+stress_*.py
+live_zenith_audit.py
+literature_benchmark.py
+scientific_audit_v28.py
+
+# ── Presentation & investor HTML decks ───────────────────────────────────────
+APOLLO_*.html
+INVESTOR_*.html
+NILUS_LAB_INVESTOR_MASTER.html
+NILUS_MASTER_PITCH_V2.html
+NILUS_PITCH_DECK.html
+REAL_ACADEMIC_POSTER_A0.html
+ZENITH_PHASE_A_*.html
+colony_microscopy_demo.html
+discovery_mockup.html
+is-chrp-v23-improved.html
+pilot_dashboard.html
+test_minimal.html
+v26_clinical_report.html
+v30_clinical_report.html
+
+# ── Documentation & Markdown (not runtime) ───────────────────────────────────
+ALIGNERR_SUBMISSION_FINAL.md
+Alignerr_Submission_Draft.md
+CATALOG_AUDIT*.md
+COLOR_*.md
+CORE_MECHANISM.md
+CROSS_MODE_COLOR_VERIFICATION.md
+FINAL_VIDEO_SCRIPT.md
+SCIENTIFIC_ABSTRACT_V26.md
+SCIENTIFIC_SUMMARY.md
+SECURITY_HARDENING.md
+TECHNICAL_GAPS_REPORT.md
+ZENITH_FOUNDATION_MODEL_CARD.md
+ZENITH_TECHNICAL_REPORT_AR.md
+reprogramming_guidelines.md
+
+# ── AlphaFold job files ──────────────────────────────────────────────────────
+AlphaFold_*.json
+Refined_Cardiac_Rejuvenation_Job.json
+Zenith_Cardiac_AF3_Job.json
+Zenith_Yamanaka_AF3_Job.json
+ZENITH_PLATFORM_DISCOVERY_RESULT.json
+
+# ── Log & output files ──────────────────────────────────────────────────────
+*.log
+*.txt
+!robots.txt
+!requirements.txt
+audit_report.txt
+dosage_optimization_audit.json
+zenith_live_audit_smooth_muscle_cell.json
+last_conversation_transcript.txt
+
+# ── Large binary assets NOT needed at runtime ────────────────────────────────
+*.mp4
+*.pdf
+*.lnk
+*.zip
+Experiment_*.png
+exp1_*.png
+exp2_*.png
+osk_3d.png
+osk_pae.png
+zenith_identity.png
+logo_transparent.png
+*.bak
+profile.html.bak
+index.html.bak
+
+# ── Font files (served from CDN in production) ───────────────────────────────
+Outfit-Bold.ttf
+Outfit-Regular.ttf
+
+# ── Data directories NOT needed at runtime ───────────────────────────────────
+# Only data/real/reprogramming_timecourse.h5ad is used at runtime
+data/foundation/
+data/hca_full/
+data/hca_subsampled_20k.h5ad
+data/s41586-020-2797-4.pdf
+data/41586_2020_2797_MOESM*.pdf
+data/Supplementary_tables/
+data/heart_datasets_index.json
+data/heart_selected_datasets.json
+data/geo/
+data/wot_maps/
+data/trajectories/
+data/real_trajectories/
+data/real/patient_biopsy_aligned.h5ad
+data/real/patient_plaque_aligned.h5ad
+data/real/patient_plaque_aligned_v2.h5ad
+
+# ── Reassembly part files (already reassembled into full files) ──────────────
+*.part000
+*.part001
+*.part002
+*.part003
+*.part004
+
+
+# ── Stale/old model directories ──────────────────────────────────────────────
+models/scvi_model/
+models/scvi_model_hca/
+models/zenith_foundation_v1_old/
+models/zenith_foundation_v1-20260530T213626Z-3-001/
+models/zenith_foundation_v1-20260530T213626Z-3-001.zip
+models/zenith_foundation_v29/
+
+# ── SDKs (client-side code, not the server) ──────────────────────────────────
+sdks/
+
+# ── MCP server (separate process, not part of Docker web server) ─────────────
+mcp_server.py
+mcp_config.json
+
+# ── Google verification ──────────────────────────────────────────────────────
+googleb345720fc36e8810.html
+
+# ── Deployment config (Railway reads from repo, not from Docker image) ───────
+.railway-trigger
+Procfile
+railway.json
+REPRO_MANIFEST.json
+
+# ── System files ─────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+node_modules/
+dist/
+build/
+.htaccess
