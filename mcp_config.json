@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "zenith-mcp-server": {
+      "command": "py",
+      "args": ["C:/Users/alaaa/.gemini/antigravity/scratch/is-chrp-v26-generative/mcp_server.py"],
+      "env": {
+        "ZENITH_API_KEY": "your_api_key_here",
+        "ZENITH_API_URL": "https://niluslab.com/api/v1"
+      }
+    }
+  }
+}
