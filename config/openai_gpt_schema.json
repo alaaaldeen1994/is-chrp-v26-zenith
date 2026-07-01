@@ -1,0 +1,290 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Nilus Lab Zenith API",
+    "version": "30.1.0",
+    "description": "API for evaluating reprogramming factors, folding protein sequences, running single-cell perturbation simulations, and optimizing lipid nanoparticles."
+  },
+  "servers": [
+    {
+      "url": "https://niluslab.com/api/v1",
+      "description": "Production Server"
+    }
+  ],
+  "paths": {
+    "/health": {
+      "get": {
+        "summary": "API Health Check",
+        "operationId": "checkHealth",
+        "responses": {
+          "200": {
+            "description": "System status online",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": { "type": "string" },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "status": { "type": "string" },
+                        "uptime_seconds": { "type": "number" },
+                        "timestamp": { "type": "string" }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/safety/audit": {
+      "post": {
+        "summary": "Safety and CpG Age Audit",
+        "operationId": "safetyAudit",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "factors": {
+                    "type": "array",
+                    "items": { "type": "string" }
+                  },
+                  "cpg_methylation": {
+                    "type": "object",
+                    "additionalProperties": { "type": "number" }
+                  }
+                },
+                "required": ["factors"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Audit results",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": { "type": "string" },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "approved_factors": {
+                          "type": "array",
+                          "items": { "type": "string" }
+                        },
+                        "blocked_factors": {
+                          "type": "array",
+                          "items": { "type": "string" }
+                        },
+                        "cpg_age_years": { "type": "number" }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/structure/fold": {
+      "post": {
+        "summary": "ESMFold Protein Folding",
+        "operationId": "foldSequence",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "sequence": { "type": "string" }
+                },
+                "required": ["sequence"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "PDB coordinates output",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": { "type": "string" },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "pdb_data": { "type": "string" }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/predict/perturbation": {
+      "post": {
+        "summary": "Transcriptomic Perturbation Forecast",
+        "operationId": "predictPerturbation",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "perturbation_factors": {
+                    "type": "object",
+                    "additionalProperties": { "type": "number" }
+                  },
+                  "baseline_cell_type": { "type": "string" },
+                  "census_filter": { "type": "string" }
+                },
+                "required": ["perturbation_factors"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Job queued",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "job_id": { "type": "string" },
+                    "status": { "type": "string" },
+                    "status_url": { "type": "string" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/lnp/optimize": {
+      "post": {
+        "summary": "Lipid Nanoparticle Tropism Optimizer",
+        "operationId": "optimizeLnp",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "molar_ratios": {
+                    "type": "object",
+                    "properties": {
+                      "ionizable": { "type": "number" },
+                      "helper": { "type": "number" },
+                      "cholesterol": { "type": "number" },
+                      "peg": { "type": "number" }
+                    },
+                    "required": ["ionizable", "helper", "cholesterol", "peg"]
+                  },
+                  "np_ratio": { "type": "number" },
+                  "active_ligand_conjugation": { "type": "boolean" },
+                  "ligand_density": { "type": "number" },
+                  "peg_mw": { "type": "number" }
+                },
+                "required": ["molar_ratios", "np_ratio"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Optimization prediction result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": { "type": "string" },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "encapsulation_efficiency_percent": { "type": "number" },
+                        "particle_size_nm": { "type": "number" },
+                        "heart_selectivity_score": { "type": "number" }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/jobs/{job_id}": {
+      "get": {
+        "summary": "Check Async Job Status",
+        "operationId": "getJobStatus",
+        "parameters": [
+          {
+            "name": "job_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Job state information",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": { "type": "string" },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "status": { "type": "string" },
+                        "result": { "type": "object" }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "ApiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-API-Key"
+      }
+    }
+  },
+  "security": [
+    {
+      "ApiKeyAuth": []
+    }
+  ]
+}
