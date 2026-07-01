@@ -60,7 +60,7 @@ class CSRFMiddleware(BaseHTTPMiddleware):
             "/simulate_step", "/discover_protocol", "/discover_hybrid", "/impute", 
             "/get_expert_reasoning", "/send_email", "/api/simulation/config", "/run_virtual_trial"
         ]
-        if request.url.path in api_key_paths:
+        if request.url.path in api_key_paths or request.url.path.startswith("/api/v1/"):
             return await call_next(request)
         
         # Validate CSRF token for all other POST/PUT/DELETE requests
