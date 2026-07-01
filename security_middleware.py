@@ -201,7 +201,7 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
         # Production CSP: Restrict to known trusted domains
         response.headers["Content-Security-Policy"] = (
             "default-src 'self'; "
-            "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://apis.google.com https://www.gstatic.com https://unpkg.com; "
+            "script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://cdn.jsdelivr.net https://apis.google.com https://www.gstatic.com https://unpkg.com; "
             "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net https://unpkg.com; "
             "img-src 'self' data: blob: https:; "
             "font-src 'self' data: https://fonts.gstatic.com https://cdn.jsdelivr.net; "
