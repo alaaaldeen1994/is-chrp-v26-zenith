@@ -538,7 +538,12 @@ def post_structure_fold(
     
     result = folder.fold_sequence(payload.sequence)
     if result["status"] == "error":
-        raise HTTPException(status_code=400, detail=result["message"])
+        if result.get("error_type") == "validation_too_long":
+            raise HTTPException(status_code=413, detail=result["message"])
+        elif result.get("error_type") in ["validation_empty", "validation_invalid_chars"]:
+            raise HTTPException(status_code=400, detail=result["message"])
+        else:
+            raise HTTPException(status_code=502, detail=result["message"])
         
     duration = int((time.time() - start_time) * 1000)
     log_api_call(db, request, 200, duration, 10)

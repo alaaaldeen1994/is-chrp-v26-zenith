@@ -7256,10 +7256,18 @@ Response:
 
 Response:
 {
-  "pdb_data": "HEADER  PROTEIN...\nATOM      1  N   MET A   1...",
-  "residue_count": 317,
-  "source": "esmfold_api" | "synthetic_fallback",
-  "confidence_note": "Mean pLDDT estimated at 0.72+"
+  "status": "success",
+  "data": {
+    "source": "ESMFold-Live" | "Zenith-Synthetic-Fallback",
+    "fallback_used": true | false,
+    "provider_status": "ok" | "external_provider_failed",
+    "pdb_data": "HEADER  PROTEIN...\nATOM      1  N   MET...",
+    "metrics": {
+      "length": 15,
+      "compute_time_sec": 0.25,
+      "predicted_lddt": 85.0
+    }
+  }
 }</div>
                     </div>
 

@@ -14,6 +14,7 @@ BASE = "https://www.niluslab.com"
 ctx = ssl.create_default_context()
 import os
 API_KEY = os.getenv("ZENITH_API_KEY") or os.getenv("INTERNAL_API_KEY") or "zk_live_c43349c9f8f86cd9df05dcf8e45bcff0"
+results = []
 
 def test(finding_id, description, passed, detail=""):
     status = "PASS" if passed else "FAIL"
