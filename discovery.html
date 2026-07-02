@@ -141,8 +141,8 @@
                 window._isAuthenticated = !!(user || ZENITH_DEMO_BYPASS);
                 updateAuthUI(window._isAuthenticated);
                 
-                // Auto-redirect to simulation lab if flag is set
-                if (window._isAuthenticated && localStorage.getItem('auth_redirect') === 'sim') {
+                // Auto-redirect to simulation lab if flag is set or hash is present
+                if (window._isAuthenticated && (localStorage.getItem('auth_redirect') === 'sim' || window.location.hash === '#simulation')) {
                     localStorage.removeItem('auth_redirect');
                     setTimeout(() => {
                         if (typeof enterSimulation === 'function') enterSimulation();
@@ -154,8 +154,8 @@
         function performLogout() {
             localStorage.removeItem('ZENITH_DEMO_BYPASS');
             firebase.auth().signOut().then(() => {
-                window.location.reload();
-            }).catch(() => { window.location.reload(); });
+                window.location.href = 'index.html';
+            }).catch(() => { window.location.href = 'index.html'; });
         }
     </script>
 
@@ -1360,7 +1360,7 @@
 
     <!-- Top bar -->
     <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 28px;background:transparent;border-bottom:none;">
-        <div style="display:flex;align-items:center;gap:8px;">
+        <a href="index.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;cursor:pointer;">
             <div style="width:28px;height:28px;background:#1a1a1a;border-radius:50%;display:flex;align-items:center;justify-content:center;">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f8f8f6" stroke-width="2">
                     <circle cx="12" cy="12" r="5"/>
@@ -1369,7 +1369,7 @@
             </div>
             <span style="color:#1a1a1a;font-weight:600;font-size:14px;letter-spacing:-0.01em;font-family:'Inter','Segoe UI',sans-serif;">Nilus Lab</span>
             <span style="font-size:11px;color:#9b9b9b;font-weight:400;font-family:'Inter','Segoe UI',sans-serif;">Zenith v30</span>
-        </div>
+        </a>
         <div style="display:flex;align-items:center;gap:6px;">
             <button onclick="enterSimulation()" style="background:transparent;border:1px solid rgba(0,0,0,0.12);color:#6b6b6b;font-size:12px;font-weight:400;padding:5px 14px;border-radius:8px;cursor:pointer;font-family:'Inter','Segoe UI',sans-serif;transition:all 0.15s;" onmouseover="this.style.borderColor='rgba(0,0,0,0.25)';this.style.color='#1a1a1a'" onmouseout="this.style.borderColor='rgba(0,0,0,0.12)';this.style.color='#6b6b6b'">Simulation Lab</button>
             <button id="auth-btn-top" style="opacity:0; transition:opacity 0.25s; background:transparent;border:none;color:#9b9b9b;font-size:12px;cursor:pointer;padding:4px 8px;font-family:'Inter','Segoe UI',sans-serif;" onmouseover="this.style.color='#1a1a1a'" onmouseout="this.style.color='#9b9b9b'">...</button>
@@ -2465,12 +2465,12 @@
             <!-- 1. BRANDING & STATUS PILL -->
             <div class="flex items-center px-4 h-12 lg:h-full lg:border-r border-white/10 shrink-0">
                 <div class="flex items-center gap-4">
-                    <div class="flex items-center gap-2">
+                    <a href="index.html" class="flex items-center gap-2 hover:opacity-80 transition-opacity" style="text-decoration:none;">
                         <i data-lucide="layers" class="w-5 h-5 text-slate-100"></i>
                         <div class="font-sans font-bold tracking-tighter flex items-center uppercase text-slate-100">
                             <span class="text-lg mr-1">NILUS <span class="text-blue-600 ml-1">LAB</span></span>
                         </div>
-                    </div>
+                    </a>
 
 
                     <div class="h-6 w-px bg-white/10 mx-2 hidden xl:block"></div>
@@ -2523,6 +2523,12 @@
             <div class="flex items-center gap-2 px-4 h-12 lg:h-full bg-black shrink-0">
 
                 <!-- SYSTEM ACTIONS -->
+                <a href="index.html" id="back-to-disc"
+                    class="h-7 px-3 bg-blue-900/20 border border-blue-500/30 text-blue-400 rounded hover:bg-blue-900/40 flex items-center gap-2 transition-all"
+                    style="text-decoration: none;">
+                    <i data-lucide="arrow-left" class="w-3 h-3"></i>
+                    <span class="text-[8px] font-black uppercase">Main Page</span>
+                </a>
                 <button
                     class="h-7 px-3 bg-blue-900/20 border border-blue-500/30 text-blue-400 rounded hover:bg-blue-900/40 flex items-center gap-2 transition-all"
                     onclick="BiosimEngine.boot()">
@@ -2550,7 +2556,7 @@
                     </button>
                     <a href="index.html"
                         class="h-7 px-3 bg-blue-600/20 border border-blue-500/50 text-[8px] text-blue-400 rounded flex items-center gap-1.5 hover:bg-blue-600/30 font-bold transition-all">
-                        <i data-lucide="user" class="w-3 h-3"></i> PROFILE
+                        <i data-lucide="home" class="w-3 h-3"></i> MAIN PAGE
                     </a>
                 </div>
                 <div class="h-6 w-px bg-white/10 mx-2"></div>
@@ -4941,6 +4947,7 @@ function enterSimulation() {
     }
 
     document.body.classList.add('sim-mode');
+    window.location.hash = 'simulation';
 
     // Bridge discovery results into Simulation Lab
     if (window._lastResult) {
@@ -5000,6 +5007,7 @@ function enterSimulation() {
 function exitSimulation() {
 
     document.body.classList.remove('sim-mode');
+    window.location.hash = '';
 
 }
 

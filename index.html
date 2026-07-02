@@ -5818,7 +5818,7 @@
 
                     // Redirect to the console after successful login
 
-                    window.location.href = _redirectAfterLogin || 'discovery.html';
+                    window.location.href = _redirectAfterLogin || 'index.html';
 
                 } catch (error) {
 
@@ -5870,7 +5870,7 @@
 
                     await firebase.auth().signInWithPopup(provider);
 
-                    window.location.href = _redirectAfterLogin || 'discovery.html';
+                    window.location.href = _redirectAfterLogin || 'index.html';
 
                 } catch (error) {
 
