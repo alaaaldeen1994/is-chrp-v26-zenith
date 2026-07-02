@@ -482,9 +482,14 @@
       document.getElementById("download-pdb-btn").disabled = true;
       document.getElementById("view-pdb-btn").disabled = true;
 
-      // Get API Key directly from input or localStorage
+      // Get API Key directly from input or storage fallback
       const inputKey = document.getElementById("api-key-input") ? document.getElementById("api-key-input").value.trim() : "";
-      const savedKey = localStorage.getItem("zenith_session_token") || "";
+      let savedKey = "";
+      try {
+        savedKey = localStorage.getItem("zenith_session_token") || "";
+      } catch (e) {
+        savedKey = window._zenithApiKey || "";
+      }
       const apiKey = inputKey || savedKey.trim();
       const startTime = Date.now();
 
@@ -627,7 +632,12 @@
 
     // Load saved API Key on load and prevent password autofill overrides
     window.addEventListener("DOMContentLoaded", () => {
-      const savedKey = localStorage.getItem("zenith_session_token") || "";
+      let savedKey = "";
+      try {
+        savedKey = localStorage.getItem("zenith_session_token") || "";
+      } catch (e) {
+        savedKey = window._zenithApiKey || "";
+      }
       const input = document.getElementById("api-key-input");
       if (input) {
         input.value = savedKey;
@@ -635,7 +645,12 @@
         // Anti-autofill override: Chrome/Firefox might inject saved login credentials.
         // If no token is saved, explicitly clear the field after DOM load to force fallback proxy route.
         setTimeout(() => {
-          const currentSaved = localStorage.getItem("zenith_session_token") || "";
+          let currentSaved = "";
+          try {
+            currentSaved = localStorage.getItem("zenith_session_token") || "";
+          } catch (e) {
+            currentSaved = window._zenithApiKey || "";
+          }
           if (!currentSaved) {
             input.value = "";
           } else {
@@ -661,12 +676,21 @@
     function saveApiKey() {
       const input = document.getElementById("api-key-input");
       const key = input.value.trim();
-      if (key) {
-        localStorage.setItem("zenith_session_token", key);
-        alert("API Key saved locally. Ready for prediction.");
-      } else {
-        localStorage.removeItem("zenith_session_token");
-        alert("API Key cleared.");
+      try {
+        if (key) {
+          localStorage.setItem("zenith_session_token", key);
+          alert("API Key saved locally. Ready for prediction.");
+        } else {
+          localStorage.removeItem("zenith_session_token");
+          alert("API Key cleared.");
+        }
+      } catch (e) {
+        window._zenithApiKey = key;
+        if (key) {
+          alert("API Key saved in temporary memory (storage is disabled by your browser). Ready for prediction.");
+        } else {
+          alert("API Key cleared from temporary memory.");
+        }
       }
     }
 
