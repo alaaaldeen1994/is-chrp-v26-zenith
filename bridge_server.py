@@ -1460,19 +1460,26 @@ async def lifespan(app: FastAPI):
         # 3. Seed default API keys if table is empty (fresh deploy)
         import hashlib
         import secrets
+        import os
         db = SessionLocal()
         try:
             if db.query(APIKey).count() == 0:
-                raw_token = secrets.token_hex(16)
-                new_key = f"zk_live_{raw_token}"
+                env_key = os.getenv("ZENITH_API_KEY")
+                if env_key:
+                    new_key = env_key
+                    print(f"[DATABASE] Seeding API Key from environment variable ZENITH_API_KEY.")
+                else:
+                    raw_token = secrets.token_hex(16)
+                    new_key = f"zk_live_{raw_token}"
+                    print("\n" + "="*80)
+                    print("   [SECURITY WARNING] NO API KEYS FOUND IN DATABASE.")
+                    print(f"   GENERATED NEW SECURE SYSTEM API KEY: {new_key}")
+                    print("   WRITE THIS KEY DOWN. IT WILL NOT BE PRINTED AGAIN.")
+                    print("="*80 + "\n")
+                
                 key_hash = hashlib.sha256(new_key.encode()).hexdigest()
                 db.add(APIKey(key_hash=key_hash, prefix=new_key[:14] + "..." + new_key[-4:], owner="Default System Owner", tier="enterprise"))
                 db.commit()
-                print("\n" + "="*80)
-                print("   [SECURITY WARNING] NO API KEYS FOUND IN DATABASE.")
-                print(f"   GENERATED NEW SECURE SYSTEM API KEY: {new_key}")
-                print("   WRITE THIS KEY DOWN. IT WILL NOT BE PRINTED AGAIN.")
-                print("="*80 + "\n")
             else:
                 print(f"[DATABASE] API keys already exist ({db.query(APIKey).count()} keys).")
         finally:
