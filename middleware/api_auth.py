@@ -1,3 +1,4 @@
+import os
 import hashlib
 from fastapi import Request, HTTPException
 from fastapi.security import APIKeyHeader
