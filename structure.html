@@ -17,10 +17,9 @@
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
 
-  <!-- jQuery (Required by 3Dmol.js) -->
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <!-- 3Dmol.js for 3D Protein Visualization -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/3Dmol/2.0.4/3Dmol-min.js"></script>
+  <!-- jQuery and 3Dmol.js — self-hosted to avoid CSP/CDN issues -->
+  <script src="/vendor/jquery-3.6.0.min.js"></script>
+  <script src="/vendor/3Dmol-min.js"></script>
 
   <script>
     tailwind.config = {
@@ -167,13 +166,17 @@
       <!-- LEFT SIDEBAR: INPUT & METRICS -->
       <div class="space-y-6">
         
-        <!-- API Key configuration panel (Option C) -->
+        <!-- Optional Personal API Key panel -->
         <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-3">
           <h2 class="font-outfit text-sm font-bold uppercase tracking-wider text-slate-800 flex items-center gap-2">
-            <i data-lucide="key" class="w-4 h-4 text-blue-600"></i> Zenith API Credentials
+            <i data-lucide="key" class="w-4 h-4 text-blue-600"></i> Optional: Personal API Key
           </h2>
+          <div class="flex items-center gap-2 bg-emerald-50 border border-emerald-200 rounded-lg px-3 py-2">
+            <i data-lucide="shield-check" class="w-3.5 h-3.5 text-emerald-600 flex-shrink-0"></i>
+            <span class="text-[10px] text-emerald-700 font-semibold">Works without a key — server authenticates securely by default</span>
+          </div>
           <p class="text-[11px] text-slate-500 leading-relaxed">
-            Enter your Zenith API key below. The key is stored locally in your browser and used exclusively to authenticate calls to Nilus Lab services.
+            Leave blank to use the secure default route. Optionally enter your personal <code class="bg-slate-100 px-1 rounded text-[10px]">zk_live_…</code> API key to use your own quota.
           </p>
           <div class="relative flex items-center">
             <input
@@ -181,7 +184,7 @@
               id="api-key-input"
               autocomplete="new-password"
               class="w-full h-10 pl-3.5 pr-10 rounded-xl border border-slate-200 text-xs font-mono focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 bg-slate-50"
-              placeholder="Enter zk_live_... or DEVELOPER_KEY"
+              placeholder="Optional: your personal zk_live_… key"
             />
             <button
               type="button"
@@ -196,8 +199,46 @@
             onclick="saveApiKey()"
             class="w-full h-9 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg font-bold text-[10px] uppercase tracking-wider transition flex items-center justify-center gap-1.5"
           >
-            <i data-lucide="save" class="w-3.5 h-3.5"></i> Save API Key
+            <i data-lucide="save" class="w-3.5 h-3.5"></i> Save Personal Key
           </button>
+        </div>
+
+        <!-- Diagnostics Panel -->
+        <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-3">
+          <h2 class="font-outfit text-sm font-bold uppercase tracking-wider text-slate-800 flex items-center justify-between gap-2">
+            <span class="flex items-center gap-2"><i data-lucide="activity" class="w-4 h-4 text-blue-600"></i> Diagnostics</span>
+            <button onclick="refreshDiagnostics()" class="text-[9px] font-mono bg-slate-100 hover:bg-slate-200 text-slate-500 px-2 py-1 rounded uppercase tracking-wider transition">Refresh</button>
+          </h2>
+          <div class="space-y-2 text-[11px] font-mono">
+            <div class="flex items-center justify-between py-1 border-b border-slate-100">
+              <span class="text-slate-500">3Dmol.js loaded</span>
+              <span id="diag-3dmol" class="font-bold text-slate-400">checking…</span>
+            </div>
+            <div class="flex items-center justify-between py-1 border-b border-slate-100">
+              <span class="text-slate-500">API route used</span>
+              <span id="diag-route" class="font-bold text-slate-400">—</span>
+            </div>
+            <div class="flex items-center justify-between py-1 border-b border-slate-100">
+              <span class="text-slate-500">HTTP status</span>
+              <span id="diag-http" class="font-bold text-slate-400">—</span>
+            </div>
+            <div class="flex items-center justify-between py-1 border-b border-slate-100">
+              <span class="text-slate-500">source</span>
+              <span id="diag-source" class="font-bold text-slate-400">—</span>
+            </div>
+            <div class="flex items-center justify-between py-1 border-b border-slate-100">
+              <span class="text-slate-500">fallback_used</span>
+              <span id="diag-fallback" class="font-bold text-slate-400">—</span>
+            </div>
+            <div class="flex items-center justify-between py-1 border-b border-slate-100">
+              <span class="text-slate-500">provider_status</span>
+              <span id="diag-provider" class="font-bold text-slate-400">—</span>
+            </div>
+            <div class="flex items-center justify-between py-1">
+              <span class="text-slate-500">CSP/CDN error</span>
+              <span id="diag-csp" class="font-bold text-emerald-600">none</span>
+            </div>
+          </div>
         </div>
 
         <!-- Input Panel -->
@@ -482,7 +523,8 @@
       document.getElementById("download-pdb-btn").disabled = true;
       document.getElementById("view-pdb-btn").disabled = true;
 
-      // Get API Key directly from input or storage fallback
+      // API Key: only use if user explicitly provided a valid personal key (must start with zk_live_)
+      // NEVER inject internal server keys from the browser. Leave blank to use the secure proxy route.
       const inputKey = document.getElementById("api-key-input") ? document.getElementById("api-key-input").value.trim() : "";
       let savedKey = "";
       try {
@@ -490,15 +532,19 @@
       } catch (e) {
         savedKey = window._zenithApiKey || "";
       }
-      const apiKey = inputKey || savedKey.trim();
+      // Only accept keys that look like personal user keys (zk_live_ prefix)
+      const candidateKey = inputKey || savedKey.trim();
+      const apiKey = candidateKey.startsWith("zk_live_") ? candidateKey : "";
       const startTime = Date.now();
 
-      // Decide endpoint: if no key is entered locally, use rate-limited secure proxy route Option B
+      // Decide endpoint: no key = secure proxy (server injects credentials). User key = direct authenticated route.
       const targetEndpoint = apiKey ? "/api/v1/structure/fold" : "/api/v1/structure/fold/ui";
       const headers = { "Content-Type": "application/json" };
       if (apiKey) {
         headers["X-API-Key"] = apiKey;
       }
+      // Update diagnostics route before request
+      document.getElementById("diag-route").innerText = targetEndpoint;
 
       try {
         const response = await fetch(targetEndpoint, {
@@ -509,6 +555,8 @@
 
         const status = response.status;
         document.getElementById("metric-http").innerText = `${status} ${status === 200 ? 'OK' : response.statusText}`;
+        document.getElementById("diag-http").innerText = status;
+        document.getElementById("diag-http").className = status === 200 ? "font-bold text-emerald-600" : "font-bold text-red-600";
 
         const result = await response.json();
         const latency = ((Date.now() - startTime) / 1000).toFixed(2);
@@ -522,6 +570,16 @@
           // Populate metrics
           document.getElementById("metric-source").innerText = data.source;
           document.getElementById("metric-cache").innerText = data.cache_hit ? "Hit" : "Miss";
+
+          // Populate diagnostics panel
+          document.getElementById("diag-source").innerText = data.source || "—";
+          document.getElementById("diag-source").className = (data.source === "ESMFold-Live") ? "font-bold text-emerald-600" : "font-bold text-amber-600";
+          const fbUsed = data.fallback_used === true ? "true" : "false";
+          document.getElementById("diag-fallback").innerText = fbUsed;
+          document.getElementById("diag-fallback").className = data.fallback_used ? "font-bold text-amber-600" : "font-bold text-emerald-600";
+          const provSt = data.provider_status || "—";
+          document.getElementById("diag-provider").innerText = provSt;
+          document.getElementById("diag-provider").className = (provSt === "ok") ? "font-bold text-emerald-600" : "font-bold text-amber-600";
           
           if (data.metrics && data.metrics.predicted_lddt !== null) {
             const lddtPercent = Math.round(data.metrics.predicted_lddt * 100);
@@ -579,10 +637,10 @@
       // Hide placeholder
       placeholder.classList.add("hidden");
 
-      // Initialize 3Dmol viewer
-      const mol3D = window.$3Dmol || window.3Dmol;
+      // Initialize 3Dmol viewer — use bracket notation to avoid JS syntax error on identifier starting with digit
+      const mol3D = window.$3Dmol || window["3Dmol"];
       if (!mol3D) {
-        throw new Error("3Dmol library is not loaded. Please perform a hard refresh (Ctrl+F5 or Cmd+Shift+R) to clear your browser cache.");
+        throw new Error("3Dmol library failed to load. Check the Diagnostics panel for CSP or network errors.");
       }
       const viewer = mol3D.createViewer(container, {
         backgroundColor: "#0f172a"
@@ -630,7 +688,31 @@
       lucide.createIcons();
     }
 
-    // Load saved API Key on load and prevent password autofill overrides
+    // Run diagnostics on load
+    function refreshDiagnostics() {
+      const mol3D = window.$3Dmol || window["3Dmol"];
+      const el = document.getElementById("diag-3dmol");
+      if (mol3D) {
+        el.innerText = "true ✓";
+        el.className = "font-bold text-emerald-600";
+      } else {
+        el.innerText = "false ✗";
+        el.className = "font-bold text-red-600";
+      }
+    }
+
+    // Catch CSP/network errors on vendor scripts
+    window._diagCspErrors = [];
+    window.addEventListener("securitypolicyviolation", (e) => {
+      window._diagCspErrors.push(e.blockedURI);
+      const cspEl = document.getElementById("diag-csp");
+      if (cspEl) {
+        cspEl.innerText = "CSP blocked: " + e.blockedURI;
+        cspEl.className = "font-bold text-red-600";
+      }
+    });
+
+    // Load saved personal API Key on load and prevent browser password autofill
     window.addEventListener("DOMContentLoaded", () => {
       let savedKey = "";
       try {
@@ -638,12 +720,12 @@
       } catch (e) {
         savedKey = window._zenithApiKey || "";
       }
+      // Only restore if it looks like a personal user key
+      const isPersonalKey = savedKey.startsWith("zk_live_");
       const input = document.getElementById("api-key-input");
       if (input) {
-        input.value = savedKey;
-        
-        // Anti-autofill override: Chrome/Firefox might inject saved login credentials.
-        // If no token is saved, explicitly clear the field after DOM load to force fallback proxy route.
+        input.value = isPersonalKey ? savedKey : "";
+        // Anti-autofill: override any browser-injected credentials after DOM settles
         setTimeout(() => {
           let currentSaved = "";
           try {
@@ -651,13 +733,13 @@
           } catch (e) {
             currentSaved = window._zenithApiKey || "";
           }
-          if (!currentSaved) {
-            input.value = "";
-          } else {
-            input.value = currentSaved;
-          }
+          const isValid = currentSaved.startsWith("zk_live_");
+          input.value = isValid ? currentSaved : "";
         }, 150);
       }
+
+      // Run initial diagnostics
+      refreshDiagnostics();
     });
 
     function toggleApiKeyVisibility() {
@@ -676,20 +758,27 @@
     function saveApiKey() {
       const input = document.getElementById("api-key-input");
       const key = input.value.trim();
+      // Validate: only accept personal user keys (zk_live_ prefix)
+      if (key && !key.startsWith("zk_live_")) {
+        alert("Invalid key format. Personal API keys must start with zk_live_\n\nLeave blank to use the secure default route (no key required).");
+        input.value = "";
+        return;
+      }
       try {
         if (key) {
           localStorage.setItem("zenith_session_token", key);
-          alert("API Key saved locally. Ready for prediction.");
+          alert("Personal API key saved. You will use your own quota for predictions.");
         } else {
           localStorage.removeItem("zenith_session_token");
-          alert("API Key cleared.");
+          window._zenithApiKey = "";
+          alert("Personal key cleared. Using secure default route.");
         }
       } catch (e) {
         window._zenithApiKey = key;
         if (key) {
-          alert("API Key saved in temporary memory (storage is disabled by your browser). Ready for prediction.");
+          alert("Personal key saved in session memory (browser storage is restricted).");
         } else {
-          alert("API Key cleared from temporary memory.");
+          alert("Key cleared. Using secure default route.");
         }
       }
     }

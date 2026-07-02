@@ -197,11 +197,19 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
         response.headers["X-Frame-Options"] = "SAMEORIGIN"
         response.headers["X-XSS-Protection"] = "1; mode=block"
         response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains"
-        
+
+        # Prevent browser caching of HTML pages so users always get latest JS/CSP updates
+        content_type = response.headers.get("content-type", "")
+        if "text/html" in content_type:
+            response.headers["Cache-Control"] = "no-store, no-cache, must-revalidate"
+            response.headers["Pragma"] = "no-cache"
+            response.headers["Expires"] = "0"
+
         # Production CSP: Restrict to known trusted domains
+        # jQuery and 3Dmol.js are now self-hosted under /vendor — no external CDN needed
         response.headers["Content-Security-Policy"] = (
             "default-src 'self'; "
-            "script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://cdn.jsdelivr.net https://apis.google.com https://www.gstatic.com https://unpkg.com https://code.jquery.com https://cdnjs.cloudflare.com; "
+            "script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://cdn.jsdelivr.net https://apis.google.com https://www.gstatic.com https://unpkg.com; "
             "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net https://unpkg.com; "
             "img-src 'self' data: blob: https:; "
             "font-src 'self' data: https://fonts.gstatic.com https://cdn.jsdelivr.net; "
@@ -211,5 +219,5 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
             "child-src 'self' blob:; "
             "object-src 'none';"
         )
-        
+
         return response

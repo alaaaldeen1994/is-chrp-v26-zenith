@@ -1877,6 +1877,11 @@ if not os.path.exists("af3_jobs"):
 
 app.mount("/af3_jobs", StaticFiles(directory="af3_jobs"), name="af3_jobs")
 
+# Self-hosted vendor libraries (jQuery, 3Dmol.js) — eliminates external CDN CSP dependencies
+if not os.path.exists("vendor"):
+    os.makedirs("vendor")
+app.mount("/vendor", StaticFiles(directory="vendor"), name="vendor")
+
 
 
 @app.get("/", response_class=HTMLResponse)
