@@ -575,7 +575,11 @@
       placeholder.classList.add("hidden");
 
       // Initialize 3Dmol viewer
-      const viewer = $3Dmol.createViewer(container, {
+      const mol3D = window.$3Dmol || window.3Dmol;
+      if (!mol3D) {
+        throw new Error("3Dmol library is not loaded. Please perform a hard refresh (Ctrl+F5 or Cmd+Shift+R) to clear your browser cache.");
+      }
+      const viewer = mol3D.createViewer(container, {
         backgroundColor: "#0f172a"
       });
 
