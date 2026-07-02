@@ -165,6 +165,38 @@
       <!-- LEFT SIDEBAR: INPUT & METRICS -->
       <div class="space-y-6">
         
+        <!-- API Key configuration panel (Option C) -->
+        <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-3">
+          <h2 class="font-outfit text-sm font-bold uppercase tracking-wider text-slate-800 flex items-center gap-2">
+            <i data-lucide="key" class="w-4 h-4 text-blue-600"></i> Zenith API Credentials
+          </h2>
+          <p class="text-[11px] text-slate-500 leading-relaxed">
+            Enter your Zenith API key below. The key is stored locally in your browser and used exclusively to authenticate calls to Nilus Lab services.
+          </p>
+          <div class="relative flex items-center">
+            <input
+              type="password"
+              id="api-key-input"
+              class="w-full h-10 pl-3.5 pr-10 rounded-xl border border-slate-200 text-xs font-mono focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 bg-slate-50"
+              placeholder="Enter zk_live_... or DEVELOPER_KEY"
+            />
+            <button
+              type="button"
+              onclick="toggleApiKeyVisibility()"
+              class="absolute right-3 text-slate-400 hover:text-slate-600 focus:outline-none"
+            >
+              <i id="api-key-toggle-icon" data-lucide="eye" class="w-4 h-4"></i>
+            </button>
+          </div>
+          <button
+            type="button"
+            onclick="saveApiKey()"
+            class="w-full h-9 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg font-bold text-[10px] uppercase tracking-wider transition flex items-center justify-center gap-1.5"
+          >
+            <i data-lucide="save" class="w-3.5 h-3.5"></i> Save API Key
+          </button>
+        </div>
+
         <!-- Input Panel -->
         <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
           <h2 class="font-outfit text-sm font-bold uppercase tracking-wider text-slate-800 mb-4 flex items-center gap-2">
@@ -561,8 +593,13 @@
       telemetryStatus.innerText = "ERROR";
       telemetryStatus.className = "text-[9px] font-mono bg-red-50 text-red-600 px-2 py-0.5 rounded uppercase font-bold";
 
+      let displayMsg = msg;
+      if (status === 401 || String(msg).toLowerCase().includes("api key") || String(msg).toLowerCase().includes("auth") || String(msg).toLowerCase().includes("unauthorized")) {
+        displayMsg = "API key missing or invalid. Please sign in or provide a valid Zenith API key.";
+      }
+
       banner.className = "mb-4 p-3.5 rounded-xl text-xs font-semibold bg-red-50 border border-red-200 text-red-800 flex items-start gap-2.5";
-      bannerText.innerText = `Prediction Failed: [HTTP ${status}] ${msg}`;
+      bannerText.innerText = `Prediction Failed: [HTTP ${status}] ${displayMsg}`;
       bannerIcon.setAttribute("data-lucide", "x-circle");
       lucide.createIcons();
 
@@ -571,8 +608,42 @@
       vIcon.classList.remove("hidden");
       vIcon.setAttribute("data-lucide", "alert-circle");
       vTitle.innerText = "Prediction Failed";
-      vSub.innerText = msg;
+      vSub.innerText = displayMsg;
       lucide.createIcons();
+    }
+
+    // Load saved API Key on load
+    window.addEventListener("DOMContentLoaded", () => {
+      const savedKey = localStorage.getItem("zenith_session_token") || "";
+      const input = document.getElementById("api-key-input");
+      if (input) {
+        input.value = savedKey;
+      }
+    });
+
+    function toggleApiKeyVisibility() {
+      const input = document.getElementById("api-key-input");
+      const icon = document.getElementById("api-key-toggle-icon");
+      if (input.type === "password") {
+        input.type = "text";
+        icon.setAttribute("data-lucide", "eye-off");
+      } else {
+        input.type = "password";
+        icon.setAttribute("data-lucide", "eye");
+      }
+      lucide.createIcons();
+    }
+
+    function saveApiKey() {
+      const input = document.getElementById("api-key-input");
+      const key = input.value.trim();
+      if (key) {
+        localStorage.setItem("zenith_session_token", key);
+        alert("API Key saved locally. Ready for prediction.");
+      } else {
+        localStorage.removeItem("zenith_session_token");
+        alert("API Key cleared.");
+      }
     }
 
     function downloadPdb() {
