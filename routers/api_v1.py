@@ -94,20 +94,22 @@ def get_health(request: Request, db: Session = Depends(get_db)):
     log_api_call(db, request, 200, duration, 0)
     return APIEnvelope(data=data, meta={"compute_time_ms": duration, "credits_used": 0})
 
-# --- Reference: Genes ---
 @router.get("/reference/genes", response_model=APIEnvelope)
 def get_genes(request: Request, db: Session = Depends(get_db)):
     start_time = time.time()
+    error_msg = None
     try:
         from bridge_server import GENE_SYMBOLS
         genes = GENE_SYMBOLS
-    except Exception:
+    except Exception as e:
+        import traceback
+        error_msg = f"{e}\n{traceback.format_exc()}"
         # Fallback to general list if bridge is not importable
         genes = ["POU5F1", "SOX2", "NANOG", "LIN28A", "KLF4", "MYC", "GATA4", "TBX5", "NKX2-5", "SIRT1", "SIRT5", "SIRT6"]
     
     duration = int((time.time() - start_time) * 1000)
     log_api_call(db, request, 200, duration, 0)
-    return APIEnvelope(data={"total": len(genes), "genes": genes}, meta={"compute_time_ms": duration, "credits_used": 0})
+    return APIEnvelope(data={"total": len(genes), "genes": genes}, meta={"compute_time_ms": duration, "credits_used": 0, "error": error_msg})
 
 # --- LNP Optimization ---
 @router.post("/lnp/optimize", response_model=APIEnvelope)
