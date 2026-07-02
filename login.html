@@ -1,20 +1,20 @@
 <!DOCTYPE html>
-<html lang="en" class="h-full bg-[#09090b]">
+<html lang="en" class="h-full bg-[#f6f6f4]">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Welcome Back - Nilus Lab / Zenith</title>
-    <meta name="description" content="Sign in to the Nilus Lab Zenith platform to access your virtual clinical trials and in-silico cardiac reprogramming dashboard.">
-    
+    <meta name="description" content="Sign in to the Nilus Lab Zenith platform to access your virtual clinical trials and in-silico cardiac reprogramming dashboard." />
+
     <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@700;800;900&display=swap" rel="stylesheet">
-    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800;900&display=swap" rel="stylesheet" />
+
     <!-- Scripts -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
-    
+
     <script>
         tailwind.config = {
             theme: {
@@ -27,157 +27,374 @@
             }
         }
     </script>
-    
+
     <style>
+        :root {
+            --page-bg: #f6f6f4;
+            --panel-bg: #fbfbfa;
+            --line: #dedfdf;
+            --line-soft: #e9eaeb;
+            --text: #0e1116;
+            --muted: #5f6672;
+            --muted-light: #8a9099;
+        }
+
+        html, body {
+            min-height: 100%;
+            background: var(--page-bg);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--text);
+        }
+
+        .main-shell {
+            background:
+                radial-gradient(circle at top left, rgba(255,255,255,0.96), rgba(246,246,244,0.98)),
+                linear-gradient(180deg, #fafaf8 0%, #f4f4f2 100%);
+            box-shadow:
+                0 24px 80px rgba(17, 24, 39, 0.08),
+                inset 0 1px 0 rgba(255,255,255,0.8);
+        }
+
+        .auth-input {
+            transition: all 0.18s ease;
+        }
+
         .auth-input:focus {
             outline: none;
-            border-color: #3f3f46;
-            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.05);
+            border-color: #111827;
+            box-shadow: 0 0 0 3px rgba(17, 24, 39, 0.055);
+            background: #ffffff;
         }
-        /* Custom scrollbar for dark layout */
+
+        .primary-button {
+            background: linear-gradient(180deg, #0b1017 0%, #06090e 100%);
+            box-shadow:
+                inset 0 1px 0 rgba(255,255,255,0.08),
+                0 8px 24px rgba(2, 8, 20, 0.10);
+        }
+
+        .primary-button:hover {
+            background: linear-gradient(180deg, #151b24 0%, #0b1119 100%);
+        }
+
+        .dna-panel {
+            background:
+                linear-gradient(180deg, rgba(255,255,255,0.92), rgba(248,248,247,0.96)),
+                #f8f8f7;
+        }
+
+        .divider-line {
+            background: linear-gradient(90deg, transparent 0%, #d9dce0 15%, #d9dce0 85%, transparent 100%);
+        }
+
+        .google-btn:hover {
+            border-color: #bfc3ca;
+            background: #ffffff;
+        }
+
+        .top-badge {
+            background: rgba(255,255,255,0.76);
+            backdrop-filter: blur(10px);
+        }
+
+        ::selection {
+            background: #111827;
+            color: #ffffff;
+        }
+
         ::-webkit-scrollbar {
-            width: 6px;
+            width: 8px;
         }
+
         ::-webkit-scrollbar-track {
-            background: #09090b;
+            background: #f3f4f6;
         }
+
         ::-webkit-scrollbar-thumb {
-            background: #27272a;
-            border-radius: 3px;
+            background: #c6c9cf;
+            border-radius: 999px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #adb3bb;
+        }
+
+        @media (max-height: 820px) {
+            .compact-heading {
+                font-size: 42px !important;
+                line-height: 1.05 !important;
+            }
+
+            .compact-copy {
+                font-size: 16px !important;
+                line-height: 1.7 !important;
+            }
+
+            .compact-form {
+                padding-top: 2rem !important;
+                padding-bottom: 2rem !important;
+            }
         }
     </style>
 </head>
-<body class="h-full text-zinc-100 flex font-sans overflow-hidden">
 
-    <!-- LEFT PANEL: SIGN IN FORM -->
-    <div class="w-full md:w-[45%] flex flex-col justify-between p-8 md:p-12 lg:p-16 bg-[#09090b] overflow-y-auto">
-        
-        <!-- Logo / Branded Header -->
-        <div class="flex items-center gap-2">
-            <a href="index.html" class="flex items-center gap-2 group">
-                <div class="w-8 h-8 rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center transition-all group-hover:border-zinc-700">
-                    <svg class="w-4 h-4 text-emerald-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                        <path d="M4.5 10.5C4.5 10.5 7.5 13.5 12 13.5C16.5 13.5 19.5 10.5 19.5 10.5" />
-                        <path d="M4.5 6.5C4.5 6.5 7.5 3.5 12 3.5C16.5 3.5 19.5 6.5 19.5 6.5" />
-                        <path d="M12 3.5V20.5" />
-                        <circle cx="12" cy="3.5" r="1.5" fill="currentColor" />
-                        <circle cx="12" cy="12" r="1.5" fill="currentColor" />
-                        <circle cx="12" cy="20.5" r="1.5" fill="currentColor" />
-                    </svg>
-                </div>
-                <span class="font-outfit font-black tracking-tight text-white transition-colors group-hover:text-zinc-200">Nilus Lab <span class="text-zinc-500 font-medium">/</span> Zenith</span>
-            </a>
-        </div>
+<body class="min-h-full overflow-x-hidden">
+    <main class="min-h-screen w-full p-0 lg:p-5">
+        <section class="main-shell min-h-screen lg:min-h-[calc(100vh-2.5rem)] w-full lg:rounded-[28px] border border-[#e6e7e8] overflow-hidden">
+            <div class="grid min-h-screen lg:min-h-[calc(100vh-2.5rem)] grid-cols-1 lg:grid-cols-[45%_55%]">
 
-        <!-- Central Form Container -->
-        <div class="my-auto py-8 max-w-md w-full mx-auto space-y-8">
-            <div class="space-y-2">
-                <h1 class="text-3xl font-outfit font-black tracking-tight text-white" id="auth-title">Welcome back</h1>
-                <p class="text-sm text-zinc-400 font-medium" id="auth-subtitle">Sign in to Nilus Lab with one of the options below or your credentials.</p>
-            </div>
+                <!-- LEFT PANEL -->
+                <div class="bg-[#fbfbfa] border-r border-[#e1e3e4] px-7 sm:px-10 xl:px-16 py-8 lg:py-10 flex flex-col overflow-y-auto">
 
-            <!-- Error Notification Alert Box -->
-            <div id="error-alert" class="hidden p-4 bg-red-950/40 border border-red-800/40 rounded-xl text-red-400 text-xs font-medium flex gap-3 items-start">
-                <i data-lucide="alert-circle" class="w-4 h-4 mt-0.5 flex-shrink-0"></i>
-                <span id="error-message"></span>
-            </div>
+                    <!-- Header -->
+                    <header class="flex items-center gap-5">
+                        <a href="index.html" class="flex items-center gap-4 group">
+                            <div class="w-12 h-12 flex items-center justify-center">
+                                <svg class="w-10 h-10 text-[#11151b]" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                    <path d="M20 9c11 7 13 13 0 23" />
+                                    <path d="M44 9c-11 7-13 13 0 23" />
+                                    <path d="M20 32c11 7 13 13 0 23" />
+                                    <path d="M44 32c-11 7-13 13 0 23" />
+                                    <path d="M23 13h18" />
+                                    <path d="M23 20h18" />
+                                    <path d="M23 44h18" />
+                                    <path d="M23 51h18" />
+                                </svg>
+                            </div>
 
-            <!-- Social Providers -->
-            <div class="space-y-3">
-                <!-- Google Button -->
-                <button onclick="signInWithGoogle()" type="button" class="w-full flex items-center justify-center gap-2 py-2.5 px-4 bg-zinc-900 hover:bg-zinc-800/80 border border-zinc-800 hover:border-zinc-700 rounded-xl font-semibold text-xs transition-all text-white">
-                    <svg class="w-4 h-4" viewBox="0 0 24 24">
-                        <path fill="#EA4335" d="M12.24 10.285V14.4h6.887c-.648 2.41-2.519 4.13-5.136 4.13A5.55 5.55 0 0 1 8.4 12.985a5.55 5.55 0 0 1 5.59-5.55c2.455 0 4.417 1.42 5.253 3.42l3.868-2.99C20.87 4.17 17.75 2 13.99 2 7.92 2 3 6.92 3 12.985S7.92 23.97 13.99 23.97c5.96 0 10.21-4.19 10.21-10.21 0-.61-.06-1.2-.18-1.765H12.24z"/>
-                    </svg>
-                    <span>Continue with Google</span>
-                </button>
-            </div>
+                            <div class="flex items-center gap-4">
+                                <span class="font-outfit text-[18px] md:text-[20px] tracking-[0.18em] font-bold uppercase text-[#0d1117]">
+                                    Nilus Lab
+                                </span>
+                                <span class="text-[#c7cacf]">|</span>
+                                <span class="font-outfit text-[18px] md:text-[20px] tracking-[0.18em] font-medium uppercase text-[#262b34]">
+                                    Zenith
+                                </span>
+                            </div>
+                        </a>
+                    </header>
 
-            <!-- Divider -->
-            <div class="relative flex py-2 items-center">
-                <div class="flex-grow border-t border-zinc-800/60"></div>
-                <span class="flex-shrink mx-4 text-[10px] uppercase font-bold tracking-widest text-zinc-500">- or -</span>
-                <div class="flex-grow border-t border-zinc-800/60"></div>
-            </div>
+                    <!-- Form area -->
+                    <div class="flex-1 flex items-center">
+                        <div class="compact-form w-full max-w-[530px] mx-auto pt-10 pb-8">
+                            <div class="mb-8">
+                                <p class="text-[13px] font-bold uppercase tracking-[0.22em] text-[#7a818b] mb-4">
+                                    Welcome Back
+                                </p>
 
-            <!-- Credentials Form -->
-            <form id="auth-form" onsubmit="handleAuth(event)" class="space-y-4">
-                <div class="space-y-1.5">
-                    <label class="text-xs font-semibold text-zinc-400" for="email">Email Address</label>
-                    <input type="email" id="email" class="auth-input w-full py-2.5 px-4 bg-zinc-950 border border-zinc-800 rounded-xl text-sm transition-all focus:border-zinc-700" placeholder="name@organization.com" required>
-                </div>
+                                <h1 id="auth-title" class="compact-heading font-outfit text-[42px] xl:text-[50px] leading-[1.06] tracking-[-0.045em] font-semibold text-[#0e1116] max-w-[430px]">
+                                    Access the Zenith Computational Platform
+                                </h1>
 
-                <div class="space-y-1.5">
-                    <div class="flex justify-between items-center">
-                        <label class="text-xs font-semibold text-zinc-400" for="password">Password</label>
-                        <a href="javascript:void(0)" onclick="handlePasswordReset()" class="text-[10px] font-bold text-zinc-500 hover:text-zinc-300 uppercase tracking-wider transition-colors">Forgot your password?</a>
+                                <p id="auth-subtitle" class="compact-copy mt-6 text-[17px] leading-8 text-[#5f6672] max-w-[460px]">
+                                    Sign in to continue building the future of systems biology and cellular engineering.
+                                </p>
+                            </div>
+
+                            <!-- Error -->
+                            <div id="error-alert" class="hidden mb-6 p-4 bg-red-50 border border-red-200 rounded-2xl text-red-700 text-sm font-medium flex gap-3 items-start">
+                                <i data-lucide="alert-circle" class="w-4 h-4 mt-0.5 flex-shrink-0"></i>
+                                <span id="error-message"></span>
+                            </div>
+
+                            <!-- Google -->
+                            <button onclick="signInWithGoogle()" type="button" class="google-btn w-full h-[58px] rounded-2xl border border-[#d9dde2] bg-[#fbfbfb] flex items-center justify-center gap-4 text-[16px] font-semibold text-[#11151b] transition-all">
+                                <svg class="w-6 h-6" viewBox="0 0 24 24" aria-hidden="true">
+                                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                                    <path fill="#FBBC05" d="M5.84 14.1c-.22-.66-.35-1.36-.35-2.1s.13-1.44.35-2.1V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l3.66-2.84z"/>
+                                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06L5.84 9.9C6.71 7.3 9.14 5.38 12 5.38z"/>
+                                </svg>
+                                <span>Continue with Google</span>
+                            </button>
+
+                            <!-- Divider -->
+                            <div class="relative my-7 flex items-center">
+                                <div class="h-px flex-1 divider-line"></div>
+                                <span class="mx-6 text-[12px] font-bold uppercase tracking-[0.25em] text-[#8a9099]">OR</span>
+                                <div class="h-px flex-1 divider-line"></div>
+                            </div>
+
+                            <!-- Form -->
+                            <form id="auth-form" onsubmit="handleAuth(event)" class="space-y-5">
+                                <div>
+                                    <label class="block mb-3 text-[12px] font-bold uppercase tracking-[0.15em] text-[#131720]" for="email">
+                                        Email Address
+                                    </label>
+
+                                    <div class="relative">
+                                        <i data-lucide="mail" class="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-[#8a9099]"></i>
+                                        <input
+                                            type="email"
+                                            id="email"
+                                            class="auth-input w-full h-[58px] rounded-2xl border border-[#d7dbe0] bg-[#fbfbfb] pl-14 pr-5 text-[16px] text-[#11151b] placeholder:text-[#8b919a]"
+                                            placeholder="name@organization.com"
+                                            required
+                                        />
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <div class="flex items-center justify-between mb-3">
+                                        <label class="block text-[12px] font-bold uppercase tracking-[0.15em] text-[#131720]" for="password">
+                                            Password
+                                        </label>
+
+                                        <a href="javascript:void(0)" onclick="handlePasswordReset()" class="text-[13px] font-medium text-[#5d6470] hover:text-[#11151b] transition-colors">
+                                            Forgot password?
+                                        </a>
+                                    </div>
+
+                                    <div class="relative">
+                                        <i data-lucide="lock" class="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-[#8a9099]"></i>
+                                        <input
+                                            type="password"
+                                            id="password"
+                                            class="auth-input w-full h-[58px] rounded-2xl border border-[#d7dbe0] bg-[#fbfbfb] pl-14 pr-14 text-[16px] text-[#11151b] placeholder:text-[#8b919a]"
+                                            placeholder="••••••••"
+                                            required
+                                        />
+                                        <i data-lucide="eye" class="absolute right-5 top-1/2 -translate-y-1/2 w-5 h-5 text-[#8a9099] cursor-pointer" onclick="togglePasswordVisibility()"></i>
+                                    </div>
+                                </div>
+
+                                <button
+                                    type="submit"
+                                    id="submit-btn"
+                                    class="primary-button w-full h-[60px] mt-2 rounded-2xl text-white font-semibold text-[17px] flex items-center justify-center gap-4 transition-all"
+                                >
+                                    <span id="btn-text">Sign in to Zenith</span>
+                                    <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                                </button>
+                            </form>
+
+                            <!-- Create account -->
+                            <div class="pt-6 text-center">
+                                <p class="text-[14px] text-[#5d6470]">
+                                    <span id="toggle-msg">Don’t have an account?</span>
+                                    <a href="javascript:void(0)" id="toggle-auth-btn" onclick="toggleAuthMode()" class="font-bold text-[#11151b] hover:underline ml-1">
+                                        Create one
+                                    </a>
+                                </p>
+                            </div>
+
+                            <!-- Token -->
+                            <div class="text-center border-t border-[#e2e4e7] pt-5 mt-7">
+                                <a href="javascript:void(0)" onclick="restoreInstitutionalAccess()" class="text-[11px] font-bold uppercase tracking-[0.24em] text-[#8a9099] hover:text-[#11151b] transition-colors">
+                                    Institutional Hardware Token
+                                </a>
+                            </div>
+                        </div>
                     </div>
-                    <input type="password" id="password" class="auth-input w-full py-2.5 px-4 bg-zinc-950 border border-zinc-800 rounded-xl text-sm transition-all focus:border-zinc-700" placeholder="••••••••" required>
+
+                    <!-- Terms -->
+                    <footer class="text-[11px] text-[#7a818b] leading-relaxed max-w-[480px] mx-auto text-center">
+                        By signing in you accept the Nilus Lab
+                        <a href="legal.html" class="underline underline-offset-4 hover:text-[#11151b]">Terms of Service</a>
+                        and acknowledge our
+                        <a href="legal.html" class="underline underline-offset-4 hover:text-[#11151b]">Privacy Policy</a>.
+                    </footer>
                 </div>
 
-                <button type="submit" id="submit-btn" class="w-full py-2.5 bg-zinc-100 hover:bg-white text-zinc-950 font-bold rounded-xl text-xs uppercase tracking-widest transition-all flex items-center justify-center gap-2 mt-6">
-                    <span id="btn-text">Sign In</span>
-                    <i data-lucide="arrow-right" class="w-4 h-4"></i>
-                </button>
-            </form>
+                <!-- RIGHT PANEL -->
+                <div class="dna-panel hidden lg:flex flex-col relative overflow-hidden bg-[#f8f8f7]">
 
-            <!-- Bottom Alternate Links -->
-            <div class="text-center pt-2">
-                <p class="text-xs text-zinc-400 font-medium">
-                    <span id="toggle-msg">Don't have an account?</span> 
-                    <a href="javascript:void(0)" id="toggle-auth-btn" onclick="toggleAuthMode()" class="text-white hover:underline font-semibold ml-1">Create one here.</a>
-                </p>
-            </div>
-            
-            <!-- Hardware Token Link (Special Local Option) -->
-            <div class="text-center border-t border-zinc-900 pt-4">
-                <a href="javascript:void(0)" onclick="restoreInstitutionalAccess()" class="text-[10px] font-bold text-zinc-500 hover:text-zinc-300 uppercase tracking-widest transition-colors">
-                    Institutional Hardware Token
-                </a>
-            </div>
-        </div>
+                    <!-- Grayscale DNA background visual -->
+                    <div class="absolute inset-0 pointer-events-none overflow-hidden opacity-[0.42] bg-no-repeat bg-right-bottom bg-cover"
+                         style="background-image: url('assets/login-dna-bg.png');">
+                    </div>
 
-        <!-- Footer terms -->
-        <div class="text-[10px] text-zinc-500 leading-relaxed max-w-sm mx-auto text-center md:text-left">
-            By signing in you accept the Nilus Lab <a href="legal.html" class="underline hover:text-zinc-300">Terms of Service</a> and acknowledge our <a href="legal.html" class="underline hover:text-zinc-300">Privacy Policy</a>.
-        </div>
-    </div>
+                    <!-- white fade overlay -->
+                    <div class="absolute inset-0 pointer-events-none"
+                         style="background: linear-gradient(90deg, #f8f8f7 0%, rgba(248, 248, 247, 0.94) 30%, rgba(248, 248, 247, 0.40) 70%, transparent 100%);">
+                    </div>
 
-    <!-- RIGHT PANEL: PREMIUM SCIENTIFIC TESTIMONIAL PANEL -->
-    <div class="hidden md:flex md:w-[55%] bg-[#020204] border-l border-zinc-900 flex-col justify-between p-12 lg:p-20 relative overflow-hidden">
-        
-        <!-- Subtle Helix background grid -->
-        <div class="absolute inset-0 opacity-5 pointer-events-none bg-[radial-gradient(#27272a_1px,transparent_1px)] [background-size:16px_16px]"></div>
-        
-        <!-- Top tag -->
-        <div class="relative z-10 flex justify-end">
-            <span class="text-[10px] font-black uppercase tracking-[0.25em] bg-zinc-900/60 border border-zinc-800 text-emerald-400 px-3 py-1.5 rounded-full">v30.0 GOLD Secure Node</span>
-        </div>
+                    <!-- Top badge -->
+                    <div class="relative z-10 px-8 xl:px-12 pt-8 xl:pt-10 flex justify-end">
+                        <div class="top-badge inline-flex items-center gap-3 h-[48px] px-6 rounded-full border border-[#11151b] text-[#11151b]">
+                            <i data-lucide="shield-check" class="w-5 h-5"></i>
+                            <span class="font-bold text-[13px] tracking-[0.14em] uppercase">
+                                v30.0 Gold Secure Node
+                            </span>
+                        </div>
+                    </div>
 
-        <!-- Central Testimonial Quote -->
-        <div class="my-auto max-w-lg relative z-10 space-y-8">
-            <blockquote class="text-2xl lg:text-3xl font-outfit font-bold text-zinc-100 leading-snug tracking-tight">
-                "Zenith is the first computational model of cardiac expression that turns stochastic cellular reprogramming into a predictable engineering discipline."
-            </blockquote>
-            
-            <!-- Author Card -->
-            <div class="flex items-center gap-4">
-                <div class="w-10 h-10 rounded-full bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-400">
-                    <i data-lucide="user" class="w-5 h-5"></i>
+                    <!-- Quote -->
+                    <div class="relative z-10 flex-1 px-10 xl:px-20 flex items-center">
+                        <div class="max-w-[720px]">
+                            <div class="font-outfit text-[92px] leading-none font-semibold text-[#0d1117] mb-1">“</div>
+
+                            <blockquote class="font-outfit text-[31px] xl:text-[39px] leading-[1.34] tracking-[-0.035em] text-[#11151b] font-medium max-w-[700px]">
+                                Zenith is the first computational model of cardiac expression that turns stochastic cellular reprogramming into a
+                                <span class="font-semibold">predictable engineering discipline.</span>
+                            </blockquote>
+
+                            <div class="mt-10 flex items-center gap-5">
+                                <div class="w-14 h-14 rounded-full border border-[#bfc4cb] bg-white/90 flex items-center justify-center">
+                                    <i data-lucide="user" class="w-7 h-7 text-[#11151b]"></i>
+                                </div>
+
+                                <div>
+                                    <h4 class="text-[15px] font-bold text-[#11151b]">Alaa Aldeen</h4>
+                                    <p class="text-[14px] text-[#5f6672]">Lead Reprogramming Architect, Nilus Lab</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Bottom strip -->
+                    <div class="relative z-10 grid grid-cols-4 border-t border-[#dde0e4] bg-white/80 backdrop-blur">
+                        <div class="px-5 xl:px-6 py-6 flex items-start gap-4 border-r border-[#e0e3e7]">
+                            <i data-lucide="shield" class="w-7 h-7 text-[#11151b] mt-1"></i>
+                            <div>
+                                <h5 class="text-[11px] xl:text-[12px] font-bold uppercase tracking-[0.13em] text-[#11151b]">
+                                    Secure · Encrypted · Private
+                                </h5>
+                                <p class="mt-1 text-[12px] xl:text-[13px] leading-5 text-[#5f6672]">
+                                    Enterprise-grade access protection.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="px-5 xl:px-6 py-6 flex items-start gap-4 border-r border-[#e0e3e7]">
+                            <i data-lucide="dna" class="w-7 h-7 text-[#11151b] mt-1"></i>
+                            <div>
+                                <h5 class="text-[11px] xl:text-[12px] font-bold uppercase tracking-[0.13em] text-[#11151b]">
+                                    Systems Biology Gateway
+                                </h5>
+                                <p class="mt-1 text-[12px] xl:text-[13px] leading-5 text-[#5f6672]">
+                                    Computational biology platform.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="px-5 xl:px-6 py-6 flex items-start gap-4 border-r border-[#e0e3e7]">
+                            <i data-lucide="flask-conical" class="w-7 h-7 text-[#11151b] mt-1"></i>
+                            <div>
+                                <h5 class="text-[11px] xl:text-[12px] font-bold uppercase tracking-[0.13em] text-[#11151b]">
+                                    Research Use Only
+                                </h5>
+                                <p class="mt-1 text-[12px] xl:text-[13px] leading-5 text-[#5f6672]">
+                                    Not for diagnostic or clinical use.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="px-5 xl:px-6 py-6 flex items-center justify-center gap-3">
+                            <span class="text-[12px] xl:text-[13px] font-semibold tracking-[0.08em] uppercase text-[#11151b]">
+                                Nilus Lab © 2026
+                            </span>
+                            <i data-lucide="shield-check" class="w-7 h-7 text-[#11151b]"></i>
+                        </div>
+                    </div>
                 </div>
-                <div>
-                    <h4 class="font-bold text-sm text-zinc-200">Alaa Aldeen</h4>
-                    <p class="text-xs text-zinc-500">Lead Reprogramming Architect, Nilus Lab</p>
-                </div>
-            </div>
-        </div>
 
-        <!-- Bottom status details -->
-        <div class="relative z-10 flex justify-between text-[10px] font-bold text-zinc-500 uppercase tracking-widest">
-            <span>Systems Biology AI Gateway</span>
-            <span>Nilus Lab &copy; 2026</span>
-        </div>
-    </div>
+            </div>
+        </section>
+    </main>
 
     <!-- Firebase Library Configurations -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
@@ -188,7 +405,7 @@
     <script>
         // Track mode (Sign In vs Sign Up)
         let isSignUp = false;
-        
+
         // Handle URL parameters for post-login redirection
         const urlParams = new URLSearchParams(window.location.search);
         const redirectUrl = urlParams.get('redirect') || 'discovery.html';
@@ -202,17 +419,17 @@
             const toggleBtn = document.getElementById('toggle-auth-btn');
 
             if (isSignUp) {
-                title.innerText = 'Create an account';
-                subtitle.innerText = 'Sign up for a professional Nilus Lab researcher account.';
-                submitText.innerText = 'Sign Up';
+                title.innerText = 'Create your Zenith account';
+                subtitle.innerText = 'Register for secure access to Nilus Lab computational biology workflows.';
+                submitText.innerText = 'Create account';
                 toggleMsg.innerText = 'Already have an account?';
-                toggleBtn.innerText = 'Sign In here.';
+                toggleBtn.innerText = 'Sign in';
             } else {
-                title.innerText = 'Welcome back';
-                subtitle.innerText = 'Sign in to Nilus Lab with one of the options below or your credentials.';
-                submitText.innerText = 'Sign In';
-                toggleMsg.innerText = "Don't have an account?";
-                toggleBtn.innerText = 'Create one here.';
+                title.innerText = 'Access the Zenith Computational Platform';
+                subtitle.innerText = 'Sign in to continue building the future of systems biology and cellular engineering.';
+                submitText.innerText = 'Sign in to Zenith';
+                toggleMsg.innerText = "Don’t have an account?";
+                toggleBtn.innerText = 'Create one';
             }
         }
 
@@ -221,7 +438,7 @@
             const provider = new firebase.auth.GoogleAuthProvider();
             const alertBox = document.getElementById('error-alert');
             const alertText = document.getElementById('error-message');
-            
+
             try {
                 alertBox.classList.add('hidden');
                 await firebase.auth().signInWithPopup(provider);
@@ -237,7 +454,7 @@
             event.preventDefault();
             const email = document.getElementById('email').value.trim();
             const password = document.getElementById('password').value.trim();
-            
+
             const alertBox = document.getElementById('error-alert');
             const alertText = document.getElementById('error-message');
             const submitBtn = document.getElementById('submit-btn');
@@ -245,7 +462,7 @@
             try {
                 alertBox.classList.add('hidden');
                 submitBtn.disabled = true;
-                submitBtn.innerText = isSignUp ? 'SIGNING UP...' : 'SIGNING IN...';
+                submitBtn.innerText = isSignUp ? 'CREATING ACCOUNT...' : 'SIGNING IN...';
 
                 if (isSignUp) {
                     await firebase.auth().createUserWithEmailAndPassword(email, password);
@@ -256,16 +473,16 @@
                 window.location.href = redirectUrl;
             } catch (error) {
                 submitBtn.disabled = false;
-                submitBtn.innerHTML = `<span>${isSignUp ? 'Sign Up' : 'Sign In'}</span><i data-lucide="arrow-right" class="w-4 h-4"></i>`;
+                submitBtn.innerHTML = `<span>${isSignUp ? 'Create account' : 'Sign in to Zenith'}</span><i data-lucide="arrow-right" class="w-5 h-5"></i>`;
                 lucide.createIcons();
-                
+
                 alertBox.classList.remove('hidden');
-                
+
                 // Friendly error translation
                 if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
                     alertText.innerText = 'Invalid email address or password. Please verify and try again.';
                 } else if (error.code === 'auth/email-already-in-use') {
-                    alertText.innerText = 'This email is already registered. Please Sign In instead.';
+                    alertText.innerText = 'This email is already registered. Please sign in instead.';
                 } else if (error.code === 'auth/weak-password') {
                     alertText.innerText = 'Password must be at least 6 characters long.';
                 } else {
@@ -274,7 +491,19 @@
             }
         }
 
-
+        // Password visibility toggler
+        function togglePasswordVisibility() {
+            const passwordInput = document.getElementById('password');
+            const eyeIcon = passwordInput.nextElementSibling;
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                eyeIcon.setAttribute('data-lucide', 'eye-off');
+            } else {
+                passwordInput.type = 'password';
+                eyeIcon.setAttribute('data-lucide', 'eye');
+            }
+            lucide.createIcons();
+        }
 
         // Reset password handler
         function handlePasswordReset() {
