@@ -177,6 +177,7 @@
             <input
               type="password"
               id="api-key-input"
+              autocomplete="new-password"
               class="w-full h-10 pl-3.5 pr-10 rounded-xl border border-slate-200 text-xs font-mono focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 bg-slate-50"
               placeholder="Enter zk_live_... or DEVELOPER_KEY"
             />
@@ -479,17 +480,23 @@
       document.getElementById("download-pdb-btn").disabled = true;
       document.getElementById("view-pdb-btn").disabled = true;
 
-      // Get API Key from localStorage or fallback
-      const apiKey = localStorage.getItem("zenith_session_token") || "DEVELOPER_KEY";
+      // Get API Key directly from input or localStorage
+      const inputKey = document.getElementById("api-key-input") ? document.getElementById("api-key-input").value.trim() : "";
+      const savedKey = localStorage.getItem("zenith_session_token") || "";
+      const apiKey = inputKey || savedKey.trim();
       const startTime = Date.now();
 
+      // Decide endpoint: if no key is entered locally, use rate-limited secure proxy route Option B
+      const targetEndpoint = apiKey ? "/api/v1/structure/fold" : "/api/v1/structure/fold/ui";
+      const headers = { "Content-Type": "application/json" };
+      if (apiKey) {
+        headers["X-API-Key"] = apiKey;
+      }
+
       try {
-        const response = await fetch("/api/v1/structure/fold", {
+        const response = await fetch(targetEndpoint, {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "X-API-Key": apiKey
-          },
+          headers: headers,
           body: JSON.stringify({ sequence })
         });
 
@@ -612,12 +619,23 @@
       lucide.createIcons();
     }
 
-    // Load saved API Key on load
+    // Load saved API Key on load and prevent password autofill overrides
     window.addEventListener("DOMContentLoaded", () => {
       const savedKey = localStorage.getItem("zenith_session_token") || "";
       const input = document.getElementById("api-key-input");
       if (input) {
         input.value = savedKey;
+        
+        // Anti-autofill override: Chrome/Firefox might inject saved login credentials.
+        // If no token is saved, explicitly clear the field after DOM load to force fallback proxy route.
+        setTimeout(() => {
+          const currentSaved = localStorage.getItem("zenith_session_token") || "";
+          if (!currentSaved) {
+            input.value = "";
+          } else {
+            input.value = currentSaved;
+          }
+        }, 150);
       }
     });
 
