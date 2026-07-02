@@ -9,8 +9,27 @@ from bridge_server import app
 
 client = TestClient(app)
 
-# Use the test key generated during setup
-TEST_API_KEY = "zk_live_c43349c9f8f86cd9df05dcf8e45bcff0"
+import hashlib
+from database.connection import SessionLocal
+from database.models import APIKey
+
+# Use environment key or fallback to a safe mock test key
+TEST_API_KEY = os.getenv("ZENITH_API_KEY", "zk_live_mock_key_for_testing")
+
+# Seed the test key hash in the SQLite database to allow integration tests to pass
+db = SessionLocal()
+try:
+    test_hash = hashlib.sha256(TEST_API_KEY.encode()).hexdigest()
+    if not db.query(APIKey).filter(APIKey.key_hash == test_hash).first():
+        db.add(APIKey(
+            key_hash=test_hash,
+            prefix=TEST_API_KEY[:14] + "..." + TEST_API_KEY[-4:],
+            owner="Test Suite",
+            tier="enterprise"
+        ))
+        db.commit()
+finally:
+    db.close()
 
 def test_api_v1():
     print("="*60)

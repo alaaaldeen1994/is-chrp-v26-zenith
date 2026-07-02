@@ -1459,18 +1459,20 @@ async def lifespan(app: FastAPI):
 
         # 3. Seed default API keys if table is empty (fresh deploy)
         import hashlib
+        import secrets
         db = SessionLocal()
         try:
             if db.query(APIKey).count() == 0:
-                default_keys = [
-                    {"key": "zk_live_bd5bdbf38a1c5ce3c8fa0b18a67ae168", "owner": "Waed Lab", "tier": "enterprise"},
-                    {"key": "zk_live_c43349c9f8f86cd9df05dcf8e45bcff0", "owner": "Waed Lab", "tier": "enterprise"},
-                ]
-                for k in default_keys:
-                    key_hash = hashlib.sha256(k["key"].encode()).hexdigest()
-                    db.add(APIKey(key_hash=key_hash, prefix=k["key"][:14] + "..." + k["key"][-4:], owner=k["owner"], tier=k["tier"]))
+                raw_token = secrets.token_hex(16)
+                new_key = f"zk_live_{raw_token}"
+                key_hash = hashlib.sha256(new_key.encode()).hexdigest()
+                db.add(APIKey(key_hash=key_hash, prefix=new_key[:14] + "..." + new_key[-4:], owner="Default System Owner", tier="enterprise"))
                 db.commit()
-                print(f"[DATABASE] Seeded {len(default_keys)} default API keys.")
+                print("\n" + "="*80)
+                print("   [SECURITY WARNING] NO API KEYS FOUND IN DATABASE.")
+                print(f"   GENERATED NEW SECURE SYSTEM API KEY: {new_key}")
+                print("   WRITE THIS KEY DOWN. IT WILL NOT BE PRINTED AGAIN.")
+                print("="*80 + "\n")
             else:
                 print(f"[DATABASE] API keys already exist ({db.query(APIKey).count()} keys).")
         finally:
