@@ -536,7 +536,7 @@ def post_structure_fold(
 ):
     start_time = time.time()
     
-    result = folder.fold_sequence(payload.sequence)
+    result = folder.fold_sequence(payload.sequence, db=db)
     if result["status"] == "error":
         if result.get("error_type") == "validation_too_long":
             raise HTTPException(status_code=413, detail=result["message"])

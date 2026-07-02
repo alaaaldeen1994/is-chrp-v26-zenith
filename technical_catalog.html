@@ -7260,13 +7260,23 @@ Response:
   "data": {
     "source": "ESMFold-Live" | "Zenith-Synthetic-Fallback",
     "fallback_used": true | false,
+    "provider": "ESMFold",
     "provider_status": "ok" | "external_provider_failed",
+    "sequence_length": 15,
     "pdb_data": "HEADER  PROTEIN...\nATOM      1  N   MET...",
     "metrics": {
       "length": 15,
       "compute_time_sec": 0.25,
       "predicted_lddt": 85.0
-    }
+    },
+    "cache_hit": true | false,
+    "scientific_limitations": [
+      "Single-sequence structure prediction only",
+      "Not AlphaFold",
+      "Not AlphaFold3",
+      "Not ligand-aware",
+      "Not validated for clinical use"
+    ]
   }
 }</div>
                     </div>

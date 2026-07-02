@@ -1453,7 +1453,7 @@ async def lifespan(app: FastAPI):
     # 2. Auto-create database tables if they don't exist (fixes fresh container deploys)
     try:
         from database.connection import engine, Base, SessionLocal
-        from database.models import APIKey, AuditLog, WebhookSubscription  # noqa: F401 - import to register models
+        from database.models import APIKey, AuditLog, WebhookSubscription, StructureCache  # noqa: F401 - import to register models
         Base.metadata.create_all(bind=engine)
         print("[DATABASE] Tables verified/created successfully.")
 

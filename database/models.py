@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Boolean, DateTime, ForeignKey, Text
+from sqlalchemy import Column, Integer, String, Boolean, DateTime, ForeignKey, Text, Float
 from sqlalchemy.orm import relationship
 from datetime import datetime
 from database.connection import Base
@@ -43,4 +43,19 @@ class WebhookSubscription(Base):
     secret = Column(String, nullable=False)  # HMAC signing secret specific to this endpoint
     is_active = Column(Boolean, default=True, nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+
+class StructureCache(Base):
+    __tablename__ = "structure_cache"
+
+    id = Column(Integer, primary_key=True, index=True)
+    sequence_hash = Column(String, unique=True, index=True, nullable=False)
+    sequence = Column(Text, nullable=False)
+    source = Column(String, nullable=False)
+    pdb_data = Column(Text, nullable=False)
+    provider_status = Column(String, nullable=False)
+    metrics_length = Column(Integer, nullable=False)
+    metrics_compute_time_sec = Column(Float, nullable=False)
+    metrics_predicted_lddt = Column(Float, nullable=True)
+    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+
 

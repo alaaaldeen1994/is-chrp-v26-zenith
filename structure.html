@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en" class="bg-[#f8fafc]">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Zenith v30.0 GOLD | ESMFold Structure Prediction | Nilus Lab</title>
+  <meta name="description" content="ESMFold 3D protein structure prediction engine. Generate standard PDB coordinate files from single-chain amino acid sequences." />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@400;500;600;700;800;900&family=JetBrains+Mono&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- 3Dmol.js for 3D Protein Visualization -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/3Dmol/2.0.4/3Dmol-min.js"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            outfit: ['Outfit', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace']
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    /* Styling & Glassmorphic touches */
+    .nav-dock-link {
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: #475569;
+      transition: all 0.2s ease;
+    }
+    .nav-dock-link:hover, .nav-dock-link.active {
+      color: #2563eb;
+    }
+    .inst-dropdown {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 8px 0;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+      z-index: 50;
+      min-width: 180px;
+    }
+    .inst-dropdown a {
+      display: block;
+      padding: 8px 16px;
+      font-size: 11px;
+      font-weight: 700;
+      color: #334155;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .inst-dropdown a:hover {
+      background: #f8fafc;
+      color: #2563eb;
+    }
+    .inst-diligence-wrapper:hover .inst-dropdown {
+      display: block;
+    }
+    .metric-card {
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 12px;
+      transition: all 0.2s;
+    }
+    .metric-card:hover {
+      border-color: #cbd5e1;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    }
+  </style>
+</head>
+
+<body class="font-sans antialiased text-[#1e293b]">
+
+  <!-- HEADER / NAVIGATION DOCK -->
+  <header class="sticky top-0 z-40 w-full bg-white/80 backdrop-blur-md border-b border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      
+      <!-- Brand Logo -->
+      <a href="index.html" class="flex items-center gap-2">
+        <svg class="w-6 h-6 text-[#2563eb]" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M32 10L51 20L32 30L13 20L32 10Z" />
+          <path d="M51 30L32 40L13 30" />
+          <path d="M51 40L32 50L13 40" />
+        </svg>
+        <span class="font-outfit text-sm tracking-[0.2em] font-black uppercase text-[#0f172a]">
+          Nilus <span class="text-blue-600">Lab</span>
+        </span>
+      </a>
+
+      <!-- Desktop Menu -->
+      <nav class="hidden md:flex items-center gap-6">
+        <a href="discovery.html" class="nav-dock-link">Mainframe</a>
+        
+        <div class="inst-diligence-wrapper relative py-4 flex items-center gap-1 cursor-pointer">
+          <span class="nav-dock-link">Diligence</span>
+          <i data-lucide="chevron-down" class="w-3 h-3 text-slate-400"></i>
+          <div class="inst-dropdown">
+            <a href="evidence.html">Evidence Registry</a>
+            <a href="scientific_qna.html">Scientific Q&A</a>
+            <a href="whitepaper.html">Research Whitepaper</a>
+            <a href="regulatory.html">Regulatory Statement</a>
+            <a href="v30_clinical_report.html">Clinical Report v30.0</a>
+            <a href="how_it_works.html" class="text-blue-600 font-extrabold">How Zenith Works</a>
+          </div>
+        </div>
+
+        <a href="technical_catalog.html" class="nav-dock-link">Catalog</a>
+        <a href="trials.html" class="nav-dock-link">Trials</a>
+        <a href="structure.html" class="nav-dock-link active">Folding</a>
+        <a href="api.html" class="nav-dock-link">API</a>
+      </nav>
+
+      <!-- Back button -->
+      <a href="discovery.html" class="flex items-center gap-1.5 px-3.5 py-1.5 bg-slate-100 hover:bg-slate-200 border border-slate-200 hover:border-slate-300 rounded-full font-bold text-[10px] uppercase tracking-widest text-slate-600 transition">
+        <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i> Back
+      </a>
+    </div>
+  </header>
+
+  <!-- MAIN BODY CONTENT -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    
+    <!-- Title / Intro Section -->
+    <div class="mb-8">
+      <div class="flex items-center gap-2 mb-2">
+        <span class="px-2 py-0.5 bg-blue-50 text-blue-600 border border-blue-200 rounded font-outfit text-[10px] font-bold uppercase tracking-wider">
+          ESMFold Prediction Engine
+        </span>
+        <span class="px-2 py-0.5 bg-slate-100 text-slate-600 border border-slate-200 rounded font-outfit text-[10px] font-bold uppercase tracking-wider">
+          v30.0 Core Module
+        </span>
+      </div>
+      <h1 class="font-outfit text-3xl font-black tracking-tight text-slate-900 sm:text-4xl">
+        Protein Structure Folding
+      </h1>
+      <p class="mt-2 text-sm text-slate-500 max-w-3xl leading-relaxed">
+        Fast ESMFold-based single-chain protein structure prediction for research-use exploratory workflows. Submit a valid FASTA amino acid sequence to generate 3D coordinates.
+      </p>
+    </div>
+
+    <!-- Layout Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-[38%_62%] gap-8">
+      
+      <!-- LEFT SIDEBAR: INPUT & METRICS -->
+      <div class="space-y-6">
+        
+        <!-- Input Panel -->
+        <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
+          <h2 class="font-outfit text-sm font-bold uppercase tracking-wider text-slate-800 mb-4 flex items-center gap-2">
+            <i data-lucide="dna" class="w-4 h-4 text-blue-600"></i> Sequence Input
+          </h2>
+
+          <form id="folding-form" onsubmit="submitSequence(event)" class="space-y-4">
+            <div>
+              <label for="sequence" class="block text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1.5">
+                Amino Acid Sequence (ARNDCQEGHILKMFPSTWYVX)
+              </label>
+              <textarea
+                id="sequence"
+                rows="5"
+                class="w-full rounded-xl border border-slate-200 p-3.5 font-mono text-xs uppercase tracking-widest focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 bg-slate-50"
+                placeholder="Paste FASTA or raw sequence..."
+                required
+              >MQIFVKTLTGKTITLEVEPSDTIENVKAKIQDKEGIPPDQQRLIFAGKQLEDGRTLSDYNIQKESTLHLVLRLRGG</textarea>
+            </div>
+
+            <div class="flex items-center justify-between text-[11px] text-slate-400 font-medium">
+              <span id="char-count">Length: 76 residues</span>
+              <span>Max allowed: 1000 residues</span>
+            </div>
+
+            <button
+              type="submit"
+              id="fold-btn"
+              class="w-full h-11 bg-[#0f172a] hover:bg-slate-800 text-white rounded-xl font-semibold text-xs tracking-wider uppercase transition flex items-center justify-center gap-2 shadow-md hover:shadow-lg disabled:opacity-55 disabled:cursor-not-allowed"
+            >
+              <span>Predict 3D Structure</span>
+              <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </button>
+          </form>
+        </div>
+
+        <!-- Telemetry Results Panel -->
+        <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-4">
+          <h2 class="font-outfit text-sm font-bold uppercase tracking-wider text-slate-800 flex items-center justify-between">
+            <span class="flex items-center gap-2">
+              <i data-lucide="bar-chart-2" class="w-4 h-4 text-blue-600"></i> Metrics & Telemetry
+            </span>
+            <span id="telemetry-status" class="text-[9px] font-mono bg-slate-100 text-slate-600 px-2 py-0.5 rounded uppercase font-bold">
+              IDLE
+            </span>
+          </h2>
+
+          <div class="grid grid-cols-2 gap-3.5 text-xs">
+            <div class="metric-card">
+              <div class="text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-1">HTTP Status</div>
+              <div id="metric-http" class="font-mono font-bold text-slate-700">-</div>
+            </div>
+            
+            <div class="metric-card">
+              <div class="text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-1">Compute Source</div>
+              <div id="metric-source" class="font-semibold text-slate-700">-</div>
+            </div>
+
+            <div class="metric-card">
+              <div class="text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-1">Latency / Time</div>
+              <div id="metric-latency" class="font-mono font-bold text-slate-700">-</div>
+            </div>
+
+            <div class="metric-card">
+              <div class="text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-1">Cache Status</div>
+              <div id="metric-cache" class="font-semibold text-slate-700">-</div>
+            </div>
+
+            <div class="metric-card col-span-2">
+              <div class="flex items-center justify-between mb-1">
+                <span class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Confidence (predicted lDDT)</span>
+                <span id="metric-lddt-source" class="text-[8px] font-mono text-slate-400"></span>
+              </div>
+              <div class="flex items-center gap-3">
+                <div class="flex-1 bg-slate-100 h-2 rounded-full overflow-hidden">
+                  <div id="lddt-bar" class="bg-blue-600 h-full w-0 transition-all duration-500"></div>
+                </div>
+                <span id="metric-lddt" class="font-mono font-bold text-slate-700">-</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- PDB Action Buttons -->
+          <div class="grid grid-cols-2 gap-3 pt-2">
+            <button
+              id="download-pdb-btn"
+              onclick="downloadPdb()"
+              disabled
+              class="h-10 border border-slate-200 hover:border-slate-300 bg-white hover:bg-slate-50 text-slate-700 disabled:opacity-50 disabled:cursor-not-allowed rounded-xl font-bold text-[10px] uppercase tracking-wider transition flex items-center justify-center gap-1.5"
+            >
+              <i data-lucide="download" class="w-3.5 h-3.5"></i> Download PDB
+            </button>
+            <button
+              id="view-pdb-btn"
+              onclick="openPdbModal()"
+              disabled
+              class="h-10 border border-slate-200 hover:border-slate-300 bg-white hover:bg-slate-50 text-slate-700 disabled:opacity-50 disabled:cursor-not-allowed rounded-xl font-bold text-[10px] uppercase tracking-wider transition flex items-center justify-center gap-1.5"
+            >
+              <i data-lucide="file-text" class="w-3.5 h-3.5"></i> View Raw PDB
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- RIGHT CONTAINER: 3D VIEWER -->
+      <div class="space-y-6">
+        
+        <!-- Viewer Card -->
+        <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm flex flex-col h-full min-h-[580px]">
+          <h2 class="font-outfit text-sm font-bold uppercase tracking-wider text-slate-800 mb-4 flex items-center gap-2">
+            <i data-lucide="eye" class="w-4 h-4 text-blue-600"></i> 3D Structure Viewer
+          </h2>
+
+          <!-- Status Banners -->
+          <div id="alert-banner" class="hidden mb-4 p-3 rounded-xl text-xs font-semibold flex items-start gap-2.5">
+            <i id="alert-icon" class="w-4 h-4 flex-shrink-0 mt-0.5"></i>
+            <span id="alert-text"></span>
+          </div>
+
+          <!-- 3Dmol container -->
+          <div class="flex-1 w-full min-h-[420px] rounded-xl border border-slate-200 overflow-hidden relative bg-[#0f172a] shadow-inner flex items-center justify-center">
+            <div id="protein-viewer" class="w-full h-full"></div>
+            
+            <!-- Default Placeholder / Loader -->
+            <div id="viewer-placeholder" class="absolute inset-0 flex flex-col items-center justify-center text-center p-6 bg-slate-900/50 backdrop-blur-sm transition-all duration-300">
+              <div class="w-12 h-12 rounded-full border-4 border-slate-700 border-t-blue-500 animate-spin mb-4 hidden" id="viewer-spinner"></div>
+              <i data-lucide="layers" class="w-10 h-10 text-slate-500 mb-3" id="viewer-icon"></i>
+              <h3 class="text-sm font-semibold text-slate-300" id="viewer-title">No Model Loaded</h3>
+              <p class="text-xs text-slate-500 mt-1 max-w-xs" id="viewer-sub">Submit an amino acid sequence to generate and visualize its 3D atomic coordinates.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Scientific Disclaimer / Limitations -->
+        <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-4">
+          <div class="bg-amber-50/50 border border-amber-200/60 rounded-xl p-4 text-amber-800 text-xs leading-relaxed flex gap-3">
+            <i data-lucide="alert-triangle" class="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5"></i>
+            <div>
+              <strong class="font-bold text-amber-900 block mb-1">Scientific Integrity & Verification:</strong>
+              ESMFold is used for fast single-sequence exploratory structure prediction. It is not equivalent to AlphaFold2, AlphaFold-Multimer, or AlphaFold3. It does not model ligands, nucleic acids, protein complexes, or binding interactions. Results are provided for research-use exploratory analysis only.
+            </div>
+          </div>
+
+          <!-- Comparison Table -->
+          <div class="overflow-x-auto border border-slate-200 rounded-xl">
+            <table class="w-full text-[11px] text-left text-slate-500 font-medium">
+              <thead class="bg-slate-50 text-[10px] font-black uppercase tracking-wider text-slate-700 border-b border-slate-200">
+                <tr>
+                  <th class="py-2.5 px-3">Feature</th>
+                  <th class="py-2.5 px-3">ESMFold</th>
+                  <th class="py-2.5 px-3">AlphaFold2</th>
+                  <th class="py-2.5 px-3">AlphaFold3</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-200">
+                <tr>
+                  <td class="py-2 px-3 font-bold text-slate-900">Speed</td>
+                  <td class="py-2 px-3 text-emerald-600 font-bold">Fast (Seconds)</td>
+                  <td class="py-2 px-3">Slower</td>
+                  <td class="py-2 px-3">Slower / Advanced</td>
+                </tr>
+                <tr>
+                  <td class="py-2 px-3 font-bold text-slate-900">Input</td>
+                  <td class="py-2 px-3">Single protein sequence</td>
+                  <td class="py-2 px-3">Protein sequence / MSA</td>
+                  <td class="py-2 px-3">Proteins, nucleic acids, ligands</td>
+                </tr>
+                <tr>
+                  <td class="py-2 px-3 font-bold text-slate-900">MSA required</td>
+                  <td class="py-2 px-3">No</td>
+                  <td class="py-2 px-3">Usually yes</td>
+                  <td class="py-2 px-3">Model-dependent</td>
+                </tr>
+                <tr>
+                  <td class="py-2 px-3 font-bold text-slate-900">Complexes</td>
+                  <td class="py-2 px-3">Limited / Not primary</td>
+                  <td class="py-2 px-3">AF-Multimer needed</td>
+                  <td class="py-2 px-3 text-slate-800 font-bold">Supported</td>
+                </tr>
+                <tr>
+                  <td class="py-2 px-3 font-bold text-slate-900">Ligands</td>
+                  <td class="py-2 px-3">No</td>
+                  <td class="py-2 px-3">No standard support</td>
+                  <td class="py-2 px-3 text-slate-800 font-bold">Supported</td>
+                </tr>
+                <tr>
+                  <td class="py-2 px-3 font-bold text-slate-900">Zenith Status</td>
+                  <td class="py-2 px-3 text-emerald-600 font-bold">Integrated</td>
+                  <td class="py-2 px-3">Not integrated</td>
+                  <td class="py-2 px-3">Not integrated</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- RAW PDB VIEW MODAL -->
+  <div id="pdb-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
+    <div class="bg-white rounded-2xl border border-slate-200 w-full max-w-3xl flex flex-col max-h-[85vh] shadow-2xl overflow-hidden">
+      <div class="p-5 border-b border-slate-200 flex items-center justify-between">
+        <h3 class="font-outfit font-bold text-slate-800 flex items-center gap-2">
+          <i data-lucide="file-text" class="w-4 h-4 text-blue-600"></i> Raw PDB Structure Output
+        </h3>
+        <button onclick="closePdbModal()" class="text-slate-400 hover:text-slate-600 transition">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+      <div class="p-5 overflow-auto flex-1 bg-slate-950 font-mono text-[10px] text-slate-300 leading-normal select-text">
+        <pre id="pdb-raw-text"></pre>
+      </div>
+      <div class="p-4 border-t border-slate-200 bg-slate-50 flex justify-end gap-3">
+        <button onclick="closePdbModal()" class="px-4 py-2 border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 rounded-xl font-semibold text-xs transition">
+          Close
+        </button>
+        <button onclick="downloadPdb()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-semibold text-xs transition shadow flex items-center gap-1.5">
+          <i data-lucide="download" class="w-3.5 h-3.5"></i> Download
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCRIPT LOGIC -->
+  <script>
+    let activePdbData = null;
+    let activeSequence = "";
+
+    // Track text area inputs to update character count
+    const sequenceInput = document.getElementById("sequence");
+    const charCountEl = document.getElementById("char-count");
+    sequenceInput.addEventListener("input", (e) => {
+      const len = e.target.value.trim().length;
+      charCountEl.innerText = `Length: ${len} residues`;
+    });
+
+    async function submitSequence(event) {
+      event.preventDefault();
+
+      const sequence = sequenceInput.value.trim().replace(/\s/g, "").toUpperCase();
+      if (!sequence) return;
+
+      // Loading state
+      const foldBtn = document.getElementById("fold-btn");
+      const spinner = document.getElementById("viewer-spinner");
+      const vPlaceholder = document.getElementById("viewer-placeholder");
+      const vIcon = document.getElementById("viewer-icon");
+      const vTitle = document.getElementById("viewer-title");
+      const vSub = document.getElementById("viewer-sub");
+      const telemetryStatus = document.getElementById("telemetry-status");
+
+      foldBtn.disabled = true;
+      foldBtn.innerHTML = `<span>Processing Fold...</span> <div class="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>`;
+      
+      // Update viewer placeholder to show loading
+      vPlaceholder.classList.remove("hidden");
+      spinner.classList.remove("hidden");
+      vIcon.classList.add("hidden");
+      vTitle.innerText = "Folding Sequence...";
+      vSub.innerText = "Sending sequence coordinates request to the Zenith computational biology service.";
+      
+      telemetryStatus.innerText = "COMPUTING";
+      telemetryStatus.className = "text-[9px] font-mono bg-blue-50 text-blue-600 px-2 py-0.5 rounded uppercase font-bold animate-pulse";
+
+      // Reset metrics
+      document.getElementById("metric-http").innerText = "-";
+      document.getElementById("metric-source").innerText = "-";
+      document.getElementById("metric-latency").innerText = "-";
+      document.getElementById("metric-cache").innerText = "-";
+      document.getElementById("metric-lddt").innerText = "-";
+      document.getElementById("metric-lddt-source").innerText = "";
+      document.getElementById("lddt-bar").style.width = "0%";
+      document.getElementById("alert-banner").className = "hidden";
+      
+      document.getElementById("download-pdb-btn").disabled = true;
+      document.getElementById("view-pdb-btn").disabled = true;
+
+      // Get API Key from localStorage or fallback
+      const apiKey = localStorage.getItem("zenith_session_token") || "DEVELOPER_KEY";
+      const startTime = Date.now();
+
+      try {
+        const response = await fetch("/api/v1/structure/fold", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-API-Key": apiKey
+          },
+          body: JSON.stringify({ sequence })
+        });
+
+        const status = response.status;
+        document.getElementById("metric-http").innerText = `${status} ${status === 200 ? 'OK' : response.statusText}`;
+
+        const result = await response.json();
+        const latency = ((Date.now() - startTime) / 1000).toFixed(2);
+        document.getElementById("metric-latency").innerText = `${latency}s`;
+
+        if (response.ok && result.status === "success") {
+          const data = result.data;
+          activePdbData = data.pdb_data;
+          activeSequence = sequence;
+
+          // Populate metrics
+          document.getElementById("metric-source").innerText = data.source;
+          document.getElementById("metric-cache").innerText = data.cache_hit ? "Hit" : "Miss";
+          
+          if (data.metrics && data.metrics.predicted_lddt !== null) {
+            const lddtPercent = Math.round(data.metrics.predicted_lddt * 100);
+            document.getElementById("metric-lddt").innerText = `${lddtPercent}%`;
+            document.getElementById("lddt-bar").style.width = `${lddtPercent}%`;
+            document.getElementById("metric-lddt-source").innerText = data.metrics.confidence_source || "B-factor derived";
+          } else {
+            document.getElementById("metric-lddt").innerText = "N/A";
+          }
+
+          // Visual success banner state
+          const banner = document.getElementById("alert-banner");
+          const bannerText = document.getElementById("alert-text");
+          const bannerIcon = document.getElementById("alert-icon");
+
+          if (data.source === "ESMFold-Live" && !data.fallback_used && data.provider_status === "ok") {
+            banner.className = "mb-4 p-3.5 rounded-xl text-xs font-semibold bg-emerald-50 border border-emerald-200 text-emerald-800 flex items-start gap-2.5";
+            bannerText.innerText = "Live ESMFold structure generated successfully.";
+            bannerIcon.setAttribute("data-lucide", "check-circle");
+          } else {
+            banner.className = "mb-4 p-3.5 rounded-xl text-xs font-semibold bg-amber-50 border border-amber-200 text-amber-800 flex items-start gap-2.5";
+            bannerText.innerText = "Synthetic fallback structure only. Not real ESMFold output. Warning: " + (data.provider_error || "External provider unavailable");
+            bannerIcon.setAttribute("data-lucide", "alert-triangle");
+          }
+          lucide.createIcons();
+
+          // Render 3D model
+          renderProteinPDB(data.pdb_data);
+          
+          // Enable buttons
+          document.getElementById("download-pdb-btn").disabled = false;
+          document.getElementById("view-pdb-btn").disabled = false;
+          
+          telemetryStatus.innerText = "SUCCESS";
+          telemetryStatus.className = "text-[9px] font-mono bg-emerald-50 text-emerald-600 px-2 py-0.5 rounded uppercase font-bold";
+        } else {
+          // Error state
+          const errMsg = result.detail || result.message || "An unexpected error occurred during prediction.";
+          showErrorState(status, errMsg);
+        }
+      } catch (err) {
+        console.error("Folding request failed:", err);
+        showErrorState("Network Error", err.message);
+      } finally {
+        foldBtn.disabled = false;
+        foldBtn.innerHTML = `<span>Predict 3D Structure</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>`;
+        lucide.createIcons();
+      }
+    }
+
+    function renderProteinPDB(pdbData) {
+      const container = document.getElementById("protein-viewer");
+      const placeholder = document.getElementById("viewer-placeholder");
+
+      // Hide placeholder
+      placeholder.classList.add("hidden");
+
+      // Initialize 3Dmol viewer
+      const viewer = $3Dmol.createViewer(container, {
+        backgroundColor: "#0f172a"
+      });
+
+      viewer.addModel(pdbData, "pdb");
+      viewer.setStyle({}, {
+        cartoon: {
+          color: "spectrum"
+        }
+      });
+      viewer.zoomTo();
+      viewer.render();
+    }
+
+    function showErrorState(status, msg) {
+      const telemetryStatus = document.getElementById("telemetry-status");
+      const banner = document.getElementById("alert-banner");
+      const bannerText = document.getElementById("alert-text");
+      const bannerIcon = document.getElementById("alert-icon");
+      const spinner = document.getElementById("viewer-spinner");
+      const vIcon = document.getElementById("viewer-icon");
+      const vTitle = document.getElementById("viewer-title");
+      const vSub = document.getElementById("viewer-sub");
+
+      telemetryStatus.innerText = "ERROR";
+      telemetryStatus.className = "text-[9px] font-mono bg-red-50 text-red-600 px-2 py-0.5 rounded uppercase font-bold";
+
+      banner.className = "mb-4 p-3.5 rounded-xl text-xs font-semibold bg-red-50 border border-red-200 text-red-800 flex items-start gap-2.5";
+      bannerText.innerText = `Prediction Failed: [HTTP ${status}] ${msg}`;
+      bannerIcon.setAttribute("data-lucide", "x-circle");
+      lucide.createIcons();
+
+      // Reset viewer state
+      spinner.classList.add("hidden");
+      vIcon.classList.remove("hidden");
+      vIcon.setAttribute("data-lucide", "alert-circle");
+      vTitle.innerText = "Prediction Failed";
+      vSub.innerText = msg;
+      lucide.createIcons();
+    }
+
+    function downloadPdb() {
+      if (!activePdbData) return;
+      const blob = new Blob([activePdbData], { type: "text/plain" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `zenith_fold_${activeSequence.substring(0, 10)}_${Date.now()}.pdb`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    function openPdbModal() {
+      if (!activePdbData) return;
+      document.getElementById("pdb-raw-text").innerText = activePdbData;
+      document.getElementById("pdb-modal").classList.remove("hidden");
+    }
+
+    function closePdbModal() {
+      document.getElementById("pdb-modal").classList.add("hidden");
+    }
+
+    // Initialize Lucide icons on load
+    lucide.createIcons();
+  </script>
+</body>
+</html>

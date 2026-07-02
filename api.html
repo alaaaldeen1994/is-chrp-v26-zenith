@@ -70,6 +70,7 @@
                     <a href="index.html" class="dark-nav-dock-link text-[11px] font-bold uppercase tracking-widest transition-all">Mainframe</a>
                     <a href="technical_catalog.html" class="dark-nav-dock-link text-[11px] font-bold uppercase tracking-widest transition-all">Catalog</a>
                     <a href="trials.html" class="dark-nav-dock-link text-[11px] font-bold uppercase tracking-widest transition-all">Trials</a>
+                    <a href="structure.html" class="dark-nav-dock-link text-[11px] font-bold uppercase tracking-widest transition-all">Folding</a>
                     <a href="api.html" class="dark-nav-dock-link text-[11px] font-bold uppercase tracking-widest transition-all active relative">API</a>
                 </div>
             </div>
@@ -299,13 +300,24 @@
   "data": {
     "source": "ESMFold-Live",
     "fallback_used": false,
+    "provider": "ESMFold",
     "provider_status": "ok",
+    "sequence_length": 105,
     "pdb_data": "HEADER    PROTEIN BINDING                         02-JUL-26\nTITLE     ESMFOLD PREDICTED STRUCTURE\nATOM      1  N   MET A   1      12.420  15.106  23.840  1.00 85.00           N\nATOM      2  CA  MET A   1      13.500  14.280  24.120  1.00 85.00           C\n...",
     "metrics": {
       "length": 105,
       "compute_time_sec": 1.25,
-      "predicted_lddt": 85.0
-    }
+      "predicted_lddt": 85.0,
+      "confidence_source": "pLDDT/B-factor-derived"
+    },
+    "cache_hit": false,
+    "scientific_limitations": [
+      "Single-sequence structure prediction only",
+      "Not AlphaFold",
+      "Not AlphaFold3",
+      "Not ligand-aware",
+      "Not validated for clinical use"
+    ]
   },
   "meta": {
     "credits_used": 10,

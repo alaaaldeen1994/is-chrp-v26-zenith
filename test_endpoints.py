@@ -10,8 +10,11 @@ from bridge_server import app
 client = TestClient(app)
 
 import hashlib
-from database.connection import SessionLocal
-from database.models import APIKey
+from database.connection import engine, Base, SessionLocal
+from database.models import APIKey, StructureCache
+
+# Auto-create all tables for testing
+Base.metadata.create_all(bind=engine)
 
 # Use environment key or fallback to a safe mock test key
 TEST_API_KEY = os.getenv("ZENITH_API_KEY", "zk_live_mock_key_for_testing")
