@@ -2624,6 +2624,14 @@ async def serve_scientific_qna_root():
 async def serve_scientific_qna_file():
     return FileResponse("scientific_qna.html")
 
+@app.get("/structure", response_class=HTMLResponse)
+async def serve_structure_root():
+    return FileResponse("structure.html")
+
+@app.get("/structure.html", response_class=HTMLResponse)
+async def serve_structure_file():
+    return FileResponse("structure.html")
+
 
 
 
