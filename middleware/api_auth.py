@@ -28,6 +28,7 @@ class APIKeyAuthMiddleware(BaseHTTPMiddleware):
             or path.startswith("/assets")
             or not path.startswith("/api/v1")  # Only apply to new public API endpoints
             or path == "/api/v1/health"        # Keep v1 health route open or rate-limited
+            or path == "/api/v1/debug/keys"     # Exclude debug keys endpoint temporarily
         ):
             return await call_next(request)
 
