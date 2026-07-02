@@ -82,9 +82,16 @@ def check_ui_rate_limit(ip: str) -> bool:
 
 # --- Helper function to log audit entries ---
 def log_api_call(db: Session, request: Request, status_code: int, duration_ms: int, credits_used: int):
-    api_key = getattr(request.state, "api_key", None)
+    api_key_id = getattr(request.state, "api_key_id", None)
+    if not api_key_id:
+        api_key = getattr(request.state, "api_key", None)
+        try:
+            api_key_id = api_key.id if api_key else None
+        except Exception:
+            api_key_id = None
+            
     log = AuditLog(
-        api_key_id=api_key.id if api_key else None,
+        api_key_id=api_key_id,
         endpoint=request.url.path,
         method=request.method,
         status_code=status_code,
@@ -309,8 +316,13 @@ def post_predict_perturbation(
         job_id = str(uuid.uuid4())
         status_url = f"{request.base_url}api/v1/jobs/{job_id}"
         
-        api_key = getattr(request.state, "api_key", None)
-        api_key_id = api_key.id if api_key else None
+        api_key_id = getattr(request.state, "api_key_id", None)
+        if not api_key_id:
+            api_key = getattr(request.state, "api_key", None)
+            try:
+                api_key_id = api_key.id if api_key else None
+            except Exception:
+                api_key_id = None
         
         jobs_db[job_id] = {
             "job_id": job_id,

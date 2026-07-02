@@ -59,6 +59,7 @@ class APIKeyAuthMiddleware(BaseHTTPMiddleware):
                     db.commit()
                     db.refresh(db_key)
                 request.state.api_key = db_key
+                request.state.api_key_id = db_key.id
             finally:
                 db.close()
             return await call_next(request)
@@ -74,6 +75,7 @@ class APIKeyAuthMiddleware(BaseHTTPMiddleware):
             
             # Save key information in request state for downstream routers
             request.state.api_key = db_key
+            request.state.api_key_id = db_key.id
         finally:
             db.close()
 

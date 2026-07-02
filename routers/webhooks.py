@@ -29,12 +29,18 @@ def post_subscribe(
     request: Request,
     db: Session = Depends(get_db)
 ):
-    api_key = getattr(request.state, "api_key", None)
-    if not api_key:
-        raise HTTPException(status_code=401, detail="Valid API key required to subscribe to webhooks")
+    api_key_id = getattr(request.state, "api_key_id", None)
+    if not api_key_id:
+        api_key = getattr(request.state, "api_key", None)
+        if not api_key:
+            raise HTTPException(status_code=401, detail="Valid API key required to subscribe to webhooks")
+        try:
+            api_key_id = api_key.id
+        except Exception:
+            raise HTTPException(status_code=401, detail="Valid API key required to subscribe to webhooks")
 
     # Limit total subscriptions per key for abuse prevention (e.g. max 5)
-    existing_count = db.query(WebhookSubscription).filter(WebhookSubscription.api_key_id == api_key.id, WebhookSubscription.is_active == True).count()
+    existing_count = db.query(WebhookSubscription).filter(WebhookSubscription.api_key_id == api_key_id, WebhookSubscription.is_active == True).count()
     if existing_count >= 5:
         raise HTTPException(status_code=400, detail="Maximum of 5 active webhook subscriptions reached for this API key")
 
@@ -42,7 +48,7 @@ def post_subscribe(
     secret = f"whsec_{secrets.token_hex(24)}"
     
     sub = WebhookSubscription(
-        api_key_id=api_key.id,
+        api_key_id=api_key_id,
         url=str(payload.url),
         secret=secret,
         is_active=True
