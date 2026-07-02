@@ -1,538 +1,535 @@
 <!DOCTYPE html>
-<html lang="en" class="bg-[#f6f6f4]">
+<html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Welcome Back - Nilus Lab / Zenith</title>
-    <meta name="description" content="Sign in to the Nilus Lab Zenith platform." />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nilus Lab / Zenith Login</title>
+  <meta name="description" content="Sign in to access the Zenith computational platform." />
 
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800;900&display=swap" rel="stylesheet" />
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet" />
 
-    <!-- Scripts -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
 
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                        outfit: ['Outfit', 'sans-serif'],
-                    }
-                }
-            }
+  <!-- Lucide -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            outfit: ['Outfit', 'sans-serif']
+          }
         }
-    </script>
+      }
+    };
+  </script>
 
-    <style>
-        html,
-        body {
-            min-height: 100%;
-            background: #f6f6f4;
-            font-family: 'Inter', sans-serif;
-            color: #0e1116;
-        }
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      min-height: 100%;
+      background: #f4f4f2;
+      color: #111827;
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+    }
 
-        body {
-            overflow-x: hidden;
-        }
+    .page-shell {
+      min-height: 100vh;
+      padding: 16px;
+      background: #f4f4f2;
+    }
 
-        .page-shell {
-            min-height: 100vh;
-            background: #f6f6f4;
-            padding: 22px;
-        }
+    .main-card {
+      min-height: calc(100vh - 32px);
+      border: 1px solid #e5e7eb;
+      border-radius: 32px;
+      overflow: hidden;
+      background: #fafaf9;
+      box-shadow: 0 18px 60px rgba(0,0,0,0.08);
+    }
 
-        .auth-card {
-            min-height: calc(100vh - 44px);
-            background: #fbfbfa;
-            border: 1px solid #e2e4e7;
-            border-radius: 28px;
-            overflow: hidden;
-            box-shadow: 0 24px 80px rgba(17, 24, 39, 0.08);
-        }
+    .divider-line {
+      height: 1px;
+      background: linear-gradient(90deg, transparent 0%, #d9dde3 15%, #d9dde3 85%, transparent 100%);
+    }
 
-        .auth-input {
-            transition: all 0.18s ease;
-        }
+    .auth-input {
+      transition: 0.18s ease;
+    }
 
-        .auth-input:focus {
-            outline: none;
-            border-color: #111827;
-            box-shadow: 0 0 0 3px rgba(17, 24, 39, 0.055);
-            background: #ffffff;
-        }
+    .auth-input:focus {
+      outline: none;
+      border-color: #111827;
+      box-shadow: 0 0 0 3px rgba(17,24,39,0.05);
+      background: #ffffff;
+    }
 
-        .primary-button {
-            background: linear-gradient(180deg, #0b1017 0%, #06090e 100%);
-            box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 8px 24px rgba(2, 8, 20, 0.10);
-        }
+    .primary-btn {
+      background: linear-gradient(180deg, #0d1117 0%, #06090d 100%);
+      color: white;
+      transition: 0.18s ease;
+      box-shadow: 0 10px 24px rgba(0,0,0,0.14);
+    }
 
-        .primary-button:hover {
-            background: linear-gradient(180deg, #151b24 0%, #0b1119 100%);
-        }
+    .primary-btn:hover {
+      background: linear-gradient(180deg, #18202b 0%, #0c1118 100%);
+    }
 
-        .divider-line {
-            background: linear-gradient(90deg, transparent 0%, #d9dce0 15%, #d9dce0 85%, transparent 100%);
-        }
+    .right-panel {
+      position: relative;
+      overflow: hidden;
+      background: #f6f6f5;
+    }
 
-        .dna-panel {
-            position: relative;
-            overflow: hidden;
-            background: #f8f8f7;
-        }
+    .dna-bg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center right;
+      z-index: 1;
+      pointer-events: none;
+      user-select: none;
+    }
 
-        .dna-bg {
-            position: absolute;
-            inset: 0;
-            background-image: url("assets/login-dna-bg.png");
-            background-repeat: no-repeat;
-            background-size: cover;
-            background-position: right bottom;
-            opacity: 0.62;
-            transform: scale(1.02);
-        }
+    .right-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      background:
+        linear-gradient(
+          90deg,
+          rgba(246,246,245,0.96) 0%,
+          rgba(246,246,245,0.88) 18%,
+          rgba(246,246,245,0.72) 34%,
+          rgba(246,246,245,0.40) 54%,
+          rgba(246,246,245,0.14) 76%,
+          rgba(246,246,245,0.03) 100%
+        );
+      pointer-events: none;
+    }
 
-        .dna-bg-fallback {
-            position: absolute;
-            inset: 0;
-            opacity: 0.22;
-            background:
-                radial-gradient(circle at 77% 15%, rgba(140, 148, 160, 0.45) 0 5px, transparent 6px),
-                radial-gradient(circle at 83% 20%, rgba(140, 148, 160, 0.35) 0 4px, transparent 5px),
-                radial-gradient(circle at 87% 30%, rgba(140, 148, 160, 0.35) 0 4px, transparent 5px),
-                radial-gradient(circle at 75% 45%, rgba(140, 148, 160, 0.28) 0 5px, transparent 6px),
-                linear-gradient(135deg, transparent 0%, transparent 55%, rgba(180,185,192,0.22) 56%, transparent 57%);
-        }
+    .glass-badge {
+      background: rgba(255,255,255,0.76);
+      backdrop-filter: blur(8px);
+    }
 
-        .dna-wash {
-            position: absolute;
-            inset: 0;
-            background:
-                linear-gradient(90deg, rgba(248,248,247,0.96) 0%, rgba(248,248,247,0.78) 32%, rgba(248,248,247,0.42) 62%, rgba(248,248,247,0.10) 100%),
-                linear-gradient(180deg, rgba(255,255,255,0.45) 0%, rgba(255,255,255,0.08) 45%, rgba(255,255,255,0.30) 100%);
-        }
+    .footer-strip {
+      background: rgba(255,255,255,0.82);
+      backdrop-filter: blur(8px);
+    }
 
-        .top-badge {
-            background: rgba(255,255,255,0.78);
-            backdrop-filter: blur(10px);
-        }
+    @media (max-width: 1023px) {
+      .page-shell {
+        padding: 0;
+      }
 
-        @media (max-width: 1023px) {
-            .page-shell {
-                padding: 0;
-            }
-
-            .auth-card {
-                min-height: 100vh;
-                border-radius: 0;
-                border: none;
-                box-shadow: none;
-            }
-        }
-
-        @media (max-height: 850px) and (min-width: 1024px) {
-            .login-title {
-                font-size: 40px !important;
-                line-height: 1.06 !important;
-            }
-
-            .login-copy {
-                font-size: 16px !important;
-                line-height: 1.7 !important;
-            }
-
-            .form-wrap {
-                padding-top: 28px !important;
-                padding-bottom: 28px !important;
-            }
-
-            .field-height {
-                height: 54px !important;
-            }
-
-            .bottom-strip {
-                padding-top: 18px !important;
-                padding-bottom: 18px !important;
-            }
-        }
-    </style>
+      .main-card {
+        min-height: 100vh;
+        border-radius: 0;
+        border: none;
+      }
+    }
+  </style>
 </head>
 
 <body>
-    <main class="page-shell">
-        <section class="auth-card">
-            <div class="grid min-h-[calc(100vh-44px)] grid-cols-1 lg:grid-cols-[45%_55%]">
+  <main class="page-shell">
+    <section class="main-card">
+      <div class="grid min-h-[calc(100vh-32px)] grid-cols-1 lg:grid-cols-[43%_57%]">
 
-                <!-- LEFT PANEL -->
-                <div class="bg-[#fbfbfa] border-r border-[#e1e3e4] px-8 sm:px-12 xl:px-16 py-8 lg:py-10 flex flex-col">
+        <!-- LEFT PANEL -->
+        <div class="bg-[#fbfbfa] border-r border-[#e5e7eb] px-8 sm:px-12 xl:px-16 py-8 lg:py-10 flex flex-col overflow-y-auto">
 
-                    <!-- Logo -->
-                    <header>
-                        <a href="index.html" class="inline-flex items-center gap-4">
-                            <div class="w-11 h-11 flex items-center justify-center">
-                                <svg class="w-9 h-9 text-[#11151b]" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M20 9c11 7 13 13 0 23" />
-                                    <path d="M44 9c-11 7-13 13 0 23" />
-                                    <path d="M20 32c11 7 13 13 0 23" />
-                                    <path d="M44 32c-11 7-13 13 0 23" />
-                                    <path d="M23 13h18" />
-                                    <path d="M23 20h18" />
-                                    <path d="M23 44h18" />
-                                    <path d="M23 51h18" />
-                                </svg>
-                            </div>
+          <!-- Header -->
+          <header class="mb-8">
+            <a href="index.html" class="inline-flex items-center gap-4">
+              <div class="w-12 h-12 flex items-center justify-center">
+                <svg class="w-10 h-10 text-[#2563eb]" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="4.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M32 10L51 20L32 30L13 20L32 10Z" />
+                  <path d="M51 30L32 40L13 30" />
+                  <path d="M51 40L32 50L13 40" />
+                </svg>
+              </div>
 
-                            <div class="flex items-center gap-4">
-                                <span class="font-outfit text-[18px] md:text-[20px] tracking-[0.18em] font-bold uppercase text-[#0d1117]">
-                                    Nilus Lab
-                                </span>
-                                <span class="text-[#c7cacf]">|</span>
-                                <span class="font-outfit text-[18px] md:text-[20px] tracking-[0.18em] font-medium uppercase text-[#262b34]">
-                                    Zenith
-                                </span>
-                            </div>
-                        </a>
-                    </header>
+              <div class="flex items-center gap-4">
+                <span class="font-outfit text-[19px] md:text-[21px] tracking-[0.18em] font-bold uppercase text-[#111827]">
+                  Nilus Lab
+                </span>
+                <span class="text-[#c7cbd1]">|</span>
+                <span class="font-outfit text-[19px] md:text-[21px] tracking-[0.18em] font-medium uppercase text-[#1f2937]">
+                  Zenith
+                </span>
+              </div>
+            </a>
+          </header>
 
-                    <!-- Form -->
-                    <div class="flex-1 flex items-center">
-                        <div class="form-wrap w-full max-w-[560px] mx-auto py-10">
-                            <div class="mb-8">
-                                <p class="text-[13px] font-bold uppercase tracking-[0.22em] text-[#7a818b] mb-4">
-                                    Welcome Back
-                                </p>
+          <!-- Form area -->
+          <div class="flex-1 flex items-center">
+            <div class="w-full max-w-[560px] mx-auto">
+              <p class="text-[13px] font-bold uppercase tracking-[0.22em] text-[#7a818b] mb-4">
+                Welcome Back
+              </p>
 
-                                <h1 id="auth-title" class="login-title font-outfit text-[42px] xl:text-[48px] leading-[1.08] tracking-[-0.045em] font-semibold text-[#0e1116] max-w-[520px]">
-                                    Access the Zenith Computational Platform
-                                </h1>
+              <h1 id="auth-title" class="font-outfit text-[42px] xl:text-[52px] leading-[1.05] tracking-[-0.045em] font-semibold text-[#0f172a] max-w-[520px]">
+                Access the Zenith Computational Platform
+              </h1>
 
-                                <p id="auth-subtitle" class="login-copy mt-6 text-[17px] leading-8 text-[#5f6672] max-w-[520px]">
-                                    Sign in to continue building the future of systems biology and cellular engineering.
-                                </p>
-                            </div>
+              <p id="auth-subtitle" class="mt-6 text-[18px] leading-9 text-[#5f6672] max-w-[520px]">
+                Sign in to continue building the future of systems biology and cellular engineering.
+              </p>
 
-                            <!-- Error -->
-                            <div id="error-alert" class="hidden mb-6 p-4 bg-red-50 border border-red-200 rounded-2xl text-red-700 text-sm font-medium flex gap-3 items-start">
-                                <i data-lucide="alert-circle" class="w-4 h-4 mt-0.5 flex-shrink-0"></i>
-                                <span id="error-message"></span>
-                            </div>
+              <!-- Error -->
+              <div id="error-alert" class="hidden mt-8 mb-2 p-4 bg-red-50 border border-red-200 rounded-2xl text-red-700 text-sm font-medium flex gap-3 items-start">
+                <i data-lucide="alert-circle" class="w-4 h-4 mt-0.5 flex-shrink-0"></i>
+                <span id="error-message"></span>
+              </div>
 
-                            <!-- Google -->
-                            <button onclick="signInWithGoogle()" type="button" class="field-height w-full h-[58px] rounded-2xl border border-[#d9dde2] bg-[#fbfbfb] hover:bg-white hover:border-[#bfc3ca] flex items-center justify-center gap-4 text-[16px] font-semibold text-[#11151b] transition-all">
-                                <svg class="w-6 h-6" viewBox="0 0 24 24" aria-hidden="true">
-                                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                                    <path fill="#FBBC05" d="M5.84 14.1c-.22-.66-.35-1.36-.35-2.1s.13-1.44.35-2.1V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l3.66-2.84z"/>
-                                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06L5.84 9.9C6.71 7.3 9.14 5.38 12 5.38z"/>
-                                </svg>
-                                <span>Continue with Google</span>
-                            </button>
+              <!-- Google -->
+              <div class="mt-8">
+                <button onclick="signInWithGoogle()" type="button" class="w-full h-[58px] rounded-2xl border border-[#d9dde2] bg-white hover:bg-[#fcfcfc] hover:border-[#c4cad1] flex items-center justify-center gap-4 text-[16px] font-semibold text-[#111827] transition">
+                  <svg class="w-6 h-6" viewBox="0 0 24 24" aria-hidden="true">
+                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                    <path fill="#FBBC05" d="M5.84 14.1c-.22-.66-.35-1.36-.35-2.1s.13-1.44.35-2.1V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l3.66-2.84z"/>
+                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06L5.84 9.9C6.71 7.3 9.14 5.38 12 5.38z"/>
+                  </svg>
+                  <span>Continue with Google</span>
+                </button>
+              </div>
 
-                            <!-- Divider -->
-                            <div class="relative my-7 flex items-center">
-                                <div class="h-px flex-1 divider-line"></div>
-                                <span class="mx-6 text-[12px] font-bold uppercase tracking-[0.25em] text-[#8a9099]">OR</span>
-                                <div class="h-px flex-1 divider-line"></div>
-                            </div>
+              <!-- Divider -->
+              <div class="relative my-7 flex items-center">
+                <div class="flex-1 divider-line"></div>
+                <span class="mx-6 text-[12px] font-bold uppercase tracking-[0.24em] text-[#8a9099]">OR</span>
+                <div class="flex-1 divider-line"></div>
+              </div>
 
-                            <!-- Credentials Form -->
-                            <form id="auth-form" onsubmit="handleAuth(event)" class="space-y-5">
-                                <div>
-                                    <label class="block mb-3 text-[12px] font-bold uppercase tracking-[0.15em] text-[#131720]" for="email">
-                                        Email Address
-                                    </label>
-
-                                    <div class="relative">
-                                        <i data-lucide="mail" class="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-[#8a9099]"></i>
-                                        <input
-                                            type="email"
-                                            id="email"
-                                            class="auth-input field-height w-full h-[58px] rounded-2xl border border-[#d7dbe0] bg-[#fbfbfb] pl-14 pr-5 text-[16px] text-[#11151b] placeholder:text-[#8b919a]"
-                                            placeholder="name@organization.com"
-                                            required
-                                        />
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <div class="flex items-center justify-between mb-3">
-                                        <label class="block text-[12px] font-bold uppercase tracking-[0.15em] text-[#131720]" for="password">
-                                            Password
-                                        </label>
-
-                                        <a href="javascript:void(0)" onclick="handlePasswordReset()" class="text-[13px] font-medium text-[#5d6470] hover:text-[#11151b] transition-colors">
-                                            Forgot password?
-                                        </a>
-                                    </div>
-
-                                    <div class="relative">
-                                        <i data-lucide="lock" class="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-[#8a9099]"></i>
-                                        <input
-                                            type="password"
-                                            id="password"
-                                            class="auth-input field-height w-full h-[58px] rounded-2xl border border-[#d7dbe0] bg-[#fbfbfb] pl-14 pr-14 text-[16px] text-[#11151b] placeholder:text-[#8b919a]"
-                                            placeholder="••••••••"
-                                            required
-                                        />
-                                        <i data-lucide="eye" class="absolute right-5 top-1/2 -translate-y-1/2 w-5 h-5 text-[#8a9099]"></i>
-                                    </div>
-                                </div>
-
-                                <button type="submit" id="submit-btn" class="primary-button field-height w-full h-[60px] mt-2 rounded-2xl text-white font-semibold text-[17px] flex items-center justify-center gap-4 transition-all">
-                                    <span id="btn-text">Sign in to Zenith</span>
-                                    <i data-lucide="arrow-right" class="w-5 h-5"></i>
-                                </button>
-                            </form>
-
-                            <!-- Account Toggle -->
-                            <div class="pt-6 text-center">
-                                <p class="text-[14px] text-[#5d6470]">
-                                    <span id="toggle-msg">Don’t have an account?</span>
-                                    <a href="javascript:void(0)" id="toggle-auth-btn" onclick="toggleAuthMode()" class="font-bold text-[#11151b] hover:underline ml-1">
-                                        Create one
-                                    </a>
-                                </p>
-                            </div>
-
-                            <!-- Token -->
-                            <div class="text-center border-t border-[#e2e4e7] pt-5 mt-7">
-                                <a href="javascript:void(0)" onclick="restoreInstitutionalAccess()" class="text-[11px] font-bold uppercase tracking-[0.24em] text-[#8a9099] hover:text-[#11151b] transition-colors">
-                                    Institutional Hardware Token
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Terms -->
-                    <footer class="text-[11px] text-[#7a818b] leading-relaxed max-w-[480px] mx-auto text-center">
-                        By signing in you accept the Nilus Lab
-                        <a href="legal.html" class="underline underline-offset-4 hover:text-[#11151b]">Terms of Service</a>
-                        and acknowledge our
-                        <a href="legal.html" class="underline underline-offset-4 hover:text-[#11151b]">Privacy Policy</a>.
-                    </footer>
+              <!-- Form -->
+              <form id="auth-form" onsubmit="handleAuth(event)" class="space-y-5">
+                <div>
+                  <label for="email" class="block mb-3 text-[12px] font-bold uppercase tracking-[0.15em] text-[#111827]">
+                    Email Address
+                  </label>
+                  <div class="relative">
+                    <i data-lucide="mail" class="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-[#8a9099]"></i>
+                    <input
+                      type="email"
+                      id="email"
+                      class="auth-input w-full h-[58px] rounded-2xl border border-[#d7dbe0] bg-white pl-14 pr-5 text-[16px] text-[#111827] placeholder:text-[#8b919a]"
+                      placeholder="name@organization.com"
+                      required
+                    />
+                  </div>
                 </div>
 
-                <!-- RIGHT PANEL -->
-                <div class="dna-panel hidden lg:flex flex-col">
+                <div>
+                  <div class="flex items-center justify-between mb-3">
+                    <label for="password" class="block text-[12px] font-bold uppercase tracking-[0.15em] text-[#111827]">
+                      Password
+                    </label>
+                    <a href="javascript:void(0)" onclick="handlePasswordReset()" class="text-[13px] font-medium text-[#5d6470] hover:text-[#111827] transition">
+                      Forgot password?
+                    </a>
+                  </div>
 
-                    <!-- DNA image background -->
-                    <div class="dna-bg-fallback"></div>
-                    <div class="dna-bg"></div>
-                    <div class="dna-wash"></div>
-
-                    <!-- Badge -->
-                    <div class="relative z-10 px-8 xl:px-12 pt-8 xl:pt-10 flex justify-end">
-                        <div class="top-badge inline-flex items-center gap-3 h-[48px] px-6 rounded-full border border-[#11151b] text-[#11151b]">
-                            <i data-lucide="shield-check" class="w-5 h-5"></i>
-                            <span class="font-bold text-[13px] tracking-[0.14em] uppercase">
-                                v30.0 Gold Secure Node
-                            </span>
-                        </div>
-                    </div>
-
-                    <!-- Quote -->
-                    <div class="relative z-10 flex-1 px-10 xl:px-20 flex items-center">
-                        <div class="max-w-[720px]">
-                            <div class="font-outfit text-[92px] leading-none font-semibold text-[#0d1117] mb-1">“</div>
-
-                            <blockquote class="font-outfit text-[31px] xl:text-[39px] leading-[1.34] tracking-[-0.035em] text-[#11151b] font-medium max-w-[700px]">
-                                Zenith is the first computational model of cardiac expression that turns stochastic cellular reprogramming into a
-                                <span class="font-semibold">predictable engineering discipline.</span>
-                            </blockquote>
-
-                            <div class="mt-10 flex items-center gap-5">
-                                <div class="w-14 h-14 rounded-full border border-[#bfc4cb] bg-white/90 flex items-center justify-center">
-                                    <i data-lucide="dna" class="w-7 h-7 text-[#11151b]"></i>
-                                </div>
-
-                                <div>
-                                    <h4 class="text-[15px] font-bold text-[#11151b]">Alaa Aldeen</h4>
-                                    <p class="text-[14px] text-[#5f6672]">Lead Reprogramming Architect, Nilus Lab</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Bottom Strip -->
-                    <div class="relative z-10 grid grid-cols-4 border-t border-[#dde0e4] bg-white/82 backdrop-blur">
-                        <div class="bottom-strip px-5 xl:px-6 py-6 flex items-start gap-4 border-r border-[#e0e3e7]">
-                            <i data-lucide="shield" class="w-7 h-7 text-[#11151b] mt-1"></i>
-                            <div>
-                                <h5 class="text-[11px] xl:text-[12px] font-bold uppercase tracking-[0.13em] text-[#11151b]">
-                                    Secure · Encrypted · Private
-                                </h5>
-                                <p class="mt-1 text-[12px] xl:text-[13px] leading-5 text-[#5f6672]">
-                                    Enterprise-grade access protection.
-                                </p>
-                            </div>
-                        </div>
-
-                        <div class="bottom-strip px-5 xl:px-6 py-6 flex items-start gap-4 border-r border-[#e0e3e7]">
-                            <i data-lucide="dna" class="w-7 h-7 text-[#11151b] mt-1"></i>
-                            <div>
-                                <h5 class="text-[11px] xl:text-[12px] font-bold uppercase tracking-[0.13em] text-[#11151b]">
-                                    Systems Biology Gateway
-                                </h5>
-                                <p class="mt-1 text-[12px] xl:text-[13px] leading-5 text-[#5f6672]">
-                                    Computational biology platform.
-                                </p>
-                            </div>
-                        </div>
-
-                        <div class="bottom-strip px-5 xl:px-6 py-6 flex items-start gap-4 border-r border-[#e0e3e7]">
-                            <i data-lucide="flask-conical" class="w-7 h-7 text-[#11151b] mt-1"></i>
-                            <div>
-                                <h5 class="text-[11px] xl:text-[12px] font-bold uppercase tracking-[0.13em] text-[#11151b]">
-                                    Research Use Only
-                                </h5>
-                                <p class="mt-1 text-[12px] xl:text-[13px] leading-5 text-[#5f6672]">
-                                    Not for diagnostic or clinical use.
-                                </p>
-                            </div>
-                        </div>
-
-                        <div class="bottom-strip px-5 xl:px-6 py-6 flex items-center justify-center gap-3">
-                            <span class="text-[12px] xl:text-[13px] font-semibold tracking-[0.08em] uppercase text-[#11151b]">
-                                Nilus Lab © 2026
-                            </span>
-                            <i data-lucide="shield-check" class="w-7 h-7 text-[#11151b]"></i>
-                        </div>
-                    </div>
+                  <div class="relative">
+                    <i data-lucide="lock" class="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-[#8a9099]"></i>
+                    <input
+                      type="password"
+                      id="password"
+                      class="auth-input w-full h-[58px] rounded-2xl border border-[#d7dbe0] bg-white pl-14 pr-14 text-[16px] text-[#111827] placeholder:text-[#8b919a]"
+                      placeholder="••••••••"
+                      required
+                    />
+                    <button type="button" onclick="togglePassword()" class="absolute right-5 top-1/2 -translate-y-1/2 text-[#8a9099] hover:text-[#111827]">
+                      <i id="toggle-eye" data-lucide="eye" class="w-5 h-5"></i>
+                    </button>
+                  </div>
                 </div>
 
+                <button type="submit" id="submit-btn" class="primary-btn w-full h-[60px] mt-2 rounded-2xl font-semibold text-[17px] flex items-center justify-center gap-4">
+                  <span id="btn-text">Sign in to Zenith</span>
+                  <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                </button>
+              </form>
+
+              <!-- Toggle -->
+              <div class="pt-6 text-center">
+                <p class="text-[14px] text-[#5d6470]">
+                  <span id="toggle-msg">Don’t have an account?</span>
+                  <a href="javascript:void(0)" id="toggle-auth-btn" onclick="toggleAuthMode()" class="font-bold text-[#111827] hover:underline ml-1">
+                    Create one
+                  </a>
+                </p>
+              </div>
+
+              <!-- Token -->
+              <div class="text-center border-t border-[#e5e7eb] pt-5 mt-7">
+                <a href="javascript:void(0)" onclick="restoreInstitutionalAccess()" class="text-[11px] font-bold uppercase tracking-[0.24em] text-[#8a9099] hover:text-[#111827] transition">
+                  Institutional Hardware Token
+                </a>
+              </div>
             </div>
-        </section>
-    </main>
+          </div>
 
-    <!-- Firebase Library Configurations -->
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-    <script src="js/firebase_config.js"></script>
+          <!-- Terms -->
+          <footer class="text-[11px] text-[#7a818b] leading-relaxed max-w-[500px] mx-auto text-center mt-8">
+            By signing in you accept the Nilus Lab
+            <a href="legal.html" class="underline underline-offset-4 hover:text-[#111827]">Terms of Service</a>
+            and acknowledge our
+            <a href="legal.html" class="underline underline-offset-4 hover:text-[#111827]">Privacy Policy</a>.
+          </footer>
+        </div>
 
-    <script>
-        let isSignUp = false;
+        <!-- RIGHT PANEL -->
+        <div class="right-panel hidden lg:flex flex-col">
 
-        const urlParams = new URLSearchParams(window.location.search);
-        const redirectUrl = urlParams.get('redirect') || 'discovery.html';
+          <!-- DNA background image -->
+          <img
+            src="assets/login-dna-bg.png"
+            alt="DNA molecular background"
+            class="dna-bg"
+            onerror="this.style.display='none';"
+          />
 
-        function toggleAuthMode() {
-            isSignUp = !isSignUp;
+          <!-- Overlay -->
+          <div class="right-overlay"></div>
 
-            const title = document.getElementById('auth-title');
-            const subtitle = document.getElementById('auth-subtitle');
-            const submitText = document.getElementById('btn-text');
-            const toggleMsg = document.getElementById('toggle-msg');
-            const toggleBtn = document.getElementById('toggle-auth-btn');
+          <!-- Top badge -->
+          <div class="relative z-10 px-8 xl:px-12 pt-8 xl:pt-10 flex justify-end">
+            <div class="glass-badge inline-flex items-center gap-3 h-[52px] px-7 rounded-full border border-[#111827] text-[#111827]">
+              <i data-lucide="shield-check" class="w-5 h-5"></i>
+              <span class="font-bold text-[13px] tracking-[0.14em] uppercase">
+                v30.0 Gold Secure Node
+              </span>
+            </div>
+          </div>
 
-            if (isSignUp) {
-                title.innerText = 'Create your Zenith account';
-                subtitle.innerText = 'Register for secure access to Nilus Lab computational biology workflows.';
-                submitText.innerText = 'Create account';
-                toggleMsg.innerText = 'Already have an account?';
-                toggleBtn.innerText = 'Sign in';
-            } else {
-                title.innerText = 'Access the Zenith Computational Platform';
-                subtitle.innerText = 'Sign in to continue building the future of systems biology and cellular engineering.';
-                submitText.innerText = 'Sign in to Zenith';
-                toggleMsg.innerText = "Don’t have an account?";
-                toggleBtn.innerText = 'Create one';
-            }
+          <!-- Quote -->
+          <div class="relative z-10 flex-1 px-10 xl:px-20 flex items-center">
+            <div class="max-w-[720px]">
+              <div class="font-outfit text-[92px] leading-none font-semibold text-[#0f172a] mb-2">“</div>
+
+              <blockquote class="font-outfit text-[31px] xl:text-[40px] leading-[1.34] tracking-[-0.035em] text-[#111827] font-medium max-w-[720px]">
+                Zenith is the first computational model of cardiac expression that turns stochastic cellular reprogramming into a
+                <span class="font-semibold">predictable engineering discipline.</span>
+              </blockquote>
+
+              <div class="mt-10 flex items-center gap-5">
+                <div class="w-14 h-14 rounded-full border border-[#c8ccd2] bg-white/90 flex items-center justify-center">
+                  <i data-lucide="layers-3" class="w-7 h-7 text-[#2563eb]"></i>
+                </div>
+
+                <div>
+                  <h4 class="text-[15px] font-bold text-[#111827]">Alaa Aldeen</h4>
+                  <p class="text-[14px] text-[#5f6672]">Lead Reprogramming Architect, Nilus Lab</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bottom strip -->
+          <div class="relative z-10 grid grid-cols-4 border-t border-[#dde0e4] footer-strip">
+            <div class="px-5 xl:px-6 py-6 flex items-start gap-4 border-r border-[#e0e3e7]">
+              <i data-lucide="shield" class="w-7 h-7 text-[#111827] mt-1"></i>
+              <div>
+                <h5 class="text-[11px] xl:text-[12px] font-bold uppercase tracking-[0.13em] text-[#111827]">
+                  Secure · Encrypted · Private
+                </h5>
+                <p class="mt-1 text-[12px] xl:text-[13px] leading-5 text-[#5f6672]">
+                  Enterprise-grade access protection.
+                </p>
+              </div>
+            </div>
+
+            <div class="px-5 xl:px-6 py-6 flex items-start gap-4 border-r border-[#e0e3e7]">
+              <i data-lucide="layers-3" class="w-7 h-7 text-[#2563eb] mt-1"></i>
+              <div>
+                <h5 class="text-[11px] xl:text-[12px] font-bold uppercase tracking-[0.13em] text-[#111827]">
+                  Systems Biology AI Gateway
+                </h5>
+                <p class="mt-1 text-[12px] xl:text-[13px] leading-5 text-[#5f6672]">
+                  Powering the future of computational biology.
+                </p>
+              </div>
+            </div>
+
+            <div class="px-5 xl:px-6 py-6 flex items-start gap-4 border-r border-[#e0e3e7]">
+              <i data-lucide="flask-conical" class="w-7 h-7 text-[#111827] mt-1"></i>
+              <div>
+                <h5 class="text-[11px] xl:text-[12px] font-bold uppercase tracking-[0.13em] text-[#111827]">
+                  Research Use Only
+                </h5>
+                <p class="mt-1 text-[12px] xl:text-[13px] leading-5 text-[#5f6672]">
+                  Not for Diagnostic or Clinical Use.
+                </p>
+              </div>
+            </div>
+
+            <div class="px-5 xl:px-6 py-6 flex items-center justify-center gap-3">
+              <span class="text-[12px] xl:text-[13px] font-semibold tracking-[0.08em] uppercase text-[#111827]">
+                Nilus Lab © 2026
+              </span>
+              <i data-lucide="layers-3" class="w-7 h-7 text-[#2563eb]"></i>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+  <script src="js/firebase_config.js"></script>
+
+  <script>
+    let isSignUp = false;
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const redirectUrl = urlParams.get('redirect') || 'discovery.html';
+
+    function toggleAuthMode() {
+      isSignUp = !isSignUp;
+
+      const title = document.getElementById('auth-title');
+      const subtitle = document.getElementById('auth-subtitle');
+      const submitText = document.getElementById('btn-text');
+      const toggleMsg = document.getElementById('toggle-msg');
+      const toggleBtn = document.getElementById('toggle-auth-btn');
+
+      if (isSignUp) {
+        title.innerText = 'Create your Zenith account';
+        subtitle.innerText = 'Register for secure access to Nilus Lab computational biology workflows.';
+        submitText.innerText = 'Create account';
+        toggleMsg.innerText = 'Already have an account?';
+        toggleBtn.innerText = 'Sign in';
+      } else {
+        title.innerText = 'Access the Zenith Computational Platform';
+        subtitle.innerText = 'Sign in to continue building the future of systems biology and cellular engineering.';
+        submitText.innerText = 'Sign in to Zenith';
+        toggleMsg.innerText = "Don’t have an account?";
+        toggleBtn.innerText = 'Create one';
+      }
+    }
+
+    function togglePassword() {
+      const passwordInput = document.getElementById('password');
+      const eyeIcon = document.getElementById('toggle-eye');
+
+      if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        eyeIcon.setAttribute('data-lucide', 'eye-off');
+      } else {
+        passwordInput.type = 'password';
+        eyeIcon.setAttribute('data-lucide', 'eye');
+      }
+
+      lucide.createIcons();
+    }
+
+    async function signInWithGoogle() {
+      const provider = new firebase.auth.GoogleAuthProvider();
+      const alertBox = document.getElementById('error-alert');
+      const alertText = document.getElementById('error-message');
+
+      try {
+        alertBox.classList.add('hidden');
+        await firebase.auth().signInWithPopup(provider);
+        window.location.href = redirectUrl;
+      } catch (error) {
+        alertBox.classList.remove('hidden');
+        alertText.innerText = error.message;
+      }
+    }
+
+    async function handleAuth(event) {
+      event.preventDefault();
+
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value.trim();
+
+      const alertBox = document.getElementById('error-alert');
+      const alertText = document.getElementById('error-message');
+      const submitBtn = document.getElementById('submit-btn');
+
+      try {
+        alertBox.classList.add('hidden');
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = isSignUp ? 'CREATING ACCOUNT...' : 'SIGNING IN...';
+
+        if (isSignUp) {
+          await firebase.auth().createUserWithEmailAndPassword(email, password);
+        } else {
+          await firebase.auth().signInWithEmailAndPassword(email, password);
         }
 
-        async function signInWithGoogle() {
-            const provider = new firebase.auth.GoogleAuthProvider();
-            const alertBox = document.getElementById('error-alert');
-            const alertText = document.getElementById('error-message');
-
-            try {
-                alertBox.classList.add('hidden');
-                await firebase.auth().signInWithPopup(provider);
-                window.location.href = redirectUrl;
-            } catch (error) {
-                alertBox.classList.remove('hidden');
-                alertText.innerText = error.message;
-            }
-        }
-
-        async function handleAuth(event) {
-            event.preventDefault();
-
-            const email = document.getElementById('email').value.trim();
-            const password = document.getElementById('password').value.trim();
-
-            const alertBox = document.getElementById('error-alert');
-            const alertText = document.getElementById('error-message');
-            const submitBtn = document.getElementById('submit-btn');
-
-            try {
-                alertBox.classList.add('hidden');
-                submitBtn.disabled = true;
-                submitBtn.innerText = isSignUp ? 'CREATING ACCOUNT...' : 'SIGNING IN...';
-
-                if (isSignUp) {
-                    await firebase.auth().createUserWithEmailAndPassword(email, password);
-                } else {
-                    await firebase.auth().signInWithEmailAndPassword(email, password);
-                }
-
-                window.location.href = redirectUrl;
-            } catch (error) {
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = `<span>${isSignUp ? 'Create account' : 'Sign in to Zenith'}</span><i data-lucide="arrow-right" class="w-5 h-5"></i>`;
-                lucide.createIcons();
-
-                alertBox.classList.remove('hidden');
-
-                if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
-                    alertText.innerText = 'Invalid email address or password. Please verify and try again.';
-                } else if (error.code === 'auth/email-already-in-use') {
-                    alertText.innerText = 'This email is already registered. Please sign in instead.';
-                } else if (error.code === 'auth/weak-password') {
-                    alertText.innerText = 'Password must be at least 6 characters long.';
-                } else {
-                    alertText.innerText = error.message;
-                }
-            }
-        }
-
-        function handlePasswordReset() {
-            const email = document.getElementById('email').value.trim();
-
-            if (!email) {
-                alert("Please enter your email address first to request a password reset.");
-                return;
-            }
-
-            firebase.auth().sendPasswordResetEmail(email).then(() => {
-                alert("Password reset email sent. Please check your inbox.");
-            }).catch(error => {
-                alert("Error sending password reset: " + error.message);
-            });
-        }
-
-        function restoreInstitutionalAccess() {
-            const userKey = prompt("Please insert your hardware security USB token key or recovery hash:");
-
-            if (userKey) {
-                localStorage.setItem("zenith_session_token", userKey);
-                alert("Hardware Token authenticated. Session token saved to localStorage.");
-                window.location.href = redirectUrl;
-            }
-        }
-
-        firebase.auth().onAuthStateChanged((user) => {
-            if (user) {
-                window.location.href = redirectUrl;
-            }
-        });
-
+        window.location.href = redirectUrl;
+      } catch (error) {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = `<span>${isSignUp ? 'Create account' : 'Sign in to Zenith'}</span><i data-lucide="arrow-right" class="w-5 h-5"></i>`;
         lucide.createIcons();
-    </script>
+
+        alertBox.classList.remove('hidden');
+
+        if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
+          alertText.innerText = 'Invalid email address or password. Please verify and try again.';
+        } else if (error.code === 'auth/email-already-in-use') {
+          alertText.innerText = 'This email is already registered. Please sign in instead.';
+        } else if (error.code === 'auth/weak-password') {
+          alertText.innerText = 'Password must be at least 6 characters long.';
+        } else {
+          alertText.innerText = error.message;
+        }
+      }
+    }
+
+    function handlePasswordReset() {
+      const email = document.getElementById('email').value.trim();
+
+      if (!email) {
+        alert('Please enter your email address first to request a password reset.');
+        return;
+      }
+
+      firebase.auth().sendPasswordResetEmail(email)
+        .then(() => {
+          alert('Password reset email sent. Please check your inbox.');
+        })
+        .catch(error => {
+          alert('Error sending password reset: ' + error.message);
+        });
+    }
+
+    function restoreInstitutionalAccess() {
+      const userKey = prompt('Please insert your hardware security USB token key or recovery hash:');
+
+      if (userKey) {
+        localStorage.setItem('zenith_session_token', userKey);
+        alert('Hardware Token authenticated. Session token saved to localStorage.');
+        window.location.href = redirectUrl;
+      }
+    }
+
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        window.location.href = redirectUrl;
+      }
+    });
+
+    lucide.createIcons();
+  </script>
 </body>
 </html>
