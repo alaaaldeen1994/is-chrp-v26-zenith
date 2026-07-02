@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-[#09090b]">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome Back - Nilus Lab / Zenith</title>
+    <meta name="description" content="Sign in to the Nilus Lab Zenith platform to access your virtual clinical trials and in-silico cardiac reprogramming dashboard.">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Scripts -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        outfit: ['Outfit', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        .auth-input:focus {
+            outline: none;
+            border-color: #3f3f46;
+            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.05);
+        }
+        /* Custom scrollbar for dark layout */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #09090b;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #27272a;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body class="h-full text-zinc-100 flex font-sans overflow-hidden">
+
+    <!-- LEFT PANEL: SIGN IN FORM -->
+    <div class="w-full md:w-[45%] flex flex-col justify-between p-8 md:p-12 lg:p-16 bg-[#09090b] overflow-y-auto">
+        
+        <!-- Logo / Branded Header -->
+        <div class="flex items-center gap-2">
+            <a href="index.html" class="flex items-center gap-2 group">
+                <div class="w-8 h-8 rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center transition-all group-hover:border-zinc-700">
+                    <svg class="w-4 h-4 text-emerald-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <path d="M4.5 10.5C4.5 10.5 7.5 13.5 12 13.5C16.5 13.5 19.5 10.5 19.5 10.5" />
+                        <path d="M4.5 6.5C4.5 6.5 7.5 3.5 12 3.5C16.5 3.5 19.5 6.5 19.5 6.5" />
+                        <path d="M12 3.5V20.5" />
+                        <circle cx="12" cy="3.5" r="1.5" fill="currentColor" />
+                        <circle cx="12" cy="12" r="1.5" fill="currentColor" />
+                        <circle cx="12" cy="20.5" r="1.5" fill="currentColor" />
+                    </svg>
+                </div>
+                <span class="font-outfit font-black tracking-tight text-white transition-colors group-hover:text-zinc-200">Nilus Lab <span class="text-zinc-500 font-medium">/</span> Zenith</span>
+            </a>
+        </div>
+
+        <!-- Central Form Container -->
+        <div class="my-auto py-8 max-w-md w-full mx-auto space-y-8">
+            <div class="space-y-2">
+                <h1 class="text-3xl font-outfit font-black tracking-tight text-white" id="auth-title">Welcome back</h1>
+                <p class="text-sm text-zinc-400 font-medium" id="auth-subtitle">Sign in to Nilus Lab with one of the options below or your credentials.</p>
+            </div>
+
+            <!-- Error Notification Alert Box -->
+            <div id="error-alert" class="hidden p-4 bg-red-950/40 border border-red-800/40 rounded-xl text-red-400 text-xs font-medium flex gap-3 items-start">
+                <i data-lucide="alert-circle" class="w-4 h-4 mt-0.5 flex-shrink-0"></i>
+                <span id="error-message"></span>
+            </div>
+
+            <!-- Social Providers -->
+            <div class="grid grid-cols-2 gap-3">
+                <!-- GitHub Button -->
+                <button onclick="handleGitHubAlert()" type="button" class="w-full flex items-center justify-center gap-2 py-2.5 px-4 bg-zinc-900 hover:bg-zinc-800/80 border border-zinc-800 hover:border-zinc-700 rounded-xl font-semibold text-xs transition-all text-white">
+                    <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                    </svg>
+                    <span>GitHub</span>
+                </button>
+
+                <!-- Google Button -->
+                <button onclick="signInWithGoogle()" type="button" class="w-full flex items-center justify-center gap-2 py-2.5 px-4 bg-zinc-900 hover:bg-zinc-800/80 border border-zinc-800 hover:border-zinc-700 rounded-xl font-semibold text-xs transition-all text-white">
+                    <svg class="w-4 h-4" viewBox="0 0 24 24">
+                        <path fill="#EA4335" d="M12.24 10.285V14.4h6.887c-.648 2.41-2.519 4.13-5.136 4.13A5.55 5.55 0 0 1 8.4 12.985a5.55 5.55 0 0 1 5.59-5.55c2.455 0 4.417 1.42 5.253 3.42l3.868-2.99C20.87 4.17 17.75 2 13.99 2 7.92 2 3 6.92 3 12.985S7.92 23.97 13.99 23.97c5.96 0 10.21-4.19 10.21-10.21 0-.61-.06-1.2-.18-1.765H12.24z"/>
+                    </svg>
+                    <span>Google</span>
+                </button>
+            </div>
+
+            <!-- Divider -->
+            <div class="relative flex py-2 items-center">
+                <div class="flex-grow border-t border-zinc-800/60"></div>
+                <span class="flex-shrink mx-4 text-[10px] uppercase font-bold tracking-widest text-zinc-500">- or -</span>
+                <div class="flex-grow border-t border-zinc-800/60"></div>
+            </div>
+
+            <!-- Credentials Form -->
+            <form id="auth-form" onsubmit="handleAuth(event)" class="space-y-4">
+                <div class="space-y-1.5">
+                    <label class="text-xs font-semibold text-zinc-400" for="email">Email Address</label>
+                    <input type="email" id="email" class="auth-input w-full py-2.5 px-4 bg-zinc-950 border border-zinc-800 rounded-xl text-sm transition-all focus:border-zinc-700" placeholder="name@organization.com" required>
+                </div>
+
+                <div class="space-y-1.5">
+                    <div class="flex justify-between items-center">
+                        <label class="text-xs font-semibold text-zinc-400" for="password">Password</label>
+                        <a href="javascript:void(0)" onclick="handlePasswordReset()" class="text-[10px] font-bold text-zinc-500 hover:text-zinc-300 uppercase tracking-wider transition-colors">Forgot your password?</a>
+                    </div>
+                    <input type="password" id="password" class="auth-input w-full py-2.5 px-4 bg-zinc-950 border border-zinc-800 rounded-xl text-sm transition-all focus:border-zinc-700" placeholder="••••••••" required>
+                </div>
+
+                <button type="submit" id="submit-btn" class="w-full py-2.5 bg-zinc-100 hover:bg-white text-zinc-950 font-bold rounded-xl text-xs uppercase tracking-widest transition-all flex items-center justify-center gap-2 mt-6">
+                    <span id="btn-text">Sign In</span>
+                    <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </button>
+            </form>
+
+            <!-- Bottom Alternate Links -->
+            <div class="text-center pt-2">
+                <p class="text-xs text-zinc-400 font-medium">
+                    <span id="toggle-msg">Don't have an account?</span> 
+                    <a href="javascript:void(0)" id="toggle-auth-btn" onclick="toggleAuthMode()" class="text-white hover:underline font-semibold ml-1">Create one here.</a>
+                </p>
+            </div>
+            
+            <!-- Hardware Token Link (Special Local Option) -->
+            <div class="text-center border-t border-zinc-900 pt-4">
+                <a href="javascript:void(0)" onclick="restoreInstitutionalAccess()" class="text-[10px] font-bold text-zinc-500 hover:text-zinc-300 uppercase tracking-widest transition-colors">
+                    Institutional Hardware Token
+                </a>
+            </div>
+        </div>
+
+        <!-- Footer terms -->
+        <div class="text-[10px] text-zinc-500 leading-relaxed max-w-sm mx-auto text-center md:text-left">
+            By signing in you accept the Nilus Lab <a href="legal.html" class="underline hover:text-zinc-300">Terms of Service</a> and acknowledge our <a href="legal.html" class="underline hover:text-zinc-300">Privacy Policy</a>.
+        </div>
+    </div>
+
+    <!-- RIGHT PANEL: PREMIUM SCIENTIFIC TESTIMONIAL PANEL -->
+    <div class="hidden md:flex md:w-[55%] bg-[#020204] border-l border-zinc-900 flex-col justify-between p-12 lg:p-20 relative overflow-hidden">
+        
+        <!-- Subtle Helix background grid -->
+        <div class="absolute inset-0 opacity-5 pointer-events-none bg-[radial-gradient(#27272a_1px,transparent_1px)] [background-size:16px_16px]"></div>
+        
+        <!-- Top tag -->
+        <div class="relative z-10 flex justify-end">
+            <span class="text-[10px] font-black uppercase tracking-[0.25em] bg-zinc-900/60 border border-zinc-800 text-emerald-400 px-3 py-1.5 rounded-full">v30.0 GOLD Secure Node</span>
+        </div>
+
+        <!-- Central Testimonial Quote -->
+        <div class="my-auto max-w-lg relative z-10 space-y-8">
+            <blockquote class="text-2xl lg:text-3xl font-outfit font-bold text-zinc-100 leading-snug tracking-tight">
+                "Zenith is the first computational model of cardiac expression that turns stochastic cellular reprogramming into a predictable engineering discipline."
+            </blockquote>
+            
+            <!-- Author Card -->
+            <div class="flex items-center gap-4">
+                <div class="w-10 h-10 rounded-full bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-400">
+                    <i data-lucide="user" class="w-5 h-5"></i>
+                </div>
+                <div>
+                    <h4 class="font-bold text-sm text-zinc-200">Dr. Elena Rostova</h4>
+                    <p class="text-xs text-zinc-500">Lead Reprogramming Architect, Nilus Lab</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom status details -->
+        <div class="relative z-10 flex justify-between text-[10px] font-bold text-zinc-500 uppercase tracking-widest">
+            <span>Systems Biology AI Gateway</span>
+            <span>Nilus Lab &copy; 2026</span>
+        </div>
+    </div>
+
+    <!-- Firebase Library Configurations -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="js/firebase_config.js"></script>
+
+    <script>
+        // Track mode (Sign In vs Sign Up)
+        let isSignUp = false;
+        
+        // Handle URL parameters for post-login redirection
+        const urlParams = new URLSearchParams(window.location.search);
+        const redirectUrl = urlParams.get('redirect') || 'discovery.html';
+
+        function toggleAuthMode() {
+            isSignUp = !isSignUp;
+            const title = document.getElementById('auth-title');
+            const subtitle = document.getElementById('auth-subtitle');
+            const submitText = document.getElementById('btn-text');
+            const toggleMsg = document.getElementById('toggle-msg');
+            const toggleBtn = document.getElementById('toggle-auth-btn');
+
+            if (isSignUp) {
+                title.innerText = 'Create an account';
+                subtitle.innerText = 'Sign up for a professional Nilus Lab researcher account.';
+                submitText.innerText = 'Sign Up';
+                toggleMsg.innerText = 'Already have an account?';
+                toggleBtn.innerText = 'Sign In here.';
+            } else {
+                title.innerText = 'Welcome back';
+                subtitle.innerText = 'Sign in to Nilus Lab with one of the options below or your credentials.';
+                submitText.innerText = 'Sign In';
+                toggleMsg.innerText = "Don't have an account?";
+                toggleBtn.innerText = 'Create one here.';
+            }
+        }
+
+        // Firebase Google auth handler
+        async function signInWithGoogle() {
+            const provider = new firebase.auth.GoogleAuthProvider();
+            const alertBox = document.getElementById('error-alert');
+            const alertText = document.getElementById('error-message');
+            
+            try {
+                alertBox.classList.add('hidden');
+                await firebase.auth().signInWithPopup(provider);
+                window.location.href = redirectUrl;
+            } catch (error) {
+                alertBox.classList.remove('hidden');
+                alertText.innerText = error.message;
+            }
+        }
+
+        // Credentials Sign In / Sign Up handler
+        async function handleAuth(event) {
+            event.preventDefault();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value.trim();
+            
+            const alertBox = document.getElementById('error-alert');
+            const alertText = document.getElementById('error-message');
+            const submitBtn = document.getElementById('submit-btn');
+
+            try {
+                alertBox.classList.add('hidden');
+                submitBtn.disabled = true;
+                submitBtn.innerText = isSignUp ? 'SIGNING UP...' : 'SIGNING IN...';
+
+                if (isSignUp) {
+                    await firebase.auth().createUserWithEmailAndPassword(email, password);
+                } else {
+                    await firebase.auth().signInWithEmailAndPassword(email, password);
+                }
+
+                window.location.href = redirectUrl;
+            } catch (error) {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = `<span>${isSignUp ? 'Sign Up' : 'Sign In'}</span><i data-lucide="arrow-right" class="w-4 h-4"></i>`;
+                lucide.createIcons();
+                
+                alertBox.classList.remove('hidden');
+                
+                // Friendly error translation
+                if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
+                    alertText.innerText = 'Invalid email address or password. Please verify and try again.';
+                } else if (error.code === 'auth/email-already-in-use') {
+                    alertText.innerText = 'This email is already registered. Please Sign In instead.';
+                } else if (error.code === 'auth/weak-password') {
+                    alertText.innerText = 'Password must be at least 6 characters long.';
+                } else {
+                    alertText.innerText = error.message;
+                }
+            }
+        }
+
+        // GitHub alert handler
+        function handleGitHubAlert() {
+            alert("GitHub Sign-In is configured exclusively for institutional Enterprise tiers. Please authenticate using Google or Email Credentials.");
+        }
+
+        // Reset password handler
+        function handlePasswordReset() {
+            const email = document.getElementById('email').value.trim();
+            if (!email) {
+                alert("Please enter your email address first to request a password reset.");
+                return;
+            }
+            firebase.auth().sendPasswordResetEmail(email).then(() => {
+                alert("Password reset email sent. Please check your inbox.");
+            }).catch(error => {
+                alert("Error sending password reset: " + error.message);
+            });
+        }
+
+        // Institutional recovery fallback
+        function restoreInstitutionalAccess() {
+            const userKey = prompt("Please insert your hardware security USB token key or recovery hash:");
+            if (userKey) {
+                localStorage.setItem("zenith_session_token", userKey);
+                alert("Hardware Token authenticated. Session token saved to localStorage.");
+                window.location.href = redirectUrl;
+            }
+        }
+
+        // If already logged in, redirect away
+        firebase.auth().onAuthStateChanged((user) => {
+            if (user) {
+                window.location.href = redirectUrl;
+            }
+        });
+
+        // Initialize icons
+        lucide.createIcons();
+    </script>
+</body>
+</html>

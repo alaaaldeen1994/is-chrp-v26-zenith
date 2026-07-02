@@ -2392,18 +2392,12 @@ async def get_api_path():
 
 
 @app.get("/login.html")
-
 async def get_login():
-
-    return RedirectResponse(url="/")
-
-
+    return FileResponse("login.html")
 
 @app.get("/login")
-
 async def get_login_path():
-
-    return RedirectResponse(url="/")
+    return FileResponse("login.html")
 
 
 

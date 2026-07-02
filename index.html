@@ -5738,9 +5738,11 @@
 
                 if (resetRedirect) _redirectAfterLogin = null;
 
-                document.getElementById('login-modal').classList.add('active');
-
-                lucide.createIcons();
+                let url = 'login.html';
+                if (_redirectAfterLogin) {
+                    url += '?redirect=' + encodeURIComponent(_redirectAfterLogin);
+                }
+                window.location.href = url;
 
             }
 
