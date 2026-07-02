@@ -91,3 +91,14 @@ Zenith explicitly limits marketing representation of ESMFold. The dashboard cont
 ## 8. Security Auditing
 *   No raw tracebacks, internal server paths, or secrets are returned in API error blocks.
 *   Provider header bearer tokens are fully masked as `Bearer ****` during connection debug print logging.
+
+---
+
+## 9. Visual Verification Screenshots
+The ESMFold-Live predicted results have been visually verified using the new 3Dmol.js viewer dashboard.
+
+````carousel
+![3D Ribbon Cartoon View on the structure.html Dashboard](C:\Users\alaaa\.gemini\antigravity\brain\bdb0e85e-e524-4428-888e-c146909ba3e3\esmfold_3d_structure_screenshot.png)
+<!-- slide -->
+![Raw PDB Coordinates View Overlay Modal](C:\Users\alaaa\.gemini\antigravity\brain\bdb0e85e-e524-4428-888e-c146909ba3e3\esmfold_raw_pdb_preview_screenshot.png)
+````
