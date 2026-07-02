@@ -576,4 +576,10 @@ def get_job_download(
         filename=filename
     )
 
+@router.get("/debug/keys")
+def get_debug_keys(db: Session = Depends(get_db)):
+    from database.models import APIKey
+    keys = db.query(APIKey).all()
+    return [{"id": k.id, "prefix": k.prefix, "owner": k.owner, "tier": k.tier, "is_active": k.is_active} for k in keys]
+
 
