@@ -1,14 +1,14 @@
 <!DOCTYPE html>
-<html lang="en" class="h-full bg-[#f6f6f4]">
+<html lang="en" class="bg-[#f6f6f4]">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Welcome Back - Nilus Lab / Zenith</title>
-    <meta name="description" content="Sign in to the Nilus Lab Zenith platform to access your virtual clinical trials and in-silico cardiac reprogramming dashboard." />
+    <meta name="description" content="Sign in to the Nilus Lab Zenith platform." />
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800;900&display=swap" rel="stylesheet" />
 
     <!-- Scripts -->
@@ -29,33 +29,31 @@
     </script>
 
     <style>
-        :root {
-            --page-bg: #f6f6f4;
-            --panel-bg: #fbfbfa;
-            --line: #dedfdf;
-            --line-soft: #e9eaeb;
-            --text: #0e1116;
-            --muted: #5f6672;
-            --muted-light: #8a9099;
-        }
-
-        html, body {
+        html,
+        body {
             min-height: 100%;
-            background: var(--page-bg);
+            background: #f6f6f4;
+            font-family: 'Inter', sans-serif;
+            color: #0e1116;
         }
 
         body {
-            font-family: 'Inter', sans-serif;
-            color: var(--text);
+            overflow-x: hidden;
         }
 
-        .main-shell {
-            background:
-                radial-gradient(circle at top left, rgba(255,255,255,0.96), rgba(246,246,244,0.98)),
-                linear-gradient(180deg, #fafaf8 0%, #f4f4f2 100%);
-            box-shadow:
-                0 24px 80px rgba(17, 24, 39, 0.08),
-                inset 0 1px 0 rgba(255,255,255,0.8);
+        .page-shell {
+            min-height: 100vh;
+            background: #f6f6f4;
+            padding: 22px;
+        }
+
+        .auth-card {
+            min-height: calc(100vh - 44px);
+            background: #fbfbfa;
+            border: 1px solid #e2e4e7;
+            border-radius: 28px;
+            overflow: hidden;
+            box-shadow: 0 24px 80px rgba(17, 24, 39, 0.08);
         }
 
         .auth-input {
@@ -71,89 +69,113 @@
 
         .primary-button {
             background: linear-gradient(180deg, #0b1017 0%, #06090e 100%);
-            box-shadow:
-                inset 0 1px 0 rgba(255,255,255,0.08),
-                0 8px 24px rgba(2, 8, 20, 0.10);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 8px 24px rgba(2, 8, 20, 0.10);
         }
 
         .primary-button:hover {
             background: linear-gradient(180deg, #151b24 0%, #0b1119 100%);
         }
 
-        .dna-panel {
-            background:
-                linear-gradient(180deg, rgba(255,255,255,0.92), rgba(248,248,247,0.96)),
-                #f8f8f7;
-        }
-
         .divider-line {
             background: linear-gradient(90deg, transparent 0%, #d9dce0 15%, #d9dce0 85%, transparent 100%);
         }
 
-        .google-btn:hover {
-            border-color: #bfc3ca;
-            background: #ffffff;
+        .dna-panel {
+            position: relative;
+            overflow: hidden;
+            background: #f8f8f7;
+        }
+
+        .dna-bg {
+            position: absolute;
+            inset: 0;
+            background-image: url("assets/login-dna-bg.png");
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: right bottom;
+            opacity: 0.62;
+            transform: scale(1.02);
+        }
+
+        .dna-bg-fallback {
+            position: absolute;
+            inset: 0;
+            opacity: 0.22;
+            background:
+                radial-gradient(circle at 77% 15%, rgba(140, 148, 160, 0.45) 0 5px, transparent 6px),
+                radial-gradient(circle at 83% 20%, rgba(140, 148, 160, 0.35) 0 4px, transparent 5px),
+                radial-gradient(circle at 87% 30%, rgba(140, 148, 160, 0.35) 0 4px, transparent 5px),
+                radial-gradient(circle at 75% 45%, rgba(140, 148, 160, 0.28) 0 5px, transparent 6px),
+                linear-gradient(135deg, transparent 0%, transparent 55%, rgba(180,185,192,0.22) 56%, transparent 57%);
+        }
+
+        .dna-wash {
+            position: absolute;
+            inset: 0;
+            background:
+                linear-gradient(90deg, rgba(248,248,247,0.96) 0%, rgba(248,248,247,0.78) 32%, rgba(248,248,247,0.42) 62%, rgba(248,248,247,0.10) 100%),
+                linear-gradient(180deg, rgba(255,255,255,0.45) 0%, rgba(255,255,255,0.08) 45%, rgba(255,255,255,0.30) 100%);
         }
 
         .top-badge {
-            background: rgba(255,255,255,0.76);
+            background: rgba(255,255,255,0.78);
             backdrop-filter: blur(10px);
         }
 
-        ::selection {
-            background: #111827;
-            color: #ffffff;
-        }
-
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: #f3f4f6;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: #c6c9cf;
-            border-radius: 999px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: #adb3bb;
-        }
-
-        @media (max-height: 820px) {
-            .compact-heading {
-                font-size: 42px !important;
-                line-height: 1.05 !important;
+        @media (max-width: 1023px) {
+            .page-shell {
+                padding: 0;
             }
 
-            .compact-copy {
+            .auth-card {
+                min-height: 100vh;
+                border-radius: 0;
+                border: none;
+                box-shadow: none;
+            }
+        }
+
+        @media (max-height: 850px) and (min-width: 1024px) {
+            .login-title {
+                font-size: 40px !important;
+                line-height: 1.06 !important;
+            }
+
+            .login-copy {
                 font-size: 16px !important;
                 line-height: 1.7 !important;
             }
 
-            .compact-form {
-                padding-top: 2rem !important;
-                padding-bottom: 2rem !important;
+            .form-wrap {
+                padding-top: 28px !important;
+                padding-bottom: 28px !important;
+            }
+
+            .field-height {
+                height: 54px !important;
+            }
+
+            .bottom-strip {
+                padding-top: 18px !important;
+                padding-bottom: 18px !important;
             }
         }
     </style>
 </head>
 
-<body class="min-h-full overflow-x-hidden">
-    <main class="min-h-screen w-full p-0 lg:p-5">
-        <section class="main-shell min-h-screen lg:min-h-[calc(100vh-2.5rem)] w-full lg:rounded-[28px] border border-[#e6e7e8] overflow-hidden">
-            <div class="grid min-h-screen lg:min-h-[calc(100vh-2.5rem)] grid-cols-1 lg:grid-cols-[45%_55%]">
+<body>
+    <main class="page-shell">
+        <section class="auth-card">
+            <div class="grid min-h-[calc(100vh-44px)] grid-cols-1 lg:grid-cols-[45%_55%]">
 
                 <!-- LEFT PANEL -->
-                <div class="bg-[#fbfbfa] border-r border-[#e1e3e4] px-7 sm:px-10 xl:px-16 py-8 lg:py-10 flex flex-col overflow-y-auto">
+                <div class="bg-[#fbfbfa] border-r border-[#e1e3e4] px-8 sm:px-12 xl:px-16 py-8 lg:py-10 flex flex-col">
 
-                    <!-- Header -->
-                    <header class="flex items-center gap-5">
-                        <a href="index.html" class="flex items-center gap-4 group">
-                            <div class="w-12 h-12 flex items-center justify-center">
-                                <svg class="w-10 h-10 text-[#11151b]" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <!-- Logo -->
+                    <header>
+                        <a href="index.html" class="inline-flex items-center gap-4">
+                            <div class="w-11 h-11 flex items-center justify-center">
+                                <svg class="w-9 h-9 text-[#11151b]" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M20 9c11 7 13 13 0 23" />
                                     <path d="M44 9c-11 7-13 13 0 23" />
                                     <path d="M20 32c11 7 13 13 0 23" />
@@ -177,19 +199,19 @@
                         </a>
                     </header>
 
-                    <!-- Form area -->
+                    <!-- Form -->
                     <div class="flex-1 flex items-center">
-                        <div class="compact-form w-full max-w-[530px] mx-auto pt-10 pb-8">
+                        <div class="form-wrap w-full max-w-[560px] mx-auto py-10">
                             <div class="mb-8">
                                 <p class="text-[13px] font-bold uppercase tracking-[0.22em] text-[#7a818b] mb-4">
                                     Welcome Back
                                 </p>
 
-                                <h1 id="auth-title" class="compact-heading font-outfit text-[42px] xl:text-[50px] leading-[1.06] tracking-[-0.045em] font-semibold text-[#0e1116] max-w-[430px]">
+                                <h1 id="auth-title" class="login-title font-outfit text-[42px] xl:text-[48px] leading-[1.08] tracking-[-0.045em] font-semibold text-[#0e1116] max-w-[520px]">
                                     Access the Zenith Computational Platform
                                 </h1>
 
-                                <p id="auth-subtitle" class="compact-copy mt-6 text-[17px] leading-8 text-[#5f6672] max-w-[460px]">
+                                <p id="auth-subtitle" class="login-copy mt-6 text-[17px] leading-8 text-[#5f6672] max-w-[520px]">
                                     Sign in to continue building the future of systems biology and cellular engineering.
                                 </p>
                             </div>
@@ -201,7 +223,7 @@
                             </div>
 
                             <!-- Google -->
-                            <button onclick="signInWithGoogle()" type="button" class="google-btn w-full h-[58px] rounded-2xl border border-[#d9dde2] bg-[#fbfbfb] flex items-center justify-center gap-4 text-[16px] font-semibold text-[#11151b] transition-all">
+                            <button onclick="signInWithGoogle()" type="button" class="field-height w-full h-[58px] rounded-2xl border border-[#d9dde2] bg-[#fbfbfb] hover:bg-white hover:border-[#bfc3ca] flex items-center justify-center gap-4 text-[16px] font-semibold text-[#11151b] transition-all">
                                 <svg class="w-6 h-6" viewBox="0 0 24 24" aria-hidden="true">
                                     <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
                                     <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
@@ -218,7 +240,7 @@
                                 <div class="h-px flex-1 divider-line"></div>
                             </div>
 
-                            <!-- Form -->
+                            <!-- Credentials Form -->
                             <form id="auth-form" onsubmit="handleAuth(event)" class="space-y-5">
                                 <div>
                                     <label class="block mb-3 text-[12px] font-bold uppercase tracking-[0.15em] text-[#131720]" for="email">
@@ -230,7 +252,7 @@
                                         <input
                                             type="email"
                                             id="email"
-                                            class="auth-input w-full h-[58px] rounded-2xl border border-[#d7dbe0] bg-[#fbfbfb] pl-14 pr-5 text-[16px] text-[#11151b] placeholder:text-[#8b919a]"
+                                            class="auth-input field-height w-full h-[58px] rounded-2xl border border-[#d7dbe0] bg-[#fbfbfb] pl-14 pr-5 text-[16px] text-[#11151b] placeholder:text-[#8b919a]"
                                             placeholder="name@organization.com"
                                             required
                                         />
@@ -253,25 +275,21 @@
                                         <input
                                             type="password"
                                             id="password"
-                                            class="auth-input w-full h-[58px] rounded-2xl border border-[#d7dbe0] bg-[#fbfbfb] pl-14 pr-14 text-[16px] text-[#11151b] placeholder:text-[#8b919a]"
+                                            class="auth-input field-height w-full h-[58px] rounded-2xl border border-[#d7dbe0] bg-[#fbfbfb] pl-14 pr-14 text-[16px] text-[#11151b] placeholder:text-[#8b919a]"
                                             placeholder="••••••••"
                                             required
                                         />
-                                        <i data-lucide="eye" class="absolute right-5 top-1/2 -translate-y-1/2 w-5 h-5 text-[#8a9099] cursor-pointer" onclick="togglePasswordVisibility()"></i>
+                                        <i data-lucide="eye" class="absolute right-5 top-1/2 -translate-y-1/2 w-5 h-5 text-[#8a9099]"></i>
                                     </div>
                                 </div>
 
-                                <button
-                                    type="submit"
-                                    id="submit-btn"
-                                    class="primary-button w-full h-[60px] mt-2 rounded-2xl text-white font-semibold text-[17px] flex items-center justify-center gap-4 transition-all"
-                                >
+                                <button type="submit" id="submit-btn" class="primary-button field-height w-full h-[60px] mt-2 rounded-2xl text-white font-semibold text-[17px] flex items-center justify-center gap-4 transition-all">
                                     <span id="btn-text">Sign in to Zenith</span>
                                     <i data-lucide="arrow-right" class="w-5 h-5"></i>
                                 </button>
                             </form>
 
-                            <!-- Create account -->
+                            <!-- Account Toggle -->
                             <div class="pt-6 text-center">
                                 <p class="text-[14px] text-[#5d6470]">
                                     <span id="toggle-msg">Don’t have an account?</span>
@@ -300,19 +318,14 @@
                 </div>
 
                 <!-- RIGHT PANEL -->
-                <div class="dna-panel hidden lg:flex flex-col relative overflow-hidden bg-[#f8f8f7]">
+                <div class="dna-panel hidden lg:flex flex-col">
 
-                    <!-- Grayscale DNA background visual -->
-                    <div class="absolute inset-0 pointer-events-none overflow-hidden opacity-[0.42] bg-no-repeat bg-right-bottom bg-cover"
-                         style="background-image: url('assets/login-dna-bg.png');">
-                    </div>
+                    <!-- DNA image background -->
+                    <div class="dna-bg-fallback"></div>
+                    <div class="dna-bg"></div>
+                    <div class="dna-wash"></div>
 
-                    <!-- white fade overlay -->
-                    <div class="absolute inset-0 pointer-events-none"
-                         style="background: linear-gradient(90deg, #f8f8f7 0%, rgba(248, 248, 247, 0.94) 30%, rgba(248, 248, 247, 0.40) 70%, transparent 100%);">
-                    </div>
-
-                    <!-- Top badge -->
+                    <!-- Badge -->
                     <div class="relative z-10 px-8 xl:px-12 pt-8 xl:pt-10 flex justify-end">
                         <div class="top-badge inline-flex items-center gap-3 h-[48px] px-6 rounded-full border border-[#11151b] text-[#11151b]">
                             <i data-lucide="shield-check" class="w-5 h-5"></i>
@@ -334,7 +347,7 @@
 
                             <div class="mt-10 flex items-center gap-5">
                                 <div class="w-14 h-14 rounded-full border border-[#bfc4cb] bg-white/90 flex items-center justify-center">
-                                    <i data-lucide="user" class="w-7 h-7 text-[#11151b]"></i>
+                                    <i data-lucide="dna" class="w-7 h-7 text-[#11151b]"></i>
                                 </div>
 
                                 <div>
@@ -345,9 +358,9 @@
                         </div>
                     </div>
 
-                    <!-- Bottom strip -->
-                    <div class="relative z-10 grid grid-cols-4 border-t border-[#dde0e4] bg-white/80 backdrop-blur">
-                        <div class="px-5 xl:px-6 py-6 flex items-start gap-4 border-r border-[#e0e3e7]">
+                    <!-- Bottom Strip -->
+                    <div class="relative z-10 grid grid-cols-4 border-t border-[#dde0e4] bg-white/82 backdrop-blur">
+                        <div class="bottom-strip px-5 xl:px-6 py-6 flex items-start gap-4 border-r border-[#e0e3e7]">
                             <i data-lucide="shield" class="w-7 h-7 text-[#11151b] mt-1"></i>
                             <div>
                                 <h5 class="text-[11px] xl:text-[12px] font-bold uppercase tracking-[0.13em] text-[#11151b]">
@@ -359,7 +372,7 @@
                             </div>
                         </div>
 
-                        <div class="px-5 xl:px-6 py-6 flex items-start gap-4 border-r border-[#e0e3e7]">
+                        <div class="bottom-strip px-5 xl:px-6 py-6 flex items-start gap-4 border-r border-[#e0e3e7]">
                             <i data-lucide="dna" class="w-7 h-7 text-[#11151b] mt-1"></i>
                             <div>
                                 <h5 class="text-[11px] xl:text-[12px] font-bold uppercase tracking-[0.13em] text-[#11151b]">
@@ -371,7 +384,7 @@
                             </div>
                         </div>
 
-                        <div class="px-5 xl:px-6 py-6 flex items-start gap-4 border-r border-[#e0e3e7]">
+                        <div class="bottom-strip px-5 xl:px-6 py-6 flex items-start gap-4 border-r border-[#e0e3e7]">
                             <i data-lucide="flask-conical" class="w-7 h-7 text-[#11151b] mt-1"></i>
                             <div>
                                 <h5 class="text-[11px] xl:text-[12px] font-bold uppercase tracking-[0.13em] text-[#11151b]">
@@ -383,7 +396,7 @@
                             </div>
                         </div>
 
-                        <div class="px-5 xl:px-6 py-6 flex items-center justify-center gap-3">
+                        <div class="bottom-strip px-5 xl:px-6 py-6 flex items-center justify-center gap-3">
                             <span class="text-[12px] xl:text-[13px] font-semibold tracking-[0.08em] uppercase text-[#11151b]">
                                 Nilus Lab © 2026
                             </span>
@@ -403,15 +416,14 @@
     <script src="js/firebase_config.js"></script>
 
     <script>
-        // Track mode (Sign In vs Sign Up)
         let isSignUp = false;
 
-        // Handle URL parameters for post-login redirection
         const urlParams = new URLSearchParams(window.location.search);
         const redirectUrl = urlParams.get('redirect') || 'discovery.html';
 
         function toggleAuthMode() {
             isSignUp = !isSignUp;
+
             const title = document.getElementById('auth-title');
             const subtitle = document.getElementById('auth-subtitle');
             const submitText = document.getElementById('btn-text');
@@ -433,7 +445,6 @@
             }
         }
 
-        // Firebase Google auth handler
         async function signInWithGoogle() {
             const provider = new firebase.auth.GoogleAuthProvider();
             const alertBox = document.getElementById('error-alert');
@@ -449,9 +460,9 @@
             }
         }
 
-        // Credentials Sign In / Sign Up handler
         async function handleAuth(event) {
             event.preventDefault();
+
             const email = document.getElementById('email').value.trim();
             const password = document.getElementById('password').value.trim();
 
@@ -478,7 +489,6 @@
 
                 alertBox.classList.remove('hidden');
 
-                // Friendly error translation
                 if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
                     alertText.innerText = 'Invalid email address or password. Please verify and try again.';
                 } else if (error.code === 'auth/email-already-in-use') {
@@ -491,27 +501,14 @@
             }
         }
 
-        // Password visibility toggler
-        function togglePasswordVisibility() {
-            const passwordInput = document.getElementById('password');
-            const eyeIcon = passwordInput.nextElementSibling;
-            if (passwordInput.type === 'password') {
-                passwordInput.type = 'text';
-                eyeIcon.setAttribute('data-lucide', 'eye-off');
-            } else {
-                passwordInput.type = 'password';
-                eyeIcon.setAttribute('data-lucide', 'eye');
-            }
-            lucide.createIcons();
-        }
-
-        // Reset password handler
         function handlePasswordReset() {
             const email = document.getElementById('email').value.trim();
+
             if (!email) {
                 alert("Please enter your email address first to request a password reset.");
                 return;
             }
+
             firebase.auth().sendPasswordResetEmail(email).then(() => {
                 alert("Password reset email sent. Please check your inbox.");
             }).catch(error => {
@@ -519,9 +516,9 @@
             });
         }
 
-        // Institutional recovery fallback
         function restoreInstitutionalAccess() {
             const userKey = prompt("Please insert your hardware security USB token key or recovery hash:");
+
             if (userKey) {
                 localStorage.setItem("zenith_session_token", userKey);
                 alert("Hardware Token authenticated. Session token saved to localStorage.");
@@ -529,14 +526,12 @@
             }
         }
 
-        // If already logged in, redirect away
         firebase.auth().onAuthStateChanged((user) => {
             if (user) {
                 window.location.href = redirectUrl;
             }
         });
 
-        // Initialize icons
         lucide.createIcons();
     </script>
 </body>
