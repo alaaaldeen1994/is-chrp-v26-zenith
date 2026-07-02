@@ -5328,8 +5328,14 @@ class DosageRequest(BaseModel):
 
 
 @app.post("/api/v2/dosage_optimization")
-
 async def run_dosage_optimization(req: Optional[DosageRequest] = None):
+    return await run_dosage_optimization_internal(req)
+
+@app.post("/api/v1/trials/dosage-optimize")
+async def run_dosage_optimization_api_v1(req: Optional[DosageRequest] = None):
+    return await run_dosage_optimization_internal(req)
+
+async def run_dosage_optimization_internal(req: Optional[DosageRequest] = None):
 
     """
 
@@ -5659,8 +5665,14 @@ class TrialResponse(BaseModel):
 
 
 @app.post("/run_virtual_trial", response_model=TrialResponse)
-
 async def run_virtual_trial(req: TrialRequest):
+    return await run_virtual_trial_internal(req)
+
+@app.post("/api/v1/trials/run", response_model=TrialResponse)
+async def run_virtual_trial_api_v1(req: TrialRequest):
+    return await run_virtual_trial_internal(req)
+
+async def run_virtual_trial_internal(req: TrialRequest):
 
     try:
 
@@ -7090,6 +7102,10 @@ async def predict_perturbation(req: PerturbationRequest):
         factors=req.perturbation_factors
     )
 
+@app.post("/api/v1/predict/perturbation")
+async def predict_perturbation_api_v1_alias(req: PerturbationRequest):
+    return await predict_perturbation(req)
+
 
 # ============================================================
 # LNP OPTIMIZATION DELIVERY ENDPOINT
@@ -7131,6 +7147,10 @@ async def optimize_lnp(req: LNPOptimizeRequest):
         molar_ratios=molar_ratios,
         np_ratio=req.np_ratio
     )
+
+@app.post("/api/v1/lnp/optimize")
+async def optimize_lnp_api_v1_alias(req: LNPOptimizeRequest):
+    return await optimize_lnp(req)
 
 
 # ============================================================

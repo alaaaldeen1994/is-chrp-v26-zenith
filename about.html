@@ -72,6 +72,22 @@
             mask-image: linear-gradient(to left, black, transparent);
             -webkit-mask-image: linear-gradient(to left, black, transparent);
         }
+
+        .card-elite {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(25px);
+            border: 1px solid rgba(13, 148, 136, 0.12);
+            border-radius: 2.5rem;
+            padding: 3rem;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.02);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .card-elite:hover {
+            border-color: rgba(13, 148, 136, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(13, 148, 136, 0.05);
+        }
     </style>
 </head>
 
@@ -120,7 +136,7 @@
         <div class="card-elite !p-12">
             <h3 class="text-xs font-black text-blue-600 uppercase tracking-widest mb-6">Generative Biology</h3>
             <p class="text-base text-slate-500 font-medium leading-relaxed">
-                Unlike legacy deterministic models, Zenith leverages Attention-based manifolds to identify optimal transition paths in 5,000-dimensional gene space.
+                Unlike legacy deterministic models, Zenith leverages Attention-based manifolds to identify optimal transition paths in 4,908-dimensional gene space.
             </p>
         </div>
         <div class="card-elite !p-12">
@@ -137,7 +153,7 @@
             <ul class="space-y-6 text-sm text-slate-600 font-medium">
                 <li class="flex gap-4">
                     <span class="text-teal-600 font-black">✓</span>
-                    <span><strong class="text-slate-900">Zenith Ultra Engine:</strong> 24-layer Transformer capturing 5,000 HD regulatory dimensions.</span>
+                    <span><strong class="text-slate-900">Zenith Ultra Engine:</strong> 24-layer Transformer capturing 4,908 HD regulatory dimensions.</span>
                 </li>
                 <li class="flex gap-4">
                     <span class="text-teal-600 font-black">✓</span>

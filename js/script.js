@@ -1759,6 +1759,7 @@ const BiosimBridge = {
 
     renderDiscoveryResult(data) {
         if (!data) return;
+        const isAssistant = data.recommended_protocol === "ZENITH ASSISTANT";
         const outPanel = document.getElementById('discovery-output');
         const conf = document.getElementById('discovery-conf');
         const rec = document.getElementById('discovery-rec');
@@ -1907,7 +1908,6 @@ const BiosimBridge = {
         }
 
         // v28 CUSTOM: If this is the ZENITH ASSISTANT, hide the gene manifest and score to keep it clean.
-        const isAssistant = data.recommended_protocol === "ZENITH ASSISTANT";
         const actionGrid = outPanel ? outPanel.querySelector('.flex.gap-1') : null;
         const profileHeader = outPanel ? outPanel.querySelector('.flex.justify-between.items-center.mb-1') : null;
 

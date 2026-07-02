@@ -99,8 +99,8 @@ def get_health(request: Request, db: Session = Depends(get_db)):
 def get_genes(request: Request, db: Session = Depends(get_db)):
     start_time = time.time()
     try:
-        from bridge_server import CONFIG
-        genes = CONFIG.geneSymbols
+        from bridge_server import GENE_SYMBOLS
+        genes = GENE_SYMBOLS
     except Exception:
         # Fallback to general list if bridge is not importable
         genes = ["POU5F1", "SOX2", "NANOG", "LIN28A", "KLF4", "MYC", "GATA4", "TBX5", "NKX2-5", "SIRT1", "SIRT5", "SIRT6"]
