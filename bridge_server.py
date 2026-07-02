@@ -1464,10 +1464,10 @@ async def lifespan(app: FastAPI):
         db = SessionLocal()
         try:
             if db.query(APIKey).count() == 0:
-                env_key = os.getenv("ZENITH_API_KEY")
+                env_key = os.getenv("ZENITH_API_KEY") or os.getenv("INTERNAL_API_KEY")
                 if env_key:
                     new_key = env_key
-                    print(f"[DATABASE] Seeding API Key from environment variable ZENITH_API_KEY.")
+                    print(f"[DATABASE] Seeding API Key from environment variable.")
                 else:
                     raw_token = secrets.token_hex(16)
                     new_key = f"zk_live_{raw_token}"
