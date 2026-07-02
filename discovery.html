@@ -107,6 +107,7 @@
     <script>
         const ZENITH_DEMO_BYPASS = localStorage.getItem('ZENITH_DEMO_BYPASS') === 'true';
         window._isAuthenticated = false;
+        window._authResolved = false;
 
         function updateAuthUI(isAuthenticated) {
             const topBtn = document.getElementById('auth-btn-top');
@@ -116,9 +117,13 @@
                 if (isAuthenticated) {
                     topBtn.innerText = 'Sign Out';
                     topBtn.onclick = performLogout;
+                    topBtn.style.color = '#6b6b6b';
                 } else {
                     topBtn.innerText = 'Sign In';
-                    topBtn.onclick = () => { window.location.href = 'index.html'; };
+                    // Go to login.html with redirect back to discovery.html so after login they land here already authenticated
+                    topBtn.onclick = () => { window.location.href = 'login.html?redirect=discovery.html'; };
+                    topBtn.style.color = '#2563eb';
+                    topBtn.style.fontWeight = '600';
                 }
                 topBtn.style.opacity = '1';
             }
@@ -129,7 +134,7 @@
                     mobBtn.onclick = performLogout;
                 } else {
                     mobBtn.innerText = 'SIGN IN';
-                    mobBtn.onclick = () => { window.location.href = 'index.html'; };
+                    mobBtn.onclick = () => { window.location.href = 'login.html?redirect=discovery.html'; };
                 }
                 mobBtn.style.opacity = '1';
             }
@@ -137,8 +142,13 @@
 
         // Wrap in DOMContentLoaded to prevent race conditions with DOM elements
         window.addEventListener('DOMContentLoaded', () => {
+            // Show a brief loading state on the auth button while Firebase restores session
+            const topBtn = document.getElementById('auth-btn-top');
+            if (topBtn) { topBtn.innerText = '...'; topBtn.style.opacity = '0.5'; }
+
             firebase.auth().onAuthStateChanged((user) => {
                 window._isAuthenticated = !!(user || ZENITH_DEMO_BYPASS);
+                window._authResolved = true;
                 updateAuthUI(window._isAuthenticated);
                 
                 // Auto-redirect to simulation lab if flag is set or hash is present
@@ -157,6 +167,7 @@
                 window.location.href = 'index.html';
             }).catch(() => { window.location.href = 'index.html'; });
         }
+
     </script>
 
     <style>
