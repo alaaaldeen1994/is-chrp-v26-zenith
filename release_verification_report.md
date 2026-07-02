@@ -101,4 +101,6 @@ The ESMFold-Live predicted results have been visually verified using the new 3Dm
 ![3D Ribbon Cartoon View on the structure.html Dashboard](C:\Users\alaaa\.gemini\antigravity\brain\bdb0e85e-e524-4428-888e-c146909ba3e3\esmfold_3d_structure_screenshot.png)
 <!-- slide -->
 ![Raw PDB Coordinates View Overlay Modal](C:\Users\alaaa\.gemini\antigravity\brain\bdb0e85e-e524-4428-888e-c146909ba3e3\esmfold_raw_pdb_preview_screenshot.png)
+<!-- slide -->
+![AlphaFold Server Manifest Export Modal](C:\Users\alaaa\.gemini\antigravity\brain\bdb0e85e-e524-4428-888e-c146909ba3e3\alphafold_manifest_export_proof.png)
 ````
