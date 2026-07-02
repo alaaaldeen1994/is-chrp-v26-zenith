@@ -65,6 +65,21 @@ router = APIRouter(prefix="/api/v1", tags=["API v1"])
 # In-memory job state cache for local execution fallback
 jobs_db = {}
 
+# Simple in-memory rate limiter for UI-based protein folding proxy
+UI_FOLD_LIMITS = {}
+
+def check_ui_rate_limit(ip: str) -> bool:
+    import time
+    now = time.time()
+    if ip not in UI_FOLD_LIMITS:
+        UI_FOLD_LIMITS[ip] = []
+    # Clean old timestamps (older than 60 seconds)
+    UI_FOLD_LIMITS[ip] = [t for t in UI_FOLD_LIMITS[ip] if now - t < 60]
+    if len(UI_FOLD_LIMITS[ip]) >= 10:
+        return False
+    UI_FOLD_LIMITS[ip].append(now)
+    return True
+
 # --- Helper function to log audit entries ---
 def log_api_call(db: Session, request: Request, status_code: int, duration_ms: int, credits_used: int):
     api_key = getattr(request.state, "api_key", None)
@@ -534,6 +549,32 @@ def post_structure_fold(
     db: Session = Depends(get_db),
     folder = Depends(get_structural_folder)
 ):
+    start_time = time.time()
+    
+    result = folder.fold_sequence(payload.sequence, db=db)
+    if result["status"] == "error":
+        if result.get("error_type") == "validation_too_long":
+            raise HTTPException(status_code=413, detail=result["message"])
+        elif result.get("error_type") in ["validation_empty", "validation_invalid_chars"]:
+            raise HTTPException(status_code=400, detail=result["message"])
+        else:
+            raise HTTPException(status_code=502, detail=result["message"])
+        
+    duration = int((time.time() - start_time) * 1000)
+    log_api_call(db, request, 200, duration, 10)
+    return APIEnvelope(data=result, meta={"compute_time_ms": duration, "credits_used": 10})
+
+@router.post("/structure/fold/ui", response_model=APIEnvelope)
+def post_structure_fold_ui(
+    payload: ProteinFoldingRequest,
+    request: Request,
+    db: Session = Depends(get_db),
+    folder = Depends(get_structural_folder)
+):
+    ip = request.client.host if request.client else "unknown"
+    if not check_ui_rate_limit(ip):
+        raise HTTPException(status_code=429, detail="Rate limit exceeded. Maximum 10 fold requests per minute.")
+        
     start_time = time.time()
     
     result = folder.fold_sequence(payload.sequence, db=db)

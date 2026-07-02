@@ -28,6 +28,7 @@ class APIKeyAuthMiddleware(BaseHTTPMiddleware):
             or path.startswith("/assets")
             or not path.startswith("/api/v1")  # Only apply to new public API endpoints
             or path == "/api/v1/health"        # Keep v1 health route open or rate-limited
+            or path == "/api/v1/structure/fold/ui"  # UI-only endpoint (Option B proxy)
         ):
             return await call_next(request)
 
@@ -39,17 +40,27 @@ class APIKeyAuthMiddleware(BaseHTTPMiddleware):
                 content={"status": "error", "message": f"Missing authentication header: {settings.API_KEY_HEADER}"}
             )
 
-        # Allow fallback DEVELOPER_KEY or the system's internal API key directly
-        internal_key = getattr(settings, "INTERNAL_API_KEY", None) or "zenith-v26-secure-key-4922"
-        if api_key in ["DEVELOPER_KEY", internal_key, "zk_live_mock_key_for_testing"]:
-            mock_key = APIKey(
-                key_hash=hashlib.sha256(api_key.encode()).hexdigest(),
-                prefix=api_key[:14] + "..." + api_key[-4:] if len(api_key) > 18 else api_key,
-                owner="System Fallback / Developer Bypass",
-                tier="enterprise",
-                is_active=True
-            )
-            request.state.api_key = mock_key
+        # Allow fallback DEVELOPER_KEY or zk_live_mock_key_for_testing ONLY in development env
+        is_dev = getattr(settings, "ENV", "production") != "production" or os.getenv("ALLOW_DEV_KEYS") == "true"
+        if is_dev and api_key in ["DEVELOPER_KEY", "zk_live_mock_key_for_testing"]:
+            db = SessionLocal()
+            try:
+                key_hash = hashlib.sha256(api_key.encode()).hexdigest()
+                db_key = db.query(APIKey).filter(APIKey.key_hash == key_hash).first()
+                if not db_key:
+                    db_key = APIKey(
+                        key_hash=key_hash,
+                        prefix=api_key[:14] + "..." + api_key[-4:] if len(api_key) > 18 else api_key,
+                        owner="System Fallback / Developer Bypass",
+                        tier="enterprise",
+                        is_active=True
+                    )
+                    db.add(db_key)
+                    db.commit()
+                    db.refresh(db_key)
+                request.state.api_key = db_key
+            finally:
+                db.close()
             return await call_next(request)
 
         db = SessionLocal()
