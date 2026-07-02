@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="bg-[#f8fafc]">
+<html lang="en" class="h-full bg-[#f8fafc]">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -80,18 +80,18 @@
     .metric-card {
       background: white;
       border: 1px solid #e2e8f0;
-      border-radius: 12px;
-      padding: 12px;
+      border-radius: 10px;
+      padding: 8px 10px;
       transition: all 0.2s;
     }
     .metric-card:hover {
       border-color: #cbd5e1;
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
     }
   </style>
 </head>
 
-<body class="font-sans antialiased text-[#1e293b]">
+<body class="h-full font-sans antialiased text-[#1e293b] flex flex-col overflow-hidden">
 
   <!-- HEADER / NAVIGATION DOCK -->
   <header class="sticky top-0 z-40 w-full bg-white/80 backdrop-blur-md border-b border-slate-200">
@@ -140,303 +140,219 @@
   </header>
 
   <!-- MAIN BODY CONTENT -->
-  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <main class="flex-1 min-h-0 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-3">
     
-    <!-- Title / Intro Section -->
-    <div class="mb-8">
-      <div class="flex items-center gap-2 mb-2">
-        <span class="px-2 py-0.5 bg-blue-50 text-blue-600 border border-blue-200 rounded font-outfit text-[10px] font-bold uppercase tracking-wider">
-          ESMFold Prediction Engine
-        </span>
-        <span class="px-2 py-0.5 bg-slate-100 text-slate-600 border border-slate-200 rounded font-outfit text-[10px] font-bold uppercase tracking-wider">
-          v30.0 Core Module
-        </span>
-      </div>
-      <h1 class="font-outfit text-3xl font-black tracking-tight text-slate-900 sm:text-4xl">
-        Protein Structure Folding
-      </h1>
-      <p class="mt-2 text-sm text-slate-500 max-w-3xl leading-relaxed">
-        Fast ESMFold-based single-chain protein structure prediction for research-use exploratory workflows. Submit a valid FASTA amino acid sequence to generate 3D coordinates.
-      </p>
+    <!-- Compact Title Row -->
+    <div class="flex items-center gap-3 mb-3">
+      <span class="px-2 py-0.5 bg-blue-50 text-blue-600 border border-blue-200 rounded font-outfit text-[9px] font-bold uppercase tracking-wider">ESMFold</span>
+      <h1 class="font-outfit text-xl font-black tracking-tight text-slate-900">Protein Structure Folding</h1>
+      <span class="text-[11px] text-slate-400 font-medium hidden sm:block">— Submit an amino acid sequence to generate 3D coordinates</span>
     </div>
 
-    <!-- Layout Grid -->
-    <div class="grid grid-cols-1 lg:grid-cols-[38%_62%] gap-8">
+    <!-- Layout Grid: fills remaining height -->
+    <div class="grid grid-cols-1 lg:grid-cols-[360px_1fr] gap-4" style="height: calc(100vh - 135px);">
       
-      <!-- LEFT SIDEBAR: INPUT & METRICS -->
-      <div class="space-y-6">
+      <!-- LEFT SIDEBAR: INPUT & METRICS (scrollable) -->
+      <div class="h-full overflow-y-auto space-y-3 pr-1" style="scrollbar-width: thin;">
         
-        <!-- Optional Personal API Key panel -->
-        <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-3">
-          <h2 class="font-outfit text-sm font-bold uppercase tracking-wider text-slate-800 flex items-center gap-2">
-            <i data-lucide="key" class="w-4 h-4 text-blue-600"></i> Optional: Personal API Key
-          </h2>
-          <div class="flex items-center gap-2 bg-emerald-50 border border-emerald-200 rounded-lg px-3 py-2">
-            <i data-lucide="shield-check" class="w-3.5 h-3.5 text-emerald-600 flex-shrink-0"></i>
-            <span class="text-[10px] text-emerald-700 font-semibold">Works without a key — server authenticates securely by default</span>
-          </div>
-          <p class="text-[11px] text-slate-500 leading-relaxed">
-            Leave blank to use the secure default route. Optionally enter your personal <code class="bg-slate-100 px-1 rounded text-[10px]">zk_live_…</code> API key to use your own quota.
-          </p>
-          <div class="relative flex items-center">
-            <input
-              type="password"
-              id="api-key-input"
-              autocomplete="new-password"
-              class="w-full h-10 pl-3.5 pr-10 rounded-xl border border-slate-200 text-xs font-mono focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 bg-slate-50"
-              placeholder="Optional: your personal zk_live_… key"
-            />
-            <button
-              type="button"
-              onclick="toggleApiKeyVisibility()"
-              class="absolute right-3 text-slate-400 hover:text-slate-600 focus:outline-none"
-            >
-              <i id="api-key-toggle-icon" data-lucide="eye" class="w-4 h-4"></i>
+        <!-- Optional Personal API Key — compact collapsible -->
+        <details class="bg-white rounded-xl border border-slate-200 shadow-sm group" open>
+          <summary class="flex items-center justify-between px-4 py-2.5 cursor-pointer list-none select-none">
+            <span class="flex items-center gap-2 font-outfit text-[11px] font-bold uppercase tracking-wider text-slate-700">
+              <i data-lucide="key" class="w-3.5 h-3.5 text-blue-600"></i> Optional: Personal API Key
+            </span>
+            <div class="flex items-center gap-2">
+              <span class="text-[9px] bg-emerald-50 border border-emerald-200 text-emerald-700 px-2 py-0.5 rounded-full font-bold">No key needed</span>
+              <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-400 transition group-open:rotate-180"></i>
+            </div>
+          </summary>
+          <div class="px-4 pb-3 space-y-2 border-t border-slate-100">
+            <p class="text-[10px] text-slate-500 mt-2">Leave blank to use secure default. Enter <code class="bg-slate-100 px-1 rounded">zk_live_…</code> key only for your own quota.</p>
+            <div class="relative flex items-center">
+              <input type="password" id="api-key-input" autocomplete="new-password"
+                class="w-full h-8 pl-3 pr-8 rounded-lg border border-slate-200 text-xs font-mono focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 bg-slate-50"
+                placeholder="Optional: your personal zk_live_… key" />
+              <button type="button" onclick="toggleApiKeyVisibility()" class="absolute right-2.5 text-slate-400 hover:text-slate-600">
+                <i id="api-key-toggle-icon" data-lucide="eye" class="w-3.5 h-3.5"></i>
+              </button>
+            </div>
+            <button type="button" onclick="saveApiKey()" class="w-full h-7 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg font-bold text-[9px] uppercase tracking-wider transition flex items-center justify-center gap-1">
+              <i data-lucide="save" class="w-3 h-3"></i> Save Personal Key
             </button>
           </div>
-          <button
-            type="button"
-            onclick="saveApiKey()"
-            class="w-full h-9 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg font-bold text-[10px] uppercase tracking-wider transition flex items-center justify-center gap-1.5"
-          >
-            <i data-lucide="save" class="w-3.5 h-3.5"></i> Save Personal Key
-          </button>
-        </div>
+        </details>
 
-        <!-- Diagnostics Panel -->
-        <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-3">
-          <h2 class="font-outfit text-sm font-bold uppercase tracking-wider text-slate-800 flex items-center justify-between gap-2">
-            <span class="flex items-center gap-2"><i data-lucide="activity" class="w-4 h-4 text-blue-600"></i> Diagnostics</span>
-            <button onclick="refreshDiagnostics()" class="text-[9px] font-mono bg-slate-100 hover:bg-slate-200 text-slate-500 px-2 py-1 rounded uppercase tracking-wider transition">Refresh</button>
-          </h2>
-          <div class="space-y-2 text-[11px] font-mono">
-            <div class="flex items-center justify-between py-1 border-b border-slate-100">
-              <span class="text-slate-500">3Dmol.js loaded</span>
-              <span id="diag-3dmol" class="font-bold text-slate-400">checking…</span>
+        <!-- Diagnostics — compact horizontal grid -->
+        <div class="bg-white rounded-xl border border-slate-200 p-3 shadow-sm">
+          <div class="flex items-center justify-between mb-2">
+            <span class="font-outfit text-[10px] font-bold uppercase tracking-wider text-slate-600 flex items-center gap-1.5">
+              <i data-lucide="activity" class="w-3 h-3 text-blue-600"></i> Diagnostics
+            </span>
+            <button onclick="refreshDiagnostics()" class="text-[8px] font-mono bg-slate-100 hover:bg-slate-200 text-slate-500 px-1.5 py-0.5 rounded uppercase tracking-wider transition">Refresh</button>
+          </div>
+          <div class="grid grid-cols-3 gap-1.5 text-[9px] font-mono">
+            <div class="bg-slate-50 rounded-lg p-1.5 border border-slate-100">
+              <div class="text-slate-400 mb-0.5">3Dmol.js</div>
+              <div id="diag-3dmol" class="font-bold text-slate-400">…</div>
             </div>
-            <div class="flex items-center justify-between py-1 border-b border-slate-100">
-              <span class="text-slate-500">API route used</span>
-              <span id="diag-route" class="font-bold text-slate-400">—</span>
+            <div class="bg-slate-50 rounded-lg p-1.5 border border-slate-100">
+              <div class="text-slate-400 mb-0.5">HTTP</div>
+              <div id="diag-http" class="font-bold text-slate-400">—</div>
             </div>
-            <div class="flex items-center justify-between py-1 border-b border-slate-100">
-              <span class="text-slate-500">HTTP status</span>
-              <span id="diag-http" class="font-bold text-slate-400">—</span>
+            <div class="bg-slate-50 rounded-lg p-1.5 border border-slate-100">
+              <div class="text-slate-400 mb-0.5">Source</div>
+              <div id="diag-source" class="font-bold text-slate-400">—</div>
             </div>
-            <div class="flex items-center justify-between py-1 border-b border-slate-100">
-              <span class="text-slate-500">source</span>
-              <span id="diag-source" class="font-bold text-slate-400">—</span>
+            <div class="bg-slate-50 rounded-lg p-1.5 border border-slate-100">
+              <div class="text-slate-400 mb-0.5">Route</div>
+              <div id="diag-route" class="font-bold text-slate-400 truncate" style="max-width:80px" title="">—</div>
             </div>
-            <div class="flex items-center justify-between py-1 border-b border-slate-100">
-              <span class="text-slate-500">fallback_used</span>
-              <span id="diag-fallback" class="font-bold text-slate-400">—</span>
+            <div class="bg-slate-50 rounded-lg p-1.5 border border-slate-100">
+              <div class="text-slate-400 mb-0.5">Fallback</div>
+              <div id="diag-fallback" class="font-bold text-slate-400">—</div>
             </div>
-            <div class="flex items-center justify-between py-1 border-b border-slate-100">
-              <span class="text-slate-500">provider_status</span>
-              <span id="diag-provider" class="font-bold text-slate-400">—</span>
+            <div class="bg-slate-50 rounded-lg p-1.5 border border-slate-100">
+              <div class="text-slate-400 mb-0.5">Provider</div>
+              <div id="diag-provider" class="font-bold text-slate-400">—</div>
             </div>
-            <div class="flex items-center justify-between py-1">
-              <span class="text-slate-500">CSP/CDN error</span>
-              <span id="diag-csp" class="font-bold text-emerald-600">none</span>
-            </div>
+          </div>
+          <div class="mt-1.5 flex items-center justify-between text-[9px] font-mono">
+            <span class="text-slate-400">CSP/CDN error</span>
+            <span id="diag-csp" class="font-bold text-emerald-600">none</span>
           </div>
         </div>
 
-        <!-- Input Panel -->
-        <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
-          <h2 class="font-outfit text-sm font-bold uppercase tracking-wider text-slate-800 mb-4 flex items-center gap-2">
-            <i data-lucide="dna" class="w-4 h-4 text-blue-600"></i> Sequence Input
+        <!-- Sequence Input — compact -->
+        <div class="bg-white rounded-xl border border-slate-200 p-4 shadow-sm">
+          <h2 class="font-outfit text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-2.5 flex items-center gap-2">
+            <i data-lucide="dna" class="w-3.5 h-3.5 text-blue-600"></i> Sequence Input
           </h2>
-
-          <form id="folding-form" onsubmit="submitSequence(event)" class="space-y-4">
+          <form id="folding-form" onsubmit="submitSequence(event)" class="space-y-2">
             <div>
-              <label for="sequence" class="block text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1.5">
-                Amino Acid Sequence (ARNDCQEGHILKMFPSTWYVX)
-              </label>
-              <textarea
-                id="sequence"
-                rows="5"
-                class="w-full rounded-xl border border-slate-200 p-3.5 font-mono text-xs uppercase tracking-widest focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 bg-slate-50"
-                placeholder="Paste FASTA or raw sequence..."
-                required
+              <label for="sequence" class="block text-[9px] font-bold uppercase tracking-wider text-slate-400 mb-1">Amino Acid Sequence (ARNDCQEGHILKMFPSTWYVX)</label>
+              <textarea id="sequence" rows="4"
+                class="w-full rounded-lg border border-slate-200 p-2.5 font-mono text-[11px] uppercase tracking-widest focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 bg-slate-50 resize-none"
+                placeholder="Paste FASTA or raw sequence..." required
               >MQIFVKTLTGKTITLEVEPSDTIENVKAKIQDKEGIPPDQQRLIFAGKQLEDGRTLSDYNIQKESTLHLVLRLRGG</textarea>
             </div>
-
-            <div class="flex items-center justify-between text-[11px] text-slate-400 font-medium">
+            <div class="flex items-center justify-between text-[9px] text-slate-400 font-medium">
               <span id="char-count">Length: 76 residues</span>
-              <span>Max allowed: 1000 residues</span>
+              <span>Max: 1000 residues</span>
             </div>
-
-            <button
-              type="submit"
-              id="fold-btn"
-              class="w-full h-11 bg-[#0f172a] hover:bg-slate-800 text-white rounded-xl font-semibold text-xs tracking-wider uppercase transition flex items-center justify-center gap-2 shadow-md hover:shadow-lg disabled:opacity-55 disabled:cursor-not-allowed"
-            >
+            <button type="submit" id="fold-btn"
+              class="w-full h-9 bg-[#0f172a] hover:bg-slate-800 text-white rounded-lg font-semibold text-[10px] tracking-wider uppercase transition flex items-center justify-center gap-2 shadow-md disabled:opacity-55 disabled:cursor-not-allowed">
               <span>Predict 3D Structure</span>
-              <i data-lucide="arrow-right" class="w-4 h-4"></i>
+              <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
             </button>
           </form>
         </div>
 
-        <!-- Telemetry Results Panel -->
-        <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-4">
-          <h2 class="font-outfit text-sm font-bold uppercase tracking-wider text-slate-800 flex items-center justify-between">
-            <span class="flex items-center gap-2">
-              <i data-lucide="bar-chart-2" class="w-4 h-4 text-blue-600"></i> Metrics & Telemetry
+        <!-- Metrics & PDB actions — compact -->
+        <div class="bg-white rounded-xl border border-slate-200 p-3 shadow-sm space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="font-outfit text-[10px] font-bold uppercase tracking-wider text-slate-600 flex items-center gap-1.5">
+              <i data-lucide="bar-chart-2" class="w-3 h-3 text-blue-600"></i> Metrics
             </span>
-            <span id="telemetry-status" class="text-[9px] font-mono bg-slate-100 text-slate-600 px-2 py-0.5 rounded uppercase font-bold">
-              IDLE
-            </span>
-          </h2>
-
-          <div class="grid grid-cols-2 gap-3.5 text-xs">
+            <span id="telemetry-status" class="text-[8px] font-mono bg-slate-100 text-slate-600 px-2 py-0.5 rounded uppercase font-bold">IDLE</span>
+          </div>
+          <div class="grid grid-cols-2 gap-1.5">
             <div class="metric-card">
-              <div class="text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-1">HTTP Status</div>
-              <div id="metric-http" class="font-mono font-bold text-slate-700">-</div>
+              <div class="text-[8px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">HTTP Status</div>
+              <div id="metric-http" class="font-mono font-bold text-slate-700 text-xs">-</div>
             </div>
-            
             <div class="metric-card">
-              <div class="text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-1">Compute Source</div>
-              <div id="metric-source" class="font-semibold text-slate-700">-</div>
+              <div class="text-[8px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Source</div>
+              <div id="metric-source" class="font-semibold text-slate-700 text-xs">-</div>
             </div>
-
             <div class="metric-card">
-              <div class="text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-1">Latency / Time</div>
-              <div id="metric-latency" class="font-mono font-bold text-slate-700">-</div>
+              <div class="text-[8px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Latency</div>
+              <div id="metric-latency" class="font-mono font-bold text-slate-700 text-xs">-</div>
             </div>
-
             <div class="metric-card">
-              <div class="text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-1">Cache Status</div>
-              <div id="metric-cache" class="font-semibold text-slate-700">-</div>
+              <div class="text-[8px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Cache</div>
+              <div id="metric-cache" class="font-semibold text-slate-700 text-xs">-</div>
             </div>
-
             <div class="metric-card col-span-2">
               <div class="flex items-center justify-between mb-1">
-                <span class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Confidence (predicted lDDT)</span>
+                <span class="text-[8px] font-bold text-slate-400 uppercase tracking-wider">Confidence pLDDT</span>
                 <span id="metric-lddt-source" class="text-[8px] font-mono text-slate-400"></span>
               </div>
-              <div class="flex items-center gap-3">
-                <div class="flex-1 bg-slate-100 h-2 rounded-full overflow-hidden">
+              <div class="flex items-center gap-2">
+                <div class="flex-1 bg-slate-100 h-1.5 rounded-full overflow-hidden">
                   <div id="lddt-bar" class="bg-blue-600 h-full w-0 transition-all duration-500"></div>
                 </div>
-                <span id="metric-lddt" class="font-mono font-bold text-slate-700">-</span>
+                <span id="metric-lddt" class="font-mono font-bold text-slate-700 text-xs">-</span>
               </div>
             </div>
           </div>
-
           <!-- PDB Action Buttons -->
-          <div class="grid grid-cols-2 gap-3 pt-2">
-            <button
-              id="download-pdb-btn"
-              onclick="downloadPdb()"
-              disabled
-              class="h-10 border border-slate-200 hover:border-slate-300 bg-white hover:bg-slate-50 text-slate-700 disabled:opacity-50 disabled:cursor-not-allowed rounded-xl font-bold text-[10px] uppercase tracking-wider transition flex items-center justify-center gap-1.5"
-            >
-              <i data-lucide="download" class="w-3.5 h-3.5"></i> Download PDB
+          <div class="grid grid-cols-2 gap-2 pt-1">
+            <button id="download-pdb-btn" onclick="downloadPdb()" disabled
+              class="h-8 border border-slate-200 hover:border-slate-300 bg-white hover:bg-slate-50 text-slate-700 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg font-bold text-[9px] uppercase tracking-wider transition flex items-center justify-center gap-1">
+              <i data-lucide="download" class="w-3 h-3"></i> Download PDB
             </button>
-            <button
-              id="view-pdb-btn"
-              onclick="openPdbModal()"
-              disabled
-              class="h-10 border border-slate-200 hover:border-slate-300 bg-white hover:bg-slate-50 text-slate-700 disabled:opacity-50 disabled:cursor-not-allowed rounded-xl font-bold text-[10px] uppercase tracking-wider transition flex items-center justify-center gap-1.5"
-            >
-              <i data-lucide="file-text" class="w-3.5 h-3.5"></i> View Raw PDB
+            <button id="view-pdb-btn" onclick="openPdbModal()" disabled
+              class="h-8 border border-slate-200 hover:border-slate-300 bg-white hover:bg-slate-50 text-slate-700 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg font-bold text-[9px] uppercase tracking-wider transition flex items-center justify-center gap-1">
+              <i data-lucide="file-text" class="w-3 h-3"></i> View Raw PDB
             </button>
           </div>
         </div>
 
       </div>
 
-      <!-- RIGHT CONTAINER: 3D VIEWER -->
-      <div class="space-y-6">
-        
-        <!-- Viewer Card -->
-        <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm flex flex-col h-full min-h-[580px]">
-          <h2 class="font-outfit text-sm font-bold uppercase tracking-wider text-slate-800 mb-4 flex items-center gap-2">
-            <i data-lucide="eye" class="w-4 h-4 text-blue-600"></i> 3D Structure Viewer
-          </h2>
+      <!-- RIGHT COLUMN: 3D VIEWER — fills remaining height -->
+      <div class="h-full flex flex-col gap-3 min-h-0">
 
-          <!-- Status Banners -->
-          <div id="alert-banner" class="hidden mb-4 p-3 rounded-xl text-xs font-semibold flex items-start gap-2.5">
-            <i id="alert-icon" class="w-4 h-4 flex-shrink-0 mt-0.5"></i>
-            <span id="alert-text"></span>
+        <!-- Viewer Card — expands to fill all space -->
+        <div class="flex-1 min-h-0 bg-white rounded-2xl border border-slate-200 p-4 shadow-sm flex flex-col">
+          <div class="flex items-center justify-between mb-2.5">
+            <h2 class="font-outfit text-[11px] font-bold uppercase tracking-wider text-slate-700 flex items-center gap-2">
+              <i data-lucide="eye" class="w-3.5 h-3.5 text-blue-600"></i> 3D Structure Viewer
+            </h2>
+            <!-- Status banner inline -->
+            <div id="alert-banner" class="hidden p-2 rounded-lg text-[10px] font-semibold flex items-center gap-1.5 max-w-sm">
+              <i id="alert-icon" class="w-3.5 h-3.5 flex-shrink-0"></i>
+              <span id="alert-text"></span>
+            </div>
           </div>
 
-          <!-- 3Dmol container -->
-          <div class="flex-1 w-full min-h-[420px] rounded-xl border border-slate-200 overflow-hidden relative bg-[#0f172a] shadow-inner flex items-center justify-center">
+          <!-- 3Dmol container — flex-1 so it fills all remaining card space -->
+          <div class="flex-1 min-h-0 w-full rounded-xl border border-slate-200 overflow-hidden relative bg-[#0f172a] shadow-inner flex items-center justify-center">
             <div id="protein-viewer" class="w-full h-full"></div>
-            
-            <!-- Default Placeholder / Loader -->
-            <div id="viewer-placeholder" class="absolute inset-0 flex flex-col items-center justify-center text-center p-6 bg-slate-900/50 backdrop-blur-sm transition-all duration-300">
-              <div class="w-12 h-12 rounded-full border-4 border-slate-700 border-t-blue-500 animate-spin mb-4 hidden" id="viewer-spinner"></div>
-              <i data-lucide="layers" class="w-10 h-10 text-slate-500 mb-3" id="viewer-icon"></i>
+            <div id="viewer-placeholder" class="absolute inset-0 flex flex-col items-center justify-center text-center p-6 bg-slate-900/60 backdrop-blur-sm transition-all duration-300">
+              <div class="w-10 h-10 rounded-full border-4 border-slate-700 border-t-blue-500 animate-spin mb-3 hidden" id="viewer-spinner"></div>
+              <i data-lucide="layers" class="w-9 h-9 text-slate-500 mb-2" id="viewer-icon"></i>
               <h3 class="text-sm font-semibold text-slate-300" id="viewer-title">No Model Loaded</h3>
               <p class="text-xs text-slate-500 mt-1 max-w-xs" id="viewer-sub">Submit an amino acid sequence to generate and visualize its 3D atomic coordinates.</p>
             </div>
           </div>
         </div>
 
-        <!-- Scientific Disclaimer / Limitations -->
-        <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-4">
-          <div class="bg-amber-50/50 border border-amber-200/60 rounded-xl p-4 text-amber-800 text-xs leading-relaxed flex gap-3">
-            <i data-lucide="alert-triangle" class="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5"></i>
-            <div>
-              <strong class="font-bold text-amber-900 block mb-1">Scientific Integrity & Verification:</strong>
-              ESMFold is used for fast single-sequence exploratory structure prediction. It is not equivalent to AlphaFold2, AlphaFold-Multimer, or AlphaFold3. It does not model ligands, nucleic acids, protein complexes, or binding interactions. Results are provided for research-use exploratory analysis only.
+        <!-- Scientific disclaimer + comparison table — compact collapsible -->
+        <details class="bg-white rounded-xl border border-slate-200 shadow-sm flex-shrink-0">
+          <summary class="flex items-center gap-2 px-4 py-2.5 cursor-pointer list-none select-none text-[10px] font-bold uppercase tracking-wider text-amber-700">
+            <i data-lucide="alert-triangle" class="w-3.5 h-3.5 text-amber-500"></i>
+            Scientific Limitations &amp; ESMFold vs AlphaFold Comparison
+            <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-400 ml-auto"></i>
+          </summary>
+          <div class="px-4 pb-3 border-t border-slate-100">
+            <p class="text-[10px] text-amber-700 leading-relaxed mt-2 mb-2"><strong>Note:</strong> ESMFold is for fast exploratory single-sequence prediction only. Not equivalent to AlphaFold2/3. No ligands, complexes, or nucleic acids.</p>
+            <div class="overflow-x-auto border border-slate-200 rounded-lg">
+              <table class="w-full text-[10px] text-left text-slate-500">
+                <thead class="bg-slate-50 text-[9px] font-black uppercase tracking-wider text-slate-600 border-b border-slate-200">
+                  <tr><th class="py-1.5 px-2">Feature</th><th class="py-1.5 px-2">ESMFold</th><th class="py-1.5 px-2">AlphaFold2</th><th class="py-1.5 px-2">AlphaFold3</th></tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">
+                  <tr><td class="py-1 px-2 font-bold text-slate-800">Speed</td><td class="py-1 px-2 text-emerald-600 font-bold">Fast (seconds)</td><td class="py-1 px-2">Slower</td><td class="py-1 px-2">Slower</td></tr>
+                  <tr><td class="py-1 px-2 font-bold text-slate-800">MSA required</td><td class="py-1 px-2">No</td><td class="py-1 px-2">Usually yes</td><td class="py-1 px-2">Model-dependent</td></tr>
+                  <tr><td class="py-1 px-2 font-bold text-slate-800">Complexes</td><td class="py-1 px-2">Limited</td><td class="py-1 px-2">AF-Multimer</td><td class="py-1 px-2 font-bold text-slate-700">Supported</td></tr>
+                  <tr><td class="py-1 px-2 font-bold text-slate-800">Ligands</td><td class="py-1 px-2">No</td><td class="py-1 px-2">No</td><td class="py-1 px-2 font-bold text-slate-700">Supported</td></tr>
+                  <tr><td class="py-1 px-2 font-bold text-slate-800">Zenith Status</td><td class="py-1 px-2 text-emerald-600 font-bold">Integrated</td><td class="py-1 px-2">—</td><td class="py-1 px-2">—</td></tr>
+                </tbody>
+              </table>
             </div>
           </div>
-
-          <!-- Comparison Table -->
-          <div class="overflow-x-auto border border-slate-200 rounded-xl">
-            <table class="w-full text-[11px] text-left text-slate-500 font-medium">
-              <thead class="bg-slate-50 text-[10px] font-black uppercase tracking-wider text-slate-700 border-b border-slate-200">
-                <tr>
-                  <th class="py-2.5 px-3">Feature</th>
-                  <th class="py-2.5 px-3">ESMFold</th>
-                  <th class="py-2.5 px-3">AlphaFold2</th>
-                  <th class="py-2.5 px-3">AlphaFold3</th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-slate-200">
-                <tr>
-                  <td class="py-2 px-3 font-bold text-slate-900">Speed</td>
-                  <td class="py-2 px-3 text-emerald-600 font-bold">Fast (Seconds)</td>
-                  <td class="py-2 px-3">Slower</td>
-                  <td class="py-2 px-3">Slower / Advanced</td>
-                </tr>
-                <tr>
-                  <td class="py-2 px-3 font-bold text-slate-900">Input</td>
-                  <td class="py-2 px-3">Single protein sequence</td>
-                  <td class="py-2 px-3">Protein sequence / MSA</td>
-                  <td class="py-2 px-3">Proteins, nucleic acids, ligands</td>
-                </tr>
-                <tr>
-                  <td class="py-2 px-3 font-bold text-slate-900">MSA required</td>
-                  <td class="py-2 px-3">No</td>
-                  <td class="py-2 px-3">Usually yes</td>
-                  <td class="py-2 px-3">Model-dependent</td>
-                </tr>
-                <tr>
-                  <td class="py-2 px-3 font-bold text-slate-900">Complexes</td>
-                  <td class="py-2 px-3">Limited / Not primary</td>
-                  <td class="py-2 px-3">AF-Multimer needed</td>
-                  <td class="py-2 px-3 text-slate-800 font-bold">Supported</td>
-                </tr>
-                <tr>
-                  <td class="py-2 px-3 font-bold text-slate-900">Ligands</td>
-                  <td class="py-2 px-3">No</td>
-                  <td class="py-2 px-3">No standard support</td>
-                  <td class="py-2 px-3 text-slate-800 font-bold">Supported</td>
-                </tr>
-                <tr>
-                  <td class="py-2 px-3 font-bold text-slate-900">Zenith Status</td>
-                  <td class="py-2 px-3 text-emerald-600 font-bold">Integrated</td>
-                  <td class="py-2 px-3">Not integrated</td>
-                  <td class="py-2 px-3">Not integrated</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
+        </details>
 
       </div>
 
