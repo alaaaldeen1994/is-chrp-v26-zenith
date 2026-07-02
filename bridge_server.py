@@ -1673,6 +1673,15 @@ app = FastAPI(
 
 )
 
+@app.exception_handler(Exception)
+async def debug_exception_handler(request: Request, exc: Exception):
+    import traceback
+    tb_str = "".join(traceback.format_exception(type(exc), exc, exc.__traceback__))
+    return JSONResponse(
+        status_code=500,
+        content={"status": "error", "message": str(exc), "traceback": tb_str}
+    )
+
 
 
 # ==================== SECURITY MIDDLEWARE ====================
