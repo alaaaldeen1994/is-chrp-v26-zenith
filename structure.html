@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Zenith v30.0 GOLD | ESMFold Structure Prediction | Nilus Lab</title>
-  <meta name="description" content="ESMFold 3D protein structure prediction engine. Generate standard PDB coordinate files from single-chain amino acid sequences." />
+  <title>Zenith v30.0 GOLD | Structure Prediction | ESMFold + Boltz API | Nilus Lab</title>
+  <meta name="description" content="ESMFold single-chain protein folding and Boltz API biomolecular complex prediction. Predict 3D structures for protein+DNA+RNA+ligand complexes." />
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -88,6 +88,108 @@
       border-color: #cbd5e1;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
     }
+    /* ── Boltz tab styles ─────────────────────────── */
+    .mode-tab {
+      padding: 6px 16px;
+      border-radius: 8px;
+      font-size: 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: 1.5px solid transparent;
+      color: #64748b;
+      background: transparent;
+    }
+    .mode-tab.active {
+      background: #0f172a;
+      color: #fff;
+      border-color: #0f172a;
+      box-shadow: 0 2px 8px rgba(15,23,42,0.2);
+    }
+    .mode-tab:not(.active):hover {
+      background: #f1f5f9;
+      color: #334155;
+    }
+    .chain-card {
+      background: #f8fafc;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 10px 12px;
+      margin-bottom: 8px;
+      position: relative;
+    }
+    .chain-card .chain-type-badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-right: 6px;
+    }
+    .badge-protein  { background: #dbeafe; color: #1d4ed8; }
+    .badge-dna      { background: #dcfce7; color: #15803d; }
+    .badge-rna      { background: #fef3c7; color: #b45309; }
+    .badge-ligand   { background: #f3e8ff; color: #7c3aed; }
+    .badge-ion      { background: #ffe4e6; color: #be123c; }
+    .boltz-btn {
+      height: 34px;
+      border-radius: 10px;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.18s;
+      border: none;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      justify-content: center;
+      padding: 0 14px;
+    }
+    .boltz-btn.primary   { background: #1d4ed8; color: #fff; }
+    .boltz-btn.primary:hover   { background: #1e40af; }
+    .boltz-btn.secondary { background: #f1f5f9; color: #334155; border: 1.5px solid #e2e8f0; }
+    .boltz-btn.secondary:hover { background: #e2e8f0; }
+    .boltz-btn.danger    { background: #fee2e2; color: #b91c1c; border: 1.5px solid #fecaca; }
+    .boltz-btn.danger:hover    { background: #fecaca; }
+    .boltz-btn:disabled  { opacity: 0.45; cursor: not-allowed; }
+    .boltz-metric-pill {
+      display: flex;
+      flex-direction: column;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 6px 10px;
+      font-size: 9px;
+    }
+    .boltz-metric-pill .label { color: #94a3b8; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 2px; }
+    .boltz-metric-pill .value { color: #1e293b; font-weight: 800; font-size: 12px; font-family: 'JetBrains Mono', monospace; }
+    .boltz-ruo-badge {
+      background: #fef9c3;
+      border: 1px solid #fde047;
+      color: #854d0e;
+      border-radius: 6px;
+      padding: 3px 10px;
+      font-size: 9px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    #boltz-viewer-container {
+      width: 100%;
+      height: 100%;
+      border-radius: 12px;
+      overflow: hidden;
+      background: #0f172a;
+      position: relative;
+      min-height: 320px;
+    }
+    #boltz-molstar-mount { width: 100%; height: 100%; }
   </style>
 </head>
 
@@ -142,13 +244,23 @@
   <!-- MAIN BODY CONTENT -->
   <main class="flex-1 min-h-0 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-3">
     
-    <!-- Compact Title Row -->
-    <div class="flex items-center gap-3 mb-3">
-      <span class="px-2 py-0.5 bg-blue-50 text-blue-600 border border-blue-200 rounded font-outfit text-[9px] font-bold uppercase tracking-wider">ESMFold</span>
-      <h1 class="font-outfit text-xl font-black tracking-tight text-slate-900">Protein Structure Folding</h1>
-      <span class="text-[11px] text-slate-400 font-medium hidden sm:block">— Submit an amino acid sequence to generate 3D coordinates</span>
+    <!-- Title Row + Mode Tabs -->
+    <div class="flex items-center gap-3 mb-3 flex-wrap">
+      <h1 class="font-outfit text-xl font-black tracking-tight text-slate-900">Structure Prediction</h1>
+      <div class="flex items-center gap-1 bg-slate-100 p-1 rounded-xl ml-1">
+        <button class="mode-tab active" id="tab-esmfold" onclick="switchTab('esmfold')" title="ESMFold: single-chain protein folding">
+          <i data-lucide="dna" style="width:10px;height:10px;display:inline;vertical-align:middle;margin-right:3px"></i>ESMFold
+        </button>
+        <button class="mode-tab" id="tab-boltz" onclick="switchTab('boltz')" title="Boltz API: multi-chain biomolecular complex prediction">
+          <i data-lucide="layers" style="width:10px;height:10px;display:inline;vertical-align:middle;margin-right:3px"></i>Boltz Complex
+        </button>
+      </div>
+      <span class="boltz-ruo-badge" id="ruo-badge" style="display:none">Research Use Only</span>
+      <span class="text-[11px] text-slate-400 font-medium hidden sm:block" id="tab-subtitle">— Submit an amino acid sequence to generate 3D coordinates</span>
     </div>
 
+    <!-- ESMFold Panel (wrapped for tab switching) -->
+    <div id="esmfold-panel-wrap">
     <!-- Layout Grid: fills remaining height -->
     <div class="grid grid-cols-1 lg:grid-cols-[360px_1fr] gap-4" style="height: calc(100vh - 135px);">
       
@@ -356,7 +468,189 @@
 
       </div>
 
-    </div>
+    </div><!-- /#esmfold-panel-wrap -->
+
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <!-- BOLTZ COMPLEX PREDICTION PANEL                                     -->
+    <!-- ═══════════════════════════════════════════════════════════════════ -->
+    <div id="boltz-panel" style="display:none; height:calc(100vh - 135px);">
+      <div class="grid grid-cols-1 lg:grid-cols-[380px_1fr] gap-4 h-full">
+
+        <!-- ── LEFT: Chain Builder + Controls ── -->
+        <div class="h-full overflow-y-auto space-y-3 pr-1" style="scrollbar-width:thin">
+
+          <!-- Engine badge -->
+          <div class="flex items-center gap-2 mb-1">
+            <span class="px-2 py-0.5 bg-violet-50 text-violet-700 border border-violet-200 rounded font-outfit text-[9px] font-bold uppercase tracking-wider">Boltz-2.1 API</span>
+            <span class="text-[10px] text-slate-500">Native complex prediction — Protein · DNA · RNA · Ligand · Ion</span>
+          </div>
+
+          <!-- Job Name -->
+          <div class="bg-white rounded-xl border border-slate-200 p-3 shadow-sm">
+            <label class="block text-[9px] font-bold uppercase tracking-wider text-slate-400 mb-1">Job Name <span class="text-slate-300">(optional)</span></label>
+            <input type="text" id="boltz-job-name" maxlength="64" placeholder="e.g. OCT4-DNA-complex" class="w-full h-8 px-3 rounded-lg border border-slate-200 text-xs font-mono focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500 bg-slate-50" />
+          </div>
+
+          <!-- Chain Builder -->
+          <div class="bg-white rounded-xl border border-slate-200 p-3 shadow-sm">
+            <div class="flex items-center justify-between mb-2">
+              <h2 class="font-outfit text-[11px] font-bold uppercase tracking-wider text-slate-700 flex items-center gap-2">
+                <i data-lucide="list" class="w-3.5 h-3.5 text-violet-600"></i> Complex Chains
+              </h2>
+              <span id="boltz-chain-count" class="text-[9px] font-mono bg-slate-100 text-slate-500 px-2 py-0.5 rounded-full">0 chains</span>
+            </div>
+
+            <!-- Chain list -->
+            <div id="boltz-chains-list"></div>
+
+            <!-- Add chain buttons -->
+            <div class="grid grid-cols-2 gap-1.5 mt-2">
+              <button class="boltz-btn secondary" onclick="boltzAddChain('protein')"><span class="badge-protein chain-type-badge">P</span>Add Protein</button>
+              <button class="boltz-btn secondary" onclick="boltzAddChain('dna')"><span class="badge-dna chain-type-badge">D</span>Add DNA</button>
+              <button class="boltz-btn secondary" onclick="boltzAddChain('rna')"><span class="badge-rna chain-type-badge">R</span>Add RNA</button>
+              <button class="boltz-btn secondary" onclick="boltzAddChain('ligand_ccd')"><span class="badge-ligand chain-type-badge">L</span>Add Ligand/Ion</button>
+            </div>
+          </div>
+
+          <!-- Binding type -->
+          <div class="bg-white rounded-xl border border-slate-200 p-3 shadow-sm">
+            <label class="block text-[9px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">Binding Mode</label>
+            <select id="boltz-binding-type" class="w-full h-8 px-2 rounded-lg border border-slate-200 text-xs bg-slate-50 focus:outline-none focus:border-violet-500">
+              <option value="none">None — Structure only (no binding metrics)</option>
+              <option value="ligand_protein_binding">Ligand→Protein binding</option>
+              <option value="protein_protein_binding">Protein→Protein binding</option>
+            </select>
+            <div id="boltz-binder-chain-row" class="hidden mt-2">
+              <label class="block text-[9px] font-bold uppercase tracking-wider text-slate-400 mb-1">Binder Chain ID</label>
+              <input type="text" id="boltz-binder-chain-id" placeholder="e.g. B" maxlength="4" class="w-full h-8 px-3 rounded-lg border border-slate-200 text-xs font-mono bg-slate-50 focus:outline-none focus:border-violet-500" />
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="space-y-2">
+            <button class="boltz-btn secondary w-full" id="boltz-validate-btn" onclick="boltzValidate()">
+              <i data-lucide="check-circle" style="width:13px;height:13px"></i> 1. Validate Complex
+            </button>
+            <button class="boltz-btn secondary w-full" id="boltz-estimate-btn" onclick="boltzEstimate()" disabled>
+              <i data-lucide="dollar-sign" style="width:13px;height:13px"></i> 2. Estimate Cost
+            </button>
+            <button class="boltz-btn primary w-full" id="boltz-submit-btn" onclick="boltzSubmitWithConfirm()" disabled>
+              <i data-lucide="send" style="width:13px;height:13px"></i> 3. Submit Boltz Prediction
+            </button>
+          </div>
+
+          <!-- Status + Polling -->
+          <div class="bg-white rounded-xl border border-slate-200 p-3 shadow-sm">
+            <div class="flex items-center justify-between mb-2">
+              <span class="font-outfit text-[10px] font-bold uppercase tracking-wider text-slate-600 flex items-center gap-1.5">
+                <i data-lucide="activity" class="w-3 h-3 text-violet-600"></i> Job Status
+              </span>
+              <span id="boltz-status-badge" class="text-[8px] font-mono bg-slate-100 text-slate-500 px-2 py-0.5 rounded uppercase font-bold">IDLE</span>
+            </div>
+            <div id="boltz-status-msg" class="text-[10px] text-slate-500 font-mono mb-2">No job submitted yet.</div>
+            <div id="boltz-job-id-row" class="hidden text-[9px] font-mono text-slate-400 mb-2 break-all">Job ID: <span id="boltz-job-id-display"></span></div>
+            <button class="boltz-btn secondary w-full" id="boltz-poll-btn" onclick="boltzPollStatus()" disabled>
+              <i data-lucide="refresh-cw" style="width:12px;height:12px"></i> Check Status
+            </button>
+          </div>
+
+          <!-- Result Actions -->
+          <div class="bg-white rounded-xl border border-slate-200 p-3 shadow-sm" id="boltz-result-actions" style="display:none">
+            <div class="font-outfit text-[10px] font-bold uppercase tracking-wider text-slate-600 flex items-center gap-1.5 mb-2">
+              <i data-lucide="download-cloud" class="w-3 h-3 text-emerald-600"></i> Downloads
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+              <button class="boltz-btn secondary" id="boltz-dl-cif-btn" onclick="boltzDownloadCif()">
+                <i data-lucide="file" style="width:12px;height:12px"></i> Download CIF
+              </button>
+              <button class="boltz-btn secondary" id="boltz-dl-conf-btn" onclick="boltzDownloadConfidence()">
+                <i data-lucide="bar-chart-2" style="width:12px;height:12px"></i> Confidence JSON
+              </button>
+            </div>
+          </div>
+
+          <!-- Scientific Disclaimer -->
+          <details class="bg-amber-50 rounded-xl border border-amber-200 shadow-sm flex-shrink-0">
+            <summary class="flex items-center gap-2 px-3 py-2 cursor-pointer list-none select-none text-[10px] font-bold uppercase tracking-wider text-amber-700">
+              <i data-lucide="alert-triangle" class="w-3.5 h-3.5 text-amber-500"></i>
+              Research Use Only Disclaimer
+              <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-amber-400 ml-auto"></i>
+            </summary>
+            <div class="px-3 pb-3 pt-2 text-[10px] text-amber-800 leading-relaxed">
+              <p><strong>For research use only (RUO). Not for clinical, diagnostic, or therapeutic decision-making.</strong></p>
+              <p class="mt-1">Complex predictions require experimental validation. Zenith does not run AlphaFold2 or AlphaFold3 internally. Predictions are powered by Boltz API (Boltz-2.1 model).</p>
+            </div>
+          </details>
+
+        </div><!-- /left col -->
+
+        <!-- ── RIGHT: Mol* Viewer + Metrics ── -->
+        <div class="h-full flex flex-col gap-3 min-h-0">
+
+          <!-- Viewer Card -->
+          <div class="flex-1 min-h-0 bg-white rounded-2xl border border-slate-200 p-4 shadow-sm flex flex-col">
+            <div class="flex items-center justify-between mb-2.5">
+              <h2 class="font-outfit text-[11px] font-bold uppercase tracking-wider text-slate-700 flex items-center gap-2">
+                <i data-lucide="eye" class="w-3.5 h-3.5 text-violet-600"></i> 3D Complex Viewer
+                <span class="text-[9px] font-mono bg-violet-50 text-violet-600 border border-violet-200 px-1.5 rounded">Mol*</span>
+              </h2>
+              <div class="flex items-center gap-2">
+                <span id="boltz-real-badge" class="hidden text-[8px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 px-2 py-0.5 rounded-full uppercase">Real Prediction</span>
+                <span id="boltz-no-synth-badge" class="hidden text-[8px] font-bold bg-slate-50 text-slate-500 border border-slate-200 px-2 py-0.5 rounded-full uppercase">No Synthetic Fallback</span>
+              </div>
+            </div>
+
+            <!-- Viewer / Placeholder -->
+            <div id="boltz-viewer-container" class="flex-1 min-h-0">
+              <!-- Mol* will be initialized here -->
+              <div id="boltz-viewer-placeholder" class="absolute inset-0 flex flex-col items-center justify-center text-center p-6 bg-slate-900/60 backdrop-blur-sm transition-all duration-300" style="position:absolute;inset:0">
+                <div class="w-10 h-10 rounded-full border-4 border-slate-700 border-t-violet-500 animate-spin mb-3 hidden" id="boltz-viewer-spinner"></div>
+                <i data-lucide="layers" class="w-9 h-9 text-slate-500 mb-2" id="boltz-viewer-icon"></i>
+                <h3 class="text-sm font-semibold text-slate-300" id="boltz-viewer-title">No Complex Loaded</h3>
+                <p class="text-xs text-slate-500 mt-1 max-w-xs" id="boltz-viewer-sub">Build your complex above, then submit a Boltz API prediction.</p>
+              </div>
+              <div id="boltz-molstar-mount" style="width:100%;height:100%"></div>
+            </div>
+          </div>
+
+          <!-- Confidence metrics -->
+          <div id="boltz-metrics-panel" class="bg-white rounded-xl border border-slate-200 p-3 shadow-sm flex-shrink-0" style="display:none">
+            <div class="font-outfit text-[10px] font-bold uppercase tracking-wider text-slate-600 flex items-center gap-1.5 mb-2">
+              <i data-lucide="bar-chart-2" class="w-3 h-3 text-violet-600"></i> Confidence Metrics
+              <span class="ml-auto text-[8px] font-mono text-slate-400 bg-slate-100 px-2 py-0.5 rounded">boltz-2.1</span>
+            </div>
+            <div class="grid grid-cols-3 gap-2 mb-2" id="boltz-metrics-grid"></div>
+            <div id="boltz-binding-metrics" class="hidden mt-2 p-2 bg-violet-50 border border-violet-200 rounded-lg">
+              <div class="text-[9px] font-bold uppercase tracking-wider text-violet-700 mb-1">Binding Metrics</div>
+              <div id="boltz-binding-content" class="text-[10px] font-mono text-violet-900"></div>
+            </div>
+          </div>
+
+          <!-- Chain Info Table -->
+          <div id="boltz-info-table-panel" class="bg-white rounded-xl border border-slate-200 p-3 shadow-sm flex-shrink-0" style="display:none">
+            <div class="font-outfit text-[10px] font-bold uppercase tracking-wider text-slate-600 flex items-center gap-1.5 mb-2">
+              <i data-lucide="table" class="w-3 h-3 text-slate-400"></i> Complex Composition
+            </div>
+            <div class="overflow-x-auto">
+              <table class="w-full text-[10px]" id="boltz-info-table">
+                <thead class="text-[9px] font-black uppercase tracking-wider text-slate-500 border-b border-slate-200">
+                  <tr><th class="py-1 px-2 text-left">Type</th><th class="py-1 px-2 text-left">Chain</th><th class="py-1 px-2 text-left">Value / Seq</th><th class="py-1 px-2 text-left">Length</th></tr>
+                </thead>
+                <tbody id="boltz-info-tbody" class="divide-y divide-slate-100"></tbody>
+              </table>
+            </div>
+            <div class="mt-2 pt-2 border-t border-slate-100 text-[9px] font-mono text-slate-400 grid grid-cols-2 gap-1">
+              <div>Provider: <span id="bi-provider" class="text-slate-700 font-bold">Boltz API</span></div>
+              <div>Engine: <span id="bi-engine" class="text-slate-700 font-bold">boltz-2.1</span></div>
+              <div>Real Prediction: <span id="bi-real" class="text-emerald-700 font-bold">true</span></div>
+              <div>Synthetic Fallback: <span id="bi-synth" class="text-emerald-700 font-bold">false</span></div>
+            </div>
+          </div>
+
+        </div><!-- /right col -->
+
+      </div>
+    </div><!-- /#boltz-panel -->
 
   </main>
 
@@ -389,6 +683,463 @@
   <script>
     let activePdbData = null;
     let activeSequence = "";
+
+    // ── Tab switcher ─────────────────────────────────────────────────────
+    function switchTab(tab) {
+      const esmPanel   = document.getElementById('esmfold-panel-wrap');
+      const boltzPanel = document.getElementById('boltz-panel');
+      const esmTab     = document.getElementById('tab-esmfold');
+      const boltzTab   = document.getElementById('tab-boltz');
+      const sub        = document.getElementById('tab-subtitle');
+      const ruoBadge   = document.getElementById('ruo-badge');
+
+      if (tab === 'esmfold') {
+        esmPanel   && (esmPanel.style.display = '');
+        boltzPanel && (boltzPanel.style.display = 'none');
+        esmTab.classList.add('active');
+        boltzTab.classList.remove('active');
+        sub.textContent = '— Submit an amino acid sequence to generate 3D coordinates';
+        ruoBadge.style.display = 'none';
+      } else {
+        esmPanel   && (esmPanel.style.display = 'none');
+        boltzPanel && (boltzPanel.style.display = '');
+        esmTab.classList.remove('active');
+        boltzTab.classList.add('active');
+        sub.textContent = '— Build a biomolecular complex (Protein + DNA + RNA + Ligand)';
+        ruoBadge.style.display = '';
+        lucide.createIcons();
+      }
+    }
+
+    // ── Boltz Complex State ──────────────────────────────────────────────
+    let boltzChains    = [];   // { type, value, chain_id }
+    let boltzJobId     = null; // Boltz prediction ID
+    let boltzValidated = false;
+    let boltzEstimated = false;
+    let boltzPolling   = null; // interval handle
+    let boltzCifUrl    = null; // proxied download path
+    const CHAIN_LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+    function nextChainId() {
+      const used = boltzChains.map(c => c.chain_id);
+      for (const l of CHAIN_LETTERS) {
+        if (!used.includes(l)) return l;
+      }
+      return 'Z';
+    }
+
+    function boltzRenderChains() {
+      const container = document.getElementById('boltz-chains-list');
+      container.innerHTML = '';
+      boltzChains.forEach((chain, idx) => {
+        const badgeClass = {
+          protein: 'badge-protein', dna: 'badge-dna', rna: 'badge-rna',
+          ligand_ccd: 'badge-ligand', ligand_smiles: 'badge-ligand'
+        }[chain.type] || 'badge-ligand';
+        const label = { protein: 'Protein', dna: 'DNA', rna: 'RNA', ligand_ccd: 'Ligand/Ion', ligand_smiles: 'Ligand SMILES' }[chain.type] || chain.type;
+        const placeholder = chain.type === 'protein' ? 'MKTIIALSYIFCLVFA...' :
+                            chain.type === 'dna'     ? 'ATGCAAATGAAT...' :
+                            chain.type === 'rna'     ? 'AUGCAAAUGAAU...' :
+                            'CCD code e.g. ATP, ZN';
+        const div = document.createElement('div');
+        div.className = 'chain-card';
+        div.innerHTML = `
+          <div class="flex items-center justify-between mb-1.5">
+            <span>
+              <span class="chain-type-badge ${badgeClass}">${label}</span>
+              <span class="text-[9px] font-mono text-slate-500">Chain ${chain.chain_id}</span>
+            </span>
+            <button onclick="boltzRemoveChain(${idx})" class="text-slate-300 hover:text-red-500 transition" title="Remove chain">
+              <i data-lucide="x-circle" style="width:14px;height:14px"></i>
+            </button>
+          </div>
+          <textarea rows="2" placeholder="${placeholder}"
+            class="w-full rounded-lg border border-slate-200 p-1.5 font-mono text-[10px] uppercase tracking-widest focus:outline-none focus:border-violet-500 bg-white resize-none"
+            onchange="boltzUpdateChain(${idx}, this.value)"
+            oninput="boltzUpdateChain(${idx}, this.value)"
+          >${chain.value || ''}</textarea>
+        `;
+        container.appendChild(div);
+      });
+      document.getElementById('boltz-chain-count').textContent = boltzChains.length + ' chain' + (boltzChains.length !== 1 ? 's' : '');
+      lucide.createIcons();
+      boltzValidated = false;
+      boltzEstimated = false;
+      document.getElementById('boltz-estimate-btn').disabled = true;
+      document.getElementById('boltz-submit-btn').disabled = true;
+    }
+
+    function boltzAddChain(type) {
+      boltzChains.push({ type, value: '', chain_id: nextChainId() });
+      boltzRenderChains();
+    }
+
+    function boltzRemoveChain(idx) {
+      boltzChains.splice(idx, 1);
+      // Re-assign chain IDs sequentially
+      boltzChains.forEach((c, i) => { c.chain_id = CHAIN_LETTERS[i] || CHAIN_LETTERS[25]; });
+      boltzRenderChains();
+    }
+
+    function boltzUpdateChain(idx, val) {
+      boltzChains[idx].value = val.trim().toUpperCase();
+    }
+
+    // Binding mode show/hide
+    document.getElementById('boltz-binding-type').addEventListener('change', function() {
+      const row = document.getElementById('boltz-binder-chain-row');
+      row.classList.toggle('hidden', this.value === 'none');
+    });
+
+    // ── Validate ─────────────────────────────────────────────────────────
+    async function boltzValidate() {
+      const btn = document.getElementById('boltz-validate-btn');
+      btn.disabled = true;
+      btn.innerHTML = '<div class="w-3 h-3 border-2 border-slate-400 border-t-transparent rounded-full animate-spin"></div> Validating...';
+
+      const manifest = boltzBuildManifest();
+      try {
+        const resp = await fetch('/api/v1/structure/boltz/validate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ manifest })
+        });
+        const data = await resp.json();
+        if (data.valid) {
+          boltzSetStatus('validated', '✓ Complex is valid. ' + JSON.stringify(data.summary));
+          document.getElementById('boltz-estimate-btn').disabled = false;
+          boltzValidated = true;
+        } else {
+          boltzSetStatus('error', '✗ Validation failed: ' + data.errors.join(' | '));
+          document.getElementById('boltz-estimate-btn').disabled = true;
+        }
+      } catch (e) {
+        boltzSetStatus('error', 'Network error during validation: ' + e.message);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i data-lucide="check-circle" style="width:13px;height:13px"></i> 1. Validate Complex';
+        lucide.createIcons();
+      }
+    }
+
+    // ── Cost Estimate ─────────────────────────────────────────────────────
+    async function boltzEstimate() {
+      const btn = document.getElementById('boltz-estimate-btn');
+      btn.disabled = true;
+      btn.innerHTML = '<div class="w-3 h-3 border-2 border-slate-400 border-t-transparent rounded-full animate-spin"></div> Estimating...';
+
+      const manifest = boltzBuildManifest();
+      try {
+        const resp = await fetch('/api/v1/structure/boltz/estimate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ manifest })
+        });
+        if (!resp.ok) {
+          const err = await resp.json();
+          boltzSetStatus('error', 'Cost estimate error: ' + (err.detail?.message || resp.status));
+        } else {
+          const data = await resp.json();
+          const cost = data.estimated_cost_usd || '?';
+          boltzSetStatus('estimated', `Estimated cost: $${cost} USD. ${data.disclaimer || ''}`);
+          document.getElementById('boltz-submit-btn').disabled = false;
+          boltzEstimated = true;
+          window._boltzEstimatedCost = cost;
+        }
+      } catch (e) {
+        boltzSetStatus('error', 'Network error during cost estimate: ' + e.message);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i data-lucide="dollar-sign" style="width:13px;height:13px"></i> 2. Estimate Cost';
+        lucide.createIcons();
+      }
+    }
+
+    // ── Submit with confirmation ───────────────────────────────────────────
+    function boltzSubmitWithConfirm() {
+      const cost = window._boltzEstimatedCost || '?';
+      const ok = confirm(
+        `This will submit a real Boltz API complex prediction and will incur usage cost.\n\n` +
+        `Estimated cost: $${cost} USD\n\n` +
+        `The prediction will run on Boltz-2.1. No synthetic fallback will be used.\n\n` +
+        `FOR RESEARCH USE ONLY — Not for clinical decisions.\n\nContinue?`
+      );
+      if (ok) boltzSubmit();
+    }
+
+    async function boltzSubmit() {
+      const btn = document.getElementById('boltz-submit-btn');
+      btn.disabled = true;
+      btn.innerHTML = '<div class="w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin"></div> Submitting...';
+
+      const manifest = boltzBuildManifest();
+      const jobName  = document.getElementById('boltz-job-name').value.trim() || undefined;
+
+      boltzShowViewerLoading();
+
+      try {
+        const resp = await fetch('/api/v1/structure/boltz/submit', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ manifest, job_name: jobName, num_samples: 1 })
+        });
+        const data = await resp.json();
+        if (!resp.ok) {
+          const errMsg = data.detail?.message || data.detail || 'Unknown error';
+          boltzSetStatus('error', 'Boltz API error: ' + errMsg);
+          boltzShowViewerError(errMsg);
+        } else {
+          boltzJobId = data.boltz_prediction_id;
+          boltzSetStatus('running', 'Job submitted. ID: ' + boltzJobId + ' | Status: ' + data.status);
+          document.getElementById('boltz-job-id-display').textContent = boltzJobId;
+          document.getElementById('boltz-job-id-row').classList.remove('hidden');
+          document.getElementById('boltz-poll-btn').disabled = false;
+          boltzRenderInfoTable();
+          // Start auto-polling
+          if (boltzPolling) clearInterval(boltzPolling);
+          boltzPolling = setInterval(boltzPollStatus, 8000);
+          boltzPollStatus();
+        }
+      } catch (e) {
+        boltzSetStatus('error', 'Submit failed: ' + e.message);
+        boltzShowViewerError(e.message);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i data-lucide="send" style="width:13px;height:13px"></i> 3. Submit Boltz Prediction';
+        lucide.createIcons();
+      }
+    }
+
+    // ── Poll Status ────────────────────────────────────────────────────────
+    async function boltzPollStatus() {
+      if (!boltzJobId) return;
+      try {
+        const resp = await fetch(`/api/v1/structure/boltz/jobs/${boltzJobId}`);
+        const data = await resp.json();
+        const status = data.status;
+        boltzSetStatus(status, `Job ${boltzJobId} | Status: ${status}`);
+        if (status === 'succeeded') {
+          if (boltzPolling) { clearInterval(boltzPolling); boltzPolling = null; }
+          boltzLoadResult();
+        } else if (status === 'failed') {
+          if (boltzPolling) { clearInterval(boltzPolling); boltzPolling = null; }
+          const errMsg = data.error?.message || 'Boltz prediction failed.';
+          boltzShowViewerError(errMsg);
+          boltzSetStatus('error', 'Prediction failed: ' + errMsg);
+        }
+      } catch (e) {
+        // Network blip — keep polling
+        console.warn('[Boltz] Poll error:', e.message);
+      }
+    }
+
+    // ── Load Result ────────────────────────────────────────────────────────
+    async function boltzLoadResult() {
+      try {
+        const resp = await fetch(`/api/v1/structure/boltz/jobs/${boltzJobId}/result`);
+        const data = await resp.json();
+        if (!resp.ok) throw new Error(data.detail?.message || 'Result fetch failed');
+
+        // Show real prediction badges
+        document.getElementById('boltz-real-badge').classList.remove('hidden');
+        document.getElementById('boltz-no-synth-badge').classList.remove('hidden');
+
+        // Show metrics
+        boltzRenderMetrics(data);
+
+        // Load CIF into viewer
+        boltzLoadCifViewer();
+
+        // Show result actions
+        document.getElementById('boltz-result-actions').style.display = '';
+      } catch (e) {
+        boltzSetStatus('error', 'Failed to load result: ' + e.message);
+        boltzShowViewerError('Result unavailable: ' + e.message);
+      }
+    }
+
+    // ── Load CIF into Mol* (via proxy) ────────────────────────────────────
+    async function boltzLoadCifViewer() {
+      const placeholder = document.getElementById('boltz-viewer-placeholder');
+      const spinner = document.getElementById('boltz-viewer-spinner');
+      const icon = document.getElementById('boltz-viewer-icon');
+      const title = document.getElementById('boltz-viewer-title');
+      const sub = document.getElementById('boltz-viewer-sub');
+
+      spinner.classList.remove('hidden');
+      icon.classList.add('hidden');
+      title.textContent = 'Loading complex structure...';
+      sub.textContent = 'Downloading CIF from Boltz API (proxied). Loading Mol* viewer.';
+
+      const cifUrl = `/api/v1/structure/boltz/jobs/${boltzJobId}/download/model.cif`;
+
+      try {
+        // Fetch CIF bytes
+        const resp = await fetch(cifUrl);
+        if (!resp.ok) throw new Error('CIF download failed: HTTP ' + resp.status);
+        const cifText = await resp.text();
+
+        // Load into 3Dmol.js (already loaded on the page)
+        const container = document.getElementById('boltz-molstar-mount');
+        container.innerHTML = '';
+        const viewerDiv = document.createElement('div');
+        viewerDiv.style.cssText = 'width:100%;height:100%;position:relative;';
+        container.appendChild(viewerDiv);
+
+        const viewer3d = $3Dmol.createViewer($(viewerDiv), {
+          backgroundColor: '#0f172a',
+          antialias: true,
+        });
+        viewer3d.addModel(cifText, 'cif');
+        viewer3d.setStyle({ chain: /^/ }, { cartoon: { colorfunc: function(a) {
+          const map = { 'A':'#818cf8','B':'#34d399','C':'#f472b6','D':'#fbbf24','E':'#60a5fa' };
+          return map[a.chain] || '#94a3b8';
+        }}, stick: { radius: 0.15, opacity: 0.5 }});
+        viewer3d.zoomTo();
+        viewer3d.render();
+
+        // Hide placeholder
+        placeholder.style.display = 'none';
+        boltzCifUrl = cifUrl;
+      } catch (e) {
+        spinner.classList.add('hidden');
+        icon.classList.remove('hidden');
+        title.textContent = 'Viewer Error';
+        sub.textContent = e.message;
+        boltzSetStatus('error', 'Viewer error: ' + e.message);
+      }
+    }
+
+    // ── Render Metrics ─────────────────────────────────────────────────────
+    function boltzRenderMetrics(data) {
+      const metrics = data.best_sample?.metrics || {};
+      const grid = document.getElementById('boltz-metrics-grid');
+      grid.innerHTML = '';
+      const show = [
+        ['Structure Confidence', metrics.structure_confidence],
+        ['pTM', metrics.ptm],
+        ['ipTM', metrics.iptm],
+        ['Complex pLDDT', metrics.complex_plddt],
+        ['Complex ipLDDT', metrics.complex_iplddt],
+        ['PDE', metrics.complex_pde],
+      ];
+      show.forEach(([label, val]) => {
+        if (val !== undefined && val !== null) {
+          const pill = document.createElement('div');
+          pill.className = 'boltz-metric-pill';
+          const display = typeof val === 'number' ? val.toFixed(3) : val;
+          pill.innerHTML = `<span class="label">${label}</span><span class="value">${display}</span>`;
+          grid.appendChild(pill);
+        }
+      });
+
+      const bm = data.binding_metrics;
+      if (bm) {
+        document.getElementById('boltz-binding-metrics').classList.remove('hidden');
+        document.getElementById('boltz-binding-content').innerHTML =
+          `Binding Confidence: <strong>${(bm.binding_confidence||0).toFixed(3)}</strong>` +
+          (bm.optimization_score !== undefined ? ` &nbsp;|&nbsp; Optimization Score: <strong>${bm.optimization_score.toFixed(3)}</strong>` : '');
+      }
+
+      document.getElementById('boltz-metrics-panel').style.display = '';
+    }
+
+    // ── Info Table ────────────────────────────────────────────────────────
+    function boltzRenderInfoTable() {
+      const tbody = document.getElementById('boltz-info-tbody');
+      tbody.innerHTML = '';
+      boltzChains.forEach(c => {
+        const tr = document.createElement('tr');
+        const typeMap = { protein:'Protein', dna:'DNA', rna:'RNA', ligand_ccd:'Ligand/Ion', ligand_smiles:'Ligand SMILES' };
+        const seqPreview = c.value.length > 24 ? c.value.substring(0, 24) + '…' : c.value;
+        tr.innerHTML = `<td class="py-1 px-2 font-bold text-slate-800">${typeMap[c.type]||c.type}</td><td class="py-1 px-2 font-mono">${c.chain_id}</td><td class="py-1 px-2 font-mono text-slate-500">${seqPreview}</td><td class="py-1 px-2 font-mono">${c.value.length}</td>`;
+        tbody.appendChild(tr);
+      });
+      document.getElementById('boltz-info-table-panel').style.display = '';
+    }
+
+    // ── Downloads ─────────────────────────────────────────────────────────
+    function boltzDownloadCif() {
+      if (!boltzJobId) return;
+      const a = document.createElement('a');
+      a.href = `/api/v1/structure/boltz/jobs/${boltzJobId}/download/model.cif`;
+      a.download = `boltz_${boltzJobId}_sample0.cif`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
+
+    function boltzDownloadConfidence() {
+      if (!boltzJobId) return;
+      const a = document.createElement('a');
+      a.href = `/api/v1/structure/boltz/jobs/${boltzJobId}/download/confidence.json`;
+      a.download = `boltz_${boltzJobId}_confidence.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
+
+    // ── Manifest Builder ──────────────────────────────────────────────────
+    function boltzBuildManifest() {
+      const entities = boltzChains.map(c => ({
+        type: c.type,
+        value: c.value,
+        chain_ids: [c.chain_id]
+      }));
+      const bindingType = document.getElementById('boltz-binding-type').value;
+      let manifest = { entities };
+      if (bindingType !== 'none') {
+        const binderId = document.getElementById('boltz-binder-chain-id').value.trim();
+        const binding = { type: bindingType };
+        if (bindingType === 'ligand_protein_binding') binding.binder_chain_id = binderId || undefined;
+        if (bindingType === 'protein_protein_binding') binding.binder_chain_ids = binderId ? [binderId] : undefined;
+        manifest.binding = binding;
+      }
+      return manifest;
+    }
+
+    // ── UI helpers ────────────────────────────────────────────────────────
+    function boltzSetStatus(type, msg) {
+      const badge = document.getElementById('boltz-status-badge');
+      const msgEl = document.getElementById('boltz-status-msg');
+      msgEl.textContent = msg;
+      const map = {
+        idle:       ['bg-slate-100 text-slate-500', 'IDLE'],
+        validated:  ['bg-emerald-50 text-emerald-700', 'VALIDATED'],
+        estimated:  ['bg-blue-50 text-blue-700', 'ESTIMATED'],
+        running:    ['bg-violet-50 text-violet-700 animate-pulse', 'RUNNING'],
+        succeeded:  ['bg-emerald-50 text-emerald-700', 'SUCCEEDED'],
+        error:      ['bg-red-50 text-red-700', 'ERROR'],
+        failed:     ['bg-red-50 text-red-700', 'FAILED'],
+      };
+      const [cls, label] = map[type] || map.idle;
+      badge.className = `text-[8px] font-mono px-2 py-0.5 rounded uppercase font-bold ${cls}`;
+      badge.textContent = label;
+    }
+
+    function boltzShowViewerLoading() {
+      const ph = document.getElementById('boltz-viewer-placeholder');
+      ph.style.display = '';
+      ph.style.position = 'absolute';
+      document.getElementById('boltz-viewer-spinner').classList.remove('hidden');
+      document.getElementById('boltz-viewer-icon').classList.add('hidden');
+      document.getElementById('boltz-viewer-title').textContent = 'Submitting to Boltz API...';
+      document.getElementById('boltz-viewer-sub').textContent = 'Prediction running on Boltz-2.1. This may take 30–120 seconds. Auto-polling every 8s.';
+    }
+
+    function boltzShowViewerError(msg) {
+      const ph = document.getElementById('boltz-viewer-placeholder');
+      ph.style.display = '';
+      ph.style.position = 'absolute';
+      document.getElementById('boltz-viewer-spinner').classList.add('hidden');
+      const icon = document.getElementById('boltz-viewer-icon');
+      icon.classList.remove('hidden');
+      icon.setAttribute('data-lucide','alert-triangle');
+      document.getElementById('boltz-viewer-title').textContent = 'Prediction Unavailable';
+      document.getElementById('boltz-viewer-sub').textContent =
+        'Boltz API is unavailable or prediction failed. No complex structure was generated.\n' + msg;
+      lucide.createIcons();
+    }
 
     // Track text area inputs to update character count
     const sequenceInput = document.getElementById("sequence");

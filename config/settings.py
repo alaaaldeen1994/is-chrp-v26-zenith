@@ -19,6 +19,22 @@ class Settings(BaseSettings):
     ESMFOLD_PROVIDER_NAME: str = "ESMFold"
     ESMFOLD_CACHE_ENABLED: bool = True
 
+    # ── Boltz API (Native Complex Prediction) ─────────────────────────────────
+    BOLTZ_API_ENABLED: bool = True
+    BOLTZ_API_BASE_URL: str = "https://api.boltz.bio"
+    BOLTZ_API_KEY: str = ""          # Set in Railway env only — NEVER commit
+    BOLTZ_API_TIMEOUT_SECONDS: float = 120.0
+    BOLTZ_API_MAX_PROTEIN_CHAINS: int = 5
+    BOLTZ_API_MAX_DNA_CHAINS: int = 5
+    BOLTZ_API_MAX_RNA_CHAINS: int = 5
+    BOLTZ_API_MAX_LIGANDS: int = 10
+    BOLTZ_API_MAX_JOBS_PER_USER_PER_DAY: int = 50
+    BOLTZ_API_DATA_RETENTION_DAYS: int = 7
+    # Safety rails — set both to false in production, always
+    COMPLEX_ALLOW_MOCK: bool = False
+    COMPLEX_REQUIRE_REAL_ENGINE: bool = True
+    COMPLEX_SYNTHETIC_FALLBACK: bool = False  # MUST remain False in production
+
     # Database & Cache
     DATABASE_URL: str = "sqlite:///./zenith_api.db"
     REDIS_URL: str = "redis://localhost:6379/0"
