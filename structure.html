@@ -1424,6 +1424,53 @@
 
       // Run initial diagnostics
       refreshDiagnostics();
+
+      // Check query parameter to switch tabs if requested
+      try {
+        const urlParams = new URLSearchParams(window.location.search);
+        const tabParam = urlParams.get('tab');
+        if (tabParam === 'boltz') {
+          switchTab('boltz');
+        } else if (tabParam === 'esmfold') {
+          switchTab('esmfold');
+        }
+      } catch (err) {
+        console.warn("Could not check URL tab params:", err);
+      }
+
+      // Check for incoming Boltz transfer from Discovery
+      try {
+        const transferRaw = sessionStorage.getItem("zenith_boltz_transfer");
+        if (transferRaw) {
+          const transferData = JSON.parse(transferRaw);
+          if (transferData && transferData.chains && transferData.chains.length) {
+            // Set job name
+            const jobNameInput = document.getElementById("boltz-job-name");
+            if (jobNameInput) {
+              jobNameInput.value = transferData.jobName || "";
+            }
+            // Populate chains
+            boltzChains = transferData.chains;
+            // Render chains UI
+            boltzRenderChains();
+            
+            // If bindingType is provided
+            if (transferData.bindingType) {
+              const bSelect = document.getElementById("boltz-binding-type");
+              if (bSelect) {
+                bSelect.value = transferData.bindingType;
+              }
+            }
+            
+            // Switch view immediately to Boltz Complex
+            switchTab("boltz");
+          }
+          // Clear session data so it doesn't pop up again
+          sessionStorage.removeItem("zenith_boltz_transfer");
+        }
+      } catch (err) {
+        console.error("Failed to parse Boltz transfer data:", err);
+      }
     });
 
     function toggleApiKeyVisibility() {

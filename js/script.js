@@ -2077,18 +2077,131 @@ const BiosimBridge = {
                 } else {
                     BiosimUI.notify('UniProt', `${geneName} not found in Swiss-Prot`, 'warn');
                     break;
-                }
-            } catch (e) {
-                console.warn(`UniProt fetch failed for ${geneName}:`, e.message);
-                retries--;
-                if (retries <= 0) {
-                    BiosimUI.notify('UniProt', `Network error for ${geneName}`, 'warn');
-                } else {
-                    await new Promise(r => setTimeout(r, 500));
-                }
+            }
+        return (this.domainDefaults && this.domainDefaults[geneName]) || null;
+    },
+
+    async buildComplexPayload() {
+        if (!this.lastDiscovery) {
+            return null;
+        }
+        const data = this.lastDiscovery;
+        const pKeys = Object.keys(data.target_profile || {});
+
+        const TF_METADATA = {
+            'GATA4': { motif: 'GCAGATCTGATAGCAGATCTGATAGCAG', revMotif: 'CTGCTATCAGATCTGCTATCAGATCTGC', fallbackDomain: [217, 328], fallbackSeq: 'HPNLDMFDDFSEGRECVNCGAMSTPLWRRDGTGHYLCNACGLYHKMNGINRPLIKPQRRLSASRRVGLSCANCQTTTTTLWRRNAEGEPVCNACGLYMKLHGVPRPLAMRKEGIQTRKRKPKNLNKSKT' },
+            'TBX5': { motif: 'AGGTGTGAAATTAACCCTCACTAAAGGG', revMotif: 'CCCTTTAGTGAGGGTTAATTTCACACCT', fallbackDomain: [50, 250], fallbackSeq: 'KVFLHERELWLKFHEVGTEMIITKAGRRMFPSYKVKVTGLNPKTKYILLMDIVPADDHRYKFADNKWSVTGKAEPAMPGRLYVHPDSPATGAHWMRQLVSFQKLKLTNNHLDPFGHIILNSMHKYQPRLHIVKAD' },
+            'NKX2-5': { motif: 'CAAGTGAAATTAACCCTCACTAAAGGG', revMotif: 'CCCTTTAGTGAGGGTTAATTTCACATTG', fallbackDomain: [138, 197], fallbackSeq: 'KKPRVLFSQAQVYELERRFKQQRYLSAPEREHLASLILKLTQTQVKIWFQNHRYKMKRQAKD' },
+            'SOX5': { motif: 'AACAATGAATTACCAACAATGA', revMotif: 'TCATTGTTGGTAATTCATTGTT', fallbackDomain: [550, 625], fallbackSeq: 'MVKRPMNAFMVWSRGQRRKMAQENPKMHNSEISKRLGAEWKLLSETEKRPFIDEAKRLRALHMKEHPDYKYRPRRK' },
+            'SOX2': { motif: 'AACAATGAATTACCAACAATGA', revMotif: 'TCATTGTTGGTAATTCATTGTT', fallbackDomain: [41, 120], fallbackSeq: 'VKRPMNAFMVWSRGQRRKMAQENPKMHNSEISKRLGAEWKLLSETEKRPFIDEAKRLRALHMKEHPDYKYRPRRKTKTL' },
+            'OCT4': { motif: 'ATGCAAATGAATTACATGCAAAT', revMotif: 'ATTTGCATGTAATTCATTTGCAT', fallbackDomain: [134, 360], fallbackSeq: 'TPGAVKLEKEKLEQNPEESQDIKALQKELEQFAKLLKQKRITLGYTQADVGLTLGVLFGKVFSQTTICRFEALQLSFKNMCKLRPLLQKWVEEADNNENLQEICKAETLVQARKRKRTSIENRVRGNLENLFLQCPKPTLQQISHIAQQLGLEKDVVRVWFCNRRQKGKRSSSDYAQREDFEAAGS' },
+            'POU5F1': { motif: 'ATGCAAATGAATTACATGCAAAT', revMotif: 'ATTTGCATGTAATTCATTTGCAT', fallbackDomain: [134, 360], fallbackSeq: 'TPGAVKLEKEKLEQNPEESQDIKALQKELEQFAKLLKQKRITLGYTQADVGLTLGVLFGKVFSQTTICRFEALQLSFKNMCKLRPLLQKWVEEADNNENLQEICKAETLVQARKRKRTSIENRVRGNLENLFLQCPKPTLQQISHIAQQLGLEKDVVRVWFCNRRQKGKRSSSDYAQREDFEAAGS' },
+            'MEF2C': { motif: 'CTAAAAATAGAAATTA', revMotif: 'TAATTTCTATTTTTAG', fallbackDomain: [1, 86], fallbackSeq: 'MGRKKIQITRIMDERNRQVTFTKRKFGLMKKAYELSVLCDCEIALIIFNSSNKLFQYASTDMDKVLLKYTEYNEPHESRTNSDIVET' },
+            'ZFHX3': { motif: 'AATATTGAATTAAATATTGA', revMotif: 'TCAATATTTAATTCAATATT', fallbackDomain: [2600, 2670], fallbackSeq: 'VVPKRPFALEEQAQAALQAVHAALEAGVKPRLGLPTAARARLEALRARGAGELPPQPVAGLAEAAAEGPGA' },
+            'KLF4': { motif: 'GGGTGTGAAATTAGGGTGTG', revMotif: 'CACACCCTAATTTCACACCC', fallbackDomain: [352, 479], fallbackSeq: 'KASLSAPGSEYGSPSVISVSKGSPDGSHPVVVAPYNGGPPRTCPKIKQEAVSSCTHLGAGPPLSNGHRPAAHDFPLGRQLPSRTTPTLGLEEVLSSRDCHPALPLPPGFHPHPGPNYPSFLPDQM' },
+            'MYC': { motif: 'CACGTGAAATTACACGTG', revMotif: 'CACGTGTAATTTCACGTG', fallbackDomain: [367, 439], fallbackSeq: 'KRCHVSTHQHNYAAPPSTRKDYPAAKRVKLDSVRVLRQISNNRKCTSPRSSDTEENVKRRTHNVLERQRRNELKRSFF' }
+        };
+
+        let targetTF = null;
+        for (let gene of pKeys) {
+            const upperGene = gene.toUpperCase();
+            if (TF_METADATA[upperGene]) {
+                targetTF = upperGene;
+                break;
             }
         }
-        return (this.domainDefaults && this.domainDefaults[geneName]) || null;
+
+        if (!targetTF) {
+            const selectedCellType = window._selectedCellType || 'all';
+            if (selectedCellType.includes('atrial')) {
+                targetTF = 'NKX2-5';
+            } else if (selectedCellType.includes('ventricular') || selectedCellType.includes('cardio') || selectedCellType.includes('heart')) {
+                targetTF = 'GATA4';
+            } else if (selectedCellType.includes('neural') || selectedCellType.includes('brain')) {
+                targetTF = 'SOX2';
+            } else {
+                targetTF = 'GATA4';
+            }
+        }
+
+        const tfMeta = TF_METADATA[targetTF] || TF_METADATA['GATA4'];
+        let proteinSeq = tfMeta.fallbackSeq;
+        let dnaFwd = tfMeta.motif;
+        let dnaRev = tfMeta.revMotif;
+
+        try {
+            const lookupUrl = `/api/uniprot-lookup?gene=${encodeURIComponent(targetTF)}`;
+            const response = await fetch(lookupUrl);
+            if (response.ok) {
+                const uniData = await response.json();
+                if (uniData && uniData.sequence) {
+                    const fullSeq = uniData.sequence;
+                    let dStart = tfMeta.fallbackDomain[0];
+                    let dEnd = tfMeta.fallbackDomain[1];
+
+                    const features = uniData.domains || [];
+                    const dbdFeature = features.find(f => f.type === 'DNA binding' || f.type === 'Domain' || f.description.toLowerCase().includes('dna-binding') || f.description.toLowerCase().includes('hmg-box') || f.description.toLowerCase().includes('zinc finger'));
+                    if (dbdFeature && dbdFeature.start && dbdFeature.end) {
+                        dStart = dbdFeature.start;
+                        dEnd = dbdFeature.end;
+                    }
+
+                    const padStart = Math.max(1, dStart - 10);
+                    const padEnd = Math.min(fullSeq.length, dEnd + 10);
+                    proteinSeq = fullSeq.substring(padStart - 1, padEnd);
+                }
+            }
+        } catch (fetchErr) {
+            console.warn("[Complex Payload] UniProt fetch failed:", fetchErr.message);
+        }
+
+        return {
+            targetTF,
+            proteinSeq,
+            dnaFwd,
+            dnaRev,
+            hasZn: (targetTF === 'GATA4' || targetTF === 'KLF4' || targetTF === 'ZFHX3'),
+            znCount: targetTF === 'ZFHX3' ? 17 : 4
+        };
+    },
+
+    async sendToBoltzComplex() {
+        try {
+            if (!this.lastDiscovery) {
+                BiosimUI.notify('Error', 'Run a discovery first.', 'err');
+                return;
+            }
+            BiosimUI.notify('Preparing', 'Extracting sequences and motifs...', 'inf');
+            const payload = await this.buildComplexPayload();
+            if (!payload) return;
+
+            const { targetTF, proteinSeq, dnaFwd, dnaRev, hasZn, znCount } = payload;
+
+            const chains = [];
+            chains.push({ type: 'protein', value: proteinSeq, chain_id: 'A' });
+            chains.push({ type: 'dna', value: dnaFwd, chain_id: 'B' });
+            chains.push({ type: 'dna', value: dnaRev, chain_id: 'C' });
+
+            if (hasZn) {
+                chains.push({ type: 'ligand_ccd', value: 'ZN', chain_id: 'D' });
+            }
+
+            const transferData = {
+                jobName: `Zenith_${targetTF}_Complex`,
+                chains: chains,
+                bindingType: 'protein_protein_binding'
+            };
+
+            sessionStorage.setItem('zenith_boltz_transfer', JSON.stringify(transferData));
+            BiosimUI.notify('Redirecting', 'Transferring sequence data to folding room...', 'suc');
+            setTimeout(() => {
+                window.location.href = 'structure.html?tab=boltz';
+            }, 800);
+
+        } catch (error) {
+            console.error("Boltz Transfer Error: ", error);
+            BiosimUI.notify('Transfer Error', error.message, 'err');
+        }
     },
 
     async exportAlphaFoldManifest() {
@@ -2097,99 +2210,17 @@ const BiosimBridge = {
                 BiosimUI.notify('Export Error', 'Run a discovery first.', 'err');
                 return;
             }
-            const data = this.lastDiscovery;
-            const pKeys = Object.keys(data.target_profile || {});
+            const payload = await this.buildComplexPayload();
+            if (!payload) return;
 
-            // Transcription Factor mapping & motifs
-            const TF_METADATA = {
-                'GATA4': { motif: 'GCAGATCTGATAGCAGATCTGATAGCAG', revMotif: 'CTGCTATCAGATCTGCTATCAGATCTGC', fallbackDomain: [217, 328], fallbackSeq: 'HPNLDMFDDFSEGRECVNCGAMSTPLWRRDGTGHYLCNACGLYHKMNGINRPLIKPQRRLSASRRVGLSCANCQTTTTTLWRRNAEGEPVCNACGLYMKLHGVPRPLAMRKEGIQTRKRKPKNLNKSKT' },
-                'TBX5': { motif: 'AGGTGTGAAATTAACCCTCACTAAAGGG', revMotif: 'CCCTTTAGTGAGGGTTAATTTCACACCT', fallbackDomain: [50, 250], fallbackSeq: 'KVFLHERELWLKFHEVGTEMIITKAGRRMFPSYKVKVTGLNPKTKYILLMDIVPADDHRYKFADNKWSVTGKAEPAMPGRLYVHPDSPATGAHWMRQLVSFQKLKLTNNHLDPFGHIILNSMHKYQPRLHIVKAD' },
-                'NKX2-5': { motif: 'CAAGTGAAATTAACCCTCACTAAAGGG', revMotif: 'CCCTTTAGTGAGGGTTAATTTCACATTG', fallbackDomain: [138, 197], fallbackSeq: 'KKPRVLFSQAQVYELERRFKQQRYLSAPEREHLASLILKLTQTQVKIWFQNHRYKMKRQAKD' },
-                'SOX5': { motif: 'AACAATGAATTACCAACAATGA', revMotif: 'TCATTGTTGGTAATTCATTGTT', fallbackDomain: [550, 625], fallbackSeq: 'MVKRPMNAFMVWSRGQRRKMAQENPKMHNSEISKRLGAEWKLLSETEKRPFIDEAKRLRALHMKEHPDYKYRPRRK' },
-                'SOX2': { motif: 'AACAATGAATTACCAACAATGA', revMotif: 'TCATTGTTGGTAATTCATTGTT', fallbackDomain: [41, 120], fallbackSeq: 'VKRPMNAFMVWSRGQRRKMAQENPKMHNSEISKRLGAEWKLLSETEKRPFIDEAKRLRALHMKEHPDYKYRPRRKTKTL' },
-                'OCT4': { motif: 'ATGCAAATGAATTACATGCAAAT', revMotif: 'ATTTGCATGTAATTCATTTGCAT', fallbackDomain: [134, 360], fallbackSeq: 'TPGAVKLEKEKLEQNPEESQDIKALQKELEQFAKLLKQKRITLGYTQADVGLTLGVLFGKVFSQTTICRFEALQLSFKNMCKLRPLLQKWVEEADNNENLQEICKAETLVQARKRKRTSIENRVRGNLENLFLQCPKPTLQQISHIAQQLGLEKDVVRVWFCNRRQKGKRSSSDYAQREDFEAAGS' },
-                'POU5F1': { motif: 'ATGCAAATGAATTACATGCAAAT', revMotif: 'ATTTGCATGTAATTCATTTGCAT', fallbackDomain: [134, 360], fallbackSeq: 'TPGAVKLEKEKLEQNPEESQDIKALQKELEQFAKLLKQKRITLGYTQADVGLTLGVLFGKVFSQTTICRFEALQLSFKNMCKLRPLLQKWVEEADNNENLQEICKAETLVQARKRKRTSIENRVRGNLENLFLQCPKPTLQQISHIAQQLGLEKDVVRVWFCNRRQKGKRSSSDYAQREDFEAAGS' },
-                'MEF2C': { motif: 'CTAAAAATAGAAATTA', revMotif: 'TAATTTCTATTTTTAG', fallbackDomain: [1, 86], fallbackSeq: 'MGRKKIQITRIMDERNRQVTFTKRKFGLMKKAYELSVLCDCEIALIIFNSSNKLFQYASTDMDKVLLKYTEYNEPHESRTNSDIVET' },
-                'ZFHX3': { motif: 'AATATTGAATTAAATATTGA', revMotif: 'TCAATATTTAATTCAATATT', fallbackDomain: [2600, 2670], fallbackSeq: 'VVPKRPFALEEQAQAALQAVHAALEAGVKPRLGLPTAARARLEALRARGAGELPPQPVAGLAEAAAEGPGA' },
-                'KLF4': { motif: 'GGGTGTGAAATTAGGGTGTG', revMotif: 'CACACCCTAATTTCACACCC', fallbackDomain: [352, 479], fallbackSeq: 'KASLSAPGSEYGSPSVISVSKGSPDGSHPVVVAPYNGGPPRTCPKIKQEAVSSCTHLGAGPPLSNGHRPAAHDFPLGRQLPSRTTPTLGLEEVLSSRDCHPALPLPPGFHPHPGPNYPSFLPDQM' },
-                'MYC': { motif: 'CACGTGAAATTACACGTG', revMotif: 'CACGTGTAATTTCACGTG', fallbackDomain: [367, 439], fallbackSeq: 'KRCHVSTHQHNYAAPPSTRKDYPAAKRVKLDSVRVLRQISNNRKCTSPRSSDTEENVKRRTHNVLERQRRNELKRSFF' }
-            };
-
-            // 1. Identify which TF to fold
-            let targetTF = null;
-            // First check if any TF is in the target profile keys
-            for (let gene of pKeys) {
-                const upperGene = gene.toUpperCase();
-                if (TF_METADATA[upperGene]) {
-                    targetTF = upperGene;
-                    break;
-                }
-            }
-
-            // Fallback to cell type primary driver if none found in profile
-            if (!targetTF) {
-                const selectedCellType = window._selectedCellType || 'all';
-                console.info("[AF3 Export] No TF in target profile, falling back to cell type canonical driver for:", selectedCellType);
-                if (selectedCellType.includes('atrial')) {
-                    targetTF = 'NKX2-5';
-                } else if (selectedCellType.includes('ventricular') || selectedCellType.includes('cardio') || selectedCellType.includes('heart')) {
-                    targetTF = 'GATA4';
-                } else if (selectedCellType.includes('neural') || selectedCellType.includes('brain')) {
-                    targetTF = 'NEUROD2';
-                } else {
-                    targetTF = 'GATA4'; // absolute fallback
-                }
-            }
-
-            console.info("[AF3 Export] Selected TF for modeling:", targetTF);
-            BiosimUI.notify('AF3 Export', `Selected TF for modeling: ${targetTF}`, 'inf');
-
-            const tfMeta = TF_METADATA[targetTF] || TF_METADATA['GATA4'];
-            let proteinSeq = tfMeta.fallbackSeq;
-            let dnaFwd = tfMeta.motif;
-            let dnaRev = tfMeta.revMotif;
-
-            // 2. Fetch live sequence from UniProt endpoint to make it real!
-            try {
-                const lookupUrl = `/api/uniprot-lookup?gene=${encodeURIComponent(targetTF)}`;
-                console.info("[AF3 Export] Fetching sequence from:", lookupUrl);
-                const response = await fetch(lookupUrl);
-                if (response.ok) {
-                    const uniData = await response.json();
-                    if (uniData && uniData.sequence) {
-                        const fullSeq = uniData.sequence;
-                        // Extract DNA-binding domain
-                        let dStart = tfMeta.fallbackDomain[0];
-                        let dEnd = tfMeta.fallbackDomain[1];
-
-                        // Try to find DNA-binding domain in features
-                        const features = uniData.domains || [];
-                        const dbdFeature = features.find(f => f.type === 'DNA binding' || f.type === 'Domain' || f.description.toLowerCase().includes('dna-binding') || f.description.toLowerCase().includes('hmg-box') || f.description.toLowerCase().includes('zinc finger'));
-                        if (dbdFeature && dbdFeature.start && dbdFeature.end) {
-                            dStart = dbdFeature.start;
-                            dEnd = dbdFeature.end;
-                            console.info("[AF3 Export] Found domain in UniProt features:", dbdFeature);
-                        }
-
-                        // Trim to domain (with 10 AA padding on each side for stability)
-                        const padStart = Math.max(1, dStart - 10);
-                        const padEnd = Math.min(fullSeq.length, dEnd + 10);
-                        proteinSeq = fullSeq.substring(padStart - 1, padEnd);
-                        console.info(`[AF3 Export] Trimming protein to domain ${padStart}-${padEnd} (length ${proteinSeq.length} AA)`);
-                        BiosimUI.notify('AF3 Export', `Fetched reviewed UniProt sequence for ${targetTF}`, 'suc');
-                    }
-                }
-            } catch (fetchErr) {
-                console.warn("[AF3 Export] Live UniProt fetch failed, using built-in high-fidelity domain coordinates:", fetchErr.message);
-            }
+            const { targetTF, proteinSeq, dnaFwd, dnaRev, hasZn, znCount } = payload;
 
             let sequences = [];
             sequences.push({ "dnaSequence": { "sequence": dnaFwd, "count": 1 } });
             sequences.push({ "dnaSequence": { "sequence": dnaRev, "count": 1 } });
 
-            // Add Zinc ions for zinc-finger TFs
-            if (targetTF === 'GATA4' || targetTF === 'KLF4' || targetTF === 'ZFHX3') {
-                sequences.push({ "ion": { "ion": "ZN", "count": targetTF === 'ZFHX3' ? 17 : 4 } });
+            if (hasZn) {
+                sequences.push({ "ion": { "ion": "ZN", "count": znCount } });
             }
 
             sequences.push({ "proteinChain": { "sequence": proteinSeq, "count": 1 } });
@@ -2206,7 +2237,6 @@ const BiosimBridge = {
 
             const jsonStr = JSON.stringify(manifest, null, 2);
 
-            // Fail-safe: Copy to clipboard
             try {
                 await navigator.clipboard.writeText(jsonStr);
                 BiosimUI.notify('COPIED', 'JSON manifest copied to clipboard!', 'suc');
@@ -2214,7 +2244,6 @@ const BiosimBridge = {
 
             const backupFileName = `Zenith_Full_${targetTF.toUpperCase()}.json`;
 
-            // Download file
             const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(jsonStr);
             const a = document.createElement('a');
             a.href = dataUri;
