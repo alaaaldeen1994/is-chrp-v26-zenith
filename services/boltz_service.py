@@ -291,6 +291,59 @@ def download_boltz_cif_content(boltz_prediction_id: str, sample_index: int = 0) 
     except httpx.RequestError as exc:
         raise BoltzJobError(f"Network error downloading CIF: {_sanitize_error(str(exc))}")
 
+def convert_cif_to_pdb(cif_text: str) -> str:
+    lines = cif_text.splitlines()
+    pdb_lines = []
+    
+    for line in lines:
+        if line.startswith("ATOM") or line.startswith("HETATM"):
+            parts = line.split()
+            if len(parts) < 18:
+                continue
+                
+            group = parts[0] # ATOM or HETATM
+            serial = int(parts[1])
+            elem = parts[2]
+            atom_name = parts[3]
+            res_name = parts[5]
+            res_seq = int(parts[7])
+            chain_id = parts[9]
+            
+            x = float(parts[10])
+            y = float(parts[11])
+            z = float(parts[12])
+            
+            occ = float(parts[13])
+            b_factor = float(parts[17])
+            
+            # Format atom name (standard PDB formatting: 4 chars)
+            if len(elem) == 1 and len(atom_name) <= 3:
+                atom_field = f" {atom_name:<3}"
+            else:
+                atom_field = f"{atom_name:<4}"
+                
+            # Formatted PDB line
+            pdb_line = (
+                f"{group:<6}"
+                f"{serial:>5} "
+                f"{atom_field}"
+                f" {res_name:>3} "
+                f"{chain_id}{res_seq:>4}    "
+                f"{x:>8.3f}{y:>8.3f}{z:>8.3f}"
+                f"{occ:>6.2f}{b_factor:>6.2f}          "
+                f"{elem:>2}  "
+            )
+            pdb_lines.append(pdb_line)
+            
+    pdb_lines.append("END")
+    return "\n".join(pdb_lines)
+
+def download_boltz_pdb_content(boltz_prediction_id: str, sample_index: int = 0) -> bytes:
+    cif_bytes = download_boltz_cif_content(boltz_prediction_id, sample_index=sample_index)
+    cif_text = cif_bytes.decode("utf-8", errors="replace")
+    pdb_text = convert_cif_to_pdb(cif_text)
+    return pdb_text.encode("utf-8")
+
 def download_boltz_confidence_content(boltz_prediction_id: str) -> bytes:
     result = get_boltz_job_result(boltz_prediction_id)
     confidence_data = {

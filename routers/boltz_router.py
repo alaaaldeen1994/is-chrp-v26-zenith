@@ -249,6 +249,33 @@ async def download_cif(
         raise HTTPException(status_code=502, detail=_format_error("boltz_api_error", str(exc)))
 
 
+@router.get("/jobs/{boltz_prediction_id}/download/model.pdb")
+async def download_pdb(
+    boltz_prediction_id: str,
+    sample: int = Query(0, ge=0, le=4),
+):
+    """
+    Download the predicted structure converted to standard PDB format.
+    Proxied through Zenith backend.
+    """
+    bs = _import_boltz()
+    try:
+        pdb_bytes = bs.download_boltz_pdb_content(boltz_prediction_id, sample_index=sample)
+        return Response(
+            content=pdb_bytes,
+            media_type="chemical/x-pdb",
+            headers={
+                "Content-Disposition": f'attachment; filename="boltz_{boltz_prediction_id}_sample{sample}.pdb"',
+                "X-Real-Prediction": "true",
+                "X-Synthetic-Fallback": "false",
+            }
+        )
+    except bs.BoltzDisabledError as exc:
+        raise HTTPException(status_code=503, detail=_format_error("boltz_disabled", str(exc)))
+    except bs.BoltzJobError as exc:
+        raise HTTPException(status_code=502, detail=_format_error("boltz_api_error", str(exc)))
+
+
 @router.get("/jobs/{boltz_prediction_id}/download/confidence.json")
 async def download_confidence(boltz_prediction_id: str):
     """

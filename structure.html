@@ -566,7 +566,10 @@
             <div class="font-outfit text-[10px] font-bold uppercase tracking-wider text-slate-600 flex items-center gap-1.5 mb-2">
               <i data-lucide="download-cloud" class="w-3 h-3 text-emerald-600"></i> Downloads
             </div>
-            <div class="grid grid-cols-2 gap-2">
+            <div class="grid grid-cols-3 gap-2">
+              <button class="boltz-btn secondary" id="boltz-dl-pdb-btn" onclick="boltzDownloadPdb()">
+                <i data-lucide="file-text" style="width:12px;height:12px"></i> Download PDB
+              </button>
               <button class="boltz-btn secondary" id="boltz-dl-cif-btn" onclick="boltzDownloadCif()">
                 <i data-lucide="file" style="width:12px;height:12px"></i> Download CIF
               </button>
@@ -1025,16 +1028,18 @@
 
       spinner.classList.remove('hidden');
       icon.classList.add('hidden');
+      spinner.classList.remove('hidden');
+      icon.classList.add('hidden');
       title.textContent = 'Loading complex structure...';
-      sub.textContent = 'Downloading CIF from Boltz API (proxied). Loading Mol* viewer.';
+      sub.textContent = 'Downloading PDB from Boltz API (proxied). Loading Mol* viewer.';
 
-      const cifUrl = `/api/v1/structure/boltz/jobs/${boltzJobId}/download/model.cif`;
+      const pdbUrl = `/api/v1/structure/boltz/jobs/${boltzJobId}/download/model.pdb`;
 
       try {
-        // Fetch CIF bytes
-        const resp = await fetch(cifUrl);
-        if (!resp.ok) throw new Error('CIF download failed: HTTP ' + resp.status);
-        const cifText = await resp.text();
+        // Fetch PDB bytes
+        const resp = await fetch(pdbUrl);
+        if (!resp.ok) throw new Error('PDB download failed: HTTP ' + resp.status);
+        const pdbText = await resp.text();
 
         // Load into 3Dmol.js (already loaded on the page)
         const container = document.getElementById('boltz-molstar-mount');
@@ -1049,7 +1054,7 @@
           antialias: true,
         });
         window._activeBoltzViewer = viewer3d;
-        const model = viewer3d.addModel(cifText, 'cif');
+        const model = viewer3d.addModel(pdbText, 'pdb');
         if (model && typeof model.computeSecondaryStructure === 'function') {
           model.computeSecondaryStructure();
         }
@@ -1064,13 +1069,8 @@
           return '#ff7d00'; // Very Low (Orange)
         };
 
-        // Style all polymer backbones as cartoon ribbons colored by pLDDT B-factor
-        viewer3d.setStyle({}, { cartoon: { colorfunc: plddtColorfunc } });
-
-        // Overlay stick representation on standard polymer residues as a fail-safe
-        viewer3d.addStyle({ hetflag: false }, {
-          stick: { colorfunc: plddtColorfunc, radius: 0.16 }
-        });
+        // Style standard chains (protein/DNA/RNA) as cartoon ribbons colored by pLDDT B-factor
+        viewer3d.setStyle({ hetflag: false }, { cartoon: { colorfunc: plddtColorfunc } });
 
         // Add stick style for heteroatoms (ligands)
         viewer3d.addStyle({ hetflag: true }, {
@@ -1087,7 +1087,7 @@
 
         // Hide placeholder
         placeholder.style.display = 'none';
-        boltzCifUrl = cifUrl;
+        boltzCifUrl = pdbUrl;
 
         // Fetch and draw PAE matrix
         fetch(`/api/v1/structure/boltz/jobs/${boltzJobId}/pae`)
@@ -1180,6 +1180,16 @@
       const a = document.createElement('a');
       a.href = `/api/v1/structure/boltz/jobs/${boltzJobId}/download/model.cif`;
       a.download = `boltz_${boltzJobId}_sample0.cif`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
+
+    function boltzDownloadPdb() {
+      if (!boltzJobId) return;
+      const a = document.createElement('a');
+      a.href = `/api/v1/structure/boltz/jobs/${boltzJobId}/download/model.pdb`;
+      a.download = `boltz_${boltzJobId}_sample0.pdb`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
