@@ -801,6 +801,64 @@
                             chain.type === 'dna'     ? 'ATGCAAATGAAT...' :
                             chain.type === 'rna'     ? 'AUGCAAAUGAAU...' :
                             'CCD code e.g. ATP, ZN';
+        let inputHtml = '';
+        if (chain.type === 'ligand_ccd') {
+          const isPreset = ['MG','ZN','CL','CA','NA','MN','ADP','ATP','AMP','GTP','GDP','FAD','NAD','NAP','NDP','HEM','HEC','PLM','OLA','MYR','CIT','CLA','CHL','BCL','BCB',''].includes(chain.value);
+          inputHtml = `
+            <select class="w-full rounded-lg border border-slate-200 p-1.5 font-mono text-[10px] focus:outline-none focus:border-violet-500 bg-white"
+              onchange="boltzHandleCcdDropdownChange(${idx}, this)"
+            >
+              <option value="" ${chain.value === '' ? 'selected' : ''}>-- Select a Ligand or Ion --</option>
+              <optgroup label="Ions">
+                <option value="MG" ${chain.value === 'MG' ? 'selected' : ''}>MG - Magnesium Ion (Mg²⁺)</option>
+                <option value="ZN" ${chain.value === 'ZN' ? 'selected' : ''}>ZN - Zinc Ion (Zn²⁺)</option>
+                <option value="CL" ${chain.value === 'CL' ? 'selected' : ''}>CL - Chloride Ion (Cl⁻)</option>
+                <option value="CA" ${chain.value === 'CA' ? 'selected' : ''}>CA - Calcium Ion (Ca²⁺)</option>
+                <option value="NA" ${chain.value === 'NA' ? 'selected' : ''}>NA - Sodium Ion (Na⁺)</option>
+                <option value="MN" ${chain.value === 'MN' ? 'selected' : ''}>MN - Manganese Ion (Mn²⁺)</option>
+              </optgroup>
+              <optgroup label="Standard Ligands">
+                <option value="ADP" ${chain.value === 'ADP' ? 'selected' : ''}>ADP - Adenosine diphosphate</option>
+                <option value="ATP" ${chain.value === 'ATP' ? 'selected' : ''}>ATP - Adenosine triphosphate</option>
+                <option value="AMP" ${chain.value === 'AMP' ? 'selected' : ''}>AMP - Adenosine phosphate</option>
+                <option value="GTP" ${chain.value === 'GTP' ? 'selected' : ''}>GTP - Guanosine-5'-triphosphate</option>
+                <option value="GDP" ${chain.value === 'GDP' ? 'selected' : ''}>GDP - Guanosine-5'-diphosphate</option>
+                <option value="FAD" ${chain.value === 'FAD' ? 'selected' : ''}>FAD - Flavin-adenine dinucleotide</option>
+                <option value="NAD" ${chain.value === 'NAD' ? 'selected' : ''}>NAD - Nicotinamide-adenine-dinucleotide</option>
+                <option value="NAP" ${chain.value === 'NAP' ? 'selected' : ''}>NAP (NADP) - Nicotinamide-adenine-dinucleotide-phosphate</option>
+                <option value="NDP" ${chain.value === 'NDP' ? 'selected' : ''}>NDP (NADPH) - Dihydro-nicotinamide-adenine-dinucleotide-phosphate</option>
+                <option value="HEM" ${chain.value === 'HEM' ? 'selected' : ''}>HEM - Heme</option>
+                <option value="HEC" ${chain.value === 'HEC' ? 'selected' : ''}>HEC - Heme C</option>
+                <option value="PLM" ${chain.value === 'PLM' ? 'selected' : ''}>PLM - Palmitic acid</option>
+                <option value="OLA" ${chain.value === 'OLA' ? 'selected' : ''}>OLA - Oleic acid</option>
+                <option value="MYR" ${chain.value === 'MYR' ? 'selected' : ''}>MYR - Myristic acid</option>
+                <option value="CIT" ${chain.value === 'CIT' ? 'selected' : ''}>CIT - Citric acid</option>
+                <option value="CLA" ${chain.value === 'CLA' ? 'selected' : ''}>CLA - Chlorophyll A</option>
+                <option value="CHL" ${chain.value === 'CHL' ? 'selected' : ''}>CHL - Chlorophyll B</option>
+                <option value="BCL" ${chain.value === 'BCL' ? 'selected' : ''}>BCL - Bacteriochlorophyll A</option>
+                <option value="BCB" ${chain.value === 'BCB' ? 'selected' : ''}>BCB - Bacteriochlorophyll B</option>
+              </optgroup>
+              <option value="custom" ${!isPreset ? 'selected' : ''}>Custom CCD Code...</option>
+            </select>
+            <div id="custom-ccd-wrapper-${idx}" class="${(!isPreset && chain.value) ? '' : 'hidden'} mt-1.5">
+              <input type="text" placeholder="Enter custom 3-letter CCD code (e.g. HEM)"
+                value="${chain.value || ''}"
+                class="w-full rounded-lg border border-slate-200 p-1.5 font-mono text-[10px] uppercase focus:outline-none focus:border-violet-500 bg-white"
+                oninput="boltzUpdateChain(${idx}, this.value)"
+                onchange="boltzUpdateChain(${idx}, this.value)"
+              />
+            </div>
+          `;
+        } else {
+          inputHtml = `
+            <textarea rows="2" placeholder="${placeholder}"
+              class="w-full rounded-lg border border-slate-200 p-1.5 font-mono text-[10px] uppercase tracking-widest focus:outline-none focus:border-violet-500 bg-white resize-none"
+              onchange="boltzUpdateChain(${idx}, this.value)"
+              oninput="boltzUpdateChain(${idx}, this.value)"
+            >${chain.value || ''}</textarea>
+          `;
+        }
+
         const div = document.createElement('div');
         div.className = 'chain-card';
         div.innerHTML = `
@@ -813,11 +871,7 @@
               <i data-lucide="x-circle" style="width:14px;height:14px"></i>
             </button>
           </div>
-          <textarea rows="2" placeholder="${placeholder}"
-            class="w-full rounded-lg border border-slate-200 p-1.5 font-mono text-[10px] uppercase tracking-widest focus:outline-none focus:border-violet-500 bg-white resize-none"
-            onchange="boltzUpdateChain(${idx}, this.value)"
-            oninput="boltzUpdateChain(${idx}, this.value)"
-          >${chain.value || ''}</textarea>
+          ${inputHtml}
         `;
         container.appendChild(div);
       });
@@ -843,6 +897,19 @@
 
     function boltzUpdateChain(idx, val) {
       boltzChains[idx].value = val.trim().toUpperCase();
+    }
+
+    function boltzHandleCcdDropdownChange(idx, selectEl) {
+      const val = selectEl.value;
+      const customWrapper = document.getElementById(`custom-ccd-wrapper-${idx}`);
+      if (val === 'custom') {
+        customWrapper.classList.remove('hidden');
+        const inputEl = customWrapper.querySelector('input');
+        boltzUpdateChain(idx, inputEl.value);
+      } else {
+        customWrapper.classList.add('hidden');
+        boltzUpdateChain(idx, val);
+      }
     }
 
     // Binding mode show/hide
