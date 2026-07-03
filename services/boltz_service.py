@@ -304,6 +304,62 @@ def download_boltz_confidence_content(boltz_prediction_id: str) -> bytes:
     }
     return json.dumps(confidence_data, indent=2).encode("utf-8")
 
+def get_boltz_job_pae(boltz_prediction_id: str) -> Dict[str, Any]:
+    import io
+    import tarfile
+    import numpy as np
+
+    result = get_boltz_job_result(boltz_prediction_id)
+    archive_url = result.get("_internal_archive_url")
+    if not archive_url:
+        raise BoltzJobError("Archive URL is not available.")
+
+    try:
+        with httpx.Client(timeout=60.0) as client:
+            resp = client.get(archive_url)
+        if resp.status_code != 200:
+            raise BoltzJobError(f"Archive download failed (HTTP {resp.status_code}).")
+        archive_bytes = resp.content
+    except httpx.RequestError as exc:
+        raise BoltzJobError(f"Network error downloading archive: {_sanitize_error(str(exc))}")
+
+    try:
+        pae_data = None
+        with tarfile.open(fileobj=io.BytesIO(archive_bytes), mode="r:gz") as tar:
+            for member in tar.getmembers():
+                if member.name.endswith("pae.npz"):
+                    f = tar.extractfile(member)
+                    if f:
+                        pae_data = f.read()
+                        break
+        if not pae_data:
+            raise BoltzJobError("sample_0_pae.npz not found in output archive.")
+    except Exception as e:
+        raise BoltzJobError(f"Failed to extract PAE data from archive: {str(e)}")
+
+    try:
+        with np.load(io.BytesIO(pae_data)) as loader:
+            # Boltz stores PAE under key 'pae'
+            pae_matrix = loader["pae"]
+    except Exception as e:
+        raise BoltzJobError(f"Failed to load PAE numpy array: {str(e)}")
+
+    n = pae_matrix.shape[0]
+    max_res = 600
+    if n > max_res:
+        step = int(np.ceil(n / max_res))
+        pae_matrix = pae_matrix[::step, ::step]
+        n = pae_matrix.shape[0]
+
+    # Convert float32 values to standard native python floats for JSON serialization
+    pae_list = [[float(val) for val in row] for row in pae_matrix]
+
+    return {
+        "prediction_id": boltz_prediction_id,
+        "pae": pae_list,
+        "n": n
+    }
+
 # ── Data Deletion ─────────────────────────────────────────────────────────────
 def delete_boltz_job_data(boltz_prediction_id: str) -> bool:
     _check_enabled()

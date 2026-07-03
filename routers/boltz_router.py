@@ -1,4 +1,4 @@
-﻿"""
+"""
 boltz_router.py - Zenith Boltz API Endpoints
 ==========================================
 All endpoints under /api/v1/structure/boltz/
@@ -267,6 +267,20 @@ async def download_confidence(boltz_prediction_id: str):
                 "X-Synthetic-Fallback": "false",
             }
         )
+    except bs.BoltzDisabledError as exc:
+        raise HTTPException(status_code=503, detail=_format_error("boltz_disabled", str(exc)))
+    except bs.BoltzJobError as exc:
+        raise HTTPException(status_code=502, detail=_format_error("boltz_api_error", str(exc)))
+
+
+@router.get("/jobs/{boltz_prediction_id}/pae")
+async def get_job_pae(boltz_prediction_id: str):
+    """
+    Retrieve the 2D Predicted Aligned Error (PAE) matrix for a completed prediction.
+    """
+    bs = _import_boltz()
+    try:
+        return bs.get_boltz_job_pae(boltz_prediction_id)
     except bs.BoltzDisabledError as exc:
         raise HTTPException(status_code=503, detail=_format_error("boltz_disabled", str(exc)))
     except bs.BoltzJobError as exc:

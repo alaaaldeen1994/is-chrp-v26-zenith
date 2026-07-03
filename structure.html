@@ -612,17 +612,59 @@
                 <span id="boltz-no-synth-badge" class="hidden text-[8px] font-bold bg-slate-50 text-slate-500 border border-slate-200 px-2 py-0.5 rounded-full uppercase">No Synthetic Fallback</span>
               </div>
             </div>
+            <!-- pLDDT Color Legend Bar (AlphaFold Database Style) -->
+            <div id="boltz-plddt-legend" class="hidden mb-2.5 px-3 py-1.5 bg-[#0f172a] border border-slate-800 rounded-xl text-[9px] font-semibold text-slate-300">
+              <div class="flex flex-wrap items-center justify-between gap-2">
+                <div class="flex items-center gap-2">
+                  <span class="text-slate-400 uppercase tracking-widest text-[8px] font-black">Model Confidence (pLDDT):</span>
+                  <div class="flex items-center gap-2 flex-wrap">
+                    <div class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-[#0053d6]"></span><span>Very high (&gt;90)</span></div>
+                    <div class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-[#00c2ec]"></span><span>Confident (70-90)</span></div>
+                    <div class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-[#ffdb00]"></span><span class="text-slate-200">Low (50-70)</span></div>
+                    <div class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-[#ff7d00]"></span><span>Very low (&lt;50)</span></div>
+                  </div>
+                </div>
+                <div class="text-[9px] font-mono text-slate-300" id="boltz-summary-scores"></div>
+              </div>
+            </div>
 
             <!-- Viewer / Placeholder -->
-            <div id="boltz-viewer-container" class="flex-1 min-h-0">
-              <!-- Mol* will be initialized here -->
-              <div id="boltz-viewer-placeholder" class="absolute inset-0 flex flex-col items-center justify-center text-center p-6 bg-slate-900/60 backdrop-blur-sm transition-all duration-300" style="position:absolute;inset:0">
-                <div class="w-10 h-10 rounded-full border-4 border-slate-700 border-t-violet-500 animate-spin mb-3 hidden" id="boltz-viewer-spinner"></div>
-                <i data-lucide="layers" class="w-9 h-9 text-slate-500 mb-2" id="boltz-viewer-icon"></i>
-                <h3 class="text-sm font-semibold text-slate-300" id="boltz-viewer-title">No Complex Loaded</h3>
-                <p class="text-xs text-slate-500 mt-1 max-w-xs" id="boltz-viewer-sub">Build your complex above, then submit a Boltz API prediction.</p>
+            <div id="boltz-viewer-container" class="flex-1 min-h-0 flex gap-4">
+              <!-- Left: 3Dmol viewer -->
+              <div class="flex-1 relative min-w-0 h-full border border-slate-100 rounded-xl overflow-hidden bg-slate-950">
+                <div id="boltz-viewer-placeholder" class="absolute inset-0 flex flex-col items-center justify-center text-center p-6 bg-slate-900/60 backdrop-blur-sm transition-all duration-300" style="position:absolute;inset:0;z-index:10">
+                  <div class="w-10 h-10 rounded-full border-4 border-slate-700 border-t-violet-500 animate-spin mb-3 hidden" id="boltz-viewer-spinner"></div>
+                  <i data-lucide="layers" class="w-9 h-9 text-slate-500 mb-2" id="boltz-viewer-icon"></i>
+                  <h3 class="text-sm font-semibold text-slate-300" id="boltz-viewer-title">No Complex Loaded</h3>
+                  <p class="text-xs text-slate-500 mt-1 max-w-xs" id="boltz-viewer-sub">Build your complex above, then submit a Boltz API prediction.</p>
+                </div>
+                <div id="boltz-molstar-mount" style="width:100%;height:100%"></div>
               </div>
-              <div id="boltz-molstar-mount" style="width:100%;height:100%"></div>
+
+              <!-- Right: PAE Heatmap Panel -->
+              <div id="boltz-pae-panel" class="w-[300px] flex-shrink-0 flex flex-col border border-slate-200 rounded-xl bg-slate-50/50 p-3" style="display:none">
+                <div class="flex items-center justify-between mb-1.5">
+                  <span class="text-[10px] font-bold text-slate-700 uppercase tracking-wider">Predicted Aligned Error (PAE)</span>
+                  <div class="flex items-center gap-1.5">
+                    <input type="checkbox" id="pae-borders-toggle" checked onchange="drawPAEHeatmap()" class="w-3 h-3 text-violet-600 rounded">
+                    <label for="pae-borders-toggle" class="text-[9px] font-bold text-slate-500 uppercase cursor-pointer select-none">Borders</label>
+                  </div>
+                </div>
+                <!-- Heatmap Canvas container -->
+                <div class="flex-1 min-h-0 flex items-center justify-center relative bg-white border border-slate-200 rounded-lg p-2 overflow-hidden">
+                  <canvas id="boltz-pae-canvas" style="max-width:100%; max-height:100%; aspect-ratio:1/1; cursor:crosshair;"></canvas>
+                  <!-- Tooltip -->
+                  <div id="pae-tooltip" class="absolute hidden bg-slate-900/95 text-white text-[8px] font-bold py-1 px-1.5 rounded shadow pointer-events-none z-50 line-clamp-3"></div>
+                </div>
+                <!-- Color bar legend at bottom -->
+                <div class="mt-2 flex flex-col gap-1 text-[8px] font-bold text-slate-500 uppercase">
+                  <div class="flex justify-between items-center text-[7px]">
+                    <span>0 Å (High Confidence)</span>
+                    <span>30 Å (Low Confidence)</span>
+                  </div>
+                  <div class="w-full h-2 rounded-full overflow-hidden" style="background: linear-gradient(to right, #004a1c 0%, #3ca05c 50%, #ffffff 100%)"></div>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -731,6 +773,8 @@
     let boltzEstimated = false;
     let boltzPolling   = null; // interval handle
     let boltzCifUrl    = null; // proxied download path
+    let currentPAEMatrix = null;
+    let currentPAEChains = [];
     const CHAIN_LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
     function nextChainId() {
@@ -1006,10 +1050,13 @@
         });
         window._activeBoltzViewer = viewer3d;
         viewer3d.addModel(cifText, 'cif');
-        // Style standard chains (protein/DNA/RNA) as cartoon ribbons
-        viewer3d.setStyle({ hetflag: false }, { cartoon: { colorfunc: function(a) {
-          const map = { 'A':'#818cf8','B':'#34d399','C':'#f472b6','D':'#fbbf24','E':'#60a5fa' };
-          return map[a.chain] || '#94a3b8';
+        // Style standard chains (protein/DNA/RNA) as cartoon ribbons colored by pLDDT B-factor
+        viewer3d.setStyle({ hetflag: false }, { cartoon: { colorfunc: function(atom) {
+          const plddt = atom.b; // B-factor column contains pLDDT score
+          if (plddt > 90) return '#0053d6'; // Very High (Dark Blue)
+          if (plddt > 70) return '#00c2ec'; // Confident (Light Blue)
+          if (plddt > 50) return '#ffdb00'; // Low (Yellow)
+          return '#ff7d00'; // Very Low (Orange)
         }}});
 
         // Style heteroatoms (ligands) as sticks
@@ -1028,6 +1075,25 @@
         // Hide placeholder
         placeholder.style.display = 'none';
         boltzCifUrl = cifUrl;
+
+        // Fetch and draw PAE matrix
+        fetch(`/api/v1/structure/boltz/jobs/${boltzJobId}/pae`)
+          .then(r => {
+            if (!r.ok) throw new Error("PAE not available");
+            return r.json();
+          })
+          .then(data => {
+            if (data && data.pae) {
+              currentPAEMatrix = data.pae;
+              currentPAEChains = getPAEChainLengths();
+              document.getElementById('boltz-pae-panel').style.display = 'flex';
+              drawPAEHeatmap();
+            }
+          })
+          .catch(err => {
+            console.warn("PAE fetch skipped:", err.message);
+            document.getElementById('boltz-pae-panel').style.display = 'none';
+          });
       } catch (e) {
         spinner.classList.add('hidden');
         icon.classList.remove('hidden');
@@ -1069,6 +1135,16 @@
       }
 
       document.getElementById('boltz-metrics-panel').style.display = '';
+
+      // Display pLDDT Color Legend and pTM/ipTM Summary scores
+      const sumEl = document.getElementById('boltz-summary-scores');
+      if (sumEl && metrics.iptm !== undefined && metrics.ptm !== undefined) {
+        sumEl.innerHTML = `ipTM = <span class="text-white font-bold">${metrics.iptm.toFixed(2)}</span> &nbsp;|&nbsp; pTM = <span class="text-white font-bold">${metrics.ptm.toFixed(2)}</span>`;
+      } else if (sumEl && metrics.complex_plddt !== undefined) {
+        const val = typeof metrics.complex_plddt === 'number' && metrics.complex_plddt <= 1.0 ? metrics.complex_plddt * 100 : metrics.complex_plddt;
+        sumEl.innerHTML = `Complex pLDDT = <span class="text-white font-bold">${val.toFixed(1)}</span>`;
+      }
+      document.getElementById('boltz-plddt-legend').classList.remove('hidden');
     }
 
     // ── Info Table ────────────────────────────────────────────────────────
@@ -1152,6 +1228,8 @@
       document.getElementById('boltz-viewer-icon').classList.add('hidden');
       document.getElementById('boltz-viewer-title').textContent = 'Submitting to Boltz API...';
       document.getElementById('boltz-viewer-sub').textContent = 'Prediction running on Boltz-2.1. This may take 30–120 seconds. Auto-polling every 8s.';
+      document.getElementById('boltz-plddt-legend').classList.add('hidden');
+      document.getElementById('boltz-pae-panel').style.display = 'none';
     }
 
     function boltzShowViewerError(msg) {
@@ -1165,6 +1243,8 @@
       document.getElementById('boltz-viewer-title').textContent = 'Prediction Unavailable';
       document.getElementById('boltz-viewer-sub').textContent =
         'Boltz API is unavailable or prediction failed. No complex structure was generated.\n' + msg;
+      document.getElementById('boltz-plddt-legend').classList.add('hidden');
+      document.getElementById('boltz-pae-panel').style.display = 'none';
       lucide.createIcons();
     }
 
@@ -1483,6 +1563,7 @@
       } catch (err) {
         console.error("Failed to parse Boltz transfer data:", err);
       }
+      initPAETooltip();
     });
 
     function toggleApiKeyVisibility() {
@@ -1578,6 +1659,153 @@
           window._activeBoltzViewer.render();
         }
       }
+    }
+
+    // ── PAE Heatmap Drawing & Interactivity ──────────────────────────────
+    function getPAEColor(value) {
+      const clamped = Math.max(0, Math.min(30, value));
+      const t = clamped / 30; // 0 to 1
+      
+      // Interpolate between Dark Green (0, 74, 28) and White (255, 255, 255)
+      let r, g, b;
+      if (t < 0.5) {
+        const factor = t * 2;
+        r = Math.round(0 + factor * 60);
+        g = Math.round(74 + factor * 86);
+        b = Math.round(28 + factor * 64);
+      } else {
+        const factor = (t - 0.5) * 2;
+        r = Math.round(60 + factor * 195);
+        g = Math.round(160 + factor * 95);
+        b = Math.round(92 + factor * 163);
+      }
+      return `rgb(${r}, ${g}, ${b})`;
+    }
+
+    function getPAEChainLengths() {
+      if (!boltzChains || boltzChains.length === 0) return [];
+      return boltzChains.map(c => {
+        let len = (c.value || "").length;
+        if (c.type === 'ligand_ccd') {
+          len = 1;
+        }
+        return {
+          chain_id: c.chain_id,
+          length: len
+        };
+      });
+    }
+
+    function drawPAEHeatmap() {
+      const canvas = document.getElementById('boltz-pae-canvas');
+      if (!canvas || !currentPAEMatrix) return;
+      
+      const ctx = canvas.getContext('2d');
+      const size = currentPAEMatrix.length;
+      
+      canvas.width = size;
+      canvas.height = size;
+      
+      const imgData = ctx.createImageData(size, size);
+      const data = imgData.data;
+      
+      for (let i = 0; i < size; i++) {
+        for (let j = 0; j < size; j++) {
+          const val = currentPAEMatrix[i][j];
+          const colorStr = getPAEColor(val);
+          const matches = colorStr.match(/\d+/g);
+          const r = parseInt(matches[0]);
+          const g = parseInt(matches[1]);
+          const b = parseInt(matches[2]);
+          
+          const pixelIdx = (i * size + j) * 4;
+          data[pixelIdx] = r;
+          data[pixelIdx+1] = g;
+          data[pixelIdx+2] = b;
+          data[pixelIdx+3] = 255;
+        }
+      }
+      
+      ctx.putImageData(imgData, 0, 0);
+      
+      const drawBorders = document.getElementById('pae-borders-toggle')?.checked;
+      if (drawBorders && currentPAEChains && currentPAEChains.length > 0) {
+        ctx.strokeStyle = 'rgba(0, 0, 0, 0.45)';
+        ctx.lineWidth = Math.max(1, Math.round(size / 200));
+        
+        let cumIndex = 0;
+        for (let k = 0; k < currentPAEChains.length - 1; k++) {
+          cumIndex += currentPAEChains[k].length;
+          
+          ctx.beginPath();
+          ctx.moveTo(cumIndex, 0);
+          ctx.lineTo(cumIndex, size);
+          ctx.stroke();
+          
+          ctx.beginPath();
+          ctx.moveTo(0, cumIndex);
+          ctx.lineTo(size, cumIndex);
+          ctx.stroke();
+        }
+      }
+    }
+
+    function initPAETooltip() {
+      const canvas = document.getElementById('boltz-pae-canvas');
+      const tooltip = document.getElementById('pae-tooltip');
+      if (!canvas || !tooltip) return;
+      
+      canvas.addEventListener('mousemove', (e) => {
+        if (!currentPAEMatrix) return;
+        
+        const rect = canvas.getBoundingClientRect();
+        const scaleX = canvas.width / rect.width;
+        const scaleY = canvas.height / rect.height;
+        
+        const mouseX = Math.floor((e.clientX - rect.left) * scaleX);
+        const mouseY = Math.floor((e.clientY - rect.top) * scaleY);
+        
+        if (mouseX >= 0 && mouseX < canvas.width && mouseY >= 0 && mouseY < canvas.height) {
+          const paeVal = currentPAEMatrix[mouseY][mouseX];
+          const resX = getResidueChainAndIndex(mouseX);
+          const resY = getResidueChainAndIndex(mouseY);
+          
+          const parentRect = canvas.parentElement.getBoundingClientRect();
+          tooltip.style.left = (e.clientX - parentRect.left + 12) + 'px';
+          tooltip.style.top = (e.clientY - parentRect.top + 12) + 'px';
+          tooltip.innerHTML = `
+            <div class="font-sans text-[7px] leading-tight">
+              <strong>Aligned residue:</strong> Chain ${resY.chain} : ${resY.index}<br/>
+              <strong>Scored residue:</strong> Chain ${resX.chain} : ${resX.index}<br/>
+              <strong>Expected Error:</strong> ${paeVal.toFixed(2)} Å
+            </div>
+          `;
+          tooltip.classList.remove('hidden');
+        } else {
+          tooltip.classList.add('hidden');
+        }
+      });
+      
+      canvas.addEventListener('mouseleave', () => {
+        tooltip.classList.add('hidden');
+      });
+    }
+
+    function getResidueChainAndIndex(globalIndex) {
+      if (!currentPAEChains || currentPAEChains.length === 0) {
+        return { chain: '?', index: globalIndex + 1 };
+      }
+      let cum = 0;
+      for (let c of currentPAEChains) {
+        if (globalIndex >= cum && globalIndex < cum + c.length) {
+          return {
+            chain: c.chain_id,
+            index: (globalIndex - cum) + 1
+          };
+        }
+        cum += c.length;
+      }
+      return { chain: '?', index: globalIndex + 1 };
     }
 
     // Initialize Lucide icons on load
