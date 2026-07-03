@@ -1,4 +1,4 @@
-﻿"""
+"""
 boltz_service.py - Zenith Native Complex Prediction via Boltz API
 Security rules:
   * BOLTZ_API_KEY is ONLY read from settings (Railway env var).
@@ -20,7 +20,7 @@ from config.settings import settings
 logger = logging.getLogger(__name__)
 
 # ── Endpoints ─────────────────────────────────────────────────────────────────
-BOLTZ_ENDPOINT_START    = "/compute/v1/predictions/structure-and-binding/start"
+BOLTZ_ENDPOINT_START    = "/compute/v1/predictions/structure-and-binding"
 BOLTZ_ENDPOINT_POLL     = "/compute/v1/predictions/structure-and-binding/{id}"
 BOLTZ_ENDPOINT_ESTIMATE = "/compute/v1/predictions/structure-and-binding/estimate-cost"
 BOLTZ_ENDPOINT_DELETE   = "/compute/v1/predictions/structure-and-binding/{id}/delete-data"
