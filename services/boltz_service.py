@@ -191,8 +191,6 @@ def submit_boltz_job(
         input_body["binding"] = binding
 
     body: Dict[str, Any] = {"model": "boltz-2.1", "input": input_body}
-    if job_name:
-        body["name"] = _sanitize_job_name(job_name)
 
     url = settings.BOLTZ_API_BASE_URL.rstrip("/") + BOLTZ_ENDPOINT_START
     logger.info("[Boltz] Submitting complex prediction: %s", job_name or "unnamed")
