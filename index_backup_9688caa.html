@@ -1,41 +1,29 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zenith v30 | Cardiac Rejuvenation | Nilus Lab</title>
-    <meta name="description" content="Discover genes that reverse biological ageing. Zenith v30 uses a dual-model ensemble of 2.42M cells (1.94M Generalist + 486k Specialist) to identify pro-rejuvenation gene targets.">
-    <meta name="keywords" content="ageing, gene discovery, single-cell genomics, scVI, rejuvenation, bioinformatics, Nilus Lab, Zenith, computational biology">
-    <link rel="canonical" href="https://www.niluslab.com/discovery.html">
-    <meta property="og:title" content="Zenith v30 — Discover Genes That Reverse Cardiac Ageing">
-    <meta property="og:description" content="AI-powered gene discovery platform trained on a dual-model ensemble of 2.42M cells. Identify pro-rejuvenation targets backed by single-cell transcriptomic evidence.">
+    <title>Zenith v27 | Cardiac Ageing Gene Discovery | Nilus Lab</title>
+    <meta name="description" content="Discover genes that reverse cardiac ageing. Zenith v27 uses a trained scVI model on 486,134 human cardiac cells from the Human Cell Atlas to identify pro-rejuvenation gene targets.">
+    <meta name="keywords" content="cardiac ageing, gene discovery, single-cell genomics, scVI, Human Cell Atlas, rejuvenation, bioinformatics, Nilus Lab, Zenith, computational biology">
+    <link rel="canonical" href="https://www.niluslab.com/index.html">
+    <meta property="og:title" content="Zenith v27 ÔÇö Discover Genes That Reverse Cardiac Ageing">
+    <meta property="og:description" content="AI-powered gene discovery platform trained on 486k human cardiac cells from the Human Cell Atlas. Identify pro-rejuvenation targets backed by single-cell transcriptomic evidence.">
     <meta property="og:image" content="https://www.niluslab.com/assets/og-preview.jpg">
-    <meta property="og:url" content="https://www.niluslab.com/discovery.html">
+    <meta property="og:url" content="https://www.niluslab.com/index.html">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="Nilus Lab">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Zenith v30 — Cardiac Ageing Gene Discovery">
-    <meta name="twitter:description" content="Discover genes that reverse biological ageing using single-cell transcriptomics from a dual-model ensemble of 2.42M cells.">
+    <meta name="twitter:title" content="Zenith v27 ÔÇö Cardiac Ageing Gene Discovery">
+    <meta name="twitter:description" content="Discover genes that reverse cardiac ageing using single-cell transcriptomics from 486k human cardiac cells.">
 
     <!-- Inter font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 
-    <!-- VIEW SWITCHING — must be in <head> to apply before paint -->
+    <!-- VIEW SWITCHING ÔÇö must be in <head> to apply before paint -->
     <style>
-        #view-discovery  { display: flex !important; flex-direction: column; height: 100vh; background: #f1f5f9; overflow-y: auto; overflow-x: hidden; }
-        #disc-hero {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 40px 32px 32px;
-            min-height: calc(100vh - 54px);
-        }
-        #view-discovery.has-results #disc-hero {
-            justify-content: flex-start !important;
-        }
+        #view-discovery  { display: flex !important; flex-direction: column; min-height: 100vh; background: #f8f8f6; }
         #view-simulation { display: none !important; }
         body.sim-mode #view-discovery  { display: none !important; }
         body.sim-mode #view-simulation { display: block !important; }
@@ -47,7 +35,7 @@
 
         /* Discovery page uses Inter */
         #view-discovery * { font-family: 'Inter', system-ui, sans-serif; box-sizing: border-box; }
-        
+
         #disc-card {
             background: #ffffff !important;
             backdrop-filter: none !important;
@@ -105,69 +93,25 @@
     <script src="js/firebase_config.js"></script>
     <!-- AUTH GUARD: Discovery page is public. Simulation requires auth. -->
     <script>
+        // Allow discovery view without login ÔÇö only simulation needs auth
         const ZENITH_DEMO_BYPASS = localStorage.getItem('ZENITH_DEMO_BYPASS') === 'true';
         window._isAuthenticated = false;
-        window._authResolved = false;
 
-        function updateAuthUI(isAuthenticated) {
-            const topBtn = document.getElementById('auth-btn-top');
-            const mobBtn = document.getElementById('auth-btn-mobile');
-            
-            if (topBtn) {
-                if (isAuthenticated) {
-                    topBtn.innerText = 'Sign Out';
-                    topBtn.onclick = performLogout;
-                    topBtn.style.color = '#6b6b6b';
-                } else {
-                    topBtn.innerText = 'Sign In';
-                    // Go to login.html with redirect back to discovery.html so after login they land here already authenticated
-                    topBtn.onclick = () => { window.location.href = 'login.html?redirect=discovery.html'; };
-                    topBtn.style.color = '#2563eb';
-                    topBtn.style.fontWeight = '600';
-                }
-                topBtn.style.opacity = '1';
+        firebase.auth().onAuthStateChanged((user) => {
+            window._isAuthenticated = !!(user || ZENITH_DEMO_BYPASS);
+            // Auth gate: redirect to profile if not signed in
+            if (!window._isAuthenticated) {
+                window.location.href = 'profile.html';
+                return;
             }
-            
-            if (mobBtn) {
-                if (isAuthenticated) {
-                    mobBtn.innerText = 'SIGN OUT';
-                    mobBtn.onclick = performLogout;
-                } else {
-                    mobBtn.innerText = 'SIGN IN';
-                    mobBtn.onclick = () => { window.location.href = 'login.html?redirect=discovery.html'; };
-                }
-                mobBtn.style.opacity = '1';
-            }
-        }
-
-        // Wrap in DOMContentLoaded to prevent race conditions with DOM elements
-        window.addEventListener('DOMContentLoaded', () => {
-            // Show a brief loading state on the auth button while Firebase restores session
-            const topBtn = document.getElementById('auth-btn-top');
-            if (topBtn) { topBtn.innerText = '...'; topBtn.style.opacity = '0.5'; }
-
-            firebase.auth().onAuthStateChanged((user) => {
-                window._isAuthenticated = !!(user || ZENITH_DEMO_BYPASS);
-                window._authResolved = true;
-                updateAuthUI(window._isAuthenticated);
-                
-                // Auto-redirect to simulation lab if flag is set or hash is present
-                if (window._isAuthenticated && (localStorage.getItem('auth_redirect') === 'sim' || window.location.hash === '#simulation')) {
-                    localStorage.removeItem('auth_redirect');
-                    setTimeout(() => {
-                        if (typeof enterSimulation === 'function') enterSimulation();
-                    }, 100);
-                }
-            });
         });
 
         function performLogout() {
             localStorage.removeItem('ZENITH_DEMO_BYPASS');
             firebase.auth().signOut().then(() => {
-                window.location.href = 'index.html';
-            }).catch(() => { window.location.href = 'index.html'; });
+                window.location.href = 'profile.html';
+            }).catch(() => { window.location.href = 'profile.html'; });
         }
-
     </script>
 
     <style>
@@ -186,7 +130,7 @@
         }
 
         .validator-badge {
-            color: #0f172a;
+            color: #10b981;
             font-weight: bold;
         }
 
@@ -205,84 +149,37 @@
         @media (max-width: 768px) {
 
             /* Hide entire desktop layout */
+
             #architect-layout, #ai-panel, #ai-toggle-btn { display: none !important; }
 
-            /* By default, hide mobile shell in discovery mode */
+
+
+            /* Show mobile shell */
+
             #mobile-shell {
-                display: none !important;
-            }
 
-            /* Show mobile shell ONLY in simulation mode */
-            body.sim-mode #mobile-shell {
                 display: flex !important;
-                flex-direction: column;
-                height: 100vh;
-                height: 100dvh;
-                width: 100%;
-                max-width: 100vw;
-                background: #02020a;
-                font-family: 'Inter', system-ui, sans-serif;
-                color: #e2e8f0;
-                overflow: hidden;
-                position: relative;
-            }
 
-            /* Discovery view mobile optimization */
-            #view-discovery {
-                padding: 10px 10px 24px 10px !important;
-                background: #f8f8f6 !important;
-            }
-            #view-discovery > div:first-child {
-                padding: 10px 14px !important;
-            }
-            #disc-hero {
-                padding: 24px 12px 24px 12px !important;
-                min-height: auto !important;
-            }
-            #view-discovery h1 {
-                font-size: 20px !important;
-                line-height: 1.3 !important;
-            }
-            #disc-card {
-                border-radius: 16px !important;
-            }
-            #disc-query {
-                padding: 14px 16px 8px 16px !important;
-                font-size: 14px !important;
-            }
-            #disc-card > div:last-child {
-                border-radius: 0 0 16px 16px !important;
-                padding: 8px 10px !important;
-            }
-            #model-select-btn, #celltype-select-btn {
-                padding: 5px 8px !important;
-                font-size: 11px !important;
-            }
-            #disc-run-btn {
-                width: 28px !important;
-                height: 28px !important;
-                padding: 6px !important;
-            }
-            
-            /* Safety gate buttons tap target size */
-            .safety-btn {
-                padding: 8px 6px !important;
-                font-size: 10px !important;
-            }
-            
-            /* Responsive grid in report card */
-            #disc-results {
-                width: 100% !important;
-                margin-top: 14px !important;
-            }
-            #disc-results > div {
-                padding: 14px 16px !important;
-                border-radius: 12px !important;
-            }
-            #disc-results > div > div[style*="display:grid"],
-            #disc-results > div > div[style*="display: grid"] {
-                grid-template-columns: 1fr !important;
-                gap: 14px !important;
+                flex-direction: column;
+
+                height: 100vh;
+
+                height: 100dvh;
+
+                width: 100%;
+
+                max-width: 100vw;
+
+                background: #02020a;
+
+                font-family: 'Inter', system-ui, sans-serif;
+
+                color: #e2e8f0;
+
+                overflow: hidden;
+
+                position: relative;
+
             }
 
 
@@ -1025,7 +922,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <!-- THREE.js removed — 3D viewport disabled -->
+    <!-- THREE.js removed ÔÇö 3D viewport disabled -->
 
 
 
@@ -1126,21 +1023,13 @@
 
         }
 
-        /* Modern Native Scrollbar */
-        html::-webkit-scrollbar, body::-webkit-scrollbar, #view-discovery::-webkit-scrollbar {
-            width: 14px;
+        /* Hide native scrollbars globally to let the custom scrollbar shine */
+        html, body {
+            scrollbar-width: none !important; /* Firefox */
+            -ms-overflow-style: none !important; /* IE/Edge */
         }
-        html::-webkit-scrollbar-track, body::-webkit-scrollbar-track, #view-discovery::-webkit-scrollbar-track {
-            background: #f8fafc;
-            border-left: 1px solid #e2e8f0;
-        }
-        html::-webkit-scrollbar-thumb, body::-webkit-scrollbar-thumb, #view-discovery::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
-            border: 3px solid #f8fafc;
-            border-radius: 10px;
-        }
-        html::-webkit-scrollbar-thumb:hover, body::-webkit-scrollbar-thumb:hover, #view-discovery::-webkit-scrollbar-thumb:hover {
-            background: #94a3b8;
+        html::-webkit-scrollbar, body::-webkit-scrollbar {
+            display: none !important; /* Chrome, Safari, Opera */
         }
 
         /* Floating Full-Height Custom Scrollbar Navigator */
@@ -1209,30 +1098,19 @@
         }
 
     </style>
-    <!-- Global Mobile Responsiveness Patch -->
-    <style>
-        @media (max-width: 768px) {
-            html, body { overflow-x: hidden !important; width: 100vw !important; }
-            .px-12, .px-24, .px-8, .px-6 { padding-left: 1.5rem !important; padding-right: 1.5rem !important; }
-            .py-24, .py-16 { padding-top: 4rem !important; padding-bottom: 4rem !important; }
-            .text-5xl { font-size: 2.25rem !important; line-height: 1.1 !important; }
-            .text-6xl { font-size: 2.5rem !important; line-height: 1.1 !important; }
-            .text-7xl { font-size: 2.75rem !important; line-height: 1.1 !important; }
-            .grid { gap: 1.5rem !important; }
-            .lg\:grid-cols-2, .lg\:grid-cols-3, .lg\:grid-cols-4 { grid-template-columns: 1fr !important; }
-            .nav-links { display: none !important; }
-            .hero { padding: 4rem 1.5rem !important; min-height: auto !important; }
-            .cap-bento { display: flex !important; flex-direction: column !important; }
-            .cap-card { padding: 2rem !important; }
-        }
-    </style>
+
 </head>
 
 
 
 <body>
 
-<!-- Floating Scroll Controls removed -->
+<!-- Floating Scroll Controls (Sleek Glassmorphic Custom Scrollbar) -->
+<div id="floating-scroll-controls">
+    <div id="scrollbar-track" class="scroll-track">
+        <div id="scrollbar-thumb" class="scroll-thumb"></div>
+    </div>
+</div>
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -1365,13 +1243,13 @@
 </script>
 
 
-<!-- ═══ VIEW 1: DISCOVERY (default, clean) ═══ -->
+<!-- ÔòÉÔòÉÔòÉ VIEW 1: DISCOVERY (default, clean) ÔòÉÔòÉÔòÉ -->
 
 <div id="view-discovery">
 
     <!-- Top bar -->
     <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 28px;background:transparent;border-bottom:none;">
-        <a href="index.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;cursor:pointer;">
+        <div style="display:flex;align-items:center;gap:8px;">
             <div style="width:28px;height:28px;background:#1a1a1a;border-radius:50%;display:flex;align-items:center;justify-content:center;">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f8f8f6" stroke-width="2">
                     <circle cx="12" cy="12" r="5"/>
@@ -1379,25 +1257,25 @@
                 </svg>
             </div>
             <span style="color:#1a1a1a;font-weight:600;font-size:14px;letter-spacing:-0.01em;font-family:'Inter','Segoe UI',sans-serif;">Nilus Lab</span>
-            <span style="font-size:11px;color:#9b9b9b;font-weight:400;font-family:'Inter','Segoe UI',sans-serif;">Zenith v30</span>
-        </a>
+            <span style="font-size:11px;color:#9b9b9b;font-weight:400;font-family:'Inter','Segoe UI',sans-serif;">Zenith v27</span>
+        </div>
         <div style="display:flex;align-items:center;gap:6px;">
             <button onclick="enterSimulation()" style="background:transparent;border:1px solid rgba(0,0,0,0.12);color:#6b6b6b;font-size:12px;font-weight:400;padding:5px 14px;border-radius:8px;cursor:pointer;font-family:'Inter','Segoe UI',sans-serif;transition:all 0.15s;" onmouseover="this.style.borderColor='rgba(0,0,0,0.25)';this.style.color='#1a1a1a'" onmouseout="this.style.borderColor='rgba(0,0,0,0.12)';this.style.color='#6b6b6b'">Simulation Lab</button>
-            <button id="auth-btn-top" style="opacity:0; transition:opacity 0.25s; background:transparent;border:none;color:#9b9b9b;font-size:12px;cursor:pointer;padding:4px 8px;font-family:'Inter','Segoe UI',sans-serif;" onmouseover="this.style.color='#1a1a1a'" onmouseout="this.style.color='#9b9b9b'">...</button>
+            <button onclick="performLogout()" style="background:transparent;border:none;color:#9b9b9b;font-size:12px;cursor:pointer;padding:4px 8px;font-family:'Inter','Segoe UI',sans-serif;" onmouseover="this.style.color='#1a1a1a'" onmouseout="this.style.color='#9b9b9b'">Exit</button>
         </div>
     </div>
 
     <!-- Hero -->
-    <div id="disc-hero">
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 32px 32px;min-height:calc(100vh - 54px);">
 
         <!-- Title -->
         <div style="text-align:center;margin-bottom:24px;width:100%;max-width:680px;">
             <h1 style="color:#1a1a1a;font-size:26px;font-weight:500;letter-spacing:-0.02em;margin:0;line-height:1.3;font-family:'Inter','Segoe UI',sans-serif;">Discover genes that reverse cardiac ageing</h1>
         </div>
 
-        <!-- Main input card — Claude-style -->
-            <div id="disc-card"
-                 style="width:100%;max-width:680px;font-family:'Inter','Segoe UI',sans-serif;outline:none;box-shadow: 0 10px 40px rgba(0,0,0,0.1);border-radius:23px;">
+        <!-- Main input card ÔÇö Claude-style -->
+        <div id="disc-card"
+             style="width:100%;max-width:680px;font-family:'Inter','Segoe UI',sans-serif;outline:none;">
 
             <textarea id="disc-query" rows="3"
                 style="width:100%;padding:20px 22px 12px 22px;box-sizing:border-box;display:block;"
@@ -1420,24 +1298,24 @@
                     <!-- Dropdown List -->
                     <div id="model-dropdown-list"
                         style="display:none;position:absolute;bottom:calc(100% + 6px);left:0;background:#ffffff;border:1px solid #d5d5d2;border-radius:14px;padding:6px;box-shadow:0 4px 20px rgba(0,0,0,0.08);flex-direction:column;gap:3px;z-index:1000;min-width:220px;">
-                        <!-- Option 1: Zenith Ensemble -->
-                        <button onclick="selectModelOption('real', 'Zenith Ensemble')" id="model-opt-real"
+                        <!-- Option 1: Zenith -->
+                        <button onclick="selectModelOption('real', 'Zenith')" id="model-opt-real"
                             style="background:#f5f3ef;color:#191919;border:none;text-align:left;padding:8px 12px;border-radius:8px;cursor:pointer;width:100%;font-family:'Inter','Segoe UI',sans-serif;display:flex;flex-direction:column;gap:2px;transition:all 0.15s;">
-                            <span style="font-size:12px;font-weight:600;">Zenith Ensemble</span>
-                            <span style="font-size:9px;color:#8b8b8b;font-weight:400;">1.94M Generalist + 486k Specialist</span>
+                            <span style="font-size:12px;font-weight:600;">Zenith</span>
+                            <span style="font-size:9px;color:#8b8b8b;font-weight:400;">HCA data + query-aware analysis</span>
                         </button>
                         <!-- Option 2: GPT Analysis -->
-                        <button onclick="selectModelOption('gpt', 'GPT-4o Clinical Log')" id="model-opt-gpt"
+                        <button onclick="selectModelOption('gpt', 'GPT Analysis')" id="model-opt-gpt"
                             style="background:transparent;color:#6b6b6b;border:none;text-align:left;padding:8px 12px;border-radius:8px;cursor:pointer;width:100%;font-family:'Inter','Segoe UI',sans-serif;display:flex;flex-direction:column;gap:2px;transition:all 0.15s;">
-                            <span style="font-size:12px;font-weight:600;">GPT-4o Clinical Log</span>
-                            <span style="font-size:9px;color:#8b8b8b;font-weight:400;">Comparative synthesis of dual scVI models</span>
+                            <span style="font-size:12px;font-weight:600;">GPT Analysis</span>
+                            <span style="font-size:9px;color:#8b8b8b;font-weight:400;">GPT-4o without HCA data context</span>
                         </button>
                         <!-- Option 3: OSK Partial -->
                         <div style="height:1px;background:#e8e8e6;margin:2px 4px;"></div>
                         <button onclick="selectModelOption('osk', 'OSK Partial')" id="model-opt-osk"
                             style="background:transparent;color:#6b6b6b;border:none;text-align:left;padding:8px 12px;border-radius:8px;cursor:pointer;width:100%;font-family:'Inter','Segoe UI',sans-serif;display:flex;flex-direction:column;gap:2px;transition:all 0.15s;">
                             <span style="font-size:12px;font-weight:600;">OSK Partial</span>
-                            <span style="font-size:9px;color:#8b8b8b;font-weight:400;">Partial reprogramming · Safety-gated</span>
+                            <span style="font-size:9px;color:#8b8b8b;font-weight:400;">Partial reprogramming ┬À Safety-gated</span>
                         </button>
                     </div>
                 </div>
@@ -1534,494 +1412,16 @@
         <!-- Results area -->
         <div id="disc-results" style="width:100%;max-width:720px;margin-top:20px;display:none;"></div>
 
-        <!-- B2B Expansion Panels -->
-        <div id="discovery-b2b-panels" class="w-full max-w-[720px] mt-6 flex flex-col gap-6" style="display:none;">
-            <!-- CARDIAC GRN VISUALIZER (GraphRAG) -->
-            <div id="grn-visualizer-panel" class="p-6 bg-white border border-slate-200 rounded-[24px] shadow-sm relative overflow-hidden animation-fade-in">
-                <div class="text-[11px] text-slate-800 font-bold uppercase tracking-wider mb-4 flex items-center gap-1.5">
-                    <i data-lucide="network" class="w-3.5 h-3.5 text-slate-800"></i>
-                    GraphRAG Network Visualizer
-                    <span class="ml-auto text-[9px] px-2.5 py-0.5 bg-slate-100 text-slate-800 border border-slate-200 rounded-full font-bold tracking-normal">Cardiac GRN</span>
-                </div>
-                <div class="relative w-full h-[240px] bg-[#090d16] border border-slate-800 rounded-2xl overflow-hidden flex items-center justify-center">
-                    <svg id="grn-canvas-viewport" class="w-full h-full cursor-grab active:cursor-grabbing"></svg>
-                    <div id="grn-tooltip" class="absolute hidden bg-slate-900 border border-slate-800 px-3 py-2 rounded-lg text-xs text-white font-sans pointer-events-none z-10 shadow-lg"></div>
-                </div>
-                <div id="grn-pathway-summary" class="mt-3.5 p-3.5 bg-slate-50 border border-slate-100 rounded-xl text-xs text-slate-600 font-sans leading-relaxed">
-                    Regulatory pathway chains will be resolved topologically based on the semantic search query context.
-                </div>
-            </div>
-
-            <!-- MULTI-OMICS PERTURBATION PREDICTOR -->
-            <div id="multiomics-predictor-panel" class="p-6 bg-white border border-slate-200 rounded-[24px] shadow-sm relative overflow-hidden animation-fade-in">
-                <div class="text-[11px] text-slate-800 font-bold uppercase tracking-wider mb-4 flex items-center gap-1.5">
-                    <i data-lucide="sliders" class="w-3.5 h-3.5 text-slate-800"></i>
-                    Multi-Omics Perturbation Predictor (scGPT)
-                    <span class="ml-auto text-[9px] px-2.5 py-0.5 bg-slate-100 text-slate-800 border border-slate-200 rounded-full font-bold tracking-normal">Zero-Shot Mode</span>
-                </div>
-                <!-- Dosages Sliders -->
-                <div class="grid grid-cols-2 gap-4 mb-4 bg-slate-50 p-4 rounded-2xl border border-slate-100">
-                    <div>
-                        <label class="text-[9px] text-slate-600 font-bold block mb-1.5 uppercase tracking-wider">GATA4 Dosage: <span id="val-gata4" class="text-slate-800 font-mono font-bold">1.0</span></label>
-                        <input id="slider-gata4" type="range" min="0" max="3" step="0.1" value="1.0" class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer" style="accent-color:#1e293b;">
-                    </div>
-                    <div>
-                        <label class="text-[9px] text-slate-600 font-bold block mb-1.5 uppercase tracking-wider">MEF2C Dosage: <span id="val-mef2c" class="text-slate-800 font-mono font-bold">1.0</span></label>
-                        <input id="slider-mef2c" type="range" min="0" max="3" step="0.1" value="1.0" class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer" style="accent-color:#1e293b;">
-                    </div>
-                    <div>
-                        <label class="text-[9px] text-slate-600 font-bold block mb-1.5 uppercase tracking-wider">TBX5 Dosage: <span id="val-tbx5" class="text-slate-800 font-mono font-bold">1.0</span></label>
-                        <input id="slider-tbx5" type="range" min="0" max="3" step="0.1" value="1.0" class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer" style="accent-color:#1e293b;">
-                    </div>
-                    <div>
-                        <label class="text-[9px] text-slate-600 font-bold block mb-1.5 uppercase tracking-wider">NKX2-5 Dosage: <span id="val-nkx25" class="text-slate-800 font-mono font-bold">1.0</span></label>
-                        <input id="slider-nkx25" type="range" min="0" max="3" step="0.1" value="1.0" class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer" style="accent-color:#1e293b;">
-                    </div>
-                    <div>
-                        <label class="text-[9px] text-slate-600 font-bold block mb-1.5 uppercase tracking-wider">OCT4 (Pioneer): <span id="val-oct4" class="text-slate-800 font-mono font-bold">0.0</span></label>
-                        <input id="slider-oct4" type="range" min="0" max="3" step="0.1" value="0.0" class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer" style="accent-color:#1e293b;">
-                    </div>
-                    <div>
-                        <label class="text-[9px] text-slate-600 font-bold block mb-1.5 uppercase tracking-wider">SOX2 (Pioneer): <span id="val-sox2" class="text-slate-800 font-mono font-bold">0.0</span></label>
-                        <input id="slider-sox2" type="range" min="0" max="3" step="0.1" value="0.0" class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer" style="accent-color:#1e293b;">
-                    </div>
-                    <div>
-                        <label class="text-[9px] text-slate-600 font-bold block mb-1.5 uppercase tracking-wider">KLF4 (Pioneer): <span id="val-klf4" class="text-slate-800 font-mono font-bold">0.0</span></label>
-                        <input id="slider-klf4" type="range" min="0" max="3" step="0.1" value="0.0" class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer" style="accent-color:#1e293b;">
-                    </div>
-                    <div>
-                        <label class="text-[9px] text-slate-600 font-bold block mb-1.5 uppercase tracking-wider">NMN Booster: <span id="val-nmn" class="text-slate-800 font-mono font-bold">0.0</span></label>
-                        <input id="slider-nmn" type="range" min="0" max="3" step="0.1" value="0.0" class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer" style="accent-color:#1e293b;">
-                    </div>
-                    <div>
-                        <label class="text-[9px] text-slate-600 font-bold block mb-1.5 uppercase tracking-wider">MYC (Oncogene): <span id="val-myc" class="text-slate-800 font-mono font-bold">0.0</span></label>
-                        <input id="slider-myc" type="range" min="0" max="3" step="0.1" value="0.0" class="w-full h-1 bg-slate-800 rounded-lg appearance-none cursor-pointer" style="accent-color:#1e293b;">
-                    </div>
-                    <div>
-                        <label class="text-[9px] text-slate-600 font-bold block mb-1.5 uppercase tracking-wider">SNAI1 (EMT): <span id="val-snai1" class="text-slate-800 font-mono font-bold">0.0</span></label>
-                        <input id="slider-snai1" type="range" min="0" max="3" step="0.1" value="0.0" class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer" style="accent-color:#ca8a04;">
-                    </div>
-                    <div class="col-span-2 grid grid-cols-1 md:grid-cols-2 gap-3 mt-2 pt-2 border-t border-slate-200/60">
-                        <!-- Oral Route -->
-                        <div class="col-span-2 flex items-center gap-2 p-2.5 bg-slate-50 border border-slate-100 rounded-xl">
-                            <input id="chk-oral-admin" type="checkbox" class="rounded text-slate-800 focus:ring-slate-500 h-3.5 w-3.5 cursor-pointer">
-                            <label for="chk-oral-admin" class="text-[9px] text-slate-500 font-bold uppercase tracking-wider cursor-pointer">Oral Route (NMN gut microbiome deamidation penalty)</label>
-                        </div>
-                        
-                        <!-- Card 1: Semaglutide -->
-                        <div class="flex flex-col p-2.5 bg-slate-50 border border-slate-100 rounded-xl">
-                            <div class="flex items-center gap-2">
-                                <input id="chk-semaglutide" type="checkbox" class="rounded text-slate-800 focus:ring-slate-500 h-3.5 w-3.5 cursor-pointer">
-                                <label for="chk-semaglutide" class="text-[9px] text-slate-800 font-black uppercase tracking-wider cursor-pointer" title="Clinical Target: -4.9 years PhenoAge, -2.2 years OMICmAge, -9% DunedinPACE">Semaglutide (GLP-1)</label>
-                                <button type="button" onclick="document.getElementById('dose-panel-semaglutide').classList.toggle('hidden')" class="ml-auto text-slate-400 hover:text-slate-600 cursor-pointer" title="Adjust Pharmacokinetics">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.1a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
-                                </button>
-                            </div>
-                            <div id="dose-panel-semaglutide" class="hidden flex flex-col gap-2 mt-2 pt-2 border-t border-slate-200/60">
-                                <div class="flex items-center justify-between text-[8px] text-slate-500 font-bold font-mono">
-                                    <span>DOSE: <span id="val-dose-semaglutide" class="text-slate-800 font-bold">1.0 mg</span></span>
-                                    <span>FREQ: <span id="val-freq-semaglutide" class="text-slate-800 font-bold">168 hrs</span></span>
-                                </div>
-                                <div>
-                                    <label class="text-[7px] text-slate-400 font-bold uppercase block mb-0.5">Dose (mg)</label>
-                                    <input id="slider-dose-semaglutide" type="range" min="0.1" max="5.0" step="0.1" value="1.0" class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer" style="accent-color:#1e293b;">
-                                </div>
-                                <div>
-                                    <label class="text-[7px] text-slate-400 font-bold uppercase block mb-0.5">Frequency (hours)</label>
-                                    <input id="slider-freq-semaglutide" type="range" min="24" max="336" step="24" value="168" class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer" style="accent-color:#1e293b;">
-                                </div>
-                                <div class="flex items-center gap-1.5 mt-0.5">
-                                    <span class="text-[7px] text-slate-400 uppercase font-bold shrink-0">PK/PD Wave:</span>
-                                    <svg id="sparkline-semaglutide" class="w-full h-5 bg-slate-100 rounded border border-slate-200 overflow-hidden" preserveAspectRatio="none"></svg>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Card 2: Omega-3 -->
-                        <div class="flex flex-col p-2.5 bg-slate-50 border border-slate-100 rounded-xl">
-                            <div class="flex items-center gap-2">
-                                <input id="chk-omega3" type="checkbox" class="rounded text-slate-800 focus:ring-slate-500 h-3.5 w-3.5 cursor-pointer">
-                                <label for="chk-omega3" class="text-[9px] text-slate-800 font-black uppercase tracking-wider cursor-pointer" title="Causal Target: -6.1 years DamAge, +6.2 years AdaptAge">Omega-3 Fatty Acids</label>
-                                <button type="button" onclick="document.getElementById('dose-panel-omega3').classList.toggle('hidden')" class="ml-auto text-slate-400 hover:text-slate-600 cursor-pointer" title="Adjust Pharmacokinetics">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.1a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
-                                </button>
-                            </div>
-                            <div id="dose-panel-omega3" class="hidden flex flex-col gap-2 mt-2 pt-2 border-t border-slate-200/60">
-                                <div class="flex items-center justify-between text-[8px] text-slate-500 font-bold font-mono">
-                                    <span>DOSE: <span id="val-dose-omega3" class="text-slate-800 font-bold">1000 mg</span></span>
-                                    <span>FREQ: <span id="val-freq-omega3" class="text-slate-800 font-bold">24 hrs</span></span>
-                                </div>
-                                <div>
-                                    <label class="text-[7px] text-slate-400 font-bold uppercase block mb-0.5">Dose (mg)</label>
-                                    <input id="slider-dose-omega3" type="range" min="100" max="3000" step="100" value="1000" class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer" style="accent-color:#1e293b;">
-                                </div>
-                                <div>
-                                    <label class="text-[7px] text-slate-400 font-bold uppercase block mb-0.5">Frequency (hours)</label>
-                                    <input id="slider-freq-omega3" type="range" min="12" max="168" step="12" value="24" class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer" style="accent-color:#1e293b;">
-                                </div>
-                                <div class="flex items-center gap-1.5 mt-0.5">
-                                    <span class="text-[7px] text-slate-400 uppercase font-bold shrink-0">PK/PD Wave:</span>
-                                    <svg id="sparkline-omega3" class="w-full h-5 bg-slate-100 rounded border border-slate-200 overflow-hidden" preserveAspectRatio="none"></svg>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Card 3: Plasmapheresis -->
-                        <div class="flex flex-col p-2.5 bg-slate-50 border border-slate-100 rounded-xl">
-                            <div class="flex items-center gap-2">
-                                <input id="chk-plasmapheresis" type="checkbox" class="rounded text-slate-800 focus:ring-slate-500 h-3.5 w-3.5 cursor-pointer">
-                                <label for="chk-plasmapheresis" class="text-[9px] text-slate-800 font-black uppercase tracking-wider cursor-pointer" title="Toxicity Risk: +0.26 years GrimAge, +0.003 DunedinPACE">Plasmapheresis (Stress)</label>
-                                <button type="button" onclick="document.getElementById('dose-panel-plasmapheresis').classList.toggle('hidden')" class="ml-auto text-slate-400 hover:text-slate-600 cursor-pointer" title="Adjust Pharmacokinetics">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.1a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
-                                </button>
-                            </div>
-                            <div id="dose-panel-plasmapheresis" class="hidden flex flex-col gap-2 mt-2 pt-2 border-t border-slate-200/60">
-                                <div class="flex items-center justify-between text-[8px] text-slate-500 font-bold font-mono">
-                                    <span>DOSES: <span id="val-dose-plasmapheresis" class="text-slate-800 font-bold">1 unit</span></span>
-                                    <span>FREQ: <span id="val-freq-plasmapheresis" class="text-slate-800 font-bold">720 hrs</span></span>
-                                </div>
-                                <div>
-                                    <label class="text-[7px] text-slate-400 font-bold uppercase block mb-0.5">Volume (units)</label>
-                                    <input id="slider-dose-plasmapheresis" type="range" min="1" max="5" step="1" value="1" class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer" style="accent-color:#1e293b;">
-                                </div>
-                                <div>
-                                    <label class="text-[7px] text-slate-400 font-bold uppercase block mb-0.5">Frequency (hours)</label>
-                                    <input id="slider-freq-plasmapheresis" type="range" min="168" max="720" step="168" value="720" class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer" style="accent-color:#1e293b;">
-                                </div>
-                                <div class="flex items-center gap-1.5 mt-0.5">
-                                    <span class="text-[7px] text-slate-400 uppercase font-bold shrink-0">PK/PD Wave:</span>
-                                    <svg id="sparkline-plasmapheresis" class="w-full h-5 bg-slate-100 rounded border border-slate-200 overflow-hidden" preserveAspectRatio="none"></svg>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Card 4: Decitabine -->
-                        <div class="flex flex-col p-2.5 bg-slate-50 border border-slate-100 rounded-xl">
-                            <div class="flex items-center gap-2">
-                                <input id="chk-decitabine" type="checkbox" class="rounded text-slate-800 focus:ring-slate-500 h-3.5 w-3.5 cursor-pointer">
-                                <label for="chk-decitabine" class="text-[9px] text-slate-800 font-black uppercase tracking-wider cursor-pointer" title="Chemotherapy: -5.92 years AdaptAge, +2.4 years DamAge">Decitabine (AML)</label>
-                                <button type="button" onclick="document.getElementById('dose-panel-decitabine').classList.toggle('hidden')" class="ml-auto text-slate-400 hover:text-slate-600 cursor-pointer" title="Adjust Pharmacokinetics">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.1a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
-                                </button>
-                            </div>
-                            <div id="dose-panel-decitabine" class="hidden flex flex-col gap-2 mt-2 pt-2 border-t border-slate-200/60">
-                                <div class="flex items-center justify-between text-[8px] text-slate-500 font-bold font-mono">
-                                    <span>DOSE: <span id="val-dose-decitabine" class="text-slate-800 font-bold">20 mg</span></span>
-                                    <span>FREQ: <span id="val-freq-decitabine" class="text-slate-800 font-bold">24 hrs</span></span>
-                                </div>
-                                <div>
-                                    <label class="text-[7px] text-slate-400 font-bold uppercase block mb-0.5">Dose (mg)</label>
-                                    <input id="slider-dose-decitabine" type="range" min="5" max="100" step="5" value="20" class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer" style="accent-color:#1e293b;">
-                                </div>
-                                <div>
-                                    <label class="text-[7px] text-slate-400 font-bold uppercase block mb-0.5">Frequency (hours)</label>
-                                    <input id="slider-freq-decitabine" type="range" min="12" max="168" step="12" value="24" class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer" style="accent-color:#1e293b;">
-                                </div>
-                                <div class="flex items-center gap-1.5 mt-0.5">
-                                    <span class="text-[7px] text-slate-400 uppercase font-bold shrink-0">PK/PD Wave:</span>
-                                    <svg id="sparkline-decitabine" class="w-full h-5 bg-slate-100 rounded border border-slate-200 overflow-hidden" preserveAspectRatio="none"></svg>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Card 5: Ketamine -->
-                        <div class="flex flex-col p-2.5 bg-slate-50 border border-slate-100 rounded-xl">
-                            <div class="flex items-center gap-2">
-                                <input id="chk-ketamine" type="checkbox" class="rounded text-slate-800 focus:ring-slate-500 h-3.5 w-3.5 cursor-pointer">
-                                <label for="chk-ketamine" class="text-[9px] text-slate-800 font-black uppercase tracking-wider cursor-pointer" title="Clinical Target: -1.81 years OMICmAge">Ketamine Infusion</label>
-                                <button type="button" onclick="document.getElementById('dose-panel-ketamine').classList.toggle('hidden')" class="ml-auto text-slate-400 hover:text-slate-600 cursor-pointer" title="Adjust Pharmacokinetics">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.1a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
-                                </button>
-                            </div>
-                            <div id="dose-panel-ketamine" class="hidden flex flex-col gap-2 mt-2 pt-2 border-t border-slate-200/60">
-                                <div class="flex items-center justify-between text-[8px] text-slate-500 font-bold font-mono">
-                                    <span>DOSE: <span id="val-dose-ketamine" class="text-slate-800 font-bold">50 mg</span></span>
-                                    <span>FREQ: <span id="val-freq-ketamine" class="text-slate-800 font-bold">168 hrs</span></span>
-                                </div>
-                                <div>
-                                    <label class="text-[7px] text-slate-400 font-bold uppercase block mb-0.5">Dose (mg)</label>
-                                    <input id="slider-dose-ketamine" type="range" min="10" max="200" step="10" value="50" class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer" style="accent-color:#1e293b;">
-                                </div>
-                                <div>
-                                    <label class="text-[7px] text-slate-400 font-bold uppercase block mb-0.5">Frequency (hours)</label>
-                                    <input id="slider-freq-ketamine" type="range" min="24" max="336" step="24" value="168" class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer" style="accent-color:#1e293b;">
-                                </div>
-                                <div class="flex items-center gap-1.5 mt-0.5">
-                                    <span class="text-[7px] text-slate-400 uppercase font-bold shrink-0">PK/PD Wave:</span>
-                                    <svg id="sparkline-ketamine" class="w-full h-5 bg-slate-100 rounded border border-slate-200 overflow-hidden" preserveAspectRatio="none"></svg>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Card 6: Bezisterim -->
-                        <div class="flex flex-col p-2.5 bg-slate-50 border border-slate-100 rounded-xl">
-                            <div class="flex items-center gap-2">
-                                <input id="chk-bezisterim" type="checkbox" class="rounded text-slate-800 focus:ring-slate-500 h-3.5 w-3.5 cursor-pointer">
-                                <label for="chk-bezisterim" class="text-[9px] text-slate-800 font-black uppercase tracking-wider cursor-pointer" title="Clinical Target: -4.77 years InflammAge">Bezisterim</label>
-                                <button type="button" onclick="document.getElementById('dose-panel-bezisterim').classList.toggle('hidden')" class="ml-auto text-slate-400 hover:text-slate-600 cursor-pointer" title="Adjust Pharmacokinetics">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.1a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
-                                </button>
-                            </div>
-                            <div id="dose-panel-bezisterim" class="hidden flex flex-col gap-2 mt-2 pt-2 border-t border-slate-200/60">
-                                <div class="flex items-center justify-between text-[8px] text-slate-500 font-bold font-mono">
-                                    <span>DOSE: <span id="val-dose-bezisterim" class="text-slate-800 font-bold">5.0 mg</span></span>
-                                    <span>FREQ: <span id="val-freq-bezisterim" class="text-slate-800 font-bold">24 hrs</span></span>
-                                </div>
-                                <div>
-                                    <label class="text-[7px] text-slate-400 font-bold uppercase block mb-0.5">Dose (mg)</label>
-                                    <input id="slider-dose-bezisterim" type="range" min="1" max="50" step="1" value="5" class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer" style="accent-color:#1e293b;">
-                                </div>
-                                <div>
-                                    <label class="text-[7px] text-slate-400 font-bold uppercase block mb-0.5">Frequency (hours)</label>
-                                    <input id="slider-freq-bezisterim" type="range" min="12" max="168" step="12" value="24" class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer" style="accent-color:#1e293b;">
-                                </div>
-                                <div class="flex items-center gap-1.5 mt-0.5">
-                                    <span class="text-[7px] text-slate-400 uppercase font-bold shrink-0">PK/PD Wave:</span>
-                                    <svg id="sparkline-bezisterim" class="w-full h-5 bg-slate-100 rounded border border-slate-200 overflow-hidden" preserveAspectRatio="none"></svg>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Card 7: Pitavastatin -->
-                        <div class="flex flex-col p-2.5 bg-slate-50 border border-slate-100 rounded-xl">
-                            <div class="flex items-center gap-2">
-                                <input id="chk-pitavastatin" type="checkbox" class="rounded text-slate-800 focus:ring-slate-500 h-3.5 w-3.5 cursor-pointer">
-                                <label for="chk-pitavastatin" class="text-[9px] text-slate-800 font-black uppercase tracking-wider cursor-pointer" title="Statin Target: -0.035 DunedinPACE">Pitavastatin</label>
-                                <button type="button" onclick="document.getElementById('dose-panel-pitavastatin').classList.toggle('hidden')" class="ml-auto text-slate-400 hover:text-slate-600 cursor-pointer" title="Adjust Pharmacokinetics">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.1a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
-                                </button>
-                            </div>
-                            <div id="dose-panel-pitavastatin" class="hidden flex flex-col gap-2 mt-2 pt-2 border-t border-slate-200/60">
-                                <div class="flex items-center justify-between text-[8px] text-slate-500 font-bold font-mono">
-                                    <span>DOSE: <span id="val-dose-pitavastatin" class="text-slate-800 font-bold">2.0 mg</span></span>
-                                    <span>FREQ: <span id="val-freq-pitavastatin" class="text-slate-800 font-bold">24 hrs</span></span>
-                                </div>
-                                <div>
-                                    <label class="text-[7px] text-slate-400 font-bold uppercase block mb-0.5">Dose (mg)</label>
-                                    <input id="slider-dose-pitavastatin" type="range" min="0.5" max="8.0" step="0.5" value="2.0" class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer" style="accent-color:#1e293b;">
-                                </div>
-                                <div>
-                                    <label class="text-[7px] text-slate-400 font-bold uppercase block mb-0.5">Frequency (hours)</label>
-                                    <input id="slider-freq-pitavastatin" type="range" min="12" max="168" step="12" value="24" class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer" style="accent-color:#1e293b;">
-                                </div>
-                                <div class="flex items-center gap-1.5 mt-0.5">
-                                    <span class="text-[7px] text-slate-400 uppercase font-bold shrink-0">PK/PD Wave:</span>
-                                    <svg id="sparkline-pitavastatin" class="w-full h-5 bg-slate-100 rounded border border-slate-200 overflow-hidden" preserveAspectRatio="none"></svg>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Card 8: Multivitamin -->
-                        <div class="flex flex-col p-2.5 bg-slate-50 border border-slate-100 rounded-xl">
-                            <div class="flex items-center gap-2">
-                                <input id="chk-multivitamin" type="checkbox" class="rounded text-slate-800 focus:ring-slate-500 h-3.5 w-3.5 cursor-pointer">
-                                <label for="chk-multivitamin" class="text-[9px] text-slate-800 font-black uppercase tracking-wider cursor-pointer" title="Clinical Target: -0.44 years PhenoAge, -0.21 years GrimAge">Multivitamin</label>
-                                <button type="button" onclick="document.getElementById('dose-panel-multivitamin').classList.toggle('hidden')" class="ml-auto text-slate-400 hover:text-slate-600 cursor-pointer" title="Adjust Pharmacokinetics">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.1a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
-                                </button>
-                            </div>
-                            <div id="dose-panel-multivitamin" class="hidden flex flex-col gap-2 mt-2 pt-2 border-t border-slate-200/60">
-                                <div class="flex items-center justify-between text-[8px] text-slate-500 font-bold font-mono">
-                                    <span>DOSE: <span id="val-dose-multivitamin" class="text-slate-800 font-bold">1.0 tab</span></span>
-                                    <span>FREQ: <span id="val-freq-multivitamin" class="text-slate-800 font-bold">24 hrs</span></span>
-                                </div>
-                                <div>
-                                    <label class="text-[7px] text-slate-400 font-bold uppercase block mb-0.5">Dose (tabs)</label>
-                                    <input id="slider-dose-multivitamin" type="range" min="0.5" max="5.0" step="0.5" value="1.0" class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer" style="accent-color:#1e293b;">
-                                </div>
-                                <div>
-                                    <label class="text-[7px] text-slate-400 font-bold uppercase block mb-0.5">Frequency (hours)</label>
-                                    <input id="slider-freq-multivitamin" type="range" min="12" max="168" step="12" value="24" class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer" style="accent-color:#1e293b;">
-                                </div>
-                                <div class="flex items-center gap-1.5 mt-0.5">
-                                    <span class="text-[7px] text-slate-400 uppercase font-bold shrink-0">PK/PD Wave:</span>
-                                    <svg id="sparkline-multivitamin" class="w-full h-5 bg-slate-100 rounded border border-slate-200 overflow-hidden" preserveAspectRatio="none"></svg>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Toxicity Hazard Banner -->
-                <div id="pred-hazard-banner" class="hidden mb-4 p-3.5 bg-red-50 border border-red-200 rounded-2xl text-xs text-slate-800 font-sans leading-relaxed animation-pulse flex gap-2 items-start">
-                    <i data-lucide="shield-alert" class="w-4 h-4 text-slate-800 shrink-0 mt-0.5"></i>
-                    <span id="pred-hazard-text"></span>
-                </div>
-
-                <!-- Prediction Metrics Grid -->
-                <div class="grid grid-cols-3 gap-3 mb-4">
-                    <div class="bg-slate-50 border border-slate-100 p-2.5 rounded-2xl text-center">
-                        <div class="text-[8px] text-slate-500 font-bold uppercase mb-1">TIME-seq CpG Delta</div>
-                        <div id="pred-age-shift" class="text-xs text-slate-900 font-bold font-mono">--</div>
-                    </div>
-                    <div class="bg-slate-50 border border-slate-100 p-2.5 rounded-2xl text-center">
-                        <div class="text-[8px] text-slate-500 font-bold uppercase mb-1">Transcriptome Stability</div>
-                        <div id="pred-stability" class="text-xs text-slate-900 font-bold font-mono">--</div>
-                    </div>
-                    <div class="bg-slate-50 border border-slate-100 p-2.5 rounded-2xl text-center">
-                        <div class="text-[8px] text-slate-500 font-bold uppercase mb-1">Sirtuin Activity</div>
-                        <div id="pred-sirt-index" class="text-xs text-slate-900 font-bold font-mono">--</div>
-                    </div>
-                    <div class="bg-slate-50 border border-slate-100 p-2.5 rounded-2xl text-center">
-                        <div class="text-[8px] text-slate-500 font-bold uppercase mb-1">Endothelial Rejuv</div>
-                        <div id="pred-endo-score" class="text-xs text-slate-900 font-bold font-mono">--</div>
-                    </div>
-                    <div class="bg-slate-50 border border-slate-100 p-2.5 rounded-2xl text-center">
-                        <div class="text-[8px] text-slate-500 font-bold uppercase mb-1">Syncytial Safety</div>
-                        <div id="pred-sync-safety" class="text-xs text-slate-900 font-bold font-mono">--</div>
-                    </div>
-                    <div class="bg-slate-50 border border-slate-100 p-2.5 rounded-2xl text-center">
-                        <div class="text-[8px] text-slate-500 font-bold uppercase mb-1">AFRAID Frailty Age</div>
-                        <div id="pred-afraid-age" class="text-xs text-slate-900 font-bold font-mono">--</div>
-                    </div>
-                </div>
-                
-                <!-- Clinical Trial Metrics Card -->
-                <div id="clinical-metrics-card" class="mb-4 p-3.5 bg-slate-100/60 border border-slate-200/80 rounded-2xl animation-fade-in">
-                    <div class="text-[7px] text-slate-800 font-black uppercase mb-2 tracking-widest flex items-center gap-1">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" class="text-slate-700"><circle cx="12" cy="8" r="7"/><path d="M8.21 13.89L7 23l5-3 5 3-1.21-9.12"/></svg>
-                        Clinical Trial Outcomes & Provenance (Harvard Genetic Studies)
-                    </div>
-                    <div class="grid grid-cols-3 gap-2 text-center mb-2">
-                        <div class="bg-white border border-slate-200/40 p-2 rounded-xl">
-                            <div class="text-[6px] text-slate-500 font-bold uppercase mb-0.5">DunedinPACE Rate</div>
-                            <div id="pred-dunedin-pace" class="text-[10px] text-slate-800 font-mono font-black">1.000</div>
-                        </div>
-                        <div class="bg-white border border-slate-200/40 p-2 rounded-xl">
-                            <div class="text-[6px] text-slate-500 font-bold uppercase mb-0.5">Causal DamAge</div>
-                            <div id="pred-damage-shift" class="text-[10px] text-slate-800 font-mono font-black">0.00 Yrs</div>
-                        </div>
-                        <div class="bg-white border border-slate-200/40 p-2 rounded-xl">
-                            <div class="text-[6px] text-slate-500 font-bold uppercase mb-0.5">Causal AdaptAge</div>
-                            <div id="pred-adaptive-shift" class="text-[10px] text-slate-800 font-mono font-black">0.00 Yrs</div>
-                        </div>
-                    </div>
-                    <div class="text-[7px] text-slate-800/70 font-medium italic leading-relaxed flex gap-1.5 items-start bg-white/50 p-1.5 rounded-lg border border-slate-100/30">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="text-slate-600 shrink-0 mt-0.5"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-                        <span id="pred-clinical-citation">Source: Adiv A. Johnson & Harvard Genetic Studies, Frontiers in Genetics, 2026. Systematic review of 41 human trials.</span>
-                    </div>
-                </div>
-                
-                <!-- Epigenetic CpG Methylome Heatmap -->
-                <div class="space-y-2 mb-4 animation-fade-in">
-                    <div class="text-[9px] text-slate-500 font-bold uppercase tracking-wider flex items-center gap-1.5">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="text-slate-700"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
-                        TIME-seq Epigenetic CpG Methylome Heatmap (100 Loci)
-                        <span class="ml-auto text-[8px] text-slate-800 bg-slate-100 px-1.5 py-0.5 rounded border border-slate-200 font-mono font-bold">Zenith v30 Engine</span>
-                    </div>
-                    <div class="bg-slate-900 border border-slate-800 p-3 rounded-2xl">
-                        <div id="cpg-heatmap-grid" class="grid grid-cols-10 gap-[2px] w-full aspect-video bg-slate-950 p-1.5 rounded-lg border border-slate-800/60 overflow-hidden">
-                            <!-- Dynamically generated 100 blocks via JavaScript -->
-                        </div>
-                        <div class="flex items-center justify-between text-[7px] text-slate-400 mt-2 font-mono uppercase tracking-widest px-0.5">
-                            <span>Youthful (0.0 Methylation)</span>
-                            <div class="h-1.5 w-24 rounded-full bg-gradient-to-r from-emerald-500 to-purple-600 border border-slate-800"></div>
-                            <span>Aged (1.0 Methylation)</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Expression Profiles -->
-                <div class="space-y-2">
-                    <div class="text-[9px] text-slate-500 font-bold uppercase mb-2 tracking-wider">Epigenetic & Structural Expression Profiles</div>
-                    <div id="pred-expressions" class="space-y-3 bg-slate-50 p-4 rounded-2xl border border-slate-100">
-                        <!-- Will be dynamically populated -->
-                    </div>
-                </div>
-
-            </div>
-
-            <!-- LNP DELIVERY OPTIMIZER -->
-            <div id="lnp-optimizer-panel" class="p-6 bg-white border border-slate-200 rounded-[24px] shadow-sm relative overflow-hidden animation-fade-in">
-                <div class="text-[11px] text-slate-800 font-bold uppercase tracking-wider mb-4 flex items-center gap-1.5">
-                    <i data-lucide="package" class="w-3.5 h-3.5 text-slate-800"></i>
-                    mRNA-LNP Formulation Delivery Optimizer
-                    <span class="ml-auto text-[9px] px-2.5 py-0.5 bg-slate-100 text-slate-800 border border-slate-200 rounded-full font-bold tracking-normal font-sans">Encapsulation</span>
-                </div>
-                <!-- LNP Parameter Sliders -->
-                <div class="grid grid-cols-2 gap-4 mb-4 bg-slate-50 p-4 rounded-2xl border border-slate-100">
-                    <div>
-                        <label class="text-[9px] text-slate-600 font-bold block mb-1.5 uppercase tracking-wider">Ionizable Molar %: <span id="val-lnp-ion" class="text-slate-800 font-mono font-bold">50.0%</span></label>
-                        <input id="slider-lnp-ion" type="range" min="30" max="60" step="1" value="50" class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer" style="accent-color:#1e293b;">
-                    </div>
-                    <div>
-                        <label class="text-[9px] text-slate-600 font-bold block mb-1.5 uppercase tracking-wider">Cholesterol Molar %: <span id="val-lnp-chol" class="text-slate-800 font-mono font-bold">38.5%</span></label>
-                        <input id="slider-lnp-chol" type="range" min="20" max="50" step="0.5" value="38.5" class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer" style="accent-color:#1e293b;">
-                    </div>
-                    <div>
-                        <label class="text-[9px] text-slate-600 font-bold block mb-1.5 uppercase tracking-wider">Helper Lipid Molar %: <span id="val-lnp-helper" class="text-slate-800 font-mono font-bold">10.0%</span></label>
-                        <input id="slider-lnp-helper" type="range" min="5" max="20" step="0.5" value="10" class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer" style="accent-color:#1e293b;">
-                    </div>
-                    <div>
-                        <label class="text-[9px] text-slate-600 font-bold block mb-1.5 uppercase tracking-wider">PEG-Lipid Molar %: <span id="val-lnp-peg" class="text-slate-800 font-mono font-bold">1.5%</span></label>
-                        <input id="slider-lnp-peg" type="range" min="0.5" max="5.0" step="0.1" value="1.5" class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer" style="accent-color:#1e293b;">
-                    </div>
-                    <div class="col-span-2">
-                        <label class="text-[9px] text-slate-600 font-bold block mb-1.5 uppercase tracking-wider">N/P Ratio (Nitrogen/Phosphate): <span id="val-lnp-np" class="text-slate-800 font-mono font-bold">6.0</span></label>
-                        <input id="slider-lnp-np" type="range" min="1.0" max="15.0" step="0.1" value="6.0" class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer" style="accent-color:#1e293b;">
-                    </div>
-                    <div class="col-span-2 flex items-center gap-2 mt-2 pt-2 border-t border-slate-200/60">
-                        <input id="chk-lnp-active" type="checkbox" class="rounded text-slate-800 focus:ring-slate-500 h-3.5 w-3.5 cursor-pointer">
-                        <label for="chk-lnp-active" class="text-[9px] text-slate-500 font-bold uppercase tracking-wider cursor-pointer">Active Ligand Conjugation (Bypasses liver barrier)</label>
-                    </div>
-                    <div id="lnp-ligand-density-container" class="col-span-2 hidden transition-all duration-300">
-                        <label class="text-[9px] text-slate-600 font-bold block mb-1.5 uppercase tracking-wider">Ligand Conjugation Density (%): <span id="val-lnp-ligand" class="text-slate-800 font-mono font-bold">2.5%</span></label>
-                        <input id="slider-lnp-ligand" type="range" min="0.1" max="10.0" step="0.1" value="2.5" class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer" style="accent-color:#1e293b;">
-                    </div>
-                    <div class="col-span-2">
-                        <label class="text-[9px] text-slate-600 font-bold block mb-1.5 uppercase tracking-wider">PEG Molecular Weight (Da): <span id="val-lnp-peg-mw" class="text-slate-800 font-mono font-bold">2000 Da</span></label>
-                        <input id="slider-lnp-peg-mw" type="range" min="1000" max="5000" step="500" value="2000" class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer" style="accent-color:#1e293b;">
-                    </div>
-                </div>
-                <!-- LNP Target Tropism Metrics -->
-                <div class="grid grid-cols-3 gap-3 mb-4">
-                    <div class="bg-slate-50 border border-slate-100 p-2.5 rounded-2xl text-center">
-                        <div class="text-[8px] text-slate-500 font-bold uppercase mb-1">Encapsulation %</div>
-                        <div id="lnp-ee" class="text-xs text-slate-900 font-bold font-mono">--</div>
-                    </div>
-                    <div class="bg-slate-50 border border-slate-100 p-2.5 rounded-2xl text-center">
-                        <div class="text-[8px] text-slate-500 font-bold uppercase mb-1">Cardiac Tropism</div>
-                        <div id="lnp-tropism" class="text-xs text-slate-900 font-bold font-mono">--</div>
-                    </div>
-                    <div class="bg-slate-50 border border-slate-100 p-2.5 rounded-2xl text-center">
-                        <div class="text-[8px] text-slate-500 font-bold uppercase mb-1">Liver Seq.</div>
-                        <div id="lnp-liver-seq" class="text-xs text-slate-900 font-bold font-mono">--</div>
-                    </div>
-                    <div class="bg-slate-50 border border-slate-100 p-2.5 rounded-2xl text-center">
-                        <div class="text-[8px] text-slate-500 font-bold uppercase mb-1">Endosomal Escape</div>
-                        <div id="lnp-escape-rate" class="text-xs text-slate-900 font-bold font-mono">--</div>
-                    </div>
-                    <div class="bg-slate-50 border border-slate-100 p-2.5 rounded-2xl text-center">
-                        <div class="text-[8px] text-slate-500 font-bold uppercase mb-1">Half-Life (t1/2)</div>
-                        <div id="lnp-half-life" class="text-xs text-slate-900 font-bold font-mono">--</div>
-                    </div>
-                    <div class="bg-slate-50 border border-slate-100 p-2.5 rounded-2xl text-center">
-                        <div class="text-[8px] text-slate-500 font-bold uppercase mb-1">Cytotoxicity</div>
-                        <div id="lnp-toxicity" class="text-xs text-slate-900 font-bold font-mono">--</div>
-                    </div>
-                </div>
-                <div class="flex items-center justify-between text-xs text-slate-500 font-sans mb-3">
-                    <span>Status: <span id="lnp-status-val" class="text-slate-800 font-bold uppercase">--</span></span>
-                    <span>Target: Heart (Cardiomyocytes)</span>
-                </div>
-                <!-- Biophysical Mechanism Banner -->
-                <div id="lnp-mechanism-banner" class="p-3 bg-slate-50 border border-slate-100 rounded-2xl text-[9px] text-slate-500 font-sans leading-relaxed">
-                    Adjust parameters or toggle active targeting to resolve the continuous endothelial barrier.
-                </div>
-
-            </div>
-        </div>
-
         <!-- Footer -->
         <div style="margin-top:40px;text-align:center;font-size:8px;color:#bdc1c6;width:100%;max-width:720px;">
-            Zenith v30.0 &nbsp;·&nbsp; ~2.42M Cells (1.94M Generalist + 486k Specialist) &nbsp;·&nbsp; Research Use Only
+            Zenith v27.0 GOLD &nbsp;┬À&nbsp; Litvi┼êukov├í et al., Nature 2020 (DOI: 10.1038/s41586-020-2797-4) &nbsp;┬À&nbsp; Research Use Only
         </div>
     </div>
 </div>
 
 
 
-<!-- ═══ VIEW 2: SIMULATION LAB (existing layout, hidden by default) ═══ -->
+<!-- ÔòÉÔòÉÔòÉ VIEW 2: SIMULATION LAB (existing layout, hidden by default) ÔòÉÔòÉÔòÉ -->
 
 <div id="view-simulation">
     <!-- Simulation back button injected by JS -->
@@ -2206,7 +1606,7 @@
 
             </div>
 
-            <button id="auth-btn-mobile" class="mob-exit-btn" style="opacity: 0; transition: opacity 0.25s;">...</button>
+            <button class="mob-exit-btn" onclick="typeof exitSimulation!=='undefined'?exitSimulation():(typeof performLogout!=='undefined'?performLogout():window.location.href='profile.html')">EXIT</button>
 
         </div>
 
@@ -2476,12 +1876,12 @@
             <!-- 1. BRANDING & STATUS PILL -->
             <div class="flex items-center px-4 h-12 lg:h-full lg:border-r border-white/10 shrink-0">
                 <div class="flex items-center gap-4">
-                    <a href="index.html" class="flex items-center gap-2 hover:opacity-80 transition-opacity" style="text-decoration:none;">
+                    <div class="flex items-center gap-2">
                         <i data-lucide="layers" class="w-5 h-5 text-slate-100"></i>
                         <div class="font-sans font-bold tracking-tighter flex items-center uppercase text-slate-100">
                             <span class="text-lg mr-1">NILUS <span class="text-blue-600 ml-1">LAB</span></span>
                         </div>
-                    </a>
+                    </div>
 
 
                     <div class="h-6 w-px bg-white/10 mx-2 hidden xl:block"></div>
@@ -2506,7 +1906,7 @@
                     <span class="text-slate-500 text-[7px] font-black uppercase tracking-widest">Engine Capacity</span>
                     <div class="flex items-center gap-2">
                         <span class="w-1.5 h-1.5 bg-blue-500 rounded-full"></span>
-                        <span class="text-blue-400 font-bold text-[9px] uppercase">Zenith Ultra-v30.0</span>
+                        <span class="text-blue-400 font-bold text-[9px] uppercase">Zenith Ultra-v27.0 GOLD (GOLD)</span>
                     </div>
                 </div>
                 <div class="header-stat border-l border-white/10 pl-6 shrink-0 hidden md:block">
@@ -2534,12 +1934,6 @@
             <div class="flex items-center gap-2 px-4 h-12 lg:h-full bg-black shrink-0">
 
                 <!-- SYSTEM ACTIONS -->
-                <a href="index.html" id="back-to-disc"
-                    class="h-7 px-3 bg-blue-900/20 border border-blue-500/30 text-blue-400 rounded hover:bg-blue-900/40 flex items-center gap-2 transition-all"
-                    style="text-decoration: none;">
-                    <i data-lucide="arrow-left" class="w-3 h-3"></i>
-                    <span class="text-[8px] font-black uppercase">Main Page</span>
-                </a>
                 <button
                     class="h-7 px-3 bg-blue-900/20 border border-blue-500/30 text-blue-400 rounded hover:bg-blue-900/40 flex items-center gap-2 transition-all"
                     onclick="BiosimEngine.boot()">
@@ -2565,9 +1959,9 @@
                         onclick="BiosimBridge.toggleCatalog()">
                         <i data-lucide="book" class="w-3 h-3"></i> DOCS
                     </button>
-                    <a href="index.html"
+                    <a href="profile.html"
                         class="h-7 px-3 bg-blue-600/20 border border-blue-500/50 text-[8px] text-blue-400 rounded flex items-center gap-1.5 hover:bg-blue-600/30 font-bold transition-all">
-                        <i data-lucide="home" class="w-3 h-3"></i> MAIN PAGE
+                        <i data-lucide="user" class="w-3 h-3"></i> PROFILE
                     </a>
                 </div>
                 <div class="h-6 w-px bg-white/10 mx-2"></div>
@@ -2588,10 +1982,10 @@
                 </button>
                 <div class="h-6 w-px bg-white/10 mx-2"></div>
 
-                <!-- SIGN OUT IN SAME THEME -->
-                <button onclick="performLogout()"
+                <!-- EXIT IN SAME THEME -->
+                <button onclick="exitSimulation()"
                     class="h-7 px-3 bg-blue-600/20 border border-blue-500/50 text-[8px] text-blue-400 rounded flex items-center gap-1.5 hover:bg-blue-600/30 transition-all font-bold font-black">
-                    <i data-lucide="log-out" class="w-3 h-3"></i> SIGN OUT
+                    <i data-lucide="arrow-left" class="w-3 h-3"></i> EXIT
                 </button>
             </div>
         </div>
@@ -2623,9 +2017,9 @@
                             <option value="OSKM">OSKM (Yamanaka - iPSC)</option>
                             <option value="MPTR">MPTR (Transient Rejuvenation)</option>
                             <option value="LIN28">LIN28/NANOG (Thomson)</option>
-                            <option value="DIRECT_NEURO">Direct → Neuro (Transdiff)</option>
-                            <option value="DIRECT_CARDIO">Direct → Cardio (Transdiff)</option>
-                            <option value="DIRECT_ENDO">Direct → Endoderm (Transdiff)</option>
+                            <option value="DIRECT_NEURO">Direct ÔåÆ Neuro (Transdiff)</option>
+                            <option value="DIRECT_CARDIO">Direct ÔåÆ Cardio (Transdiff)</option>
+                            <option value="DIRECT_ENDO">Direct ÔåÆ Endoderm (Transdiff)</option>
                         </select>
                         <i data-lucide="chevron-down" class="absolute right-2 top-1/2 -translate-y-1/2 w-3 h-3 text-slate-500 pointer-events-none"></i>
                     </div>
@@ -2839,7 +2233,7 @@
 
                     <div class="space-y-3">
 
-                        <!-- v30.0: FEATURE 4 - FLUX TOGGLE -->
+                        <!-- v27.1: FEATURE 4 - FLUX TOGGLE -->
 
                         <div
 
@@ -2903,7 +2297,7 @@
                                 oninput="BiosimLab.updateConfig('stochastic.mutationRate', this.value, 'val-mut', true)">
                         </div>
 
-                        <!-- v30.0: ORGANOID CLUSTERING CONTROL -->
+                        <!-- v27.1: ORGANOID CLUSTERING CONTROL -->
                         <div>
                             <div class="flex justify-between text-[8px] text-blue-400 font-bold mb-1">
                                 <span>TISSUE COHESION (ORGANOIDS)</span>
@@ -2993,10 +2387,6 @@
                             <span>Primary Marker (scVI)</span>
                             <span class="hud-value" id="insp-marker">--</span>
                         </div>
-                        <div class="hud-row text-emerald-400 font-bold border-t border-blue-900/30 pt-1 mt-1">
-                            <span>Epigenetic Stability</span>
-                            <span class="hud-value" id="insp-esi">--%</span>
-                        </div>
 
                         <!-- GNN SIGNALING INTERCEPT -->
                         <div class="mt-4 pt-2 border-t border-blue-900/40">
@@ -3047,6 +2437,7 @@
                     <canvas id="viewport-microscope"></canvas>
                     <div class="scanline-overlay"></div>
                     <div class="bloom-overlay"></div>
+                </div>
 
                 <!-- 3D viewport removed -->
 
@@ -3288,7 +2679,7 @@
 
                         <div class="explorer-box">
 
-                            <div class="text-[8px] font-bold text-slate-400 mb-2">ZENITH v30.0: 6K-GENOME EXPLORER
+                            <div class="text-[8px] font-bold text-slate-400 mb-2">ZENITH v27.1: KILO-GENOME EXPLORER
 
                             </div>
 
@@ -3342,7 +2733,11 @@
 
 
 
+                <div class="scanline-overlay"></div>
 
+                <div class="bloom-overlay"></div>
+
+                <canvas id="microscope-canvas" style="width:100%; height:100%;"></canvas>
 
 
 
@@ -3366,7 +2761,7 @@
 
                     EXPOSURE: 180ms<br>
 
-                    PROVENANCE: <span class="text-blue-400">PREDICTED (Zenith-v30.0)</span><br>
+                    PROVENANCE: <span class="text-blue-400">PREDICTED (Zenith-v27.0 GOLD)</span><br>
 
                     STATUS: SCANNING COLONY... <span id="micro-fps">60</span> FPS
 
@@ -3410,7 +2805,6 @@
                     </div>
 
                 </div>
-                </div>
 
             </div>
 
@@ -3434,15 +2828,15 @@
                         <button id="chip-real" data-active="1"
                             onclick="window._discoveryMode='real';this.setAttribute('data-active','1');document.getElementById('chip-gpt').removeAttribute('data-active');this.style.background='rgba(99,102,241,0.9)';this.style.color='#fff';document.getElementById('chip-gpt').style.background='transparent';document.getElementById('chip-gpt').style.color='#64748b';"
                             style="background:rgba(99,102,241,0.9);color:#fff;border:none;padding:4px 9px;border-radius:5px;font-size:8px;font-weight:800;cursor:pointer;letter-spacing:0.03em;white-space:nowrap;">
-                            ⚡ Zenith
+                            ÔÜí Zenith
                         </button>
                         <button id="chip-gpt"
                             onclick="window._discoveryMode='gpt';this.setAttribute('data-active','1');document.getElementById('chip-real').removeAttribute('data-active');this.style.background='rgba(99,102,241,0.9)';this.style.color='#fff';document.getElementById('chip-real').style.background='transparent';document.getElementById('chip-real').style.color='#64748b';"
                             style="background:transparent;color:#64748b;border:none;padding:4px 9px;border-radius:5px;font-size:8px;font-weight:800;cursor:pointer;letter-spacing:0.03em;white-space:nowrap;">
-                            ✦ GPT
+                            Ô£ª GPT
                         </button>
                     </div>
-                    <span id="mode-badge" style="flex:1;font-size:7px;color:#4f46e5;font-weight:700;opacity:0.7;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">83 donors · 2.42M cells · 4,908 genes</span>
+                    <span id="mode-badge" style="flex:1;font-size:7px;color:#4f46e5;font-weight:700;opacity:0.7;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">14 donors ┬À 32,383 genes</span>
                     <button id="btn-discover"
                         onclick="window._discoveryMode=(document.getElementById('chip-real').getAttribute('data-active')?'real':'gpt');BiosimBridge.discoverHybridProtocol(this);"
                         style="background:linear-gradient(135deg,#4f46e5,#2563eb);color:#fff;border:none;padding:6px 12px;border-radius:7px;font-size:9px;font-weight:900;cursor:pointer;display:flex;align-items:center;gap:4px;box-shadow:0 2px 10px rgba(79,70,229,0.4);flex-shrink:0;white-space:nowrap;">
@@ -3542,7 +2936,7 @@
                     </div>
                 </div>
 
-                <!-- Literature Audit — secondary action, small -->
+                <!-- Literature Audit ÔÇö secondary action, small -->
                 <div class="px-3 mb-3">
                     <button id="btn-lit-audit"
                         onclick="BiosimExpert.runLiteratureAudit(this)"
@@ -3550,7 +2944,7 @@
                         onmouseover="this.style.borderColor='rgba(99,102,241,0.4)';this.style.color='#a5b4fc'"
                         onmouseout="this.style.borderColor='rgba(255,255,255,0.08)';this.style.color='#64748b'">
                         <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
-                        Perform Literature Audit (v30)
+                        Perform Literature Audit (v27)
                     </button>
                 </div>
                 <div class="p-1">
@@ -3590,7 +2984,7 @@
                                 <div id="pr-sirt-relevance" class="text-[7px] text-slate-500">--</div>
                             </div>
                             <div class="p-2 bg-black/30 border border-purple-500/20 rounded-lg">
-                                <div class="text-[6px] text-purple-400 font-black uppercase mb-1">TIME-seq Clock</div>
+                                <div class="text-[6px] text-purple-400 font-black uppercase mb-1">Horvath Clock</div>
                                 <div id="pr-horvath-score" class="text-[14px] text-purple-300 font-black">--</div>
                                 <div id="pr-horvath-shift" class="text-[7px] text-slate-500">--</div>
                             </div>
@@ -3635,14 +3029,14 @@
                         </div>
                     </div>
 
-                    <!-- v30.0: scVI LATENT VERIFICATION (scGen methodology) -->
+                    <!-- v27: scVI LATENT VERIFICATION (scGen methodology) -->
                     <div id="scvi-latent-panel" class="hidden mt-2 p-3 bg-blue-950/20 border border-blue-500/30 rounded-xl animation-fade-in relative overflow-hidden">
                         <div class="absolute top-0 right-0 p-1 opacity-20">
                             <i data-lucide="microscope" class="w-8 h-8 text-blue-400"></i>
                         </div>
                         <div class="text-[7px] text-blue-300 font-black uppercase tracking-widest mb-2 flex items-center gap-1.5">
                             <i data-lucide="verified" class="w-2.5 h-2.5 text-blue-400"></i>
-                            scVI Manifold Verification (486k Specialist Model)
+                            scVI Manifold Verification (486k Model)
                             <span class="ml-auto text-[6px] px-1 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded">Measured Data</span>
                         </div>
                         <div class="grid grid-cols-2 gap-3 mb-3">
@@ -3674,10 +3068,11 @@
                     <div id="af3-metrics-panel" class="hidden mt-2 p-3 bg-slate-950/60 border border-slate-700/40 rounded-xl">
                         <div class="text-[7px] text-slate-500 font-black uppercase tracking-widest mb-2 flex items-center gap-1.5">
                             <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                            AlphaFold Server Manifest Export
+                            AlphaFold 3 Structural Validation
                         </div>
                         <p class="text-[8px] text-slate-400 leading-relaxed mb-2">
-                            This utility compiles a JSON manifest for external submission to the official Google DeepMind AlphaFold Server (alphafoldserver.com) to calculate pLDDT, PAE, pTM, and ipTM metrics.
+                            pLDDT, PAE, pTM and ipTM scores are produced exclusively by the AlphaFold 3 server.
+                            Extract the JSON manifest below and submit it to get real structural confidence metrics.
                         </p>
                         <div class="grid grid-cols-4 gap-1">
                             <div class="bg-black/30 border border-slate-700/30 p-1.5 rounded text-center">
@@ -3699,7 +3094,7 @@
                         </div>
                         <a href="https://alphafoldserver.com" target="_blank" class="mt-2 flex items-center justify-center gap-1 w-full py-1.5 bg-blue-900/20 border border-blue-500/30 rounded text-[7px] text-blue-400 hover:bg-blue-500/20 transition-all font-black uppercase tracking-widest">
                             <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-                            Submit Manifest to alphafoldserver.com
+                            Submit Manifest   alphafoldserver.com
                         </a>
                     </div>
 
@@ -3707,7 +3102,7 @@
                     <div class="flex gap-1">
                         <button onclick="BiosimBridge.exportAlphaFoldManifest()"
                             class="flex-1 py-2 bg-blue-600/20 border border-blue-500/40 rounded-lg text-[8px] text-blue-300 font-black hover:bg-blue-600/35 flex items-center justify-center gap-1 transition-all">
-                            <i data-lucide="file-code" class="w-3 h-3"></i> EXPORT ALPHAFOLD MANIFEST
+                            <i data-lucide="file-code" class="w-3 h-3"></i> EXTRACT AF3 JSON
                         </button>
                         <button onclick="BiosimBridge.injectDiscoveryIntoSim()"
                             class="flex-1 py-2 bg-blue-600/15 border border-blue-500/30 rounded-lg text-[8px] text-blue-400 font-black hover:bg-blue-600/25 flex items-center justify-center gap-1 transition-all">
@@ -3716,10 +3111,6 @@
                         <button onclick="BiosimBridge.exportOpentronsScript()" title="Opentrons"
                             class="w-8 h-8 bg-slate-800/80 border border-slate-700/60 rounded-lg text-slate-400 flex items-center justify-center hover:text-white transition-all">
                             <i data-lucide="cpu" class="w-3.5 h-3.5"></i>
-                        </button>
-                        <button onclick="BiosimBridge.exportEchoProtocol()" title="Labcyte Echo Transfer List"
-                            class="w-8 h-8 bg-slate-800/80 border border-slate-700/60 rounded-lg text-slate-400 flex items-center justify-center hover:text-white transition-all">
-                            <i data-lucide="file-spreadsheet" class="w-3.5 h-3.5"></i>
                         </button>
                     </div>
 
@@ -3739,8 +3130,6 @@
                             </div>
                         </div>
                     </div>
-
-                    <!-- B2B EXPANSIONS RELOCATED TO STANDALONE DISCOVERY TAB -->
                 </div>
 
                 <!-- CLINICAL ANALYTICS (UNIFIED FLOW) -->
@@ -3778,9 +3167,6 @@
                         <button onclick="BiosimBridge.runPopulationAudit()" class="flex items-center gap-1 px-1.5 py-0.5 bg-blue-900/20 border border-blue-500/20 text-[7px] text-blue-500 rounded hover:bg-blue-500/20 transition-all font-bold group/btn">
                             <i data-lucide="microscope" class="w-2 h-2 group-hover/btn:scale-125 transition-transform"></i> SCIENTIFIC AUDIT
                         </button>
-                        <button onclick="BiosimBridge.toggleQCSidebar(true)" class="flex items-center gap-1 px-1.5 py-0.5 bg-indigo-900/20 border border-indigo-500/20 text-[7px] text-indigo-400 rounded hover:bg-indigo-500/20 transition-all font-bold group/btn">
-                            <i data-lucide="terminal" class="w-2 h-2 group-hover/btn:scale-125 transition-transform"></i> QC MONITOR
-                        </button>
                         <button onclick="BiosimUI.downloadSimulationData()" class="flex items-center gap-1 px-1.5 py-0.5 bg-emerald-900/20 border border-emerald-500/20 text-[7px] text-emerald-500/80 rounded hover:bg-emerald-500/20 transition-all font-bold group/btn">
                             <i data-lucide="download" class="w-2 h-2 group-hover/btn:animate-bounce"></i> DOWNLOAD
                         </button>
@@ -3812,32 +3198,20 @@
                             <div id="ai-status" class="w-1.5 h-1.5 rounded-full bg-slate-700"></div>
                         </div>
                     </div>
-                    <div class="grid grid-cols-2 gap-2 mt-2">
-                        <div>
-                            <div class="text-[7px] font-bold text-slate-400 uppercase mb-1">1.94M Generalist</div>
-                            <div id="latent-projection-list" class="space-y-1 max-h-48 overflow-y-auto pr-1">
-                                <div class="text-[8px] text-slate-600 italic">Select a cell...</div>
-                            </div>
-                        </div>
-                        <div>
-                            <div class="text-[7px] font-bold text-slate-400 uppercase mb-1">486K Specialist</div>
-                            <div id="latent-projection-list-486k" class="space-y-1 max-h-48 overflow-y-auto pr-1">
-                                <div class="text-[8px] text-slate-600 italic">Select a cell...</div>
-                            </div>
-                        </div>
+                    <div id="latent-projection-list" class="space-y-1 max-h-48 overflow-y-auto pr-1">
+                        <div class="text-[8px] text-slate-600 italic">Select a cell to expand transcriptome...</div>
                     </div>
-
                     <div id="scvi-summary"
                         class="mt-3 p-2 bg-blue-900/20 border-l-2 border-blue-500 rounded hidden relative group">
                         <div class="flex justify-between items-start">
-                            <div class="text-[7px] text-blue-400 font-bold uppercase mb-1">ESI Benchmarking</div>
+                            <div class="text-[7px] text-blue-400 font-bold uppercase mb-1">AI Scientific Insight
+                            </div>
+                            <button onclick="BiosimUI.copyText('scvi-summary-text', 'Scientific Insight', this)"
+                                class="text-blue-400 hover:text-blue-200 p-0.5 rounded hover:bg-blue-400/10 transition-colors opacity-0 group-hover:opacity-100">
+                                <i data-lucide="copy" class="w-2.5 h-2.5"></i>
+                            </button>
                         </div>
-                        <div id="scvi-summary-text" class="text-[9px] text-white leading-tight mb-2"></div>
-                        
-                        <div class="flex justify-between items-start mt-2 border-t border-blue-500/30 pt-2">
-                            <div class="text-[7px] text-emerald-400 font-bold uppercase mb-1">GPT-4o Clinical Log</div>
-                        </div>
-                        <div id="ai-expert-insight" class="text-[9px] text-emerald-100 leading-tight italic max-h-32 overflow-y-auto pr-1"></div>
+                        <div id="scvi-summary-text" class="text-[9px] text-white leading-tight italic"></div>
                     </div>
 
                     <!-- AI Expert Reasoning -->
@@ -3858,9 +3232,9 @@
 
                 <!-- GENOMIC EXPLORER -->
                 <div class="mb-4">
-                    <span class="text-[9px] font-bold text-slate-500 uppercase">Zenith v30.0: 6K-Gene Foundation Explorer</span>
+                    <span class="text-[9px] font-bold text-slate-500 uppercase">Zenith v27.0 GOLD GOLD: Ultra-HD (5K) Genome Explorer</span>
                     <div class="mt-2 mb-2">
-                        <input type="text" id="gene-search" placeholder="Search 4,908 genes..."
+                        <input type="text" id="gene-search" placeholder="Search 5,000 genes..."
                             class="w-full bg-black/60 border border-dim rounded px-2 py-1 text-[10px] text-blue-300 focus:outline-none focus:border-blue-500/50"
                             oninput="BiosimUI.initGeneGrid(this.value)">
                     </div>
@@ -3868,7 +3242,7 @@
                         <div id="gene-grid" class="gene-matrix p-2"
                             style="display: grid; grid-template-columns: repeat(10, 1fr); gap: 2px;">
 
-                            <!-- Dynamically populated 4,908 nodes -->
+                            <!-- Dynamically populated 5,000 nodes -->
                         </div>
                     </div>
                 </div>
@@ -3945,9 +3319,9 @@
         RESEARCH USE ONLY - Phase 1 Validation
     </div>
     </div>
-    <script src="js/script.js?v=30.0.3"></script>
+    <script src="js/script.js?v=14.0.0"></script>
 
-    <!-- v30.0 GOLD VISION BRIDGE OVERLAY -->
+    <!-- v27.0 GOLD GOLD VISION BRIDGE OVERLAY -->
     <div id="vision-overlay"
         class="fixed inset-0 bg-black/80 backdrop-blur-md z-[2000] hidden flex items-center justify-center">
         <div
@@ -3973,11 +3347,11 @@
 
                 <h1 class="font-black text-sm tracking-widest text-slate-900 uppercase">Nilus Lab <span
 
-                        class="text-blue-600">Zenith v30.1</span></h1>
+                        class="text-teal-600">Zenith v27.0 GOLD</span></h1>
 
                 <div class="text-[10px] text-slate-400 font-black tracking-[0.2em] uppercase">Virtual Clinical Trial
 
-                    Platform | 2.42M-Cell Ensemble Manifold</div>
+                    Platform | ~167.6M Parameter GOLD Manifold</div>
 
 
 
@@ -4059,7 +3433,7 @@
 
 
 
-    <!-- v30.0: TIME-SERIES AUDIT COMPARATOR -->
+    <!-- v27.1: TIME-SERIES AUDIT COMPARATOR -->
 
     <div id="audit-overlay" class="fixed inset-0 bg-black/90 backdrop-blur-lg z-[3000] hidden flex flex-col p-8">
 
@@ -4209,7 +3583,7 @@
 
             <div class="text-xs text-slate-500 font-mono">
 
-                *Delta Analysis computed via 2.42M-Cell Ensemble Manifold Divergence
+                *Delta Analysis computed via ~167.6M GOLD Manifold Divergence
 
             </div>
 
@@ -4263,7 +3637,7 @@
 
                     Analysis (RUO)</h1>
 
-                <p style="color: #64748b; font-size: 13px;">Patient Digital Twin (Predicted): Zenith-Sim v30.0 |
+                <p style="color: #64748b; font-size: 13px;">Patient Digital Twin (Predicted): Zenith-Sim v27.0 GOLD GOLD |
 
                     Clinical Profile: #4922-A (Research Use Only)</p>
 
@@ -4432,14 +3806,16 @@
     </script>
 
 
-    <!-- firebase_config.js already loaded at top of file — do not load again -->
+    <!-- firebase_config.js already loaded at top of file ÔÇö do not load again -->
 
     <!-- VOLUMETRIC CELL RENDERER - Professional Grade 3D (Legacy)
 
     <script src="js/volumetric-cell-renderer.js"></script>
 
     -->
-    <!-- auth_guard.js removed to allow public discovery page -->
+
+    <script src="js/auth_guard.js?v=20260128-v2"></script>
+
     <script>
 
         // Close dropdown when clicking outside
@@ -4854,7 +4230,7 @@ function renderPartialReport(data) {
 
     if (sirtScore) sirtScore.textContent = (sr.pathway_score || 0) + '%';
 
-    if (sirtRel) sirtRel.textContent = 'Relevance: ' + (sr.sirtuin_relevance || '--');
+    if (sirtRel) sirtRel.textContent = 'Relevance: ' + (sr.sinclair_relevance || '--');
 
 
 
@@ -4944,21 +4320,15 @@ window.updateDiscSafetyButtons = updateDiscSafetyButtons;
 
 
 
-<!-- ═══ DISCOVERY VIEW CONTROLLER ═══ -->
+<!-- ÔòÉÔòÉÔòÉ DISCOVERY VIEW CONTROLLER ÔòÉÔòÉÔòÉ -->
 
 <script>
 
-// ── View switcher ──────────────────────────────────────────────────
+// ÔöÇÔöÇ View switcher ÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇ
 
 function enterSimulation() {
-    if (!window._isAuthenticated) {
-        localStorage.setItem('auth_redirect', 'sim');
-        window.location.href = 'index.html';
-        return;
-    }
 
     document.body.classList.add('sim-mode');
-    window.location.hash = 'simulation';
 
     // Bridge discovery results into Simulation Lab
     if (window._lastResult) {
@@ -5018,13 +4388,12 @@ function enterSimulation() {
 function exitSimulation() {
 
     document.body.classList.remove('sim-mode');
-    window.location.hash = '';
 
 }
 
 
 
-// ── Claude-style Model Dropdown & Submit Button ───────────────────
+// ÔöÇÔöÇ Claude-style Model Dropdown & Submit Button ÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇ
 window._discMode = 'real';
 window._discoveryMode = 'real'; // ensure bridge also defaults to real
 window._activeModelMode = 'real';
@@ -5145,7 +4514,7 @@ function renderOskReport(safetyData, dosageData, elapsed, cellTypeKey, query) {
     const downloadBtnHtml = safetyData.af3_manifest
         ? `<button onclick="downloadOskAF3Manifest()" style="width:100%;margin-top:12px;background:transparent;border:1.5px solid #8b8070;color:#8b8070;padding:8px 14px;border-radius:10px;font-size:10px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:all 0.15s;font-family:'Inter',sans-serif;" onmouseover="this.style.background='#f7f7f6';" onmouseout="this.style.background='transparent';">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
-            Download AlphaFold Server Manifest
+            Download AlphaFold 3 Manifest
            </button>`
         : '';
 
@@ -5158,8 +4527,8 @@ function renderOskReport(safetyData, dosageData, elapsed, cellTypeKey, query) {
                         <span style="width:8px;height:8px;background:#d97706;border-radius:50%;display:inline-block;"></span>
                         <span style="color:#d97706;font-size:10px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;">Zenith Safety Gate Report</span>
                     </div>
-                    <div style="color:#6b6b6b;font-size:11px;">Specialist scVI Manifold - ${cellTypeLabel} - ${elapsed}s</div>
-                    <div style="color:#8b8b8b;font-size:10px;margin-top:2px;font-style:italic;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${query}">"${query.substring(0,70)}${query.length>70?'…':''}"</div>
+                    <div style="color:#6b6b6b;font-size:11px;">HCA scVI Manifold - ${cellTypeLabel} - ${elapsed}s</div>
+                    <div style="color:#8b8b8b;font-size:10px;margin-top:2px;font-style:italic;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${query}">"${query.substring(0,70)}${query.length>70?'ÔÇª':''}"</div>
                 </div>
                 <div style="text-align:center;background:#fafafa;border:1px solid #D6CEBF;border-radius:10px;padding:10px 14px;flex-shrink:0;margin-left:12px;">
                     <div style="font-size:24px;font-weight:800;color:#191919;line-height:1;">-${safetyData.age_reduction ? safetyData.age_reduction.toFixed(1) : '0.0'}y</div>
@@ -5202,7 +4571,7 @@ function renderOskReport(safetyData, dosageData, elapsed, cellTypeKey, query) {
                             <span style="font-size:9px;font-weight:700;color:${sirt.caloric_restriction_mimicry ? '#10b981' : '#6b7280'}">${sirt.caloric_restriction_mimicry ? 'ACTIVE' : 'INACTIVE'}</span>
                         </div>
                         <div style="display:flex;justify-content:space-between;align-items:center;">
-                            <span style="font-size:10px;color:#6b7280;">TIME-seq CpG Loci Affected</span>
+                            <span style="font-size:10px;color:#6b7280;">Horvath Loci Affected</span>
                             <span style="font-size:11px;font-weight:700;color:#191919;font-family:monospace;">${horvath.loci_affected || 0}/8</span>
                         </div>
                         <div style="display:flex;justify-content:space-between;align-items:center;">
@@ -5243,12 +4612,11 @@ function renderOskReport(safetyData, dosageData, elapsed, cellTypeKey, query) {
             ${downloadBtnHtml}
         </div>
     `;
-    document.getElementById('view-discovery').scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function downloadOskAF3Manifest() {
     if (!window._oskLastAF3Manifest) return;
-    const blob = new Blob([JSON.stringify([window._oskLastAF3Manifest], null, 2)], {type: "application/json"});
+    const blob = new Blob([JSON.stringify(window._oskLastAF3Manifest, null, 2)], {type: "application/json"});
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
@@ -5350,8 +4718,8 @@ async function loadCellTypes() {
                 
                 let cellsLabel = ct.n_cells ? `${ct.n_cells.toLocaleString()} cells` : '';
                 let extraInfo = '';
-                if (ct.age_delta) extraInfo += ` · Rejuvenation Δ: ${ct.age_delta}y`;
-                if (ct.magnitude) extraInfo += ` · Vector Mag: ${ct.magnitude.toFixed(2)}`;
+                if (ct.age_delta) extraInfo += ` ┬À Rejuvenation ╬ö: ${ct.age_delta}y`;
+                if (ct.magnitude) extraInfo += ` ┬À Vector Mag: ${ct.magnitude.toFixed(2)}`;
                 
                 btn.innerHTML = `
                     <span style="font-size: 11px; font-weight: 600;">${ct.label}</span>
@@ -5366,7 +4734,7 @@ async function loadCellTypes() {
         list.innerHTML = `
             <button onclick="selectCellTypeOption('all', 'All cardiac cells')" style="background:#f5f3ef;color:#191919;border:none;text-align:left;padding:8px 12px;border-radius:8px;cursor:pointer;width:100%;font-family:'Inter',sans-serif;display:flex;flex-direction:column;gap:2px;">
                 <span style="font-size:11px;font-weight:600;">All cardiac cells</span>
-                <span style="font-size:8px;color:#8b8b8b;">~2.5M cells (Dual Model) · Rejuvenation Δ: 11.9y</span>
+                <span style="font-size:8px;color:#8b8b8b;">486,134 cells ┬À Rejuvenation ╬ö: 11.9y</span>
             </button>
             <button onclick="selectCellTypeOption('regular_ventricular_cardiac_myocyte', 'regular ventricular cardiac myocyte')" style="background:transparent;color:#6b6b6b;border:none;text-align:left;padding:8px 12px;border-radius:8px;cursor:pointer;width:100%;font-family:'Inter',sans-serif;display:flex;flex-direction:column;gap:2px;">
                 <span style="font-size:11px;font-weight:600;">regular ventricular cardiac myocyte</span>
@@ -5438,26 +4806,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
-// ── Discovery runner — query-aware dual mode ───────────────────────
+// ÔöÇÔöÇ Discovery runner ÔÇö query-aware dual mode ÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇ
 async function runDiscovery() {
 
     const resultsEl = document.getElementById('disc-results');
     const mode  = window._discMode || 'real';
     const query = (document.getElementById('disc-query').value || '').trim();
 
-    const b2bPanels = document.getElementById('discovery-b2b-panels');
-    if (b2bPanels) b2bPanels.style.display = 'none';
-
     if (!query) {
         resultsEl.style.display = 'block';
         resultsEl.innerHTML = `<div style="background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.25);border-radius:12px;padding:14px;text-align:center;color:#f59e0b;font-size:10px;font-weight:700;">
-            ⚠ Please enter a research question first</div>`;
+            ÔÜá Please enter a research question first</div>`;
         return;
-    }
-
-    document.getElementById('view-discovery').classList.add('has-results');
-    if (typeof updateScrollbar === 'function') {
-        updateScrollbar();
     }
 
     if (window._activeModelMode === 'osk') {
@@ -5467,7 +4827,7 @@ async function runDiscovery() {
             'Analyzing full dedifferentiation teratoma risk ceilings...',
             'Running Bayesian GP dosage optimization for target cell lineage...',
             'Simulating chromatin accessibility and chromatin pioneer TF binding...',
-            'Compiling cooperative AlphaFold Server manifest structure...',
+            'Compiling cooperative AlphaFold 3 manifest structure...',
             'Finalising comprehensive safety report...'
         ];
         
@@ -5480,7 +4840,7 @@ async function runDiscovery() {
                 </div>
                 <div id="disc-status" style="color:#6b6b6b;font-size:10px;font-family:sans-serif;">Initialising safety gates...</div>
                 <div style="margin-top:12px;font-size:10px;color:#8b8b8b;font-family:monospace;padding:6px 12px;background:#f8f8f6;border:1px solid #D6CEBF;border-radius:6px;text-align:left;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
-                    Query: "${query.substring(0,80)}${query.length>80?'…':''}"
+                    Query: "${query.substring(0,80)}${query.length>80?'ÔÇª':''}"
                 </div>
             </div>`;
             
@@ -5544,7 +4904,7 @@ async function runDiscovery() {
             clearInterval(interval);
             console.error("OSK Pipeline error:", e);
             resultsEl.innerHTML = `<div style="background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.25);border-radius:12px;padding:14px;text-align:center;color:#dc2626;font-size:11px;font-weight:700;">
-                ⚠ Error running OSK Partial Safety pipeline: ${e.message}</div>`;
+                ÔÜá Error running OSK Partial Safety pipeline: ${e.message}</div>`;
         }
         return;
     }
@@ -5552,7 +4912,7 @@ async function runDiscovery() {
     // Show loading
     resultsEl.style.display = 'block';
     const loadLabel = mode === 'real'
-        ? 'Tournament Discovery — 3 hypotheses × judge × refine...'
+        ? 'Tournament Discovery ÔÇö 3 hypotheses ├ù judge ├ù refine...'
         : 'Analysing query context on GPT...';
 
     resultsEl.innerHTML = `
@@ -5563,17 +4923,17 @@ async function runDiscovery() {
             </div>
             <div id="disc-status" style="color:#6b6b6b;font-size:10px;font-family:sans-serif;">Initialising...</div>
             <div style="margin-top:12px;font-size:10px;color:#8b8b8b;font-family:monospace;padding:6px 12px;background:#f8f8f6;border:1px solid #D6CEBF;border-radius:6px;text-align:left;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
-                Query: "${query.substring(0,80)}${query.length>80?'…':''}"
+                Query: "${query.substring(0,80)}${query.length>80?'ÔÇª':''}"
             </div>
         </div>`;
 
     const bar    = document.getElementById('disc-prog-bar');
     const status = document.getElementById('disc-status');
 
-    // ─── ROUTE 1: Zenith ─────────────────────────────────────────────
+    // ÔöÇÔöÇÔöÇ ROUTE 1: Zenith ÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇ
     if (mode === 'real') {
         const phases = [
-            'Loading 400 verified Specialist genes...',
+            'Loading 400 verified HCA genes...',
             'Generating 3 competing hypotheses...',
             'Running tournament evaluation...',
             'Selecting winning gene panel...',
@@ -5594,7 +4954,7 @@ async function runDiscovery() {
             const r = await fetch('/api/gpt-discovery/run', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ query: query, cell_type: window._selectedCellType || 'all', top_n: 8, mode: 'real' })
+                body: JSON.stringify({ query: query, cell_type: window._selectedCellType || 'all', top_n: 8 })
             });
             if (!r.ok) throw new Error(`Server returned ${r.status}`);
             const data = await r.json();
@@ -5636,9 +4996,9 @@ async function runDiscovery() {
                 proGenes = tempPro;
                 ageGenes = tempAge;
             }
-            const delta  = data.real_age_delta_years  ? Math.abs(data.real_age_delta_years).toFixed(1) : '—';
+            const delta  = data.real_age_delta_years  ? data.real_age_delta_years.toFixed(1) : 'ÔÇö';
 
-            // Query-aware reranking: extract gene names from prompt → pin mentioned ones to top
+            // Query-aware reranking: extract gene names from prompt ÔåÆ pin mentioned ones to top
             const queryUpper = query.toUpperCase();
             const KNOWN_GENES = ['PRKG1','SLC8A1','CACNA1C','RYR2','TTN','MYH7','NEXN','KCNQ5',
                                  'TMSB4X','B2M','SPL34','TPRS86','HLA-B','KPC4','DNMT3A','TET2',
@@ -5664,176 +5024,92 @@ async function runDiscovery() {
                 const mechanism = g.mechanism || '';
                 const pubmed = g.pubmed_url || `https://pubmed.ncbi.nlm.nih.gov/?term=${g.gene}+cardiac+aging`;
                 const role = g.role || '';
-                return `<div style="padding:16px;border:1px solid #e2e8f0;border-radius:12px;background:#f8fafc;display:flex;flex-direction:column;justify-content:space-between;">
-                    <div>
-                        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
-                            <div style="display:flex;align-items:center;gap:8px;">
-                                <span style="font-size:12px;color:#94a3b8;font-weight:700;background:#e2e8f0;width:20px;height:20px;display:flex;align-items:center;justify-content:center;border-radius:4px;">${i+1}</span>
-                                <span style="font-size:16px;color:${isMentioned?'#4338ca':'#0f172a'};font-weight:800;font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;">${isMentioned?'★ ':''}${g.gene}</span>
-                                <button onclick="navigator.clipboard.writeText('${g.gene}');this.innerHTML='✓'" style="background:transparent;border:none;cursor:pointer;color:#94a3b8;padding:2px;margin-left:2px;display:flex;align-items:center;" title="Copy Gene">
-                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
-                                </button>
-                            </div>
-                            <a href="${pubmed}" target="_blank" style="font-size:11px;color:#3b82f6;text-decoration:none;font-weight:700;padding:2px 8px;border-radius:4px;background:#eff6ff;" title="View on PubMed">PubMed</a>
+                return `<div style="padding:6px 0;border-bottom:1px solid #D6CEBF;">
+                    <div style="display:flex;align-items:center;gap:8px;">
+                        <span style="font-size:10px;color:#94a3b8;width:14px;text-align:right;font-weight:600;">${i+1}</span>
+                        <span style="font-size:11px;color:${isMentioned?'#8b8070':'#191919'};font-weight:700;font-family:monospace;min-width:80px;">${isMentioned?'Ôÿà ':''}${g.gene}</span>
+                        <div style="flex:1;height:5px;background:#f0ede6;border-radius:3px;overflow:hidden;">
+                            <div style="height:100%;width:${Math.round((corr/maxCorr)*100)}%;background:#8b8070;border-radius:3px;"></div>
                         </div>
-                        <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
-                            <div style="flex:1;height:6px;background:#e2e8f0;border-radius:3px;overflow:hidden;">
-                                <div style="height:100%;width:${Math.round((corr/maxCorr)*100)}%;background:#3b82f6;border-radius:3px;"></div>
-                            </div>
-                            <span style="font-size:12px;color:#64748b;font-weight:700;font-family:monospace;">r=${typeof corr === 'number' ? corr.toFixed(3) : corr}</span>
-                        </div>
-                        ${role ? `<div style="font-size:13px;color:#334155;margin-bottom:8px;line-height:1.5;">${role}</div>` : ''}
+                        <span style="font-size:10px;color:#8b8070;font-weight:700;font-family:monospace;min-width:44px;text-align:right;">r=${typeof corr === 'number' ? corr.toFixed(3) : corr}</span>
+                        <a href="${pubmed}" target="_blank" style="font-size:8px;color:#60a5fa;text-decoration:none;font-weight:600;" title="PubMed">­ƒôä</a>
                     </div>
-                    ${mechanism ? `<div style="font-size:11px;color:#64748b;font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,monospace;letter-spacing:-0.01em;">↳ ${mechanism}</div>` : ''}
+                    ${role ? `<div style="font-size:9px;color:#6b6b6b;margin:2px 0 0 22px;line-height:1.4;">${role}</div>` : ''}
+                    ${mechanism ? `<div style="font-size:8px;color:#9ca3af;margin:1px 0 0 22px;font-family:monospace;">${mechanism}</div>` : ''}
                 </div>`;
             }).join('');
 
             const ageRows = ageGenes.map((g, i) => `
-                <div style="padding:16px;border:1px solid #e2e8f0;border-radius:12px;background:#fff1f2;display:flex;flex-direction:column;justify-content:space-between;">
-                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
-                        <div style="display:flex;align-items:center;gap:8px;">
-                            <span style="font-size:12px;color:#94a3b8;font-weight:700;background:#ffe4e6;width:20px;height:20px;display:flex;align-items:center;justify-content:center;border-radius:4px;">${i+1}</span>
-                            <span style="font-size:16px;color:#e11d48;font-weight:800;font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;">${g.gene}</span>
-                            <button onclick="navigator.clipboard.writeText('${g.gene}');this.innerHTML='✓'" style="background:transparent;border:none;cursor:pointer;color:#fda4af;padding:2px;margin-left:2px;display:flex;align-items:center;" title="Copy Gene">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
-                            </button>
-                        </div>
+                <div style="display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid #D6CEBF;">
+                    <span style="font-size:10px;color:#94a3b8;width:14px;text-align:right;font-weight:600;">${i+1}</span>
+                    <span style="font-size:11px;color:#991b1b;font-weight:700;font-family:monospace;min-width:80px;">${g.gene}</span>
+                    <div style="flex:1;height:5px;background:#f9ebec;border-radius:3px;overflow:hidden;">
+                        <div style="height:100%;width:${Math.round((g.correlation_with_aging/maxAge)*100)}%;background:#c97d80;border-radius:3px;"></div>
                     </div>
-                    <div style="display:flex;align-items:center;gap:8px;">
-                        <div style="flex:1;height:6px;background:#ffe4e6;border-radius:3px;overflow:hidden;">
-                            <div style="height:100%;width:${Math.round((g.correlation_with_aging/maxAge)*100)}%;background:#e11d48;border-radius:3px;"></div>
-                        </div>
-                        <span style="font-size:12px;color:#e11d48;font-weight:700;font-family:monospace;">r=${g.correlation_with_aging.toFixed(3)}</span>
-                    </div>
+                    <span style="font-size:10px;color:#c97d80;font-weight:700;font-family:monospace;min-width:44px;text-align:right;">r=${g.correlation_with_aging.toFixed(3)}</span>
                 </div>`).join('');
 
             const queryNote = mentioned.length
-                ? `<div style="background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:10px 16px;margin-bottom:16px;font-size:13px;color:#92400e;display:flex;align-items:center;gap:8px;">
-                     <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
-                     <span style="font-weight:600;">Query-matched targets:</span> ${mentioned.join(', ')}
-                   </div>`
+                ? `<div style="background:#f0ede6;border:1px solid #D6CEBF;border-radius:6px;padding:6px 10px;margin-bottom:10px;font-size:10px;color:#8b8070;">Ôÿà Query-matched: ${mentioned.join(', ')}</div>`
                 : '';
 
             resultsEl.innerHTML = `
-                <div style="background:#ffffff;border:1px solid #e2e8f0;border-radius:24px;padding:40px;box-shadow:0 10px 25px -5px rgba(0,0,0,0.05), 0 8px 10px -6px rgba(0,0,0,0.01);">
-                    <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:32px;padding-bottom:24px;border-bottom:1px solid #e2e8f0;">
+                <div style="background:#ffffff;border:2px solid #D6CEBF;border-radius:16px;padding:20px 24px;box-shadow:0 1px 3px rgba(0,0,0,0.05);">
+                    <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid #D6CEBF;">
                         <div style="flex:1;min-width:0;">
-                            <div style="display:inline-flex;align-items:center;gap:6px;background:#eff6ff;border:1px solid #bfdbfe;padding:6px 12px;border-radius:999px;margin-bottom:12px;">
-                                <svg width="14" height="14" fill="none" stroke="#2563eb" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                <span style="color:#1d4ed8;font-size:12px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;">Zenith Tournament Discovery</span>
+                            <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;">
+                                <span style="width:8px;height:8px;background:#8b8070;border-radius:50%;display:inline-block;"></span>
+                                <span style="color:#8b8070;font-size:10px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;">Zenith Tournament Discovery ÔÇö Verified</span>
                             </div>
-                            <div style="color:#0f172a;font-size:18px;font-weight:700;margin-bottom:4px;">Litviňuková et al., Nature 2020</div>
-                            <div style="color:#64748b;font-size:14px;margin-bottom:16px;">${data.cell_type_label || 'All cardiac cells (10,000 cells)'} • Processed in ${elapsed}s</div>
-                            
-                            <div style="display:flex;gap:10px;flex-wrap:wrap;">
-                                <span style="font-size:13px;background:#1a1a1a;color:#f8f8f6;border:1px solid #1a1a1a;padding:6px 12px;border-radius:8px;font-weight:600;">${data.competing_panels || 3} competing panels</span>
-                                <span style="font-size:13px;background:#1a1a1a;color:#f8f8f6;border:1px solid #1a1a1a;padding:6px 12px;border-radius:8px;font-weight:600;">${data.rounds_completed || 2} refinement rounds</span>
-                                <span style="font-size:13px;background:#1a1a1a;color:#f8f8f6;border:1px solid #1a1a1a;padding:6px 12px;border-radius:8px;font-weight:600;">Conf: ${data.tournament_confidence ? (data.tournament_confidence * 100).toFixed(0) : '—'}%</span>
-                                <span style="font-size:13px;background:#1a1a1a;color:#f8f8f6;border:1px solid #1a1a1a;padding:6px 12px;border-radius:8px;font-weight:600;">${data.total_hca_genes_provided || 400} candidate genes</span>
+                            <div style="color:#6b6b6b;font-size:11px;">Litvi┼êukov├í et al., Nature 2020 ┬À ${data.cell_type_label || 'All cardiac cells (486,134 cells)'} ┬À ${elapsed}s</div>
+                            <div style="color:#8b8b8b;font-size:10px;margin-top:2px;font-style:italic;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${query}">"${query.substring(0,70)}${query.length>70?'ÔÇª':''}"</div>
+                            <div style="display:flex;gap:6px;margin-top:6px;flex-wrap:wrap;">
+                                <span style="font-size:8px;background:rgba(16,185,129,0.08);color:#059669;border:1px solid rgba(16,185,129,0.2);padding:2px 6px;border-radius:4px;font-weight:600;">${data.competing_panels || 3} panels</span>
+                                <span style="font-size:8px;background:rgba(37,99,235,0.08);color:#2563eb;border:1px solid rgba(37,99,235,0.2);padding:2px 6px;border-radius:4px;font-weight:600;">${data.rounds_completed || 2} rounds</span>
+                                <span style="font-size:8px;background:rgba(139,128,112,0.08);color:#8b8070;border:1px solid rgba(139,128,112,0.2);padding:2px 6px;border-radius:4px;font-weight:600;">conf: ${data.tournament_confidence ? (data.tournament_confidence * 100).toFixed(0) : 'ÔÇö'}%</span>
+                                <span style="font-size:8px;background:rgba(139,128,112,0.08);color:#8b8070;border:1px solid rgba(139,128,112,0.2);padding:2px 6px;border-radius:4px;font-weight:600;">${data.total_hca_genes_provided || 400} genes</span>
                             </div>
                         </div>
-                        <div style="text-align:center;background:#f8fafc;border:1px solid #e2e8f0;border-radius:20px;padding:24px 32px;flex-shrink:0;margin-left:32px;box-shadow:inset 0 2px 4px rgba(0,0,0,0.02);">
-                            <div style="font-size:42px;font-weight:800;color:#0f172a;line-height:1;letter-spacing:-0.02em;">${delta !== '—' ? `−${delta}<span style="font-size:24px;color:#64748b;font-weight:600;">y</span>` : '—'}</div>
-                            <div style="font-size:13px;color:#64748b;font-weight:700;margin-top:10px;text-transform:uppercase;letter-spacing:0.05em;">Age Δ (epigenetic)</div>
+                        <div style="text-align:center;background:#fafafa;border:1px solid #D6CEBF;border-radius:10px;padding:10px 14px;flex-shrink:0;margin-left:12px;">
+                            <div style="font-size:24px;font-weight:800;color:#191919;line-height:1;">${delta !== 'ÔÇö' ? `ÔêÆ${delta}y` : 'ÔÇö'}</div>
+                            <div style="font-size:9px;color:#8b8070;font-weight:600;margin-top:2px;">Age ╬ö (epigenetic)</div>
                         </div>
                     </div>
 
-                    ${gptSummary ? `<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:16px;padding:20px 24px;margin-bottom:24px;font-size:15px;color:#334155;line-height:1.6;font-family:Inter,sans-serif;">${gptSummary}</div>` : ""}${queryNote}
-                    ${data.refinement_notes ? `<div style="background:#1a1a1a;border:1px solid #1a1a1a;border-radius:16px;padding:16px 20px;margin-bottom:32px;font-size:14px;color:#e2e8f0;line-height:1.6;"><span style="font-weight:700;color:#ffffff;">Panel Refinement:</span> ${data.refinement_notes}</div>` : ''}
-                    <div style="margin-bottom:40px;">
-                        <div style="margin-bottom:40px;">
-                            <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;border-bottom:2px solid #e2e8f0;padding-bottom:12px;">
-                                <div style="background:#3b82f6;color:white;width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:16px;">↑</div>
-                                <div style="font-size:15px;color:#0f172a;font-weight:800;letter-spacing:0.05em;text-transform:uppercase;">Pro-Rejuvenation Genes</div>
-                            </div>
-                            <div style="display:grid;grid-template-columns:repeat(auto-fill, minmax(280px, 1fr));gap:16px;">
-                                ${proRows}
-                            </div>
+                    ${gptSummary ? `<div style="background:#f8f8f6;border:1px solid #D6CEBF;border-radius:10px;padding:12px 16px;margin-bottom:14px;font-size:11px;color:#4a4a4a;line-height:1.7;font-family:Inter,sans-serif;">${gptSummary}</div>` : ""}${queryNote}
+                    ${data.refinement_notes ? `<div style="background:#f0fdf4;border:1px solid rgba(16,185,129,0.2);border-radius:8px;padding:8px 12px;margin-bottom:14px;font-size:9px;color:#065f46;line-height:1.5;"><span style="font-weight:700;">Refinement:</span> ${data.refinement_notes}</div>` : ''}
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+                        <div>
+                            <div style="font-size:10px;color:#8b8070;font-weight:700;letter-spacing:0.04em;text-transform:uppercase;margin-bottom:8px;">Ôåæ Pro-Rejuvenation Genes</div>
+                            ${proRows}
                         </div>
                         <div>
-                            <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;border-bottom:2px solid #e2e8f0;padding-bottom:12px;">
-                                <div style="background:#e11d48;color:white;width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:16px;">↓</div>
-                                <div style="font-size:15px;color:#0f172a;font-weight:800;letter-spacing:0.05em;text-transform:uppercase;">Aging Marker Genes</div>
-                            </div>
-                            <div style="display:grid;grid-template-columns:repeat(auto-fill, minmax(180px, 1fr));gap:16px;">
-                                ${ageRows}
-                            </div>
+                            <div style="font-size:10px;color:#c97d80;font-weight:700;letter-spacing:0.04em;text-transform:uppercase;margin-bottom:8px;">Ôåô Aging Marker Genes</div>
+                            ${ageRows}
                         </div>
                     </div>
                     
-                    <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:16px;padding:24px;margin-bottom:32px;">
-                        <div style="font-size:13px;color:#64748b;font-weight:800;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px;">Methodology & Reasoning</div>
-                        <div style="font-size:15px;color:#334155;line-height:1.6;margin-bottom:12px;">${data.methodology || 'Tournament Discovery + Iterative Refinement'}</div>
-                        ${data.judge_reasoning ? `<div style="font-size:14px;color:#475569;background:#ffffff;border:1px solid #e2e8f0;border-radius:12px;padding:16px;margin-top:16px;"><span style="font-weight:700;color:#0f172a;">AI Judge Decision:</span> ${data.judge_reasoning}</div>` : ''}
+                    <div style="background:#f8f8f6;border:1px solid #D6CEBF;border-radius:8px;padding:8px 12px;margin-bottom:14px;">
+                        <div style="font-size:8px;color:#8b8070;font-weight:700;text-transform:uppercase;margin-bottom:2px;">Methodology</div>
+                        <div style="font-size:9px;color:#6b6b6b;line-height:1.4;">${data.methodology || 'Tournament Discovery + Iterative Refinement'}</div>
+                        ${data.judge_reasoning ? `<div style="font-size:8px;color:#9ca3af;margin-top:2px;">Judge: ${data.judge_reasoning}</div>` : ''}
                     </div>
 
-                    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px;padding-top:32px;border-top:1px solid #e2e8f0;">
-                        <div style="font-size:14px;color:#64748b;font-weight:500;">Reference: <a href="#" style="color:#3b82f6;text-decoration:none;font-weight:600;">10.1038/s41586-020-2797-4</a></div>
-                        <div style="display:flex;gap:16px;flex-wrap:wrap;">
-                            <button onclick="enterSimulation()" style="background:#ffffff;border:1px solid #cbd5e1;color:#334155;font-size:15px;font-weight:600;padding:12px 24px;border-radius:10px;cursor:pointer;transition:all 0.2s;box-shadow:0 1px 2px rgba(0,0,0,0.05);" onmouseover="this.style.background='#f8fafc';this.style.borderColor='#94a3b8';" onmouseout="this.style.background='#ffffff';this.style.borderColor='#cbd5e1';">Simulation Lab</button>
-                            <button onclick="downloadResultJSON()" style="background:#ffffff;border:1px solid #cbd5e1;color:#334155;font-size:15px;font-weight:600;padding:12px 24px;border-radius:10px;cursor:pointer;transition:all 0.2s;box-shadow:0 1px 2px rgba(0,0,0,0.05);" onmouseover="this.style.background='#f8fafc';this.style.borderColor='#94a3b8';" onmouseout="this.style.background='#ffffff';this.style.borderColor='#cbd5e1';">Export Results</button>
-                            <button onclick="BiosimBridge.sendToBoltzComplex()" style="background:#7c3aed;border:1px solid #7c3aed;color:#ffffff;font-size:15px;font-weight:600;padding:12px 28px;border-radius:10px;cursor:pointer;transition:all 0.2s;box-shadow:0 4px 6px -1px rgba(124,58,237,0.15), 0 2px 4px -1px rgba(124,58,237,0.1);" onmouseover="this.style.background='#6d28d9';this.style.transform='translateY(-2px)';" onmouseout="this.style.background='#7c3aed';this.style.transform='translateY(0)';">Fold Complex (Boltz)</button>
-                            <button onclick="downloadAF3JSON()" style="background:#0f172a;border:1px solid #0f172a;color:#ffffff;font-size:15px;font-weight:600;padding:12px 32px;border-radius:10px;cursor:pointer;transition:all 0.2s;box-shadow:0 4px 6px -1px rgba(15,23,42,0.1), 0 2px 4px -1px rgba(15,23,42,0.06);" onmouseover="this.style.background='#1e293b';this.style.transform='translateY(-2px)';" onmouseout="this.style.background='#0f172a';this.style.transform='translateY(0)';">Export AF3 Fold</button>
+                    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;padding-top:12px;border-top:1px solid #D6CEBF;">
+                        <div style="font-size:10px;color:#8b8b8b;">DOI: 10.1038/s41586-020-2797-4</div>
+                        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                            <button onclick="enterSimulation()" style="background:#fafafa;border:1px solid #D6CEBF;color:#6b6b6b;font-size:11px;font-weight:600;padding:6px 14px;border-radius:8px;cursor:pointer;transition:all 0.15s;" onmouseover="this.style.background='#fafafa';this.style.borderColor='#C8C3B8';this.style.color='#191919';" onmouseout="this.style.background='#fafafa';this.style.borderColor='#D6CEBF';this.style.color='#6b6b6b';">Simulation Lab</button>
+                            <button onclick="downloadResultJSON()" style="background:#ffffff;border:1px solid #D6CEBF;color:#6b6b6b;font-size:11px;font-weight:600;padding:6px 14px;border-radius:8px;cursor:pointer;transition:all 0.15s;" onmouseover="this.style.background='#fafafa';this.style.borderColor='#C8C3B8';this.style.color='#191919';" onmouseout="this.style.background='#ffffff';this.style.borderColor='#D6CEBF';this.style.color='#6b6b6b';">Extract Results JSON</button>
+                            <button onclick="downloadAF3JSON()" style="background:#1a1a1a;border:none;color:#f8f8f6;font-size:11px;font-weight:600;padding:6px 14px;border-radius:8px;cursor:pointer;transition:all 0.15s;" onmouseover="this.style.background='#333';" onmouseout="this.style.background='#1a1a1a';">Extract JSON (AF3)</button>
                         </div>
                     </div>
                 </div>`;
-            
-            // Display the new B2B panels container
-            const b2bPanels = document.getElementById('discovery-b2b-panels');
-            if (b2bPanels) {
-                b2bPanels.style.display = 'flex';
-                // Trigger B2B engines
-                if (typeof BiosimBridge !== 'undefined') {
-                    // Set GATA4, MEF2C, etc. slider values based on target profile
-                    const sliderIds = {
-                        'GATA4': 'slider-gata4',
-                        'MEF2C': 'slider-mef2c',
-                        'TBX5': 'slider-tbx5',
-                        'NKX2-5': 'slider-nkx25',
-                        'MYC': 'slider-myc',
-                        'SNAI1': 'slider-snai1'
-                    };
-                    // Set all factor sliders to 0 first
-                    Object.values(sliderIds).forEach(id => {
-                        const slider = document.getElementById(id);
-                        if (slider) slider.value = '0.0';
-                    });
-                    
-                    // Build targetProfile from proGenes / gptGenes
-                    const genesToSet = proGenes.length > 0 ? proGenes : gptGenes;
-                    genesToSet.forEach(g => {
-                        const geneName = (g.gene || g.gene_symbol || g).toUpperCase();
-                        // Find match in sliderIds keys (case-insensitive)
-                        const matchedKey = Object.keys(sliderIds).find(k => geneName.includes(k));
-                        if (matchedKey) {
-                            const sliderId = sliderIds[matchedKey];
-                            const slider = document.getElementById(sliderId);
-                            if (slider) {
-                                // Use correlation score as weight, normalize to 0-3 range
-                                const corr = g.correlation_with_youth || g.correlation || 0.5;
-                                slider.value = Math.min(3.0, corr * 3.0).toFixed(1);
-                            }
-                        }
-                    });
-                    
-                    BiosimBridge.renderGraphRAG(query);
-                    BiosimBridge.runMultiOmicsPredictor();
-                    BiosimBridge.runLNPOptimizer();
-                    
-                    // Initialize Lucide icons for new panels
-                    if (typeof lucide !== 'undefined' && lucide.createIcons) {
-                        lucide.createIcons();
-                    }
-                }
-            }
-            
-            document.getElementById('view-discovery').scrollTo({ top: 0, behavior: 'smooth' });
 
         } catch (err) {
             clearInterval(interval);
             resultsEl.innerHTML = `
                 <div style="background:rgba(239,68,68,0.06);border:1.5px solid #c97d80;border-radius:12px;padding:16px;">
-                    <div style="color:#991b1b;font-size:10px;font-weight:800;margin-bottom:6px;">⚠ Bridge Server Not Responding</div>
+                    <div style="color:#991b1b;font-size:10px;font-weight:800;margin-bottom:6px;">ÔÜá Bridge Server Not Responding</div>
                     <div style="color:#6b6b6b;font-size:9px;margin-bottom:10px;">${err.message}</div>
                     <div style="color:#191919;font-size:8px;font-family:monospace;background:#f8f8f6;border:1px solid #E5E0D6;padding:8px;border-radius:6px;line-height:1.6;">
                         Start the server: <span style="color:#8b8070;font-weight:700;">start_server.bat</span><br>
@@ -5842,7 +5118,7 @@ async function runDiscovery() {
                 </div>`;
         }
 
-    // ─── ROUTE 2: GPT Analysis ───────────────────────────────────────
+    // ÔöÇÔöÇÔöÇ ROUTE 2: GPT Analysis ÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇ
     } else {
         const gptPhases = [
             'Sending query to GPT...','Parsing research context...','Identifying gene candidates...','Cross-referencing cardiac literature...','Generating protocol...','Finalising response...'
@@ -5859,7 +5135,7 @@ async function runDiscovery() {
             const r = await fetch('/api/gpt-discovery/run', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ query: query, mode: 'gpt4o', cell_type: window._selectedCellType || 'all' })
+                body: JSON.stringify({ query: query, mode: 'gpt4o' })
             });
             if (!r.ok) throw new Error(r.status === 401 ? 'OpenAI API key not configured on server' : `Server returned ${r.status}`);
             const data = await r.json();
@@ -5887,10 +5163,10 @@ async function runDiscovery() {
                     <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid #D6CEBF;">
                         <div style="flex:1;min-width:0;">
                             <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;">
-                                <span style="color:#8b8070;font-size:10px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;">GPT Analysis — ${gptModel.toUpperCase()}</span>
+                                <span style="color:#8b8070;font-size:10px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;">GPT Analysis ÔÇö ${gptModel.toUpperCase()}</span>
                             </div>
-                            <div style="color:#6b6b6b;font-size:11px;">AI-assisted · literature-based · Specialist context provided · ${elapsed}s</div>
-                            <div style="color:#8b8b8b;font-size:10px;margin-top:2px;font-style:italic;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${query}">"${query.substring(0,70)}${query.length>70?'…':''}"</div>
+                            <div style="color:#6b6b6b;font-size:11px;">AI-assisted ┬À literature-based ┬À HCA context provided ┬À ${elapsed}s</div>
+                            <div style="color:#8b8b8b;font-size:10px;margin-top:2px;font-style:italic;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${query}">"${query.substring(0,70)}${query.length>70?'ÔÇª':''}"</div>
                         </div>
                         <div style="background:#fafafa;border:1px solid #D6CEBF;border-radius:10px;padding:10px 14px;text-align:center;flex-shrink:0;margin-left:12px;">
                             <div style="font-size:12px;font-weight:700;color:#191919;">GPT-4o</div>
@@ -5909,80 +5185,28 @@ async function runDiscovery() {
                     </div>
 
                     <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;padding-top:12px;border-top:1px solid #D6CEBF;">
-                        <div style="font-size:10px;color:#8b8b8b;">⚠ AI output — not peer-reviewed. Use Zenith for verified results.</div>
+                        <div style="font-size:10px;color:#8b8b8b;">ÔÜá AI output ÔÇö not peer-reviewed. Use Zenith for verified results.</div>
                         <div style="display:flex;gap:8px;">
                             <button onclick="setDiscMode('real');runDiscovery();" style="background:#fafafa;border:1px solid #D6CEBF;color:#6b6b6b;font-size:11px;font-weight:600;padding:6px 14px;border-radius:8px;cursor:pointer;transition:all 0.15s;" onmouseover="this.style.background='#fafafa';this.style.borderColor='#C8C3B8';this.style.color='#191919';" onmouseout="this.style.background='#fafafa';this.style.borderColor='#D6CEBF';this.style.color='#6b6b6b';">Compare with Zenith</button>
                             <button onclick="downloadResultJSON()" style="background:#ffffff;border:1px solid #D6CEBF;color:#6b6b6b;font-size:11px;font-weight:600;padding:6px 14px;border-radius:8px;cursor:pointer;transition:all 0.15s;" onmouseover="this.style.background='#fafafa';this.style.borderColor='#C8C3B8';this.style.color='#191919';" onmouseout="this.style.background='#ffffff';this.style.borderColor='#D6CEBF';this.style.color='#6b6b6b';">Extract Results JSON</button>
-                            <button onclick="BiosimBridge.sendToBoltzComplex()" style="background:#7c3aed;border:none;color:#ffffff;font-size:11px;font-weight:600;padding:6px 14px;border-radius:8px;cursor:pointer;transition:all 0.15s;" onmouseover="this.style.background='#6d28d9';" onmouseout="this.style.background='#7c3aed';">Fold Complex (Boltz)</button>
                             <button onclick="downloadAF3JSON()" style="background:#1a1a1a;border:none;color:#f8f8f6;font-size:11px;font-weight:600;padding:6px 14px;border-radius:8px;cursor:pointer;transition:all 0.15s;" onmouseover="this.style.background='#333';" onmouseout="this.style.background='#1a1a1a';">Extract JSON (AF3)</button>
                         </div>
                     </div>
                 </div>`;
-            
-            // Display the new B2B panels container
-            const b2bPanels = document.getElementById('discovery-b2b-panels');
-            if (b2bPanels) {
-                b2bPanels.style.display = 'flex';
-                // Trigger B2B engines
-                if (typeof BiosimBridge !== 'undefined') {
-                    // Set GATA4, MEF2C, etc. slider values based on target profile
-                    const sliderIds = {
-                        'GATA4': 'slider-gata4',
-                        'MEF2C': 'slider-mef2c',
-                        'TBX5': 'slider-tbx5',
-                        'NKX2-5': 'slider-nkx25',
-                        'MYC': 'slider-myc',
-                        'SNAI1': 'slider-snai1'
-                    };
-                    // Set all factor sliders to 0 first
-                    Object.values(sliderIds).forEach(id => {
-                        const slider = document.getElementById(id);
-                        if (slider) slider.value = '0.0';
-                    });
-                    
-                    // Build targetProfile from proGenes / gptGenes
-                    const genesToSet = gptGenes;
-                    genesToSet.forEach(g => {
-                        const geneName = (g.gene || g.gene_symbol || g).toUpperCase();
-                        // Find match in sliderIds keys (case-insensitive)
-                        const matchedKey = Object.keys(sliderIds).find(k => geneName.includes(k));
-                        if (matchedKey) {
-                            const sliderId = sliderIds[matchedKey];
-                            const slider = document.getElementById(sliderId);
-                            if (slider) {
-                                // Use correlation score as weight, normalize to 0-3 range
-                                const corr = g.correlation_with_youth || g.correlation || 0.5;
-                                slider.value = Math.min(3.0, corr * 3.0).toFixed(1);
-                            }
-                        }
-                    });
-                    
-                    BiosimBridge.renderGraphRAG(query);
-                    BiosimBridge.runMultiOmicsPredictor();
-                    BiosimBridge.runLNPOptimizer();
-                    
-                    // Initialize Lucide icons for new panels
-                    if (typeof lucide !== 'undefined' && lucide.createIcons) {
-                        lucide.createIcons();
-                    }
-                }
-            }
-            
-            document.getElementById('view-discovery').scrollTo({ top: 0, behavior: 'smooth' });
 
         } catch (err) {
             clearInterval(interval);
             const isKeyErr = err.message.includes('API key') || err.message.includes('401') || err.message.includes('403');
             resultsEl.innerHTML = `
                 <div style="background:rgba(139,92,246,0.06);border:2px solid #D6CEBF;border-radius:12px;padding:16px;">
-                    <div style="color:#8b8070;font-size:10px;font-weight:800;margin-bottom:8px;">✦ GPT Analysis — ${isKeyErr ? 'API Key Required' : 'Server Not Responding'}</div>
+                    <div style="color:#8b8070;font-size:10px;font-weight:800;margin-bottom:8px;">Ô£ª GPT Analysis ÔÇö ${isKeyErr ? 'API Key Required' : 'Server Not Responding'}</div>
                     ${isKeyErr ? `
                     <div style="color:#191919;font-size:9px;margin-bottom:12px;line-height:1.6;">
                         To use GPT Analysis, add <code style="background:#fafafa;border:1px solid #D6CEBF;padding:1px 5px;border-radius:3px;color:#191919;">OPENAI_API_KEY=sk-...</code> to the server environment and restart.
                     </div>` : `<div style="color:#6b6b6b;font-size:9px;margin-bottom:12px;">${err.message}<br>Start <span style="color:#8b8070;font-weight:700;">start_server.bat</span> first.</div>`}
                     <div style="display:flex;gap:8px;">
                         <button onclick="setDiscMode('real');runDiscovery();" style="background:#1a1a1a;color:#fff;border:none;padding:8px 16px;border-radius:9px;font-size:9px;font-weight:800;cursor:pointer;flex:1;">
-                            ⚡ Use Zenith Instead
+                            ÔÜí Use Zenith Instead
                         </button>
                     </div>
                 </div>`;
@@ -5990,7 +5214,7 @@ async function runDiscovery() {
     }
 }
 
-// ── Download Helpers with Fail-safe Clipboard Writing ─────────────────
+// ÔöÇÔöÇ Download Helpers with Fail-safe Clipboard Writing ÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇ
 window.downloadResultJSON = function() {
     if (!window._lastResult) {
         alert('Please run a discovery first.');
@@ -6069,50 +5293,6 @@ window.downloadAF3JSON = async function() {
 };
 
 
-window.viewResultJSON = function() {
-    if (!window._lastResult) {
-        alert('Please run a discovery first.');
-        return;
-    }
-    const jsonStr = JSON.stringify(window._lastResult, null, 2);
-    let modal = document.getElementById('json-view-modal');
-    if (!modal) {
-        modal = document.createElement('div');
-        modal.id = 'json-view-modal';
-        modal.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(15,23,42,0.6);backdrop-filter:blur(4px);z-index:99999;display:flex;align-items:center;justify-content:center;padding:20px;';
-        modal.innerHTML = `
-            <div style="background:#ffffff;border-radius:16px;box-shadow:0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);width:100%;max-width:800px;max-height:85vh;display:flex;flex-direction:column;overflow:hidden;border:1px solid #e2e8f0;">
-                <div style="padding:16px 20px;border-bottom:1px solid #e2e8f0;background:#f8fafc;display:flex;align-items:center;justify-content:space-between;font-family:\'Inter\',sans-serif;">
-                    <div style="font-weight:700;color:#0f172a;font-size:14px;text-transform:uppercase;letter-spacing:0.05em;">Discovery JSON Outcome</div>
-                    <div style="display:flex;gap:8px;">
-                        <button onclick="copyModalJSON()" style="background:#0f172a;border:none;color:#ffffff;font-size:11px;font-weight:700;padding:6px 14px;border-radius:8px;cursor:pointer;transition:all 0.15s;">Copy to Clipboard</button>
-                        <button onclick="closeModalJSON()" style="background:#ffffff;border:1px solid #cbd5e1;color:#334155;font-size:11px;font-weight:700;padding:6px 14px;border-radius:8px;cursor:pointer;transition:all 0.15s;">Close</button>
-                    </div>
-                </div>
-                <div style="padding:20px;overflow-y:auto;background:#0f172a;color:#cbd5e1;font-family:\'JetBrains Mono\',\'Courier New\',monospace;font-size:11px;line-height:1.6;flex:1;white-space:pre-wrap;word-break:break-all;user-select:text;">
-                    <pre id="json-modal-pre" style="margin:0;"></pre>
-                </div>
-            </div>
-        `;
-        document.body.appendChild(modal);
-    }
-    document.getElementById('json-modal-pre').textContent = jsonStr;
-    modal.style.display = 'flex';
-};
-
-window.closeModalJSON = function() {
-    const modal = document.getElementById('json-view-modal');
-    if (modal) modal.style.display = 'none';
-};
-
-window.copyModalJSON = function() {
-    const txt = document.getElementById('json-modal-pre').textContent;
-    navigator.clipboard.writeText(txt);
-    alert('JSON copied to clipboard!');
-};
-
-
-
 </script>
 
 
@@ -6121,7 +5301,7 @@ window.copyModalJSON = function() {
 
         <div class="flex items-center gap-4">
 
-            <span class="validator-badge">V30.1 GOLD VALIDATED</span>
+            <span class="validator-badge">V27.0 GOLD VALIDATED</span>
 
             <span class="sde-formula">dX_t = f(X_t, t)dt + g(X_t, t)dW_t | PDB Structural Authority v1.0 | GRN Inference active</span>
 
@@ -6133,78 +5313,6 @@ window.copyModalJSON = function() {
 
         </div>
 
-    </div>
-
-    <!-- NEXTFLOW QC MONITOR SIDEBAR -->
-    <div id="nf-qc-sidebar" style="position: fixed; right: -420px; top: 0; width: 380px; height: 100vh; background: rgba(5,5,10,0.96); border-left: 1px solid rgba(99,102,241,0.35); box-shadow: -10px 0 30px rgba(0,0,0,0.7); z-index: 9999; transition: right 0.3s ease-in-out; padding: 24px; display: flex; flex-direction: column; font-family: 'Inter', sans-serif; backdrop-blur: 20px;">
-        <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(99,102,241,0.2); padding-bottom: 16px; margin-bottom: 16px;">
-            <div style="display: flex; align-items: center; gap: 8px;">
-                <div style="width: 10px; height: 10px; border-radius: 50%; background: #6366f1; animation: pulse 2s infinite;"></div>
-                <h3 style="font-size: 11px; font-weight: 900; color: #a5b4fc; text-transform: uppercase; letter-spacing: 0.15em; margin: 0;">Nextflow Sequencing QC Monitor</h3>
-            </div>
-            <button onclick="BiosimBridge.toggleQCSidebar(false)" style="background: none; border: none; color: #94a3b8; font-size: 20px; cursor: pointer; line-height: 1; font-weight: bold;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#94a3b8'">×</button>
-        </div>
-        
-        <div style="flex: 1; overflow-y: auto; padding-right: 4px; display: flex; flex-direction: column; gap: 16px;" class="thin-scrollbar-v2">
-            <!-- Live Run Progress -->
-            <div style="padding: 12px; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px;">
-                <div style="font-size: 7px; color: #818cf8; font-weight: bold; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px;">Active Pipeline Run</div>
-                <div style="display: flex; flex-direction: column; gap: 8px;">
-                    <div style="display: flex; justify-content: space-between; font-size: 8px; color: #94a3b8;">
-                        <span>Task: cellular_qc_demux</span>
-                        <span id="qc-run-progress" style="font-family: monospace; color: #a5b4fc;">0%</span>
-                    </div>
-                    <div style="height: 4px; background: #0f172a; border-radius: 2px; overflow: hidden;">
-                        <div id="qc-run-progress-bar" style="height: 100%; background: #6366f1; width: 0%; transition: width 0.3s ease;"></div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Telemetry Audit -->
-            <div style="padding: 12px; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; display: flex; flex-direction: column; gap: 12px;">
-                <div style="font-size: 7px; color: #818cf8; font-weight: bold; text-transform: uppercase; letter-spacing: 0.1em; display: flex; align-items: center; justify-content: space-between;">
-                    <span>Sequencing Quality Control</span>
-                    <span id="qc-status-badge" style="padding: 2px 6px; border-radius: 4px; background: rgba(16,185,129,0.1); color: #10b981; border: 1px solid rgba(16,185,129,0.2); font-size: 6px; font-weight: 900;">IDLE</span>
-                </div>
-                
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-                    <div style="display: flex; flex-direction: column; gap: 2px;">
-                        <div style="font-size: 6px; color: #64748b; font-weight: bold; text-transform: uppercase;">Total Input Reads</div>
-                        <div id="qc-total-reads" style="font-size: 10px; color: #fff; font-family: monospace; font-weight: 600;">--</div>
-                    </div>
-                    <div style="display: flex; flex-direction: column; gap: 2px;">
-                        <div style="font-size: 6px; color: #64748b; font-weight: bold; text-transform: uppercase;">Mapped Reads</div>
-                        <div id="qc-mapped-reads" style="font-size: 10px; color: #fff; font-family: monospace; font-weight: 600;">--</div>
-                    </div>
-                    <div style="display: flex; flex-direction: column; gap: 2px;">
-                        <div style="font-size: 6px; color: #64748b; font-weight: bold; text-transform: uppercase;">Alignment Rate</div>
-                        <div id="qc-alignment-rate" style="font-size: 10px; color: #818cf8; font-family: monospace; font-weight: bold;">--</div>
-                    </div>
-                    <div style="display: flex; flex-direction: column; gap: 2px;">
-                        <div style="font-size: 6px; color: #64748b; font-weight: bold; text-transform: uppercase;">Mitochondrial Leakage</div>
-                        <div id="qc-mito-leakage" style="font-size: 10px; color: #10b981; font-family: monospace; font-weight: bold;">--</div>
-                    </div>
-                </div>
-                
-                <div style="font-size: 7px; color: #475569; line-height: 1.4; padding-top: 8px; border-top: 1px solid rgba(255,255,255,0.04);">
-                    Single-cell quality control filters out damaged, apoptotic, or low-quality cells based on mitochondrial transcript leakage. Cell state inclusion requirement: <code style="color: #a5b4fc; font-family: monospace;">&lt; 15%</code> mitochondrial read fraction.
-                </div>
-            </div>
-
-            <!-- System Logs -->
-            <div style="padding: 12px; background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; font-family: monospace; font-size: 7px; line-height: 1.5; color: #94a3b8; height: 160px; overflow-y: auto;" class="thin-scrollbar-v2">
-                <div style="color: #818cf8; font-weight: bold; text-transform: uppercase; margin-bottom: 6px;">Execution Log Console</div>
-                <div style="display: flex; flex-direction: column; gap: 2px;" id="qc-console-logs">
-                    <div style="color: #475569;">[IDLE] Awaiting sequencing run telemetry ingestion...</div>
-                </div>
-            </div>
-        </div>
-        
-        <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(99,102,241,0.2); display: flex; gap: 8px;">
-            <button onclick="BiosimBridge.runSequencingQC()" style="flex: 1; padding: 8px 16px; background: #4f46e5; border: none; color: #fff; font-size: 8px; font-weight: 900; border-radius: 8px; cursor: pointer; text-transform: uppercase; letter-spacing: 0.1em; transition: background 0.2s;" onmouseover="this.style.background='#4338ca'" onmouseout="this.style.background='#4f46e5'">
-                Trigger Run Audit
-            </button>
-        </div>
     </div>
 
 </body>

@@ -5839,7 +5839,7 @@ window.addEventListener('load', () => {
     // const savedKey = localStorage.getItem('openai_api_key');
     AIAssistant.addMessage('system', 'System: Nilus Lab Cloud Intelligence Connected. Knowledge Hub Active.');
 
-    // Init Charts (Fix IDs for discovery.html)
+    // Init Charts (Fix IDs for index.html)
     const ctx1 = document.getElementById('chart-main');
     if (ctx1) {
         window.myChart = new Chart(ctx1, {
@@ -5872,7 +5872,7 @@ window.addEventListener('load', () => {
         });
     }
 
-    // Init Time Course Chart (Fix ID for discovery.html)
+    // Init Time Course Chart (Fix ID for index.html)
     const ctx2 = document.getElementById('chart-timecourse');
     if (ctx2) {
         window.timeCourseData = {

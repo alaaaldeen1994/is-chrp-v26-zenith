@@ -1,0 +1,273 @@
+        <!-- DEVELOPER API PLATFORM SECTION -->
+        <section class="max-w-7xl mx-auto px-12 py-24 border-t border-slate-100 relative z-10 reveal" id="developer-api-section">
+
+            <style>
+                .api-card {
+                    position: relative;
+                    border-radius: 28px;
+                    padding: 2.5rem;
+                    overflow: hidden;
+                    transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+                    cursor: default;
+                    border: 1px solid #e2e8f0;
+                    background: linear-gradient(135deg, rgba(248,250,252,0.9), rgba(255,255,255,0.95));
+                }
+                .api-card:hover {
+                    transform: translateY(-6px);
+                    box-shadow: 0 20px 60px rgba(0,0,0,0.06);
+                    border-color: #cbd5e1;
+                }
+                .api-badge {
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 4px;
+                    padding: 3px 10px;
+                    border-radius: 999px;
+                    font-size: 9px;
+                    font-weight: 900;
+                    text-transform: uppercase;
+                    letter-spacing: 0.12em;
+                    font-family: 'Outfit', sans-serif;
+                }
+                .api-method {
+                    display: inline-block;
+                    padding: 2px 8px;
+                    border-radius: 6px;
+                    font-size: 10px;
+                    font-weight: 900;
+                    font-family: 'SF Mono', 'Fira Code', monospace;
+                    letter-spacing: 0.05em;
+                }
+                .api-method-post { background: #dcfce7; color: #166534; }
+                .api-method-get { background: #dbeafe; color: #1e40af; }
+                .api-endpoint {
+                    font-family: 'SF Mono', 'Fira Code', 'Courier New', monospace;
+                    font-size: 11.5px;
+                    font-weight: 600;
+                    color: #334155;
+                    background: rgba(241,245,249,0.8);
+                    padding: 6px 12px;
+                    border-radius: 8px;
+                    border: 1px solid #e2e8f0;
+                    display: inline-block;
+                    transition: all 0.2s ease;
+                }
+                .api-card:hover .api-endpoint {
+                    background: rgba(219,234,254,0.3);
+                    border-color: #bfdbfe;
+                }
+                .api-grid {
+                    display: grid;
+                    grid-template-columns: repeat(3, 1fr);
+                    gap: 1.5rem;
+                }
+                @media (max-width: 768px) {
+                    .api-grid { grid-template-columns: 1fr; }
+                }
+                .api-code-block {
+                    background: #0f172a;
+                    border-radius: 16px;
+                    padding: 2rem 2.5rem;
+                    font-family: 'SF Mono', 'Fira Code', 'Courier New', monospace;
+                    font-size: 12px;
+                    line-height: 1.8;
+                    color: #e2e8f0;
+                    overflow-x: auto;
+                    border: 1px solid #1e293b;
+                    position: relative;
+                }
+                .api-code-block .code-comment { color: #64748b; }
+                .api-code-block .code-key { color: #7dd3fc; }
+                .api-code-block .code-string { color: #86efac; }
+                .api-code-block .code-number { color: #fbbf24; }
+                .api-code-block .code-method { color: #c084fc; font-weight: 700; }
+                .api-live-dot {
+                    width: 8px; height: 8px;
+                    border-radius: 50%;
+                    display: inline-block;
+                    animation: pulse 2s infinite;
+                }
+            </style>
+
+            <div class="mb-16">
+                <div style="display: inline-flex; align-items: center; gap: 8px; background: rgba(37, 99, 235, 0.06); border: 1px solid rgba(37, 99, 235, 0.15); padding: 6px 16px; border-radius: 999px; margin-bottom: 1.25rem;">
+                    <span class="api-live-dot" style="background: #2563eb; box-shadow: 0 0 8px rgba(37,99,235,0.5);"></span>
+                    <span style="font-size: 9px; font-weight: 900; color: #2563eb; text-transform: uppercase; letter-spacing: 0.15em;">Developer API Platform</span>
+                </div>
+                <h2 class="text-6xl font-black text-slate-900 leading-[1.05] tracking-tight" style="font-family: 'Outfit', sans-serif; color: #0f172a;">Programmatic Access.</h2>
+                <p class="text-xl text-slate-400 leading-relaxed font-medium max-w-3xl mt-6">
+                    Production-grade REST API with authenticated endpoints, HMAC-signed webhook callbacks, and industry-standard AnnData serialization ÔÇö built for computational biology pipelines.
+                </p>
+            </div>
+
+            <!-- API Endpoints Grid -->
+            <div class="api-grid" style="margin-bottom: 2rem;">
+
+                <!-- Card 1: Safety Audit + Horvath Clock -->
+                <div class="api-card">
+                    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 1.5rem;">
+                        <div style="width: 40px; height: 40px; border-radius: 14px; background: linear-gradient(135deg, #faf5ff, #f3e8ff); border: 1px solid #e9d5ff; display: flex; align-items: center; justify-content: center;">
+                            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                                <path d="M9 12l2 2 4-4"/>
+                            </svg>
+                        </div>
+                        <span class="api-badge" style="background: #f5f3ff; border: 1px solid #e9d5ff; color: #7c3aed;">Horvath 353-CpG</span>
+                    </div>
+                    <h3 class="text-lg font-black text-slate-900 mb-3" style="font-family: 'Outfit', sans-serif;">Safety Audit & Epigenetic Clock</h3>
+                    <p class="text-sm text-slate-400 leading-relaxed font-medium mb-5">Full oncogene screening, dedifferentiation ceiling enforcement, and 353-CpG Horvath biological age prediction from methylation beta-values.</p>
+                    <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                        <span class="api-method api-method-post">POST</span>
+                        <span class="api-endpoint">/api/v1/safety/audit</span>
+                    </div>
+                </div>
+
+                <!-- Card 2: Structure Fold -->
+                <div class="api-card">
+                    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 1.5rem;">
+                        <div style="width: 40px; height: 40px; border-radius: 14px; background: linear-gradient(135deg, #f0fdf4, #dcfce7); border: 1px solid #bbf7d0; display: flex; align-items: center; justify-content: center;">
+                            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2z"/>
+                                <path d="M8 14s1.5 2 4 2 4-2 4-2"/>
+                                <line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/>
+                            </svg>
+                        </div>
+                        <span class="api-badge" style="background: #f0fdf4; border: 1px solid #bbf7d0; color: #16a34a;">ESMFold</span>
+                    </div>
+                    <h3 class="text-lg font-black text-slate-900 mb-3" style="font-family: 'Outfit', sans-serif;">Protein Structure Prediction</h3>
+                    <p class="text-sm text-slate-400 leading-relaxed font-medium mb-5">Submit amino acid sequences and receive predicted 3D coordinates in PDB format via ESMFold ÔÇö with synthetic fallback for high availability.</p>
+                    <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                        <span class="api-method api-method-post">POST</span>
+                        <span class="api-endpoint">/api/v1/structure/fold</span>
+                    </div>
+                </div>
+
+                <!-- Card 3: Census Perturbation -->
+                <div class="api-card">
+                    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 1.5rem;">
+                        <div style="width: 40px; height: 40px; border-radius: 14px; background: linear-gradient(135deg, #eff6ff, #dbeafe); border: 1px solid #bfdbfe; display: flex; align-items: center; justify-content: center;">
+                            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="3" fill="#2563eb" opacity="0.2"/>
+                                <path d="M12 2v4m0 12v4m10-10h-4M6 12H2"/>
+                                <path d="M17.66 6.34l-2.83 2.83m-5.66 5.66l-2.83 2.83"/>
+                                <path d="M6.34 6.34l2.83 2.83m5.66 5.66l2.83 2.83"/>
+                            </svg>
+                        </div>
+                        <span class="api-badge" style="background: #eff6ff; border: 1px solid #bfdbfe; color: #2563eb;">CZ Census</span>
+                    </div>
+                    <h3 class="text-lg font-black text-slate-900 mb-3" style="font-family: 'Outfit', sans-serif;">Census Perturbation & AnnData</h3>
+                    <p class="text-sm text-slate-400 leading-relaxed font-medium mb-5">Query CZ Cellxgene Census human cardiac cells, run async multi-factor perturbations, and download results as .h5ad binary files.</p>
+                    <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                        <span class="api-method api-method-post">POST</span>
+                        <span class="api-endpoint">/api/v1/predict/perturbation</span>
+                    </div>
+                </div>
+
+                <!-- Card 4: LNP Optimize -->
+                <div class="api-card">
+                    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 1.5rem;">
+                        <div style="width: 40px; height: 40px; border-radius: 14px; background: linear-gradient(135deg, #fff7ed, #ffedd5); border: 1px solid #fed7aa; display: flex; align-items: center; justify-content: center;">
+                            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="#ea580c" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"/>
+                                <circle cx="12" cy="12" r="6" stroke-dasharray="3 3"/>
+                                <circle cx="12" cy="12" r="2" fill="#ea580c"/>
+                            </svg>
+                        </div>
+                        <span class="api-badge" style="background: #fff7ed; border: 1px solid #fed7aa; color: #ea580c;">Nanoparticle</span>
+                    </div>
+                    <h3 class="text-lg font-black text-slate-900 mb-3" style="font-family: 'Outfit', sans-serif;">LNP Delivery Optimization</h3>
+                    <p class="text-sm text-slate-400 leading-relaxed font-medium mb-5">Predict lipid nanoparticle encapsulation efficiency, circulation half-life, particle size, and cardiac-targeted organ tropism index.</p>
+                    <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                        <span class="api-method api-method-post">POST</span>
+                        <span class="api-endpoint">/api/v1/lnp/optimize</span>
+                    </div>
+                </div>
+
+                <!-- Card 5: Webhook Subscriptions -->
+                <div class="api-card" style="border-color: #c7d2fe; background: linear-gradient(135deg, rgba(238,242,255,0.9), rgba(255,255,255,0.95));">
+                    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 1.5rem;">
+                        <div style="width: 40px; height: 40px; border-radius: 14px; background: linear-gradient(135deg, #eef2ff, #e0e7ff); border: 1px solid #c7d2fe; display: flex; align-items: center; justify-content: center;">
+                            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="#4f46e5" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                                <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                                <line x1="12" y1="2" x2="12" y2="4"/>
+                            </svg>
+                        </div>
+                        <span class="api-badge" style="background: #eef2ff; border: 1px solid #c7d2fe; color: #4f46e5;">HMAC-SHA256</span>
+                    </div>
+                    <h3 class="text-lg font-black text-slate-900 mb-3" style="font-family: 'Outfit', sans-serif;">Webhook Callbacks</h3>
+                    <p class="text-sm text-slate-400 leading-relaxed font-medium mb-5">Subscribe HTTPS callback URLs to receive signed real-time notifications when async jobs complete or fail. Cryptographic HMAC-SHA256 signature verification.</p>
+                    <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                        <span class="api-method api-method-post">POST</span>
+                        <span class="api-endpoint">/api/v1/webhooks/subscribe</span>
+                    </div>
+                </div>
+
+                <!-- Card 6: Job Status + Download -->
+                <div class="api-card">
+                    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 1.5rem;">
+                        <div style="width: 40px; height: 40px; border-radius: 14px; background: linear-gradient(135deg, #f0fdfa, #ccfbf1); border: 1px solid #99f6e4; display: flex; align-items: center; justify-content: center;">
+                            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="#0d9488" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                <polyline points="7 10 12 15 17 10"/>
+                                <line x1="12" y1="15" x2="12" y2="3"/>
+                            </svg>
+                        </div>
+                        <span class="api-badge" style="background: #f0fdfa; border: 1px solid #99f6e4; color: #0d9488;">AnnData</span>
+                    </div>
+                    <h3 class="text-lg font-black text-slate-900 mb-3" style="font-family: 'Outfit', sans-serif;">Job Polling & .h5ad Download</h3>
+                    <p class="text-sm text-slate-400 leading-relaxed font-medium mb-5">Poll async job status and download Scanpy-compatible AnnData binary matrices directly from completed perturbation simulations.</p>
+                    <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                        <span class="api-method api-method-get">GET</span>
+                        <span class="api-endpoint">/api/v1/jobs/{id}/download</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Code Example Block -->
+            <div style="margin-top: 2.5rem;">
+                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 1rem;">
+                    <span style="font-size: 10px; font-weight: 900; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.25em;">Quick Start Example</span>
+                    <div style="flex: 1; height: 1px; background: #e2e8f0;"></div>
+                </div>
+                <div class="api-code-block">
+                    <div style="position: absolute; top: 1rem; right: 1.5rem; display: flex; gap: 6px;">
+                        <div style="width: 10px; height: 10px; border-radius: 50%; background: #ef4444; opacity: 0.7;"></div>
+                        <div style="width: 10px; height: 10px; border-radius: 50%; background: #eab308; opacity: 0.7;"></div>
+                        <div style="width: 10px; height: 10px; border-radius: 50%; background: #22c55e; opacity: 0.7;"></div>
+                    </div>
+                    <span class="code-comment"># Run a cardiac perturbation via the Zenith API</span><br>
+                    <span class="code-key">import</span> requests<br><br>
+                    <span class="code-key">response</span> = requests.<span class="code-method">post</span>(<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-string">"https://niluslab.com/api/v1/predict/perturbation"</span>,<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;headers={<span class="code-string">"X-API-Key"</span>: <span class="code-string">"zk_live_your_key_here"</span>},<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;json={<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-string">"baseline_cell_type"</span>: <span class="code-string">"ventricular_myocyte"</span>,<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-string">"perturbation_factors"</span>: {<span class="code-string">"GATA4"</span>: <span class="code-number">1.5</span>, <span class="code-string">"SIRT1"</span>: <span class="code-number">2.0</span>},<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-string">"census_filter"</span>: <span class="code-string">"tissue_general == 'heart' and disease == 'normal'"</span><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                    )<br><br>
+                    <span class="code-comment"># Returns job_id ÔåÆ poll status ÔåÆ download .h5ad</span><br>
+                    job_id = response.json()[<span class="code-string">"job_id"</span>]<br>
+                    <span class="code-key">print</span>(<span class="code-string">f"Job launched: </span>{job_id}<span class="code-string">"</span>)
+                </div>
+            </div>
+
+            <!-- Authentication & Rate Limiting Notice -->
+            <div style="margin-top: 2.5rem; display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem;">
+                <div style="padding: 1.5rem; background: rgba(248,250,252,0.8); border: 1px solid #f1f5f9; border-radius: 20px; text-align: center;">
+                    <div style="font-family: 'Outfit', sans-serif; font-size: 22px; font-weight: 900; color: #0f172a; margin-bottom: 4px;">API Key Auth</div>
+                    <div style="font-size: 10px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.15em;">X-API-Key Header</div>
+                </div>
+                <div style="padding: 1.5rem; background: rgba(248,250,252,0.8); border: 1px solid #f1f5f9; border-radius: 20px; text-align: center;">
+                    <div style="font-family: 'Outfit', sans-serif; font-size: 22px; font-weight: 900; color: #0f172a; margin-bottom: 4px;">Rate Limited</div>
+                    <div style="font-size: 10px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.15em;">Redis-Backed Throttle</div>
+                </div>
+                <div style="padding: 1.5rem; background: rgba(248,250,252,0.8); border: 1px solid #f1f5f9; border-radius: 20px; text-align: center;">
+                    <div style="font-family: 'Outfit', sans-serif; font-size: 22px; font-weight: 900; color: #0f172a; margin-bottom: 4px;">Async Jobs</div>
+                    <div style="font-size: 10px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.15em;">Background Compute</div>
+                </div>
+            </div>
+
+        </section>
+

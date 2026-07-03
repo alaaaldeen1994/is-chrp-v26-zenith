@@ -165,7 +165,7 @@
 
           <!-- Header -->
           <header class="flex-shrink-0 mb-4 lg:mb-0">
-            <a href="index.html" class="inline-flex items-center gap-3">
+            <a href="profile.html" class="inline-flex items-center gap-3">
               <div class="w-8 h-8 flex items-center justify-center">
                 <svg class="w-7 h-7 text-[#2563eb]" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                   <path d="M32 10L51 20L32 30L13 20L32 10Z" />
@@ -344,7 +344,7 @@
     let isSignUp = false;
 
     const urlParams = new URLSearchParams(window.location.search);
-    const redirectUrl = urlParams.get('redirect') || 'discovery.html';
+    const redirectUrl = urlParams.get('redirect') || 'index.html';
 
     function toggleAuthMode() {
       isSignUp = !isSignUp;

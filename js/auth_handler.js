@@ -86,7 +86,7 @@ async function handleAuth(e) {
             // Check if there's a redirect URL in the query params
             const urlParams = new URLSearchParams(window.location.search);
             const redirectUrl = urlParams.get('redirect');
-            window.location.href = redirectUrl || "discovery.html"; // Default to simulation
+            window.location.href = redirectUrl || "index.html"; // Default to simulation
         }, 1000);
 
     } catch (error) {
