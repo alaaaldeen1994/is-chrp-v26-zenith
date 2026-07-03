@@ -1049,7 +1049,10 @@
           antialias: true,
         });
         window._activeBoltzViewer = viewer3d;
-        viewer3d.addModel(cifText, 'cif');
+        const model = viewer3d.addModel(cifText, 'cif');
+        if (model && typeof model.computeSecondaryStructure === 'function') {
+          model.computeSecondaryStructure();
+        }
         // Style all polymer backbones as cartoon ribbons colored by pLDDT B-factor
         viewer3d.setStyle({}, { cartoon: { colorfunc: function(atom) {
           let plddt = atom.b || 0;
