@@ -803,7 +803,7 @@
                             'CCD code e.g. ATP, ZN';
         let inputHtml = '';
         if (chain.type === 'ligand_ccd') {
-          const isPreset = ['MG','ZN','CL','CA','NA','MN','ADP','ATP','AMP','GTP','GDP','FAD','NAD','NAP','NDP','HEM','HEC','PLM','OLA','MYR','CIT','CLA','CHL','BCL','BCB',''].includes(chain.value);
+          const isPreset = ['MG','ZN','CL','CA','NA','MN','K','FE','CU','CO','ADP','ATP','AMP','GTP','GDP','FAD','NAD','NAP','NDP','HEM','HEC','PLM','OLA','MYR','CIT','CLA','CHL','BCL','BCB',''].includes(chain.value);
           inputHtml = `
             <select class="w-full rounded-lg border border-slate-200 p-1.5 font-mono text-[10px] focus:outline-none focus:border-violet-500 bg-white"
               onchange="boltzHandleCcdDropdownChange(${idx}, this)"
@@ -816,6 +816,10 @@
                 <option value="CA" ${chain.value === 'CA' ? 'selected' : ''}>CA - Calcium Ion (Ca²⁺)</option>
                 <option value="NA" ${chain.value === 'NA' ? 'selected' : ''}>NA - Sodium Ion (Na⁺)</option>
                 <option value="MN" ${chain.value === 'MN' ? 'selected' : ''}>MN - Manganese Ion (Mn²⁺)</option>
+                <option value="K" ${chain.value === 'K' ? 'selected' : ''}>K - Potassium Ion (K⁺)</option>
+                <option value="FE" ${chain.value === 'FE' ? 'selected' : ''}>FE - Iron Ion (Fe³⁺)</option>
+                <option value="CU" ${chain.value === 'CU' ? 'selected' : ''}>CU - Copper Ion (Cu²⁺)</option>
+                <option value="CO" ${chain.value === 'CO' ? 'selected' : ''}>CO - Cobalt Ion (Co²⁺)</option>
               </optgroup>
               <optgroup label="Standard Ligands">
                 <option value="ADP" ${chain.value === 'ADP' ? 'selected' : ''}>ADP - Adenosine diphosphate</option>
