@@ -2077,7 +2077,17 @@ const BiosimBridge = {
                 } else {
                     BiosimUI.notify('UniProt', `${geneName} not found in Swiss-Prot`, 'warn');
                     break;
+                }
+            } catch (e) {
+                console.warn(`UniProt fetch failed for ${geneName}:`, e.message);
+                retries--;
+                if (retries <= 0) {
+                    BiosimUI.notify('UniProt', `Network error for ${geneName}`, 'warn');
+                } else {
+                    await new Promise(r => setTimeout(r, 500));
+                }
             }
+        }
         return (this.domainDefaults && this.domainDefaults[geneName]) || null;
     },
 
