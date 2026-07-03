@@ -1050,22 +1050,25 @@
         });
         window._activeBoltzViewer = viewer3d;
         viewer3d.addModel(cifText, 'cif');
-        // Style standard chains (protein/DNA/RNA) as cartoon ribbons colored by pLDDT B-factor
-        viewer3d.setStyle({ hetflag: false }, { cartoon: { colorfunc: function(atom) {
-          const plddt = atom.b; // B-factor column contains pLDDT score
+        // Style all polymer backbones as cartoon ribbons colored by pLDDT B-factor
+        viewer3d.setStyle({}, { cartoon: { colorfunc: function(atom) {
+          let plddt = atom.b || 0;
+          if (plddt <= 1.0 && plddt > 0.0) {
+            plddt = plddt * 100;
+          }
           if (plddt > 90) return '#0053d6'; // Very High (Dark Blue)
           if (plddt > 70) return '#00c2ec'; // Confident (Light Blue)
           if (plddt > 50) return '#ffdb00'; // Low (Yellow)
           return '#ff7d00'; // Very Low (Orange)
         }}});
 
-        // Style heteroatoms (ligands) as sticks
-        viewer3d.setStyle({ hetflag: true }, {
+        // Add stick style for heteroatoms (ligands)
+        viewer3d.addStyle({ hetflag: true }, {
           stick: { colorscheme: 'Jmol', radius: 0.2 }
         });
 
-        // Style single-atom ions (Zn, Mg, etc.) as spheres
-        viewer3d.setStyle({ hetflag: true, elem: ['Zn', 'Mg', 'Ca', 'Mn', 'Fe', 'Na', 'K', 'Cl'] }, {
+        // Add sphere style for single-atom ions (Zn, Mg, etc.)
+        viewer3d.addStyle({ elem: ['Zn', 'Mg', 'Ca', 'Mn', 'Fe', 'Na', 'K', 'Cl'] }, {
           sphere: { colorscheme: 'Jmol', scale: 0.8 }
         });
 
