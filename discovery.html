@@ -5772,6 +5772,7 @@ async function runDiscovery() {
                         <div style="display:flex;gap:16px;flex-wrap:wrap;">
                             <button onclick="enterSimulation()" style="background:#ffffff;border:1px solid #cbd5e1;color:#334155;font-size:15px;font-weight:600;padding:12px 24px;border-radius:10px;cursor:pointer;transition:all 0.2s;box-shadow:0 1px 2px rgba(0,0,0,0.05);" onmouseover="this.style.background='#f8fafc';this.style.borderColor='#94a3b8';" onmouseout="this.style.background='#ffffff';this.style.borderColor='#cbd5e1';">Simulation Lab</button>
                             <button onclick="downloadResultJSON()" style="background:#ffffff;border:1px solid #cbd5e1;color:#334155;font-size:15px;font-weight:600;padding:12px 24px;border-radius:10px;cursor:pointer;transition:all 0.2s;box-shadow:0 1px 2px rgba(0,0,0,0.05);" onmouseover="this.style.background='#f8fafc';this.style.borderColor='#94a3b8';" onmouseout="this.style.background='#ffffff';this.style.borderColor='#cbd5e1';">Export Results</button>
+                            <button onclick="viewResultJSON()" style="background:#ffffff;border:1px solid #cbd5e1;color:#334155;font-size:15px;font-weight:600;padding:12px 24px;border-radius:10px;cursor:pointer;transition:all 0.2s;box-shadow:0 1px 2px rgba(0,0,0,0.05);" onmouseover="this.style.background='#f8fafc';this.style.borderColor='#94a3b8';" onmouseout="this.style.background='#ffffff';this.style.borderColor='#cbd5e1';">View JSON</button>
                             <button onclick="downloadAF3JSON()" style="background:#0f172a;border:1px solid #0f172a;color:#ffffff;font-size:15px;font-weight:600;padding:12px 32px;border-radius:10px;cursor:pointer;transition:all 0.2s;box-shadow:0 4px 6px -1px rgba(15,23,42,0.1), 0 2px 4px -1px rgba(15,23,42,0.06);" onmouseover="this.style.background='#1e293b';this.style.transform='translateY(-2px)';" onmouseout="this.style.background='#0f172a';this.style.transform='translateY(0)';">Export AF3 Fold</button>
                         </div>
                     </div>
@@ -5912,6 +5913,7 @@ async function runDiscovery() {
                         <div style="display:flex;gap:8px;">
                             <button onclick="setDiscMode('real');runDiscovery();" style="background:#fafafa;border:1px solid #D6CEBF;color:#6b6b6b;font-size:11px;font-weight:600;padding:6px 14px;border-radius:8px;cursor:pointer;transition:all 0.15s;" onmouseover="this.style.background='#fafafa';this.style.borderColor='#C8C3B8';this.style.color='#191919';" onmouseout="this.style.background='#fafafa';this.style.borderColor='#D6CEBF';this.style.color='#6b6b6b';">Compare with Zenith</button>
                             <button onclick="downloadResultJSON()" style="background:#ffffff;border:1px solid #D6CEBF;color:#6b6b6b;font-size:11px;font-weight:600;padding:6px 14px;border-radius:8px;cursor:pointer;transition:all 0.15s;" onmouseover="this.style.background='#fafafa';this.style.borderColor='#C8C3B8';this.style.color='#191919';" onmouseout="this.style.background='#ffffff';this.style.borderColor='#D6CEBF';this.style.color='#6b6b6b';">Extract Results JSON</button>
+                            <button onclick="viewResultJSON()" style="background:#ffffff;border:1px solid #D6CEBF;color:#6b6b6b;font-size:11px;font-weight:600;padding:6px 14px;border-radius:8px;cursor:pointer;transition:all 0.15s;" onmouseover="this.style.background='#fafafa';this.style.borderColor='#C8C3B8';this.style.color='#191919';" onmouseout="this.style.background='#ffffff';this.style.borderColor='#D6CEBF';this.style.color='#6b6b6b';">View JSON</button>
                             <button onclick="downloadAF3JSON()" style="background:#1a1a1a;border:none;color:#f8f8f6;font-size:11px;font-weight:600;padding:6px 14px;border-radius:8px;cursor:pointer;transition:all 0.15s;" onmouseover="this.style.background='#333';" onmouseout="this.style.background='#1a1a1a';">Extract JSON (AF3)</button>
                         </div>
                     </div>
@@ -6065,6 +6067,50 @@ window.downloadAF3JSON = async function() {
         alert('BiosimBridge is not loaded. Cannot generate AF3 manifest.');
     }
 };
+
+
+window.viewResultJSON = function() {
+    if (!window._lastResult) {
+        alert('Please run a discovery first.');
+        return;
+    }
+    const jsonStr = JSON.stringify(window._lastResult, null, 2);
+    let modal = document.getElementById('json-view-modal');
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'json-view-modal';
+        modal.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(15,23,42,0.6);backdrop-filter:blur(4px);z-index:99999;display:flex;align-items:center;justify-content:center;padding:20px;';
+        modal.innerHTML = `
+            <div style="background:#ffffff;border-radius:16px;box-shadow:0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);width:100%;max-width:800px;max-height:85vh;display:flex;flex-direction:column;overflow:hidden;border:1px solid #e2e8f0;">
+                <div style="padding:16px 20px;border-bottom:1px solid #e2e8f0;background:#f8fafc;display:flex;align-items:center;justify-content:space-between;font-family:\'Inter\',sans-serif;">
+                    <div style="font-weight:700;color:#0f172a;font-size:14px;text-transform:uppercase;letter-spacing:0.05em;">Discovery JSON Outcome</div>
+                    <div style="display:flex;gap:8px;">
+                        <button onclick="copyModalJSON()" style="background:#0f172a;border:none;color:#ffffff;font-size:11px;font-weight:700;padding:6px 14px;border-radius:8px;cursor:pointer;transition:all 0.15s;">Copy to Clipboard</button>
+                        <button onclick="closeModalJSON()" style="background:#ffffff;border:1px solid #cbd5e1;color:#334155;font-size:11px;font-weight:700;padding:6px 14px;border-radius:8px;cursor:pointer;transition:all 0.15s;">Close</button>
+                    </div>
+                </div>
+                <div style="padding:20px;overflow-y:auto;background:#0f172a;color:#cbd5e1;font-family:\'JetBrains Mono\',\'Courier New\',monospace;font-size:11px;line-height:1.6;flex:1;white-space:pre-wrap;word-break:break-all;user-select:text;">
+                    <pre id="json-modal-pre" style="margin:0;"></pre>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+    }
+    document.getElementById('json-modal-pre').textContent = jsonStr;
+    modal.style.display = 'flex';
+};
+
+window.closeModalJSON = function() {
+    const modal = document.getElementById('json-view-modal');
+    if (modal) modal.style.display = 'none';
+};
+
+window.copyModalJSON = function() {
+    const txt = document.getElementById('json-modal-pre').textContent;
+    navigator.clipboard.writeText(txt);
+    alert('JSON copied to clipboard!');
+};
+
 
 
 </script>

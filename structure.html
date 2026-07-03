@@ -418,9 +418,15 @@
         <!-- Viewer Card — expands to fill all space -->
         <div class="flex-1 min-h-0 bg-white rounded-2xl border border-slate-200 p-4 shadow-sm flex flex-col">
           <div class="flex items-center justify-between mb-2.5">
-            <h2 class="font-outfit text-[11px] font-bold uppercase tracking-wider text-slate-700 flex items-center gap-2">
-              <i data-lucide="eye" class="w-3.5 h-3.5 text-blue-600"></i> 3D Structure Viewer
-            </h2>
+            <div class="flex items-center gap-4">
+              <h2 class="font-outfit text-[11px] font-bold uppercase tracking-wider text-slate-700 flex items-center gap-2">
+                <i data-lucide="eye" class="w-3.5 h-3.5 text-blue-600"></i> 3D Structure Viewer
+              </h2>
+              <div class="flex items-center gap-1 bg-slate-100 p-0.5 rounded-lg text-[9px] font-bold">
+                <button type="button" onclick="setViewerTheme('esm', 'dark')" id="theme-esm-dark" class="px-2 py-0.5 rounded text-slate-700 bg-white shadow-sm transition">Dark</button>
+                <button type="button" onclick="setViewerTheme('esm', 'light')" id="theme-esm-light" class="px-2 py-0.5 rounded text-slate-500 hover:text-slate-700 transition">Light</button>
+              </div>
+            </div>
             <!-- Status banner inline -->
             <div id="alert-banner" class="hidden p-2 rounded-lg text-[10px] font-semibold flex items-center gap-1.5 max-w-sm">
               <i id="alert-icon" class="w-3.5 h-3.5 flex-shrink-0"></i>
@@ -468,6 +474,7 @@
 
       </div>
 
+    </div>
     </div><!-- /#esmfold-panel-wrap -->
 
     <!-- ═══════════════════════════════════════════════════════════════════ -->
@@ -590,10 +597,16 @@
           <!-- Viewer Card -->
           <div class="flex-1 min-h-0 bg-white rounded-2xl border border-slate-200 p-4 shadow-sm flex flex-col">
             <div class="flex items-center justify-between mb-2.5">
-              <h2 class="font-outfit text-[11px] font-bold uppercase tracking-wider text-slate-700 flex items-center gap-2">
-                <i data-lucide="eye" class="w-3.5 h-3.5 text-violet-600"></i> 3D Complex Viewer
-                <span class="text-[9px] font-mono bg-violet-50 text-violet-600 border border-violet-200 px-1.5 rounded">Mol*</span>
-              </h2>
+              <div class="flex items-center gap-4">
+                <h2 class="font-outfit text-[11px] font-bold uppercase tracking-wider text-slate-700 flex items-center gap-2">
+                  <i data-lucide="eye" class="w-3.5 h-3.5 text-violet-600"></i> 3D Complex Viewer
+                  <span class="text-[9px] font-mono bg-violet-50 text-violet-600 border border-violet-200 px-1.5 rounded">Mol*</span>
+                </h2>
+                <div class="flex items-center gap-1 bg-slate-100 p-0.5 rounded-lg text-[9px] font-bold">
+                  <button type="button" onclick="setViewerTheme('boltz', 'dark')" id="theme-boltz-dark" class="px-2 py-0.5 rounded text-slate-700 bg-white shadow-sm transition">Dark</button>
+                  <button type="button" onclick="setViewerTheme('boltz', 'light')" id="theme-boltz-light" class="px-2 py-0.5 rounded text-slate-500 hover:text-slate-700 transition">Light</button>
+                </div>
+              </div>
               <div class="flex items-center gap-2">
                 <span id="boltz-real-badge" class="hidden text-[8px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 px-2 py-0.5 rounded-full uppercase">Real Prediction</span>
                 <span id="boltz-no-synth-badge" class="hidden text-[8px] font-bold bg-slate-50 text-slate-500 border border-slate-200 px-2 py-0.5 rounded-full uppercase">No Synthetic Fallback</span>
@@ -986,10 +999,12 @@
         viewerDiv.style.cssText = 'width:100%;height:100%;position:relative;';
         container.appendChild(viewerDiv);
 
+        const bg = (window._boltzViewerTheme || 'dark') === 'light' ? '#ffffff' : '#0f172a';
         const viewer3d = $3Dmol.createViewer($(viewerDiv), {
-          backgroundColor: '#0f172a',
+          backgroundColor: bg,
           antialias: true,
         });
+        window._activeBoltzViewer = viewer3d;
         viewer3d.addModel(cifText, 'cif');
         viewer3d.setStyle({ chain: /^/ }, { cartoon: { colorfunc: function(a) {
           const map = { 'A':'#818cf8','B':'#34d399','C':'#f472b6','D':'#fbbf24','E':'#60a5fa' };
@@ -1309,9 +1324,11 @@
       if (!mol3D) {
         throw new Error("3Dmol library failed to load. Check the Diagnostics panel for CSP or network errors.");
       }
+      const bg = (window._esmViewerTheme || 'dark') === 'light' ? '#ffffff' : '#0f172a';
       const viewer = mol3D.createViewer(container, {
-        backgroundColor: "#0f172a"
+        backgroundColor: bg
       });
+      window._activeEsmViewer = viewer;
 
       viewer.addModel(pdbData, "pdb");
       viewer.setStyle({}, {
@@ -1469,8 +1486,39 @@
       document.getElementById("pdb-modal").classList.remove("hidden");
     }
 
-    function closePdbModal() {
-      document.getElementById("pdb-modal").classList.add("hidden");
+    // Global theme state for viewers
+    window._esmViewerTheme = 'dark';
+    window._boltzViewerTheme = 'dark';
+    window._activeEsmViewer = null;
+    window._activeBoltzViewer = null;
+
+    function setViewerTheme(viewerType, theme) {
+      const btnDark = document.getElementById(`theme-${viewerType}-dark`);
+      const btnLight = document.getElementById(`theme-${viewerType}-light`);
+      
+      if (theme === 'dark') {
+        btnDark.className = "px-2 py-0.5 rounded text-slate-700 bg-white shadow-sm transition";
+        btnLight.className = "px-2 py-0.5 rounded text-slate-500 hover:text-slate-700 transition";
+      } else {
+        btnDark.className = "px-2 py-0.5 rounded text-slate-500 hover:text-slate-700 transition";
+        btnLight.className = "px-2 py-0.5 rounded text-slate-700 bg-white shadow-sm transition";
+      }
+      
+      const bg = theme === 'light' ? '#ffffff' : '#0f172a';
+      
+      if (viewerType === 'esm') {
+        window._esmViewerTheme = theme;
+        if (window._activeEsmViewer) {
+          window._activeEsmViewer.setBackgroundColor(bg);
+          window._activeEsmViewer.render();
+        }
+      } else {
+        window._boltzViewerTheme = theme;
+        if (window._activeBoltzViewer) {
+          window._activeBoltzViewer.setBackgroundColor(bg);
+          window._activeBoltzViewer.render();
+        }
+      }
     }
 
     // Initialize Lucide icons on load
