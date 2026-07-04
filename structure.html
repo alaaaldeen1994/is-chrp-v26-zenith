@@ -701,9 +701,13 @@
   <!-- ============ TOP BAR ============ -->
   <header class="topbar">
     <div class="brand">
-      <div class="brand-mark">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-          <path d="M4 4c4 4 12 12 16 16M20 4C16 8 8 16 4 20"/>
+      <div class="brand-mark" style="background:var(--accent);">
+        <svg width="14" height="14" viewBox="0 0 48 48" fill="none" stroke="#ffffff" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M16 8 Q 32 16, 16 24 Q 32 32, 16 40" />
+          <path d="M32 8 Q 16 16, 32 24 Q 16 32, 32 40" opacity="0.55" />
+          <line x1="20" y1="12" x2="28" y2="12" stroke-width="3" />
+          <line x1="16" y1="24" x2="32" y2="24" stroke-width="3" />
+          <line x1="20" y1="36" x2="28" y2="36" stroke-width="3" />
         </svg>
       </div>
       <div class="brand-text">
@@ -1241,8 +1245,7 @@ function initApiKey() {
 function initSequenceInput() {
   const ta = $('#seqInput');
   ta.addEventListener('input', () => {
-    const v = ta.value.replace(/^>.*
-/, '').replace(/\s/g, '').toUpperCase();
+    const v = ta.value.replace(/^>.*\n/, '').replace(/\s/g, '').toUpperCase();
     const len = v.length;
     $('#seqLenHint').textContent = `${len} aa · max 1200`;
     STATE.sequence = v;
@@ -1712,8 +1715,7 @@ async function runPrediction() {
   btn.disabled = true;
 
   if (STATE.mode === 'esm') {
-    const seq = $('#seqInput').value.replace(/^>.*
-/, '').replace(/\s/g, '').toUpperCase();
+    const seq = $('#seqInput').value.replace(/^>.*\n/, '').replace(/\s/g, '').toUpperCase();
     if (!seq || seq.length < 10) {
       log('Sequence too short or empty — minimum 10 residues', 'err');
       btn.disabled = false;
