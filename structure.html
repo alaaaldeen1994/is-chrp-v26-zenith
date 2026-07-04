@@ -14,39 +14,39 @@
 " />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Serif:wght@500;600&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/3dmol@2.4.2/build/3Dmol-min.js"></script>
 <style>
   /* ============ DESIGN TOKENS ============ */
   :root{
-    --bg-void:#080B11;      /* Near-black, faint blue */
-    --bg-base:#0D121C;      /* App background */
-    --bg-panel:#111827;     /* Sidebar/Panels */
-    --bg-elev:#1A2333;      /* Elevated elements */
-    --bg-elev-2:#222E44;
-    --grid-line:rgba(148,163,184,.04);
-    --border:#1F2937;
-    --border-strong:#2D3B52;
-    --border-accent:rgba(59,130,246,.4);
-    --text:#E2E8F0;
-    --text-mute:#94A3B8;
-    --text-faint:#64748B;
-    --text-dim:#475569;
-    --accent:#3B82F6;       /* Professional Biotech Blue */
-    --accent-bright:#60A5FA;
-    --accent-dim:#1E3A8A;
-    --accent-glow:rgba(59,130,246,.2);
-    --amber:#F59E0B;
-    --coral:#EF4444;
-    --emerald:#10B981;      /* Used very sparingly for status only */
-    --blue:#3B82F6;
-    --cyan:#22D3EE;
+    --bg-void:#f8fafc;      /* Light gray void background */
+    --bg-base:#f1f5f9;      /* Light app background */
+    --bg-panel:#ffffff;     /* White sidebar/panels */
+    --bg-elev:#f8fafc;      /* Light gray inner background */
+    --bg-elev-2:#e2e8f0;    /* Muted gray hover state */
+    --grid-line:rgba(0,0,0,.03);
+    --border:#e2e8f0;       /* Light border */
+    --border-strong:#cbd5e1;
+    --border-accent:rgba(59,130,246,.25);
+    --text:#0f172a;         /* Dark text */
+    --text-mute:#475569;    /* Muted gray text */
+    --text-faint:#64748b;   /* Faint text */
+    --text-dim:#94a3b8;
+    --accent:#2563eb;       /* Professional Biotech Blue */
+    --accent-bright:#1d4ed8;
+    --accent-dim:#dbeafe;
+    --accent-glow:rgba(37,99,235,.1);
+    --amber:#d97706;
+    --coral:#dc2626;
+    --emerald:#16a34a;      /* Used very sparingly for status only */
+    --blue:#2563eb;
+    --cyan:#0891b2;
     --plddt-vhigh:#0053D6;  /* AlphaFold standard >90 */
     --plddt-high:#65B3E7;   /* AlphaFold standard 70-90 */
     --plddt-low:#F5B544;    /* AlphaFold standard 50-70 */
     --plddt-vlow:#FB923C;   /* AlphaFold standard <50 */
-    --shadow-lg:0 10px 24px -12px rgba(0,0,0,.8);
-    --shadow-inset:inset 0 1px 0 rgba(255,255,255,.03);
+    --shadow-lg:0 10px 24px -12px rgba(15,23,42,.12);
+    --shadow-inset:inset 0 1px 0 rgba(255,255,255,.5);
     --radius:4px;           /* Sharper, engineered corners */
     --radius-sm:3px;
   }
@@ -56,22 +56,22 @@
   body{
     background:var(--bg-base);
     color:var(--text);
-    font-family:'IBM Plex Sans',system-ui,sans-serif;
+    font-family:'Inter','IBM Plex Sans',system-ui,sans-serif;
     font-size:13px;
     line-height:1.5;
     -webkit-font-smoothing:antialiased;
-    letter-spacing:-0.005em;
+    letter-spacing:-0.01em;
   }
   ::selection{background:var(--accent-glow);color:#fff}
   ::-webkit-scrollbar{width:8px;height:8px}
   ::-webkit-scrollbar-track{background:transparent}
-  ::-webkit-scrollbar-thumb{background:#2D3B52;border-radius:8px}
-  ::-webkit-scrollbar-thumb:hover{background:#3E4D68}
+  ::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:8px}
+  ::-webkit-scrollbar-thumb:hover{background:#94a3b8}
 
   /* ============ APP SHELL ============ */
   .app{
     display:grid;
-    grid-template-rows:48px 32px 1fr 24px;
+    grid-template-rows:32px 1fr 24px;
     height:100vh;
   }
 
@@ -638,7 +638,7 @@
   /* ============ RUN PROGRESS OVERLAY ============ */
   .run-overlay{
     position:absolute;inset:0;
-    background:rgba(8,11,17,.92);
+    background:rgba(241,245,249,.92);
     backdrop-filter:blur(4px);
     z-index:20;
     display:none;
@@ -698,39 +698,10 @@
 <body>
 <div class="app">
 
-  <!-- ============ TOP BAR ============ -->
-  <header class="topbar">
-    <div class="brand" onclick="window.location.href='index.html'" style="cursor:pointer;">
-      <div class="brand-mark" style="background:#1a1a1a;border-radius:50%;display:flex;align-items:center;justify-content:center;width:28px;height:28px;box-shadow:0 0 0 1px rgba(255,255,255,.08);">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f8f8f6" stroke-width="2">
-            <circle cx="12" cy="12" r="5"/>
-            <path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.93 4.93l2.12 2.12M16.95 16.95l2.12 2.12M4.93 19.07l2.12-2.12M16.95 7.05l2.12-2.12"/>
-        </svg>
-      </div>
-      <div class="brand-text">
-        <div class="brand-name">NILUS<span>·LAB</span></div>
-        <div class="brand-sub">Zenith v30</div>
-      </div>
-    </div>
-
-    <div class="top-right">
-      <button class="top-icon" title="Documentation" onclick="window.location.href='api.html'">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-      </button>
-      <div class="user-chip" onclick="window.location.href='profile.html'" style="cursor:pointer;">
-        <div class="user-avatar" id="userAvatarInitials">NL</div>
-        <div class="user-meta">
-          <div class="user-name" id="userDisplayName">Nilus Lab</div>
-          <div class="user-org">nilus-lab · structural</div>
-        </div>
-      </div>
-    </div>
-  </header>
-
   <!-- ============ SUB BAR ============ -->
   <div class="subbar">
     <div class="crumb">
-      <a href="#">Workspace</a>
+      <a href="index.html">Nilus Lab</a>
       <span class="sep">/</span>
       <a href="#">Structural Biology</a>
       <span class="sep">/</span>
@@ -1460,11 +1431,11 @@ function boltzBuildManifest() {
 function initViewer() {
   const element = $('#molviewer');
   const viewer = $3Dmol.createViewer(element, {
-    backgroundColor: '0x080B11',
+    backgroundColor: '0xffffff',
     antialias: true,
     id: 'main-viewer',
   });
-  viewer.setViewStyle({ style: 'outline', color: 0x111827, width: 0.02 });
+  viewer.setViewStyle({ style: 'outline', color: 0x475569, width: 0.015 });
   STATE.viewer = viewer;
 
   // Initial demo model
@@ -1877,10 +1848,11 @@ function initBindingViewer() {
   if (!STATE.currentModel || !STATE.currentModel.pdb) return;
   const element = $('#bindingviewer');
   const viewer = $3Dmol.createViewer(element, {
-    backgroundColor: '0x080B11',
+    backgroundColor: '0xffffff',
     antialias: true,
     id: 'binding-viewer',
   });
+  viewer.setViewStyle({ style: 'outline', color: 0x475569, width: 0.015 });
   STATE.bindingViewer = viewer;
   const { pdb } = STATE.currentModel;
   viewer.addModel(pdb, 'pdb');
