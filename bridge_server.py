@@ -1906,7 +1906,7 @@ async def serve_index_html():
 
 async def serve_profile():
 
-    return FileResponse("profile.html")
+    return FileResponse("index.html")
 
 
 
@@ -1914,7 +1914,7 @@ async def serve_profile():
 
 async def serve_profile_html():
 
-    return FileResponse("profile.html")
+    return FileResponse("index.html")
 
 
 
@@ -1922,7 +1922,7 @@ async def serve_profile_html():
 
 async def serve_discovery():
 
-    return FileResponse("index.html")
+    return FileResponse("discovery.html")
 
 
 
@@ -1930,7 +1930,7 @@ async def serve_discovery():
 
 async def serve_discovery_html():
 
-    return FileResponse("index.html")
+    return FileResponse("discovery.html")
 
 
 
@@ -2453,7 +2453,7 @@ async def get_whitepaper():
 
 async def get_profile():
 
-    return FileResponse("profile.html")
+    return FileResponse("index.html")
 
 
 
@@ -2461,7 +2461,7 @@ async def get_profile():
 
 async def get_profile_path():
 
-    return FileResponse("profile.html")
+    return FileResponse("index.html")
 
 
 
@@ -2469,7 +2469,7 @@ async def get_profile_path():
 
 async def get_discovery():
 
-    return FileResponse("index.html")
+    return FileResponse("discovery.html")
 
 
 
@@ -2477,7 +2477,7 @@ async def get_discovery():
 
 async def get_discovery_path():
 
-    return FileResponse("index.html")
+    return FileResponse("discovery.html")
 
 
 
