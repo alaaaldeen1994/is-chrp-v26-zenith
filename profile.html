@@ -102,11 +102,7 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.160.0/three.min.js"></script>
 
-    <link
-
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap"
-
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="css/profile_minimal.css">
 
@@ -2840,7 +2836,7 @@
 
             }
 
-            .btn-agency-primary {
+            .btn-primary {
 
                 padding: 1.25rem 2rem !important;
 
@@ -2870,7 +2866,150 @@
 
         }
 
-    </style>
+    
+        /* --- NILUS INSTITUTIONAL THEME --- */
+        :root {
+            --color-black: #050505;
+            --color-soft-black: #111827;
+            --color-navy: #0F172A;
+            --color-body-grey: #4B5563;
+            --color-muted: #6B7280;
+            --color-border: #E5E7EB;
+            --color-soft-border: #DDE3EA;
+            --color-bg: #F6F7F8;
+            --color-accent: #2563EB;
+            --color-gold: #B45309;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--color-bg);
+            color: var(--color-soft-black);
+            overflow-x: hidden;
+            letter-spacing: -0.01em;
+        }
+
+        h1, h2, h3, h4, h5, h6, .nav-item {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            color: var(--color-black);
+            letter-spacing: -0.02em;
+        }
+
+        .background-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 1;
+            background: linear-gradient(
+                90deg,
+                rgba(246,247,248,0.96) 0%,
+                rgba(246,247,248,0.88) 42%,
+                rgba(246,247,248,0.66) 72%,
+                rgba(246,247,248,0.48) 100%
+            );
+            pointer-events: none;
+        }
+
+        .global-dna-bg, .hero-video {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 0;
+            opacity: 0.22 !important;
+            filter: grayscale(100%) contrast(1.05) brightness(1.08) !important;
+            pointer-events: none;
+            mix-blend-mode: normal !important;
+            mask-image: none !important;
+            -webkit-mask-image: none !important;
+            transform: none !important;
+        }
+
+        /* Fixes for main content z-index */
+        .page-content, nav, .pre-nav, main, #main-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .nilus-card, .profile-card, .stats-card-tile {
+            background: rgba(255, 255, 255, 0.86) !important;
+            border: 1px solid var(--color-border) !important;
+            border-radius: 24px !important;
+            box-shadow: 0 16px 45px rgba(15, 23, 42, 0.06) !important;
+            backdrop-filter: blur(10px) !important;
+            color: var(--color-soft-black) !important;
+        }
+
+        /* Primary Button */
+        .btn-primary, .auth-btn {
+            background: var(--color-soft-black) !important;
+            color: #FFFFFF !important;
+            border-radius: 16px !important;
+            font-weight: 700 !important;
+            border: none !important;
+            padding: 10px 24px;
+            transition: opacity 0.2s;
+        }
+        .btn-primary:hover, .auth-btn:hover {
+            opacity: 0.9;
+            transform: none !important;
+        }
+
+        /* Secondary Button */
+        .btn-secondary, .google-btn {
+            background: #FFFFFF !important;
+            border: 1px solid var(--color-border) !important;
+            color: var(--color-soft-black) !important;
+            border-radius: 16px !important;
+            font-weight: 600 !important;
+            padding: 10px 24px;
+        }
+        .btn-secondary:hover, .google-btn:hover {
+            background: #F9FAFB !important;
+        }
+
+        /* Action Button */
+        .btn-action {
+            background: var(--color-accent) !important;
+            color: white !important;
+            border-radius: 16px !important;
+            font-weight: 700 !important;
+            border: none !important;
+        }
+
+        /* Badges */
+        .nilus-badge {
+            border-radius: 999px !important;
+            padding: 8px 14px !important;
+            font-size: 11px !important;
+            font-weight: 800 !important;
+            letter-spacing: 0.12em !important;
+            text-transform: uppercase !important;
+            border: 1px solid var(--color-border);
+            background: #fff;
+            color: var(--color-muted);
+        }
+        .nilus-badge.active {
+            color: var(--color-accent) !important;
+            border-color: #BFDBFE !important;
+            background: #EFF6FF !important;
+        }
+        .nilus-badge.research {
+            color: var(--color-gold) !important;
+            border-color: #FEF3C7 !important;
+            background: #FFFBEB !important;
+        }
+
+        /* Clean up specific elements */
+        .text-slate-400 { color: var(--color-muted) !important; }
+        .bg-slate-50, .bg-slate-900, .bg-slate-950, .bg-black { background: transparent !important; }
+        
+        /* Typography overrides */
+        p { color: var(--color-body-grey); }
+        .uppercase { letter-spacing: 0.05em; font-family: 'Inter', sans-serif; }
+    
+</style>
 
     <style>
         /* FORCE HORIZONTAL STATS - ALWAYS */
@@ -2882,7 +3021,150 @@
         .stats-grid > div {
             flex: 1 1 200px !important;
         }
-    </style>
+    
+        /* --- NILUS INSTITUTIONAL THEME --- */
+        :root {
+            --color-black: #050505;
+            --color-soft-black: #111827;
+            --color-navy: #0F172A;
+            --color-body-grey: #4B5563;
+            --color-muted: #6B7280;
+            --color-border: #E5E7EB;
+            --color-soft-border: #DDE3EA;
+            --color-bg: #F6F7F8;
+            --color-accent: #2563EB;
+            --color-gold: #B45309;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--color-bg);
+            color: var(--color-soft-black);
+            overflow-x: hidden;
+            letter-spacing: -0.01em;
+        }
+
+        h1, h2, h3, h4, h5, h6, .nav-item {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            color: var(--color-black);
+            letter-spacing: -0.02em;
+        }
+
+        .background-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 1;
+            background: linear-gradient(
+                90deg,
+                rgba(246,247,248,0.96) 0%,
+                rgba(246,247,248,0.88) 42%,
+                rgba(246,247,248,0.66) 72%,
+                rgba(246,247,248,0.48) 100%
+            );
+            pointer-events: none;
+        }
+
+        .global-dna-bg, .hero-video {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 0;
+            opacity: 0.22 !important;
+            filter: grayscale(100%) contrast(1.05) brightness(1.08) !important;
+            pointer-events: none;
+            mix-blend-mode: normal !important;
+            mask-image: none !important;
+            -webkit-mask-image: none !important;
+            transform: none !important;
+        }
+
+        /* Fixes for main content z-index */
+        .page-content, nav, .pre-nav, main, #main-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .nilus-card, .profile-card, .stats-card-tile {
+            background: rgba(255, 255, 255, 0.86) !important;
+            border: 1px solid var(--color-border) !important;
+            border-radius: 24px !important;
+            box-shadow: 0 16px 45px rgba(15, 23, 42, 0.06) !important;
+            backdrop-filter: blur(10px) !important;
+            color: var(--color-soft-black) !important;
+        }
+
+        /* Primary Button */
+        .btn-primary, .auth-btn {
+            background: var(--color-soft-black) !important;
+            color: #FFFFFF !important;
+            border-radius: 16px !important;
+            font-weight: 700 !important;
+            border: none !important;
+            padding: 10px 24px;
+            transition: opacity 0.2s;
+        }
+        .btn-primary:hover, .auth-btn:hover {
+            opacity: 0.9;
+            transform: none !important;
+        }
+
+        /* Secondary Button */
+        .btn-secondary, .google-btn {
+            background: #FFFFFF !important;
+            border: 1px solid var(--color-border) !important;
+            color: var(--color-soft-black) !important;
+            border-radius: 16px !important;
+            font-weight: 600 !important;
+            padding: 10px 24px;
+        }
+        .btn-secondary:hover, .google-btn:hover {
+            background: #F9FAFB !important;
+        }
+
+        /* Action Button */
+        .btn-action {
+            background: var(--color-accent) !important;
+            color: white !important;
+            border-radius: 16px !important;
+            font-weight: 700 !important;
+            border: none !important;
+        }
+
+        /* Badges */
+        .nilus-badge {
+            border-radius: 999px !important;
+            padding: 8px 14px !important;
+            font-size: 11px !important;
+            font-weight: 800 !important;
+            letter-spacing: 0.12em !important;
+            text-transform: uppercase !important;
+            border: 1px solid var(--color-border);
+            background: #fff;
+            color: var(--color-muted);
+        }
+        .nilus-badge.active {
+            color: var(--color-accent) !important;
+            border-color: #BFDBFE !important;
+            background: #EFF6FF !important;
+        }
+        .nilus-badge.research {
+            color: var(--color-gold) !important;
+            border-color: #FEF3C7 !important;
+            background: #FFFBEB !important;
+        }
+
+        /* Clean up specific elements */
+        .text-slate-400 { color: var(--color-muted) !important; }
+        .bg-slate-50, .bg-slate-900, .bg-slate-950, .bg-black { background: transparent !important; }
+        
+        /* Typography overrides */
+        p { color: var(--color-body-grey); }
+        .uppercase { letter-spacing: 0.05em; font-family: 'Inter', sans-serif; }
+    
+</style>
 
     <style>
         /* Unified Light Mode Cascade Overrides */
@@ -3160,7 +3442,150 @@
             transform-style: preserve-3d;
             will-change: transform, box-shadow, border-color;
         }
-    </style>
+    
+        /* --- NILUS INSTITUTIONAL THEME --- */
+        :root {
+            --color-black: #050505;
+            --color-soft-black: #111827;
+            --color-navy: #0F172A;
+            --color-body-grey: #4B5563;
+            --color-muted: #6B7280;
+            --color-border: #E5E7EB;
+            --color-soft-border: #DDE3EA;
+            --color-bg: #F6F7F8;
+            --color-accent: #2563EB;
+            --color-gold: #B45309;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--color-bg);
+            color: var(--color-soft-black);
+            overflow-x: hidden;
+            letter-spacing: -0.01em;
+        }
+
+        h1, h2, h3, h4, h5, h6, .nav-item {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            color: var(--color-black);
+            letter-spacing: -0.02em;
+        }
+
+        .background-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 1;
+            background: linear-gradient(
+                90deg,
+                rgba(246,247,248,0.96) 0%,
+                rgba(246,247,248,0.88) 42%,
+                rgba(246,247,248,0.66) 72%,
+                rgba(246,247,248,0.48) 100%
+            );
+            pointer-events: none;
+        }
+
+        .global-dna-bg, .hero-video {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 0;
+            opacity: 0.22 !important;
+            filter: grayscale(100%) contrast(1.05) brightness(1.08) !important;
+            pointer-events: none;
+            mix-blend-mode: normal !important;
+            mask-image: none !important;
+            -webkit-mask-image: none !important;
+            transform: none !important;
+        }
+
+        /* Fixes for main content z-index */
+        .page-content, nav, .pre-nav, main, #main-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .nilus-card, .profile-card, .stats-card-tile {
+            background: rgba(255, 255, 255, 0.86) !important;
+            border: 1px solid var(--color-border) !important;
+            border-radius: 24px !important;
+            box-shadow: 0 16px 45px rgba(15, 23, 42, 0.06) !important;
+            backdrop-filter: blur(10px) !important;
+            color: var(--color-soft-black) !important;
+        }
+
+        /* Primary Button */
+        .btn-primary, .auth-btn {
+            background: var(--color-soft-black) !important;
+            color: #FFFFFF !important;
+            border-radius: 16px !important;
+            font-weight: 700 !important;
+            border: none !important;
+            padding: 10px 24px;
+            transition: opacity 0.2s;
+        }
+        .btn-primary:hover, .auth-btn:hover {
+            opacity: 0.9;
+            transform: none !important;
+        }
+
+        /* Secondary Button */
+        .btn-secondary, .google-btn {
+            background: #FFFFFF !important;
+            border: 1px solid var(--color-border) !important;
+            color: var(--color-soft-black) !important;
+            border-radius: 16px !important;
+            font-weight: 600 !important;
+            padding: 10px 24px;
+        }
+        .btn-secondary:hover, .google-btn:hover {
+            background: #F9FAFB !important;
+        }
+
+        /* Action Button */
+        .btn-action {
+            background: var(--color-accent) !important;
+            color: white !important;
+            border-radius: 16px !important;
+            font-weight: 700 !important;
+            border: none !important;
+        }
+
+        /* Badges */
+        .nilus-badge {
+            border-radius: 999px !important;
+            padding: 8px 14px !important;
+            font-size: 11px !important;
+            font-weight: 800 !important;
+            letter-spacing: 0.12em !important;
+            text-transform: uppercase !important;
+            border: 1px solid var(--color-border);
+            background: #fff;
+            color: var(--color-muted);
+        }
+        .nilus-badge.active {
+            color: var(--color-accent) !important;
+            border-color: #BFDBFE !important;
+            background: #EFF6FF !important;
+        }
+        .nilus-badge.research {
+            color: var(--color-gold) !important;
+            border-color: #FEF3C7 !important;
+            background: #FFFBEB !important;
+        }
+
+        /* Clean up specific elements */
+        .text-slate-400 { color: var(--color-muted) !important; }
+        .bg-slate-50, .bg-slate-900, .bg-slate-950, .bg-black { background: transparent !important; }
+        
+        /* Typography overrides */
+        p { color: var(--color-body-grey); }
+        .uppercase { letter-spacing: 0.05em; font-family: 'Inter', sans-serif; }
+    
+</style>
     <!-- Global Mobile Responsiveness Patch -->
     <style>
         @media (max-width: 768px) {
@@ -3191,12 +3616,155 @@
                 padding: 1rem !important;
             }
         }
-    </style>
+    
+        /* --- NILUS INSTITUTIONAL THEME --- */
+        :root {
+            --color-black: #050505;
+            --color-soft-black: #111827;
+            --color-navy: #0F172A;
+            --color-body-grey: #4B5563;
+            --color-muted: #6B7280;
+            --color-border: #E5E7EB;
+            --color-soft-border: #DDE3EA;
+            --color-bg: #F6F7F8;
+            --color-accent: #2563EB;
+            --color-gold: #B45309;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--color-bg);
+            color: var(--color-soft-black);
+            overflow-x: hidden;
+            letter-spacing: -0.01em;
+        }
+
+        h1, h2, h3, h4, h5, h6, .nav-item {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            color: var(--color-black);
+            letter-spacing: -0.02em;
+        }
+
+        .background-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 1;
+            background: linear-gradient(
+                90deg,
+                rgba(246,247,248,0.96) 0%,
+                rgba(246,247,248,0.88) 42%,
+                rgba(246,247,248,0.66) 72%,
+                rgba(246,247,248,0.48) 100%
+            );
+            pointer-events: none;
+        }
+
+        .global-dna-bg, .hero-video {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 0;
+            opacity: 0.22 !important;
+            filter: grayscale(100%) contrast(1.05) brightness(1.08) !important;
+            pointer-events: none;
+            mix-blend-mode: normal !important;
+            mask-image: none !important;
+            -webkit-mask-image: none !important;
+            transform: none !important;
+        }
+
+        /* Fixes for main content z-index */
+        .page-content, nav, .pre-nav, main, #main-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .nilus-card, .profile-card, .stats-card-tile {
+            background: rgba(255, 255, 255, 0.86) !important;
+            border: 1px solid var(--color-border) !important;
+            border-radius: 24px !important;
+            box-shadow: 0 16px 45px rgba(15, 23, 42, 0.06) !important;
+            backdrop-filter: blur(10px) !important;
+            color: var(--color-soft-black) !important;
+        }
+
+        /* Primary Button */
+        .btn-primary, .auth-btn {
+            background: var(--color-soft-black) !important;
+            color: #FFFFFF !important;
+            border-radius: 16px !important;
+            font-weight: 700 !important;
+            border: none !important;
+            padding: 10px 24px;
+            transition: opacity 0.2s;
+        }
+        .btn-primary:hover, .auth-btn:hover {
+            opacity: 0.9;
+            transform: none !important;
+        }
+
+        /* Secondary Button */
+        .btn-secondary, .google-btn {
+            background: #FFFFFF !important;
+            border: 1px solid var(--color-border) !important;
+            color: var(--color-soft-black) !important;
+            border-radius: 16px !important;
+            font-weight: 600 !important;
+            padding: 10px 24px;
+        }
+        .btn-secondary:hover, .google-btn:hover {
+            background: #F9FAFB !important;
+        }
+
+        /* Action Button */
+        .btn-action {
+            background: var(--color-accent) !important;
+            color: white !important;
+            border-radius: 16px !important;
+            font-weight: 700 !important;
+            border: none !important;
+        }
+
+        /* Badges */
+        .nilus-badge {
+            border-radius: 999px !important;
+            padding: 8px 14px !important;
+            font-size: 11px !important;
+            font-weight: 800 !important;
+            letter-spacing: 0.12em !important;
+            text-transform: uppercase !important;
+            border: 1px solid var(--color-border);
+            background: #fff;
+            color: var(--color-muted);
+        }
+        .nilus-badge.active {
+            color: var(--color-accent) !important;
+            border-color: #BFDBFE !important;
+            background: #EFF6FF !important;
+        }
+        .nilus-badge.research {
+            color: var(--color-gold) !important;
+            border-color: #FEF3C7 !important;
+            background: #FFFBEB !important;
+        }
+
+        /* Clean up specific elements */
+        .text-slate-400 { color: var(--color-muted) !important; }
+        .bg-slate-50, .bg-slate-900, .bg-slate-950, .bg-black { background: transparent !important; }
+        
+        /* Typography overrides */
+        p { color: var(--color-body-grey); }
+        .uppercase { letter-spacing: 0.05em; font-family: 'Inter', sans-serif; }
+    
+</style>
 </head>
 
 
 
-<body class="light-mode-profile">
+<body class="page-content" class="light-mode-profile">
 
     <!-- GLOBAL DNA BACKGROUND (BULLETPROOF LOCAL CASCADE) -->
 
@@ -3495,7 +4063,7 @@
 
                 <div id="auth-user-status" class="hidden flex flex-row items-center gap-4">
 
-                    <div class="flex items-center gap-3 px-4 py-2 bg-slate-50 border border-slate-100 rounded-full">
+                    <div class="flex items-center gap-3 nilus-badge">
 
                         <div class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
 
@@ -3559,7 +4127,7 @@
             
             <!-- Left Text Content Column -->
             <div class="hero-text-col" style="width: 100%; max-width: 800px;">
-                <div class="flex items-center gap-2 px-3 py-1 bg-blue-50/70 border border-blue-100/50 rounded-full mb-6">
+                <div class="flex items-center gap-2 nilus-badge active mb-6">
                     <span class="w-1.5 h-1.5 bg-blue-600 rounded-full animate-pulse"></span>
                     <span style="font-size: 8.5px; font-weight: 900; color: #2563eb; text-transform: uppercase; letter-spacing: 0.25em; line-height: 1;">COMPUTATIONAL EPIGENETICS PLATFORM</span>
                 </div>
@@ -3895,7 +4463,7 @@
 
                 <div class="w-full lg:w-1/3">
 
-                    <div class="bg-slate-50 border border-slate-200 rounded-[32px] p-10 shadow-sm sticky top-24">
+                    <div class="nilus-card p-10 shadow-sm sticky top-24">
 
                         <div class="flex flex-col items-center text-center mb-10">
 
@@ -3935,7 +4503,7 @@
 
                                 <div class="group relative">
 
-                                    <div class="bg-white border border-slate-200 p-3 rounded-xl flex items-center justify-center grayscale hover:grayscale-0 transition-all cursor-help">
+                                    <div class="nilus-card flex items-center justify-center grayscale hover:grayscale-0 transition-all cursor-help">
 
                                         <i data-lucide="dna" class="w-6 h-6 text-blue-600"></i>
 
@@ -3947,7 +4515,7 @@
 
                                 <div class="group relative">
 
-                                    <div class="bg-white border border-slate-200 p-3 rounded-xl flex items-center justify-center grayscale hover:grayscale-0 transition-all cursor-help">
+                                    <div class="nilus-card flex items-center justify-center grayscale hover:grayscale-0 transition-all cursor-help">
 
                                         <i data-lucide="zap" class="w-6 h-6 text-amber-500"></i>
 
@@ -3959,7 +4527,7 @@
 
                                 <div class="group relative">
 
-                                    <div class="bg-white border border-slate-200 p-3 rounded-xl flex items-center justify-center grayscale hover:grayscale-0 transition-all cursor-help">
+                                    <div class="nilus-card flex items-center justify-center grayscale hover:grayscale-0 transition-all cursor-help">
 
                                         <i data-lucide="shield-check" class="w-6 h-6 text-emerald-600"></i>
 
@@ -4011,7 +4579,7 @@
 
                             <!-- Activity Item 1 -->
 
-                            <div class="bg-slate-50 border border-slate-200 rounded-3xl p-6 flex items-center gap-6 hover:border-blue-300 transition-all group">
+                            <div class="nilus-card p-6 flex items-center gap-6 hover:border-blue-300 transition-all group">
 
                                 <div class="w-14 h-14 bg-white border border-slate-100 rounded-2xl flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform">
 
@@ -4041,7 +4609,7 @@
 
                             <!-- Activity Item 2 -->
 
-                            <div class="bg-slate-50 border border-slate-200 rounded-3xl p-6 flex items-center gap-6 hover:border-indigo-300 transition-all group">
+                            <div class="nilus-card p-6 flex items-center gap-6 hover:border-indigo-300 transition-all group">
 
                                 <div class="w-14 h-14 bg-white border border-slate-100 rounded-2xl flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform">
 
@@ -4075,7 +4643,7 @@
 
                     <!-- Compute Resources -->
 
-                    <div class="bg-slate-950 rounded-[40px] p-12 relative overflow-hidden">
+                    <div class="nilus-card p-12 relative overflow-hidden">
 
                         <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(59,130,246,0.1),transparent)] pointer-events-none"></div>
 
@@ -4203,7 +4771,150 @@
 
             #core-modules-section .cm-card:nth-child(4){animation:cm-fade-up 0.8s 0.55s both}
 
-        </style>
+        
+        /* --- NILUS INSTITUTIONAL THEME --- */
+        :root {
+            --color-black: #050505;
+            --color-soft-black: #111827;
+            --color-navy: #0F172A;
+            --color-body-grey: #4B5563;
+            --color-muted: #6B7280;
+            --color-border: #E5E7EB;
+            --color-soft-border: #DDE3EA;
+            --color-bg: #F6F7F8;
+            --color-accent: #2563EB;
+            --color-gold: #B45309;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--color-bg);
+            color: var(--color-soft-black);
+            overflow-x: hidden;
+            letter-spacing: -0.01em;
+        }
+
+        h1, h2, h3, h4, h5, h6, .nav-item {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            color: var(--color-black);
+            letter-spacing: -0.02em;
+        }
+
+        .background-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 1;
+            background: linear-gradient(
+                90deg,
+                rgba(246,247,248,0.96) 0%,
+                rgba(246,247,248,0.88) 42%,
+                rgba(246,247,248,0.66) 72%,
+                rgba(246,247,248,0.48) 100%
+            );
+            pointer-events: none;
+        }
+
+        .global-dna-bg, .hero-video {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 0;
+            opacity: 0.22 !important;
+            filter: grayscale(100%) contrast(1.05) brightness(1.08) !important;
+            pointer-events: none;
+            mix-blend-mode: normal !important;
+            mask-image: none !important;
+            -webkit-mask-image: none !important;
+            transform: none !important;
+        }
+
+        /* Fixes for main content z-index */
+        .page-content, nav, .pre-nav, main, #main-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .nilus-card, .profile-card, .stats-card-tile {
+            background: rgba(255, 255, 255, 0.86) !important;
+            border: 1px solid var(--color-border) !important;
+            border-radius: 24px !important;
+            box-shadow: 0 16px 45px rgba(15, 23, 42, 0.06) !important;
+            backdrop-filter: blur(10px) !important;
+            color: var(--color-soft-black) !important;
+        }
+
+        /* Primary Button */
+        .btn-primary, .auth-btn {
+            background: var(--color-soft-black) !important;
+            color: #FFFFFF !important;
+            border-radius: 16px !important;
+            font-weight: 700 !important;
+            border: none !important;
+            padding: 10px 24px;
+            transition: opacity 0.2s;
+        }
+        .btn-primary:hover, .auth-btn:hover {
+            opacity: 0.9;
+            transform: none !important;
+        }
+
+        /* Secondary Button */
+        .btn-secondary, .google-btn {
+            background: #FFFFFF !important;
+            border: 1px solid var(--color-border) !important;
+            color: var(--color-soft-black) !important;
+            border-radius: 16px !important;
+            font-weight: 600 !important;
+            padding: 10px 24px;
+        }
+        .btn-secondary:hover, .google-btn:hover {
+            background: #F9FAFB !important;
+        }
+
+        /* Action Button */
+        .btn-action {
+            background: var(--color-accent) !important;
+            color: white !important;
+            border-radius: 16px !important;
+            font-weight: 700 !important;
+            border: none !important;
+        }
+
+        /* Badges */
+        .nilus-badge {
+            border-radius: 999px !important;
+            padding: 8px 14px !important;
+            font-size: 11px !important;
+            font-weight: 800 !important;
+            letter-spacing: 0.12em !important;
+            text-transform: uppercase !important;
+            border: 1px solid var(--color-border);
+            background: #fff;
+            color: var(--color-muted);
+        }
+        .nilus-badge.active {
+            color: var(--color-accent) !important;
+            border-color: #BFDBFE !important;
+            background: #EFF6FF !important;
+        }
+        .nilus-badge.research {
+            color: var(--color-gold) !important;
+            border-color: #FEF3C7 !important;
+            background: #FFFBEB !important;
+        }
+
+        /* Clean up specific elements */
+        .text-slate-400 { color: var(--color-muted) !important; }
+        .bg-slate-50, .bg-slate-900, .bg-slate-950, .bg-black { background: transparent !important; }
+        
+        /* Typography overrides */
+        p { color: var(--color-body-grey); }
+        .uppercase { letter-spacing: 0.05em; font-family: 'Inter', sans-serif; }
+    
+</style>
 
         <div class="max-w-7xl mx-auto px-12">
 
@@ -5122,7 +5833,150 @@
 
                 .cap-orb-fixed { position: absolute; border-radius: 50%; filter: blur(40px); opacity: 0.4; }
 
-            </style>
+            
+        /* --- NILUS INSTITUTIONAL THEME --- */
+        :root {
+            --color-black: #050505;
+            --color-soft-black: #111827;
+            --color-navy: #0F172A;
+            --color-body-grey: #4B5563;
+            --color-muted: #6B7280;
+            --color-border: #E5E7EB;
+            --color-soft-border: #DDE3EA;
+            --color-bg: #F6F7F8;
+            --color-accent: #2563EB;
+            --color-gold: #B45309;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--color-bg);
+            color: var(--color-soft-black);
+            overflow-x: hidden;
+            letter-spacing: -0.01em;
+        }
+
+        h1, h2, h3, h4, h5, h6, .nav-item {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            color: var(--color-black);
+            letter-spacing: -0.02em;
+        }
+
+        .background-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 1;
+            background: linear-gradient(
+                90deg,
+                rgba(246,247,248,0.96) 0%,
+                rgba(246,247,248,0.88) 42%,
+                rgba(246,247,248,0.66) 72%,
+                rgba(246,247,248,0.48) 100%
+            );
+            pointer-events: none;
+        }
+
+        .global-dna-bg, .hero-video {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 0;
+            opacity: 0.22 !important;
+            filter: grayscale(100%) contrast(1.05) brightness(1.08) !important;
+            pointer-events: none;
+            mix-blend-mode: normal !important;
+            mask-image: none !important;
+            -webkit-mask-image: none !important;
+            transform: none !important;
+        }
+
+        /* Fixes for main content z-index */
+        .page-content, nav, .pre-nav, main, #main-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .nilus-card, .profile-card, .stats-card-tile {
+            background: rgba(255, 255, 255, 0.86) !important;
+            border: 1px solid var(--color-border) !important;
+            border-radius: 24px !important;
+            box-shadow: 0 16px 45px rgba(15, 23, 42, 0.06) !important;
+            backdrop-filter: blur(10px) !important;
+            color: var(--color-soft-black) !important;
+        }
+
+        /* Primary Button */
+        .btn-primary, .auth-btn {
+            background: var(--color-soft-black) !important;
+            color: #FFFFFF !important;
+            border-radius: 16px !important;
+            font-weight: 700 !important;
+            border: none !important;
+            padding: 10px 24px;
+            transition: opacity 0.2s;
+        }
+        .btn-primary:hover, .auth-btn:hover {
+            opacity: 0.9;
+            transform: none !important;
+        }
+
+        /* Secondary Button */
+        .btn-secondary, .google-btn {
+            background: #FFFFFF !important;
+            border: 1px solid var(--color-border) !important;
+            color: var(--color-soft-black) !important;
+            border-radius: 16px !important;
+            font-weight: 600 !important;
+            padding: 10px 24px;
+        }
+        .btn-secondary:hover, .google-btn:hover {
+            background: #F9FAFB !important;
+        }
+
+        /* Action Button */
+        .btn-action {
+            background: var(--color-accent) !important;
+            color: white !important;
+            border-radius: 16px !important;
+            font-weight: 700 !important;
+            border: none !important;
+        }
+
+        /* Badges */
+        .nilus-badge {
+            border-radius: 999px !important;
+            padding: 8px 14px !important;
+            font-size: 11px !important;
+            font-weight: 800 !important;
+            letter-spacing: 0.12em !important;
+            text-transform: uppercase !important;
+            border: 1px solid var(--color-border);
+            background: #fff;
+            color: var(--color-muted);
+        }
+        .nilus-badge.active {
+            color: var(--color-accent) !important;
+            border-color: #BFDBFE !important;
+            background: #EFF6FF !important;
+        }
+        .nilus-badge.research {
+            color: var(--color-gold) !important;
+            border-color: #FEF3C7 !important;
+            background: #FFFBEB !important;
+        }
+
+        /* Clean up specific elements */
+        .text-slate-400 { color: var(--color-muted) !important; }
+        .bg-slate-50, .bg-slate-900, .bg-slate-950, .bg-black { background: transparent !important; }
+        
+        /* Typography overrides */
+        p { color: var(--color-body-grey); }
+        .uppercase { letter-spacing: 0.05em; font-family: 'Inter', sans-serif; }
+    
+</style>
 
 
 
@@ -5453,7 +6307,150 @@
                     display: inline-block;
                     animation: pulse 2s infinite;
                 }
-            </style>
+            
+        /* --- NILUS INSTITUTIONAL THEME --- */
+        :root {
+            --color-black: #050505;
+            --color-soft-black: #111827;
+            --color-navy: #0F172A;
+            --color-body-grey: #4B5563;
+            --color-muted: #6B7280;
+            --color-border: #E5E7EB;
+            --color-soft-border: #DDE3EA;
+            --color-bg: #F6F7F8;
+            --color-accent: #2563EB;
+            --color-gold: #B45309;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--color-bg);
+            color: var(--color-soft-black);
+            overflow-x: hidden;
+            letter-spacing: -0.01em;
+        }
+
+        h1, h2, h3, h4, h5, h6, .nav-item {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            color: var(--color-black);
+            letter-spacing: -0.02em;
+        }
+
+        .background-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 1;
+            background: linear-gradient(
+                90deg,
+                rgba(246,247,248,0.96) 0%,
+                rgba(246,247,248,0.88) 42%,
+                rgba(246,247,248,0.66) 72%,
+                rgba(246,247,248,0.48) 100%
+            );
+            pointer-events: none;
+        }
+
+        .global-dna-bg, .hero-video {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 0;
+            opacity: 0.22 !important;
+            filter: grayscale(100%) contrast(1.05) brightness(1.08) !important;
+            pointer-events: none;
+            mix-blend-mode: normal !important;
+            mask-image: none !important;
+            -webkit-mask-image: none !important;
+            transform: none !important;
+        }
+
+        /* Fixes for main content z-index */
+        .page-content, nav, .pre-nav, main, #main-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .nilus-card, .profile-card, .stats-card-tile {
+            background: rgba(255, 255, 255, 0.86) !important;
+            border: 1px solid var(--color-border) !important;
+            border-radius: 24px !important;
+            box-shadow: 0 16px 45px rgba(15, 23, 42, 0.06) !important;
+            backdrop-filter: blur(10px) !important;
+            color: var(--color-soft-black) !important;
+        }
+
+        /* Primary Button */
+        .btn-primary, .auth-btn {
+            background: var(--color-soft-black) !important;
+            color: #FFFFFF !important;
+            border-radius: 16px !important;
+            font-weight: 700 !important;
+            border: none !important;
+            padding: 10px 24px;
+            transition: opacity 0.2s;
+        }
+        .btn-primary:hover, .auth-btn:hover {
+            opacity: 0.9;
+            transform: none !important;
+        }
+
+        /* Secondary Button */
+        .btn-secondary, .google-btn {
+            background: #FFFFFF !important;
+            border: 1px solid var(--color-border) !important;
+            color: var(--color-soft-black) !important;
+            border-radius: 16px !important;
+            font-weight: 600 !important;
+            padding: 10px 24px;
+        }
+        .btn-secondary:hover, .google-btn:hover {
+            background: #F9FAFB !important;
+        }
+
+        /* Action Button */
+        .btn-action {
+            background: var(--color-accent) !important;
+            color: white !important;
+            border-radius: 16px !important;
+            font-weight: 700 !important;
+            border: none !important;
+        }
+
+        /* Badges */
+        .nilus-badge {
+            border-radius: 999px !important;
+            padding: 8px 14px !important;
+            font-size: 11px !important;
+            font-weight: 800 !important;
+            letter-spacing: 0.12em !important;
+            text-transform: uppercase !important;
+            border: 1px solid var(--color-border);
+            background: #fff;
+            color: var(--color-muted);
+        }
+        .nilus-badge.active {
+            color: var(--color-accent) !important;
+            border-color: #BFDBFE !important;
+            background: #EFF6FF !important;
+        }
+        .nilus-badge.research {
+            color: var(--color-gold) !important;
+            border-color: #FEF3C7 !important;
+            background: #FFFBEB !important;
+        }
+
+        /* Clean up specific elements */
+        .text-slate-400 { color: var(--color-muted) !important; }
+        .bg-slate-50, .bg-slate-900, .bg-slate-950, .bg-black { background: transparent !important; }
+        
+        /* Typography overrides */
+        p { color: var(--color-body-grey); }
+        .uppercase { letter-spacing: 0.05em; font-family: 'Inter', sans-serif; }
+    
+</style>
 
             <div class="mb-16">
                 <div style="display: inline-flex; align-items: center; gap: 8px; background: rgba(37, 99, 235, 0.06); border: 1px solid rgba(37, 99, 235, 0.15); padding: 6px 16px; border-radius: 999px; margin-bottom: 1.25rem;">
@@ -6327,7 +7324,150 @@
 
         }
 
-    </style>
+    
+        /* --- NILUS INSTITUTIONAL THEME --- */
+        :root {
+            --color-black: #050505;
+            --color-soft-black: #111827;
+            --color-navy: #0F172A;
+            --color-body-grey: #4B5563;
+            --color-muted: #6B7280;
+            --color-border: #E5E7EB;
+            --color-soft-border: #DDE3EA;
+            --color-bg: #F6F7F8;
+            --color-accent: #2563EB;
+            --color-gold: #B45309;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--color-bg);
+            color: var(--color-soft-black);
+            overflow-x: hidden;
+            letter-spacing: -0.01em;
+        }
+
+        h1, h2, h3, h4, h5, h6, .nav-item {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            color: var(--color-black);
+            letter-spacing: -0.02em;
+        }
+
+        .background-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 1;
+            background: linear-gradient(
+                90deg,
+                rgba(246,247,248,0.96) 0%,
+                rgba(246,247,248,0.88) 42%,
+                rgba(246,247,248,0.66) 72%,
+                rgba(246,247,248,0.48) 100%
+            );
+            pointer-events: none;
+        }
+
+        .global-dna-bg, .hero-video {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 0;
+            opacity: 0.22 !important;
+            filter: grayscale(100%) contrast(1.05) brightness(1.08) !important;
+            pointer-events: none;
+            mix-blend-mode: normal !important;
+            mask-image: none !important;
+            -webkit-mask-image: none !important;
+            transform: none !important;
+        }
+
+        /* Fixes for main content z-index */
+        .page-content, nav, .pre-nav, main, #main-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .nilus-card, .profile-card, .stats-card-tile {
+            background: rgba(255, 255, 255, 0.86) !important;
+            border: 1px solid var(--color-border) !important;
+            border-radius: 24px !important;
+            box-shadow: 0 16px 45px rgba(15, 23, 42, 0.06) !important;
+            backdrop-filter: blur(10px) !important;
+            color: var(--color-soft-black) !important;
+        }
+
+        /* Primary Button */
+        .btn-primary, .auth-btn {
+            background: var(--color-soft-black) !important;
+            color: #FFFFFF !important;
+            border-radius: 16px !important;
+            font-weight: 700 !important;
+            border: none !important;
+            padding: 10px 24px;
+            transition: opacity 0.2s;
+        }
+        .btn-primary:hover, .auth-btn:hover {
+            opacity: 0.9;
+            transform: none !important;
+        }
+
+        /* Secondary Button */
+        .btn-secondary, .google-btn {
+            background: #FFFFFF !important;
+            border: 1px solid var(--color-border) !important;
+            color: var(--color-soft-black) !important;
+            border-radius: 16px !important;
+            font-weight: 600 !important;
+            padding: 10px 24px;
+        }
+        .btn-secondary:hover, .google-btn:hover {
+            background: #F9FAFB !important;
+        }
+
+        /* Action Button */
+        .btn-action {
+            background: var(--color-accent) !important;
+            color: white !important;
+            border-radius: 16px !important;
+            font-weight: 700 !important;
+            border: none !important;
+        }
+
+        /* Badges */
+        .nilus-badge {
+            border-radius: 999px !important;
+            padding: 8px 14px !important;
+            font-size: 11px !important;
+            font-weight: 800 !important;
+            letter-spacing: 0.12em !important;
+            text-transform: uppercase !important;
+            border: 1px solid var(--color-border);
+            background: #fff;
+            color: var(--color-muted);
+        }
+        .nilus-badge.active {
+            color: var(--color-accent) !important;
+            border-color: #BFDBFE !important;
+            background: #EFF6FF !important;
+        }
+        .nilus-badge.research {
+            color: var(--color-gold) !important;
+            border-color: #FEF3C7 !important;
+            background: #FFFBEB !important;
+        }
+
+        /* Clean up specific elements */
+        .text-slate-400 { color: var(--color-muted) !important; }
+        .bg-slate-50, .bg-slate-900, .bg-slate-950, .bg-black { background: transparent !important; }
+        
+        /* Typography overrides */
+        p { color: var(--color-body-grey); }
+        .uppercase { letter-spacing: 0.05em; font-family: 'Inter', sans-serif; }
+    
+</style>
 
     <div style="max-width: 80rem; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 2rem; flex-wrap: wrap;">
 
