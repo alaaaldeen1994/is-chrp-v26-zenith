@@ -1298,10 +1298,15 @@
       const bindingType = document.getElementById('boltz-binding-type').value;
       let manifest = { entities };
       if (bindingType !== 'none') {
-        const binderId = document.getElementById('boltz-binder-chain-id').value.trim();
+        let binderId = document.getElementById('boltz-binder-chain-id').value.trim();
+        if (!binderId) {
+          const proteinChain = boltzChains.find(c => c.type === 'protein');
+          binderId = proteinChain ? proteinChain.chain_id : (boltzChains[0] ? boltzChains[0].chain_id : 'A');
+        }
         const binding = { type: bindingType };
-        if (bindingType === 'ligand_protein_binding') binding.binder_chain_id = binderId || undefined;
-        if (bindingType === 'protein_protein_binding') binding.binder_chain_ids = binderId ? [binderId] : undefined;
+        // Set both formats for complete API robustness
+        binding.binder_chain_id = binderId;
+        binding.binder_chain_ids = [binderId];
         manifest.binding = binding;
       }
       return manifest;
@@ -1657,6 +1662,13 @@
               const bSelect = document.getElementById("boltz-binding-type");
               if (bSelect) {
                 bSelect.value = transferData.bindingType;
+                // Dispatch change event to toggle the hidden state of the binder chain ID row
+                bSelect.dispatchEvent(new Event('change'));
+              }
+              const binderInput = document.getElementById("boltz-binder-chain-id");
+              if (binderInput) {
+                const proteinChain = boltzChains.find(c => c.type === 'protein');
+                binderInput.value = proteinChain ? proteinChain.chain_id : 'A';
               }
             }
             
