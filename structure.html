@@ -847,7 +847,7 @@
             <div class="field">
               <div class="field-label">
                 <span>Chains &amp; Stoichiometry</span>
-                <span class="hint">protein · dna · rna · ligand</span>
+                <span class="hint">Protein · DNA · RNA · Ligand</span>
               </div>
               <div class="chain-list" id="chainList">
                 <!-- populated by JS -->
@@ -1296,11 +1296,11 @@ function renderChainList() {
         <div style="display:flex; align-items:center; gap:6px;">
           <div class="chain-id" style="width:20px; text-align:center;">${c.id}</div>
           <select class="select chain-type" style="width:110px; padding:4px 6px; font-size:10px; font-family:monospace;">
-            <option value="protein" ${c.type==='protein'?'selected':''}>protein</option>
-            <option value="dna" ${c.type==='dna'?'selected':''}>dna</option>
-            <option value="rna" ${c.type==='rna'?'selected':''}>rna</option>
-            <option value="ligand_ccd" ${c.type==='ligand_ccd'?'selected':''}>ligand (CCD)</option>
-            <option value="ligand_smiles" ${c.type==='ligand_smiles'?'selected':''}>ligand (SMILES)</option>
+            <option value="protein" ${c.type==='protein'?'selected':''}>Protein</option>
+            <option value="dna" ${c.type==='dna'?'selected':''}>DNA</option>
+            <option value="rna" ${c.type==='rna'?'selected':''}>RNA</option>
+            <option value="ligand_ccd" ${c.type==='ligand_ccd'?'selected':''}>Ligand (CCD)</option>
+            <option value="ligand_smiles" ${c.type==='ligand_smiles'?'selected':''}>Ligand (SMILES)</option>
           </select>
         </div>
         <div style="display:flex; align-items:center; gap:4px;">
@@ -1525,7 +1525,7 @@ function renderModel(style, colorScheme) {
   };
 
   if (style === 'cartoon') {
-    v.setStyle({ hetflag: false }, { cartoon: { colorfunc: plddtColorfunc, arrows: true, tubes: true, style: 'trace', thickness: 0.18 } });
+    v.setStyle({ hetflag: false }, { cartoon: { colorfunc: plddtColorfunc, arrows: true, tubes: true } });
     v.addStyle({ hetflag: true }, { stick: { colorscheme: 'Jmol', radius: 0.22 } });
   } else if (style === 'stick') {
     v.setStyle({}, { stick: { radius: 0.15, colorscheme: colorScheme === 'pLDDT' ? 'blueGreen' : 'default' } });
@@ -1893,7 +1893,7 @@ function initBindingViewer() {
   STATE.bindingViewer = viewer;
   const { pdb } = STATE.currentModel;
   viewer.addModel(pdb, 'pdb');
-  viewer.setStyle({}, { cartoon: { color: 0x222E44, style: 'trace', thickness: 0.2, opacity: 0.85 } });
+  viewer.setStyle({}, { cartoon: { color: 0x222E44, opacity: 0.85 } });
   viewer.setStyle({ hetflag: true }, { stick: { colorscheme: 'Jmol', radius: 0.22 }, sphere: { scale: 0.18 } });
   viewer.zoomTo();
   viewer.render();
