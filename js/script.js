@@ -2177,6 +2177,38 @@ const BiosimBridge = {
 
     async sendToBoltzComplex() {
         try {
+            // Auto-sync from window._lastResult if lastDiscovery is not yet populated
+            if (!this.lastDiscovery && window._lastResult) {
+                const res = window._lastResult;
+                const targetProfile = {};
+                if (res.mode === 'real') {
+                    if (res.pro && res.pro.length) {
+                        res.pro.forEach(g => {
+                            targetProfile[g.gene] = g.correlation_with_youth;
+                        });
+                    }
+                    if (res.aging && res.aging.length) {
+                        res.aging.forEach(g => {
+                            targetProfile[g.gene] = g.correlation_with_aging * -0.5;
+                        });
+                    }
+                } else if (res.mode === 'gpt') {
+                    const gptGenes = res.response?.genes || res.response?.top_genes || [];
+                    gptGenes.forEach((g, idx) => {
+                        const geneName = typeof g === 'string' ? g : (g.gene || g.name);
+                        const conf = typeof g === 'object' && g.confidence ? g.confidence / 100 : (1.0 - (idx * 0.1));
+                        if (geneName) {
+                            targetProfile[geneName] = Math.max(0.1, conf);
+                        }
+                    });
+                }
+                this.lastDiscovery = {
+                    query: res.query,
+                    target_profile: targetProfile,
+                    dna_motif_target: res.response?.dna_motif_target || "CCTGTGACTGTGGGGTTCA-CGCTCCCGGGTG"
+                };
+            }
+
             if (!this.lastDiscovery) {
                 BiosimUI.notify('Error', 'Run a discovery first.', 'err');
                 return;
