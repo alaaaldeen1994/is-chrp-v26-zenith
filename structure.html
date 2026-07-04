@@ -1514,7 +1514,6 @@ function renderModel(style, colorScheme) {
   if (!v || !STATE.currentModel || !STATE.currentModel.pdb) return;
   v.removeAllModels();
   const m = v.addModel(STATE.currentModel.pdb, 'pdb');
-  v.computeSecondaryStructure();
 
   const plddtColorfunc = function(atom) {
     let plddt = atom.b || 0;
@@ -1894,7 +1893,6 @@ function initBindingViewer() {
   STATE.bindingViewer = viewer;
   const { pdb } = STATE.currentModel;
   viewer.addModel(pdb, 'pdb');
-  viewer.computeSecondaryStructure();
   viewer.setStyle({}, { cartoon: { color: 0x222E44, opacity: 0.85 } });
   viewer.setStyle({ hetflag: true }, { stick: { colorscheme: 'Jmol', radius: 0.22 }, sphere: { scale: 0.18 } });
   viewer.zoomTo();
