@@ -1881,6 +1881,7 @@ function switchTab(name) {
 
 function initBindingViewer() {
   if (STATE.bindingViewer) return;
+  if (!STATE.currentModel || !STATE.currentModel.pdb) return;
   const element = $('#bindingviewer');
   const viewer = $3Dmol.createViewer(element, {
     backgroundColor: '0x080B11',
@@ -1951,7 +1952,44 @@ function init() {
   initViewer();
 
   log('Structure module initialized · ready for predictions', 'ok');
+
+  // Read URL params — discovery page sends ?tab=boltz
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('tab') === 'boltz') {
+    switchMode('boltz');
+  }
+
+  // Load session transfer data (from discovery suite)
   loadTransferData();
+
+  // Also check localStorage fallback (nilus_transfer_payload)
+  try {
+    const transferRaw = localStorage.getItem('nilus_transfer_payload');
+    if (transferRaw) {
+      const payload = JSON.parse(transferRaw);
+      log('Transfer payload detected from localStorage', 'info');
+      if (payload.chains && payload.chains.length) {
+        STATE.chains = payload.chains.map((c, idx) => ({
+          id: c.chain_id || String.fromCharCode(65 + idx),
+          type: c.type === 'ligand' ? 'ligand_ccd' : c.type,
+          copies: c.copies || 1,
+          value: c.value || ''
+        }));
+        switchMode('boltz');
+        renderChainList();
+        updateCostEstimate();
+        if (payload.binding_type && payload.binding_type !== 'none') {
+          const bSel = document.getElementById('boltz-binding-type');
+          if (bSel) { bSel.value = payload.binding_type; bSel.dispatchEvent(new Event('change')); }
+          const bInput = document.getElementById('boltz-binder-chain-id');
+          if (bInput) { bInput.value = payload.binder_chain || 'A'; }
+        }
+      }
+      localStorage.removeItem('nilus_transfer_payload');
+    }
+  } catch (e) {
+    console.error('Failed to parse localStorage transfer:', e);
+  }
 }
 
 document.addEventListener('DOMContentLoaded', init);
