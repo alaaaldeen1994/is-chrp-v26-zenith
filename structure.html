@@ -51,30 +51,6 @@
     --radius-sm:3px;
   }
 
-  body.theme-light{
-    --bg-void:#f8fafc;      /* Light gray void background */
-    --bg-base:#f1f5f9;      /* Light app background */
-    --bg-panel:#ffffff;     /* White sidebar/panels */
-    --bg-elev:#f8fafc;      /* Light gray inner background */
-    --bg-elev-2:#e2e8f0;    /* Muted gray hover state */
-    --grid-line:rgba(0,0,0,.03);
-    --border:#e2e8f0;       /* Light border */
-    --border-strong:#cbd5e1;
-    --border-accent:rgba(59,130,246,.25);
-    --text:#0f172a;         /* Dark text */
-    --text-mute:#475569;    /* Muted gray text */
-    --text-faint:#64748b;   /* Faint text */
-    --text-dim:#94a3b8;
-    --accent:#2563eb;       /* Professional Biotech Blue */
-    --accent-bright:#1d4ed8;
-    --accent-dim:#dbeafe;
-    --accent-glow:rgba(37,99,235,.1);
-    --amber:#d97706;
-    --coral:#dc2626;
-    --emerald:#16a34a;
-    --shadow-lg:0 10px 24px -12px rgba(15,23,42,.12);
-    --shadow-inset:inset 0 1px 0 rgba(255,255,255,.5);
-  }
 
   *{box-sizing:border-box;margin:0;padding:0}
   html,body{height:100%;overflow:hidden}
@@ -734,10 +710,7 @@
     <div class="subbar-spacer"></div>
     <div class="stat-chip"><span class="dot"></span><span class="label">Bridge</span><span class="val">online</span></div>
     <div class="stat-chip"><span class="label">GPU Pool</span><span class="val">7 / 12</span></div>
-    <button class="stat-chip" id="toggleTheme" title="Toggle Page Theme" style="cursor:pointer; background:var(--bg-panel); border:1px solid var(--border); color:var(--text); display:flex; align-items:center; gap:4px; font-weight:600;">
-      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
-      <span>Dark Mode</span>
-    </button>
+
     <div class="stat-chip"><span class="label">Session</span><span class="val" id="sessionId">ses-2f8a1c</span></div>
   </div>
 
