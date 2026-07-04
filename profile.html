@@ -632,7 +632,7 @@
 
 
 
-        .btn-launch {
+        .btn-action {
 
             background-color: #0f172a;
 
@@ -662,7 +662,7 @@
 
 
 
-        .btn-launch:hover {
+        .btn-action:hover {
 
             background-color: #0f172a;
 
@@ -1922,7 +1922,7 @@
 
 
 
-            .btn-launch {
+            .btn-action {
 
                 width: 100%;
 
@@ -1952,7 +1952,7 @@
 
 
 
-        .btn-launch {
+        .btn-action {
 
             width: 100%;
 
@@ -2622,7 +2622,7 @@
 
             /* Gap-heavy flex containers */
 
-            .flex.gap-8, .flex.gap-24, .flex.gap-6 {
+            .flex.gap-16, .flex.gap-24, .flex.gap-12 {
 
                 flex-direction: column !important;
 
@@ -2836,7 +2836,7 @@
 
             }
 
-            .btn-agency-primary {
+            .btn-primary {
 
                 padding: 1.25rem 2rem !important;
 
@@ -3162,7 +3162,7 @@
         @media (max-width: 768px) {
             html, body { overflow-x: hidden !important; width: 100vw !important; }
             .px-12, .px-24, .px-8, .px-6 { padding-left: 1.5rem !important; padding-right: 1.5rem !important; }
-            .py-6, .py-8 { padding-top: 4rem !important; padding-bottom: 4rem !important; }
+            .py-24, .py-16 { padding-top: 4rem !important; padding-bottom: 4rem !important; }
             .text-5xl { font-size: 2.25rem !important; line-height: 1.1 !important; }
             .text-6xl { font-size: 2.5rem !important; line-height: 1.1 !important; }
             .text-7xl { font-size: 2.75rem !important; line-height: 1.1 !important; }
@@ -3188,7 +3188,7 @@
             }
         }
     </style>
-<link rel="stylesheet" href="/css/nilus_institutional.css">
+<link rel="stylesheet" href="css/nilus_institutional.css">
 </head>
 
 
@@ -3481,7 +3481,7 @@
 
                     <button onclick="openLoginModal()"
 
-                        class="w-full md:w-auto hover: text-white px-8 py-3 text-[12px] font-black uppercase tracking-widest flex items-center justify-center gap-3 transition-all nilus-card">
+                        class="w-full md:w-auto bg-slate-900 hover:bg-slate-800 text-white px-8 py-3 rounded-full text-[12px] font-black uppercase tracking-widest flex items-center justify-center gap-3 transition-all">
 
                         <i data-lucide="log-in" class="w-4 h-4"></i> Sign In
 
@@ -3492,9 +3492,9 @@
 
                 <div id="auth-user-status" class="hidden flex flex-row items-center gap-4">
 
-                    <div class="nilus-badge">
+                    <div class="flex items-center gap-3 px-4 py-2 bg-slate-50 border border-slate-100 rounded-full nilus-card nilus-badge">
 
-                        <div class="nilus-badge active"></div>
+                        <div class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
 
                         <span id="profile-name"
 
@@ -3524,7 +3524,7 @@
     </div>
 
     <!-- Premium Mobile Drawer Menu -->
-    <div id="mobile-menu-drawer" class="fixed inset-y-0 right-0 w-[280px] bg-white/95 z-[999] transform translate-x-full transition-transform duration-300 ease-in-out flex flex-col p-8 justify-between nilus-card">
+    <div id="mobile-menu-drawer" class="fixed inset-y-0 right-0 w-[280px] bg-white/95 backdrop-blur-xl border-l border-slate-100 shadow-2xl z-[999] transform translate-x-full transition-transform duration-300 ease-in-out flex flex-col p-8 justify-between nilus-card">
         <div class="flex flex-col gap-6 pt-16">
             <a href="#" onclick="toggleMobileMenu(); checkAuthAndRedirect('index.html'); return false;" class="text-[14px] font-black text-slate-900 uppercase tracking-widest hover:text-blue-600 transition-colors">Mainframe</a>
             
@@ -3549,15 +3549,15 @@
     </div>
     
     <!-- Backdrop Overlay -->
-    <div id="mobile-menu-backdrop" onclick="toggleMobileMenu()" class="fixed inset-0 z-[998] hidden opacity-0 transition-opacity duration-300 nilus-card"></div>
+    <div id="mobile-menu-backdrop" onclick="toggleMobileMenu()" class="fixed inset-0 bg-slate-900/10 backdrop-blur-sm z-[998] hidden opacity-0 transition-opacity duration-300 nilus-card"></div>
     <!-- Hero Section -->
     <section class="hero-section">
         <div class="hero-container animate-fade-in-up">
             
             <!-- Left Text Content Column -->
             <div class="hero-text-col" style="width: 100%; max-width: 800px;">
-                <div class="nilus-badge active">
-                    <span class="nilus-badge active"></span>
+                <div class="flex items-center gap-2 px-3 py-1 bg-blue-50/70 border border-blue-100/50 rounded-full mb-6 nilus-badge active">
+                    <span class="w-1.5 h-1.5 bg-blue-600 rounded-full animate-pulse"></span>
                     <span style="font-size: 8.5px; font-weight: 900; color: #2563eb; text-transform: uppercase; letter-spacing: 0.25em; line-height: 1;">COMPUTATIONAL EPIGENETICS PLATFORM</span>
                 </div>
                 
@@ -3882,17 +3882,17 @@
 
     <!-- RESEARCHER DASHBOARD (HIDDEN UNTIL LOGIN) -->
 
-    <section id="dashboard-view" class="hidden py-8 bg-white relative z-20">
+    <section id="dashboard-view" class="hidden py-16 bg-white relative z-20">
 
         <div class="max-w-7xl mx-auto px-12">
 
-            <div class="flex flex-col lg:flex-row gap-6">
+            <div class="flex flex-col lg:flex-row gap-12">
 
                 <!-- Left Column: Identity & Badges -->
 
                 <div class="w-full lg:w-1/3">
 
-                    <div class="] p-10 sticky top-24 nilus-card">
+                    <div class="bg-slate-50 border border-slate-200 rounded-[32px] p-10 shadow-sm sticky top-24 nilus-card">
 
                         <div class="flex flex-col items-center text-center mb-10">
 
@@ -3904,7 +3904,7 @@
 
                             <h2 id="dash-profile-name" class="text-3xl font-black mb-2 uppercase tracking-tighter" style="font-family: 'Outfit', sans-serif; color: #0f172a;">RESEARCHER</h2>
 
-                            <span class="nilus-badge active">Zenith v30.0 Lead</span>
+                            <span class="px-4 py-1.5 bg-blue-100 text-slate-900 text-[10px] font-black rounded-full uppercase tracking-widest nilus-badge active">Zenith v30.0 Lead</span>
 
                         </div>
 
@@ -3932,37 +3932,37 @@
 
                                 <div class="group relative">
 
-                                    <div class="bg-white border border-slate-200 p-3 rounded-xl flex items-center justify-center grayscale hover:grayscale-0 transition-all cursor-help">
+                                    <div class="bg-white border border-slate-200 p-3 rounded-xl flex items-center justify-center grayscale hover:grayscale-0 transition-all cursor-help nilus-card">
 
                                         <i data-lucide="dna" class="w-6 h-6 text-blue-600"></i>
 
                                     </div>
 
-                                    <div class="absolute -top-10 left-1/2 -translate-x-1/2 text-white text-[8px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap nilus-card">AF3 CERTIFIED</div>
+                                    <div class="absolute -top-10 left-1/2 -translate-x-1/2 bg-slate-900 text-white text-[8px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap nilus-card">AF3 CERTIFIED</div>
 
                                 </div>
 
                                 <div class="group relative">
 
-                                    <div class="bg-white border border-slate-200 p-3 rounded-xl flex items-center justify-center grayscale hover:grayscale-0 transition-all cursor-help">
+                                    <div class="bg-white border border-slate-200 p-3 rounded-xl flex items-center justify-center grayscale hover:grayscale-0 transition-all cursor-help nilus-card">
 
                                         <i data-lucide="zap" class="w-6 h-6 text-amber-500"></i>
 
                                     </div>
 
-                                    <div class="absolute -top-10 left-1/2 -translate-x-1/2 text-white text-[8px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap nilus-card">DOSAGE MASTER</div>
+                                    <div class="absolute -top-10 left-1/2 -translate-x-1/2 bg-slate-900 text-white text-[8px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap nilus-card">DOSAGE MASTER</div>
 
                                 </div>
 
                                 <div class="group relative">
 
-                                    <div class="bg-white border border-slate-200 p-3 rounded-xl flex items-center justify-center grayscale hover:grayscale-0 transition-all cursor-help">
+                                    <div class="bg-white border border-slate-200 p-3 rounded-xl flex items-center justify-center grayscale hover:grayscale-0 transition-all cursor-help nilus-card">
 
                                         <i data-lucide="shield-check" class="w-6 h-6 text-emerald-600"></i>
 
                                     </div>
 
-                                    <div class="absolute -top-10 left-1/2 -translate-x-1/2 text-white text-[8px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap nilus-card">SAFETY AUDITOR</div>
+                                    <div class="absolute -top-10 left-1/2 -translate-x-1/2 bg-slate-900 text-white text-[8px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap nilus-card">SAFETY AUDITOR</div>
 
                                 </div>
 
@@ -4008,9 +4008,9 @@
 
                             <!-- Activity Item 1 -->
 
-                            <div class="p-6 flex items-center gap-6 hover: transition-all group nilus-card">
+                            <div class="bg-slate-50 border border-slate-200 rounded-3xl p-6 flex items-center gap-6 hover:border-blue-300 transition-all group nilus-card">
 
-                                <div class="w-14 h-14 bg-white flex items-center justify-center group-hover:scale-110 transition-transform nilus-card">
+                                <div class="w-14 h-14 bg-white border border-slate-100 rounded-2xl flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform nilus-card">
 
                                     <i data-lucide="microscope" class="w-6 h-6 text-blue-600"></i>
 
@@ -4030,7 +4030,7 @@
 
                                 </div>
 
-                                <a href="dosage_optimization_audit.json" target="_blank" class="nilus-badge">Audit JSON</a>
+                                <a href="dosage_optimization_audit.json" target="_blank" class="px-4 py-2 bg-white border border-slate-200 rounded-xl text-[9px] font-black uppercase tracking-widest hover:bg-slate-900 hover:text-white transition-all">Audit JSON</a>
 
                             </div>
 
@@ -4038,9 +4038,9 @@
 
                             <!-- Activity Item 2 -->
 
-                            <div class="p-6 flex items-center gap-6 hover: transition-all group nilus-card">
+                            <div class="bg-slate-50 border border-slate-200 rounded-3xl p-6 flex items-center gap-6 hover:border-indigo-300 transition-all group nilus-card">
 
-                                <div class="w-14 h-14 bg-white flex items-center justify-center group-hover:scale-110 transition-transform nilus-card">
+                                <div class="w-14 h-14 bg-white border border-slate-100 rounded-2xl flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform nilus-card">
 
                                     <i data-lucide="binary" class="w-6 h-6 text-indigo-600"></i>
 
@@ -4060,7 +4060,7 @@
 
                                 </div>
 
-                                <a href="v30_clinical_report.html#osk-synergy" target="_blank" class="nilus-badge">AF3 Job</a>
+                                <a href="v30_clinical_report.html#osk-synergy" target="_blank" class="px-4 py-2 bg-white border border-slate-200 rounded-xl text-[9px] font-black uppercase tracking-widest hover:bg-slate-900 hover:text-white transition-all">AF3 Job</a>
 
                             </div>
 
@@ -4072,7 +4072,7 @@
 
                     <!-- Compute Resources -->
 
-                    <div class="] p-12 relative overflow-hidden nilus-card">
+                    <div class="bg-slate-950 rounded-[40px] p-12 relative overflow-hidden nilus-card">
 
                         <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(59,130,246,0.1),transparent)] pointer-events-none"></div>
 
@@ -4088,7 +4088,7 @@
 
                                     <div class="text-2xl font-black text-white">84%</div>
 
-                                    <div class="nilus-badge">
+                                    <div class="h-1 bg-white/10 rounded-full mt-2 overflow-hidden nilus-card">
 
                                         <div class="h-full bg-blue-500 w-[84%]"></div>
 
@@ -4102,7 +4102,7 @@
 
                                     <div class="text-2xl font-black text-white">0.4ms</div>
 
-                                    <div class="nilus-badge">
+                                    <div class="h-1 bg-white/10 rounded-full mt-2 overflow-hidden nilus-card">
 
                                         <div class="h-full bg-indigo-500 w-[12%]"></div>
 
@@ -4116,7 +4116,7 @@
 
                                     <div class="text-2xl font-black text-white">PASS</div>
 
-                                    <div class="nilus-badge">
+                                    <div class="h-1 bg-white/10 rounded-full mt-2 overflow-hidden nilus-card">
 
                                         <div class="h-full bg-emerald-500 w-[100%]"></div>
 
@@ -4130,7 +4130,7 @@
 
                                     <div class="text-2xl font-black text-white">ACTIVE</div>
 
-                                    <div class="nilus-badge">
+                                    <div class="h-1 bg-white/10 rounded-full mt-2 overflow-hidden nilus-card">
 
                                         <div class="h-full bg-rose-500 w-[40%] animate-pulse"></div>
 
@@ -4154,7 +4154,7 @@
 
     <!-- CORE MODULES   CREATIVE ANIMATED SECTION -->
 
-    <section class="py-6 bg-transparent relative z-10 reveal" id="core-modules-section">
+    <section class="py-12 bg-transparent relative z-10 reveal" id="core-modules-section">
 
         <style>
 
@@ -4586,23 +4586,23 @@
 
         <!-- PLATFORM CAPABILITIES SECTION -->
 
-        <section class="py-6 bg-transparent relative z-10 reveal">
+        <section class="py-12 bg-transparent relative z-10 reveal">
 
             <div class="max-w-7xl mx-auto px-12">
 
                 <!-- GOLD STANDARD DISCOVERY CASE STUDY (INSTITUTIONAL REFERENCE) -->
 
-                <div class="mb-8 ] p-12 relative overflow-hidden group transition-all hover: nilus-card">
+                <div class="mb-16 bg-slate-50 border border-slate-200 rounded-[40px] p-12 relative overflow-hidden group shadow-sm transition-all hover:shadow-xl nilus-card">
 
-                    <div class="nilus-badge active"></div>
+                    <div class="absolute -right-20 -top-20 w-80 h-80 bg-blue-500/5 blur-[100px] rounded-full group-hover:bg-blue-500/10 transition-colors"></div>
 
-                    <div class="relative z-10 flex flex-col md:flex-row gap-6 items-center">
+                    <div class="relative z-10 flex flex-col md:flex-row gap-12 items-center">
 
                         <div class="flex-1">
 
                             <div class="flex items-center gap-3 mb-6">
 
-                                <span class="nilus-badge">Foundation Alpha</span>
+                                <span class="bg-slate-900 text-white text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-widest nilus-badge">Foundation Alpha</span>
 
                                 <span class="text-slate-400 text-[10px] font-bold uppercase tracking-widest">Case Study 01</span>
 
@@ -4618,7 +4618,7 @@
 
                             <div class="flex gap-4">
 
-                                <div class="bg-white p-4 flex-1 nilus-card">
+                                <div class="bg-white border border-slate-200 rounded-2xl p-4 flex-1 shadow-sm nilus-card">
 
                                     <div class="text-[9px] text-slate-400 font-black uppercase mb-1">Structural Fidelity</div>
 
@@ -4626,7 +4626,7 @@
 
                                 </div>
 
-                                <div class="bg-white p-4 flex-1 nilus-card">
+                                <div class="bg-white border border-slate-200 rounded-2xl p-4 flex-1 shadow-sm nilus-card">
 
                                     <div class="text-[9px] text-slate-400 font-black uppercase mb-1">Validation Mode</div>
 
@@ -4640,7 +4640,7 @@
 
                         <div class="w-full md:w-[450px] relative">
 
-                            <div class="p-1 overflow-hidden group/img nilus-card">
+                            <div class="bg-slate-900 rounded-3xl p-1 shadow-2xl overflow-hidden group/img nilus-card">
 
                                 <img src="assets/gggg.png" alt="Gold Standard structural Proof" class="w-full h-auto rounded-[22px] opacity-90 group-hover/img:opacity-100 transition-opacity">
 
@@ -4824,11 +4824,11 @@
 
         <!-- CORE CAPABILITY VISUAL -->
 
-        <section class="max-w-7xl mx-auto px-6 py-8 relative z-10 reveal">
+        <section class="max-w-7xl mx-auto px-6 py-16 relative z-10 reveal">
 
             <div
 
-                class="relative rounded-3xl overflow-hidden shadow-2xl border border-slate-100 min-h-[600px] flex items-center p-12 md:p-24 bg-white/50 backdrop-blur-sm">
+                class="relative rounded-3xl overflow-hidden shadow-2xl border border-slate-100 min-h-[600px] flex items-center p-12 md:p-24 bg-white/50 backdrop-blur-sm nilus-card">
 
                 <!-- Scientific Lab Background Image -->
 
@@ -4846,7 +4846,7 @@
 
                     <span
 
-                        class="nilus-badge">
+                        class="inline-block px-4 py-1.5 bg-slate-100 border border-slate-200 text-slate-900 text-[10px] font-black uppercase tracking-[0.3em] rounded-full mb-8 nilus-badge">
 
                         Foundation Intelligence
 
@@ -4858,7 +4858,7 @@
                         Generative Trajectory Modeling.
                     </h2>
 
-                    <p class="text-xl text-slate-400 font-medium leading-relaxed mb-6">
+                    <p class="text-xl text-slate-400 font-medium leading-relaxed mb-12">
 
                         The Zenith Mainframe delivers high-precision modeling for cellular longevity and reprogramming.
 
@@ -4872,7 +4872,7 @@
 
 
 
-                    <div class="flex gap-8">
+                    <div class="flex gap-16">
 
                         <div>
 
@@ -4914,9 +4914,9 @@
 
         <!-- LEGACY CARD REMOVED: Superseded by v30.0 Case Stu        <!-- SECTION 18: EMPIRICAL VALIDATION (AUTONOMOUS STRUCTURAL AUTHORITY) -->
 
-        <section class="max-w-7xl mx-auto px-6 py-6 border-t border-slate-100 bg-white relative z-10 reveal">
+        <section class="max-w-7xl mx-auto px-6 py-12 border-t border-slate-100 bg-white relative z-10 reveal">
 
-            <div class="mb-8">
+            <div class="mb-16">
 
                 <span class="text-[10px] font-black text-slate-900 uppercase tracking-[0.5em] mb-4 block">Empirical Validation</span>
 
@@ -4938,13 +4938,13 @@
                     These latest visualizations represent our upgraded high-fidelity structural validations generated by the Zenith platform. They showcase advanced AlphaFold 3 predictions—achieving up to 0.80 ipTM confidence—including critical molecular configurations for the Rejuvenation Manifold and refined OSKM epigenetic resetting complexes.
                 </p>
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    <div class="overflow-hidden aspect-[4/3] relative transition-all duration-500 hover:scale-[1.02] nilus-card">
+                    <div class="rounded-2xl overflow-hidden border border-slate-100 bg-slate-50 aspect-[4/3] relative shadow-lg transition-all duration-500 hover:scale-[1.02] nilus-card">
                         <img src="./assets/2 (1).png" alt="Recent Case Validation 1" class="w-full h-full object-cover">
                     </div>
-                    <div class="overflow-hidden aspect-[4/3] relative transition-all duration-500 hover:scale-[1.02] nilus-card">
+                    <div class="rounded-2xl overflow-hidden border border-slate-100 bg-slate-50 aspect-[4/3] relative shadow-lg transition-all duration-500 hover:scale-[1.02] nilus-card">
                         <img src="./assets/2 (2).png" alt="Recent Case Validation 2" class="w-full h-full object-cover">
                     </div>
-                    <div class="overflow-hidden aspect-[4/3] relative transition-all duration-500 hover:scale-[1.02] nilus-card">
+                    <div class="rounded-2xl overflow-hidden border border-slate-100 bg-slate-50 aspect-[4/3] relative shadow-lg transition-all duration-500 hover:scale-[1.02] nilus-card">
                         <img src="./assets/3.png" alt="Recent Case Validation 3" class="w-full h-full object-cover">
                     </div>
                 </div>
@@ -4957,13 +4957,13 @@
                     <div class="relative z-10 flex flex-col justify-between h-full">
                         <div>
                             <div class="flex items-center gap-4 mb-6">
-                                <div class="nilus-badge active">Case Study 01</div>
+                                <div class="px-3 py-1 bg-blue-50 border border-blue-100 text-slate-900 rounded-full text-[9px] font-black uppercase tracking-widest nilus-badge active">Case Study 01</div>
                                 <div class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Protocol: Z-Move v30.0</div>
                             </div>
 
                             <h3 class="text-2xl font-black mb-4" style="font-family: 'Outfit', sans-serif; color: #0f172a; min-height: 4rem; line-height: 1.25; letter-spacing: -0.02em;">Epicardial-to-Myocardial Transformation</h3>
 
-                            <div class="p-5 mb-6 min-h-[5.5rem] flex flex-col justify-center nilus-card">
+                            <div class="bg-slate-50 p-5 rounded-2xl border border-slate-100 mb-6 min-h-[5.5rem] flex flex-col justify-center nilus-card">
                                 <p class="text-xs text-slate-500 leading-relaxed font-mono">
                                     <span class="text-slate-900 font-bold uppercase tracking-widest text-[9px] mb-1 block">AI Discovery</span>
                                     "Discovery of the conversion of adult epicardial cells to a myocardial fate via Elite Domain-Handshake Linkers (DHL)."
@@ -4982,9 +4982,9 @@
                             </div>
                         </div>
 
-                        <div class="overflow-hidden aspect-video relative group-hover: transition-all duration-500 nilus-card">
+                        <div class="rounded-2xl overflow-hidden border border-slate-100 bg-slate-50 aspect-video relative shadow-inner group-hover:border-blue-500/30 transition-all duration-500 nilus-card">
                             <img src="./assets/new test 1.jpg" alt="Epicardial Validation" class="w-full h-full object-cover">
-                            <div class="absolute bottom-4 left-4 right-4 bg-white/95 px-6 py-3 flex justify-between items-center nilus-card">
+                            <div class="absolute bottom-4 left-4 right-4 bg-white/95 backdrop-blur-md px-6 py-3 rounded-xl border border-slate-100 flex justify-between items-center shadow-lg nilus-card">
                                 <span class="text-[9px] font-black text-slate-900 uppercase tracking-wider">Confidence</span>
                                 <span class="text-[9px] font-black text-slate-900 uppercase tracking-wider">0.70 ipTM</span>
                             </div>
@@ -4997,13 +4997,13 @@
                     <div class="relative z-10 flex flex-col justify-between h-full">
                         <div>
                             <div class="flex items-center gap-4 mb-6">
-                                <div class="nilus-badge active">Case Study 02</div>
+                                <div class="px-3 py-1 bg-blue-50 border border-blue-100 text-slate-900 rounded-full text-[9px] font-black uppercase tracking-widest nilus-badge active">Case Study 02</div>
                                 <div class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Protocol: Manifold-11.9</div>
                             </div>
 
                             <h3 class="text-2xl font-black mb-4" style="font-family: 'Outfit', sans-serif; color: #0f172a; min-height: 4rem; line-height: 1.25; letter-spacing: -0.02em;">High-Fidelity Rejuvenation Manifold</h3>
 
-                            <div class="p-5 mb-6 min-h-[5.5rem] flex flex-col justify-center nilus-card">
+                            <div class="bg-slate-50 p-5 rounded-2xl border border-slate-100 mb-6 min-h-[5.5rem] flex flex-col justify-center nilus-card">
                                 <p class="text-xs text-slate-500 leading-relaxed font-mono">
                                     <span class="text-slate-900 font-bold uppercase tracking-widest text-[9px] mb-1 block">AI Instruction</span>
                                     "Reverse biological age by 11.9 years. Strictly maintain ESI above 99%."
@@ -5022,9 +5022,9 @@
                             </div>
                         </div>
 
-                        <div class="overflow-hidden aspect-video relative group-hover: transition-all duration-500 nilus-card">
+                        <div class="rounded-2xl overflow-hidden border border-slate-100 bg-slate-50 aspect-video relative shadow-inner group-hover:border-blue-500/30 transition-all duration-500 nilus-card">
                             <img src="./assets/osk_3d.png" alt="Rejuvenation Validation" class="w-full h-full object-cover">
-                            <div class="absolute bottom-4 left-4 right-4 bg-white/95 px-6 py-3 flex justify-between items-center nilus-card">
+                            <div class="absolute bottom-4 left-4 right-4 bg-white/95 backdrop-blur-md px-6 py-3 rounded-xl border border-slate-100 flex justify-between items-center shadow-lg nilus-card">
                                 <span class="text-[9px] font-black text-slate-900 uppercase tracking-wider">Confidence</span>
                                 <span class="text-[9px] font-black text-slate-900 uppercase tracking-wider">0.80 ipTM</span>
                             </div>
@@ -5037,13 +5037,13 @@
                     <div class="relative z-10 flex flex-col justify-between h-full">
                         <div>
                             <div class="flex items-center gap-4 mb-6">
-                                <div class="nilus-badge active">Case Study 03</div>
+                                <div class="px-3 py-1 bg-blue-50 border border-blue-100 text-slate-900 rounded-full text-[9px] font-black uppercase tracking-widest nilus-badge active">Case Study 03</div>
                                 <div class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Protocol: Zenith-Ultra-SDE v30</div>
                             </div>
 
                             <h3 class="text-2xl font-black mb-4" style="font-family: 'Outfit', sans-serif; color: #0f172a; min-height: 4rem; line-height: 1.25; letter-spacing: -0.02em;">Zenith Ultra Reprogramming</h3>
 
-                            <div class="p-5 mb-6 min-h-[5.5rem] flex flex-col justify-center nilus-card">
+                            <div class="bg-slate-50 p-5 rounded-2xl border border-slate-100 mb-6 min-h-[5.5rem] flex flex-col justify-center nilus-card">
                                 <p class="text-xs text-slate-500 leading-relaxed font-mono">
                                     <span class="text-slate-900 font-bold uppercase tracking-widest text-[9px] mb-1 block">AI Discovery</span>
                                     "Tournament-discovered 4-factor OSKM cocktail with Bayesian dosage optimization for -11.9y cell rejuvenation."
@@ -5066,7 +5066,7 @@
                             </div>
                         </div>
 
-                        <div class="overflow-hidden aspect-video relative flex flex-col justify-between p-5 nilus-card" style="background: linear-gradient(135deg, #f8fafc, #f1f5f9);">
+                        <div class="rounded-2xl overflow-hidden border border-slate-100 bg-slate-50 aspect-video relative flex flex-col justify-between p-5 nilus-card" style="background: linear-gradient(135deg, #f8fafc, #f1f5f9);">
                             <div class="flex justify-between items-start">
                                 <div>
                                     <div style="font-size: 8px; font-weight: 900; color: #64748b; text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 2px; font-family: 'Outfit', sans-serif;">OSKM Reprogramming Factors</div>
@@ -5097,7 +5097,7 @@
 
         <!-- CORE CAPABILITIES   PREMIUM VERTICAL REDESIGN -->
 
-        <section class="max-w-7xl mx-auto px-12 py-6 relative z-10 reveal" id="capabilities-section">
+        <section class="max-w-7xl mx-auto px-12 py-24 relative z-10 reveal" id="capabilities-section">
 
             <style>
 
@@ -5123,7 +5123,7 @@
 
 
 
-            <div class="mb-8">
+            <div class="mb-16">
 
                 <span class="text-[11px] font-black text-slate-900 uppercase tracking-[0.4em] mb-4 block">What Makes Zenith Different</span>
 
@@ -5157,9 +5157,9 @@
 
                     <div class="mt-12 flex gap-4">
 
-                        <span class="nilus-badge active">Manifold Screening</span>
+                        <span class="px-4 py-1.5 bg-blue-600/5 border border-blue-600/10 rounded-full text-[10px] font-black text-slate-900 uppercase tracking-widest nilus-badge active">Manifold Screening</span>
 
-                        <span class="nilus-badge active">Factor Discovery</span>
+                        <span class="px-4 py-1.5 bg-blue-600/5 border border-blue-600/10 rounded-full text-[10px] font-black text-slate-900 uppercase tracking-widest nilus-badge active">Factor Discovery</span>
 
                     </div>
 
@@ -5213,7 +5213,7 @@
 
                         <div style="width: 300px; flex-shrink: 0;" class="hidden lg:block">
 
-                            <div class="p-8 bg-white/50 ] nilus-card">
+                            <div class="p-8 bg-white/50 border border-purple-100 rounded-[32px] backdrop-blur-sm shadow-xl shadow-purple-500/5 nilus-card">
 
                                 <div class="space-y-4">
 
@@ -5225,9 +5225,9 @@
 
                                     </div>
 
-                                    <div class="nilus-badge">
+                                    <div class="h-2 bg-slate-100 rounded-full overflow-hidden">
 
-                                        <div class="nilus-badge"></div>
+                                        <div class="h-full bg-purple-500 w-[92%] rounded-full"></div>
 
                                     </div>
 
@@ -5254,8 +5254,8 @@
         </section>
 
         <!-- SYSTEMS BIOLOGY UPGRADES SECTION -->
-        <section class="max-w-7xl mx-auto px-12 py-6 border-t border-slate-100 relative z-10 reveal" id="systems-biology-section">
-            <div class="mb-8">
+        <section class="max-w-7xl mx-auto px-12 py-24 border-t border-slate-100 relative z-10 reveal" id="systems-biology-section">
+            <div class="mb-16">
                 <span class="text-[11px] font-black text-indigo-600 uppercase tracking-[0.4em] mb-4 block">The Full Stack</span>
                 <h2 class="text-6xl font-black text-slate-900 leading-[1.05] tracking-tight" style="font-family: 'Outfit', sans-serif; color: #0f172a;">From Graph to Bench.</h2>
             </div>
@@ -5263,7 +5263,7 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <!-- Module 1: GraphRAG -->
                 <div class="p-10 rounded-[32px] border border-slate-100 bg-gradient-to-br from-slate-50/60 to-white/90 shadow-lg relative overflow-hidden transition-all duration-300 hover:-translate-y-2 group">
-                    <div class="w-12 h-12 flex items-center justify-center mb-8 group-hover:scale-110 transition-transform nilus-card">
+                    <div class="w-12 h-12 rounded-2xl bg-slate-50 flex items-center justify-center mb-8 border border-slate-200/80 group-hover:scale-110 transition-transform nilus-card">
                         <svg class="w-6 h-6 text-slate-800" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <circle cx="12" cy="12" r="3" fill="currentColor"/>
                             <circle cx="5" cy="6" r="2"/>
@@ -5279,12 +5279,12 @@
                     </div>
                     <h3 class="text-xl font-black text-slate-900 mb-4" style="font-family: 'Outfit', sans-serif;">GraphRAG Reasoner</h3>
                     <p class="text-sm text-slate-400 leading-relaxed font-medium mb-6">Semantic querying mapping pioneer factor binding motifs topologically over heterogeneous chromatin accessibility graphs.</p>
-                    <span class="nilus-badge">Active GRN Inference</span>
+                    <span class="px-3 py-1 bg-slate-100 border border-slate-200 rounded-full text-[9px] font-black text-slate-600 uppercase tracking-widest nilus-badge">Active GRN Inference</span>
                 </div>
 
                 <!-- Module 2: Multi-Omics -->
                 <div class="p-10 rounded-[32px] border border-slate-100 bg-gradient-to-br from-slate-50/60 to-white/90 shadow-lg relative overflow-hidden transition-all duration-300 hover:-translate-y-2 group">
-                    <div class="w-12 h-12 flex items-center justify-center mb-8 group-hover:scale-110 transition-transform nilus-card">
+                    <div class="w-12 h-12 rounded-2xl bg-slate-50 flex items-center justify-center mb-8 border border-slate-200/80 group-hover:scale-110 transition-transform nilus-card">
                         <svg class="w-6 h-6 text-slate-800" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
                             <path d="M4.5 6.5c1.5 2 3.5 5 7.5 5s6-3 7.5-5"/>
                             <path d="M4.5 17.5c1.5-2 3.5-5 7.5-5s6 3 7.5 5" opacity="0.6"/>
@@ -5298,12 +5298,12 @@
                     </div>
                     <h3 class="text-xl font-black text-slate-900 mb-4" style="font-family: 'Outfit', sans-serif;">Multi-Omics Predictor</h3>
                     <p class="text-sm text-slate-400 leading-relaxed font-medium mb-6">Emulating scGPT/Geneformer biological transformers with live multi-factor dosage slider controls.</p>
-                    <span class="nilus-badge">Zero-Shot Mode</span>
+                    <span class="px-3 py-1 bg-slate-100 border border-slate-200 rounded-full text-[9px] font-black text-slate-600 uppercase tracking-widest nilus-badge">Zero-Shot Mode</span>
                 </div>
 
                 <!-- Module 3: LNP Delivery -->
                 <div class="p-10 rounded-[32px] border border-slate-100 bg-gradient-to-br from-slate-50/60 to-white/90 shadow-lg relative overflow-hidden transition-all duration-300 hover:-translate-y-2 group">
-                    <div class="w-12 h-12 flex items-center justify-center mb-8 group-hover:scale-110 transition-transform nilus-card">
+                    <div class="w-12 h-12 rounded-2xl bg-slate-50 flex items-center justify-center mb-8 border border-slate-200/80 group-hover:scale-110 transition-transform nilus-card">
                         <svg class="w-6 h-6 text-slate-800" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
                             <circle cx="12" cy="12" r="10" stroke-width="1.5"/>
                             <circle cx="12" cy="12" r="7" stroke-dasharray="2 2"/>
@@ -5321,14 +5321,14 @@
                     </div>
                     <h3 class="text-xl font-black text-slate-900 mb-4" style="font-family: 'Outfit', sans-serif;">LNP Formulation Delivery</h3>
                     <p class="text-sm text-slate-400 leading-relaxed font-medium mb-6">Predicts lipid nanoparticle encapsulation efficiency ($EE\%$) and heart targeting organ tropism index.</p>
-                    <span class="nilus-badge">Optimized Tropism</span>
+                    <span class="px-3 py-1 bg-slate-100 border border-slate-200 rounded-full text-[9px] font-black text-slate-600 uppercase tracking-widest nilus-badge">Optimized Tropism</span>
                 </div>
 
                 <!-- Module 4: Nextflow QC -->
                 <div class="p-10 rounded-[32px] border border-slate-100 bg-gradient-to-br from-slate-50/60 to-white/90 shadow-lg relative overflow-hidden transition-all duration-300 hover:-translate-y-2 group md:col-span-2">
                     <div style="display: flex; gap: 2rem; align-items: center;">
                         <div style="flex: 1;">
-                            <div class="w-12 h-12 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform nilus-card">
+                            <div class="w-12 h-12 rounded-2xl bg-slate-50 flex items-center justify-center mb-6 border border-slate-200/80 group-hover:scale-110 transition-transform nilus-card">
                                 <svg class="w-6 h-6 text-slate-800" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
                                     <circle cx="8" cy="8" r="3"/>
                                     <circle cx="16" cy="8" r="3"/>
@@ -5338,14 +5338,14 @@
                             </div>
                             <h3 class="text-2xl font-black text-slate-900 mb-4" style="font-family: 'Outfit', sans-serif;">Nextflow QC Monitor</h3>
                             <p class="text-sm text-slate-400 leading-relaxed font-medium mb-6">Slide-over drawer monitoring live sequencing runs, demultiplexing, and enforcing $\le 15\%$ mitochondrial read leakage filters.</p>
-                            <span class="nilus-badge">Pipeline Telemetry</span>
+                            <span class="px-3 py-1 bg-slate-100 border border-slate-200 rounded-full text-[9px] font-black text-slate-600 uppercase tracking-widest nilus-badge">Pipeline Telemetry</span>
                         </div>
                     </div>
                 </div>
 
                 <!-- Module 5: Robotic Echo Protocol -->
                 <div class="p-10 rounded-[32px] border border-slate-100 bg-gradient-to-br from-slate-50/60 to-white/90 shadow-lg relative overflow-hidden transition-all duration-300 hover:-translate-y-2 group">
-                    <div class="w-12 h-12 flex items-center justify-center mb-8 group-hover:scale-110 transition-transform nilus-card">
+                    <div class="w-12 h-12 rounded-2xl bg-slate-50 flex items-center justify-center mb-8 border border-slate-200/80 group-hover:scale-110 transition-transform nilus-card">
                         <svg class="w-6 h-6 text-slate-800" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
                             <path d="M4 18h16v2H4z"/>
                             <path d="M6 18v-3c0-2 2-3 6-3s6 1 6 3v3"/>
@@ -5356,13 +5356,13 @@
                     </div>
                     <h3 class="text-xl font-black text-slate-900 mb-4" style="font-family: 'Outfit', sans-serif;">Robotic Echo Protocol</h3>
                     <p class="text-sm text-slate-400 leading-relaxed font-medium mb-6">Generates physical Labcyte Echo droplet transfer CSV spreadsheets rounded to discrete 2.5 nL steps.</p>
-                    <span class="nilus-badge">Acoustic Handler CSV</span>
+                    <span class="px-3 py-1 bg-slate-100 border border-slate-200 rounded-full text-[9px] font-black text-slate-600 uppercase tracking-widest nilus-badge">Acoustic Handler CSV</span>
                 </div>
             </div>
         </section>
 
         <!-- DEVELOPER API PLATFORM SECTION -->
-        <section class="max-w-7xl mx-auto px-12 py-6 border-t border-slate-100 relative z-10 reveal" id="developer-api-section">
+        <section class="max-w-7xl mx-auto px-12 py-24 border-t border-slate-100 relative z-10 reveal" id="developer-api-section">
 
             <style>
                 .api-card {
@@ -5452,7 +5452,7 @@
                 }
             </style>
 
-            <div class="mb-8">
+            <div class="mb-16">
                 <div style="display: inline-flex; align-items: center; gap: 8px; background: rgba(37, 99, 235, 0.06); border: 1px solid rgba(37, 99, 235, 0.15); padding: 6px 16px; border-radius: 999px; margin-bottom: 1.25rem;">
                     <span class="api-live-dot" style="background: #2563eb; box-shadow: 0 0 8px rgba(37,99,235,0.5);"></span>
                     <span style="font-size: 9px; font-weight: 900; color: #2563eb; text-transform: uppercase; letter-spacing: 0.15em;">Developer API Platform</span>
