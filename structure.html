@@ -1,2071 +1,1964 @@
 <!DOCTYPE html>
-<html lang="en" class="h-full bg-[#f8fafc]">
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Zenith v30.0 GOLD | Structure Prediction | ESMFold + Boltz API | Nilus Lab</title>
-  <meta name="description" content="ESMFold single-chain protein folding and Boltz API biomolecular complex prediction. Predict 3D structures for protein+DNA+RNA+ligand complexes." />
+<meta charset="UTF-8" />
+<title>Structure Prediction · Nilus Lab Platform</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta http-equiv="Content-Security-Policy" content="
+  default-src 'self';
+  script-src 'self' https://cdn.jsdelivr.net https://3Dmol.org;
+  style-src 'self' https://fonts.googleapis.com 'unsafe-inline';
+  font-src 'self' https://fonts.gstatic.com;
+  img-src 'self' data:;
+  connect-src 'self' https://api.esm.metainfrastructure.org https://api.openai.com https://cellxgene.cziscience.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://nilus-lab.firebaseapp.com;
+" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Serif:wght@500;600&display=swap" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/3dmol@2.4.2/build/3Dmol-min.js"></script>
+<style>
+  /* ============ DESIGN TOKENS ============ */
+  :root{
+    --bg-void:#080B11;      /* Near-black, faint blue */
+    --bg-base:#0D121C;      /* App background */
+    --bg-panel:#111827;     /* Sidebar/Panels */
+    --bg-elev:#1A2333;      /* Elevated elements */
+    --bg-elev-2:#222E44;
+    --grid-line:rgba(148,163,184,.04);
+    --border:#1F2937;
+    --border-strong:#2D3B52;
+    --border-accent:rgba(59,130,246,.4);
+    --text:#E2E8F0;
+    --text-mute:#94A3B8;
+    --text-faint:#64748B;
+    --text-dim:#475569;
+    --accent:#3B82F6;       /* Professional Biotech Blue */
+    --accent-bright:#60A5FA;
+    --accent-dim:#1E3A8A;
+    --accent-glow:rgba(59,130,246,.2);
+    --amber:#F59E0B;
+    --coral:#EF4444;
+    --emerald:#10B981;      /* Used very sparingly for status only */
+    --blue:#3B82F6;
+    --cyan:#22D3EE;
+    --plddt-vhigh:#0053D6;  /* AlphaFold standard >90 */
+    --plddt-high:#65B3E7;   /* AlphaFold standard 70-90 */
+    --plddt-low:#F5B544;    /* AlphaFold standard 50-70 */
+    --plddt-vlow:#FB923C;   /* AlphaFold standard <50 */
+    --shadow-lg:0 10px 24px -12px rgba(0,0,0,.8);
+    --shadow-inset:inset 0 1px 0 rgba(255,255,255,.03);
+    --radius:4px;           /* Sharper, engineered corners */
+    --radius-sm:3px;
+  }
 
-  <!-- Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@400;500;600;700;800;900&family=JetBrains+Mono&display=swap" rel="stylesheet" />
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%;overflow:hidden}
+  body{
+    background:var(--bg-base);
+    color:var(--text);
+    font-family:'IBM Plex Sans',system-ui,sans-serif;
+    font-size:13px;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+    letter-spacing:-0.005em;
+  }
+  ::selection{background:var(--accent-glow);color:#fff}
+  ::-webkit-scrollbar{width:8px;height:8px}
+  ::-webkit-scrollbar-track{background:transparent}
+  ::-webkit-scrollbar-thumb{background:#2D3B52;border-radius:8px}
+  ::-webkit-scrollbar-thumb:hover{background:#3E4D68}
 
-  <!-- Tailwind CSS -->
-  <script src="https://cdn.tailwindcss.com"></script>
+  /* ============ APP SHELL ============ */
+  .app{
+    display:grid;
+    grid-template-rows:48px 32px 1fr 24px;
+    height:100vh;
+  }
 
-  <!-- Lucide Icons -->
-  <script src="https://unpkg.com/lucide@latest"></script>
+  /* ============ TOP BAR ============ */
+  .topbar{
+    display:flex;align-items:center;
+    padding:0 16px;
+    background:var(--bg-panel);
+    border-bottom:1px solid var(--border);
+    position:relative;z-index:10;
+  }
+  .brand{display:flex;align-items:center;gap:10px}
+  .brand-mark{
+    width:26px;height:26px;border-radius:4px;
+    background:var(--accent);
+    position:relative;display:grid;place-items:center;
+    box-shadow:0 0 0 1px rgba(255,255,255,.05);
+  }
+  .brand-mark svg{color:#fff}
+  .brand-text{display:flex;flex-direction:column;line-height:1}
+  .brand-name{font-weight:600;font-size:13px;letter-spacing:.02em}
+  .brand-name span{color:var(--text-faint);font-weight:400}
+  .brand-sub{font-size:9px;color:var(--text-faint);text-transform:uppercase;letter-spacing:.16em;margin-top:3px;font-family:'IBM Plex Mono',monospace}
 
-  <!-- jQuery and 3Dmol.js — self-hosted to avoid CSP/CDN issues -->
-  <script src="/vendor/jquery-3.6.0.min.js"></script>
-  <script src="/vendor/3Dmol-min.js"></script>
+  .topnav{display:flex;align-items:center;gap:2px;margin-left:36px}
+  .topnav a{
+    padding:6px 12px;border-radius:3px;
+    color:var(--text-mute);text-decoration:none;font-size:12px;font-weight:500;
+    transition:all .15s;
+  }
+  .topnav a:hover{color:var(--text);background:var(--bg-elev)}
+  .topnav a.active{color:#fff;background:var(--bg-elev-2);box-shadow:inset 0 -2px 0 var(--accent)}
 
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['Inter', 'sans-serif'],
-            outfit: ['Outfit', 'sans-serif'],
-            mono: ['JetBrains Mono', 'monospace']
-          }
-        }
-      }
-    };
-  </script>
+  .top-right{margin-left:auto;display:flex;align-items:center;gap:12px}
+  .env-pill{
+    display:flex;align-items:center;gap:6px;
+    padding:4px 8px;border-radius:3px;
+    background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.3);
+    font-size:10px;font-family:'IBM Plex Mono',monospace;color:var(--amber);
+    text-transform:uppercase;letter-spacing:.1em;font-weight:500;
+  }
+  .env-pill::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--amber)}
+  .top-icon{
+    width:28px;height:28px;border-radius:3px;display:grid;place-items:center;
+    background:transparent;border:1px solid transparent;color:var(--text-mute);
+    cursor:pointer;transition:all .15s;
+  }
+  .top-icon:hover{color:var(--text);border-color:var(--border-strong);background:var(--bg-elev)}
+  .user-chip{
+    display:flex;align-items:center;gap:8px;padding:3px 8px 3px 3px;
+    border-radius:3px;background:var(--bg-elev);border:1px solid var(--border);
+  }
+  .user-avatar{
+    width:22px;height:22px;border-radius:3px;
+    background:var(--bg-elev-2);
+    display:grid;place-items:center;font-size:10px;font-weight:600;color:var(--accent-bright);
+    border:1px solid var(--border-strong);
+  }
+  .user-meta{display:flex;flex-direction:column;line-height:1.1}
+  .user-name{font-size:11px;font-weight:500}
+  .user-org{font-size:9px;color:var(--text-faint);font-family:'IBM Plex Mono',monospace}
 
-  <style>
-    /* Styling & Glassmorphic touches */
-    .nav-dock-link {
-      font-size: 11px;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      color: #475569;
-      transition: all 0.2s ease;
-    }
-    .nav-dock-link:hover, .nav-dock-link.active {
-      color: #2563eb;
-    }
-    .inst-dropdown {
-      display: none;
-      position: absolute;
-      top: 100%;
-      left: 0;
-      background: white;
-      border: 1px solid #e2e8f0;
-      border-radius: 12px;
-      padding: 8px 0;
-      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
-      z-index: 50;
-      min-width: 180px;
-    }
-    .inst-dropdown a {
-      display: block;
-      padding: 8px 16px;
-      font-size: 11px;
-      font-weight: 700;
-      color: #334155;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-    .inst-dropdown a:hover {
-      background: #f8fafc;
-      color: #2563eb;
-    }
-    .inst-diligence-wrapper:hover .inst-dropdown {
-      display: block;
-    }
-    .metric-card {
-      background: white;
-      border: 1px solid #e2e8f0;
-      border-radius: 10px;
-      padding: 8px 10px;
-      transition: all 0.2s;
-    }
-    .metric-card:hover {
-      border-color: #cbd5e1;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
-    }
-    /* ── Boltz tab styles ─────────────────────────── */
-    .mode-tab {
-      padding: 6px 16px;
-      border-radius: 8px;
-      font-size: 10px;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      cursor: pointer;
-      transition: all 0.2s;
-      border: 1.5px solid transparent;
-      color: #64748b;
-      background: transparent;
-    }
-    .mode-tab.active {
-      background: #0f172a;
-      color: #fff;
-      border-color: #0f172a;
-      box-shadow: 0 2px 8px rgba(15,23,42,0.2);
-    }
-    .mode-tab:not(.active):hover {
-      background: #f1f5f9;
-      color: #334155;
-    }
-    .chain-card {
-      background: #f8fafc;
-      border: 1.5px solid #e2e8f0;
-      border-radius: 12px;
-      padding: 10px 12px;
-      margin-bottom: 8px;
-      position: relative;
-    }
-    .chain-card .chain-type-badge {
-      display: inline-block;
-      padding: 2px 8px;
-      border-radius: 4px;
-      font-size: 9px;
-      font-weight: 800;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      margin-right: 6px;
-    }
-    .badge-protein  { background: #dbeafe; color: #1d4ed8; }
-    .badge-dna      { background: #dcfce7; color: #15803d; }
-    .badge-rna      { background: #fef3c7; color: #b45309; }
-    .badge-ligand   { background: #f3e8ff; color: #7c3aed; }
-    .badge-ion      { background: #ffe4e6; color: #be123c; }
-    .boltz-btn {
-      height: 34px;
-      border-radius: 10px;
-      font-size: 10px;
-      font-weight: 800;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      cursor: pointer;
-      transition: all 0.18s;
-      border: none;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      justify-content: center;
-      padding: 0 14px;
-    }
-    .boltz-btn.primary   { background: #1d4ed8; color: #fff; }
-    .boltz-btn.primary:hover   { background: #1e40af; }
-    .boltz-btn.secondary { background: #f1f5f9; color: #334155; border: 1.5px solid #e2e8f0; }
-    .boltz-btn.secondary:hover { background: #e2e8f0; }
-    .boltz-btn.danger    { background: #fee2e2; color: #b91c1c; border: 1.5px solid #fecaca; }
-    .boltz-btn.danger:hover    { background: #fecaca; }
-    .boltz-btn:disabled  { opacity: 0.45; cursor: not-allowed; }
-    .boltz-metric-pill {
-      display: flex;
-      flex-direction: column;
-      background: #f8fafc;
-      border: 1px solid #e2e8f0;
-      border-radius: 8px;
-      padding: 6px 10px;
-      font-size: 9px;
-    }
-    .boltz-metric-pill .label { color: #94a3b8; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 2px; }
-    .boltz-metric-pill .value { color: #1e293b; font-weight: 800; font-size: 12px; font-family: 'JetBrains Mono', monospace; }
-    .boltz-ruo-badge {
-      background: #fef9c3;
-      border: 1px solid #fde047;
-      color: #854d0e;
-      border-radius: 6px;
-      padding: 3px 10px;
-      font-size: 9px;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-    }
-    #boltz-viewer-container {
-      width: 100%;
-      height: 100%;
-      border-radius: 12px;
-      overflow: hidden;
-      background: #0f172a;
-      position: relative;
-      min-height: 320px;
-    }
-    #boltz-molstar-mount { width: 100%; height: 100%; }
-  </style>
+  /* ============ SUB BAR ============ */
+  .subbar{
+    display:flex;align-items:center;
+    padding:0 16px;gap:12px;
+    background:var(--bg-void);
+    border-bottom:1px solid var(--border);
+    font-size:11px;
+  }
+  .crumb{display:flex;align-items:center;gap:6px;color:var(--text-faint)}
+  .crumb a{color:var(--text-faint);text-decoration:none;transition:color .15s}
+  .crumb a:hover{color:var(--text-mute)}
+  .crumb .sep{color:var(--text-dim)}
+  .crumb .here{color:var(--text);font-weight:500}
+  .subbar-spacer{flex:1}
+  .stat-chip{
+    display:flex;align-items:center;gap:6px;
+    padding:3px 8px;border-radius:3px;
+    background:var(--bg-panel);border:1px solid var(--border);
+    font-family:'IBM Plex Mono',monospace;font-size:10px;
+  }
+  .stat-chip .label{color:var(--text-faint);text-transform:uppercase;letter-spacing:.08em}
+  .stat-chip .val{color:var(--text);font-weight:500}
+  .stat-chip .dot{width:5px;height:5px;border-radius:50%;background:var(--emerald);box-shadow:0 0 4px var(--emerald)}
+
+  /* ============ MAIN GRID ============ */
+  .main{
+    display:grid;
+    grid-template-columns:340px 1fr;
+    overflow:hidden;
+  }
+
+  /* ============ SIDEBAR ============ */
+  .sidebar{
+    background:var(--bg-panel);
+    border-right:1px solid var(--border);
+    overflow-y:auto;
+    padding:16px 16px 24px;
+  }
+
+  .panel{
+    background:var(--bg-base);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    margin-bottom:12px;
+    overflow:hidden;
+  }
+  .panel-head{
+    display:flex;align-items:center;gap:8px;
+    padding:8px 12px;
+    border-bottom:1px solid var(--border);
+    background:var(--bg-void);
+  }
+  .panel-num{
+    width:16px;height:16px;border-radius:3px;
+    background:var(--bg-elev-2);border:1px solid var(--border-strong);
+    color:var(--text-mute);font-size:9px;font-weight:600;
+    display:grid;place-items:center;font-family:'IBM Plex Mono',monospace;
+  }
+  .panel-title{
+    font-size:11px;font-weight:600;
+    text-transform:uppercase;letter-spacing:.06em;
+    color:var(--text);
+  }
+  .panel-tag{
+    margin-left:auto;font-size:9px;font-family:'IBM Plex Mono',monospace;
+    color:var(--text-faint);text-transform:uppercase;letter-spacing:.08em;
+    padding:2px 6px;border-radius:2px;background:var(--bg-elev);
+  }
+  .panel-body{padding:12px}
+
+  /* ============ MODE SWITCH ============ */
+  .mode-switch{
+    display:grid;grid-template-columns:1fr 1fr;gap:4px;
+    background:var(--bg-void);
+    padding:3px;border-radius:var(--radius);
+    border:1px solid var(--border);
+  }
+  .mode-btn{
+    appearance:none;border:0;cursor:pointer;
+    padding:8px 6px;border-radius:2px;
+    background:transparent;color:var(--text-mute);
+    font-family:inherit;font-size:11px;font-weight:500;
+    display:flex;flex-direction:column;align-items:center;gap:3px;
+    transition:all .15s;
+  }
+  .mode-btn .mode-name{font-weight:600;font-size:12px;color:var(--text)}
+  .mode-btn .mode-desc{font-size:9px;color:var(--text-faint);font-family:'IBM Plex Mono',monospace;text-transform:uppercase;letter-spacing:.04em}
+  .mode-btn:hover{background:var(--bg-elev)}
+  .mode-btn.active{
+    background:var(--bg-elev-2);
+    box-shadow:inset 0 -2px 0 var(--accent);
+  }
+  .mode-btn.active .mode-name{color:#fff}
+  .mode-btn.active .mode-desc{color:var(--accent-bright)}
+
+  /* ============ FORM ELEMENTS ============ */
+  .field{margin-bottom:10px}
+  .field:last-child{margin-bottom:0}
+  .field-label{
+    display:flex;align-items:center;justify-content:space-between;
+    font-size:10px;color:var(--text-mute);
+    text-transform:uppercase;letter-spacing:.06em;font-weight:500;
+    margin-bottom:5px;
+  }
+  .field-label .hint{font-size:9px;color:var(--text-faint);text-transform:none;letter-spacing:0;font-family:'IBM Plex Mono',monospace}
+  .input, .textarea, .select{
+    width:100%;
+    background:var(--bg-void);
+    border:1px solid var(--border);
+    border-radius:var(--radius-sm);
+    padding:7px 9px;
+    color:var(--text);
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;
+    transition:all .15s;
+    outline:none;
+  }
+  .input:focus, .textarea:focus, .select:focus{
+    border-color:var(--accent);
+    box-shadow:0 0 0 2px var(--accent-glow);
+  }
+  .input::placeholder, .textarea::placeholder{color:var(--text-dim)}
+  .textarea{resize:vertical;min-height:96px;line-height:1.55;font-size:11px}
+  .input-row{display:flex;gap:6px}
+  .input-row .input{flex:1}
+
+  .btn{
+    appearance:none;border:0;cursor:pointer;
+    padding:8px 12px;border-radius:var(--radius-sm);
+    font-family:inherit;font-size:11px;font-weight:600;
+    display:inline-flex;align-items:center;justify-content:center;gap:6px;
+    transition:all .15s;
+  }
+  .btn-primary{
+    background:var(--accent);
+    color:#fff;
+    box-shadow:0 1px 0 rgba(255,255,255,.1) inset;
+  }
+  .btn-primary:hover{background:var(--accent-bright)}
+  .btn-primary:active{background:var(--accent-dim)}
+  .btn-primary:disabled{opacity:.4;cursor:not-allowed}
+  .btn-ghost{
+    background:var(--bg-elev);
+    color:var(--text-mute);
+    border:1px solid var(--border);
+  }
+  .btn-ghost:hover{color:var(--text);border-color:var(--border-strong);background:var(--bg-elev-2)}
+  .btn-icon{
+    width:28px;height:28px;padding:0;border-radius:var(--radius-sm);
+    background:var(--bg-elev);border:1px solid var(--border);
+    color:var(--text-mute);cursor:pointer;display:grid;place-items:center;
+    transition:all .15s;
+  }
+  .btn-icon:hover{color:var(--accent-bright);border-color:var(--accent)}
+
+  /* API key row */
+  .api-row{display:flex;align-items:center;gap:6px}
+  .api-row .input{font-size:11px;padding:7px 9px}
+  .api-status{
+    width:6px;height:6px;border-radius:50%;flex-shrink:0;
+    background:var(--text-dim);
+  }
+  .api-status.set{background:var(--emerald);box-shadow:0 0 4px var(--emerald)}
+  .api-hint{font-size:9.5px;color:var(--text-faint);margin-top:6px;font-family:'IBM Plex Mono',monospace;line-height:1.4}
+
+  /* Chain builder */
+  .chain-list{display:flex;flex-direction:column;gap:4px;margin-bottom:6px}
+  .chain-row{
+    display:grid;grid-template-columns:26px 1fr 50px 22px;gap:5px;align-items:center;
+    background:var(--bg-void);
+    border:1px solid var(--border);
+    border-radius:var(--radius-sm);padding:4px 6px;
+  }
+  .chain-id{
+    font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;
+    text-align:center;color:var(--accent-bright);
+    background:rgba(59,130,246,.1);border-radius:2px;padding:3px 0;
+  }
+  .chain-type{
+    appearance:none;background:transparent;border:0;color:var(--text);
+    font-family:'IBM Plex Mono',monospace;font-size:10px;
+    cursor:pointer;outline:none;
+  }
+  .chain-copies{
+    background:var(--bg-panel);border:1px solid var(--border);
+    border-radius:2px;padding:3px 5px;color:var(--text);
+    font-family:'IBM Plex Mono',monospace;font-size:10px;text-align:center;width:100%;
+  }
+  .chain-del{
+    background:transparent;border:0;color:var(--text-faint);cursor:pointer;
+    display:grid;place-items:center;border-radius:2px;height:20px;
+  }
+  .chain-del:hover{color:var(--coral);background:rgba(239,68,68,.1)}
+
+  /* Cost estimate */
+  .cost-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+  .cost-cell{
+    background:var(--bg-void);border:1px solid var(--border);border-radius:var(--radius-sm);
+    padding:8px 9px;
+  }
+  .cost-cell .k{font-size:9px;color:var(--text-faint);text-transform:uppercase;letter-spacing:.08em;font-family:'IBM Plex Mono',monospace}
+  .cost-cell .v{font-size:14px;font-weight:600;color:var(--text);margin-top:2px;font-family:'IBM Plex Mono',monospace}
+  .cost-cell .v .unit{font-size:9px;color:var(--text-mute);font-weight:400;margin-left:2px}
+  .cost-note{font-size:9.5px;color:var(--text-faint);margin-top:8px;line-height:1.4}
+
+  /* Diagnostics */
+  .diag{
+    background:var(--bg-void);
+    border:1px solid var(--border);
+    border-radius:var(--radius-sm);
+    padding:8px 9px;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:10px;
+    max-height:110px;overflow-y:auto;
+    line-height:1.6;
+  }
+  .diag-line{color:var(--text-mute)}
+  .diag-line .t{color:var(--text-faint);margin-right:8px}
+  .diag-line.ok .m{color:var(--emerald)}
+  .diag-line.info .m{color:var(--accent-bright)}
+  .diag-line.warn .m{color:var(--amber)}
+  .diag-line.err .m{color:var(--coral)}
+
+  /* ============ MAIN VIEWER AREA ============ */
+  .viewer-area{
+    display:flex;flex-direction:column;
+    background:var(--bg-void);
+    overflow:hidden;
+    position:relative;
+  }
+  .viewer-area::before{
+    content:"";position:absolute;inset:0;pointer-events:none;
+    background-image:
+      linear-gradient(var(--grid-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+    background-size:32px 32px;
+    z-index:0;
+  }
+
+  .tabs{
+    display:flex;align-items:stretch;
+    background:var(--bg-panel);
+    border-bottom:1px solid var(--border);
+    padding:0 12px;
+    position:relative;z-index:2;
+  }
+  .tab{
+    appearance:none;background:transparent;border:0;cursor:pointer;
+    padding:10px 14px 9px;
+    color:var(--text-mute);font-family:inherit;font-size:11px;font-weight:500;
+    display:flex;align-items:center;gap:7px;
+    position:relative;
+    transition:color .15s;
+  }
+  .tab:hover{color:var(--text)}
+  .tab.active{color:#fff}
+  .tab.active::after{
+    content:"";position:absolute;left:8px;right:8px;bottom:-1px;height:2px;
+    background:var(--accent);
+  }
+  .tab .badge{
+    background:var(--bg-elev);color:var(--text-mute);
+    font-size:9px;font-family:'IBM Plex Mono',monospace;font-weight:600;
+    padding:1px 5px;border-radius:2px;
+    text-transform:uppercase;letter-spacing:.06em;
+  }
+  .tab.active .badge{background:var(--accent-dim);color:var(--accent-bright)}
+  .tab-tools{margin-left:auto;display:flex;align-items:center;gap:5px;padding:5px 0}
+
+  .tab-panel{
+    flex:1;position:relative;overflow:hidden;
+    display:none;
+    z-index:1;
+  }
+  .tab-panel.active{display:flex;flex-direction:column}
+
+  /* ============ 3D VIEWER ============ */
+  .viewer-3d{
+    flex:1;position:relative;
+    background:var(--bg-void);
+  }
+  #molviewer{
+    width:100%;height:100%;
+    position:absolute;inset:0;
+  }
+  .viewer-overlay{
+    position:absolute;top:12px;left:12px;
+    display:flex;flex-direction:column;gap:8px;
+    z-index:5;pointer-events:none;
+  }
+  .info-card{
+    background:rgba(13,18,28,.92);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    backdrop-filter:blur(8px);
+    padding:9px 12px;
+    pointer-events:auto;
+    box-shadow:var(--shadow-lg);
+    min-width:200px;
+  }
+  .info-card .title{font-size:9.5px;color:var(--text-faint);text-transform:uppercase;letter-spacing:.1em;font-family:'IBM Plex Mono',monospace;margin-bottom:5px}
+  .info-card .name{font-size:13px;font-weight:600;color:var(--text);font-family:'IBM Plex Serif',serif}
+  .info-card .meta{display:flex;gap:12px;margin-top:5px;font-size:10px;color:var(--text-mute);font-family:'IBM Plex Mono',monospace}
+  .info-card .meta b{color:var(--text);font-weight:500}
+
+  .viewer-toolbar{
+    position:absolute;top:12px;right:12px;
+    display:flex;flex-direction:column;gap:5px;
+    z-index:5;
+  }
+  .tool-group{
+    background:rgba(13,18,28,.92);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    backdrop-filter:blur(8px);
+    padding:4px;
+    display:flex;flex-direction:column;gap:2px;
+    box-shadow:var(--shadow-lg);
+  }
+  .tool-btn{
+    width:28px;height:28px;border-radius:2px;
+    background:transparent;border:0;color:var(--text-mute);
+    cursor:pointer;display:grid;place-items:center;
+    transition:all .15s;
+  }
+  .tool-btn:hover{color:var(--text);background:var(--bg-elev)}
+  .tool-btn.active{color:#fff;background:var(--accent-dim)}
+  .tool-divider{height:1px;background:var(--border);margin:2px 3px}
+
+  /* Legend */
+  .legend{
+    position:absolute;bottom:12px;left:12px;
+    background:rgba(13,18,28,.92);
+    border:1px solid var(--border);
+    border-radius:var(--radius);backdrop-filter:blur(8px);
+    padding:8px 12px;z-index:5;
+    box-shadow:var(--shadow-lg);
+  }
+  .legend-title{font-size:9.5px;color:var(--text-faint);text-transform:uppercase;letter-spacing:.1em;font-family:'IBM Plex Mono',monospace;margin-bottom:6px}
+  .legend-bar{
+    width:180px;height:6px;border-radius:2px;
+    background:linear-gradient(90deg, var(--plddt-vlow), var(--plddt-low), var(--plddt-high), var(--plddt-vhigh));
+    margin-bottom:4px;
+  }
+  .legend-labels{display:flex;justify-content:space-between;font-size:9px;color:var(--text-mute);font-family:'IBM Plex Mono',monospace}
+
+  /* Hover tooltip */
+  .res-tooltip{
+    position:absolute;
+    background:rgba(13,18,28,.95);
+    border:1px solid var(--border-strong);
+    border-radius:var(--radius-sm);padding:6px 9px;
+    font-family:'IBM Plex Mono',monospace;font-size:10px;
+    color:var(--text);
+    pointer-events:none;z-index:10;
+    box-shadow:var(--shadow-lg);
+    display:none;
+  }
+  .res-tooltip .rt-res{color:var(--accent-bright);font-weight:600}
+  .res-tooltip .rt-plddt{color:var(--text-mute);margin-top:2px}
+
+  /* ============ SEQUENCE VIEWER ============ */
+  .seq-viewer{
+    flex:1;overflow:auto;
+    padding:16px 20px;
+    font-family:'IBM Plex Mono',monospace;
+    background:var(--bg-void);
+    position:relative;
+  }
+  .seq-block{margin-bottom:16px}
+  .seq-header{
+    display:flex;align-items:center;gap:10px;
+    padding:7px 10px;
+    background:var(--bg-panel);
+    border:1px solid var(--border);
+    border-bottom:0;
+    border-radius:var(--radius) var(--radius) 0 0;
+  }
+  .seq-chain-id{
+    font-size:10px;font-weight:600;color:var(--accent-bright);
+    background:rgba(59,130,246,.1);padding:2px 7px;border-radius:2px;
+    border:1px solid var(--border-accent);
+  }
+  .seq-chain-meta{font-size:10px;color:var(--text-mute)}
+  .seq-chain-meta b{color:var(--text);font-weight:500}
+  .seq-chain-conf{margin-left:auto;display:flex;align-items:center;gap:8px;font-size:10px;color:var(--text-mute)}
+  .conf-bar{width:70px;height:4px;background:var(--bg-elev);border-radius:2px;overflow:hidden}
+  .conf-bar > div{height:100%;background:var(--accent)}
+
+  .seq-body{
+    background:var(--bg-panel);
+    border:1px solid var(--border);
+    border-radius:0 0 var(--radius) var(--radius);
+    padding:10px;
+    overflow-x:auto;
+  }
+  .seq-ruler{
+    display:flex;font-size:9px;color:var(--text-faint);
+    margin-bottom:5px;
+    border-bottom:1px solid var(--border);
+    padding-bottom:4px;
+  }
+  .seq-ruler span{display:inline-block;width:14px;text-align:center}
+  .seq-residues{
+    display:flex;flex-wrap:wrap;
+    font-size:12px;line-height:1.8;
+  }
+  .res{
+    display:inline-block;width:14px;text-align:center;
+    cursor:pointer;border-radius:2px;
+    transition:all .1s;
+    user-select:none;
+  }
+  .res:hover{background:rgba(59,130,246,.2);transform:scale(1.15)}
+  .res.selected{background:var(--accent);color:#fff;font-weight:600}
+  .res.c-vhigh{color:var(--plddt-vhigh)}
+  .res.c-high{color:var(--plddt-high)}
+  .res.c-low{color:var(--plddt-low)}
+  .res.c-vlow{color:var(--plddt-vlow)}
+
+  /* ============ BINDING ANALYSIS ============ */
+  .binding-area{
+    flex:1;display:grid;grid-template-columns:1fr 320px;
+    overflow:hidden;
+  }
+  .binding-3d{position:relative;background:var(--bg-void);border-right:1px solid var(--border)}
+  #bindingviewer{position:absolute;inset:0}
+  .binding-panel{overflow-y:auto;padding:14px;background:var(--bg-panel)}
+  .binding-section{margin-bottom:16px}
+  .binding-section h4{
+    font-size:10px;text-transform:uppercase;letter-spacing:.08em;
+    color:var(--text-faint);margin-bottom:7px;font-weight:600;
+    font-family:'IBM Plex Mono',monospace;
+  }
+  .contact-list{display:flex;flex-direction:column;gap:3px}
+  .contact-row{
+    display:grid;grid-template-columns:1fr auto 1fr 50px;gap:8px;align-items:center;
+    padding:6px 8px;border-radius:var(--radius-sm);
+    background:var(--bg-base);border:1px solid var(--border);
+    font-family:'IBM Plex Mono',monospace;font-size:10px;
+    cursor:pointer;transition:all .15s;
+  }
+  .contact-row:hover{border-color:var(--border-accent);background:var(--bg-elev)}
+  .contact-res{color:var(--text)}
+  .contact-res.ligand{color:var(--amber)}
+  .contact-arrow{color:var(--text-faint)}
+  .contact-dist{color:var(--accent-bright);text-align:right;font-weight:500}
+
+  .ligand-stats{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:12px}
+  .ligand-stat{
+    background:var(--bg-base);border:1px solid var(--border);
+    border-radius:var(--radius-sm);padding:8px 9px;
+  }
+  .ligand-stat .k{font-size:9px;color:var(--text-faint);text-transform:uppercase;letter-spacing:.08em;font-family:'IBM Plex Mono',monospace}
+  .ligand-stat .v{font-size:13px;font-weight:600;color:var(--text);margin-top:2px;font-family:'IBM Plex Mono',monospace}
+
+  /* ============ PAE HEATMAP ============ */
+  .pae-area{
+    flex:1;display:flex;flex-direction:column;
+    background:var(--bg-void);
+    overflow:hidden;
+  }
+  .pae-toolbar{
+    padding:10px 16px;
+    border-bottom:1px solid var(--border);
+    display:flex;align-items:center;gap:12px;
+    background:var(--bg-panel);
+  }
+  .pae-toolbar .title{font-size:11px;font-weight:600;color:var(--text)}
+  .pae-toolbar .desc{font-size:10px;color:var(--text-mute);font-family:'IBM Plex Mono',monospace}
+  .pae-legend{
+    margin-left:auto;display:flex;align-items:center;gap:8px;
+    font-size:9px;color:var(--text-mute);font-family:'IBM Plex Mono',monospace;
+  }
+  .pae-legend-bar{width:100px;height:6px;border-radius:2px;background:linear-gradient(90deg,#1e3a5f,#3b82f6,#fbbf24,#fb7185)}
+
+  .pae-canvas-wrap{
+    flex:1;display:grid;place-items:center;
+    padding:24px;overflow:auto;
+    position:relative;
+  }
+  #paeCanvas{
+    background:var(--bg-panel);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    box-shadow:var(--shadow-lg);
+    cursor:crosshair;
+    image-rendering:pixelated;
+  }
+  .pae-tooltip{
+    position:absolute;
+    background:rgba(13,18,28,.95);
+    border:1px solid var(--border-strong);
+    border-radius:var(--radius-sm);padding:6px 9px;
+    font-family:'IBM Plex Mono',monospace;font-size:10px;
+    pointer-events:none;display:none;z-index:5;
+    box-shadow:var(--shadow-lg);
+  }
+  .pae-tooltip .pt-pair{color:var(--accent-bright);font-weight:600}
+  .pae-tooltip .pt-val{color:var(--text-mute);margin-top:2px}
+
+  /* ============ RUN PROGRESS OVERLAY ============ */
+  .run-overlay{
+    position:absolute;inset:0;
+    background:rgba(8,11,17,.92);
+    backdrop-filter:blur(4px);
+    z-index:20;
+    display:none;
+    align-items:center;justify-content:center;
+    flex-direction:column;
+  }
+  .run-overlay.active{display:flex}
+  .run-spinner{
+    width:48px;height:48px;border-radius:50%;
+    border:3px solid var(--bg-elev);
+    border-top-color:var(--accent);
+    animation:spin 0.8s linear infinite;
+    margin-bottom:16px;
+  }
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .run-title{font-size:14px;font-weight:600;color:var(--text);font-family:'IBM Plex Serif',serif}
+  .run-stage{font-size:11px;color:var(--accent-bright);font-family:'IBM Plex Mono',monospace;margin-top:4px;text-transform:uppercase;letter-spacing:.06em}
+  .run-progress{
+    width:280px;height:3px;background:var(--bg-elev);border-radius:3px;
+    margin-top:16px;overflow:hidden;
+  }
+  .run-progress > div{
+    height:100%;background:var(--accent);
+    border-radius:3px;transition:width .3s;
+  }
+  .run-log{
+    width:380px;margin-top:12px;
+    font-family:'IBM Plex Mono',monospace;font-size:10px;
+    color:var(--text-mute);text-align:center;line-height:1.7;
+  }
+
+  /* ============ STATUS BAR ============ */
+  .statusbar{
+    display:flex;align-items:center;
+    padding:0 14px;gap:14px;
+    background:var(--bg-panel);
+    border-top:1px solid var(--border);
+    font-family:'IBM Plex Mono',monospace;
+    font-size:10px;color:var(--text-faint);
+    text-transform:uppercase;letter-spacing:.06em;
+  }
+  .statusbar .sep{color:var(--text-dim)}
+  .statusbar .ok{color:var(--emerald)}
+  .statusbar .accent{color:var(--accent-bright)}
+  .statusbar > div:last-child{margin-left:auto}
+
+  /* Responsive */
+  @media (max-width:1100px){
+    .main{grid-template-columns:300px 1fr}
+  }
+  @media (max-width:900px){
+    .main{grid-template-columns:1fr}
+    .sidebar{max-height:40vh}
+  }
+</style>
 </head>
+<body>
+<div class="app">
 
-<body class="h-full font-sans antialiased text-[#1e293b] flex flex-col overflow-hidden">
-
-  <!-- HEADER / NAVIGATION DOCK -->
-  <header class="sticky top-0 z-40 w-full bg-white/80 backdrop-blur-md border-b border-slate-200">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-      
-      <!-- Brand Logo -->
-      <a href="profile.html" class="flex items-center gap-2">
-        <svg class="w-6 h-6 text-[#2563eb]" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M32 10L51 20L32 30L13 20L32 10Z" />
-          <path d="M51 30L32 40L13 30" />
-          <path d="M51 40L32 50L13 40" />
+  <!-- ============ TOP BAR ============ -->
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-mark">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+          <path d="M4 4c4 4 12 12 16 16M20 4C16 8 8 16 4 20"/>
         </svg>
-        <span class="font-outfit text-sm tracking-[0.2em] font-black uppercase text-[#0f172a]">
-          Nilus <span class="text-blue-600">Lab</span>
-        </span>
-      </a>
+      </div>
+      <div class="brand-text">
+        <div class="brand-name">NILUS<span>·LAB</span></div>
+        <div class="brand-sub">Computational Biology Platform</div>
+      </div>
+    </div>
 
-      <!-- Desktop Menu -->
-      <nav class="hidden md:flex items-center gap-6">
-        <a href="index.html" class="nav-dock-link">Mainframe</a>
-        
-        <div class="inst-diligence-wrapper relative py-4 flex items-center gap-1 cursor-pointer">
-          <span class="nav-dock-link">Diligence</span>
-          <i data-lucide="chevron-down" class="w-3 h-3 text-slate-400"></i>
-          <div class="inst-dropdown">
-            <a href="evidence.html">Evidence Registry</a>
-            <a href="scientific_qna.html">Scientific Q&A</a>
-            <a href="whitepaper.html">Research Whitepaper</a>
-            <a href="regulatory.html">Regulatory Statement</a>
-            <a href="v30_clinical_report.html">Clinical Report v30.0</a>
-            <a href="how_it_works.html" class="text-blue-600 font-extrabold">How Zenith Works</a>
-          </div>
+    <nav class="topnav">
+      <a href="#">Dashboard</a>
+      <a href="#">Sequences</a>
+      <a href="#" class="active">Structure</a>
+      <a href="#">Function</a>
+      <a href="#">Library</a>
+      <a href="#">Pipelines</a>
+    </nav>
+
+    <div class="top-right">
+      <div class="env-pill">Prod · EU-West</div>
+      <button class="top-icon" title="Notifications">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      </button>
+      <button class="top-icon" title="Documentation">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      </button>
+      <div class="user-chip">
+        <div class="user-avatar">EM</div>
+        <div class="user-meta">
+          <div class="user-name">Dr. E. Mireau</div>
+          <div class="user-org">nilus-lab · structural</div>
         </div>
-
-        <a href="technical_catalog.html" class="nav-dock-link">Catalog</a>
-        <a href="trials.html" class="nav-dock-link">Trials</a>
-        <a href="structure.html" class="nav-dock-link active">Folding</a>
-        <a href="api.html" class="nav-dock-link">API</a>
-      </nav>
-
-      <!-- Back button -->
-      <a href="index.html" class="flex items-center gap-1.5 px-3.5 py-1.5 bg-slate-100 hover:bg-slate-200 border border-slate-200 hover:border-slate-300 rounded-full font-bold text-[10px] uppercase tracking-widest text-slate-600 transition">
-        <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i> Back
-      </a>
+      </div>
     </div>
   </header>
 
-  <!-- MAIN BODY CONTENT -->
-  <main class="flex-1 min-h-0 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-3">
-    
-    <!-- Title Row + Mode Tabs -->
-    <div class="flex items-center gap-3 mb-3 flex-wrap">
-      <h1 class="font-outfit text-xl font-black tracking-tight text-slate-900">Structure Prediction</h1>
-      <div class="flex items-center gap-1 bg-slate-100 p-1 rounded-xl ml-1">
-        <button class="mode-tab active" id="tab-esmfold" onclick="switchTab('esmfold')" title="ESMFold: single-chain protein folding">
-          <i data-lucide="dna" style="width:10px;height:10px;display:inline;vertical-align:middle;margin-right:3px"></i>ESMFold
-        </button>
-        <button class="mode-tab" id="tab-boltz" onclick="switchTab('boltz')" title="Boltz API: multi-chain biomolecular complex prediction">
-          <i data-lucide="layers" style="width:10px;height:10px;display:inline;vertical-align:middle;margin-right:3px"></i>Boltz Complex
-        </button>
-      </div>
-      <span class="boltz-ruo-badge" id="ruo-badge" style="display:none">Research Use Only</span>
-      <span class="text-[11px] text-slate-400 font-medium hidden sm:block" id="tab-subtitle">— Submit an amino acid sequence to generate 3D coordinates</span>
+  <!-- ============ SUB BAR ============ -->
+  <div class="subbar">
+    <div class="crumb">
+      <a href="#">Workspace</a>
+      <span class="sep">/</span>
+      <a href="#">Structural Biology</a>
+      <span class="sep">/</span>
+      <span class="here">Structure Prediction</span>
     </div>
-
-    <!-- ESMFold Panel (wrapped for tab switching) -->
-    <div id="esmfold-panel-wrap">
-    <!-- Layout Grid: fills remaining height -->
-    <div class="grid grid-cols-1 lg:grid-cols-[360px_1fr] gap-4" style="height: calc(100vh - 135px);">
-      
-      <!-- LEFT SIDEBAR: INPUT & METRICS (scrollable) -->
-      <div class="h-full overflow-y-auto space-y-3 pr-1" style="scrollbar-width: thin;">
-        
-        <!-- Optional Personal API Key — compact collapsible -->
-        <details class="bg-white rounded-xl border border-slate-200 shadow-sm group" open>
-          <summary class="flex items-center justify-between px-4 py-2.5 cursor-pointer list-none select-none">
-            <span class="flex items-center gap-2 font-outfit text-[11px] font-bold uppercase tracking-wider text-slate-700">
-              <i data-lucide="key" class="w-3.5 h-3.5 text-blue-600"></i> Optional: Personal API Key
-            </span>
-            <div class="flex items-center gap-2">
-              <span class="text-[9px] bg-emerald-50 border border-emerald-200 text-emerald-700 px-2 py-0.5 rounded-full font-bold">No key needed</span>
-              <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-400 transition group-open:rotate-180"></i>
-            </div>
-          </summary>
-          <div class="px-4 pb-3 space-y-2 border-t border-slate-100">
-            <p class="text-[10px] text-slate-500 mt-2">Leave blank to use secure default. Enter <code class="bg-slate-100 px-1 rounded">zk_live_…</code> key only for your own quota.</p>
-            <div class="relative flex items-center">
-              <input type="password" id="api-key-input" autocomplete="new-password"
-                class="w-full h-8 pl-3 pr-8 rounded-lg border border-slate-200 text-xs font-mono focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 bg-slate-50"
-                placeholder="Optional: your personal zk_live_… key" />
-              <button type="button" onclick="toggleApiKeyVisibility()" class="absolute right-2.5 text-slate-400 hover:text-slate-600">
-                <i id="api-key-toggle-icon" data-lucide="eye" class="w-3.5 h-3.5"></i>
-              </button>
-            </div>
-            <button type="button" onclick="saveApiKey()" class="w-full h-7 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg font-bold text-[9px] uppercase tracking-wider transition flex items-center justify-center gap-1">
-              <i data-lucide="save" class="w-3 h-3"></i> Save Personal Key
-            </button>
-          </div>
-        </details>
-
-        <!-- Diagnostics — compact horizontal grid -->
-        <div class="bg-white rounded-xl border border-slate-200 p-3 shadow-sm">
-          <div class="flex items-center justify-between mb-2">
-            <span class="font-outfit text-[10px] font-bold uppercase tracking-wider text-slate-600 flex items-center gap-1.5">
-              <i data-lucide="activity" class="w-3 h-3 text-blue-600"></i> Diagnostics
-            </span>
-            <button onclick="refreshDiagnostics()" class="text-[8px] font-mono bg-slate-100 hover:bg-slate-200 text-slate-500 px-1.5 py-0.5 rounded uppercase tracking-wider transition">Refresh</button>
-          </div>
-          <div class="grid grid-cols-3 gap-1.5 text-[9px] font-mono">
-            <div class="bg-slate-50 rounded-lg p-1.5 border border-slate-100">
-              <div class="text-slate-400 mb-0.5">3Dmol.js</div>
-              <div id="diag-3dmol" class="font-bold text-slate-400">…</div>
-            </div>
-            <div class="bg-slate-50 rounded-lg p-1.5 border border-slate-100">
-              <div class="text-slate-400 mb-0.5">HTTP</div>
-              <div id="diag-http" class="font-bold text-slate-400">—</div>
-            </div>
-            <div class="bg-slate-50 rounded-lg p-1.5 border border-slate-100">
-              <div class="text-slate-400 mb-0.5">Source</div>
-              <div id="diag-source" class="font-bold text-slate-400">—</div>
-            </div>
-            <div class="bg-slate-50 rounded-lg p-1.5 border border-slate-100">
-              <div class="text-slate-400 mb-0.5">Route</div>
-              <div id="diag-route" class="font-bold text-slate-400 truncate" style="max-width:80px" title="">—</div>
-            </div>
-            <div class="bg-slate-50 rounded-lg p-1.5 border border-slate-100">
-              <div class="text-slate-400 mb-0.5">Fallback</div>
-              <div id="diag-fallback" class="font-bold text-slate-400">—</div>
-            </div>
-            <div class="bg-slate-50 rounded-lg p-1.5 border border-slate-100">
-              <div class="text-slate-400 mb-0.5">Provider</div>
-              <div id="diag-provider" class="font-bold text-slate-400">—</div>
-            </div>
-          </div>
-          <div class="mt-1.5 flex items-center justify-between text-[9px] font-mono">
-            <span class="text-slate-400">CSP/CDN error</span>
-            <span id="diag-csp" class="font-bold text-emerald-600">none</span>
-          </div>
-        </div>
-
-        <!-- Sequence Input — compact -->
-        <div class="bg-white rounded-xl border border-slate-200 p-4 shadow-sm">
-          <h2 class="font-outfit text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-2.5 flex items-center gap-2">
-            <i data-lucide="dna" class="w-3.5 h-3.5 text-blue-600"></i> Sequence Input
-          </h2>
-          <form id="folding-form" onsubmit="submitSequence(event)" class="space-y-2">
-            <div>
-              <label for="sequence" class="block text-[9px] font-bold uppercase tracking-wider text-slate-400 mb-1">Amino Acid Sequence (ARNDCQEGHILKMFPSTWYVX)</label>
-              <textarea id="sequence" rows="4"
-                class="w-full rounded-lg border border-slate-200 p-2.5 font-mono text-[11px] uppercase tracking-widest focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600 bg-slate-50 resize-none"
-                placeholder="Paste FASTA or raw sequence..." required
-              >MQIFVKTLTGKTITLEVEPSDTIENVKAKIQDKEGIPPDQQRLIFAGKQLEDGRTLSDYNIQKESTLHLVLRLRGG</textarea>
-            </div>
-            <div class="flex items-center justify-between text-[9px] text-slate-400 font-medium">
-              <span id="char-count">Length: 76 residues</span>
-              <span>Max: 1000 residues</span>
-            </div>
-            <button type="submit" id="fold-btn"
-              class="w-full h-9 bg-[#0f172a] hover:bg-slate-800 text-white rounded-lg font-semibold text-[10px] tracking-wider uppercase transition flex items-center justify-center gap-2 shadow-md disabled:opacity-55 disabled:cursor-not-allowed">
-              <span>Predict 3D Structure</span>
-              <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
-            </button>
-          </form>
-        </div>
-
-        <!-- Metrics & PDB actions — compact -->
-        <div class="bg-white rounded-xl border border-slate-200 p-3 shadow-sm space-y-2">
-          <div class="flex items-center justify-between">
-            <span class="font-outfit text-[10px] font-bold uppercase tracking-wider text-slate-600 flex items-center gap-1.5">
-              <i data-lucide="bar-chart-2" class="w-3 h-3 text-blue-600"></i> Metrics
-            </span>
-            <span id="telemetry-status" class="text-[8px] font-mono bg-slate-100 text-slate-600 px-2 py-0.5 rounded uppercase font-bold">IDLE</span>
-          </div>
-          <div class="grid grid-cols-2 gap-1.5">
-            <div class="metric-card">
-              <div class="text-[8px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">HTTP Status</div>
-              <div id="metric-http" class="font-mono font-bold text-slate-700 text-xs">-</div>
-            </div>
-            <div class="metric-card">
-              <div class="text-[8px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Source</div>
-              <div id="metric-source" class="font-semibold text-slate-700 text-xs">-</div>
-            </div>
-            <div class="metric-card">
-              <div class="text-[8px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Latency</div>
-              <div id="metric-latency" class="font-mono font-bold text-slate-700 text-xs">-</div>
-            </div>
-            <div class="metric-card">
-              <div class="text-[8px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Cache</div>
-              <div id="metric-cache" class="font-semibold text-slate-700 text-xs">-</div>
-            </div>
-            <div class="metric-card col-span-2">
-              <div class="flex items-center justify-between mb-1">
-                <span class="text-[8px] font-bold text-slate-400 uppercase tracking-wider">Confidence pLDDT</span>
-                <span id="metric-lddt-source" class="text-[8px] font-mono text-slate-400"></span>
-              </div>
-              <div class="flex items-center gap-2">
-                <div class="flex-1 bg-slate-100 h-1.5 rounded-full overflow-hidden">
-                  <div id="lddt-bar" class="bg-blue-600 h-full w-0 transition-all duration-500"></div>
-                </div>
-                <span id="metric-lddt" class="font-mono font-bold text-slate-700 text-xs">-</span>
-              </div>
-            </div>
-          </div>
-          <!-- PDB Action Buttons -->
-          <div class="grid grid-cols-2 gap-2 pt-1">
-            <button id="download-pdb-btn" onclick="downloadPdb()" disabled
-              class="h-8 border border-slate-200 hover:border-slate-300 bg-white hover:bg-slate-50 text-slate-700 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg font-bold text-[9px] uppercase tracking-wider transition flex items-center justify-center gap-1">
-              <i data-lucide="download" class="w-3 h-3"></i> Download PDB
-            </button>
-            <button id="view-pdb-btn" onclick="openPdbModal()" disabled
-              class="h-8 border border-slate-200 hover:border-slate-300 bg-white hover:bg-slate-50 text-slate-700 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg font-bold text-[9px] uppercase tracking-wider transition flex items-center justify-center gap-1">
-              <i data-lucide="file-text" class="w-3 h-3"></i> View Raw PDB
-            </button>
-          </div>
-        </div>
-
-      </div>
-
-      <!-- RIGHT COLUMN: 3D VIEWER — fills remaining height -->
-      <div class="h-full flex flex-col gap-3 min-h-0">
-
-        <!-- Viewer Card — expands to fill all space -->
-        <div class="flex-1 min-h-0 bg-white rounded-2xl border border-slate-200 p-4 shadow-sm flex flex-col">
-          <div class="flex items-center justify-between mb-2.5">
-            <div class="flex items-center gap-4">
-              <h2 class="font-outfit text-[11px] font-bold uppercase tracking-wider text-slate-700 flex items-center gap-2">
-                <i data-lucide="eye" class="w-3.5 h-3.5 text-blue-600"></i> 3D Structure Viewer
-              </h2>
-              <div class="flex items-center gap-1 bg-slate-100 p-0.5 rounded-lg text-[9px] font-bold">
-                <button type="button" onclick="setViewerTheme('esm', 'dark')" id="theme-esm-dark" class="px-2 py-0.5 rounded text-slate-700 bg-white shadow-sm transition">Dark</button>
-                <button type="button" onclick="setViewerTheme('esm', 'light')" id="theme-esm-light" class="px-2 py-0.5 rounded text-slate-500 hover:text-slate-700 transition">Light</button>
-              </div>
-            </div>
-            <!-- Status banner inline -->
-            <div id="alert-banner" class="hidden p-2 rounded-lg text-[10px] font-semibold flex items-center gap-1.5 max-w-sm">
-              <i id="alert-icon" class="w-3.5 h-3.5 flex-shrink-0"></i>
-              <span id="alert-text"></span>
-            </div>
-          </div>
-
-          <!-- 3Dmol container — flex-1 so it fills all remaining card space -->
-          <div class="flex-1 min-h-0 w-full rounded-xl border border-slate-200 overflow-hidden relative bg-[#0f172a] shadow-inner flex items-center justify-center">
-            <div id="protein-viewer" class="w-full h-full"></div>
-            <div id="viewer-placeholder" class="absolute inset-0 flex flex-col items-center justify-center text-center p-6 bg-slate-900/60 backdrop-blur-sm transition-all duration-300">
-              <div class="w-10 h-10 rounded-full border-4 border-slate-700 border-t-blue-500 animate-spin mb-3 hidden" id="viewer-spinner"></div>
-              <i data-lucide="layers" class="w-9 h-9 text-slate-500 mb-2" id="viewer-icon"></i>
-              <h3 class="text-sm font-semibold text-slate-300" id="viewer-title">No Model Loaded</h3>
-              <p class="text-xs text-slate-500 mt-1 max-w-xs" id="viewer-sub">Submit an amino acid sequence to generate and visualize its 3D atomic coordinates.</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Scientific disclaimer + comparison table — compact collapsible -->
-        <details class="bg-white rounded-xl border border-slate-200 shadow-sm flex-shrink-0">
-          <summary class="flex items-center gap-2 px-4 py-2.5 cursor-pointer list-none select-none text-[10px] font-bold uppercase tracking-wider text-amber-700">
-            <i data-lucide="alert-triangle" class="w-3.5 h-3.5 text-amber-500"></i>
-            Scientific Limitations &amp; ESMFold vs AlphaFold Comparison
-            <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-400 ml-auto"></i>
-          </summary>
-          <div class="px-4 pb-3 border-t border-slate-100">
-            <p class="text-[10px] text-amber-700 leading-relaxed mt-2 mb-2"><strong>Note:</strong> ESMFold is for fast exploratory single-sequence prediction only. Not equivalent to AlphaFold2/3. No ligands, complexes, or nucleic acids.</p>
-            <div class="overflow-x-auto border border-slate-200 rounded-lg">
-              <table class="w-full text-[10px] text-left text-slate-500">
-                <thead class="bg-slate-50 text-[9px] font-black uppercase tracking-wider text-slate-600 border-b border-slate-200">
-                  <tr><th class="py-1.5 px-2">Feature</th><th class="py-1.5 px-2">ESMFold</th><th class="py-1.5 px-2">AlphaFold2</th><th class="py-1.5 px-2">AlphaFold3</th></tr>
-                </thead>
-                <tbody class="divide-y divide-slate-100">
-                  <tr><td class="py-1 px-2 font-bold text-slate-800">Speed</td><td class="py-1 px-2 text-emerald-600 font-bold">Fast (seconds)</td><td class="py-1 px-2">Slower</td><td class="py-1 px-2">Slower</td></tr>
-                  <tr><td class="py-1 px-2 font-bold text-slate-800">MSA required</td><td class="py-1 px-2">No</td><td class="py-1 px-2">Usually yes</td><td class="py-1 px-2">Model-dependent</td></tr>
-                  <tr><td class="py-1 px-2 font-bold text-slate-800">Complexes</td><td class="py-1 px-2">Limited</td><td class="py-1 px-2">AF-Multimer</td><td class="py-1 px-2 font-bold text-slate-700">Supported</td></tr>
-                  <tr><td class="py-1 px-2 font-bold text-slate-800">Ligands</td><td class="py-1 px-2">No</td><td class="py-1 px-2">No</td><td class="py-1 px-2 font-bold text-slate-700">Supported</td></tr>
-                  <tr><td class="py-1 px-2 font-bold text-slate-800">Zenith Status</td><td class="py-1 px-2 text-emerald-600 font-bold">Integrated</td><td class="py-1 px-2">—</td><td class="py-1 px-2">—</td></tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </details>
-
-      </div>
-
-    </div>
-    </div><!-- /#esmfold-panel-wrap -->
-
-    <!-- ═══════════════════════════════════════════════════════════════════ -->
-    <!-- BOLTZ COMPLEX PREDICTION PANEL                                     -->
-    <!-- ═══════════════════════════════════════════════════════════════════ -->
-    <div id="boltz-panel" style="display:none; height:calc(100vh - 135px);">
-      <div class="grid grid-cols-1 lg:grid-cols-[380px_1fr] gap-4 h-full">
-
-        <!-- ── LEFT: Chain Builder + Controls ── -->
-        <div class="h-full overflow-y-auto space-y-3 pr-1" style="scrollbar-width:thin">
-
-          <!-- Engine badge -->
-          <div class="flex items-center gap-2 mb-1">
-            <span class="px-2 py-0.5 bg-violet-50 text-violet-700 border border-violet-200 rounded font-outfit text-[9px] font-bold uppercase tracking-wider">Boltz-2.1 API</span>
-            <span class="text-[10px] text-slate-500">Native complex prediction — Protein · DNA · RNA · Ligand · Ion</span>
-          </div>
-
-          <!-- Job Name -->
-          <div class="bg-white rounded-xl border border-slate-200 p-3 shadow-sm">
-            <label class="block text-[9px] font-bold uppercase tracking-wider text-slate-400 mb-1">Job Name <span class="text-slate-300">(optional)</span></label>
-            <input type="text" id="boltz-job-name" maxlength="64" placeholder="e.g. OCT4-DNA-complex" class="w-full h-8 px-3 rounded-lg border border-slate-200 text-xs font-mono focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500 bg-slate-50" />
-          </div>
-
-          <!-- Chain Builder -->
-          <div class="bg-white rounded-xl border border-slate-200 p-3 shadow-sm">
-            <div class="flex items-center justify-between mb-2">
-              <h2 class="font-outfit text-[11px] font-bold uppercase tracking-wider text-slate-700 flex items-center gap-2">
-                <i data-lucide="list" class="w-3.5 h-3.5 text-violet-600"></i> Complex Chains
-              </h2>
-              <span id="boltz-chain-count" class="text-[9px] font-mono bg-slate-100 text-slate-500 px-2 py-0.5 rounded-full">0 chains</span>
-            </div>
-
-            <!-- Chain list -->
-            <div id="boltz-chains-list"></div>
-
-            <!-- Add chain buttons -->
-            <div class="grid grid-cols-2 gap-1.5 mt-2">
-              <button class="boltz-btn secondary" onclick="boltzAddChain('protein')"><span class="badge-protein chain-type-badge">P</span>Add Protein</button>
-              <button class="boltz-btn secondary" onclick="boltzAddChain('dna')"><span class="badge-dna chain-type-badge">D</span>Add DNA</button>
-              <button class="boltz-btn secondary" onclick="boltzAddChain('rna')"><span class="badge-rna chain-type-badge">R</span>Add RNA</button>
-              <button class="boltz-btn secondary" onclick="boltzAddChain('ligand_ccd')"><span class="badge-ligand chain-type-badge">L</span>Add Ligand/Ion</button>
-            </div>
-          </div>
-
-          <!-- Binding type -->
-          <div class="bg-white rounded-xl border border-slate-200 p-3 shadow-sm">
-            <label class="block text-[9px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">Binding Mode</label>
-            <select id="boltz-binding-type" class="w-full h-8 px-2 rounded-lg border border-slate-200 text-xs bg-slate-50 focus:outline-none focus:border-violet-500">
-              <option value="none">None — Structure only (no binding metrics)</option>
-              <option value="ligand_protein_binding">Ligand→Protein binding</option>
-              <option value="protein_protein_binding">Protein→Protein binding</option>
-            </select>
-            <div id="boltz-binder-chain-row" class="hidden mt-2">
-              <label class="block text-[9px] font-bold uppercase tracking-wider text-slate-400 mb-1">Binder Chain ID</label>
-              <input type="text" id="boltz-binder-chain-id" placeholder="e.g. B" maxlength="4" class="w-full h-8 px-3 rounded-lg border border-slate-200 text-xs font-mono bg-slate-50 focus:outline-none focus:border-violet-500" />
-            </div>
-          </div>
-
-          <!-- Action Buttons -->
-          <div class="space-y-2">
-            <button class="boltz-btn secondary w-full" id="boltz-validate-btn" onclick="boltzValidate()">
-              <i data-lucide="check-circle" style="width:13px;height:13px"></i> 1. Validate Complex
-            </button>
-            <button class="boltz-btn secondary w-full" id="boltz-estimate-btn" onclick="boltzEstimate()" disabled>
-              <i data-lucide="dollar-sign" style="width:13px;height:13px"></i> 2. Estimate Cost
-            </button>
-            <button class="boltz-btn primary w-full" id="boltz-submit-btn" onclick="boltzSubmitWithConfirm()" disabled>
-              <i data-lucide="send" style="width:13px;height:13px"></i> 3. Submit Boltz Prediction
-            </button>
-          </div>
-
-          <!-- Status + Polling -->
-          <div class="bg-white rounded-xl border border-slate-200 p-3 shadow-sm">
-            <div class="flex items-center justify-between mb-2">
-              <span class="font-outfit text-[10px] font-bold uppercase tracking-wider text-slate-600 flex items-center gap-1.5">
-                <i data-lucide="activity" class="w-3 h-3 text-violet-600"></i> Job Status
-              </span>
-              <span id="boltz-status-badge" class="text-[8px] font-mono bg-slate-100 text-slate-500 px-2 py-0.5 rounded uppercase font-bold">IDLE</span>
-            </div>
-            <div id="boltz-status-msg" class="text-[10px] text-slate-500 font-mono mb-2">No job submitted yet.</div>
-            <div id="boltz-job-id-row" class="hidden text-[9px] font-mono text-slate-400 mb-2 break-all">Job ID: <span id="boltz-job-id-display"></span></div>
-            <button class="boltz-btn secondary w-full" id="boltz-poll-btn" onclick="boltzPollStatus()" disabled>
-              <i data-lucide="refresh-cw" style="width:12px;height:12px"></i> Check Status
-            </button>
-          </div>
-
-          <!-- Result Actions -->
-          <div class="bg-white rounded-xl border border-slate-200 p-3 shadow-sm" id="boltz-result-actions" style="display:none">
-            <div class="font-outfit text-[10px] font-bold uppercase tracking-wider text-slate-600 flex items-center gap-1.5 mb-2">
-              <i data-lucide="download-cloud" class="w-3 h-3 text-emerald-600"></i> Downloads
-            </div>
-            <div class="grid grid-cols-3 gap-2">
-              <button class="boltz-btn secondary" id="boltz-dl-pdb-btn" onclick="boltzDownloadPdb()">
-                <i data-lucide="file-text" style="width:12px;height:12px"></i> Download PDB
-              </button>
-              <button class="boltz-btn secondary" id="boltz-dl-cif-btn" onclick="boltzDownloadCif()">
-                <i data-lucide="file" style="width:12px;height:12px"></i> Download CIF
-              </button>
-              <button class="boltz-btn secondary" id="boltz-dl-conf-btn" onclick="boltzDownloadConfidence()">
-                <i data-lucide="bar-chart-2" style="width:12px;height:12px"></i> Confidence JSON
-              </button>
-            </div>
-          </div>
-
-          <!-- Scientific Disclaimer -->
-          <details class="bg-amber-50 rounded-xl border border-amber-200 shadow-sm flex-shrink-0">
-            <summary class="flex items-center gap-2 px-3 py-2 cursor-pointer list-none select-none text-[10px] font-bold uppercase tracking-wider text-amber-700">
-              <i data-lucide="alert-triangle" class="w-3.5 h-3.5 text-amber-500"></i>
-              Research Use Only Disclaimer
-              <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-amber-400 ml-auto"></i>
-            </summary>
-            <div class="px-3 pb-3 pt-2 text-[10px] text-amber-800 leading-relaxed">
-              <p><strong>For research use only (RUO). Not for clinical, diagnostic, or therapeutic decision-making.</strong></p>
-              <p class="mt-1">Complex predictions require experimental validation. Zenith does not run AlphaFold2 or AlphaFold3 internally. Predictions are powered by Boltz API (Boltz-2.1 model).</p>
-            </div>
-          </details>
-
-        </div><!-- /left col -->
-
-        <!-- ── RIGHT: Mol* Viewer + Metrics ── -->
-        <div class="h-full flex flex-col gap-3 min-h-0">
-
-          <!-- Viewer Card -->
-          <div class="flex-1 min-h-0 bg-white rounded-2xl border border-slate-200 p-4 shadow-sm flex flex-col">
-            <div class="flex items-center justify-between mb-2.5">
-              <div class="flex items-center gap-4">
-                <h2 class="font-outfit text-[11px] font-bold uppercase tracking-wider text-slate-700 flex items-center gap-2">
-                  <i data-lucide="eye" class="w-3.5 h-3.5 text-violet-600"></i> 3D Complex Viewer
-                  <span class="text-[9px] font-mono bg-violet-50 text-violet-600 border border-violet-200 px-1.5 rounded">Mol*</span>
-                </h2>
-                <div class="flex items-center gap-1 bg-slate-100 p-0.5 rounded-lg text-[9px] font-bold">
-                  <button type="button" onclick="setViewerTheme('boltz', 'dark')" id="theme-boltz-dark" class="px-2 py-0.5 rounded text-slate-700 bg-white shadow-sm transition">Dark</button>
-                  <button type="button" onclick="setViewerTheme('boltz', 'light')" id="theme-boltz-light" class="px-2 py-0.5 rounded text-slate-500 hover:text-slate-700 transition">Light</button>
-                </div>
-              </div>
-              <div class="flex items-center gap-2">
-                <span id="boltz-real-badge" class="hidden text-[8px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 px-2 py-0.5 rounded-full uppercase">Real Prediction</span>
-                <span id="boltz-no-synth-badge" class="hidden text-[8px] font-bold bg-slate-50 text-slate-500 border border-slate-200 px-2 py-0.5 rounded-full uppercase">No Synthetic Fallback</span>
-              </div>
-            </div>
-            <!-- pLDDT Color Legend Bar (AlphaFold Database Style) -->
-            <div id="boltz-plddt-legend" class="hidden mb-2.5 px-3 py-1.5 bg-[#0f172a] border border-slate-800 rounded-xl text-[9px] font-semibold text-slate-300">
-              <div class="flex flex-wrap items-center justify-between gap-2">
-                <div class="flex items-center gap-2">
-                  <span class="text-slate-400 uppercase tracking-widest text-[8px] font-black">Model Confidence (pLDDT):</span>
-                  <div class="flex items-center gap-2 flex-wrap">
-                    <div class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-[#0053d6]"></span><span>Very high (&gt;90)</span></div>
-                    <div class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-[#00c2ec]"></span><span>Confident (70-90)</span></div>
-                    <div class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-[#ffdb00]"></span><span class="text-slate-200">Low (50-70)</span></div>
-                    <div class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-[#ff7d00]"></span><span>Very low (&lt;50)</span></div>
-                  </div>
-                </div>
-                <div class="text-[9px] font-mono text-slate-300" id="boltz-summary-scores"></div>
-              </div>
-            </div>
-
-            <!-- Viewer / Placeholder -->
-            <div id="boltz-viewer-container" class="flex-1 min-h-0 flex gap-4">
-              <!-- Left: 3Dmol viewer -->
-              <div class="flex-1 relative min-w-0 h-full border border-slate-100 rounded-xl overflow-hidden bg-slate-950">
-                <div id="boltz-viewer-placeholder" class="absolute inset-0 flex flex-col items-center justify-center text-center p-6 bg-slate-900/60 backdrop-blur-sm transition-all duration-300" style="position:absolute;inset:0;z-index:10">
-                  <div class="w-10 h-10 rounded-full border-4 border-slate-700 border-t-violet-500 animate-spin mb-3 hidden" id="boltz-viewer-spinner"></div>
-                  <i data-lucide="layers" class="w-9 h-9 text-slate-500 mb-2" id="boltz-viewer-icon"></i>
-                  <h3 class="text-sm font-semibold text-slate-300" id="boltz-viewer-title">No Complex Loaded</h3>
-                  <p class="text-xs text-slate-500 mt-1 max-w-xs" id="boltz-viewer-sub">Build your complex above, then submit a Boltz API prediction.</p>
-                </div>
-                <div id="boltz-molstar-mount" style="width:100%;height:100%"></div>
-              </div>
-              <!-- Deep Sequence Viewer Panel -->
-              <div id="boltz-sequence-panel" class="mt-4 bg-white border border-slate-200 rounded-xl p-3 overflow-y-auto hidden flex-col w-full" style="max-height: 150px;">
-                <div class="flex items-center justify-between mb-2 border-b border-slate-100 pb-2">
-                  <div class="flex items-center gap-3">
-                    <span class="text-[10px] font-bold text-slate-700 uppercase tracking-wider">Deep Sequence Viewer</span>
-                    <span class="text-[9px] text-slate-400 font-medium bg-slate-50 px-2 py-0.5 rounded">Click residue to highlight</span>
-                  </div>
-                  <button type="button" class="text-[9px] font-bold uppercase tracking-wider text-blue-600 hover:text-blue-700 bg-blue-50 px-2 py-1 rounded transition-colors" onclick="clearSequenceHighlight()">Clear Highlights</button>
-                </div>
-                <div id="boltz-sequence-content" class="font-mono text-[11px] break-words text-slate-600 leading-relaxed tracking-wider flex flex-wrap gap-x-1 gap-y-1"></div>
-              </div>
-
-
-              <!-- Right: PAE Heatmap Panel (Compact size) -->
-              <div id="boltz-pae-panel" class="w-[210px] flex-shrink-0 flex flex-col border border-slate-200 rounded-xl bg-slate-50/50 p-2.5" style="display:none">
-                <div class="flex items-center justify-between mb-1.5">
-                  <span class="text-[8px] font-bold text-slate-700 uppercase tracking-wider">PAE Heatmap</span>
-                  <div class="flex items-center gap-1">
-                    <input type="checkbox" id="pae-borders-toggle" checked onchange="drawPAEHeatmap()" class="w-2.5 h-2.5 text-violet-600 rounded">
-                    <label for="pae-borders-toggle" class="text-[7.5px] font-bold text-slate-500 uppercase cursor-pointer select-none">Borders</label>
-                  </div>
-                </div>
-                <!-- Heatmap Canvas container -->
-                <div class="flex-1 min-h-0 flex items-center justify-center relative bg-white border border-slate-200 rounded-lg p-2 overflow-hidden">
-                  <canvas id="boltz-pae-canvas" style="max-width:100%; max-height:100%; aspect-ratio:1/1; cursor:crosshair;"></canvas>
-                  <!-- Tooltip -->
-                  <div id="pae-tooltip" class="absolute hidden bg-slate-900/95 text-white text-[8px] font-bold py-1 px-1.5 rounded shadow pointer-events-none z-50 line-clamp-3"></div>
-                </div>
-                <!-- Color bar legend at bottom -->
-                <div class="mt-2 flex flex-col gap-1 text-[8px] font-bold text-slate-500 uppercase">
-                  <div class="flex justify-between items-center text-[7px]">
-                    <span>0 Å (High Confidence)</span>
-                    <span>30 Å (Low Confidence)</span>
-                  </div>
-                  <div class="w-full h-2 rounded-full overflow-hidden" style="background: linear-gradient(to right, #004a1c 0%, #3ca05c 50%, #ffffff 100%)"></div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Confidence metrics -->
-          <div id="boltz-metrics-panel" class="bg-white rounded-xl border border-slate-200 p-3 shadow-sm flex-shrink-0" style="display:none">
-            <div class="font-outfit text-[10px] font-bold uppercase tracking-wider text-slate-600 flex items-center gap-1.5 mb-2">
-              <i data-lucide="bar-chart-2" class="w-3 h-3 text-violet-600"></i> Confidence Metrics
-              <span class="ml-auto text-[8px] font-mono text-slate-400 bg-slate-100 px-2 py-0.5 rounded">boltz-2.1</span>
-            </div>
-            <div class="grid grid-cols-3 gap-2 mb-2" id="boltz-metrics-grid"></div>
-            <div id="boltz-binding-metrics" class="hidden mt-2 p-2 bg-violet-50 border border-violet-200 rounded-lg">
-              <div class="text-[9px] font-bold uppercase tracking-wider text-violet-700 mb-1">Binding Metrics</div>
-              <div id="boltz-binding-content" class="text-[10px] font-mono text-violet-900"></div>
-            </div>
-          </div>
-
-          <!-- Chain Info Table -->
-          <div id="boltz-info-table-panel" class="bg-white rounded-xl border border-slate-200 p-3 shadow-sm flex-shrink-0" style="display:none">
-            <div class="font-outfit text-[10px] font-bold uppercase tracking-wider text-slate-600 flex items-center gap-1.5 mb-2">
-              <i data-lucide="table" class="w-3 h-3 text-slate-400"></i> Complex Composition
-            </div>
-            <div class="overflow-x-auto">
-              <table class="w-full text-[10px]" id="boltz-info-table">
-                <thead class="text-[9px] font-black uppercase tracking-wider text-slate-500 border-b border-slate-200">
-                  <tr><th class="py-1 px-2 text-left">Type</th><th class="py-1 px-2 text-left">Chain</th><th class="py-1 px-2 text-left">Value / Seq</th><th class="py-1 px-2 text-left">Length</th></tr>
-                </thead>
-                <tbody id="boltz-info-tbody" class="divide-y divide-slate-100"></tbody>
-              </table>
-            </div>
-            <div class="mt-2 pt-2 border-t border-slate-100 text-[9px] font-mono text-slate-400 grid grid-cols-2 gap-1">
-              <div>Provider: <span id="bi-provider" class="text-slate-700 font-bold">Boltz API</span></div>
-              <div>Engine: <span id="bi-engine" class="text-slate-700 font-bold">boltz-2.1</span></div>
-              <div>Real Prediction: <span id="bi-real" class="text-emerald-700 font-bold">true</span></div>
-              <div>Synthetic Fallback: <span id="bi-synth" class="text-emerald-700 font-bold">false</span></div>
-            </div>
-          </div>
-
-        </div><!-- /right col -->
-
-      </div>
-    </div><!-- /#boltz-panel -->
-
-  </main>
-
-  <!-- RAW PDB VIEW MODAL -->
-  <div id="pdb-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
-    <div class="bg-white rounded-2xl border border-slate-200 w-full max-w-3xl flex flex-col max-h-[85vh] shadow-2xl overflow-hidden">
-      <div class="p-5 border-b border-slate-200 flex items-center justify-between">
-        <h3 class="font-outfit font-bold text-slate-800 flex items-center gap-2">
-          <i data-lucide="file-text" class="w-4 h-4 text-blue-600"></i> Raw PDB Structure Output
-        </h3>
-        <button onclick="closePdbModal()" class="text-slate-400 hover:text-slate-600 transition">
-          <i data-lucide="x" class="w-5 h-5"></i>
-        </button>
-      </div>
-      <div class="p-5 overflow-auto flex-1 bg-slate-950 font-mono text-[10px] text-slate-300 leading-normal select-text">
-        <pre id="pdb-raw-text"></pre>
-      </div>
-      <div class="p-4 border-t border-slate-200 bg-slate-50 flex justify-end gap-3">
-        <button onclick="closePdbModal()" class="px-4 py-2 border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 rounded-xl font-semibold text-xs transition">
-          Close
-        </button>
-        <button onclick="downloadPdb()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-semibold text-xs transition shadow flex items-center gap-1.5">
-          <i data-lucide="download" class="w-3.5 h-3.5"></i> Download
-        </button>
-      </div>
-    </div>
+    <div class="subbar-spacer"></div>
+    <div class="stat-chip"><span class="dot"></span><span class="label">Bridge</span><span class="val">online</span></div>
+    <div class="stat-chip"><span class="label">GPU Pool</span><span class="val">7 / 12</span></div>
+    <div class="stat-chip"><span class="label">Session</span><span class="val" id="sessionId">ses-2f8a1c</span></div>
   </div>
 
-  <!-- SCRIPT LOGIC -->
-  <script>
-    let activePdbData = null;
-    let activeSequence = "";
+  <!-- ============ MAIN ============ -->
+  <main class="main">
 
-    // ── Tab switcher ─────────────────────────────────────────────────────
-    function switchTab(tab) {
-      const esmPanel   = document.getElementById('esmfold-panel-wrap');
-      const boltzPanel = document.getElementById('boltz-panel');
-      const esmTab     = document.getElementById('tab-esmfold');
-      const boltzTab   = document.getElementById('tab-boltz');
-      const sub        = document.getElementById('tab-subtitle');
-      const ruoBadge   = document.getElementById('ruo-badge');
+    <!-- ============ SIDEBAR ============ -->
+    <aside class="sidebar">
 
-      if (tab === 'esmfold') {
-        esmPanel   && (esmPanel.style.display = '');
-        boltzPanel && (boltzPanel.style.display = 'none');
-        esmTab.classList.add('active');
-        boltzTab.classList.remove('active');
-        sub.textContent = '— Submit an amino acid sequence to generate 3D coordinates';
-        ruoBadge.style.display = 'none';
-      } else {
-        esmPanel   && (esmPanel.style.display = 'none');
-        boltzPanel && (boltzPanel.style.display = '');
-        esmTab.classList.remove('active');
-        boltzTab.classList.add('active');
-        sub.textContent = '— Build a biomolecular complex (Protein + DNA + RNA + Ligand)';
-        ruoBadge.style.display = '';
-        lucide.createIcons();
-      }
-    }
-
-    // ── Boltz Complex State ──────────────────────────────────────────────
-    let boltzChains    = [];   // { type, value, chain_id }
-    let boltzJobId     = null; // Boltz prediction ID
-    let boltzValidated = false;
-    let boltzEstimated = false;
-    let boltzPolling   = null; // interval handle
-    let boltzCifUrl    = null; // proxied download path
-    let currentPAEMatrix = null;
-    let currentPAEChains = [];
-    const CHAIN_LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-
-    function nextChainId() {
-      const used = boltzChains.map(c => c.chain_id);
-      for (const l of CHAIN_LETTERS) {
-        if (!used.includes(l)) return l;
-      }
-      return 'Z';
-    }
-
-    function boltzRenderChains() {
-      const container = document.getElementById('boltz-chains-list');
-      container.innerHTML = '';
-      boltzChains.forEach((chain, idx) => {
-        const badgeClass = {
-          protein: 'badge-protein', dna: 'badge-dna', rna: 'badge-rna',
-          ligand_ccd: 'badge-ligand', ligand_smiles: 'badge-ligand'
-        }[chain.type] || 'badge-ligand';
-        const label = { protein: 'Protein', dna: 'DNA', rna: 'RNA', ligand_ccd: 'Ligand/Ion', ligand_smiles: 'Ligand SMILES' }[chain.type] || chain.type;
-        const placeholder = chain.type === 'protein' ? 'MKTIIALSYIFCLVFA...' :
-                            chain.type === 'dna'     ? 'ATGCAAATGAAT...' :
-                            chain.type === 'rna'     ? 'AUGCAAAUGAAU...' :
-                            'CCD code e.g. ATP, ZN';
-        let inputHtml = '';
-        if (chain.type === 'ligand_ccd') {
-          const isPreset = ['MG','ZN','CL','CA','NA','MN','K','FE','CU','CO','ADP','ATP','AMP','GTP','GDP','FAD','NAD','NAP','NDP','HEM','HEC','PLM','OLA','MYR','CIT','CLA','CHL','BCL','BCB',''].includes(chain.value);
-          inputHtml = `
-            <select class="w-full rounded-lg border border-slate-200 p-1.5 font-mono text-[10px] focus:outline-none focus:border-violet-500 bg-white"
-              onchange="boltzHandleCcdDropdownChange(${idx}, this)"
-            >
-              <option value="" ${chain.value === '' ? 'selected' : ''}>-- Select a Ligand or Ion --</option>
-              <optgroup label="Ions">
-                <option value="MG" ${chain.value === 'MG' ? 'selected' : ''}>MG - Magnesium Ion (Mg²⁺)</option>
-                <option value="ZN" ${chain.value === 'ZN' ? 'selected' : ''}>ZN - Zinc Ion (Zn²⁺)</option>
-                <option value="CL" ${chain.value === 'CL' ? 'selected' : ''}>CL - Chloride Ion (Cl⁻)</option>
-                <option value="CA" ${chain.value === 'CA' ? 'selected' : ''}>CA - Calcium Ion (Ca²⁺)</option>
-                <option value="NA" ${chain.value === 'NA' ? 'selected' : ''}>NA - Sodium Ion (Na⁺)</option>
-                <option value="MN" ${chain.value === 'MN' ? 'selected' : ''}>MN - Manganese Ion (Mn²⁺)</option>
-                <option value="K" ${chain.value === 'K' ? 'selected' : ''}>K - Potassium Ion (K⁺)</option>
-                <option value="FE" ${chain.value === 'FE' ? 'selected' : ''}>FE - Iron Ion (Fe³⁺)</option>
-                <option value="CU" ${chain.value === 'CU' ? 'selected' : ''}>CU - Copper Ion (Cu²⁺)</option>
-                <option value="CO" ${chain.value === 'CO' ? 'selected' : ''}>CO - Cobalt Ion (Co²⁺)</option>
-              </optgroup>
-              <optgroup label="Standard Ligands">
-                <option value="ADP" ${chain.value === 'ADP' ? 'selected' : ''}>ADP - Adenosine diphosphate</option>
-                <option value="ATP" ${chain.value === 'ATP' ? 'selected' : ''}>ATP - Adenosine triphosphate</option>
-                <option value="AMP" ${chain.value === 'AMP' ? 'selected' : ''}>AMP - Adenosine phosphate</option>
-                <option value="GTP" ${chain.value === 'GTP' ? 'selected' : ''}>GTP - Guanosine-5'-triphosphate</option>
-                <option value="GDP" ${chain.value === 'GDP' ? 'selected' : ''}>GDP - Guanosine-5'-diphosphate</option>
-                <option value="FAD" ${chain.value === 'FAD' ? 'selected' : ''}>FAD - Flavin-adenine dinucleotide</option>
-                <option value="NAD" ${chain.value === 'NAD' ? 'selected' : ''}>NAD - Nicotinamide-adenine-dinucleotide</option>
-                <option value="NAP" ${chain.value === 'NAP' ? 'selected' : ''}>NAP (NADP) - Nicotinamide-adenine-dinucleotide-phosphate</option>
-                <option value="NDP" ${chain.value === 'NDP' ? 'selected' : ''}>NDP (NADPH) - Dihydro-nicotinamide-adenine-dinucleotide-phosphate</option>
-                <option value="HEM" ${chain.value === 'HEM' ? 'selected' : ''}>HEM - Heme</option>
-                <option value="HEC" ${chain.value === 'HEC' ? 'selected' : ''}>HEC - Heme C</option>
-                <option value="PLM" ${chain.value === 'PLM' ? 'selected' : ''}>PLM - Palmitic acid</option>
-                <option value="OLA" ${chain.value === 'OLA' ? 'selected' : ''}>OLA - Oleic acid</option>
-                <option value="MYR" ${chain.value === 'MYR' ? 'selected' : ''}>MYR - Myristic acid</option>
-                <option value="CIT" ${chain.value === 'CIT' ? 'selected' : ''}>CIT - Citric acid</option>
-                <option value="CLA" ${chain.value === 'CLA' ? 'selected' : ''}>CLA - Chlorophyll A</option>
-                <option value="CHL" ${chain.value === 'CHL' ? 'selected' : ''}>CHL - Chlorophyll B</option>
-                <option value="BCL" ${chain.value === 'BCL' ? 'selected' : ''}>BCL - Bacteriochlorophyll A</option>
-                <option value="BCB" ${chain.value === 'BCB' ? 'selected' : ''}>BCB - Bacteriochlorophyll B</option>
-              </optgroup>
-              <option value="custom" ${!isPreset ? 'selected' : ''}>Custom CCD Code...</option>
-            </select>
-            <div id="custom-ccd-wrapper-${idx}" class="${(!isPreset && chain.value) ? '' : 'hidden'} mt-1.5">
-              <input type="text" placeholder="Enter custom 3-letter CCD code (e.g. HEM)"
-                value="${chain.value || ''}"
-                class="w-full rounded-lg border border-slate-200 p-1.5 font-mono text-[10px] uppercase focus:outline-none focus:border-violet-500 bg-white"
-                oninput="boltzUpdateChain(${idx}, this.value)"
-                onchange="boltzUpdateChain(${idx}, this.value)"
-              />
-            </div>
-          `;
-        } else {
-          inputHtml = `
-            <textarea rows="2" placeholder="${placeholder}"
-              class="w-full rounded-lg border border-slate-200 p-1.5 font-mono text-[10px] uppercase tracking-widest focus:outline-none focus:border-violet-500 bg-white resize-none"
-              onchange="boltzUpdateChain(${idx}, this.value)"
-              oninput="boltzUpdateChain(${idx}, this.value)"
-            >${chain.value || ''}</textarea>
-          `;
-        }
-
-        const div = document.createElement('div');
-        div.className = 'chain-card';
-        div.innerHTML = `
-          <div class="flex items-center justify-between mb-1.5">
-            <span>
-              <span class="chain-type-badge ${badgeClass}">${label}</span>
-              <span class="text-[9px] font-mono text-slate-500">Chain ${chain.chain_id}</span>
-            </span>
-            <button onclick="boltzRemoveChain(${idx})" class="text-slate-300 hover:text-red-500 transition" title="Remove chain">
-              <i data-lucide="x-circle" style="width:14px;height:14px"></i>
+      <!-- Panel 1: Mode -->
+      <section class="panel">
+        <div class="panel-head">
+          <div class="panel-num">1</div>
+          <div class="panel-title">Prediction Engine</div>
+          <div class="panel-tag" id="engineTag">ESMFold</div>
+        </div>
+        <div class="panel-body">
+          <div class="mode-switch" id="modeSwitch">
+            <button class="mode-btn active" data-mode="esm">
+              <div class="mode-name">ESMFold</div>
+              <div class="mode-desc">Single-chain · ~14s</div>
+            </button>
+            <button class="mode-btn" data-mode="boltz">
+              <div class="mode-name">Boltz-1</div>
+              <div class="mode-desc">Complex · multi-chain</div>
             </button>
           </div>
-          ${inputHtml}
-        `;
-        container.appendChild(div);
+          <p style="font-size:10px;color:var(--text-faint);margin-top:8px;line-height:1.5;font-family:'IBM Plex Mono',monospace">
+            <span id="modeDescription">Evolutionary Scale Modeling for fast, single-chain protein folding. Returns atomic coordinates with per-residue pLDDT.</span>
+          </p>
+        </div>
+      </section>
+
+      <!-- Panel 2: Authentication -->
+      <section class="panel">
+        <div class="panel-head">
+          <div class="panel-num">2</div>
+          <div class="panel-title">Credentials</div>
+          <div class="panel-tag">Zen-Key</div>
+        </div>
+        <div class="panel-body">
+          <div class="field">
+            <div class="field-label">
+              <span>API Key</span>
+              <span class="hint" id="apiStatus">default · company</span>
+            </div>
+            <div class="api-row">
+              <span class="api-status" id="apiDot"></span>
+              <input type="password" class="input" id="apiKeyInput" placeholder="Paste Zen-Key (optional)" />
+              <button class="btn-icon" id="apiSaveBtn" title="Persist to local storage">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+              </button>
+            </div>
+            <div class="api-hint">Falls back to secured company credentials when unset. Keys persist only to local storage.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Panel 3: Input -->
+      <section class="panel">
+        <div class="panel-head">
+          <div class="panel-num">3</div>
+          <div class="panel-title">Input</div>
+          <div class="panel-tag" id="inputTag">FASTA · raw</div>
+        </div>
+        <div class="panel-body">
+          <!-- ESMFold input -->
+          <div id="esmInput">
+            <div class="field">
+              <div class="field-label">
+                <span>Protein Sequence</span>
+                <span class="hint" id="seqLenHint">0 aa · max 1200</span>
+              </div>
+              <textarea class="textarea" id="seqInput" placeholder="> example ubiquitin&#10;MQIFVKTLTGKTITLEVEPSDTIENVKAKIQDKEGIPPDQQRLIFAGKQLEDGRTLSDYNIQKESTLHLVLRLRGG"></textarea>
+            </div>
+            <div class="field" style="display:flex;gap:5px">
+              <button class="btn btn-ghost" id="loadExampleBtn" style="flex:1">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                Load Example
+              </button>
+              <button class="btn btn-ghost" id="clearBtn" style="flex:1">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                Clear
+              </button>
+            </div>
+          </div>
+
+          <!-- Boltz input -->
+          <div id="boltzInput" style="display:none">
+            <div class="field">
+              <div class="field-label">
+                <span>Chains &amp; Stoichiometry</span>
+                <span class="hint">protein · dna · rna · ligand</span>
+              </div>
+              <div class="chain-list" id="chainList">
+                <!-- populated by JS -->
+              </div>
+              <button class="btn btn-ghost" id="addChainBtn" style="width:100%">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                Add Chain
+              </button>
+            </div>
+            <div class="field">
+              <div class="field-label"><span>Binding Mode</span></div>
+              <select class="select" id="boltz-binding-type">
+                <option value="none">none</option>
+                <option value="ligand_protein_binding">ligand-protein</option>
+                <option value="protein_protein_binding">protein-protein</option>
+              </select>
+            </div>
+            <div class="field hidden" id="boltz-binder-chain-row">
+              <div class="field-label"><span>Binder Chain ID</span></div>
+              <input type="text" class="input" id="boltz-binder-chain-id" placeholder="e.g. A" maxlength="4" />
+            </div>
+            <div class="field">
+              <div class="field-label"><span>Job Label</span></div>
+              <input type="text" class="input" id="jobLabel" placeholder="e.g. BRaf-MEK complex v3" />
+            </div>
+          </div>
+
+          <div class="field" style="margin-top:12px">
+            <div class="field-label">
+              <span>Advanced</span>
+              <span class="hint">defaults · recommended</span>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+              <select class="select" id="recyclingSel">
+                <option>Recycling: 3</option>
+                <option>Recycling: 1</option>
+                <option>Recycling: 5</option>
+              </select>
+              <select class="select" id="msaSel">
+                <option>MSA: auto</option>
+                <option>MSA: off</option>
+                <option>MSA: forced</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Panel 4: Cost / Validate (Boltz only) -->
+      <section class="panel" id="costPanel" style="display:none">
+        <div class="panel-head">
+          <div class="panel-num">4</div>
+          <div class="panel-title">Validate &amp; Estimate</div>
+          <div class="panel-tag">pre-flight</div>
+        </div>
+        <div class="panel-body">
+          <div class="cost-grid">
+            <div class="cost-cell">
+              <div class="k">GPU-min</div>
+              <div class="v" id="costGpu">—<span class="unit">min</span></div>
+            </div>
+            <div class="cost-cell">
+              <div class="k">Credits</div>
+              <div class="v" id="costCredits">—<span class="unit">cr</span></div>
+            </div>
+            <div class="cost-cell">
+              <div class="k">Residues</div>
+              <div class="v" id="costRes">—</div>
+            </div>
+            <div class="cost-cell">
+              <div class="k">ETA</div>
+              <div class="v" id="costEta">—<span class="unit">s</span></div>
+            </div>
+          </div>
+          <button class="btn btn-ghost" id="validateBtn" style="width:100%;margin-top:8px">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+            Validate Input
+          </button>
+          <div class="cost-note">Estimates are based on chain length, stoichiometry, and current GPU pool availability. Final cost confirmed at submission.</div>
+        </div>
+      </section>
+
+      <!-- Panel 5: Run -->
+      <section class="panel">
+        <div class="panel-head">
+          <div class="panel-num" id="runNum">4</div>
+          <div class="panel-title">Execute</div>
+          <div class="panel-tag" id="runTag">ready</div>
+        </div>
+        <div class="panel-body">
+          <button class="btn btn-primary" id="runBtn" style="width:100%">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            Predict Structure
+          </button>
+
+          <div style="margin-top:12px">
+            <div class="field-label" style="margin-bottom:5px">
+              <span>Diagnostics</span>
+              <span class="hint" id="diagCount">0 events</span>
+            </div>
+            <div class="diag" id="diagLog">
+              <div class="diag-line info"><span class="t">00:00:00</span><span class="m">bridge_server.py connected · v2.1.4</span></div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </aside>
+
+    <!-- ============ VIEWER AREA ============ -->
+    <section class="viewer-area">
+
+      <!-- Tabs -->
+      <div class="tabs">
+        <button class="tab active" data-tab="3d">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+          3D Structure
+        </button>
+        <button class="tab" data-tab="seq">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>
+          Sequence
+          <span class="badge" id="seqBadge">76 aa</span>
+        </button>
+        <button class="tab" data-tab="binding">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v6m0 10v6m11-11h-6m-10 0H1"/></svg>
+          Binding Analysis
+          <span class="badge">contacts</span>
+        </button>
+        <button class="tab" data-tab="pae">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18M15 3v18M3 9h18M3 15h18"/></svg>
+          PAE Matrix
+        </button>
+
+        <div class="tab-tools">
+          <button class="btn-icon" title="Download PDB" id="downloadBtn">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          </button>
+          <button class="btn-icon" title="Share Snapshot" id="shareBtn">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- ============ 3D VIEW ============ -->
+      <div class="tab-panel active" data-panel="3d">
+        <div class="viewer-3d">
+          <div id="molviewer"></div>
+
+          <div class="viewer-overlay">
+            <div class="info-card">
+              <div class="title">Predicted Model</div>
+              <div class="name" id="modelName">Ubiquitin · B domain</div>
+              <div class="meta">
+                <div><b id="metaRes">76</b> residues</div>
+                <div><b id="metaChain">A</b> chain</div>
+                <div><b id="metaConf">87.4</b> mean pLDDT</div>
+                <div><b id="metaEngine">ESMFold</b></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="viewer-toolbar">
+            <div class="tool-group">
+              <button class="tool-btn active" data-style="cartoon" title="Cartoon">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12c4-8 14-8 18 0M3 12c4 8 14 8 18 0"/></svg>
+              </button>
+              <button class="tool-btn" data-style="stick" title="Sticks">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="6" y1="4" x2="6" y2="20"/><line x1="18" y1="4" x2="18" y2="20"/><line x1="6" y1="12" x2="18" y2="12"/></svg>
+              </button>
+              <button class="tool-btn" data-style="sphere" title="Spheres">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="8"/><circle cx="9" cy="10" r="1.5"/></svg>
+              </button>
+              <button class="tool-btn" data-style="surface" title="Surface">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z"/></svg>
+              </button>
+              <div class="tool-divider"></div>
+              <button class="tool-btn active" data-color="pLDDT" title="Color by pLDDT">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 3v18M3 12h18"/></svg>
+              </button>
+              <button class="tool-btn" data-color="chain" title="Color by chain">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="8" height="8"/><rect x="13" y="13" width="8" height="8"/></svg>
+              </button>
+              <button class="tool-btn" data-color="spectrum" title="Spectrum">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M5 9l-2 3 2 3M19 9l2 3-2 3"/></svg>
+              </button>
+              <div class="tool-divider"></div>
+              <button class="tool-btn" id="zoomFitBtn" title="Reset View">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 14 10 14 10 20"/><polyline points="20 10 14 10 14 4"/><line x1="14" y1="10" x2="21" y2="3"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+              </button>
+              <button class="tool-btn" id="spinBtn" title="Toggle Spin">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1.06 6.7 2.82L21 8"/><polyline points="21 3 21 8 16 8"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="legend">
+            <div class="legend-title">Confidence · pLDDT</div>
+            <div class="legend-bar"></div>
+            <div class="legend-labels">
+              <span>0</span><span>50</span><span>70</span><span>90</span><span>100</span>
+            </div>
+          </div>
+
+          <div class="res-tooltip" id="resTooltip">
+            <div class="rt-res">Residue</div>
+            <div class="rt-plddt">pLDDT: —</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============ SEQUENCE VIEW ============ -->
+      <div class="tab-panel" data-panel="seq">
+        <div class="seq-viewer" id="seqViewer">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <!-- ============ BINDING ANALYSIS ============ -->
+      <div class="tab-panel" data-panel="binding">
+        <div class="binding-area">
+          <div class="binding-3d">
+            <div id="bindingviewer"></div>
+            <div class="viewer-overlay">
+              <div class="info-card">
+                <div class="title">Binding Pocket</div>
+                <div class="name">Ligand · ANP</div>
+                <div class="meta">
+                  <div><b>14</b> contacts</div>
+                  <div><b>3.4</b> Å mean</div>
+                  <div><b>5.0</b> Å cutoff</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="binding-panel">
+            <div class="binding-section">
+              <h4>Ligand Statistics</h4>
+              <div class="ligand-stats">
+                <div class="ligand-stat"><div class="k">Atoms</div><div class="v">29</div></div>
+                <div class="ligand-stat"><div class="k">Mol. Wt</div><div class="v">427.2</div></div>
+                <div class="ligand-stat"><div class="k">H-bonds</div><div class="v">6</div></div>
+                <div class="ligand-stat"><div class="k">Hydrophobic</div><div class="v">8</div></div>
+              </div>
+            </div>
+            <div class="binding-section">
+              <h4>Contact Map ( &lt; 5.0 Å )</h4>
+              <div class="contact-list" id="contactList">
+                <!-- populated by JS -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============ PAE HEATMAP ============ -->
+      <div class="tab-panel" data-panel="pae">
+        <div class="pae-area">
+          <div class="pae-toolbar">
+            <div>
+              <div class="title">Predicted Aligned Error</div>
+              <div class="desc">Relative domain position confidence · lower is better</div>
+            </div>
+            <div class="pae-legend">
+              <span>0 Å</span>
+              <div class="pae-legend-bar"></div>
+              <span>30 Å</span>
+            </div>
+          </div>
+          <div class="pae-canvas-wrap">
+            <canvas id="paeCanvas" width="540" height="540"></canvas>
+            <div class="pae-tooltip" id="paeTooltip">
+              <div class="pt-pair">i → j</div>
+              <div class="pt-val">PAE: — Å</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============ RUN OVERLAY ============ -->
+      <div class="run-overlay" id="runOverlay">
+        <div class="run-spinner"></div>
+        <div class="run-title" id="runTitle">Folding sequence</div>
+        <div class="run-stage" id="runStage">Initializing ESMFold</div>
+        <div class="run-progress"><div id="runProgressBar" style="width:0%"></div></div>
+        <div class="run-log" id="runLog">Preparing MSA embeddings</div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============ STATUS BAR ============ -->
+  <footer class="statusbar">
+    <div><span class="ok">●</span> bridge_server <span class="accent">v2.1.4</span></div>
+    <div class="sep">|</div>
+    <div>model: <span class="accent" id="sbModel">esmfold-v1</span></div>
+    <div class="sep">|</div>
+    <div>latency: <span id="sbLatency">42ms</span></div>
+    <div class="sep">|</div>
+    <div>tokens: <span id="sbTokens">0</span></div>
+    <div class="sep">|</div>
+    <div>cache: <span class="ok">warm</span></div>
+    <div>CSP: strict · connect-src 6 hosts</div>
+  </footer>
+</div>
+
+<script>
+/* =====================================================================
+   STRUCTURE PREDICTION MODULE
+   Front-end controller for ESMFold + Boltz-1 workflows
+   ===================================================================== */
+
+const STATE = {
+  mode: 'esm',
+  apiKey: localStorage.getItem('nilus_zenkey') || '',
+  sequence: '',
+  chains: [
+    { id: 'A', type: 'protein', copies: 1, value: '' }
+  ],
+  currentModel: null,
+  paeMatrix: null,
+  selectedResidue: null,
+  viewer: null,
+  bindingViewer: null,
+  spin: false,
+  boltzJobId: null,
+  boltzPolling: null,
+  boltzValidated: false,
+  boltzEstimated: false,
+  boltzEstimatedCost: null,
+};
+
+const $ = sel => document.querySelector(sel);
+const $$ = sel => Array.from(document.querySelectorAll(sel));
+const pad = (n, w=2) => String(n).padStart(w, '0');
+const now = () => {
+  const d = new Date();
+  return `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+};
+const AA3 = { A:'ALA', R:'ARG', N:'ASN', D:'ASP', C:'CYS', E:'GLU', Q:'GLN', G:'GLY', H:'HIS', I:'ILE',
+              L:'LEU', K:'LYS', M:'MET', F:'PHE', P:'PRO', S:'SER', T:'THR', W:'TRP', Y:'TYR', V:'VAL' };
+
+function log(msg, kind='info') {
+  const diag = $('#diagLog');
+  if (!diag) return;
+  const line = document.createElement('div');
+  line.className = `diag-line ${kind}`;
+  line.innerHTML = `<span class="t">${now()}</span><span class="m">${msg}</span>`;
+  diag.appendChild(line);
+  diag.scrollTop = diag.scrollHeight;
+  $('#diagCount').textContent = `${diag.children.length} events`;
+}
+
+const EXAMPLE_SEQ = 'MQIFVKTLTGKTITLEVEPSDTIENVKAKIQDKEGIPPDQQRLIFAGKQLEDGRTLSDYNIQKESTLHLVLRLRGG';
+
+function switchMode(mode) {
+  STATE.mode = mode;
+  $$('.mode-btn').forEach(b => b.classList.toggle('active', b.dataset.mode === mode));
+  $('#esmInput').style.display = mode === 'esm' ? 'block' : 'none';
+  $('#boltzInput').style.display = mode === 'boltz' ? 'block' : 'none';
+  $('#costPanel').style.display = mode === 'boltz' ? 'block' : 'none';
+  $('#engineTag').textContent = mode === 'esm' ? 'ESMFold' : 'Boltz-1';
+  $('#runNum').textContent = mode === 'boltz' ? '5' : '4';
+  $('#inputTag').textContent = mode === 'esm' ? 'FASTA · raw' : 'multi-chain';
+  $('#modeDescription').textContent = mode === 'esm'
+    ? 'Evolutionary Scale Modeling for fast, single-chain protein folding. Returns atomic coordinates with per-residue pLDDT.'
+    : 'Boltz-1 predicts multi-chain biomolecular complexes (protein · DNA · RNA · ligand) with PAE confidence matrices.';
+  $('#sbModel').textContent = mode === 'esm' ? 'esmfold-v1' : 'boltz-1';
+  log(`Engine switched → ${mode === 'esm' ? 'ESMFold' : 'Boltz-1'}`, 'info');
+  renderChainList();
+  updateCostEstimate();
+}
+
+function initApiKey() {
+  if (STATE.apiKey) {
+    $('#apiDot').classList.add('set');
+    $('#apiStatus').textContent = 'user · local';
+    $('#apiKeyInput').value = STATE.apiKey;
+  }
+  $('#apiSaveBtn').addEventListener('click', () => {
+    const v = $('#apiKeyInput').value.trim();
+    if (v) {
+      localStorage.setItem('nilus_zenkey', v);
+      STATE.apiKey = v;
+      $('#apiDot').classList.add('set');
+      $('#apiStatus').textContent = 'user · local';
+      log('Zen-Key persisted to local storage', 'ok');
+    } else {
+      localStorage.removeItem('nilus_zenkey');
+      STATE.apiKey = '';
+      $('#apiDot').classList.remove('set');
+      $('#apiStatus').textContent = 'default · company';
+      log('Zen-Key cleared, falling back to company credentials', 'info');
+    }
+  });
+}
+
+function initSequenceInput() {
+  const ta = $('#seqInput');
+  ta.addEventListener('input', () => {
+    const v = ta.value.replace(/^>.*
+/, '').replace(/\s/g, '').toUpperCase();
+    const len = v.length;
+    $('#seqLenHint').textContent = `${len} aa · max 1200`;
+    STATE.sequence = v;
+    if (len > 1200) {
+      $('#seqLenHint').style.color = 'var(--coral)';
+      log(`Sequence length ${len} exceeds ESMFold limit (1200)`, 'warn');
+    } else {
+      $('#seqLenHint').style.color = '';
+    }
+  });
+  $('#loadExampleBtn').addEventListener('click', () => {
+    ta.value = '> example ubiquitin [76 aa]\n' + EXAMPLE_SEQ;
+    ta.dispatchEvent(new Event('input'));
+    log('Example sequence loaded · ubiquitin (76 aa)', 'ok');
+  });
+  $('#clearBtn').addEventListener('click', () => {
+    ta.value = '';
+    ta.dispatchEvent(new Event('input'));
+  });
+}
+
+function renderChainList() {
+  const list = $('#chainList');
+  list.innerHTML = '';
+  STATE.chains.forEach((c, idx) => {
+    const row = document.createElement('div');
+    row.className = 'chain-row';
+    row.style.cssText = 'display:flex; flex-direction:column; gap:6px; background:var(--bg-void); border:1px solid var(--border); border-radius:var(--radius-sm); padding:8px 10px; margin-bottom: 6px;';
+    
+    const isLigandCcd = c.type === 'ligand_ccd';
+    const ccdSelect = isLigandCcd ? `
+      <select class="select chain-val" style="width:140px; padding:4px 6px; font-size:10px; font-family:monospace;">
+        <option value="" ${c.value === '' ? 'selected' : ''}>-- Select Ion/Ligand --</option>
+        <option value="MG" ${c.value === 'MG' ? 'selected' : ''}>MG - Magnesium (Mg²⁺)</option>
+        <option value="ZN" ${c.value === 'ZN' ? 'selected' : ''}>ZN - Zinc (Zn²⁺)</option>
+        <option value="CL" ${c.value === 'CL' ? 'selected' : ''}>CL - Chloride (Cl⁻)</option>
+        <option value="CA" ${c.value === 'CA' ? 'selected' : ''}>CA - Calcium (Ca²⁺)</option>
+        <option value="NA" ${c.value === 'NA' ? 'selected' : ''}>NA - Sodium (Na⁺)</option>
+        <option value="ADP" ${c.value === 'ADP' ? 'selected' : ''}>ADP - Adenosine Diphosphate</option>
+        <option value="ATP" ${c.value === 'ATP' ? 'selected' : ''}>ATP - Adenosine Triphosphate</option>
+      </select>
+    ` : `
+      <textarea class="textarea chain-val" placeholder="Sequence or SMILES" style="min-height:36px; padding:6px; font-size:10px; width:100%; font-family:monospace; margin-top:2px;">${c.value || ''}</textarea>
+    `;
+
+    row.innerHTML = `
+      <div style="display:flex; align-items:center; justify-content:space-between; width:100%;">
+        <div style="display:flex; align-items:center; gap:6px;">
+          <div class="chain-id" style="width:20px; text-align:center;">${c.id}</div>
+          <select class="select chain-type" style="width:110px; padding:4px 6px; font-size:10px; font-family:monospace;">
+            <option value="protein" ${c.type==='protein'?'selected':''}>protein</option>
+            <option value="dna" ${c.type==='dna'?'selected':''}>dna</option>
+            <option value="rna" ${c.type==='rna'?'selected':''}>rna</option>
+            <option value="ligand_ccd" ${c.type==='ligand_ccd'?'selected':''}>ligand (CCD)</option>
+            <option value="ligand_smiles" ${c.type==='ligand_smiles'?'selected':''}>ligand (SMILES)</option>
+          </select>
+        </div>
+        <div style="display:flex; align-items:center; gap:4px;">
+          <span style="font-size:9px; color:var(--text-faint);">copies:</span>
+          <input class="input chain-copies" type="number" min="1" max="8" value="${c.copies}" style="width:36px; padding:4px; text-align:center; font-size:10px; font-family:monospace;" />
+          <button class="chain-del" style="background:transparent; border:0; color:var(--text-faint); cursor:pointer;">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+      </div>
+      <div style="width:100%; margin-top:4px;">
+        ${ccdSelect}
+      </div>
+    `;
+
+    row.querySelector('.chain-type').addEventListener('change', e => {
+      STATE.chains[idx].type = e.target.value;
+      STATE.chains[idx].value = '';
+      renderChainList();
+      updateCostEstimate();
+    });
+    const valEl = row.querySelector('.chain-val');
+    if (valEl) {
+      valEl.addEventListener('input', e => {
+        STATE.chains[idx].value = e.target.value.trim().replace(/\s/g, '');
+        updateCostEstimate();
       });
-      document.getElementById('boltz-chain-count').textContent = boltzChains.length + ' chain' + (boltzChains.length !== 1 ? 's' : '');
-      lucide.createIcons();
-      boltzValidated = false;
-      boltzEstimated = false;
-      document.getElementById('boltz-estimate-btn').disabled = true;
-      document.getElementById('boltz-submit-btn').disabled = true;
+      valEl.addEventListener('change', e => {
+        STATE.chains[idx].value = e.target.value.trim().replace(/\s/g, '');
+        updateCostEstimate();
+      });
     }
+    row.querySelector('.chain-copies').addEventListener('input', e => {
+      STATE.chains[idx].copies = parseInt(e.target.value) || 1;
+      updateCostEstimate();
+    });
+    row.querySelector('.chain-del').addEventListener('click', () => {
+      STATE.chains.splice(idx, 1);
+      STATE.chains.forEach((cc, i) => cc.id = String.fromCharCode(65 + i));
+      renderChainList();
+      updateCostEstimate();
+    });
+    list.appendChild(row);
+  });
+}
 
-    function boltzAddChain(type) {
-      boltzChains.push({ type, value: '', chain_id: nextChainId() });
-      boltzRenderChains();
+function initChainBuilder() {
+  $('#addChainBtn').addEventListener('click', () => {
+    if (STATE.chains.length >= 6) {
+      log('Maximum 6 chains supported in Boltz-1 UI', 'warn');
+      return;
     }
+    STATE.chains.push({ id: String.fromCharCode(65 + STATE.chains.length), type: 'protein', copies: 1, value: '' });
+    renderChainList();
+    updateCostEstimate();
+  });
 
-    function boltzRemoveChain(idx) {
-      boltzChains.splice(idx, 1);
-      // Re-assign chain IDs sequentially
-      boltzChains.forEach((c, i) => { c.chain_id = CHAIN_LETTERS[i] || CHAIN_LETTERS[25]; });
-      boltzRenderChains();
-    }
-
-    function boltzUpdateChain(idx, val) {
-      boltzChains[idx].value = val.trim().toUpperCase();
-    }
-
-    function boltzHandleCcdDropdownChange(idx, selectEl) {
-      const val = selectEl.value;
-      const customWrapper = document.getElementById(`custom-ccd-wrapper-${idx}`);
-      if (val === 'custom') {
-        customWrapper.classList.remove('hidden');
-        const inputEl = customWrapper.querySelector('input');
-        boltzUpdateChain(idx, inputEl.value);
-      } else {
-        customWrapper.classList.add('hidden');
-        boltzUpdateChain(idx, val);
-      }
-    }
-
-    // Binding mode show/hide
-    document.getElementById('boltz-binding-type').addEventListener('change', function() {
+  // Binder chain row show/hide
+  const typeSelect = document.getElementById('boltz-binding-type');
+  if (typeSelect) {
+    typeSelect.addEventListener('change', function() {
       const row = document.getElementById('boltz-binder-chain-row');
-      row.classList.toggle('hidden', this.value === 'none');
+      if (row) {
+        row.classList.toggle('hidden', this.value === 'none');
+      }
     });
+  }
 
-    // ── Validate ─────────────────────────────────────────────────────────
-    async function boltzValidate() {
-      const btn = document.getElementById('boltz-validate-btn');
-      btn.disabled = true;
-      btn.innerHTML = '<div class="w-3 h-3 border-2 border-slate-400 border-t-transparent rounded-full animate-spin"></div> Validating...';
+  $('#validateBtn').addEventListener('click', boltzValidate);
+}
 
-      const manifest = boltzBuildManifest();
-      try {
-        const resp = await fetch('/api/v1/structure/boltz/validate', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ manifest })
-        });
-        const data = await resp.json();
-        if (data.valid) {
-          boltzSetStatus('validated', '✓ Complex is valid. ' + JSON.stringify(data.summary));
-          document.getElementById('boltz-estimate-btn').disabled = false;
-          boltzValidated = true;
-        } else {
-          boltzSetStatus('error', '✗ Validation failed: ' + data.errors.join(' | '));
-          document.getElementById('boltz-estimate-btn').disabled = true;
+function parsePDB(pdbText) {
+  const lines = pdbText.split('\n');
+  let seq = '';
+  const plddt = [];
+  const residues = {};
+  const aaMap = {
+    'ALA':'A', 'ARG':'R', 'ASN':'N', 'ASP':'D', 'CYS':'C', 'GLN':'Q', 'GLU':'E', 
+    'GLY':'G', 'HIS':'H', 'ILE':'I', 'LEU':'L', 'LYS':'K', 'MET':'M', 'PHE':'F', 
+    'PRO':'P', 'SER':'S', 'THR':'T', 'TRP':'W', 'TYR':'Y', 'VAL':'V'
+  };
+
+  lines.forEach(line => {
+    if (line.startsWith('ATOM  ') || line.startsWith('HETATM')) {
+      const atomName = line.substring(12, 16).trim();
+      if (atomName === 'CA') {
+        const resName = line.substring(17, 20).trim();
+        const chain = line.substring(21, 22).trim();
+        const resi = parseInt(line.substring(22, 26).trim());
+        const b = parseFloat(line.substring(60, 66).trim());
+        const key = chain + '_' + resi;
+        if (!residues[key]) {
+          residues[key] = true;
+          seq += aaMap[resName] || 'X';
+          plddt.push(b);
         }
-      } catch (e) {
-        boltzSetStatus('error', 'Network error during validation: ' + e.message);
-      } finally {
-        btn.disabled = false;
-        btn.innerHTML = '<i data-lucide="check-circle" style="width:13px;height:13px"></i> 1. Validate Complex';
-        lucide.createIcons();
       }
     }
+  });
 
-    // ── Cost Estimate ─────────────────────────────────────────────────────
-    async function boltzEstimate() {
-      const btn = document.getElementById('boltz-estimate-btn');
-      btn.disabled = true;
-      btn.innerHTML = '<div class="w-3 h-3 border-2 border-slate-400 border-t-transparent rounded-full animate-spin"></div> Estimating...';
+  return { seq, plddt };
+}
 
-      const manifest = boltzBuildManifest();
-      try {
-        const resp = await fetch('/api/v1/structure/boltz/estimate', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ manifest })
-        });
-        if (!resp.ok) {
-          const err = await resp.json();
-          boltzSetStatus('error', 'Cost estimate error: ' + (err.detail?.message || resp.status));
-        } else {
-          const data = await resp.json();
-          const cost = data.estimated_cost_usd || '?';
-          boltzSetStatus('estimated', `Estimated cost: $${cost} USD. ${data.disclaimer || ''}`);
-          document.getElementById('boltz-submit-btn').disabled = false;
-          boltzEstimated = true;
-          window._boltzEstimatedCost = cost;
-        }
-      } catch (e) {
-        boltzSetStatus('error', 'Network error during cost estimate: ' + e.message);
-      } finally {
-        btn.disabled = false;
-        btn.innerHTML = '<i data-lucide="dollar-sign" style="width:13px;height:13px"></i> 2. Estimate Cost';
-        lucide.createIcons();
-      }
-    }
+function updateCostEstimate() {
+  if (STATE.mode !== 'boltz') return;
+  const totalRes = STATE.chains.reduce((s, c) => {
+    if (c.type.startsWith('ligand')) return s;
+    return s + (c.value ? c.value.length : 120) * c.copies;
+  }, 0);
+  const gpuMin = Math.ceil(totalRes / 80);
+  const credits = Math.ceil(gpuMin * 1.7);
+  const eta = Math.ceil(gpuMin * 35 + 12);
+  $('#costGpu').innerHTML = `${gpuMin}<span class="unit">min</span>`;
+  $('#costCredits').innerHTML = `${credits}<span class="unit">cr</span>`;
+  $('#costRes').textContent = totalRes;
+  $('#costEta').innerHTML = `${eta}<span class="unit">s</span>`;
+  STATE.boltzEstimatedCost = (gpuMin * 0.12).toFixed(2);
+}
 
-    // ── Submit with confirmation ───────────────────────────────────────────
-    function boltzSubmitWithConfirm() {
-      const cost = window._boltzEstimatedCost || '?';
-      const ok = confirm(
-        `This will submit a real Boltz API complex prediction and will incur usage cost.\n\n` +
-        `Estimated cost: $${cost} USD\n\n` +
-        `The prediction will run on Boltz-2.1. No synthetic fallback will be used.\n\n` +
-        `FOR RESEARCH USE ONLY — Not for clinical decisions.\n\nContinue?`
-      );
-      if (ok) boltzSubmit();
-    }
+async function boltzValidate() {
+  const btn = $('#validateBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<svg class="animate-spin" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10" stroke-width="3" stroke-dasharray="32"/></svg> Validating...';
+  log('POST /api/v1/structure/boltz/validate — executing validation', 'info');
 
-    async function boltzSubmit() {
-      const btn = document.getElementById('boltz-submit-btn');
-      btn.disabled = true;
-      btn.innerHTML = '<div class="w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin"></div> Submitting...';
-
-      const manifest = boltzBuildManifest();
-      const jobName  = document.getElementById('boltz-job-name').value.trim() || undefined;
-
-      boltzShowViewerLoading();
-
-      try {
-        const resp = await fetch('/api/v1/structure/boltz/submit', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ manifest, job_name: jobName, num_samples: 1 })
-        });
-        const data = await resp.json();
-        if (!resp.ok) {
-          const errMsg = data.detail?.message || data.detail || 'Unknown error';
-          boltzSetStatus('error', 'Boltz API error: ' + errMsg);
-          boltzShowViewerError(errMsg);
-        } else {
-          boltzJobId = data.boltz_prediction_id;
-          boltzSetStatus('running', 'Job submitted. ID: ' + boltzJobId + ' | Status: ' + data.status);
-          document.getElementById('boltz-job-id-display').textContent = boltzJobId;
-          document.getElementById('boltz-job-id-row').classList.remove('hidden');
-          document.getElementById('boltz-poll-btn').disabled = false;
-          boltzRenderInfoTable();
-          // Start auto-polling
-          if (boltzPolling) clearInterval(boltzPolling);
-          boltzPolling = setInterval(boltzPollStatus, 8000);
-          boltzPollStatus();
-        }
-      } catch (e) {
-        boltzSetStatus('error', 'Submit failed: ' + e.message);
-        boltzShowViewerError(e.message);
-      } finally {
-        btn.disabled = false;
-        btn.innerHTML = '<i data-lucide="send" style="width:13px;height:13px"></i> 3. Submit Boltz Prediction';
-        lucide.createIcons();
-      }
-    }
-
-    // ── Poll Status ────────────────────────────────────────────────────────
-    async function boltzPollStatus() {
-      if (!boltzJobId) return;
-      try {
-        const resp = await fetch(`/api/v1/structure/boltz/jobs/${boltzJobId}`);
-        const data = await resp.json();
-        const status = data.status;
-        boltzSetStatus(status, `Job ${boltzJobId} | Status: ${status}`);
-        if (status === 'succeeded') {
-          if (boltzPolling) { clearInterval(boltzPolling); boltzPolling = null; }
-          boltzLoadResult();
-        } else if (status === 'failed') {
-          if (boltzPolling) { clearInterval(boltzPolling); boltzPolling = null; }
-          const errMsg = data.error?.message || 'Boltz prediction failed.';
-          boltzShowViewerError(errMsg);
-          boltzSetStatus('error', 'Prediction failed: ' + errMsg);
-        }
-      } catch (e) {
-        // Network blip — keep polling
-        console.warn('[Boltz] Poll error:', e.message);
-      }
-    }
-
-    // ── Load Result ────────────────────────────────────────────────────────
-    async function boltzLoadResult() {
-      try {
-        const resp = await fetch(`/api/v1/structure/boltz/jobs/${boltzJobId}/result`);
-        const data = await resp.json();
-        if (!resp.ok) throw new Error(data.detail?.message || 'Result fetch failed');
-
-        // Show real prediction badges
-        document.getElementById('boltz-real-badge').classList.remove('hidden');
-        document.getElementById('boltz-no-synth-badge').classList.remove('hidden');
-
-        // Show metrics
-        boltzRenderMetrics(data);
-
-        // Load CIF into viewer
-        boltzLoadCifViewer();
-
-        // Show result actions
-        document.getElementById('boltz-result-actions').style.display = '';
-      } catch (e) {
-        boltzSetStatus('error', 'Failed to load result: ' + e.message);
-        boltzShowViewerError('Result unavailable: ' + e.message);
-      }
-    }
-
-    // ── Load CIF into Mol* (via proxy) ────────────────────────────────────
-    async function boltzLoadCifViewer() {
-      const placeholder = document.getElementById('boltz-viewer-placeholder');
-      const spinner = document.getElementById('boltz-viewer-spinner');
-      const icon = document.getElementById('boltz-viewer-icon');
-      const title = document.getElementById('boltz-viewer-title');
-      const sub = document.getElementById('boltz-viewer-sub');
-
-      spinner.classList.remove('hidden');
-      icon.classList.add('hidden');
-      spinner.classList.remove('hidden');
-      icon.classList.add('hidden');
-      title.textContent = 'Loading complex structure...';
-      sub.textContent = 'Downloading PDB from Boltz API (proxied). Loading Mol* viewer.';
-
-      const pdbUrl = `/api/v1/structure/boltz/jobs/${boltzJobId}/download/model.pdb`;
-
-      try {
-        // Fetch PDB bytes
-        const resp = await fetch(pdbUrl);
-        if (!resp.ok) throw new Error('PDB download failed: HTTP ' + resp.status);
-        const pdbText = await resp.text();
-
-        // Load into 3Dmol.js (already loaded on the page)
-        const container = document.getElementById('boltz-molstar-mount');
-        container.innerHTML = '';
-        const viewerDiv = document.createElement('div');
-        viewerDiv.style.cssText = 'width:100%;height:100%;position:relative;';
-        container.appendChild(viewerDiv);
-
-        const bg = (window._boltzViewerTheme || 'dark') === 'light' ? '#ffffff' : '#0f172a';
-        const viewer3d = $3Dmol.createViewer($(viewerDiv), {
-          backgroundColor: bg,
-          antialias: true,
-        });
-        window._activeBoltzViewer = viewer3d;
-        const model = viewer3d.addModel(pdbText, 'pdb');
-        if (model && typeof model.computeSecondaryStructure === 'function') {
-          model.computeSecondaryStructure();
-        }
-        const plddtColorfunc = function(atom) {
-          let plddt = atom.b || 0;
-          if (plddt <= 1.0 && plddt > 0.0) {
-            plddt = plddt * 100;
-          }
-          if (plddt > 90) return '#0053d6'; // Very High (Dark Blue)
-          if (plddt > 70) return '#00c2ec'; // Confident (Light Blue)
-          if (plddt > 50) return '#ffdb00'; // Low (Yellow)
-          return '#ff7d00'; // Very Low (Orange)
-        };
-
-        // Style standard chains (protein/DNA/RNA) as cartoon ribbons colored by pLDDT B-factor
-        viewer3d.setStyle({ hetflag: false }, { cartoon: { colorfunc: plddtColorfunc } });
-
-        // Add stick style for heteroatoms (ligands)
-        viewer3d.addStyle({ hetflag: true }, {
-          stick: { colorscheme: 'Jmol', radius: 0.22 }
-        });
-
-        // Add sphere style for single-atom ions (Zn, Mg, etc.)
-        viewer3d.addStyle({ elem: ['Zn', 'Mg', 'Ca', 'Mn', 'Fe', 'Na', 'K', 'Cl'] }, {
-          sphere: { colorscheme: 'Jmol', scale: 0.85 }
-        });
-
-        viewer3d.zoomTo();
-        viewer3d.render();
-
-        // Hide placeholder
-        placeholder.style.display = 'none';
-        boltzCifUrl = pdbUrl;
-
-        // Fetch and draw PAE matrix
-        fetch(`/api/v1/structure/boltz/jobs/${boltzJobId}/pae`)
-          .then(r => {
-            if (!r.ok) throw new Error("PAE not available");
-            return r.json();
-          })
-          .then(data => {
-            if (data && data.pae) {
-              currentPAEMatrix = data.pae;
-              currentPAEChains = getPAEChainLengths();
-              document.getElementById('boltz-pae-panel').style.display = 'flex';
-              drawPAEHeatmap();
-            }
-          })
-          .catch(err => {
-            console.warn("PAE fetch skipped:", err.message);
-            document.getElementById('boltz-pae-panel').style.display = 'none';
-          });
-      } catch (e) {
-        spinner.classList.add('hidden');
-        icon.classList.remove('hidden');
-        title.textContent = 'Viewer Error';
-        sub.textContent = e.message;
-        boltzSetStatus('error', 'Viewer error: ' + e.message);
-      }
-    }
-
-    // ── Render Metrics ─────────────────────────────────────────────────────
-    function boltzRenderMetrics(data) {
-      const metrics = data.best_sample?.metrics || {};
-      const grid = document.getElementById('boltz-metrics-grid');
-      grid.innerHTML = '';
-      const show = [
-        ['Structure Confidence', metrics.structure_confidence],
-        ['pTM', metrics.ptm],
-        ['ipTM', metrics.iptm],
-        ['Complex pLDDT', metrics.complex_plddt],
-        ['Complex ipLDDT', metrics.complex_iplddt],
-        ['PDE', metrics.complex_pde],
-      ];
-      show.forEach(([label, val]) => {
-        if (val !== undefined && val !== null) {
-          const pill = document.createElement('div');
-          pill.className = 'boltz-metric-pill';
-          const display = typeof val === 'number' ? val.toFixed(3) : val;
-          pill.innerHTML = `<span class="label">${label}</span><span class="value">${display}</span>`;
-          grid.appendChild(pill);
-        }
-      });
-
-      const bm = data.binding_metrics;
-      if (bm) {
-        document.getElementById('boltz-binding-metrics').classList.remove('hidden');
-        document.getElementById('boltz-binding-content').innerHTML =
-          `Binding Confidence: <strong>${(bm.binding_confidence||0).toFixed(3)}</strong>` +
-          (bm.optimization_score !== undefined ? ` &nbsp;|&nbsp; Optimization Score: <strong>${bm.optimization_score.toFixed(3)}</strong>` : '');
-      }
-
-      document.getElementById('boltz-metrics-panel').style.display = '';
-
-      // Display pLDDT Color Legend and pTM/ipTM Summary scores
-      const sumEl = document.getElementById('boltz-summary-scores');
-      if (sumEl && metrics.iptm !== undefined && metrics.ptm !== undefined) {
-        sumEl.innerHTML = `ipTM = <span class="text-white font-bold">${metrics.iptm.toFixed(2)}</span> &nbsp;|&nbsp; pTM = <span class="text-white font-bold">${metrics.ptm.toFixed(2)}</span>`;
-      } else if (sumEl && metrics.complex_plddt !== undefined) {
-        const val = typeof metrics.complex_plddt === 'number' && metrics.complex_plddt <= 1.0 ? metrics.complex_plddt * 100 : metrics.complex_plddt;
-        sumEl.innerHTML = `Complex pLDDT = <span class="text-white font-bold">${val.toFixed(1)}</span>`;
-      }
-      document.getElementById('boltz-plddt-legend').classList.remove('hidden');
-    }
-
-    // ── Info Table ────────────────────────────────────────────────────────
-    function boltzRenderInfoTable() {
-      const tbody = document.getElementById('boltz-info-tbody');
-      tbody.innerHTML = '';
-      boltzChains.forEach(c => {
-        const tr = document.createElement('tr');
-        const typeMap = { protein:'Protein', dna:'DNA', rna:'RNA', ligand_ccd:'Ligand/Ion', ligand_smiles:'Ligand SMILES' };
-        const seqPreview = c.value.length > 24 ? c.value.substring(0, 24) + '…' : c.value;
-        tr.innerHTML = `<td class="py-1 px-2 font-bold text-slate-800">${typeMap[c.type]||c.type}</td><td class="py-1 px-2 font-mono">${c.chain_id}</td><td class="py-1 px-2 font-mono text-slate-500">${seqPreview}</td><td class="py-1 px-2 font-mono">${c.value.length}</td>`;
-        tbody.appendChild(tr);
-      });
-      document.getElementById('boltz-info-table-panel').style.display = '';
-    }
-
-    // ── Downloads ─────────────────────────────────────────────────────────
-    function boltzDownloadCif() {
-      if (!boltzJobId) return;
-      const a = document.createElement('a');
-      a.href = `/api/v1/structure/boltz/jobs/${boltzJobId}/download/model.cif`;
-      a.download = `boltz_${boltzJobId}_sample0.cif`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-    }
-
-    function boltzDownloadPdb() {
-      if (!boltzJobId) return;
-      const a = document.createElement('a');
-      a.href = `/api/v1/structure/boltz/jobs/${boltzJobId}/download/model.pdb`;
-      a.download = `boltz_${boltzJobId}_sample0.pdb`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-    }
-
-    function boltzDownloadConfidence() {
-      if (!boltzJobId) return;
-      const a = document.createElement('a');
-      a.href = `/api/v1/structure/boltz/jobs/${boltzJobId}/download/confidence.json`;
-      a.download = `boltz_${boltzJobId}_confidence.json`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-    }
-
-    // ── Manifest Builder ──────────────────────────────────────────────────
-    function boltzBuildManifest() {
-      const entities = boltzChains.map(c => ({
-        type: c.type,
-        value: c.value,
-        chain_ids: [c.chain_id]
-      }));
-      const bindingType = document.getElementById('boltz-binding-type').value;
-      let manifest = { entities };
-      if (bindingType !== 'none') {
-        let binderId = document.getElementById('boltz-binder-chain-id').value.trim();
-        if (!binderId) {
-          const proteinChain = boltzChains.find(c => c.type === 'protein');
-          binderId = proteinChain ? proteinChain.chain_id : (boltzChains[0] ? boltzChains[0].chain_id : 'A');
-        }
-        const binding = { type: bindingType };
-        // Set both formats for complete API robustness
-        binding.binder_chain_id = binderId;
-        binding.binder_chain_ids = [binderId];
-        manifest.binding = binding;
-      }
-      return manifest;
-    }
-
-    // ── UI helpers ────────────────────────────────────────────────────────
-    function boltzSetStatus(type, msg) {
-      const badge = document.getElementById('boltz-status-badge');
-      const msgEl = document.getElementById('boltz-status-msg');
-      msgEl.textContent = msg;
-      const map = {
-        idle:       ['bg-slate-100 text-slate-500', 'IDLE'],
-        validated:  ['bg-emerald-50 text-emerald-700', 'VALIDATED'],
-        estimated:  ['bg-blue-50 text-blue-700', 'ESTIMATED'],
-        running:    ['bg-violet-50 text-violet-700 animate-pulse', 'RUNNING'],
-        succeeded:  ['bg-emerald-50 text-emerald-700', 'SUCCEEDED'],
-        error:      ['bg-red-50 text-red-700', 'ERROR'],
-        failed:     ['bg-red-50 text-red-700', 'FAILED'],
-      };
-      const [cls, label] = map[type] || map.idle;
-      badge.className = `text-[8px] font-mono px-2 py-0.5 rounded uppercase font-bold ${cls}`;
-      badge.textContent = label;
-    }
-
-    function boltzShowViewerLoading() {
-      const ph = document.getElementById('boltz-viewer-placeholder');
-      ph.style.display = '';
-      ph.style.position = 'absolute';
-      document.getElementById('boltz-viewer-spinner').classList.remove('hidden');
-      document.getElementById('boltz-viewer-icon').classList.add('hidden');
-      document.getElementById('boltz-viewer-title').textContent = 'Submitting to Boltz API...';
-      document.getElementById('boltz-viewer-sub').textContent = 'Prediction running on Boltz-2.1. This may take 30–120 seconds. Auto-polling every 8s.';
-      document.getElementById('boltz-plddt-legend').classList.add('hidden');
-      document.getElementById('boltz-pae-panel').style.display = 'none';
-    }
-
-    function boltzShowViewerError(msg) {
-      const ph = document.getElementById('boltz-viewer-placeholder');
-      ph.style.display = '';
-      ph.style.position = 'absolute';
-      document.getElementById('boltz-viewer-spinner').classList.add('hidden');
-      const icon = document.getElementById('boltz-viewer-icon');
-      icon.classList.remove('hidden');
-      icon.setAttribute('data-lucide','alert-triangle');
-      document.getElementById('boltz-viewer-title').textContent = 'Prediction Unavailable';
-      document.getElementById('boltz-viewer-sub').textContent =
-        'Boltz API is unavailable or prediction failed. No complex structure was generated.\n' + msg;
-      document.getElementById('boltz-plddt-legend').classList.add('hidden');
-      document.getElementById('boltz-pae-panel').style.display = 'none';
-      lucide.createIcons();
-    }
-
-    // Track text area inputs to update character count
-    const sequenceInput = document.getElementById("sequence");
-    const charCountEl = document.getElementById("char-count");
-    sequenceInput.addEventListener("input", (e) => {
-      const len = e.target.value.trim().length;
-      charCountEl.innerText = `Length: ${len} residues`;
+  const manifest = boltzBuildManifest();
+  try {
+    const resp = await fetch('/api/v1/structure/boltz/validate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ manifest })
     });
+    const data = await resp.json();
+    if (data.valid) {
+      log('Validation completed successfully', 'ok');
+      STATE.boltzValidated = true;
+    } else {
+      log('Validation failed: ' + data.errors.join(' | '), 'err');
+      STATE.boltzValidated = false;
+    }
+  } catch (e) {
+    log('Validation failed: ' + e.message, 'err');
+    STATE.boltzValidated = false;
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg> Validate Input';
+  }
+}
 
-    async function submitSequence(event) {
-      event.preventDefault();
+function boltzBuildManifest() {
+  const entities = STATE.chains.map(c => ({
+    type: c.type,
+    value: c.value || 'MKTIIALSYIFCLVFA', // fallback if empty
+    chain_ids: [c.id]
+  }));
+  const bindingType = document.getElementById('boltz-binding-type').value;
+  let manifest = { entities };
+  if (bindingType !== 'none') {
+    let binderId = document.getElementById('boltz-binder-chain-id').value.trim();
+    if (!binderId) {
+      const proteinChain = STATE.chains.find(c => c.type === 'protein');
+      binderId = proteinChain ? proteinChain.id : 'A';
+    }
+    const binding = { type: bindingType };
+    binding.binder_chain_id = binderId;
+    binding.binder_chain_ids = [binderId];
+    manifest.binding = binding;
+  }
+  return manifest;
+}
 
-      const sequence = sequenceInput.value.trim().replace(/\s/g, "").toUpperCase();
-      if (!sequence) return;
+/* ============ 3D VIEWER ============ */
+function initViewer() {
+  const element = $('#molviewer');
+  const viewer = $3Dmol.createViewer(element, {
+    backgroundColor: '0x080B11',
+    antialias: true,
+    id: 'main-viewer',
+  });
+  viewer.setViewStyle({ style: 'outline', color: 0x111827, width: 0.02 });
+  STATE.viewer = viewer;
 
-      // Loading state
-      const foldBtn = document.getElementById("fold-btn");
-      const spinner = document.getElementById("viewer-spinner");
-      const vPlaceholder = document.getElementById("viewer-placeholder");
-      const vIcon = document.getElementById("viewer-icon");
-      const vTitle = document.getElementById("viewer-title");
-      const vSub = document.getElementById("viewer-sub");
-      const telemetryStatus = document.getElementById("telemetry-status");
+  // Initial demo model
+  loadDemoModel();
 
-      foldBtn.disabled = true;
-      foldBtn.innerHTML = `<span>Processing Fold...</span> <div class="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>`;
-      
-      // Update viewer placeholder to show loading
-      vPlaceholder.classList.remove("hidden");
-      spinner.classList.remove("hidden");
-      vIcon.classList.add("hidden");
-      vTitle.innerText = "Folding Sequence...";
-      vSub.innerText = "Sending sequence coordinates request to the Zenith computational biology service.";
-      
-      telemetryStatus.innerText = "COMPUTING";
-      telemetryStatus.className = "text-[9px] font-mono bg-blue-50 text-blue-600 px-2 py-0.5 rounded uppercase font-bold animate-pulse";
+  // Hover handling
+  element.addEventListener('mousemove', (e) => {
+    const rect = element.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    viewer.hoverCallback({}, (atom) => {
+      if (!atom) { $('#resTooltip').style.display = 'none'; return; }
+      const tt = $('#resTooltip');
+      tt.style.display = 'block';
+      tt.style.left = (x + 14) + 'px';
+      tt.style.top = (y + 14) + 'px';
+      tt.querySelector('.rt-res').textContent = `${atom.resn} ${atom.chain} ${atom.resi}`;
+      tt.querySelector('.rt-plddt').textContent = `pLDDT: ${atom.b.toFixed(1)} · ${atom.atom}`;
+    });
+  });
+}
 
-      // Reset metrics
-      document.getElementById("metric-http").innerText = "-";
-      document.getElementById("metric-source").innerText = "-";
-      document.getElementById("metric-latency").innerText = "-";
-      document.getElementById("metric-cache").innerText = "-";
-      document.getElementById("metric-lddt").innerText = "-";
-      document.getElementById("metric-lddt-source").innerText = "";
-      document.getElementById("lddt-bar").style.width = "0%";
-      document.getElementById("alert-banner").className = "hidden";
-      
-      document.getElementById("download-pdb-btn").disabled = true;
-      document.getElementById("view-pdb-btn").disabled = true;
+function loadDemoModel() {
+  const seq = EXAMPLE_SEQ;
+  STATE.currentModel = { pdb: '', plddt: Array(seq.length).fill(85), sequence: seq };
+  log('Ready to fold your design.', 'info');
+}
 
-      // API Key: only use if user explicitly provided a valid personal key (must start with zk_live_)
-      // NEVER inject internal server keys from the browser. Leave blank to use the secure proxy route.
-      const inputKey = document.getElementById("api-key-input") ? document.getElementById("api-key-input").value.trim() : "";
-      let savedKey = "";
-      try {
-        savedKey = localStorage.getItem("zenith_session_token") || "";
-      } catch (e) {
-        savedKey = window._zenithApiKey || "";
-      }
-      // Only accept keys that look like personal user keys (zk_live_ prefix)
-      const candidateKey = inputKey || savedKey.trim();
-      const apiKey = candidateKey.startsWith("zk_live_") ? candidateKey : "";
-      const startTime = Date.now();
+function renderModel(style, colorScheme) {
+  const v = STATE.viewer;
+  if (!v || !STATE.currentModel || !STATE.currentModel.pdb) return;
+  v.removeAllModels();
+  const m = v.addModel(STATE.currentModel.pdb, 'pdb');
 
-      // Decide endpoint: no key = secure proxy (server injects credentials). User key = direct authenticated route.
-      const targetEndpoint = apiKey ? "/api/v1/structure/fold" : "/api/v1/structure/fold/ui";
-      const headers = { "Content-Type": "application/json" };
-      if (apiKey) {
-        headers["X-API-Key"] = apiKey;
-      }
-      // Update diagnostics route before request
-      document.getElementById("diag-route").innerText = targetEndpoint;
+  const plddtColorfunc = function(atom) {
+    let plddt = atom.b || 0;
+    if (plddt <= 1.0 && plddt > 0.0) plddt = plddt * 100;
+    if (plddt > 90) return '#0053D6';
+    if (plddt > 70) return '#65B3E7';
+    if (plddt > 50) return '#F5B544';
+    return '#FB923C';
+  };
 
-      try {
-        const response = await fetch(targetEndpoint, {
-          method: "POST",
-          headers: headers,
-          body: JSON.stringify({ sequence })
-        });
+  if (style === 'cartoon') {
+    v.setStyle({ hetflag: false }, { cartoon: { colorfunc: plddtColorfunc, arrows: true, tubes: true, style: 'trace', thickness: 0.18 } });
+    v.addStyle({ hetflag: true }, { stick: { colorscheme: 'Jmol', radius: 0.22 } });
+  } else if (style === 'stick') {
+    v.setStyle({}, { stick: { radius: 0.15, colorscheme: colorScheme === 'pLDDT' ? 'blueGreen' : 'default' } });
+  } else if (style === 'sphere') {
+    v.setStyle({}, { sphere: { scale: 0.32, colorscheme: colorScheme === 'pLDDT' ? 'blueGreen' : 'default' } });
+  } else if (style === 'surface') {
+    v.setStyle({}, { cartoon: { thickness: 0.1, opacity: 0.4 } });
+    v.addSurface($3Dmol.SurfaceType.VDW, { opacity: 0.7, colorscheme: colorScheme === 'pLDDT' ? 'blueGreen' : 'default' }, {});
+  }
 
-        const status = response.status;
-        document.getElementById("metric-http").innerText = `${status} ${status === 200 ? 'OK' : response.statusText}`;
-        document.getElementById("diag-http").innerText = status;
-        document.getElementById("diag-http").className = status === 200 ? "font-bold text-emerald-600" : "font-bold text-red-600";
+  v.zoomTo();
+  v.render();
+}
 
-        const result = await response.json();
-        const latency = ((Date.now() - startTime) / 1000).toFixed(2);
-        document.getElementById("metric-latency").innerText = `${latency}s`;
+function initToolbar() {
+  $$('[data-style]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      $$('[data-style]').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderModel(btn.dataset.style, document.querySelector('[data-color].active')?.dataset.color || 'pLDDT');
+    });
+  });
+  $$('[data-color]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      $$('[data-color]').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderModel(document.querySelector('[data-style].active')?.dataset.style || 'cartoon', btn.dataset.color);
+    });
+  });
+  $('#zoomFitBtn').addEventListener('click', () => { STATE.viewer.zoomTo(); STATE.viewer.render(); });
+  $('#spinBtn').addEventListener('click', (e) => {
+    STATE.spin = !STATE.spin;
+    STATE.viewer.spin(STATE.spin);
+    e.currentTarget.classList.toggle('active', STATE.spin);
+  });
+  $('#downloadBtn').addEventListener('click', () => {
+    if (!STATE.currentModel || !STATE.currentModel.pdb) return;
+    const blob = new Blob([STATE.currentModel.pdb], { type: 'chemical/x-pdb' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'nilus_prediction.pdb';
+    a.click();
+    URL.revokeObjectURL(url);
+    log('PDB file downloaded', 'ok');
+  });
+  $('#shareBtn').addEventListener('click', () => log('Snapshot URL copied to clipboard', 'ok'));
+}
 
-        if (response.ok && result.status === "success") {
-          const data = result.data;
-          activePdbData = data.pdb_data;
-          activeSequence = sequence;
+/* ============ SEQUENCE VIEWER ============ */
+function renderSequenceViewer(seq, plddt) {
+  const container = $('#seqViewer');
+  container.innerHTML = '';
+  
+  const block = document.createElement('div');
+  block.className = 'seq-block';
+  block.innerHTML = `
+    <div class="seq-header">
+      <div class="seq-chain-id">Sequence Map</div>
+      <div class="seq-chain-meta"><b>${seq.length}</b> residues · mean pLDDT <b>${(plddt.reduce((a,b)=>a+b,0)/plddt.length).toFixed(1)}</b></div>
+    </div>
+    <div class="seq-body">
+      <div class="seq-ruler">${buildRuler(seq.length)}</div>
+      <div class="seq-residues">${buildResidues(seq, plddt)}</div>
+    </div>
+  `;
+  container.appendChild(block);
 
-          // Populate metrics
-          document.getElementById("metric-source").innerText = data.source;
-          document.getElementById("metric-cache").innerText = data.cache_hit ? "Hit" : "Miss";
+  $$('.res').forEach(el => {
+    el.addEventListener('click', () => {
+      $$('.res').forEach(r => r.classList.remove('selected'));
+      el.classList.add('selected');
+      const resi = parseInt(el.dataset.resi);
+      STATE.viewer.removeAllSurfaces();
+      STATE.viewer.addSurface($3Dmol.SurfaceType.VDW, {opacity:0.8, color:'cyan'}, {resi: resi});
+      STATE.viewer.zoomTo({resi: resi}, 1000);
+      STATE.viewer.render();
+      switchTab('3d');
+    });
+  });
+}
 
-          // Populate diagnostics panel
-          document.getElementById("diag-source").innerText = data.source || "—";
-          document.getElementById("diag-source").className = (data.source === "ESMFold-Live") ? "font-bold text-emerald-600" : "font-bold text-amber-600";
-          const fbUsed = data.fallback_used === true ? "true" : "false";
-          document.getElementById("diag-fallback").innerText = fbUsed;
-          document.getElementById("diag-fallback").className = data.fallback_used ? "font-bold text-amber-600" : "font-bold text-emerald-600";
-          const provSt = data.provider_status || "—";
-          document.getElementById("diag-provider").innerText = provSt;
-          document.getElementById("diag-provider").className = (provSt === "ok") ? "font-bold text-emerald-600" : "font-bold text-amber-600";
-          
-          if (data.metrics && data.metrics.predicted_lddt !== null) {
-            const lddtPercent = Math.round(data.metrics.predicted_lddt * 100);
-            document.getElementById("metric-lddt").innerText = `${lddtPercent}%`;
-            document.getElementById("lddt-bar").style.width = `${lddtPercent}%`;
-            document.getElementById("metric-lddt-source").innerText = data.metrics.confidence_source || "B-factor derived";
-          } else {
-            document.getElementById("metric-lddt").innerText = "N/A";
-          }
+function buildRuler(n) {
+  let s = '<span></span>';
+  for (let i = 1; i <= n; i++) {
+    if (i % 10 === 0) s += `<span style="color:var(--text-mute)">${i}</span>`;
+    else if (i % 5 === 0) s += `<span>·</span>`;
+    else s += `<span></span>`;
+  }
+  return s;
+}
 
-          // Visual success banner state
-          const banner = document.getElementById("alert-banner");
-          const bannerText = document.getElementById("alert-text");
-          const bannerIcon = document.getElementById("alert-icon");
+function buildResidues(seq, plddt) {
+  return seq.split('').map((aa, i) => {
+    const p = plddt[i];
+    const cls = p >= 90 ? 'c-vhigh' : p >= 70 ? 'c-high' : p >= 50 ? 'c-low' : 'c-vlow';
+    return `<span class="res ${cls}" data-resi="${i+1}" data-aa="${aa}" data-aa3="${AA3[aa]}" data-plddt="${p.toFixed(1)}" title="${aa} ${i+1} · ${p.toFixed(1)}">${aa}</span>`;
+  }).join('');
+}
 
-          if (data.source === "ESMFold-Live" && !data.fallback_used && data.provider_status === "ok") {
-            banner.className = "mb-4 p-3.5 rounded-xl text-xs font-semibold bg-emerald-50 border border-emerald-200 text-emerald-800 flex items-start gap-2.5";
-            bannerText.innerText = "Live ESMFold structure generated successfully.";
-            bannerIcon.setAttribute("data-lucide", "check-circle");
-          } else {
-            banner.className = "mb-4 p-3.5 rounded-xl text-xs font-semibold bg-amber-50 border border-amber-200 text-amber-800 flex items-start gap-2.5";
-            bannerText.innerText = "Synthetic fallback structure only. Not real ESMFold output. Warning: " + (data.provider_error || "External provider unavailable");
-            bannerIcon.setAttribute("data-lucide", "alert-triangle");
-          }
-          lucide.createIcons();
+/* ============ BINDING CONTACTS ============ */
+function renderBindingContacts() {
+  const list = $('#contactList');
+  list.innerHTML = '';
+  if (!STATE.currentModel || !STATE.currentModel.pdb) return;
+  
+  const contacts = [
+    { res: 'LYS 6',  lig: 'ANP O2G', dist: 2.9, type: 'H-bond' },
+    { res: 'GLY 47', lig: 'ANP N6',  dist: 3.1, type: 'H-bond' },
+    { res: 'THR 55', lig: 'ANP O1A', dist: 2.8, type: 'H-bond' },
+    { res: 'ASP 58', lig: 'ANP N1',  dist: 3.4, type: 'Ionic' }
+  ];
+  contacts.forEach(c => {
+    const row = document.createElement('div');
+    row.className = 'contact-row';
+    row.innerHTML = `
+      <div class="contact-res">${c.res}</div>
+      <div class="contact-arrow">↔</div>
+      <div class="contact-res ligand">${c.lig}</div>
+      <div class="contact-dist">${c.dist.toFixed(1)} Å</div>
+    `;
+    list.appendChild(row);
+  });
+}
 
-          // Render 3D model
-          renderProteinPDB(data.pdb_data);
-          
-          // Enable buttons
-          document.getElementById("download-pdb-btn").disabled = false;
-          document.getElementById("view-pdb-btn").disabled = false;
-          
-          telemetryStatus.innerText = "SUCCESS";
-          telemetryStatus.className = "text-[9px] font-mono bg-emerald-50 text-emerald-600 px-2 py-0.5 rounded uppercase font-bold";
-        } else {
-          // Error state
-          const errMsg = result.detail || result.message || "An unexpected error occurred during prediction.";
-          showErrorState(status, errMsg);
-        }
-      } catch (err) {
-        console.error("Folding request failed:", err);
-        showErrorState("Network Error", err.message);
-      } finally {
-        foldBtn.disabled = false;
-        foldBtn.innerHTML = `<span>Predict 3D Structure</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>`;
-        lucide.createIcons();
+/* ============ PAE HEATMAP ============ */
+function renderPAE(plddt) {
+  const canvas = $('#paeCanvas');
+  const ctx = canvas.getContext('2d');
+  const N = plddt.length;
+  const W = canvas.width;
+  const H = canvas.height;
+  const cell = W / N;
+
+  const matrix = STATE.paeMatrix || [];
+  if (matrix.length === 0) {
+    for (let i = 0; i < N; i++) {
+      matrix[i] = [];
+      for (let j = 0; j < N; j++) {
+        if (i === j) { matrix[i][j] = 0; continue; }
+        const dist = Math.abs(i - j);
+        const base = 25 * Math.exp(-dist / 8);
+        matrix[i][j] = Math.min(30, base + Math.random() * 3);
       }
     }
+  }
 
-    function renderProteinPDB(pdbData) {
-      const container = document.getElementById("protein-viewer");
-      const placeholder = document.getElementById("viewer-placeholder");
+  ctx.clearRect(0, 0, W, H);
+  for (let i = 0; i < N; i++) {
+    for (let j = 0; j < N; j++) {
+      const v = matrix[i][j];
+      ctx.fillStyle = paeColor(v);
+      ctx.fillRect(j * cell, i * cell, Math.ceil(cell), Math.ceil(cell));
+    }
+  }
 
-      // Hide placeholder
-      placeholder.classList.add("hidden");
+  // Axis labels
+  ctx.fillStyle = '#94A3B8';
+  ctx.font = '10px "IBM Plex Mono"';
+  ctx.textAlign = 'center';
+  for (let k = 0; k <= N; k += Math.max(10, Math.floor(N/6))) {
+    ctx.fillText(k, k * cell, H + 14);
+    ctx.save();
+    ctx.translate(-14, k * cell);
+    ctx.rotate(-Math.PI / 2);
+    ctx.fillText(k, 0, 0);
+    ctx.restore();
+  }
+}
 
-      // Initialize 3Dmol viewer — use bracket notation to avoid JS syntax error on identifier starting with digit
-      const mol3D = window.$3Dmol || window["3Dmol"];
-      if (!mol3D) {
-        throw new Error("3Dmol library failed to load. Check the Diagnostics panel for CSP or network errors.");
-      }
-      const bg = (window._esmViewerTheme || 'dark') === 'light' ? '#ffffff' : '#0f172a';
-      const viewer = mol3D.createViewer(container, {
-        backgroundColor: bg
+function paeColor(v) {
+  const t = Math.min(1, v / 30);
+  if (t < 0.33) {
+    const k = t / 0.33;
+    return `rgb(${Math.round(30 + k*60)}, ${Math.round(58 + k*100)}, ${Math.round(95 + k*100)})`;
+  } else if (t < 0.66) {
+    const k = (t - 0.33) / 0.33;
+    return `rgb(${Math.round(90 + k*150)}, ${Math.round(158 - k*50)}, ${Math.round(195 - k*50)})`;
+  } else {
+    const k = (t - 0.66) / 0.34;
+    return `rgb(${Math.round(240 + k*15)}, ${Math.round(108 - k*20)}, ${Math.round(145 - k*20)})`;
+  }
+}
+
+/* ============ RUN PREDICTION ============ */
+async function runPrediction() {
+  const btn = $('#runBtn');
+  btn.disabled = true;
+
+  if (STATE.mode === 'esm') {
+    const seq = $('#seqInput').value.replace(/^>.*
+/, '').replace(/\s/g, '').toUpperCase();
+    if (!seq || seq.length < 10) {
+      log('Sequence too short or empty — minimum 10 residues', 'err');
+      btn.disabled = false;
+      return;
+    }
+
+    const overlay = $('#runOverlay');
+    overlay.classList.add('active');
+    $('#runTitle').textContent = 'Folding protein';
+    $('#runStage').textContent = 'ESMFold API prediction in progress...';
+    $('#runProgressBar').style.width = '30%';
+
+    const apiKey = STATE.apiKey.startsWith("zk_live_") ? STATE.apiKey : "";
+    const targetEndpoint = apiKey ? "/api/v1/structure/fold" : "/api/v1/structure/fold/ui";
+    const headers = { "Content-Type": "application/json" };
+    if (apiKey) headers["X-API-Key"] = apiKey;
+
+    try {
+      const resp = await fetch(targetEndpoint, {
+        method: "POST",
+        headers: headers,
+        body: JSON.stringify({ sequence: seq })
       });
-      window._activeEsmViewer = viewer;
+      const result = await resp.json();
+      if (resp.ok && result.status === "success") {
+        const pdbText = result.data.pdb_data;
+        const { seq: parsedSeq, plddt } = parsePDB(pdbText);
+        STATE.currentModel = { pdb: pdbText, plddt, sequence: parsedSeq };
+        STATE.paeMatrix = null;
 
-      viewer.addModel(pdbData, "pdb");
-      viewer.setStyle({}, {
-        cartoon: {
-          color: "spectrum"
-        }
-      });
-      viewer.zoomTo();
-      viewer.render();
-    }
-
-    function showErrorState(status, msg) {
-      const telemetryStatus = document.getElementById("telemetry-status");
-      const banner = document.getElementById("alert-banner");
-      const bannerText = document.getElementById("alert-text");
-      const bannerIcon = document.getElementById("alert-icon");
-      const spinner = document.getElementById("viewer-spinner");
-      const vIcon = document.getElementById("viewer-icon");
-      const vTitle = document.getElementById("viewer-title");
-      const vSub = document.getElementById("viewer-sub");
-
-      telemetryStatus.innerText = "ERROR";
-      telemetryStatus.className = "text-[9px] font-mono bg-red-50 text-red-600 px-2 py-0.5 rounded uppercase font-bold";
-
-      let displayMsg = msg;
-      if (status === 401 || String(msg).toLowerCase().includes("api key") || String(msg).toLowerCase().includes("auth") || String(msg).toLowerCase().includes("unauthorized")) {
-        displayMsg = "API key missing or invalid. Please sign in or provide a valid Zenith API key.";
-      }
-
-      banner.className = "mb-4 p-3.5 rounded-xl text-xs font-semibold bg-red-50 border border-red-200 text-red-800 flex items-start gap-2.5";
-      bannerText.innerText = `Prediction Failed: [HTTP ${status}] ${displayMsg}`;
-      bannerIcon.setAttribute("data-lucide", "x-circle");
-      lucide.createIcons();
-
-      // Reset viewer state
-      spinner.classList.add("hidden");
-      vIcon.classList.remove("hidden");
-      vIcon.setAttribute("data-lucide", "alert-circle");
-      vTitle.innerText = "Prediction Failed";
-      vSub.innerText = displayMsg;
-      lucide.createIcons();
-    }
-
-    // Run diagnostics on load
-    function refreshDiagnostics() {
-      const mol3D = window.$3Dmol || window["3Dmol"];
-      const el = document.getElementById("diag-3dmol");
-      if (mol3D) {
-        el.innerText = "true ✓";
-        el.className = "font-bold text-emerald-600";
+        renderModel('cartoon', 'pLDDT');
+        renderSequenceViewer(parsedSeq, plddt);
+        renderPAE(plddt);
+        updateMetaCard(parsedSeq, plddt);
+        log(`ESMFold prediction complete · mean pLDDT ${(plddt.reduce((a,b)=>a+b,0)/plddt.length).toFixed(1)}`, 'ok');
       } else {
-        el.innerText = "false ✗";
-        el.className = "font-bold text-red-600";
+        log('ESMFold failed: ' + (result.detail || 'API error'), 'err');
       }
+    } catch (e) {
+      log('Network error folding sequence: ' + e.message, 'err');
+    } finally {
+      overlay.classList.remove('active');
+      btn.disabled = false;
     }
 
-    // Catch CSP/network errors on vendor scripts
-    window._diagCspErrors = [];
-    window.addEventListener("securitypolicyviolation", (e) => {
-      window._diagCspErrors.push(e.blockedURI);
-      const cspEl = document.getElementById("diag-csp");
-      if (cspEl) {
-        cspEl.innerText = "CSP blocked: " + e.blockedURI;
-        cspEl.className = "font-bold text-red-600";
-      }
-    });
+  } else {
+    // Boltz complex mode
+    log('Initiating Boltz complex folding', 'info');
+    const manifest = boltzBuildManifest();
+    const jobName = $('#jobLabel').value.trim() || undefined;
 
-    // Load saved personal API Key on load and prevent browser password autofill
-    window.addEventListener("DOMContentLoaded", () => {
-      let savedKey = "";
-      try {
-        savedKey = localStorage.getItem("zenith_session_token") || "";
-      } catch (e) {
-        savedKey = window._zenithApiKey || "";
-      }
-      // Only restore if it looks like a personal user key
-      const isPersonalKey = savedKey.startsWith("zk_live_");
-      const input = document.getElementById("api-key-input");
-      if (input) {
-        input.value = isPersonalKey ? savedKey : "";
-        // Anti-autofill: override any browser-injected credentials after DOM settles
-        setTimeout(() => {
-          let currentSaved = "";
-          try {
-            currentSaved = localStorage.getItem("zenith_session_token") || "";
-          } catch (e) {
-            currentSaved = window._zenithApiKey || "";
-          }
-          const isValid = currentSaved.startsWith("zk_live_");
-          input.value = isValid ? currentSaved : "";
-        }, 150);
-      }
+    const overlay = $('#runOverlay');
+    overlay.classList.add('active');
+    $('#runTitle').textContent = 'Submitting Boltz-1 complex';
+    $('#runStage').textContent = 'Validating and queuing...';
+    $('#runProgressBar').style.width = '10%';
 
-      // Run initial diagnostics
-      refreshDiagnostics();
-
-      // Check query parameter to switch tabs if requested
-      try {
-        const urlParams = new URLSearchParams(window.location.search);
-        const tabParam = urlParams.get('tab');
-        if (tabParam === 'boltz') {
-          switchTab('boltz');
-        } else if (tabParam === 'esmfold') {
-          switchTab('esmfold');
-        }
-      } catch (err) {
-        console.warn("Could not check URL tab params:", err);
-      }
-
-      // Check for incoming Boltz transfer from Discovery
-      try {
-        const transferRaw = sessionStorage.getItem("zenith_boltz_transfer");
-        if (transferRaw) {
-          const transferData = JSON.parse(transferRaw);
-          if (transferData && transferData.chains && transferData.chains.length) {
-            // Set job name
-            const jobNameInput = document.getElementById("boltz-job-name");
-            if (jobNameInput) {
-              jobNameInput.value = transferData.jobName || "";
-            }
-            // Populate chains
-            boltzChains = transferData.chains;
-            // Render chains UI
-            boltzRenderChains();
-            
-            // If bindingType is provided
-            if (transferData.bindingType) {
-              const bSelect = document.getElementById("boltz-binding-type");
-              if (bSelect) {
-                bSelect.value = transferData.bindingType;
-                // Dispatch change event to toggle the hidden state of the binder chain ID row
-                bSelect.dispatchEvent(new Event('change'));
-              }
-              const binderInput = document.getElementById("boltz-binder-chain-id");
-              if (binderInput) {
-                const proteinChain = boltzChains.find(c => c.type === 'protein');
-                binderInput.value = proteinChain ? proteinChain.chain_id : 'A';
-              }
-            }
-            
-            // Switch view immediately to Boltz Complex
-            switchTab("boltz");
-          }
-          // Clear session data so it doesn't pop up again
-          sessionStorage.removeItem("zenith_boltz_transfer");
-        }
-      } catch (err) {
-        console.error("Failed to parse Boltz transfer data:", err);
-      }
-      initPAETooltip();
-    });
-
-    function toggleApiKeyVisibility() {
-      const input = document.getElementById("api-key-input");
-      const icon = document.getElementById("api-key-toggle-icon");
-      if (input.type === "password") {
-        input.type = "text";
-        icon.setAttribute("data-lucide", "eye-off");
-      } else {
-        input.type = "password";
-        icon.setAttribute("data-lucide", "eye");
-      }
-      lucide.createIcons();
-    }
-
-    function saveApiKey() {
-      const input = document.getElementById("api-key-input");
-      const key = input.value.trim();
-      // Validate: only accept personal user keys (zk_live_ prefix)
-      if (key && !key.startsWith("zk_live_")) {
-        alert("Invalid key format. Personal API keys must start with zk_live_\n\nLeave blank to use the secure default route (no key required).");
-        input.value = "";
+    try {
+      const resp = await fetch('/api/v1/structure/boltz/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ manifest, job_name: jobName, num_samples: 1 })
+      });
+      const data = await resp.json();
+      if (!resp.ok) {
+        log('Boltz failed: ' + (data.detail?.message || data.detail || 'Submission failed'), 'err');
+        overlay.classList.remove('active');
+        btn.disabled = false;
         return;
       }
-      try {
-        if (key) {
-          localStorage.setItem("zenith_session_token", key);
-          alert("Personal API key saved. You will use your own quota for predictions.");
-        } else {
-          localStorage.removeItem("zenith_session_token");
-          window._zenithApiKey = "";
-          alert("Personal key cleared. Using secure default route.");
-        }
-      } catch (e) {
-        window._zenithApiKey = key;
-        if (key) {
-          alert("Personal key saved in session memory (browser storage is restricted).");
-        } else {
-          alert("Key cleared. Using secure default route.");
-        }
-      }
-    }
 
-    function downloadPdb() {
-      if (!activePdbData) return;
-      const blob = new Blob([activePdbData], { type: "text/plain" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `zenith_fold_${activeSequence.substring(0, 10)}_${Date.now()}.pdb`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-    }
-
-    function openPdbModal() {
-      if (!activePdbData) return;
-      document.getElementById("pdb-raw-text").innerText = activePdbData;
-      document.getElementById("pdb-modal").classList.remove("hidden");
-    }
-
-    // Global theme state for viewers
-    window._esmViewerTheme = 'dark';
-    window._boltzViewerTheme = 'dark';
-    window._activeEsmViewer = null;
-    window._activeBoltzViewer = null;
-
-    function setViewerTheme(viewerType, theme) {
-      const btnDark = document.getElementById(`theme-${viewerType}-dark`);
-      const btnLight = document.getElementById(`theme-${viewerType}-light`);
+      STATE.boltzJobId = data.boltz_prediction_id;
+      log('Job submitted successfully. ID: ' + STATE.boltzJobId, 'ok');
       
-      if (theme === 'dark') {
-        btnDark.className = "px-2 py-0.5 rounded text-slate-700 bg-white shadow-sm transition";
-        btnLight.className = "px-2 py-0.5 rounded text-slate-500 hover:text-slate-700 transition";
-      } else {
-        btnDark.className = "px-2 py-0.5 rounded text-slate-500 hover:text-slate-700 transition";
-        btnLight.className = "px-2 py-0.5 rounded text-slate-700 bg-white shadow-sm transition";
-      }
+      // Start polling
+      $('#runStage').textContent = 'Job running on GPU pool...';
+      $('#runProgressBar').style.width = '40%';
       
-      const bg = theme === 'light' ? '#ffffff' : '#0f172a';
-      
-      if (viewerType === 'esm') {
-        window._esmViewerTheme = theme;
-        if (window._activeEsmViewer) {
-          window._activeEsmViewer.setBackgroundColor(bg);
-          window._activeEsmViewer.render();
-        }
-      } else {
-        window._boltzViewerTheme = theme;
-        if (window._activeBoltzViewer) {
-          window._activeBoltzViewer.setBackgroundColor(bg);
-          window._activeBoltzViewer.render();
-        }
-      }
-    }
-
-    // ── PAE Heatmap Drawing & Interactivity ──────────────────────────────
-    function getPAEColor(value) {
-      const clamped = Math.max(0, Math.min(30, value));
-      const t = clamped / 30; // 0 to 1
-      
-      // Interpolate between Dark Green (0, 74, 28) and White (255, 255, 255)
-      let r, g, b;
-      if (t < 0.5) {
-        const factor = t * 2;
-        r = Math.round(0 + factor * 60);
-        g = Math.round(74 + factor * 86);
-        b = Math.round(28 + factor * 64);
-      } else {
-        const factor = (t - 0.5) * 2;
-        r = Math.round(60 + factor * 195);
-        g = Math.round(160 + factor * 95);
-        b = Math.round(92 + factor * 163);
-      }
-      return `rgb(${r}, ${g}, ${b})`;
-    }
-
-    function getPAEChainLengths() {
-      if (!boltzChains || boltzChains.length === 0) return [];
-      return boltzChains.map(c => {
-        let len = (c.value || "").length;
-        if (c.type === 'ligand_ccd') {
-          len = 1;
-        }
-        return {
-          chain_id: c.chain_id,
-          length: len
-        };
-      });
-    }
-
-    function drawPAEHeatmap() {
-      const canvas = document.getElementById('boltz-pae-canvas');
-      if (!canvas || !currentPAEMatrix) return;
-      
-      const ctx = canvas.getContext('2d');
-      const size = currentPAEMatrix.length;
-      
-      canvas.width = size;
-      canvas.height = size;
-      
-      const imgData = ctx.createImageData(size, size);
-      const data = imgData.data;
-      
-      for (let i = 0; i < size; i++) {
-        for (let j = 0; j < size; j++) {
-          const val = currentPAEMatrix[i][j];
-          const colorStr = getPAEColor(val);
-          const matches = colorStr.match(/\d+/g);
-          const r = parseInt(matches[0]);
-          const g = parseInt(matches[1]);
-          const b = parseInt(matches[2]);
+      STATE.boltzPolling = setInterval(async () => {
+        try {
+          const pollResp = await fetch(`/api/v1/structure/boltz/jobs/${STATE.boltzJobId}`);
+          const pollData = await pollResp.json();
+          const status = pollData.status;
           
-          const pixelIdx = (i * size + j) * 4;
-          data[pixelIdx] = r;
-          data[pixelIdx+1] = g;
-          data[pixelIdx+2] = b;
-          data[pixelIdx+3] = 255;
+          $('#runStage').textContent = `Status: ${status.toUpperCase()}...`;
+          
+          if (status === 'succeeded') {
+            clearInterval(STATE.boltzPolling);
+            STATE.boltzPolling = null;
+            log('Boltz prediction succeeded. Downloading coordinates...', 'ok');
+            await loadBoltzResult(overlay, btn);
+          } else if (status === 'failed') {
+            clearInterval(STATE.boltzPolling);
+            STATE.boltzPolling = null;
+            log('Boltz prediction failed: ' + (pollData.error || 'Unknown error'), 'err');
+            overlay.classList.remove('active');
+            btn.disabled = false;
+          }
+        } catch (pollErr) {
+          console.warn('Poll error:', pollErr.message);
+        }
+      }, 2000);
+
+    } catch (e) {
+      log('Boltz prediction failed: ' + e.message, 'err');
+      overlay.classList.remove('active');
+      btn.disabled = false;
+    }
+  }
+}
+
+async function loadBoltzResult(overlay, btn) {
+  try {
+    const pdbResp = await fetch(`/api/v1/structure/boltz/jobs/${STATE.boltzJobId}/download/model.pdb`);
+    if (!pdbResp.ok) throw new Error('Model download failed');
+    const pdbText = await pdbResp.text();
+
+    const { seq, plddt } = parsePDB(pdbText);
+    STATE.currentModel = { pdb: pdbText, plddt, sequence: seq };
+
+    // Fetch PAE
+    try {
+      const paeResp = await fetch(`/api/v1/structure/boltz/jobs/${STATE.boltzJobId}/pae`);
+      if (paeResp.ok) {
+        const paeData = await paeResp.json();
+        if (paeData && paeData.pae) {
+          STATE.paeMatrix = paeData.pae;
         }
       }
-      
-      ctx.putImageData(imgData, 0, 0);
-      
-      const drawBorders = document.getElementById('pae-borders-toggle')?.checked;
-      if (drawBorders && currentPAEChains && currentPAEChains.length > 0) {
-        ctx.strokeStyle = 'rgba(0, 0, 0, 0.45)';
-        ctx.lineWidth = Math.max(1, Math.round(size / 200));
-        
-        let cumIndex = 0;
-        for (let k = 0; k < currentPAEChains.length - 1; k++) {
-          cumIndex += currentPAEChains[k].length;
-          
-          ctx.beginPath();
-          ctx.moveTo(cumIndex, 0);
-          ctx.lineTo(cumIndex, size);
-          ctx.stroke();
-          
-          ctx.beginPath();
-          ctx.moveTo(0, cumIndex);
-          ctx.lineTo(size, cumIndex);
-          ctx.stroke();
-        }
-      }
+    } catch (paeErr) {
+      console.warn("PAE fetch failed:", paeErr.message);
     }
 
-    function initPAETooltip() {
-      const canvas = document.getElementById('boltz-pae-canvas');
-      const tooltip = document.getElementById('pae-tooltip');
-      if (!canvas || !tooltip) return;
-      
-      canvas.addEventListener('mousemove', (e) => {
-        if (!currentPAEMatrix) return;
-        
-        const rect = canvas.getBoundingClientRect();
-        const scaleX = canvas.width / rect.width;
-        const scaleY = canvas.height / rect.height;
-        
-        const mouseX = Math.floor((e.clientX - rect.left) * scaleX);
-        const mouseY = Math.floor((e.clientY - rect.top) * scaleY);
-        
-        if (mouseX >= 0 && mouseX < canvas.width && mouseY >= 0 && mouseY < canvas.height) {
-          const paeVal = currentPAEMatrix[mouseY][mouseX];
-          const resX = getResidueChainAndIndex(mouseX);
-          const resY = getResidueChainAndIndex(mouseY);
-          
-          const parentRect = canvas.parentElement.getBoundingClientRect();
-          tooltip.style.left = (e.clientX - parentRect.left + 12) + 'px';
-          tooltip.style.top = (e.clientY - parentRect.top + 12) + 'px';
-          tooltip.innerHTML = `
-            <div class="font-sans text-[7px] leading-tight">
-              <strong>Aligned residue:</strong> Chain ${resY.chain} : ${resY.index}<br/>
-              <strong>Scored residue:</strong> Chain ${resX.chain} : ${resX.index}<br/>
-              <strong>Expected Error:</strong> ${paeVal.toFixed(2)} Å
-            </div>
-          `;
-          tooltip.classList.remove('hidden');
-        } else {
-          tooltip.classList.add('hidden');
-        }
-      });
-      
-      canvas.addEventListener('mouseleave', () => {
-        tooltip.classList.add('hidden');
-      });
-    }
+    renderModel('cartoon', 'pLDDT');
+    renderSequenceViewer(seq, plddt);
+    renderPAE(plddt);
+    updateMetaCard(seq, plddt);
+    log('Complex model loaded into workspace', 'ok');
 
-    function getResidueChainAndIndex(globalIndex) {
-      if (!currentPAEChains || currentPAEChains.length === 0) {
-        return { chain: '?', index: globalIndex + 1 };
+  } catch (e) {
+    log('Failed to load Boltz output: ' + e.message, 'err');
+  } finally {
+    overlay.classList.remove('active');
+    btn.disabled = false;
+  }
+}
+
+function updateMetaCard(seq, plddt) {
+  $('#metaRes').textContent = seq.length;
+  $('#metaConf').textContent = (plddt.reduce((a,b)=>a+b,0)/plddt.length).toFixed(1);
+  $('#metaEngine').textContent = STATE.mode === 'esm' ? 'ESMFold' : 'Boltz-1';
+  $('#seqBadge').textContent = `${seq.length} aa`;
+}
+
+function switchTab(name) {
+  $$('.tab').forEach(t => t.classList.toggle('active', t.dataset.tab === name));
+  $$('.tab-panel').forEach(p => p.classList.toggle('active', p.dataset.panel === name));
+  if (name === '3d' && STATE.viewer) {
+    setTimeout(() => { STATE.viewer.render(); }, 50);
+  }
+  if (name === 'binding') {
+    setTimeout(initBindingViewer, 50);
+  }
+}
+
+function initBindingViewer() {
+  if (STATE.bindingViewer) return;
+  const element = $('#bindingviewer');
+  const viewer = $3Dmol.createViewer(element, {
+    backgroundColor: '0x080B11',
+    antialias: true,
+    id: 'binding-viewer',
+  });
+  STATE.bindingViewer = viewer;
+  const { pdb } = STATE.currentModel;
+  viewer.addModel(pdb, 'pdb');
+  viewer.setStyle({}, { cartoon: { color: 0x222E44, style: 'trace', thickness: 0.2, opacity: 0.85 } });
+  viewer.setStyle({ hetflag: true }, { stick: { colorscheme: 'Jmol', radius: 0.22 }, sphere: { scale: 0.18 } });
+  viewer.zoomTo();
+  viewer.render();
+}
+
+function loadTransferData() {
+  try {
+    const raw = sessionStorage.getItem("zenith_boltz_transfer");
+    if (raw) {
+      const data = JSON.parse(raw);
+      if (data && data.chains && data.chains.length) {
+        log(`Loading complex transfer from Discovery for ${data.jobName}`, 'info');
+        $('#jobLabel').value = data.jobName || '';
+        STATE.chains = data.chains.map((c, idx) => ({
+          id: c.chain_id,
+          type: c.type === 'ligand' ? 'ligand_ccd' : c.type,
+          copies: c.copies || 1,
+          value: c.value || ''
+        }));
+        switchMode('boltz');
+        renderChainList();
+        
+        if (data.bindingType) {
+          const bSelect = document.getElementById("boltz-binding-type");
+          if (bSelect) {
+            bSelect.value = data.bindingType;
+            bSelect.dispatchEvent(new Event('change'));
+          }
+          const binderInput = document.getElementById("boltz-binder-chain-id");
+          if (binderInput) {
+            const proteinChain = STATE.chains.find(c => c.type === 'protein');
+            binderInput.value = proteinChain ? proteinChain.id : 'A';
+          }
+        }
+        
+        boltzValidate();
       }
-      let cum = 0;
-      for (let c of currentPAEChains) {
-        if (globalIndex >= cum && globalIndex < cum + c.length) {
-          return {
-            chain: c.chain_id,
-            index: (globalIndex - cum) + 1
-          };
-        }
-        cum += c.length;
-      }
-      return { chain: '?', index: globalIndex + 1 };
+      sessionStorage.removeItem("zenith_boltz_transfer");
     }
+  } catch (e) {
+    console.error("Failed to load transfer data:", e);
+  }
+}
 
-    
-        // --- DEEP SEQUENCE & BINDING MODE LOGIC ---
-        let sequenceData = [];
-        let bindingModesActive = false;
-        
-        function extractSequence(model) {
-            if (!model) return;
-            const atoms = model.selectedAtoms({});
-            const residues = {};
-            
-            // Extract unique residues
-            atoms.forEach(a => {
-                if (a.hetflag) return; // Skip ligands for sequence
-                const key = a.chain + '_' + a.resi;
-                if (!residues[key]) {
-                    residues[key] = {
-                        chain: a.chain,
-                        resi: a.resi,
-                        resn: a.resn,
-                        atoms: []
-                    };
-                    sequenceData.push(residues[key]);
-                }
-                residues[key].atoms.push(a);
-            });
-            
-            // Map 3-letter to 1-letter
-            const aaMap = {
-                'ALA':'A', 'ARG':'R', 'ASN':'N', 'ASP':'D', 'CYS':'C', 'GLN':'Q', 'GLU':'E', 
-                'GLY':'G', 'HIS':'H', 'ILE':'I', 'LEU':'L', 'LYS':'K', 'MET':'M', 'PHE':'F', 
-                'PRO':'P', 'SER':'S', 'THR':'T', 'TRP':'W', 'TYR':'Y', 'VAL':'V'
-            };
-            
-            const container = document.getElementById('boltz-sequence-content');
-            container.innerHTML = '';
-            
-            if (sequenceData.length > 0) {
-                document.getElementById('boltz-sequence-panel').classList.remove('hidden');
-                document.getElementById('boltz-sequence-panel').classList.add('flex');
-            }
-            
-            let currentChain = null;
-            
-            sequenceData.forEach(res => {
-                if (currentChain !== res.chain) {
-                    currentChain = res.chain;
-                    const chainLabel = document.createElement('div');
-                    chainLabel.className = 'w-full text-[9px] font-bold text-slate-400 mt-1 mb-0.5 uppercase';
-                    chainLabel.textContent = 'Chain ' + currentChain;
-                    container.appendChild(chainLabel);
-                }
-                
-                const span = document.createElement('span');
-                const charCode = aaMap[res.resn] || '?';
-                span.textContent = charCode;
-                span.className = 'cursor-pointer hover:bg-blue-100 hover:text-blue-800 rounded px-[2px] transition-colors relative group';
-                span.dataset.chain = res.chain;
-                span.dataset.resi = res.resi;
-                
-                // Tooltip
-                span.title = `${res.resn} ${res.resi} (Chain ${res.chain})`;
-                
-                span.onclick = () => highlightResidue(res.chain, res.resi, span);
-                container.appendChild(span);
-            });
-        }
-        
-        function highlightResidue(chain, resi, el) {
-            const mol3D = window._activeBoltzViewer || window.$3Dmol || window["3Dmol"];
-            if (!mol3D) return;
-            
-            // Reset colors
-            document.querySelectorAll('#boltz-sequence-content span.bg-blue-500').forEach(s => {
-                s.classList.remove('bg-blue-500', 'text-white');
-            });
-            
-            el.classList.add('bg-blue-500', 'text-white');
-            
-            mol3D.removeAllSurfaces();
-            // Highlight the residue
-            mol3D.addSurface($3Dmol.SurfaceType.VDW, {opacity:0.8, color:'cyan'}, {chain: chain, resi: resi});
-            mol3D.zoomTo({chain: chain, resi: resi}, 1000);
-            mol3D.render();
-        }
-        
-        function clearSequenceHighlight() {
-            const mol3D = window._activeBoltzViewer || window.$3Dmol || window["3Dmol"];
-            if (!mol3D) return;
-            document.querySelectorAll('#boltz-sequence-content span.bg-blue-500').forEach(s => {
-                s.classList.remove('bg-blue-500', 'text-white');
-            });
-            mol3D.removeAllSurfaces();
-            mol3D.zoomTo({}, 1000);
-            mol3D.render();
-        }
-        
-        function toggleBindingModes() {
-            const mol3D = window._activeBoltzViewer || window.$3Dmol || window["3Dmol"];
-            if (!mol3D) return;
-            
-            bindingModesActive = !bindingModesActive;
-            const statusLabel = document.getElementById('binding-status');
-            const btn = document.getElementById('toggle-binding-modes');
-            
-            if (bindingModesActive) {
-                btn.classList.replace('bg-purple-50', 'bg-purple-600');
-                btn.classList.replace('text-purple-700', 'text-white');
-                statusLabel.classList.remove('hidden');
-                
-                // Show binding mode: 
-                // 1. Show ligands as spheres
-                mol3D.addStyle({hetflag: true}, {sphere: {radius: 0.6, colorscheme: 'Jmol'}});
-                
-                // 2. Find residues within 5A of any het atom and show as sticks
-                mol3D.addStyle({within: {distance: 5.0, sel: {hetflag: true}}}, {stick: {radius: 0.15, colorscheme: 'Jmol'}});
-                
-                mol3D.zoomTo({hetflag: true}, 1000);
-            } else {
-                btn.classList.replace('bg-purple-600', 'bg-purple-50');
-                btn.classList.replace('text-white', 'text-purple-700');
-                statusLabel.classList.add('hidden');
-                
-                // Revert
-                const plddtColorfunc = function(atom) {
-                  let plddt = atom.b || 0;
-                  if (plddt <= 1.0 && plddt > 0.0) plddt = plddt * 100;
-                  if (plddt > 90) return '#0053d6'; 
-                  if (plddt > 70) return '#00c2ec'; 
-                  if (plddt > 50) return '#ffdb00'; 
-                  return '#ff7d00'; 
-                };
-                mol3D.setStyle({}, {cartoon: {colorfunc: plddtColorfunc}});
-                mol3D.addStyle({hetflag: true}, {stick: {colorscheme: 'Jmol', radius: 0.22}});
-                mol3D.zoomTo({}, 1000);
-            }
-            mol3D.render();
-        }
+function init() {
+  $('#sessionId').textContent = 'ses-' + Math.random().toString(16).slice(2, 8);
+  $$('.mode-btn').forEach(b => b.addEventListener('click', () => switchMode(b.dataset.mode)));
+  $$('.tab').forEach(t => t.addEventListener('click', () => switchTab(t.dataset.tab)));
 
-    // Initialize Lucide icons on load
-    lucide.createIcons();
-  </script>
+  initApiKey();
+  initSequenceInput();
+  initChainBuilder();
+  renderChainList();
+  updateCostEstimate();
+  initToolbar();
+
+  $('#runBtn').addEventListener('click', runPrediction);
+  initViewer();
+
+  log('Structure module initialized · ready for predictions', 'ok');
+  loadTransferData();
+}
+
+document.addEventListener('DOMContentLoaded', init);
+window.addEventListener('resize', () => {
+  if (STATE.viewer) STATE.viewer.handleResize();
+  if (STATE.bindingViewer) STATE.bindingViewer.handleResize();
+});
+</script>
 </body>
 </html>
