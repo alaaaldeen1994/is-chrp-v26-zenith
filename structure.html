@@ -313,9 +313,9 @@
     background:rgba(59,130,246,.1);border-radius:2px;padding:3px 0;
   }
   .chain-type{
-    appearance:none;background:transparent;border:0;color:var(--text);
+    background:var(--bg-panel);border:1px solid var(--border);border-radius:2px;color:var(--text);
     font-family:'IBM Plex Mono',monospace;font-size:10px;
-    cursor:pointer;outline:none;
+    cursor:pointer;outline:none;padding:3px 4px;
   }
   .chain-copies{
     background:var(--bg-panel);border:1px solid var(--border);
@@ -700,40 +700,24 @@
 
   <!-- ============ TOP BAR ============ -->
   <header class="topbar">
-    <div class="brand">
-      <div class="brand-mark" style="background:var(--accent);">
-        <svg width="14" height="14" viewBox="0 0 48 48" fill="none" stroke="#ffffff" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M16 8 Q 32 16, 16 24 Q 32 32, 16 40" />
-          <path d="M32 8 Q 16 16, 32 24 Q 16 32, 32 40" opacity="0.55" />
-          <line x1="20" y1="12" x2="28" y2="12" stroke-width="3" />
-          <line x1="16" y1="24" x2="32" y2="24" stroke-width="3" />
-          <line x1="20" y1="36" x2="28" y2="36" stroke-width="3" />
+    <div class="brand" onclick="window.location.href='index.html'" style="cursor:pointer;">
+      <div class="brand-mark" style="background:#1a1a1a;border-radius:50%;display:flex;align-items:center;justify-content:center;width:28px;height:28px;box-shadow:0 0 0 1px rgba(255,255,255,.08);">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f8f8f6" stroke-width="2">
+            <circle cx="12" cy="12" r="5"/>
+            <path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.93 4.93l2.12 2.12M16.95 16.95l2.12 2.12M4.93 19.07l2.12-2.12M16.95 7.05l2.12-2.12"/>
         </svg>
       </div>
       <div class="brand-text">
         <div class="brand-name">NILUS<span>·LAB</span></div>
-        <div class="brand-sub">Computational Biology Platform</div>
+        <div class="brand-sub">Zenith v30</div>
       </div>
     </div>
 
-    <nav class="topnav">
-      <a href="#">Dashboard</a>
-      <a href="#">Sequences</a>
-      <a href="#" class="active">Structure</a>
-      <a href="#">Function</a>
-      <a href="#">Library</a>
-      <a href="#">Pipelines</a>
-    </nav>
-
     <div class="top-right">
-      <div class="env-pill">Prod · EU-West</div>
-      <button class="top-icon" title="Notifications">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-      </button>
-      <button class="top-icon" title="Documentation">
+      <button class="top-icon" title="Documentation" onclick="window.location.href='api.html'">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
       </button>
-      <div class="user-chip">
+      <div class="user-chip" onclick="window.location.href='profile.html'" style="cursor:pointer;">
         <div class="user-avatar" id="userAvatarInitials">NL</div>
         <div class="user-meta">
           <div class="user-name" id="userDisplayName">Nilus Lab</div>
@@ -1526,6 +1510,13 @@ function renderModel(style, colorScheme) {
 
   if (style === 'cartoon') {
     v.setStyle({ hetflag: false }, { cartoon: { colorfunc: plddtColorfunc } });
+    v.setStyle(
+      { resn: ["DA", "DT", "DC", "DG", "A", "U", "C", "G", "RA", "RU", "RC", "RG"] },
+      { 
+        cartoon: { color: '#4da6ff' }, 
+        stick: { colorscheme: 'Jmol', radius: 0.15 } 
+      }
+    );
     v.addStyle({ hetflag: true }, { stick: { colorscheme: 'Jmol', radius: 0.22 } });
   } else if (style === 'stick') {
     v.setStyle({}, { stick: { radius: 0.15, colorscheme: colorScheme === 'pLDDT' ? 'blueGreen' : 'default' } });
@@ -1893,8 +1884,15 @@ function initBindingViewer() {
   STATE.bindingViewer = viewer;
   const { pdb } = STATE.currentModel;
   viewer.addModel(pdb, 'pdb');
-  viewer.setStyle({}, { cartoon: { color: 0x222E44, opacity: 0.85 } });
-  viewer.setStyle({ hetflag: true }, { stick: { colorscheme: 'Jmol', radius: 0.22 }, sphere: { scale: 0.18 } });
+  viewer.setStyle({ hetflag: false }, { cartoon: { color: '#2d3748', opacity: 0.85 } });
+  viewer.setStyle(
+    { resn: ["DA", "DT", "DC", "DG", "A", "U", "C", "G", "RA", "RU", "RC", "RG"] },
+    { 
+      cartoon: { color: '#4da6ff', opacity: 0.95 },
+      stick: { colorscheme: 'Jmol', radius: 0.15 }
+    }
+  );
+  viewer.setStyle({ hetflag: true }, { stick: { colorscheme: 'Jmol', radius: 0.25 }, sphere: { scale: 0.2 } });
   viewer.zoomTo();
   viewer.render();
 }
