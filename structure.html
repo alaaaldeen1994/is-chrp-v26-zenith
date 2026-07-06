@@ -959,6 +959,239 @@
     --shadow-inset: inset 0 1px 0 rgba(255,255,255,0.1);
   }
 
+
+  /* ============================================================
+     SIDEBAR COMPLETE CSS FIX - all missing components
+  ============================================================ */
+
+  /* --- Buttons --- */
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+    padding: 9px 14px; border-radius: 9px; font-size: 12px; font-weight: 600;
+    cursor: pointer; border: none; transition: all 0.12s; letter-spacing: -0.01em;
+    user-select: none; white-space: nowrap; flex-shrink: 0;
+  }
+  .btn-primary {
+    background: linear-gradient(180deg, #589EFF 0%, #2E6FD9 100%);
+    color: white;
+    box-shadow: 0 2px 8px rgba(88,158,255,0.35), inset 0 1px 0 rgba(255,255,255,0.15);
+    text-shadow: 0 1px 1px rgba(0,0,0,0.25);
+  }
+  .btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(88,158,255,0.45), inset 0 1px 0 rgba(255,255,255,0.15);
+  }
+  .btn-primary:disabled {
+    opacity: 0.45; cursor: not-allowed; transform: none !important;
+    box-shadow: none !important;
+  }
+  .btn-ghost {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    color: var(--text-mute);
+  }
+  .btn-ghost:hover {
+    background: rgba(255,255,255,0.08);
+    border-color: rgba(255,255,255,0.14);
+    color: var(--text);
+  }
+
+  /* --- API credential section --- */
+  .api-row {
+    display: flex; align-items: center; gap: 6px; margin-bottom: 6px;
+  }
+  .api-row input {
+    flex: 1;
+    background: rgba(0,0,0,0.35);
+    border: 1px solid #1E293B;
+    border-radius: 8px;
+    color: var(--text);
+    padding: 8px 12px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    outline: none;
+    transition: border-color 0.12s;
+  }
+  .api-row input:focus { border-color: var(--accent); }
+  .api-row input::placeholder { color: var(--text-dim); }
+  .api-status {
+    width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0;
+    background: var(--text-dim); display: inline-block;
+    box-shadow: none; transition: all 0.2s;
+  }
+  .api-status.set { background: #10B981; box-shadow: 0 0 6px #10B981; }
+  .api-hint {
+    font-size: 10px; color: var(--text-dim); line-height: 1.45;
+    font-family: 'JetBrains Mono', monospace; margin-top: 4px;
+  }
+
+  /* --- Textarea (sequence input) --- */
+  .textarea, textarea {
+    width: 100%; display: block;
+    background: rgba(0,0,0,0.35);
+    border: 1px solid #1E293B;
+    border-radius: 9px;
+    color: var(--text);
+    padding: 10px 12px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    line-height: 1.55;
+    resize: vertical;
+    min-height: 100px;
+    max-height: 220px;
+    outline: none;
+    transition: border-color 0.12s;
+    box-sizing: border-box;
+  }
+  .textarea:focus, textarea:focus { border-color: var(--accent); }
+  .textarea::placeholder, textarea::placeholder { color: var(--text-dim); }
+
+  /* --- Select dropdowns --- */
+  .select, select {
+    width: 100%; display: block;
+    background: rgba(0,0,0,0.35);
+    border: 1px solid #1E293B;
+    border-radius: 8px;
+    color: var(--text);
+    padding: 7px 28px 7px 10px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    outline: none;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 9px center;
+    transition: border-color 0.12s;
+  }
+  .select:focus, select:focus { border-color: var(--accent); }
+
+  /* --- Field rows --- */
+  .field { margin-bottom: 10px; }
+  .field:last-child { margin-bottom: 0; }
+  .field-label {
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 10px; font-weight: 700; color: var(--text-mute);
+    text-transform: uppercase; letter-spacing: 0.07em;
+    margin-bottom: 6px;
+  }
+  .field-label .hint {
+    text-transform: none; font-family: 'JetBrains Mono', monospace;
+    color: var(--text-faint); font-weight: 400; font-size: 10px;
+    letter-spacing: 0; text-align: right;
+  }
+
+  /* --- Chain list (Boltz mode) --- */
+  .chain-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 8px; }
+  .chain-row {
+    background: rgba(0,0,0,0.3); border: 1px solid #1E293B;
+    border-radius: 8px; padding: 10px 12px;
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .chain-row-head {
+    display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  }
+  .chain-id-badge {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700;
+    color: var(--accent-bright); background: var(--accent-soft);
+    border: 1px solid rgba(88,158,255,0.3); padding: 1px 6px; border-radius: 4px;
+  }
+  .chain-type-sel {
+    flex: 1; font-size: 10px; padding: 4px 8px;
+    border-radius: 6px; border: 1px solid #1E293B;
+    background: rgba(0,0,0,0.3); color: var(--text-mute);
+    appearance: none; outline: none; cursor: pointer;
+  }
+  .chain-copies-input {
+    width: 44px; text-align: center; padding: 4px 6px;
+    border-radius: 6px; border: 1px solid #1E293B;
+    background: rgba(0,0,0,0.3); color: var(--text); font-size: 11px;
+    outline: none;
+  }
+  .chain-del-btn {
+    width: 22px; height: 22px; border-radius: 5px; border: none;
+    background: transparent; color: var(--text-dim); cursor: pointer;
+    display: grid; place-items: center; transition: all 0.1s;
+  }
+  .chain-del-btn:hover { background: rgba(239,68,68,0.1); color: #EF4444; }
+  .chain-seq-input {
+    width: 100%; padding: 6px 10px;
+    border-radius: 7px; border: 1px solid #1E293B;
+    background: rgba(0,0,0,0.3); color: var(--text);
+    font-family: 'JetBrains Mono', monospace; font-size: 10.5px;
+    outline: none; transition: border-color 0.12s;
+  }
+  .chain-seq-input:focus { border-color: var(--accent); }
+
+  /* --- Cost estimation grid (Boltz) --- */
+  .cost-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px;
+  }
+  .cost-cell {
+    background: rgba(0,0,0,0.3); border: 1px solid #1E293B;
+    border-radius: 8px; padding: 8px 10px;
+  }
+  .cost-cell .k {
+    font-size: 9px; color: var(--text-faint); text-transform: uppercase;
+    letter-spacing: 0.06em; margin-bottom: 3px;
+  }
+  .cost-cell .v {
+    font-size: 15px; font-weight: 700;
+    font-family: 'JetBrains Mono', monospace; color: white;
+  }
+  .cost-cell .v .unit {
+    font-size: 10px; color: var(--text-faint); font-weight: 400; margin-left: 2px;
+  }
+  .cost-note {
+    font-size: 9.5px; color: var(--text-dim); line-height: 1.45;
+    margin-top: 8px; font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* --- Diagnostics log --- */
+  .diag {
+    background: rgba(0,0,0,0.45);
+    border: 1px solid #1A2234;
+    border-radius: 8px;
+    padding: 8px 10px;
+    max-height: 100px;
+    overflow-y: auto;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    line-height: 1.5;
+    margin-top: 0;
+  }
+  .diag-line {
+    display: flex; gap: 8px; margin-bottom: 3px; align-items: flex-start;
+  }
+  .diag-line:last-child { margin-bottom: 0; }
+  .diag-line .t {
+    color: var(--text-dim); flex-shrink: 0; font-size: 9.5px;
+  }
+  .diag-line.info .m { color: var(--text-mute); }
+  .diag-line.ok .m { color: #10B981; }
+  .diag-line.warn .m { color: #F59E0B; }
+  .diag-line.err .m { color: #EF4444; }
+
+  /* --- Mode description text --- */
+  .mode-desc-text {
+    font-size: 10px; color: var(--text-faint); line-height: 1.5;
+    font-family: 'JetBrains Mono', monospace; margin-top: 8px;
+  }
+
+  /* --- Hidden util --- */
+  .hidden { display: none !important; }
+
+  /* --- Advanced grid (recycling / MSA) --- */
+  .adv-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+
+  /* --- Panel body padding override for nested content --- */
+  .panel-body .field:first-child { margin-top: 0; }
+  .panel-body .btn { width: 100%; }
+
+  /* --- Input width fix --- */
+  .input { width: 100%; box-sizing: border-box; }
+
 </style>
 </head>
 <body>
@@ -1050,12 +1283,12 @@
               </div>
               <textarea class="textarea" id="seqInput" placeholder="> example ubiquitin&#10;MQIFVKTLTGKTITLEVEPSDTIENVKAKIQDKEGIPPDQQRLIFAGKQLEDGRTLSDYNIQKESTLHLVLRLRGG"></textarea>
             </div>
-            <div class="field" style="display:flex;gap:5px">
-              <button class="btn btn-ghost" id="loadExampleBtn" style="flex:1">
+            <div class="btn-row" style="display:flex;gap:6px;margin-top:6px">
+              <button class="btn btn-ghost" id="loadExampleBtn" style="flex:1;font-size:11px;padding:7px 10px">
                 <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
                 Load Example
               </button>
-              <button class="btn btn-ghost" id="clearBtn" style="flex:1">
+              <button class="btn btn-ghost" id="clearBtn" style="flex:1;font-size:11px;padding:7px 10px">
                 <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
                 Clear
               </button>
@@ -1095,12 +1328,12 @@
             </div>
           </div>
 
-          <div class="field" style="margin-top:12px">
+          <div class="field" style="margin-top:10px">
             <div class="field-label">
               <span>Advanced</span>
               <span class="hint">defaults · recommended</span>
             </div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+            <div class="adv-grid">
               <select class="select" id="recyclingSel">
                 <option>Recycling: 3</option>
                 <option>Recycling: 1</option>
@@ -1158,12 +1391,12 @@
           <div class="panel-tag" id="runTag">ready</div>
         </div>
         <div class="panel-body">
-          <button class="btn btn-primary" id="runBtn" style="width:100%">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          <button class="btn btn-primary" id="runBtn" style="width:100%;padding:11px 16px;font-size:13px;border-radius:10px">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
             Predict Structure
           </button>
 
-          <div style="margin-top:12px">
+          <div style="margin-top:14px">
             <div class="field-label" style="margin-bottom:5px">
               <span>Diagnostics</span>
               <span class="hint" id="diagCount">0 events</span>
