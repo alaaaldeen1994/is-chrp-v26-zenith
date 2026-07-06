@@ -41,10 +41,10 @@
     --emerald:#10B981;      /* Used very sparingly for status only */
     --blue:#3B82F6;
     --cyan:#22D3EE;
-    --plddt-vhigh:#0053D6;  /* AlphaFold standard >90 */
-    --plddt-high:#65B3E7;   /* AlphaFold standard 70-90 */
-    --plddt-low:#F5B544;    /* AlphaFold standard 50-70 */
-    --plddt-vlow:#FB923C;   /* AlphaFold standard <50 */
+    --plddt-vhigh:#0053D6;  /* Boltz-1 standard >90 */
+    --plddt-high:#65B3E7;   /* Boltz-1 standard 70-90 */
+    --plddt-low:#F5B544;    /* Boltz-1 standard 50-70 */
+    --plddt-vlow:#FB923C;   /* Boltz-1 standard <50 */
     --shadow-lg:0 10px 24px -12px rgba(0,0,0,.8);
     --shadow-inset:inset 0 1px 0 rgba(255,255,255,.03);
     --radius:4px;           /* Sharper, engineered corners */
@@ -959,7 +959,7 @@
                 <div><b id="metaRes">76</b> residues</div>
                 <div><b id="metaChain">A</b> chain</div>
                 <div><b id="metaConf">87.4</b> mean pLDDT</div>
-                <div><b id="metaEngine">ESMFold</b></div>
+                <div><b id="metaEngine">Boltz-1</b></div>
               </div>
             </div>
           </div>
@@ -1085,7 +1085,7 @@
       <div class="run-overlay" id="runOverlay">
         <div class="run-spinner"></div>
         <div class="run-title" id="runTitle">Folding sequence</div>
-        <div class="run-stage" id="runStage">Initializing ESMFold</div>
+        <div class="run-stage" id="runStage">Initializing Boltz-1</div>
         <div class="run-progress"><div id="runProgressBar" style="width:0%"></div></div>
         <div class="run-log" id="runLog">Preparing MSA embeddings</div>
       </div>
@@ -1103,7 +1103,7 @@
     <div>tokens: <span id="sbTokens">0</span></div>
     <div class="sep">|</div>
     <div>cache: <span class="ok">warm</span></div>
-    <div>CSP: strict · connect-src 6 hosts <span class="sep">|</span> <span style="text-transform:none;letter-spacing:0;">Outputs subject to <a href="legal.html#alphafold-terms" target="_blank" style="color:var(--accent);text-decoration:underline;">AlphaFold Server Output Terms</a></span></div>
+    <div>CSP: strict · connect-src 6 hosts <span class="sep">|</span> <span style="text-transform:none;letter-spacing:0;">Outputs subject to <a href="legal.html#boltz-terms" target="_blank" style="color:var(--accent);text-decoration:underline;">Boltz-1 Model Output Terms</a></span></div>
   </footer>
 </div>
 

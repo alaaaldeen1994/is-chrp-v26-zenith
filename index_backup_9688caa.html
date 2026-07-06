@@ -3068,10 +3068,10 @@
                     <div id="af3-metrics-panel" class="hidden mt-2 p-3 bg-slate-950/60 border border-slate-700/40 rounded-xl">
                         <div class="text-[7px] text-slate-500 font-black uppercase tracking-widest mb-2 flex items-center gap-1.5">
                             <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                            AlphaFold 3 Structural Validation
+                            Boltz-1 3 Structural Validation
                         </div>
                         <p class="text-[8px] text-slate-400 leading-relaxed mb-2">
-                            pLDDT, PAE, pTM and ipTM scores are produced exclusively by the AlphaFold 3 server.
+                            pLDDT, PAE, pTM and ipTM scores are produced exclusively by the Boltz-1 3 server.
                             Extract the JSON manifest below and submit it to get real structural confidence metrics.
                         </p>
                         <div class="grid grid-cols-4 gap-1">
@@ -4514,7 +4514,7 @@ function renderOskReport(safetyData, dosageData, elapsed, cellTypeKey, query) {
     const downloadBtnHtml = safetyData.af3_manifest
         ? `<button onclick="downloadOskAF3Manifest()" style="width:100%;margin-top:12px;background:transparent;border:1.5px solid #8b8070;color:#8b8070;padding:8px 14px;border-radius:10px;font-size:10px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:all 0.15s;font-family:'Inter',sans-serif;" onmouseover="this.style.background='#f7f7f6';" onmouseout="this.style.background='transparent';">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
-            Download AlphaFold 3 Manifest
+            Download Boltz-1 3 Manifest
            </button>`
         : '';
 
@@ -4827,7 +4827,7 @@ async function runDiscovery() {
             'Analyzing full dedifferentiation teratoma risk ceilings...',
             'Running Bayesian GP dosage optimization for target cell lineage...',
             'Simulating chromatin accessibility and chromatin pioneer TF binding...',
-            'Compiling cooperative AlphaFold 3 manifest structure...',
+            'Compiling cooperative Boltz-1 3 manifest structure...',
             'Finalising comprehensive safety report...'
         ];
         
