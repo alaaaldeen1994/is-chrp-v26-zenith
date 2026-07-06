@@ -2414,7 +2414,7 @@
 
                         style="background:rgba(0,0,0,0.6); border:1px solid rgba(255,255,255,0.08); border-radius:6px; padding:7px 8px; font-size:9px; color:#93c5fd; font-family:'JetBrains Mono',monospace; outline:none;">
 
-                    <input id="mob-af3-iptm" type="number" step="0.001" min="0" max="1" placeholder="ipTM (0-1)"
+                    <input id="mob-boltz-pae" type="number" step="0.001" min="0" max="1" placeholder="PAE Score (Boltz)"
 
                         style="background:rgba(0,0,0,0.6); border:1px solid rgba(255,255,255,0.08); border-radius:6px; padding:7px 8px; font-size:9px; color:#93c5fd; font-family:'JetBrains Mono',monospace; outline:none;">
 
@@ -2425,7 +2425,7 @@
                     document.getElementById('af3-in-plddt').value=document.getElementById('mob-af3-plddt').value;
                     document.getElementById('af3-in-pae').value=document.getElementById('mob-af3-pae').value;
                     document.getElementById('af3-in-ptm').value=document.getElementById('mob-af3-ptm').value;
-                    document.getElementById('af3-in-iptm').value=document.getElementById('mob-af3-iptm').value;
+                    document.getElementById('boltz-in-pae').value=document.getElementById('mob-boltz-pae').value;
                     if(typeof BiosimBridge!=='undefined')BiosimBridge.AF3Upload.applyRealMetrics();"
                     style="width:100%; background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.3); color:#34d399; padding:9px; border-radius:8px; font-size:9px; font-weight:900; text-transform:uppercase; letter-spacing:0.08em; cursor:pointer;">
                       APPLY REAL AF3 SCORES TO DISCOVERY
@@ -3500,7 +3500,7 @@
                             <input id="af3-in-plddt" type="number" step="0.1" min="0" max="100" placeholder="pLDDT" class="bg-black/60 border border-slate-700/50 rounded px-2 py-1 text-[8px] text-blue-300 font-mono">
                             <input id="af3-in-pae" type="number" step="0.1" min="0" max="30" placeholder="PAE (&Aring;)" class="bg-black/60 border border-slate-700/50 rounded px-2 py-1 text-[8px] text-blue-300 font-mono">
                             <input id="af3-in-ptm" type="number" step="0.001" min="0" max="1" placeholder="pTM" class="bg-black/60 border border-slate-700/50 rounded px-2 py-1 text-[8px] text-blue-300 font-mono">
-                            <input id="af3-in-iptm" type="number" step="0.001" min="0" max="1" placeholder="ipTM" class="bg-black/60 border border-slate-700/50 rounded px-2 py-1 text-[8px] text-blue-300 font-mono">
+                            <input id="boltz-in-pae" type="number" step="0.001" min="0" max="1" placeholder="PAE Score" class="bg-black/60 border border-slate-700/50 rounded px-2 py-1 text-[8px] text-blue-300 font-mono">
                         </div>
                         <button onclick="BiosimBridge.AF3Upload.applyRealMetrics()" class="w-full bg-blue-900/30 border border-blue-500/30 text-blue-400 text-[7px] font-black py-2 rounded-lg uppercase tracking-widest">&#10003; APPLY AF3 SCORES</button>
                     </div>
@@ -3677,7 +3677,7 @@
                             AlphaFold Server Manifest Export
                         </div>
                         <p class="text-[8px] text-slate-400 leading-relaxed mb-2">
-                            This utility compiles a JSON manifest for external submission to the official Google DeepMind AlphaFold Server (alphafoldserver.com) to calculate pLDDT, PAE, pTM, and ipTM metrics.
+                            This utility compiles a JSON manifest for external submission to the official Google DeepMind AlphaFold Server (alphafoldserver.com) to calculate pLDDT and PAE metrics.
                         </p>
                         <div class="grid grid-cols-4 gap-1">
                             <div class="bg-black/30 border border-slate-700/30 p-1.5 rounded text-center">
@@ -3693,8 +3693,8 @@
                                 <div class="text-[9px] text-slate-600 font-mono font-bold" id="metric-ptm">AF3</div>
                             </div>
                             <div class="bg-black/30 border border-slate-700/30 p-1.5 rounded text-center">
-                                <div class="text-[6px] text-slate-500 font-black uppercase mb-0.5">ipTM</div>
-                                <div class="text-[9px] text-slate-600 font-mono font-bold" id="metric-iptm">AF3</div>
+                                <div class="text-[6px] text-slate-500 font-black uppercase mb-0.5">PAE</div>
+                                <div class="text-[9px] text-slate-600 font-mono font-bold" id="metric-pae">AF3</div>
                             </div>
                         </div>
                         <a href="https://alphafoldserver.com" target="_blank" class="mt-2 flex items-center justify-center gap-1 w-full py-1.5 bg-blue-900/20 border border-blue-500/30 rounded text-[7px] text-blue-400 hover:bg-blue-500/20 transition-all font-black uppercase tracking-widest">
