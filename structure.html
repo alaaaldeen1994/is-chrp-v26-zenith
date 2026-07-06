@@ -1192,6 +1192,406 @@
   /* --- Input width fix --- */
   .input { width: 100%; box-sizing: border-box; }
 
+
+  /* ================================================================
+     SIDEBAR v2 — Complete CSS matching reference screenshots
+  ================================================================ */
+
+  /* Mode switch buttons */
+  .mode-switch {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    margin-bottom: 12px;
+  }
+  .mode-btn {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 10px;
+    padding: 11px 12px;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.15s;
+    color: var(--text-mute);
+  }
+  .mode-btn:hover {
+    background: rgba(255,255,255,0.06);
+    border-color: rgba(255,255,255,0.14);
+    color: var(--text);
+  }
+  .mode-btn.active {
+    background: rgba(88,158,255,0.1);
+    border-color: rgba(88,158,255,0.5);
+    color: white;
+  }
+  .mode-btn .mode-name {
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 3px;
+    color: inherit;
+  }
+  .mode-btn .mode-sub {
+    font-size: 9px;
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.05em;
+    color: var(--text-dim);
+    text-transform: uppercase;
+  }
+  .mode-btn.active .mode-sub { color: var(--accent-bright); }
+  .mode-desc-text {
+    font-size: 11px;
+    color: var(--text-dim);
+    line-height: 1.55;
+    font-family: 'JetBrains Mono', monospace;
+    margin: 0;
+  }
+
+  /* Sidebar form system */
+  .sb-field { margin-bottom: 12px; }
+  .sb-field:last-child { margin-bottom: 0; }
+  .sb-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--text-mute);
+    margin-bottom: 6px;
+  }
+  .sb-hint {
+    text-transform: none;
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--text-faint);
+    font-weight: 400;
+    font-size: 10px;
+    letter-spacing: 0;
+  }
+  .sb-input {
+    width: 100%;
+    box-sizing: border-box;
+    background: rgba(0,0,0,0.4);
+    border: 1px solid #1E293B;
+    border-radius: 8px;
+    color: var(--text);
+    padding: 9px 12px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11.5px;
+    outline: none;
+    transition: border-color 0.12s;
+    display: block;
+  }
+  .sb-input:focus { border-color: rgba(88,158,255,0.6); }
+  .sb-input::placeholder { color: var(--text-dim); }
+  .sb-textarea {
+    width: 100%;
+    box-sizing: border-box;
+    background: rgba(0,0,0,0.4);
+    border: 1px solid #1E293B;
+    border-radius: 9px;
+    color: var(--text);
+    padding: 10px 12px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    line-height: 1.6;
+    resize: vertical;
+    min-height: 105px;
+    outline: none;
+    transition: border-color 0.12s;
+    display: block;
+  }
+  .sb-textarea:focus { border-color: rgba(88,158,255,0.6); }
+  .sb-textarea::placeholder { color: var(--text-dim); }
+  .sb-select {
+    width: 100%;
+    box-sizing: border-box;
+    background: rgba(0,0,0,0.4);
+    border: 1px solid #1E293B;
+    border-radius: 8px;
+    color: var(--text);
+    padding: 8px 28px 8px 11px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    outline: none;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    display: block;
+    transition: border-color 0.12s;
+  }
+  .sb-select:focus { border-color: rgba(88,158,255,0.6); }
+
+  /* API credential row */
+  .api-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+  }
+  .api-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #334155;
+    flex-shrink: 0;
+    display: inline-block;
+    transition: all 0.2s;
+  }
+  .api-dot.set { background: #10B981; box-shadow: 0 0 6px #10B981; }
+  .api-row .sb-input { flex: 1; }
+  .icon-action-btn {
+    width: 34px;
+    height: 34px;
+    flex-shrink: 0;
+    background: rgba(0,0,0,0.4);
+    border: 1px solid #1E293B;
+    border-radius: 8px;
+    color: var(--text-mute);
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    transition: all 0.12s;
+  }
+  .icon-action-btn:hover {
+    color: white;
+    border-color: rgba(255,255,255,0.2);
+    background: rgba(255,255,255,0.06);
+  }
+  .api-hint {
+    font-size: 10px;
+    color: var(--text-dim);
+    line-height: 1.5;
+    font-family: 'JetBrains Mono', monospace;
+    margin: 0;
+  }
+
+  /* Two-button row (Load Example + Clear) */
+  .two-btn-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 7px;
+    margin-top: 8px;
+  }
+  .ghost-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    padding: 9px 12px;
+    border-radius: 9px;
+    border: 1px solid rgba(255,255,255,0.09);
+    background: rgba(255,255,255,0.04);
+    color: var(--text-mute);
+    font-size: 11.5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.12s;
+    white-space: nowrap;
+  }
+  .ghost-btn:hover {
+    background: rgba(255,255,255,0.08);
+    border-color: rgba(255,255,255,0.16);
+    color: white;
+  }
+  .ghost-btn.full-width { width: 100%; }
+
+  /* Two-column grid (Advanced) */
+  .two-col-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 7px;
+  }
+
+  /* Chain builder */
+  .chain-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 8px; }
+  .chain-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(0,0,0,0.3);
+    border: 1px solid #1E293B;
+    border-radius: 9px;
+    padding: 8px 10px;
+  }
+  .chain-id-badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    color: white;
+    background: var(--accent);
+    border-radius: 6px;
+    width: 28px;
+    height: 28px;
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+  }
+  .chain-type-select {
+    flex: 1;
+    background: rgba(0,0,0,0.4);
+    border: 1px solid #1E293B;
+    border-radius: 7px;
+    color: var(--text);
+    padding: 5px 24px 5px 9px;
+    font-size: 11px;
+    font-family: 'JetBrains Mono', monospace;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='9' height='9' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 7px center;
+    outline: none;
+    cursor: pointer;
+  }
+  .chain-copies-input {
+    width: 42px;
+    background: rgba(0,0,0,0.4);
+    border: 1px solid #1E293B;
+    border-radius: 7px;
+    color: var(--text);
+    padding: 5px 7px;
+    font-size: 11px;
+    font-family: 'JetBrains Mono', monospace;
+    text-align: center;
+    outline: none;
+  }
+  .chain-del-btn {
+    width: 26px;
+    height: 26px;
+    border-radius: 6px;
+    border: none;
+    background: transparent;
+    color: var(--text-dim);
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    transition: all 0.1s;
+  }
+  .chain-del-btn:hover { background: rgba(239,68,68,0.12); color: #EF4444; }
+  .add-chain-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 9px 12px;
+    border-radius: 9px;
+    border: 1px dashed rgba(255,255,255,0.12);
+    background: transparent;
+    color: var(--text-mute);
+    font-size: 11.5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.12s;
+  }
+  .add-chain-btn:hover {
+    border-color: rgba(88,158,255,0.4);
+    color: var(--accent-bright);
+    background: rgba(88,158,255,0.05);
+  }
+
+  /* Cost cards */
+  .cost-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 7px;
+    margin-bottom: 0;
+  }
+  .cost-card {
+    background: rgba(0,0,0,0.35);
+    border: 1px solid #1E293B;
+    border-radius: 9px;
+    padding: 10px 12px;
+  }
+  .cost-label {
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--text-dim);
+    margin-bottom: 4px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .cost-value {
+    font-size: 20px;
+    font-weight: 700;
+    font-family: 'JetBrains Mono', monospace;
+    color: white;
+  }
+  .cost-unit {
+    font-size: 11px;
+    color: var(--text-dim);
+    font-weight: 400;
+  }
+  .cost-note {
+    font-size: 10px;
+    color: var(--text-dim);
+    line-height: 1.5;
+    margin: 8px 0 0 0;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* Run/Predict button */
+  .run-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    padding: 13px 20px;
+    border-radius: 11px;
+    border: none;
+    background: linear-gradient(180deg, #7AB5FF 0%, #3B82F6 40%, #2563EB 100%);
+    color: white;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    letter-spacing: -0.01em;
+    box-shadow: 0 2px 12px rgba(88,158,255,0.4), inset 0 1px 0 rgba(255,255,255,0.2);
+    transition: all 0.15s;
+  }
+  .run-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 24px rgba(88,158,255,0.55), inset 0 1px 0 rgba(255,255,255,0.2);
+  }
+  .run-btn:disabled {
+    opacity: 0.5; cursor: not-allowed; transform: none !important;
+    box-shadow: none !important;
+  }
+
+  /* Diagnostics log */
+  .diag-log {
+    background: rgba(0,0,0,0.5);
+    border: 1px solid #1A2234;
+    border-radius: 9px;
+    padding: 10px 12px;
+    max-height: 120px;
+    overflow-y: auto;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    line-height: 1.55;
+  }
+  .diag-log .diag-line {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 4px;
+    align-items: flex-start;
+  }
+  .diag-log .diag-line:last-child { margin-bottom: 0; }
+  .diag-log .t { color: #334155; flex-shrink: 0; }
+  .diag-log .diag-line.info .m { color: var(--text-mute); }
+  .diag-log .diag-line.ok .m { color: #34D399; }
+  .diag-log .diag-line.warn .m { color: #FBBF24; }
+  .diag-log .diag-line.err .m { color: #F87171; }
+
+  /* Hidden utility */
+  .hidden { display: none !important; }
+
 </style>
 </head>
 <body>
@@ -1217,7 +1617,7 @@
     <!-- ============ SIDEBAR ============ -->
     <aside class="sidebar">
 
-      <!-- Panel 1: Mode -->
+      <!-- ─── Panel 1: Prediction Engine ─── -->
       <section class="panel">
         <div class="panel-head">
           <div class="panel-num">1</div>
@@ -1228,185 +1628,200 @@
           <div class="mode-switch" id="modeSwitch">
             <button class="mode-btn active" data-mode="esm">
               <div class="mode-name">Nilus Atomix</div>
-              <div class="mode-desc">Single-chain · ~14s</div>
+              <div class="mode-sub">SINGLE-CHAIN · ~14S</div>
             </button>
             <button class="mode-btn" data-mode="boltz">
               <div class="mode-name">Boltz API</div>
-              <div class="mode-desc">Native Complex Prediction</div>
+              <div class="mode-sub">COMPLEX PREDICTION</div>
             </button>
           </div>
-          <p style="font-size:10px;color:var(--text-faint);margin-top:8px;line-height:1.5;font-family:'IBM Plex Mono',monospace">
-            <span id="modeDescription">Evolutionary Scale Modeling for fast, single-chain protein folding. Returns atomic coordinates with per-residue pLDDT.</span>
-          </p>
+          <p class="mode-desc-text" id="modeDescription">Evolutionary Scale Modeling for fast, single-chain protein folding. Returns atomic coordinates with per-residue pLDDT.</p>
         </div>
       </section>
 
-      <!-- Panel 2: Authentication -->
+      <!-- ─── Panel 2: Credentials ─── -->
       <section class="panel">
         <div class="panel-head">
           <div class="panel-num">2</div>
           <div class="panel-title">Credentials</div>
-          <div class="panel-tag">Zen-Key</div>
+          <div class="panel-tag">ZEN-KEY</div>
         </div>
         <div class="panel-body">
-          <div class="field">
-            <div class="field-label">
+          <div class="sb-field">
+            <div class="sb-label">
               <span>API Key</span>
-              <span class="hint" id="apiStatus">default · company</span>
+              <span class="sb-hint" id="apiStatus">default · company</span>
             </div>
             <div class="api-row">
-              <span class="api-status" id="apiDot"></span>
-              <input type="password" class="input" id="apiKeyInput" placeholder="Paste Zen-Key (optional)" />
-              <button class="btn-icon" id="apiSaveBtn" title="Persist to local storage">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+              <span class="api-dot" id="apiDot"></span>
+              <input type="password" class="sb-input" id="apiKeyInput" placeholder="Paste Zen-Key (optional)" />
+              <button class="icon-action-btn" id="apiSaveBtn" title="Save to local storage">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
               </button>
             </div>
-            <div class="api-hint">Falls back to secured company credentials when unset. Keys persist only to local storage.</div>
+            <p class="api-hint">Falls back to secured company credentials when unset. Keys persist only to local storage.</p>
           </div>
         </div>
       </section>
 
-      <!-- Panel 3: Input -->
+      <!-- ─── Panel 3: Input ─── -->
       <section class="panel">
         <div class="panel-head">
           <div class="panel-num">3</div>
           <div class="panel-title">Input</div>
-          <div class="panel-tag" id="inputTag">FASTA · raw</div>
+          <div class="panel-tag" id="inputTag">FASTA · RAW</div>
         </div>
         <div class="panel-body">
-          <!-- Nilus Atomix input -->
+
+          <!-- Nilus Atomix: single sequence -->
           <div id="esmInput">
-            <div class="field">
-              <div class="field-label">
+            <div class="sb-field">
+              <div class="sb-label">
                 <span>Protein Sequence</span>
-                <span class="hint" id="seqLenHint">0 aa · max 1200</span>
+                <span class="sb-hint" id="seqLenHint">0 aa · max 400 aa</span>
               </div>
-              <textarea class="textarea" id="seqInput" placeholder="> example ubiquitin&#10;MQIFVKTLTGKTITLEVEPSDTIENVKAKIQDKEGIPPDQQRLIFAGKQLEDGRTLSDYNIQKESTLHLVLRLRGG"></textarea>
+              <textarea class="sb-textarea" id="seqInput" rows="5" placeholder="> example ubiquitin&#10;MQIFVKTLTGKTITLEVEPSDTIENVKAKIQDKEGIPPDQQRLIFAGKQLEDGRTLSDYNIQKESTLHLVLRLRGG"></textarea>
             </div>
-            <div class="btn-row" style="display:flex;gap:6px;margin-top:6px">
-              <button class="btn btn-ghost" id="loadExampleBtn" style="flex:1;font-size:11px;padding:7px 10px">
+            <div class="two-btn-row">
+              <button class="ghost-btn" id="loadExampleBtn">
                 <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
                 Load Example
               </button>
-              <button class="btn btn-ghost" id="clearBtn" style="flex:1;font-size:11px;padding:7px 10px">
+              <button class="ghost-btn" id="clearBtn">
                 <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
                 Clear
               </button>
             </div>
+            <div class="sb-field" style="margin-top:14px">
+              <div class="sb-label">
+                <span>Advanced</span>
+                <span class="sb-hint">defaults · recommended</span>
+              </div>
+              <div class="two-col-grid">
+                <select class="sb-select" id="recyclingSel">
+                  <option>Recycling: 3</option>
+                  <option>Recycling: 1</option>
+                  <option>Recycling: 5</option>
+                </select>
+                <select class="sb-select" id="msaSel">
+                  <option>MSA: auto</option>
+                  <option>MSA: off</option>
+                  <option>MSA: forced</option>
+                </select>
+              </div>
+            </div>
           </div>
 
-          <!-- Boltz input -->
+          <!-- Boltz: chain builder -->
           <div id="boltzInput" style="display:none">
-            <div class="field">
-              <div class="field-label">
+            <div class="sb-field">
+              <div class="sb-label">
                 <span>Chains &amp; Stoichiometry</span>
-                <span class="hint">Protein · DNA · RNA · Ligand</span>
+                <span class="sb-hint">Protein · DNA · RNA · Ligand</span>
               </div>
-              <div class="chain-list" id="chainList">
-                <!-- populated by JS -->
-              </div>
-              <button class="btn btn-ghost" id="addChainBtn" style="width:100%">
-                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              <div class="chain-list" id="chainList"><!-- populated by JS --></div>
+              <button class="add-chain-btn" id="addChainBtn">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                 Add Chain
               </button>
             </div>
-            <div class="field">
-              <div class="field-label"><span>Binding Mode</span></div>
-              <select class="select" id="boltz-binding-type">
+            <div class="sb-field">
+              <div class="sb-label"><span>Binding Mode</span></div>
+              <select class="sb-select" id="boltz-binding-type">
                 <option value="none">none</option>
                 <option value="ligand_protein_binding">ligand-protein</option>
                 <option value="protein_protein_binding">protein-protein</option>
               </select>
             </div>
-            <div class="field hidden" id="boltz-binder-chain-row">
-              <div class="field-label"><span>Binder Chain ID</span></div>
-              <input type="text" class="input" id="boltz-binder-chain-id" placeholder="e.g. A" maxlength="4" />
+            <div class="sb-field hidden" id="boltz-binder-chain-row">
+              <div class="sb-label"><span>Binder Chain ID</span></div>
+              <input type="text" class="sb-input" id="boltz-binder-chain-id" placeholder="e.g. A" maxlength="4" />
             </div>
-            <div class="field">
-              <div class="field-label"><span>Job Label</span></div>
-              <input type="text" class="input" id="jobLabel" placeholder="e.g. BRaf-MEK complex v3" />
+            <div class="sb-field">
+              <div class="sb-label"><span>Job Label</span></div>
+              <input type="text" class="sb-input" id="jobLabel" placeholder="e.g. BRaf-MEK complex v3" />
+            </div>
+            <div class="sb-field">
+              <div class="sb-label">
+                <span>Advanced</span>
+                <span class="sb-hint">defaults · recommended</span>
+              </div>
+              <div class="two-col-grid">
+                <select class="sb-select" id="recyclingSel2">
+                  <option>Recycling: 3</option>
+                  <option>Recycling: 1</option>
+                  <option>Recycling: 5</option>
+                </select>
+                <select class="sb-select" id="msaSel2">
+                  <option>MSA: auto</option>
+                  <option>MSA: off</option>
+                  <option>MSA: forced</option>
+                </select>
+              </div>
             </div>
           </div>
 
-          <div class="field" style="margin-top:10px">
-            <div class="field-label">
-              <span>Advanced</span>
-              <span class="hint">defaults · recommended</span>
-            </div>
-            <div class="adv-grid">
-              <select class="select" id="recyclingSel">
-                <option>Recycling: 3</option>
-                <option>Recycling: 1</option>
-                <option>Recycling: 5</option>
-              </select>
-              <select class="select" id="msaSel">
-                <option>MSA: auto</option>
-                <option>MSA: off</option>
-                <option>MSA: forced</option>
-              </select>
-            </div>
-          </div>
         </div>
       </section>
 
-      <!-- Panel 4: Cost / Validate (Boltz only) -->
+      <!-- ─── Panel 4: Validate & Estimate (Boltz only) ─── -->
       <section class="panel" id="costPanel" style="display:none">
         <div class="panel-head">
           <div class="panel-num">4</div>
           <div class="panel-title">Validate &amp; Estimate</div>
-          <div class="panel-tag">pre-flight</div>
+          <div class="panel-tag">PRE-FLIGHT</div>
         </div>
         <div class="panel-body">
           <div class="cost-grid">
-            <div class="cost-cell">
-              <div class="k">GPU-min</div>
-              <div class="v" id="costGpu">â€”<span class="unit">min</span></div>
+            <div class="cost-card">
+              <div class="cost-label">GPU-MIN</div>
+              <div class="cost-value"><span id="costGpu">—</span><span class="cost-unit"> min</span></div>
             </div>
-            <div class="cost-cell">
-              <div class="k">Credits</div>
-              <div class="v" id="costCredits">â€”<span class="unit">cr</span></div>
+            <div class="cost-card">
+              <div class="cost-label">CREDITS</div>
+              <div class="cost-value"><span id="costCredits">—</span><span class="cost-unit"> cr</span></div>
             </div>
-            <div class="cost-cell">
-              <div class="k">Residues</div>
-              <div class="v" id="costRes">â€”</div>
+            <div class="cost-card">
+              <div class="cost-label">RESIDUES</div>
+              <div class="cost-value"><span id="costRes">—</span></div>
             </div>
-            <div class="cost-cell">
-              <div class="k">ETA</div>
-              <div class="v" id="costEta">â€”<span class="unit">s</span></div>
+            <div class="cost-card">
+              <div class="cost-label">ETA</div>
+              <div class="cost-value"><span id="costEta">—</span><span class="cost-unit"> s</span></div>
             </div>
           </div>
-          <button class="btn btn-ghost" id="validateBtn" style="width:100%;margin-top:8px">
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          <button class="ghost-btn full-width" id="validateBtn" style="margin-top:10px">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
             Validate Input
           </button>
-          <div class="cost-note">Estimates are based on chain length, stoichiometry, and current GPU pool availability. Final cost confirmed at submission.</div>
+          <p class="cost-note">Estimates are based on chain length, stoichiometry, and current GPU pool availability. Final cost confirmed at submission.</p>
         </div>
       </section>
 
-      <!-- Panel 5: Run -->
-      <section class="panel">
-        <div class="panel-head">
-          <div class="panel-num" id="runNum">4</div>
-          <div class="panel-title">Execute</div>
-          <div class="panel-tag" id="runTag">ready</div>
+      <!-- ─── Panel 5: Execute ─── -->
+      <section class="panel" style="border-color: rgba(88,158,255,0.3);">
+        <div class="panel-head" style="background:rgba(88,158,255,0.06)">
+          <div class="panel-num" id="runNum" style="background:var(--accent);color:white">4</div>
+          <div class="panel-title" style="color:white">Execute</div>
+          <div class="panel-tag" id="runTag" style="color:var(--accent-bright);border-color:rgba(88,158,255,0.3)">READY</div>
         </div>
         <div class="panel-body">
-          <button class="btn btn-primary" id="runBtn" style="width:100%;padding:11px 16px;font-size:13px;border-radius:10px">
+          <button class="run-btn" id="runBtn">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
             Predict Structure
           </button>
-
           <div style="margin-top:14px">
-            <div class="field-label" style="margin-bottom:5px">
+            <div class="sb-label" style="margin-bottom:6px">
               <span>Diagnostics</span>
-              <span class="hint" id="diagCount">0 events</span>
+              <span class="sb-hint" id="diagCount">0 events</span>
             </div>
-            <div class="diag" id="diagLog">
+            <div class="diag-log" id="diagLog">
               <div class="diag-line info"><span class="t">00:00:00</span><span class="m">bridge_server.py connected · v2.1.4</span></div>
             </div>
           </div>
         </div>
       </section>
+
     </aside>
 
     <!-- ============ VIEWER AREA ============ -->

@@ -133,48 +133,45 @@ function renderChainList() {
   STATE.chains.forEach((c, idx) => {
     const row = document.createElement('div');
     row.className = 'chain-row';
-    row.style.cssText = 'display:flex; flex-direction:column; gap:6px; background:var(--bg-void); border:1px solid var(--border); border-radius:var(--radius-sm); padding:8px 10px; margin-bottom: 6px;';
-    
-    const isLigandCcd = c.type === 'ligand_ccd';
-    const ccdSelect = isLigandCcd ? `
-      <select class="select chain-val" style="width:140px; padding:4px 6px; font-size:10px; font-family:monospace;">
-        <option value="" ${c.value === '' ? 'selected' : ''}>-- Select Ion/Ligand --</option>
-        <option value="MG" ${c.value === 'MG' ? 'selected' : ''}>MG - Magnesium (Mg²⁺)</option>
-        <option value="ZN" ${c.value === 'ZN' ? 'selected' : ''}>ZN - Zinc (Zn²⁺)</option>
-        <option value="CL" ${c.value === 'CL' ? 'selected' : ''}>CL - Chloride (Cl⁻)</option>
-        <option value="CA" ${c.value === 'CA' ? 'selected' : ''}>CA - Calcium (Ca²⁺)</option>
-        <option value="NA" ${c.value === 'NA' ? 'selected' : ''}>NA - Sodium (Na⁺)</option>
-        <option value="ADP" ${c.value === 'ADP' ? 'selected' : ''}>ADP - Adenosine Diphosphate</option>
-        <option value="ATP" ${c.value === 'ATP' ? 'selected' : ''}>ATP - Adenosine Triphosphate</option>
-      </select>
-    ` : `
-      <textarea class="textarea chain-val" placeholder="Sequence or SMILES" style="min-height:36px; padding:6px; font-size:10px; width:100%; font-family:monospace; margin-top:2px;">${c.value || ''}</textarea>
-    `;
+
+    const isLigandCcd = c.type === 'ligand_ccd' || c.type === 'ligand_smiles';
+    const seqPlaceholder = c.type === 'protein' ? 'Paste amino acid sequence...' :
+                            c.type === 'dna' ? 'Paste DNA sequence...' :
+                            c.type === 'rna' ? 'Paste RNA sequence...' :
+                            c.type === 'ligand_ccd' ? 'CCD code (e.g. ATP)' : 'SMILES string';
 
     row.innerHTML = `
-      <div style="display:flex; align-items:center; justify-content:space-between; width:100%;">
-        <div style="display:flex; align-items:center; gap:6px;">
-          <div class="chain-id" style="width:20px; text-align:center;">${c.id}</div>
-          <select class="select chain-type" style="width:110px; padding:4px 6px; font-size:10px; font-family:monospace;">
-            <option value="protein" ${c.type==='protein'?'selected':''}>Protein</option>
-            <option value="dna" ${c.type==='dna'?'selected':''}>DNA</option>
-            <option value="rna" ${c.type==='rna'?'selected':''}>RNA</option>
-            <option value="ligand_ccd" ${c.type==='ligand_ccd'?'selected':''}>Ligand (CCD)</option>
-            <option value="ligand_smiles" ${c.type==='ligand_smiles'?'selected':''}>Ligand (SMILES)</option>
-          </select>
-        </div>
-        <div style="display:flex; align-items:center; gap:4px;">
-          <span style="font-size:9px; color:var(--text-faint);">copies:</span>
-          <input class="input chain-copies" type="number" min="1" max="8" value="${c.copies}" style="width:36px; padding:4px; text-align:center; font-size:10px; font-family:monospace;" />
-          <button class="chain-del" style="background:transparent; border:0; color:var(--text-faint); cursor:pointer;">
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-          </button>
-        </div>
-      </div>
-      <div style="width:100%; margin-top:4px;">
-        ${ccdSelect}
-      </div>
+      <div class="chain-id-badge">${c.id}</div>
+      <select class="chain-type-select chain-type">
+        <option value="protein" ${c.type==='protein'?'selected':''}>Protein</option>
+        <option value="dna"     ${c.type==='dna'?'selected':''}>DNA</option>
+        <option value="rna"     ${c.type==='rna'?'selected':''}>RNA</option>
+        <option value="ligand_ccd"    ${c.type==='ligand_ccd'?'selected':''}>Ligand (CCD)</option>
+        <option value="ligand_smiles" ${c.type==='ligand_smiles'?'selected':''}>Ligand (SMILES)</option>
+      </select>
+      <input class="chain-copies-input chain-copies" type="number" min="1" max="8" value="${c.copies}" />
+      <button class="chain-del-btn chain-del" title="Remove chain">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+      </button>
     `;
+
+    // Sequence/value input row below (only if not ligand_ccd with dropdown)
+    const seqRow = document.createElement('div');
+    seqRow.style.cssText = 'margin-top:6px;';
+    if (c.type === 'ligand_ccd') {
+      seqRow.innerHTML = `<select class="sb-select chain-val" style="font-size:10.5px">
+        <option value="">-- Select Ligand --</option>
+        <option value="MG" ${c.value==='MG'?'selected':''}>MG — Magnesium</option>
+        <option value="ZN" ${c.value==='ZN'?'selected':''}>ZN — Zinc</option>
+        <option value="CA" ${c.value==='CA'?'selected':''}>CA — Calcium</option>
+        <option value="ATP" ${c.value==='ATP'?'selected':''}>ATP</option>
+        <option value="ADP" ${c.value==='ADP'?'selected':''}>ADP</option>
+        <option value="HEM" ${c.value==='HEM'?'selected':''}>HEM — Heme</option>
+      </select>`;
+    } else {
+      seqRow.innerHTML = `<textarea class="sb-textarea chain-val" rows="2" placeholder="${seqPlaceholder}" style="min-height:52px">${c.value || ''}</textarea>`;
+    }
+    row.appendChild(seqRow);
 
     row.querySelector('.chain-type').addEventListener('change', e => {
       STATE.chains[idx].type = e.target.value;
@@ -206,6 +203,7 @@ function renderChainList() {
     list.appendChild(row);
   });
 }
+
 
 function initChainBuilder() {
   $('#addChainBtn').addEventListener('click', () => {
