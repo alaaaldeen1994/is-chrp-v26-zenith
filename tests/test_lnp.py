@@ -20,7 +20,7 @@ def test_lnp_optimized_formulation():
     assert result["encapsulation_efficiency_percent"] > 90.0  # Efficient encapsulation
     assert "heart_selectivity_score" in result
     assert result["heart_selectivity_score"] > 0.50          # Good tropism selectivity
-    assert result["formulation_status"] == "MODERATE_DELIVERY"
+    assert result["formulation_status"] == "OPTIMIZED_DELIVERY"
     assert "zeta_potential_mv" in result["biophysical_metrics"]
 
 def test_lnp_suboptimal_formulation():

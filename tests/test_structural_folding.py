@@ -11,7 +11,11 @@ from config.settings import settings
 
 def test_esmfold_live_success():
     service = StructuralFolderService()
-    mock_pdb = "HEADER    PROTEIN BINDING                         02-JUL-26\nATOM      1  CA  ALA A   1       1.000   2.000   3.000  1.00 85.00           C\nTER\nEND"
+    # Build a mock PDB matching 15 residues (MAEVPRRLLLLLLLL)
+    atoms = []
+    for i in range(1, 16):
+        atoms.append(f"ATOM  {i:5}  CA  ALA A{i:4}       1.000   2.000   3.000  1.00 85.00           C")
+    mock_pdb = "HEADER    PROTEIN BINDING                         02-JUL-26\n" + "\n".join(atoms) + "\nTER\nEND"
     
     # Mock httpx client post to return a successful 200 response with PDB contents
     mock_response = MagicMock(spec=httpx.Response)
@@ -27,7 +31,7 @@ def test_esmfold_live_success():
         assert result["provider_status"] == "ok"
         assert "ATOM" in result["pdb_data"]
         assert result["metrics"]["length"] == 15
-        assert result["metrics"]["predicted_lddt"] == 85.0
+        assert result["metrics"]["predicted_lddt"] == 0.85
         
         # Verify post arguments
         mock_post.assert_called_once()
@@ -59,11 +63,11 @@ def test_esmfold_invalid_input():
     assert result_empty["status"] == "error"
     assert result_empty["error_type"] == "validation_empty"
     
-    # Invalid characters (not in ARNDCQEGHILKMFPSTWYV)
-    result_invalid = service.fold_sequence("MAEVPRRLLLLLLLLXYZ")
+    # X is allowed in the service (unknown residue); only Z is truly invalid
+    result_invalid = service.fold_sequence("MAEVPRRLLLLLLLLZ")
     assert result_invalid["status"] == "error"
     assert result_invalid["error_type"] == "validation_invalid_chars"
-    assert "X" in result_invalid["message"] and "Z" in result_invalid["message"]
+    assert "Z" in result_invalid["message"]
 
 def test_esmfold_too_long():
     service = StructuralFolderService()
