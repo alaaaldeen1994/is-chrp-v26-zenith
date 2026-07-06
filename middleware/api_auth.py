@@ -31,6 +31,7 @@ class APIKeyAuthMiddleware(BaseHTTPMiddleware):
             or path == "/api/v1/health"        # Keep v1 health route open or rate-limited
             or path == "/api/v1/structure/fold/ui"  # UI-only endpoint (Option B proxy)
             or path.startswith("/api/v1/structure/boltz")  # UI-facing Boltz endpoints
+            or path.startswith("/api/v1/clinical")          # UI-facing clinical simulation/optimization endpoints
         ):
             return await call_next(request)
 
