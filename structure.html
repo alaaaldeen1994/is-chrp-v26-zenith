@@ -8,6 +8,11 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <!-- Firebase Compat CDNs -->
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+  <script src="js/firebase_config.js"></script>
+
   <!-- Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
   <!-- 3Dmol.js -->
@@ -561,7 +566,16 @@
       <div class="env-pill"><div class="pulse-dot"></div> Production</div>
       <button class="icon-btn" title="Notifications"><i data-lucide="bell" class="w-4 h-4"></i></button>
       <button class="icon-btn" title="Settings"><i data-lucide="settings" class="w-4 h-4"></i></button>
-      <button class="icon-btn" title="User Profile"><i data-lucide="user" class="w-4 h-4"></i></button>
+      
+      <!-- Dynamic Firebase User Chip -->
+      <div class="user-chip" id="userChip" style="display: none;">
+        <div class="avatar" id="userAvatar">U</div>
+        <div class="user-info">
+          <span class="user-name" id="userName">User</span>
+          <span class="user-org">NILUS-MEMBER</span>
+        </div>
+        <button class="icon-btn" title="Sign Out" onclick="firebase.auth().signOut();" style="margin-left: 8px; width: 24px; height: 24px; border: none; background: transparent; padding: 0; display: flex; align-items: center; justify-content: center;"><i data-lucide="log-out" class="w-3.5 h-3.5" style="color: var(--text-muted);"></i></button>
+      </div>
     </div>
   </header>
 
@@ -829,6 +843,31 @@
 
 <script>
   lucide.createIcons();
+
+  // --- FIREBASE AUTHENTICATION AND REDIRECT ---
+  firebase.auth().onAuthStateChanged((user) => {
+    if (user) {
+      // User is logged in, show user chip with their credentials
+      const userChip = $('userChip');
+      if (userChip) userChip.style.display = 'flex';
+      
+      const displayName = user.displayName || user.email.split('@')[0].toUpperCase();
+      const userNameEl = $('userName');
+      const userAvatarEl = $('userAvatar');
+      
+      if (userNameEl) userNameEl.innerText = displayName;
+      if (userAvatarEl) userAvatarEl.innerText = displayName.substring(0, 2).toUpperCase();
+      
+      logDiag(`Session active: Authenticated as ${user.email}`, 'ok');
+      lucide.createIcons();
+    } else {
+      // User is not logged in, redirect them to sign in
+      logDiag("Authentication required. Redirecting to login...", "warn");
+      setTimeout(() => {
+        window.location.href = "login.html?redirect=structure.html";
+      }, 1200);
+    }
+  });
 
   // --- STATE ---
   const state = {
