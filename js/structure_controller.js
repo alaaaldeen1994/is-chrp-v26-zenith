@@ -131,78 +131,73 @@ function renderChainList() {
   const list = $('#chainList');
   list.innerHTML = '';
   STATE.chains.forEach((c, idx) => {
-    const row = document.createElement('div');
-    row.className = 'chain-row';
+    // Outer wrapper — column layout
+    const wrapper = document.createElement('div');
+    wrapper.style.cssText = 'background:rgba(0,0,0,0.3);border:1px solid #1E293B;border-radius:9px;overflow:hidden;';
 
-    const isLigandCcd = c.type === 'ligand_ccd' || c.type === 'ligand_smiles';
-    const seqPlaceholder = c.type === 'protein' ? 'Paste amino acid sequence...' :
-                            c.type === 'dna' ? 'Paste DNA sequence...' :
-                            c.type === 'rna' ? 'Paste RNA sequence...' :
-                            c.type === 'ligand_ccd' ? 'CCD code (e.g. ATP)' : 'SMILES string';
-
-    row.innerHTML = `
-      <div class="chain-id-badge">${c.id}</div>
-      <select class="chain-type-select chain-type">
+    // Top row: [badge][type select][copies][delete]
+    const headerRow = document.createElement('div');
+    headerRow.style.cssText = 'display:flex;align-items:center;gap:7px;padding:8px 10px;';
+    headerRow.innerHTML = `
+      <div style="width:28px;height:28px;border-radius:7px;background:#3B82F6;color:white;display:grid;place-items:center;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;flex-shrink:0">${c.id}</div>
+      <select class="chain-type-select chain-type" style="flex:1;min-width:0;background:rgba(0,0,0,0.4);border:1px solid #1E293B;border-radius:7px;color:#E2E8F0;padding:6px 22px 6px 9px;font-size:11px;font-family:'JetBrains Mono',monospace;appearance:none;-webkit-appearance:none;background-image:url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='9' height='9' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E\");background-repeat:no-repeat;background-position:right 7px center;outline:none;cursor:pointer;">
         <option value="protein" ${c.type==='protein'?'selected':''}>Protein</option>
         <option value="dna"     ${c.type==='dna'?'selected':''}>DNA</option>
         <option value="rna"     ${c.type==='rna'?'selected':''}>RNA</option>
         <option value="ligand_ccd"    ${c.type==='ligand_ccd'?'selected':''}>Ligand (CCD)</option>
         <option value="ligand_smiles" ${c.type==='ligand_smiles'?'selected':''}>Ligand (SMILES)</option>
       </select>
-      <input class="chain-copies-input chain-copies" type="number" min="1" max="8" value="${c.copies}" />
-      <button class="chain-del-btn chain-del" title="Remove chain">
+      <span style="font-size:11px;color:#94A3B8;margin-right:2px;user-select:none;">copies:</span>
+      <input class="chain-copies-input chain-copies" type="number" min="1" max="8" value="${c.copies}" style="width:40px;flex-shrink:0;background:rgba(0,0,0,0.4);border:1px solid #1E293B;border-radius:7px;color:#E2E8F0;padding:6px 4px;font-size:11px;font-family:'JetBrains Mono',monospace;text-align:center;outline:none;" />
+      <button class="chain-del" style="width:26px;height:26px;flex-shrink:0;border-radius:6px;border:none;background:transparent;color:#475569;cursor:pointer;display:grid;place-items:center;transition:all 0.1s;" title="Remove chain">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
       </button>
     `;
+    headerRow.querySelector('.chain-del').addEventListener('mouseenter', e => e.currentTarget.style.cssText += 'background:rgba(248,113,113,0.12);color:#F87171;');
+    headerRow.querySelector('.chain-del').addEventListener('mouseleave', e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#475569'; });
+    wrapper.appendChild(headerRow);
 
-    // Sequence/value input row below (only if not ligand_ccd with dropdown)
-    const seqRow = document.createElement('div');
-    seqRow.style.cssText = 'margin-top:6px;';
+    // Bottom: sequence / value input
+    const valRow = document.createElement('div');
+    valRow.style.cssText = 'padding:0 10px 10px 10px;';
+    const seqPlaceholder = 'Sequence or SMILES';
     if (c.type === 'ligand_ccd') {
-      seqRow.innerHTML = `<select class="sb-select chain-val" style="font-size:10.5px">
+      valRow.innerHTML = `<select class="chain-val" style="width:100%;background:rgba(0,0,0,0.4);border:1px solid #1E293B;border-radius:7px;color:#E2E8F0;padding:7px 24px 7px 9px;font-size:10.5px;font-family:'JetBrains Mono',monospace;appearance:none;outline:none;cursor:pointer;">
         <option value="">-- Select Ligand --</option>
-        <option value="MG" ${c.value==='MG'?'selected':''}>MG — Magnesium</option>
-        <option value="ZN" ${c.value==='ZN'?'selected':''}>ZN — Zinc</option>
-        <option value="CA" ${c.value==='CA'?'selected':''}>CA — Calcium</option>
+        <option value="MG"  ${c.value==='MG'?'selected':''}>MG — Magnesium</option>
+        <option value="ZN"  ${c.value==='ZN'?'selected':''}>ZN — Zinc</option>
+        <option value="CA"  ${c.value==='CA'?'selected':''}>CA — Calcium</option>
         <option value="ATP" ${c.value==='ATP'?'selected':''}>ATP</option>
         <option value="ADP" ${c.value==='ADP'?'selected':''}>ADP</option>
         <option value="HEM" ${c.value==='HEM'?'selected':''}>HEM — Heme</option>
       </select>`;
     } else {
-      seqRow.innerHTML = `<textarea class="sb-textarea chain-val" rows="2" placeholder="${seqPlaceholder}" style="min-height:52px">${c.value || ''}</textarea>`;
+      valRow.innerHTML = `<textarea class="chain-val" rows="2" placeholder="${seqPlaceholder}" style="width:100%;background:rgba(0,0,0,0.4);border:1px solid #1E293B;border-radius:7px;color:#E2E8F0;padding:7px 10px;font-family:'JetBrains Mono',monospace;font-size:10.5px;line-height:1.5;resize:vertical;min-height:50px;outline:none;display:block;">${c.value || ''}</textarea>`;
     }
-    row.appendChild(seqRow);
+    wrapper.appendChild(valRow);
 
-    row.querySelector('.chain-type').addEventListener('change', e => {
+    // Events
+    headerRow.querySelector('.chain-type').addEventListener('change', e => {
       STATE.chains[idx].type = e.target.value;
       STATE.chains[idx].value = '';
-      renderChainList();
-      updateCostEstimate();
+      renderChainList(); updateCostEstimate();
     });
-    const valEl = row.querySelector('.chain-val');
+    const valEl = wrapper.querySelector('.chain-val');
     if (valEl) {
-      valEl.addEventListener('input', e => {
-        STATE.chains[idx].value = e.target.value.trim().replace(/\s/g, '');
-        updateCostEstimate();
-      });
-      valEl.addEventListener('change', e => {
-        STATE.chains[idx].value = e.target.value.trim().replace(/\s/g, '');
-        updateCostEstimate();
-      });
+      valEl.addEventListener('input',  e => { STATE.chains[idx].value = e.target.value.trim().replace(/\s/g,''); updateCostEstimate(); });
+      valEl.addEventListener('change', e => { STATE.chains[idx].value = e.target.value.trim().replace(/\s/g,''); updateCostEstimate(); });
     }
-    row.querySelector('.chain-copies').addEventListener('input', e => {
-      STATE.chains[idx].copies = parseInt(e.target.value) || 1;
-      updateCostEstimate();
-    });
-    row.querySelector('.chain-del').addEventListener('click', () => {
+    headerRow.querySelector('.chain-copies').addEventListener('input', e => { STATE.chains[idx].copies = parseInt(e.target.value)||1; updateCostEstimate(); });
+    headerRow.querySelector('.chain-del').addEventListener('click', () => {
       STATE.chains.splice(idx, 1);
       STATE.chains.forEach((cc, i) => cc.id = String.fromCharCode(65 + i));
-      renderChainList();
-      updateCostEstimate();
+      renderChainList(); updateCostEstimate();
     });
-    list.appendChild(row);
+    list.appendChild(wrapper);
   });
 }
+
+
 
 
 function initChainBuilder() {
