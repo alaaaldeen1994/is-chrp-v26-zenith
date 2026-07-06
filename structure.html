@@ -1275,6 +1275,31 @@
     }, 3500);
   });
 
+  // --- FIREBASE AUTHENTICATION AND REDIRECT ---
+  firebase.auth().onAuthStateChanged((user) => {
+    if (user) {
+      // User is logged in, show user chip with their credentials
+      const userChip = $('userChip');
+      if (userChip) userChip.style.display = 'flex';
+      
+      const displayName = user.displayName || (user.email ? user.email.split('@')[0].toUpperCase() : 'MEMBER');
+      const userNameEl = $('userName');
+      const userAvatarEl = $('userAvatar');
+      
+      if (userNameEl) userNameEl.innerText = displayName;
+      if (userAvatarEl) userAvatarEl.innerText = displayName.substring(0, 2).toUpperCase();
+      
+      logDiag(`Session active: Authenticated as ${user.email || 'Anonymous'}`, 'ok');
+      lucide.createIcons();
+    } else {
+      // User is not logged in, redirect them to sign in
+      logDiag("Authentication required. Redirecting to login...", "warn");
+      setTimeout(() => {
+        window.location.href = "login.html?redirect=structure.html";
+      }, 1200);
+    }
+  });
+
 </script>
 </body>
 </html>
