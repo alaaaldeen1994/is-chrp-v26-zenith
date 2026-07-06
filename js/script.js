@@ -1918,7 +1918,7 @@ const BiosimBridge = {
 
         if (profileContainer && data.target_profile && !isAssistant) {
             let totalResidues = 0;
-            const LARGE_THRESHOLD = 2000; // Boltz-1 3 hard limit per chain
+            const LARGE_THRESHOLD = 2000; // ZenithFold 3 hard limit per chain
 
             // Known exact lengths (UniProt canonical, Homo sapiens)
             const verifiedLengths = {
@@ -2011,7 +2011,7 @@ const BiosimBridge = {
                 const warnHTML = `
                     <div class="mt-2 p-1.5 bg-red-950/20 border border-red-500/30 rounded flex items-center gap-2">
                         <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-                        <span class="text-[7px] text-red-400 uppercase font-black tracking-widest">AF3 LIMIT EXCEEDED — Fused chain ~${totalResidues}aa exceeds the 2,000aa Boltz-1 3 limit. Deselect large factors (marked red) or use domain-only sequences.</span>
+                        <span class="text-[7px] text-red-400 uppercase font-black tracking-widest">AF3 LIMIT EXCEEDED — Fused chain ~${totalResidues}aa exceeds the 2,000aa ZenithFold 3 limit. Deselect large factors (marked red) or use domain-only sequences.</span>
                     </div>`;
                 profileContainer.insertAdjacentHTML('beforeend', warnHTML);
             }
@@ -2275,7 +2275,7 @@ const BiosimBridge = {
                 "sequences": sequences
             }];
 
-            BiosimUI.notify('Native Export', `Boltz-1 Server JSON Generated`, 'suc');
+            BiosimUI.notify('Native Export', `ZenithFold Server JSON Generated`, 'suc');
 
             const jsonStr = JSON.stringify(manifest, null, 2);
 
@@ -2302,7 +2302,7 @@ const BiosimBridge = {
             BiosimUI.logTerminal(`ENTITIES: ${sequences.length} total chains`);
             BiosimUI.logTerminal(`[ZENITH v28] Dynamic DeepMind Format Verified.`);
         } catch (error) {
-            console.error("Boltz-1 Export Error: ", error);
+            console.error("ZenithFold Export Error: ", error);
             BiosimUI.notify('Export Error', error.message, 'err');
             BiosimUI.logTerminal(`[CRITICAL] Export crashed: ${error.message}`);
         }

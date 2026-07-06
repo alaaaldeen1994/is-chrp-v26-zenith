@@ -7225,14 +7225,14 @@ Response:
                     </div>
 
 
-                    <!-- Endpoint: ESMFold Protein Structure -->
+                    <!-- Endpoint: Nilus Atomix Protein Structure -->
                     <div class="bg-black/40 p-6 rounded-xl border border-pink-500/20">
                         <div class="flex items-center gap-3 mb-3">
                             <span class="text-[10px] bg-slate-500/20 text-slate-300 px-3 py-1 rounded font-bold">POST</span>
                             <span class="font-mono text-white text-lg">/api/v1/structure/fold</span>
-                            <span class="text-[9px] bg-pink-500/20 text-pink-300 px-2 py-0.5 rounded-full font-bold uppercase tracking-wider">ESMFold</span>
+                            <span class="text-[9px] bg-pink-500/20 text-pink-300 px-2 py-0.5 rounded-full font-bold uppercase tracking-wider">Nilus Atomix</span>
                         </div>
-                        <p class="text-sm text-slate-300 mb-4">Submit amino acid sequences and receive predicted 3D atomic coordinates in PDB format via the <strong class="text-white">ESMFold</strong> protein language model. Falls back to high-fidelity synthetic PDB generation when the upstream ESMFold API is unavailable.</p>
+                        <p class="text-sm text-slate-300 mb-4">Submit amino acid sequences and receive predicted 3D atomic coordinates in PDB format via the <strong class="text-white">Nilus Atomix</strong> protein language model. Falls back to high-fidelity synthetic PDB generation when the upstream Nilus Atomix API is unavailable.</p>
                         <div class="code-block text-xs">Request:
 {
   "sequence": "MQPILLEEQTSGFYF..."  // Amino acid sequence (≤ 400 residues)
@@ -7242,9 +7242,9 @@ Response:
 {
   "status": "success",
   "data": {
-    "source": "ESMFold-Live" | "Zenith-Synthetic-Fallback",
+    "source": "Nilus Atomix-Live" | "Zenith-Synthetic-Fallback",
     "fallback_used": true | false,
-    "provider": "ESMFold",
+    "provider": "Nilus Atomix",
     "provider_status": "ok" | "external_provider_failed",
     "sequence_length": 15,
     "pdb_data": "HEADER  PROTEIN...\nATOM      1  N   MET...",
@@ -7381,7 +7381,7 @@ Response:
                         <li class="flex gap-2"><span class="text-blue-400">&bull;</span> Webhook callbacks are signed with <strong class="text-white">HMAC-SHA256</strong> using shared secrets</li>
                         <li class="flex gap-2"><span class="text-blue-400">&bull;</span> AnnData files are serialised via <strong class="text-white">anndata.write_h5ad()</strong> to scratch storage</li>
                         <li class="flex gap-2"><span class="text-blue-400">&bull;</span> Census queries target <strong class="text-white">Homo sapiens</strong> cardiac cells (heart tissue, normal disease state)</li>
-                        <li class="flex gap-2"><span class="text-blue-400">&bull;</span> ESMFold uses external API with automatic <strong class="text-white">synthetic PDB fallback</strong> for high availability</li>
+                        <li class="flex gap-2"><span class="text-blue-400">&bull;</span> Nilus Atomix uses external API with automatic <strong class="text-white">synthetic PDB fallback</strong> for high availability</li>
                     </ul>
                 </div>
 
@@ -13508,7 +13508,7 @@ RATE_LIMITS = {
 
                         <li class="flex gap-2"><span class="text-emerald-400">+</span> REST API: <code class="bg-black/40 px-1 rounded font-mono text-xs">/api/v1/safety/audit</code> &mdash; Horvath 353-CpG epigenetic clock integration</li>
 
-                        <li class="flex gap-2"><span class="text-emerald-400">+</span> REST API: <code class="bg-black/40 px-1 rounded font-mono text-xs">/api/v1/structure/fold</code> &mdash; ESMFold protein structure prediction</li>
+                        <li class="flex gap-2"><span class="text-emerald-400">+</span> REST API: <code class="bg-black/40 px-1 rounded font-mono text-xs">/api/v1/structure/fold</code> &mdash; Nilus Atomix protein structure prediction</li>
 
                         <li class="flex gap-2"><span class="text-emerald-400">+</span> REST API: <code class="bg-black/40 px-1 rounded font-mono text-xs">/api/v1/predict/perturbation</code> &mdash; CZ Cellxgene Census cardiac perturbation</li>
 

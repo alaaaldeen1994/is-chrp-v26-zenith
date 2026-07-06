@@ -283,7 +283,7 @@
                         <span class="font-mono text-white font-bold">/api/v1/structure/fold</span>
                     </div>
                     <p class="text-zinc-400 text-sm leading-relaxed">
-                        Folds the provided amino acid sequence using ESMFold, returning 3D atomic coordinates in standard Protein Data Bank (.pdb) output structure.
+                        Folds the provided amino acid sequence using Nilus Atomix, returning 3D atomic coordinates in standard Protein Data Bank (.pdb) output structure.
                     </p>
 
                     <div class="space-y-3">
@@ -298,9 +298,9 @@
                         <pre class="bg-black border border-zinc-900 p-4 rounded-xl font-mono text-xs text-zinc-300 overflow-x-auto"><code>{
   "status": "success",
   "data": {
-    "source": "ESMFold-Live",
+    "source": "Nilus Atomix-Live",
     "fallback_used": false,
-    "provider": "ESMFold",
+    "provider": "Nilus Atomix",
     "provider_status": "ok",
     "sequence_length": 105,
     "pdb_data": "HEADER    PROTEIN BINDING                         02-JUL-26\nTITLE     ESMFOLD PREDICTED STRUCTURE\nATOM      1  N   MET A   1      12.420  15.106  23.840  1.00 85.00           N\nATOM      2  CA  MET A   1      13.500  14.280  24.120  1.00 85.00           C\n...",
@@ -313,7 +313,7 @@
     "cache_hit": false,
     "scientific_limitations": [
       "Single-sequence structure prediction only",
-      "Not Boltz-1",
+      "Not ZenithFold",
       "Not AlphaFold3",
       "Not ligand-aware",
       "Not validated for clinical use"
@@ -607,7 +607,7 @@ if __name__ == "__main__":
                 <div id="code-js" class="space-y-4">
                     <h3 class="font-outfit text-lg font-bold text-white">JavaScript / Node.js Integration</h3>
                     <p class="text-zinc-400 text-sm font-medium">
-                        Node.js script using fetch syntax to request ESMFold structure coordinates:
+                        Node.js script using fetch syntax to request Nilus Atomix structure coordinates:
                     </p>
                     <pre class="bg-zinc-950 border border-zinc-900 p-5 rounded-2xl font-mono text-xs text-zinc-200 overflow-x-auto"><code>const apiKey = 'zk_live_your_key_here';
 const baseUrl = 'https://niluslab.com/api/v1';
@@ -628,7 +628,7 @@ async function fetchProteinFold(sequence) {
       console.log('Coordinates loaded:');
       console.log(envelope.data.pdb_data.substring(0, 500) + '\n...');
     } else {
-      console.error('ESMFold failed:', envelope);
+      console.error('Nilus Atomix failed:', envelope);
     }
   } catch (err) {
     console.error('Request Error:', err);
@@ -672,7 +672,7 @@ fetchProteinFold('MGDVEKGKKIFIMKCSQCHTVEKGGKHKTGPNLHGLFG');</code></pre>
                 <span class="w-1 h-1 bg-zinc-800 rounded-full"></span>
                 <span>All computational simulations subject to compliance protocols.</span>
                 <span class="w-1 h-1 bg-zinc-800 rounded-full"></span>
-                <span>Outputs subject to <a href="legal.html#boltz-terms" class="text-blue-500 hover:underline">Boltz-1 Model Output Terms</a>.</span>
+                <span>Outputs subject to <a href="legal.html#boltz-terms" class="text-blue-500 hover:underline">ZenithFold Model Output Terms</a>.</span>
             </div>
             <div class="flex items-center gap-6 font-mono text-zinc-500">
                 <span class="flex items-center gap-2">

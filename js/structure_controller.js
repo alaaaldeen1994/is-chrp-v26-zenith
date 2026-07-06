@@ -1,6 +1,6 @@
 /* =====================================================================
    STRUCTURE PREDICTION MODULE
-   Front-end controller for ESMFold + boltz-2.1 workflows
+   Front-end controller for Nilus Atomix + zenithfold-2.1 workflows
    ===================================================================== */
 
 const STATE = {
@@ -52,14 +52,14 @@ function switchMode(mode) {
   $('#esmInput').style.display = mode === 'esm' ? 'block' : 'none';
   $('#boltzInput').style.display = mode === 'boltz' ? 'block' : 'none';
   $('#costPanel').style.display = mode === 'boltz' ? 'block' : 'none';
-  $('#engineTag').textContent = mode === 'esm' ? 'ESMFold' : 'boltz-2.1';
+  $('#engineTag').textContent = mode === 'esm' ? 'Nilus Atomix' : 'zenithfold-2.1';
   $('#runNum').textContent = mode === 'boltz' ? '5' : '4';
   $('#inputTag').textContent = mode === 'esm' ? 'FASTA · raw' : 'multi-chain';
   $('#modeDescription').textContent = mode === 'esm'
     ? 'Evolutionary Scale Modeling for fast, single-chain protein folding. Returns atomic coordinates with per-residue pLDDT.'
-    : 'boltz-2.1 predicts multi-chain biomolecular complexes (protein · DNA · RNA · ligand) with PAE confidence matrices.';
-  $('#sbModel').textContent = mode === 'esm' ? 'esmfold-v1' : 'boltz-2.1';
-  log(`Engine switched → ${mode === 'esm' ? 'ESMFold' : 'boltz-2.1'}`, 'info');
+    : 'zenithfold-2.1 predicts multi-chain biomolecular complexes (protein · DNA · RNA · ligand) with PAE confidence matrices.';
+  $('#sbModel').textContent = mode === 'esm' ? 'nilus-atomix-v1' : 'zenithfold-2.1';
+  log(`Engine switched → ${mode === 'esm' ? 'Nilus Atomix' : 'zenithfold-2.1'}`, 'info');
   renderChainList();
   updateCostEstimate();
 }
@@ -97,7 +97,7 @@ function initSequenceInput() {
     STATE.sequence = v;
     if (len > 1200) {
       $('#seqLenHint').style.color = 'var(--coral)';
-      log(`Sequence length ${len} exceeds ESMFold limit (1200)`, 'warn');
+      log(`Sequence length ${len} exceeds Nilus Atomix limit (1200)`, 'warn');
     } else {
       $('#seqLenHint').style.color = '';
     }
@@ -196,7 +196,7 @@ function renderChainList() {
 function initChainBuilder() {
   $('#addChainBtn').addEventListener('click', () => {
     if (STATE.chains.length >= 6) {
-      log('Maximum 6 chains supported in boltz-2.1 UI', 'warn');
+      log('Maximum 6 chains supported in zenithfold-2.1 UI', 'warn');
       return;
     }
     STATE.chains.push({ id: String.fromCharCode(65 + STATE.chains.length), type: 'protein', copies: 1, value: '' });
@@ -578,7 +578,7 @@ async function runPrediction() {
     const overlay = $('#runOverlay');
     overlay.classList.add('active');
     $('#runTitle').textContent = 'Folding protein';
-    $('#runStage').textContent = 'ESMFold API prediction in progress...';
+    $('#runStage').textContent = 'Nilus Atomix API prediction in progress...';
     $('#runProgressBar').style.width = '30%';
 
     const apiKey = STATE.apiKey.startsWith("zk_live_") ? STATE.apiKey : "";
@@ -603,9 +603,9 @@ async function runPrediction() {
         renderSequenceViewer(parsedSeq, plddt);
         renderPAE(plddt);
         updateMetaCard(parsedSeq, plddt);
-        log(`ESMFold prediction complete · mean pLDDT ${(plddt.reduce((a,b)=>a+b,0)/plddt.length).toFixed(1)}`, 'ok');
+        log(`Nilus Atomix prediction complete · mean pLDDT ${(plddt.reduce((a,b)=>a+b,0)/plddt.length).toFixed(1)}`, 'ok');
       } else {
-        log('ESMFold failed: ' + (result.detail || 'API error'), 'err');
+        log('Nilus Atomix failed: ' + (result.detail || 'API error'), 'err');
       }
     } catch (e) {
       log('Network error folding sequence: ' + e.message, 'err');
@@ -622,7 +622,7 @@ async function runPrediction() {
 
     const overlay = $('#runOverlay');
     overlay.classList.add('active');
-    $('#runTitle').textContent = 'Submitting boltz-2.1 complex';
+    $('#runTitle').textContent = 'Submitting zenithfold-2.1 complex';
     $('#runStage').textContent = 'Validating and queuing...';
     $('#runProgressBar').style.width = '10%';
 
@@ -719,7 +719,7 @@ async function loadBoltzResult(overlay, btn) {
 function updateMetaCard(seq, plddt) {
   $('#metaRes').textContent = seq.length;
   $('#metaConf').textContent = (plddt.reduce((a,b)=>a+b,0)/plddt.length).toFixed(1);
-  $('#metaEngine').textContent = STATE.mode === 'esm' ? 'ESMFold' : 'boltz-2.1';
+  $('#metaEngine').textContent = STATE.mode === 'esm' ? 'Nilus Atomix' : 'zenithfold-2.1';
   $('#seqBadge').textContent = `${seq.length} aa`;
 }
 
