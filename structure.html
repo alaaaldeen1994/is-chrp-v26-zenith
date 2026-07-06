@@ -544,8 +544,10 @@
   <!-- Topbar -->
   <header class="topbar">
     <div class="brand">
-      <div class="brand-mark"></div>
-      <div class="brand-text">NILUS<span>LAB</span></div>
+      <i data-lucide="layers" class="w-6 h-6 text-blue-500"></i>
+      <div class="brand-text" style="color: white; font-family: 'Outfit', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: -0.02em; display: flex; align-items: center; gap: 4px;">
+        NILUS <span style="color: #3b82f6;">LAB</span>
+      </div>
       <div class="brand-sub">Biocomputational Cloud</div>
     </div>
     <nav class="topnav">
@@ -557,15 +559,9 @@
     </nav>
     <div class="top-right">
       <div class="env-pill"><div class="pulse-dot"></div> Production</div>
-      <button class="icon-btn"><i data-lucide="bell" class="w-4 h-4"></i></button>
-      <button class="icon-btn"><i data-lucide="settings" class="w-4 h-4"></i></button>
-      <div class="user-chip">
-        <div class="avatar">DR</div>
-        <div class="user-info">
-          <span class="user-name">Dr. Rivera</span>
-          <span class="user-org">NILUS-RESEARCH</span>
-        </div>
-      </div>
+      <button class="icon-btn" title="Notifications"><i data-lucide="bell" class="w-4 h-4"></i></button>
+      <button class="icon-btn" title="Settings"><i data-lucide="settings" class="w-4 h-4"></i></button>
+      <button class="icon-btn" title="User Profile"><i data-lucide="user" class="w-4 h-4"></i></button>
     </div>
   </header>
 
@@ -871,12 +867,31 @@
     $('pan'+n).classList.add('active');
     
     // Update flow indicator
-    for(let i=1; i<=4; i++) {
-      const seg = $('fseg'+i);
-      seg.className = 'flow-seg';
-      if(i < n && n <= 4) seg.classList.add('done');
-      if(i === n && n <= 4) seg.classList.add('active');
-      if(n === 5) seg.classList.add('done'); // All done if executing
+    if (state.mode === 'nilus') {
+      // Map 1, 3, 5 panel clicks to flow segments
+      const seg1 = $('fseg1');
+      const seg2 = $('fseg2');
+      
+      seg1.className = 'flow-seg';
+      seg2.className = 'flow-seg';
+      
+      if (n === 1) {
+        seg1.classList.add('active');
+      } else if (n === 3) {
+        seg1.classList.add('done');
+        seg2.classList.add('active');
+      } else if (n === 5) {
+        seg1.classList.add('done');
+        seg2.classList.add('done');
+      }
+    } else {
+      for(let i=1; i<=4; i++) {
+        const seg = $('fseg'+i);
+        seg.className = 'flow-seg';
+        if(i < n && n <= 4) seg.classList.add('done');
+        if(i === n && n <= 4) seg.classList.add('active');
+        if(n === 5) seg.classList.add('done');
+      }
     }
   }
 
@@ -887,6 +902,32 @@
     
     $('metaEngine').innerText = mode === 'nilus' ? 'Nilus Atomix' : 'ZenithFold';
     $('sbModel').innerText = mode === 'nilus' ? 'nilus-atomix-v1' : 'zenithfold-2.1';
+    
+    // Hide panels not relevant to Nilus Atomix mode to keep interface clean & organized
+    if (mode === 'nilus') {
+      $('pan2').style.display = 'none';
+      $('pan4').style.display = 'none';
+      document.querySelector('#pan1 .step-num').innerText = '1';
+      document.querySelector('#pan3 .step-num').innerText = '2';
+      document.querySelector('#pan5 .step-num').innerText = '3';
+      
+      // Update flow segments to only show 3 steps
+      $('fseg3').style.display = 'none';
+      $('fseg4').style.display = 'none';
+    } else {
+      $('pan2').style.display = 'block';
+      $('pan4').style.display = 'block';
+      document.querySelector('#pan1 .step-num').innerText = '1';
+      document.querySelector('#pan2 .step-num').innerText = '2';
+      document.querySelector('#pan3 .step-num').innerText = '3';
+      document.querySelector('#pan4 .step-num').innerText = '4';
+      document.querySelector('#pan5 .step-num').innerText = '5';
+      
+      // Show all 4 flow segments
+      $('fseg3').style.display = 'block';
+      $('fseg4').style.display = 'block';
+    }
+    
     logDiag(`Engine switched to ${mode.toUpperCase()}`);
   }
 
@@ -1157,7 +1198,7 @@
       msg.innerText = stages[i].m;
       prog.style.width = stages[i].p + '%';
       logDiag(stages[i].m);
-      await new Promise(r => setTimeout(r, 600 + Math.random()*800));
+      await new Promise(r => setTimeout(r, 60 + Math.random()*60));
     }
     
     // Generate data
@@ -1183,6 +1224,9 @@
 
   // Auto-init demo if empty
   window.addEventListener('DOMContentLoaded', () => {
+    // Set initial mode to trigger clean display
+    setMode('nilus', { currentTarget: $('btnNilus') });
+    
     if(!$('seqInput').value) loadExample();
     
     // Latency ticker
