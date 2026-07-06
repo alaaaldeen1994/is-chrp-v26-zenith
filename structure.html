@@ -124,9 +124,11 @@
     background: #080B12; border-bottom: 1px solid #1A2234;
     height: 34px; flex-shrink: 0; font-size: 11px; color: var(--text-dim);
   }
-  .subbar .crumb { color: var(--text-dim); }
-  .subbar .crumb.active { color: var(--text); font-weight: 600; }
-  .subbar .sep { color: var(--text-faint); margin: 0 4px; }
+  .subbar .crumb { color: var(--text-mute); }
+  .subbar .crumb a { color: var(--accent); text-decoration: none; transition: color var(--t-fast); }
+  .subbar .crumb a:hover { color: var(--accent-bright); }
+  .subbar .crumb .here { color: var(--text); font-weight: 600; }
+  .subbar .sep { color: var(--text-faint); margin: 0 6px; }
   .subbar-right { margin-left: auto; display: flex; align-items: center; gap: 10px; }
   .stat-chip {
     display: flex; align-items: center; gap: 5px;
