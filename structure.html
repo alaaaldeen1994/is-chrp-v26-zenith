@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<title>Structure Prediction Â· Nilus Lab Platform</title>
+<title>Structure Prediction · Nilus Lab Platform</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta http-equiv="Content-Security-Policy" content="
   default-src 'self';
@@ -470,6 +470,447 @@
     .main { grid-template-columns: 1fr; }
     .sidebar { height: auto; max-height: 50vh; }
   }
+
+  /* ============ VIEWER 3D CONTAINER ============ */
+  .viewer-3d {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background: #000;
+    overflow: hidden;
+  }
+  #molviewer {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  /* ============ VIEWER OVERLAY (Info Card) ============ */
+  .viewer-overlay {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    z-index: 10;
+    pointer-events: none;
+  }
+  .info-card {
+    background: rgba(12, 17, 25, 0.82);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 12px;
+    padding: 14px 16px;
+    min-width: 200px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+  }
+  .info-card .title {
+    font-size: 9px;
+    color: var(--text-faint);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 4px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .info-card .name {
+    font-size: 15px;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 10px;
+    letter-spacing: -0.01em;
+  }
+  .info-card .meta {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    font-size: 11.5px;
+    color: var(--text-mute);
+  }
+  .info-card .meta b {
+    color: white;
+    font-weight: 700;
+  }
+
+  /* ============ VIEWER TOOLBAR (Right Side) ============ */
+  .viewer-toolbar {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    z-index: 10;
+  }
+  .tool-group {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    background: rgba(12, 17, 25, 0.82);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 10px;
+    padding: 5px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+  }
+  .tool-btn {
+    width: 28px;
+    height: 28px;
+    border-radius: 7px;
+    border: none;
+    background: transparent;
+    color: var(--text-mute);
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    transition: all 0.12s;
+  }
+  .tool-btn:hover {
+    color: white;
+    background: rgba(255,255,255,0.08);
+  }
+  .tool-btn.active {
+    background: var(--accent-deep);
+    color: white;
+    box-shadow: 0 0 8px var(--accent-glow);
+  }
+  .tool-divider {
+    width: 100%;
+    height: 1px;
+    background: rgba(255,255,255,0.06);
+    margin: 2px 0;
+  }
+
+  /* ============ CONFIDENCE LEGEND (Bottom Left) ============ */
+  .legend {
+    position: absolute;
+    bottom: 16px;
+    left: 16px;
+    z-index: 10;
+    background: rgba(12, 17, 25, 0.82);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 10px;
+    padding: 10px 14px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+  }
+  .legend-title {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--text-mute);
+    margin-bottom: 6px;
+    letter-spacing: 0.03em;
+  }
+  .legend-bar {
+    width: 160px;
+    height: 5px;
+    border-radius: 3px;
+    background: linear-gradient(90deg, #FB923C, #F5B544, #65B3E7, #0053D6);
+    margin-bottom: 4px;
+  }
+  .legend-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 9px;
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--text-faint);
+    width: 160px;
+  }
+
+  /* ============ RESIDUE TOOLTIP ============ */
+  .res-tooltip {
+    position: absolute;
+    background: rgba(12, 17, 25, 0.95);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--border-strong);
+    border-radius: 8px;
+    padding: 7px 11px;
+    pointer-events: none;
+    display: none;
+    z-index: 200;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.5);
+  }
+  .res-tooltip .rt-res {
+    font-weight: 700;
+    font-size: 11.5px;
+    color: white;
+  }
+  .res-tooltip .rt-plddt {
+    font-size: 10px;
+    color: var(--text-mute);
+    font-family: 'JetBrains Mono', monospace;
+    margin-top: 2px;
+  }
+
+  /* ============ SEQUENCE VIEWER ============ */
+  .seq-viewer {
+    padding: 24px;
+    overflow-y: auto;
+    height: 100%;
+  }
+  .seq-block { margin-bottom: 24px; }
+  .seq-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--border);
+  }
+  .seq-chain-id {
+    font-family: 'Outfit', sans-serif; font-weight: 700; color: white; font-size: 14px;
+    background: var(--accent-soft); border: 1px solid var(--accent); color: var(--accent-bright);
+    padding: 2px 8px; border-radius: 4px;
+  }
+  .seq-chain-meta { font-size: 12px; color: var(--text-mute); }
+  .seq-body {
+    background: var(--bg-panel); border: 1px solid var(--border);
+    border-radius: 10px; padding: 16px;
+  }
+  .seq-ruler {
+    display: flex; font-family: 'JetBrains Mono', monospace; font-size: 9px;
+    color: var(--text-faint); margin-bottom: 6px; user-select: none;
+  }
+  .seq-ruler span { display: inline-block; width: 12px; text-align: center; }
+  .seq-residues {
+    font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.8;
+    letter-spacing: 0.5px; word-break: break-all;
+  }
+  .seq-residues .res {
+    display: inline-block; width: 12px; text-align: center;
+    border-radius: 2px; cursor: pointer; transition: all .1s;
+  }
+  .seq-residues .res:hover { background: rgba(255,255,255,0.08); transform: scale(1.15); }
+  .seq-residues .res.selected { background: var(--accent); color: white !important; box-shadow: 0 0 8px var(--accent-glow); }
+  .c-vhigh { color: var(--accent-bright); }
+  .c-high { color: #65B3E7; }
+  .c-low { color: #F5B544; }
+  .c-vlow { color: #FB923C; }
+
+  /* ============ BINDING ANALYSIS ============ */
+  .binding-area { display: flex; height: 100%; }
+  .binding-3d { flex: 1; position: relative; background: #000; }
+  #bindingviewer { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .binding-panel {
+    width: 280px; background: var(--bg-surface); border-left: 1px solid var(--border);
+    display: flex; flex-direction: column; overflow-y: auto;
+  }
+  .binding-section { padding: 16px; border-bottom: 1px solid var(--border); }
+  .binding-section h4 {
+    font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;
+    color: var(--text-mute); margin-bottom: 12px;
+  }
+  .ligand-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .ligand-stat {
+    background: var(--bg-panel); border: 1px solid var(--border);
+    border-radius: 8px; padding: 8px 10px;
+  }
+  .ligand-stat .k { font-size: 9px; color: var(--text-faint); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 2px; }
+  .ligand-stat .v { font-size: 15px; font-weight: 700; color: white; font-family: 'JetBrains Mono', monospace; }
+  
+  .contact-list { display: flex; flex-direction: column; gap: 6px; }
+  .contact-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 7px 10px; border-radius: 8px; background: var(--bg-panel);
+    border: 1px solid var(--border); font-family: 'JetBrains Mono', monospace; font-size: 10.5px;
+    transition: all 0.12s; cursor: pointer;
+  }
+  .contact-row:hover { border-color: var(--accent); transform: translateX(3px); }
+  .contact-res { font-weight: 600; color: white; }
+  .contact-arrow { color: var(--text-faint); }
+  .contact-res.ligand { color: var(--accent-bright); }
+  .contact-dist { font-weight: 700; color: #10B981; }
+
+  /* ============ PAE AREA ============ */
+  .pae-area { display: flex; flex-direction: column; height: 100%; }
+  .pae-toolbar {
+    padding: 12px 20px; border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 12px; background: var(--bg-surface);
+    flex-shrink: 0;
+  }
+  .pae-toolbar .title { font-size: 13px; font-weight: 600; color: white; }
+  .pae-toolbar .desc { font-size: 11px; color: var(--text-mute); margin-top: 2px; }
+  .pae-legend { margin-left: auto; display: flex; align-items: center; gap: 8px; font-size: 10px; color: var(--text-mute); font-family: 'JetBrains Mono', monospace; }
+  .pae-legend-bar { width: 80px; height: 6px; border-radius: 3px; background: linear-gradient(90deg,#1e3a5f,#3b82f6,#fbbf24,#fb7185); }
+  .pae-canvas-wrap { flex: 1; display: grid; place-items: center; padding: 24px; overflow: auto; position: relative; }
+  #paeCanvas { background: var(--bg-panel); border: 1px solid var(--border); border-radius: 8px; box-shadow: 0 10px 24px rgba(0,0,0,0.6); cursor: crosshair; image-rendering: pixelated; }
+  .pae-tooltip {
+    position: absolute; background: rgba(13,18,28,.95); border: 1px solid var(--border-strong);
+    border-radius: 6px; padding: 6px 10px; font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    pointer-events: none; display: none; z-index: 5; box-shadow: 0 8px 16px rgba(0,0,0,0.5);
+  }
+  .pae-tooltip .pt-pair { color: var(--accent-bright); font-weight: 600; }
+  .pae-tooltip .pt-val { color: var(--text-mute); margin-top: 2px; }
+
+  /* ============ BTN-ICON (Tab toolbar buttons) ============ */
+  .btn-icon {
+    width: 28px; height: 28px; border-radius: 6px;
+    border: 1px solid transparent; background: transparent;
+    color: var(--text-mute); cursor: pointer;
+    display: grid; place-items: center; transition: all .12s;
+  }
+  .btn-icon:hover { background: var(--bg-panel); color: white; border-color: var(--border-strong); }
+
+  /* ============ EXECUTE PANEL BUTTONS ============ */
+  .run-grid { display: flex; gap: 8px; margin-bottom: 16px; }
+  .btn-run {
+    flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    padding: 11px 16px; border-radius: 10px; font-size: 13px; font-weight: 700;
+    cursor: pointer; border: none; transition: all 0.12s;
+    background: linear-gradient(180deg, var(--accent-bright), var(--accent-deep));
+    color: white; box-shadow: 0 4px 12px var(--accent-soft), inset 0 1px 1px rgba(255,255,255,0.15);
+    text-shadow: 0 1px 1px rgba(0,0,0,0.3);
+    letter-spacing: -0.01em;
+  }
+  .btn-run:hover { transform: translateY(-1px); box-shadow: 0 6px 20px var(--accent-glow), inset 0 1px 1px rgba(255,255,255,0.15); }
+  .btn-run:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; box-shadow: none !important; }
+  .btn-validate {
+    padding: 11px 14px; border-radius: 10px; font-size: 12px; font-weight: 600;
+    cursor: pointer; border: 1px solid var(--border-strong); background: var(--bg-panel);
+    color: var(--text-mute); transition: all 0.12s;
+  }
+  .btn-validate:hover { color: white; border-color: var(--text-mute); }
+
+  /* API key row */
+  .api-row { display: flex; gap: 8px; }
+  .api-input { flex: 1; }
+  .api-btn {
+    width: 32px; height: 32px; border-radius: 8px; border: 1px solid var(--border-strong);
+    background: var(--bg-base); color: var(--text-mute); cursor: pointer;
+    display: grid; place-items: center; transition: all 0.12s;
+  }
+  .api-btn:hover { color: white; border-color: var(--text-mute); }
+  .api-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--text-faint); display: inline-block; margin-right: 6px; }
+  .api-dot.set { background: #10B981; box-shadow: 0 0 6px #10B981; }
+
+  /* Cost estimate panel */
+  .cost-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+  .cost-card { background: var(--bg-base); border: 1px solid var(--border); padding: 10px; border-radius: 10px; }
+  .cost-lbl { font-size: 9px; color: var(--text-faint); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
+  .cost-val { font-size: 16px; font-weight: 700; font-family: 'JetBrains Mono', monospace; color: white; }
+  .cost-val .unit { font-size: 10px; color: var(--text-faint); font-weight: 400; margin-left: 2px; }
+
+  /* Chain builder */
+  .chain-row { background: var(--bg-base); border: 1px solid var(--border); border-radius: 8px; padding: 8px 10px; margin-bottom: 6px; }
+  .chain-add-btn {
+    width: 100%; padding: 8px; border: 1px dashed var(--border-strong); border-radius: 8px;
+    background: transparent; color: var(--text-mute); font-size: 11px; font-weight: 600; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.12s;
+  }
+  .chain-add-btn:hover { background: var(--bg-panel); border-color: var(--text-mute); color: white; }
+
+  /* Validate button */
+  .validate-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 7px 12px; border-radius: 8px; font-size: 11px; font-weight: 600;
+    cursor: pointer; border: 1px solid var(--border-strong); background: var(--bg-base);
+    color: var(--text-mute); transition: all 0.12s;
+  }
+  .validate-btn:hover { color: white; border-color: var(--text-mute); }
+  .validate-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  /* Load Example / Clear buttons */
+  .btn-sm {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 7px 12px; border-radius: 8px; font-size: 11px; font-weight: 600;
+    cursor: pointer; border: 1px solid var(--border-strong); background: var(--bg-panel);
+    color: var(--text-mute); transition: all 0.12s;
+  }
+  .btn-sm:hover { color: white; border-color: var(--text-mute); background: var(--bg-base); }
+
+  /* Advanced options row */
+  .adv-row { display: flex; gap: 8px; }
+  .adv-row .select { flex: 1; }
+
+  /* Diag panel */
+  .diag-panel {
+    background: #000; border: 1px solid var(--border); border-radius: 10px;
+    padding: 12px; display: flex; flex-direction: column; gap: 8px;
+  }
+  .diag-header {
+    display: flex; justify-content: space-between; font-size: 10px;
+    color: var(--text-faint); font-family: 'JetBrains Mono', monospace; letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  #diagLog { max-height: 110px; overflow-y: auto; font-family: 'JetBrains Mono', monospace; font-size: 10px; line-height: 1.5; }
+  .diag-line { margin-bottom: 3px; display: flex; gap: 6px; }
+  .diag-line .t { color: var(--text-dim); }
+  .diag-line.info .m { color: var(--text-mute); }
+  .diag-line.ok .m { color: #10B981; }
+  .diag-line.warn .m { color: #F59E0B; }
+  .diag-line.err .m { color: #EF4444; }
+
+
+  /* ============ VIEWER AREA (right column) ============ */
+  .viewer-area {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: #000;
+    position: relative;
+  }
+
+  /* ============ SPIN ANIMATION ============ */
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ============ STAT CHIP ============ */
+  .stat-chip .label { color: var(--text-faint); margin-right: 2px; }
+  .stat-chip .val { color: var(--text); font-weight: 600; }
+
+  /* ============ TOPBAR ADJUSTMENTS ============ */
+  .topbar .brand-mark {
+    width: 28px; height: 28px; border-radius: 8px;
+    background: linear-gradient(135deg, var(--accent-deep), var(--accent));
+    display: grid; place-items: center;
+    box-shadow: 0 0 0 1px rgba(255,255,255,0.1), 0 4px 12px var(--accent-soft);
+  }
+  .topbar .brand-mark svg { color: white; }
+
+  /* ============ FIELD LABEL ============ */
+  .field { margin-bottom: 14px; }
+  .field-label {
+    display: flex; justify-content: space-between;
+    font-size: 10px; font-weight: 700; color: var(--text-mute);
+    text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 6px;
+  }
+  .field-label .hint {
+    text-transform: none; font-family: 'JetBrains Mono', monospace;
+    color: var(--text-faint); font-weight: 400; font-size: 10px;
+  }
+
+  /* ============ SELECT ============ */
+  select, .select {
+    width: 100%; background: var(--bg-base); border: 1px solid var(--border-strong);
+    color: var(--text); padding: 8px 12px; border-radius: 8px;
+    font-family: 'JetBrains Mono', monospace; font-size: 11.5px;
+    transition: all 0.12s; outline: none; cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+  }
+  select:hover, .select:hover { border-color: var(--text-mute); }
+  select:focus, .select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+
+  /* ============ INPUT ============ */
+  input[type="text"], input[type="password"] {
+    background: var(--bg-base); border: 1px solid var(--border-strong);
+    color: var(--text); padding: 7px 12px; border-radius: 8px;
+    font-family: 'JetBrains Mono', monospace; font-size: 11.5px;
+    transition: all 0.12s; outline: none;
+  }
+  input:hover { border-color: var(--text-mute); }
+  input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+
+  /* ============ TEXTAREA ============ */
+  textarea, .textarea {
+    background: var(--bg-base); border: 1px solid var(--border-strong);
+    color: var(--text); padding: 8px 12px; border-radius: 8px;
+    font-family: 'JetBrains Mono', monospace; font-size: 11.5px;
+    transition: all 0.12s; outline: none; resize: vertical;
+    min-height: 96px; line-height: 1.5; width: 100%;
+  }
+  textarea:hover { border-color: var(--text-mute); }
+  textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+
+  /* ============ EXTRA SHADOW TOKENS ============ */
+  :root {
+    --shadow-sm: 0 2px 6px rgba(0,0,0,0.4);
+    --shadow-md: 0 6px 16px rgba(0,0,0,0.6);
+    --shadow-inset: inset 0 1px 0 rgba(255,255,255,0.1);
+  }
+
 </style>
 </head>
 <body>
@@ -506,7 +947,7 @@
           <div class="mode-switch" id="modeSwitch">
             <button class="mode-btn active" data-mode="esm">
               <div class="mode-name">Nilus Atomix</div>
-              <div class="mode-desc">Single-chain Â· ~14s</div>
+              <div class="mode-desc">Single-chain · ~14s</div>
             </button>
             <button class="mode-btn" data-mode="boltz">
               <div class="mode-name">Boltz API</div>
@@ -530,7 +971,7 @@
           <div class="field">
             <div class="field-label">
               <span>API Key</span>
-              <span class="hint" id="apiStatus">default Â· company</span>
+              <span class="hint" id="apiStatus">default · company</span>
             </div>
             <div class="api-row">
               <span class="api-status" id="apiDot"></span>
@@ -549,7 +990,7 @@
         <div class="panel-head">
           <div class="panel-num">3</div>
           <div class="panel-title">Input</div>
-          <div class="panel-tag" id="inputTag">FASTA Â· raw</div>
+          <div class="panel-tag" id="inputTag">FASTA · raw</div>
         </div>
         <div class="panel-body">
           <!-- Nilus Atomix input -->
@@ -557,7 +998,7 @@
             <div class="field">
               <div class="field-label">
                 <span>Protein Sequence</span>
-                <span class="hint" id="seqLenHint">0 aa Â· max 1200</span>
+                <span class="hint" id="seqLenHint">0 aa · max 1200</span>
               </div>
               <textarea class="textarea" id="seqInput" placeholder="> example ubiquitin&#10;MQIFVKTLTGKTITLEVEPSDTIENVKAKIQDKEGIPPDQQRLIFAGKQLEDGRTLSDYNIQKESTLHLVLRLRGG"></textarea>
             </div>
@@ -578,7 +1019,7 @@
             <div class="field">
               <div class="field-label">
                 <span>Chains &amp; Stoichiometry</span>
-                <span class="hint">Protein Â· DNA Â· RNA Â· Ligand</span>
+                <span class="hint">Protein · DNA · RNA · Ligand</span>
               </div>
               <div class="chain-list" id="chainList">
                 <!-- populated by JS -->
@@ -609,7 +1050,7 @@
           <div class="field" style="margin-top:12px">
             <div class="field-label">
               <span>Advanced</span>
-              <span class="hint">defaults Â· recommended</span>
+              <span class="hint">defaults · recommended</span>
             </div>
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
               <select class="select" id="recyclingSel">
@@ -680,7 +1121,7 @@
               <span class="hint" id="diagCount">0 events</span>
             </div>
             <div class="diag" id="diagLog">
-              <div class="diag-line info"><span class="t">00:00:00</span><span class="m">bridge_server.py connected Â· v2.1.4</span></div>
+              <div class="diag-line info"><span class="t">00:00:00</span><span class="m">bridge_server.py connected · v2.1.4</span></div>
             </div>
           </div>
         </div>
@@ -729,7 +1170,7 @@
           <div class="viewer-overlay">
             <div class="info-card">
               <div class="title">Predicted Model</div>
-              <div class="name" id="modelName">Ubiquitin Â· B domain</div>
+              <div class="name" id="modelName">Ubiquitin · B domain</div>
               <div class="meta">
                 <div><b id="metaRes">76</b> residues</div>
                 <div><b id="metaChain">A</b> chain</div>
@@ -774,7 +1215,7 @@
           </div>
 
           <div class="legend">
-            <div class="legend-title">Confidence Â· pLDDT</div>
+            <div class="legend-title">Confidence · pLDDT</div>
             <div class="legend-bar"></div>
             <div class="legend-labels">
               <span>0</span><span>50</span><span>70</span><span>90</span><span>100</span>
@@ -803,11 +1244,11 @@
             <div class="viewer-overlay">
               <div class="info-card">
                 <div class="title">Binding Pocket</div>
-                <div class="name">Ligand Â· ANP</div>
+                <div class="name">Ligand · ANP</div>
                 <div class="meta">
                   <div><b>14</b> contacts</div>
-                  <div><b>3.4</b> Ã… mean</div>
-                  <div><b>5.0</b> Ã… cutoff</div>
+                  <div><b>3.4</b> Å mean</div>
+                  <div><b>5.0</b> Å cutoff</div>
                 </div>
               </div>
             </div>
@@ -823,7 +1264,7 @@
               </div>
             </div>
             <div class="binding-section">
-              <h4>Contact Map ( &lt; 5.0 Ã… )</h4>
+              <h4>Contact Map ( &lt; 5.0 Å )</h4>
               <div class="contact-list" id="contactList">
                 <!-- populated by JS -->
               </div>
@@ -838,19 +1279,19 @@
           <div class="pae-toolbar">
             <div>
               <div class="title">Predicted Aligned Error</div>
-              <div class="desc">Relative domain position confidence Â· lower is better</div>
+              <div class="desc">Relative domain position confidence · lower is better</div>
             </div>
             <div class="pae-legend">
-              <span>0 Ã…</span>
+              <span>0 Å</span>
               <div class="pae-legend-bar"></div>
-              <span>30 Ã…</span>
+              <span>30 Å</span>
             </div>
           </div>
           <div class="pae-canvas-wrap">
             <canvas id="paeCanvas" width="540" height="540"></canvas>
             <div class="pae-tooltip" id="paeTooltip">
               <div class="pt-pair">i â†’ j</div>
-              <div class="pt-val">PAE: â€” Ã…</div>
+              <div class="pt-val">PAE: â€” Å</div>
             </div>
           </div>
         </div>
@@ -878,7 +1319,7 @@
     <div>tokens: <span id="sbTokens">0</span></div>
     <div class="sep">|</div>
     <div>cache: <span class="ok">warm</span></div>
-    <div>CSP: strict Â· connect-src 6 hosts <span class="sep">|</span> <span style="text-transform:none;letter-spacing:0;">Outputs subject to <a href="legal.html#boltz-terms" target="_blank" style="color:var(--accent);text-decoration:underline;">ZenithFold Model Output Terms</a></span></div>
+    <div>CSP: strict · connect-src 6 hosts <span class="sep">|</span> <span style="text-transform:none;letter-spacing:0;">Outputs subject to <a href="legal.html#boltz-terms" target="_blank" style="color:var(--accent);text-decoration:underline;">ZenithFold Model Output Terms</a></span></div>
   </footer>
 </div>
 
