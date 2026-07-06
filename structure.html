@@ -1,1305 +1,1143 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>NilusLab | Structural Biology IDE</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-  <!-- Firebase Compat CDNs -->
-  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
-  <script src="js/firebase_config.js"></script>
+<meta charset="UTF-8" />
+<title>Structure Prediction Â· Nilus Lab Platform</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta http-equiv="Content-Security-Policy" content="
+  default-src 'self';
+  script-src 'self' https://cdn.jsdelivr.net https://3Dmol.org;
+  style-src 'self' https://fonts.googleapis.com 'unsafe-inline';
+  font-src 'self' https://fonts.gstatic.com;
+  img-src 'self' data:;
+  connect-src 'self' https://api.esm.metainfrastructure.org https://api.openai.com https://cellxgene.cziscience.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://nilus-lab.firebaseapp.com https://firestore.googleapis.com;
+" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/3dmol@2.4.2/build/3Dmol-min.js"></script>
+<style>
+  /* ============ DESIGN TOKENS ============ */
+  :root{
+    --bg-void:#080B12;
+    --bg-base:#0C1119;
+    --bg-panel:#11161F;
+    --bg-elev:#171F2B;
+    --bg-elev-2:#222E44;
+    --grid-line:rgba(148,163,184,.04);
+    --border:#1E293B;
+    --border-strong:#334155;
+    --border-accent:rgba(88,158,255,.4);
+    --text:#E2E8F0;
+    --text-mute:#94A3B8;
+    --text-faint:#64748B;
+    --text-dim:#475569;
+    --accent:#589EFF;
+    --accent-bright:#8BB8FF;
+    --accent-deep:#2E6FD9;
+    --accent-glow:rgba(88,158,255,.25);
+    --amber:#F59E0B;
+    --coral:#EF4444;
+    --emerald:#10B981;      /* Used very sparingly for status only */
+    --blue:#3B82F6;
+    --cyan:#22D3EE;
+    --plddt-vhigh:#0053D6;  /* ZenithFold standard >90 */
+    --plddt-high:#65B3E7;   /* ZenithFold standard 70-90 */
+    --plddt-low:#F5B544;    /* ZenithFold standard 50-70 */
+    --plddt-vlow:#FB923C;   /* ZenithFold standard <50 */
+    --shadow-lg:0 10px 24px -12px rgba(0,0,0,.8);
+    --shadow-inset:inset 0 1px 0 rgba(255,255,255,.03);
+    --radius:4px;           /* Sharper, engineered corners */
+    --radius-sm:3px;
+  }
 
-  <!-- Icons -->
-  <script src="https://unpkg.com/lucide@latest"></script>
-  <!-- 3Dmol.js -->
-  <script src="https://3Dmol.org/build/3Dmol-min.js"></script>
 
-  <style>
-    :root {
-      /* Color Palette */
-      --bg-base: #080B12;
-      --bg-surface: #0C1119;
-      --bg-panel: #11161F;
-      --bg-glass: rgba(17, 22, 31, 0.72);
-      
-      --accent: #589EFF;
-      --accent-bright: #8BB8FF;
-      --accent-deep: #2E6FD9;
-      --accent-soft: rgba(88, 158, 255, 0.12);
-      --accent-glow: rgba(88, 158, 255, 0.25);
-      
-      --text-main: #E2E8F0;
-      --text-muted: #94A3B8;
-      --text-dim: #64748B;
-      
-      /* Status Colors */
-      --ok: #10B981;
-      --ok-soft: rgba(16, 185, 129, 0.15);
-      --info: #3B82F6;
-      --info-soft: rgba(59, 130, 246, 0.15);
-      --warn: #F59E0B;
-      --warn-soft: rgba(245, 158, 11, 0.15);
-      --err: #EF4444;
-      --err-soft: rgba(239, 68, 68, 0.15);
-      --violet: #8B5CF6;
-      --violet-soft: rgba(139, 92, 246, 0.15);
-      
-      /* Borders */
-      --border: #1E293B;
-      --border-soft: #141C29;
-      --border-strong: #334155;
-      --border-accent: rgba(88, 158, 255, 0.4);
-      --border-glass: rgba(255, 255, 255, 0.06);
-      
-      /* Shadows */
-      --shadow-xs: 0 1px 2px rgba(0,0,0,0.5);
-      --shadow-sm: 0 2px 4px rgba(0,0,0,0.5);
-      --shadow-md: 0 4px 8px rgba(0,0,0,0.4);
-      --shadow-lg: 0 8px 16px rgba(0,0,0,0.4);
-      --shadow-xl: 0 20px 40px rgba(0,0,0,0.5);
-      --shadow-glow: 0 0 15px var(--accent-glow);
-      --shadow-inset: inset 0 1px 1px rgba(255,255,255,0.05);
-      
-      /* Radii */
-      --radius-sm: 3px;
-      --radius-md: 5px;
-      --radius-lg: 8px;
-      --radius-xl: 12px;
-      --radius-2xl: 16px;
-      --radius-pill: 999px;
-      
-      /* Transitions */
-      --ease: cubic-bezier(0.4, 0, 0.2, 1);
-      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
-      --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
-      --t-fast: 0.12s;
-      --t-normal: 0.18s;
-      --t-slow: 0.3s;
-    }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%;overflow:hidden}
+  body{
+    background:var(--bg-base);
+    color:var(--text);
+    font-family:'Inter','IBM Plex Sans',system-ui,sans-serif;
+    font-size:13px;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+    letter-spacing:-0.01em;
+  }
+  ::selection{background:var(--accent-glow);color:var(--text)}
+  ::-webkit-scrollbar{width:8px;height:8px}
+  ::-webkit-scrollbar-track{background:transparent}
+  ::-webkit-scrollbar-thumb{background:var(--border-strong);border-radius:8px}
+  ::-webkit-scrollbar-thumb:hover{background:var(--text-faint)}
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    
-    body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      font-feature-settings: 'cv02','cv03','cv04','cv11';
-      font-size: 13.5px;
-      line-height: 1.55;
-      letter-spacing: -0.011em;
-      background-color: var(--bg-base);
-      color: var(--text-main);
-      overflow: hidden; /* Fixed viewport */
-      height: 100vh;
-      width: 100vw;
-      /* Ambient Lighting */
-      background-image: 
-        radial-gradient(circle at 50% 0%, rgba(46,111,217,0.1) 0%, transparent 50%),
-        radial-gradient(circle at 100% 100%, rgba(139,92,246,0.08) 0%, transparent 50%);
-    }
+  /* ============ APP SHELL ============ */
+  .app{
+    display:grid;
+    grid-template-rows:32px 1fr 24px;
+    height:100vh;
+  }
 
-    /* Scrollbars */
-    ::-webkit-scrollbar { width: 10px; height: 10px; }
-    ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb { 
-      background: var(--border-strong); 
-      border: 2px solid transparent; 
-      background-clip: padding-box; 
-      border-radius: var(--radius-pill); 
-    }
-    ::-webkit-scrollbar-thumb:hover { background: var(--text-dim); border: 2px solid transparent; background-clip: padding-box; }
+  /* ============ TOP BAR ============ */
+  .topbar{
+    display:flex;align-items:center;
+    padding:0 16px;
+    background:var(--bg-panel);
+    border-bottom:1px solid var(--border);
+    position:relative;z-index:10;
+  }
+  .brand{display:flex;align-items:center;gap:10px}
+  .brand-mark{
+    width:26px;height:26px;border-radius:4px;
+    background:var(--accent);
+    position:relative;display:grid;place-items:center;
+    box-shadow:0 0 0 1px rgba(255,255,255,.05);
+  }
+  .brand-mark svg{color:#fff}
+  .brand-text{display:flex;flex-direction:column;line-height:1}
+  .brand-name{font-weight:600;font-size:13px;letter-spacing:.02em}
+  .brand-name span{color:var(--text-faint);font-weight:400}
+  .brand-sub{font-size:9px;color:var(--text-faint);text-transform:uppercase;letter-spacing:.16em;margin-top:3px;font-family:'IBM Plex Mono',monospace}
 
-    /* App Shell Grid */
-    .app {
-      display: grid;
-      grid-template-rows: 48px 36px 1fr 28px;
-      height: 100vh;
-      width: 100vw;
-    }
+  .topnav{display:flex;align-items:center;gap:2px;margin-left:36px}
+  .topnav a{
+    padding:6px 12px;border-radius:3px;
+    color:var(--text-mute);text-decoration:none;font-size:12px;font-weight:500;
+    transition:all .15s;
+  }
+  .topnav a:hover{color:var(--text);background:var(--bg-elev)}
+  .topnav a.active{color:var(--text);background:var(--bg-elev-2);box-shadow:inset 0 -2px 0 var(--accent)}
 
-    /* Top Bar */
-    .topbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 20px;
-      background: var(--bg-surface);
-      border-bottom: 1px solid var(--border);
-      z-index: 10;
-    }
+  .top-right{margin-left:auto;display:flex;align-items:center;gap:12px}
+  .env-pill{
+    display:flex;align-items:center;gap:6px;
+    padding:4px 8px;border-radius:3px;
+    background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.3);
+    font-size:10px;font-family:'IBM Plex Mono',monospace;color:var(--amber);
+    text-transform:uppercase;letter-spacing:.1em;font-weight:500;
+  }
+  .env-pill::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--amber)}
+  .top-icon{
+    width:28px;height:28px;border-radius:3px;display:grid;place-items:center;
+    background:transparent;border:1px solid transparent;color:var(--text-mute);
+    cursor:pointer;transition:all .15s;
+  }
+  .top-icon:hover{color:var(--text);border-color:var(--border-strong);background:var(--bg-elev)}
+  .user-chip{
+    display:flex;align-items:center;gap:8px;padding:3px 8px 3px 3px;
+    border-radius:3px;background:var(--bg-elev);border:1px solid var(--border);
+  }
+  .user-avatar{
+    width:22px;height:22px;border-radius:3px;
+    background:var(--bg-elev-2);
+    display:grid;place-items:center;font-size:10px;font-weight:600;color:var(--accent-bright);
+    border:1px solid var(--border-strong);
+  }
+  .user-meta{display:flex;flex-direction:column;line-height:1.1}
+  .user-name{font-size:11px;font-weight:500}
+  .user-org{font-size:9px;color:var(--text-faint);font-family:'IBM Plex Mono',monospace}
 
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    .brand-mark {
-      width: 32px;
-      height: 32px;
-      border-radius: var(--radius-lg);
-      background: linear-gradient(135deg, var(--accent), var(--violet));
-      position: relative;
-      box-shadow: var(--shadow-glow);
-    }
-    .brand-mark::after {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
-      border-radius: inherit;
-      box-shadow: inset 0 2px 4px rgba(255,255,255,0.3);
-    }
-    .brand-text { font-weight: 800; font-size: 16px; letter-spacing: -0.02em; }
-    .brand-text span { color: var(--text-dim); }
-    .brand-sub { font-size: 11px; color: var(--text-muted); font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em; padding-left: 8px; border-left: 1px solid var(--border-strong); }
+  /* ============ SUB BAR ============ */
+  .subbar{
+    display:flex;align-items:center;
+    padding:0 16px;gap:12px;
+    background:var(--bg-void);
+    border-bottom:1px solid var(--border);
+    font-size:11px;
+  }
+  .crumb{display:flex;align-items:center;gap:6px;color:var(--text-faint)}
+  .crumb a{color:var(--text-faint);text-decoration:none;transition:color .15s}
+  .crumb a:hover{color:var(--text-mute)}
+  .crumb .sep{color:var(--text-dim)}
+  .crumb .here{color:var(--text);font-weight:500}
+  .subbar-spacer{flex:1}
+  .stat-chip{
+    display:flex;align-items:center;gap:6px;
+    padding:3px 8px;border-radius:3px;
+    background:var(--bg-panel);border:1px solid var(--border);
+    font-family:'IBM Plex Mono',monospace;font-size:10px;
+    color:var(--text-mute);
+  }
+  .stat-chip .label{color:var(--text-faint);text-transform:uppercase;letter-spacing:.08em}
+  .stat-chip .val{color:var(--text);font-weight:500}
+  .stat-chip .dot{width:5px;height:5px;border-radius:50%;background:var(--emerald);box-shadow:0 0 4px var(--emerald)}
 
-    .topnav {
-      display: flex;
-      height: 100%;
-      gap: 8px;
-    }
-    .nav-item {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      padding: 0 16px;
-      height: 100%;
-      color: var(--text-muted);
-      font-weight: 500;
-      font-size: 13px;
-      cursor: pointer;
-      position: relative;
-      transition: color var(--t-fast) var(--ease);
-    }
-    .nav-item:hover { color: var(--text-main); }
-    .nav-item.active { color: var(--text-main); }
-    .nav-item.active::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 24px;
-      height: 2px;
-      background: var(--accent);
-      box-shadow: 0 -2px 10px var(--accent);
-      border-radius: 2px 2px 0 0;
-    }
+  /* ============ MAIN GRID ============ */
+  .main{
+    display:grid;
+    grid-template-columns:340px 1fr;
+    overflow:hidden;
+  }
 
-    .top-right {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-    }
-    .env-pill {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      background: var(--warn-soft);
-      border: 1px solid rgba(245, 158, 11, 0.3);
-      color: var(--warn);
-      padding: 4px 10px;
-      border-radius: var(--radius-pill);
-      font-size: 11px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-    .pulse-dot {
-      width: 6px; height: 6px; border-radius: 50%; background: currentColor;
-      box-shadow: 0 0 8px currentColor;
-      animation: pulse 2s infinite;
-    }
-    @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
+  /* ============ SIDEBAR ============ */
+  .sidebar{
+    background:var(--bg-panel);
+    border-right:1px solid var(--border);
+    overflow-y:auto;
+    padding:16px 16px 24px;
+  }
 
-    .user-chip {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 4px 12px 4px 4px;
-      background: var(--bg-panel);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-pill);
-      cursor: pointer;
-      transition: all var(--t-fast);
-    }
-    .user-chip:hover { border-color: var(--border-strong); transform: translateY(-1px); }
-    .avatar {
-      width: 24px; height: 24px; border-radius: 50%;
-      background: linear-gradient(135deg, var(--info), var(--accent));
-      display: flex; align-items: center; justify-content: center;
-      font-size: 10px; font-weight: 700; color: white;
-    }
-    .user-info { display: flex; flex-direction: column; line-height: 1.2; }
-    .user-name { font-size: 12px; font-weight: 600; }
-    .user-org { font-size: 10px; color: var(--text-dim); }
+  .panel{
+    background:var(--bg-base);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    margin-bottom:12px;
+    overflow:hidden;
+  }
+  .panel-head{
+    display:flex;align-items:center;gap:8px;
+    padding:8px 12px;
+    border-bottom:1px solid var(--border);
+    background:var(--bg-void);
+  }
+  .panel-num{
+    width:16px;height:16px;border-radius:3px;
+    background:var(--bg-elev-2);border:1px solid var(--border-strong);
+    color:var(--text-mute);font-size:9px;font-weight:600;
+    display:grid;place-items:center;font-family:'IBM Plex Mono',monospace;
+  }
+  .panel-title{
+    font-size:11px;font-weight:600;
+    text-transform:uppercase;letter-spacing:.06em;
+    color:var(--text);
+  }
+  .panel-tag{
+    margin-left:auto;font-size:9px;font-family:'IBM Plex Mono',monospace;
+    color:var(--text-faint);text-transform:uppercase;letter-spacing:.08em;
+    padding:2px 6px;border-radius:2px;background:var(--bg-elev);
+  }
+  .panel-body{padding:12px}
 
-    /* Sub Bar */
-    .subbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 20px;
-      background: var(--bg-panel);
-      border-bottom: 1px solid var(--border);
-      font-size: 12px;
-    }
-    .breadcrumb { color: var(--text-muted); display: flex; gap: 6px; align-items: center; }
-    .breadcrumb span:last-child { color: var(--text-main); font-weight: 500; }
-    .stat-chips { display: flex; gap: 8px; }
-    .stat-chip {
-      display: flex; align-items: center; gap: 6px;
-      padding: 2px 8px; background: var(--bg-base); border: 1px solid var(--border);
-      border-radius: var(--radius-pill); font-family: 'JetBrains Mono', monospace; font-size: 10.5px;
-      color: var(--text-muted);
-    }
+  /* ============ MODE SWITCH ============ */
+  .mode-switch{
+    display:grid;grid-template-columns:1fr 1fr;gap:4px;
+    background:var(--bg-void);
+    padding:3px;border-radius:var(--radius);
+    border:1px solid var(--border);
+  }
+  .mode-btn{
+    appearance:none;border:0;cursor:pointer;
+    padding:8px 6px;border-radius:2px;
+    background:transparent;color:var(--text-mute);
+    font-family:inherit;font-size:11px;font-weight:500;
+    display:flex;flex-direction:column;align-items:center;gap:3px;
+    transition:all .15s;
+  }
+  .mode-btn .mode-name{font-weight:600;font-size:12px;color:var(--text)}
+  .mode-btn .mode-desc{font-size:9px;color:var(--text-faint);font-family:'IBM Plex Mono',monospace;text-transform:uppercase;letter-spacing:.04em}
+  .mode-btn:hover{background:var(--bg-elev)}
+  .mode-btn.active{
+    background:var(--bg-elev-2);
+    box-shadow:inset 0 -2px 0 var(--accent);
+  }
+  .mode-btn.active .mode-name{color:var(--text)}
+  .mode-btn.active .mode-desc{color:var(--accent-bright)}
 
-    /* Main Area */
-    .main {
-      display: flex;
-      overflow: hidden;
-    }
+  /* ============ FORM ELEMENTS ============ */
+  .field{margin-bottom:10px}
+  .field:last-child{margin-bottom:0}
+  .field-label{
+    display:flex;align-items:center;justify-content:space-between;
+    font-size:10px;color:var(--text-mute);
+    text-transform:uppercase;letter-spacing:.06em;font-weight:500;
+    margin-bottom:5px;
+  }
+  .field-label .hint{font-size:9px;color:var(--text-faint);text-transform:none;letter-spacing:0;font-family:'IBM Plex Mono',monospace}
+  .input, .textarea, .select{
+    width:100%;
+    background:var(--bg-void);
+    border:1px solid var(--border);
+    border-radius:var(--radius-sm);
+    padding:7px 9px;
+    color:var(--text);
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;
+    transition:all .15s;
+    outline:none;
+  }
+  .input:focus, .textarea:focus, .select:focus{
+    border-color:var(--accent);
+    box-shadow:0 0 0 2px var(--accent-glow);
+  }
+  .input::placeholder, .textarea::placeholder{color:var(--text-dim)}
+  .textarea{resize:vertical;min-height:96px;line-height:1.55;font-size:11px}
+  .input-row{display:flex;gap:6px}
+  .input-row .input{flex:1}
 
-    /* Sidebar */
-    .sidebar {
-      width: 368px;
-      background: var(--bg-surface);
-      border-right: 1px solid var(--border);
-      display: flex;
-      flex-direction: column;
-      overflow-y: auto;
-      position: relative;
-    }
+  .btn{
+    appearance:none;border:0;cursor:pointer;
+    padding:8px 12px;border-radius:var(--radius-sm);
+    font-family:inherit;font-size:11px;font-weight:600;
+    display:inline-flex;align-items:center;justify-content:center;gap:6px;
+    transition:all .15s;
+  }
+  .btn-primary{
+    background:var(--accent);
+    color:#fff;
+    box-shadow:0 1px 0 rgba(255,255,255,.1) inset;
+  }
+  .btn-primary:hover{background:var(--accent-bright)}
+  .btn-primary:active{background:var(--accent-dim)}
+  .btn-primary:disabled{opacity:.4;cursor:not-allowed}
+  .btn-ghost{
+    background:var(--bg-elev);
+    color:var(--text-mute);
+    border:1px solid var(--border);
+  }
+  .btn-ghost:hover{color:var(--text);border-color:var(--border-strong);background:var(--bg-elev-2)}
+  .btn-icon{
+    width:28px;height:28px;padding:0;border-radius:var(--radius-sm);
+    background:var(--bg-elev);border:1px solid var(--border);
+    color:var(--text-mute);cursor:pointer;display:grid;place-items:center;
+    transition:all .15s;
+  }
+  .btn-icon:hover{color:var(--accent-bright);border-color:var(--accent)}
 
-    .flow-indicator {
-      position: sticky; top: 0; z-index: 5;
-      background: rgba(12, 17, 25, 0.9);
-      backdrop-filter: blur(8px);
-      padding: 16px 20px;
-      border-bottom: 1px solid var(--border);
-      display: flex; gap: 4px;
-    }
-    .flow-seg {
-      flex: 1; height: 4px; border-radius: 2px; background: var(--border-strong);
-      transition: all var(--t-slow) var(--ease);
-    }
-    .flow-seg.done { background: var(--accent-deep); }
-    .flow-seg.active { background: linear-gradient(90deg, var(--accent), var(--accent-bright)); box-shadow: 0 0 8px var(--accent-glow); }
+  /* API key row */
+  .api-row{display:flex;align-items:center;gap:6px}
+  .api-row .input{font-size:11px;padding:7px 9px}
+  .api-status{
+    width:6px;height:6px;border-radius:50%;flex-shrink:0;
+    background:var(--text-dim);
+  }
+  .api-status.set{background:var(--emerald);box-shadow:0 0 4px var(--emerald)}
+  .api-hint{font-size:9.5px;color:var(--text-faint);margin-top:6px;font-family:'IBM Plex Mono',monospace;line-height:1.4}
 
-    .panel {
-      padding: 20px;
-      border-bottom: 1px solid var(--border-soft);
-      transition: all var(--t-normal) var(--ease);
-      border-left: 2px solid transparent;
-    }
-    .panel.active {
-      background: var(--bg-panel);
-      border-left: 2px solid var(--accent);
-      box-shadow: inset 20px 0 40px -20px var(--accent-soft);
-    }
-    
-    .panel-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
-    .step-num {
-      width: 24px; height: 24px; border-radius: 50%;
-      background: var(--border-strong); color: var(--text-muted);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 12px; font-weight: 700; transition: all var(--t-normal);
-    }
-    .panel.active .step-num {
-      background: linear-gradient(135deg, var(--accent), var(--accent-deep));
-      color: white; box-shadow: var(--shadow-glow), var(--shadow-inset);
-    }
-    .panel-title { font-weight: 600; font-size: 14px; }
+  /* Chain builder */
+  .chain-list{display:flex;flex-direction:column;gap:4px;margin-bottom:6px}
+  .chain-row{
+    display:grid;grid-template-columns:26px 1fr 50px 22px;gap:5px;align-items:center;
+    background:var(--bg-void);
+    border:1px solid var(--border);
+    border-radius:var(--radius-sm);padding:4px 6px;
+  }
+  .chain-id{
+    font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;
+    text-align:center;color:var(--accent-bright);
+    background:rgba(59,130,246,.1);border-radius:2px;padding:3px 0;
+  }
+  .chain-type{
+    background:var(--bg-panel);border:1px solid var(--border);border-radius:2px;color:var(--text);
+    font-family:'IBM Plex Mono',monospace;font-size:10px;
+    cursor:pointer;outline:none;padding:3px 4px;
+  }
+  .chain-copies{
+    background:var(--bg-panel);border:1px solid var(--border);
+    border-radius:2px;padding:3px 5px;color:var(--text);
+    font-family:'IBM Plex Mono',monospace;font-size:10px;text-align:center;width:100%;
+  }
+  .chain-del{
+    background:transparent;border:0;color:var(--text-faint);cursor:pointer;
+    display:grid;place-items:center;border-radius:2px;height:20px;
+  }
+  .chain-del:hover{color:var(--coral);background:rgba(239,68,68,.1)}
 
-    .mode-switch { display: flex; gap: 8px; margin-bottom: 12px; }
-    .mode-btn {
-      flex: 1; padding: 10px; background: var(--bg-base); border: 1px solid var(--border);
-      border-radius: var(--radius-lg); cursor: pointer; text-align: left;
-      transition: all var(--t-fast); position: relative; overflow: hidden;
-    }
-    .mode-btn:hover { border-color: var(--border-strong); transform: translateY(-1px); }
-    .mode-btn.active {
-      background: linear-gradient(180deg, var(--bg-panel), var(--accent-soft));
-      border-color: var(--border-accent);
-    }
-    .mode-btn.active::after {
-      content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 2px;
-      background: var(--accent); box-shadow: 0 -2px 8px var(--accent);
-    }
-    .mode-name { font-weight: 600; font-size: 13px; margin-bottom: 4px; display: block; }
-    .mode-desc { font-size: 11px; color: var(--text-dim); }
+  /* Cost estimate */
+  .cost-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+  .cost-cell{
+    background:var(--bg-void);border:1px solid var(--border);border-radius:var(--radius-sm);
+    padding:8px 9px;
+  }
+  .cost-cell .k{font-size:9px;color:var(--text-faint);text-transform:uppercase;letter-spacing:.08em;font-family:'IBM Plex Mono',monospace}
+  .cost-cell .v{font-size:14px;font-weight:600;color:var(--text);margin-top:2px;font-family:'IBM Plex Mono',monospace}
+  .cost-cell .v .unit{font-size:9px;color:var(--text-mute);font-weight:400;margin-left:2px}
+  .cost-note{font-size:9.5px;color:var(--text-faint);margin-top:8px;line-height:1.4}
 
-    .input-group { margin-bottom: 14px; }
-    .input-label { display: flex; justify-content: space-between; font-size: 12px; font-weight: 500; color: var(--text-muted); margin-bottom: 6px; }
-    input[type="text"], input[type="password"], textarea, select {
-      width: 100%; background: var(--bg-base); border: 1px solid var(--border-strong);
-      color: var(--text-main); padding: 8px 12px; border-radius: var(--radius-md);
-      font-family: 'JetBrains Mono', monospace; font-size: 12px;
-      transition: all var(--t-fast);
-    }
-    input:hover, textarea:hover, select:hover { border-color: var(--text-dim); }
-    input:focus, textarea:focus, select:focus {
-      outline: none; border-color: var(--accent);
-      box-shadow: 0 0 0 3px var(--accent-soft); background: var(--bg-panel);
-    }
-    textarea { height: 120px; resize: vertical; }
+  /* Diagnostics */
+  .diag{
+    background:var(--bg-void);
+    border:1px solid var(--border);
+    border-radius:var(--radius-sm);
+    padding:8px 9px;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:10px;
+    max-height:110px;overflow-y:auto;
+    line-height:1.6;
+  }
+  .diag-line{color:var(--text-mute)}
+  .diag-line .t{color:var(--text-faint);margin-right:8px}
+  .diag-line.ok .m{color:var(--emerald)}
+  .diag-line.info .m{color:var(--accent-bright)}
+  .diag-line.warn .m{color:var(--amber)}
+  .diag-line.err .m{color:var(--coral)}
 
-    .btn {
-      padding: 8px 16px; border-radius: var(--radius-md); font-size: 13px; font-weight: 600;
-      cursor: pointer; transition: all var(--t-fast); border: none; display: flex; align-items: center; justify-content: center; gap: 8px;
-    }
-    .btn-primary {
-      background: linear-gradient(180deg, var(--accent-bright), var(--accent-deep));
-      color: white; box-shadow: var(--shadow-sm), var(--shadow-inset);
-      text-shadow: 0 1px 2px rgba(0,0,0,0.5);
-    }
-    .btn-primary:hover { transform: translateY(-1px); box-shadow: var(--shadow-md), var(--shadow-glow), var(--shadow-inset); }
-    .btn-primary:active { transform: translateY(0); filter: brightness(0.9); }
-    .btn-ghost { background: var(--bg-panel); color: var(--text-main); border: 1px solid var(--border-strong); }
-    .btn-ghost:hover { background: var(--bg-surface); border-color: var(--text-muted); transform: translateY(-1px); }
+  /* ============ MAIN VIEWER AREA ============ */
+  .viewer-area{
+    display:flex;flex-direction:column;
+    background:var(--bg-void);
+    overflow:hidden;
+    position:relative;
+  }
+  .viewer-area::before{
+    content:"";position:absolute;inset:0;pointer-events:none;
+    background-image:
+      linear-gradient(var(--grid-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+    background-size:32px 32px;
+    z-index:0;
+  }
 
-    .cost-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
-    .cost-cell {
-      background: var(--bg-base); border: 1px solid var(--border); padding: 10px;
-      border-radius: var(--radius-lg); position: relative; overflow: hidden;
-    }
-    .cost-cell::before {
-      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
-      background: linear-gradient(90deg, transparent, var(--accent), transparent);
-      opacity: 0; transition: opacity var(--t-normal);
-    }
-    .cost-cell:hover::before { opacity: 1; }
-    .cost-lbl { font-size: 11px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
-    .cost-val { font-size: 16px; font-weight: 700; font-family: 'JetBrains Mono', monospace; }
+  .tabs{
+    display:flex;align-items:stretch;
+    background:var(--bg-panel);
+    border-bottom:1px solid var(--border);
+    padding:0 12px;
+    position:relative;z-index:2;
+  }
+  .tab{
+    appearance:none;background:transparent;border:0;cursor:pointer;
+    padding:10px 14px 9px;
+    color:var(--text-mute);font-family:inherit;font-size:11px;font-weight:500;
+    display:flex;align-items:center;gap:7px;
+    position:relative;
+    transition:color .15s;
+  }
+  .tab:hover{color:var(--text)}
+  .tab.active{color:var(--text)}
+  .tab.active::after{
+    content:"";position:absolute;left:8px;right:8px;bottom:-1px;height:2px;
+    background:var(--accent);
+  }
+  .tab .badge{
+    background:var(--bg-elev);color:var(--text-mute);
+    font-size:9px;font-family:'IBM Plex Mono',monospace;font-weight:600;
+    padding:1px 5px;border-radius:2px;
+    text-transform:uppercase;letter-spacing:.06em;
+  }
+  .tab.active .badge{background:var(--accent-dim);color:var(--accent-bright)}
+  .tab-tools{margin-left:auto;display:flex;align-items:center;gap:5px;padding:5px 0}
 
-    .diag-log {
-      background: #000; border: 1px solid var(--border); border-radius: var(--radius-lg);
-      padding: 12px; height: 140px; overflow-y: auto; font-family: 'JetBrains Mono', monospace;
-      font-size: 10.5px; line-height: 1.6;
-    }
-    .log-line { display: flex; gap: 8px; animation: slideIn 0.2s var(--ease-out); }
-    @keyframes slideIn { from { opacity: 0; transform: translateX(-4px); } to { opacity: 1; transform: translateX(0); } }
-    .log-ts { color: var(--text-dim); }
-    .log-ok { color: var(--ok); }
-    .log-info { color: var(--info); }
-    .log-warn { color: var(--warn); }
-    .log-err { color: var(--err); }
+  .tab-panel{
+    flex:1;position:relative;overflow:hidden;
+    display:none;
+    z-index:1;
+  }
+  .tab-panel.active{display:flex;flex-direction:column}
 
-    /* Viewer Area */
-    .viewer-area {
-      flex: 1; display: flex; flex-direction: column; background: #000; position: relative;
-    }
-    
-    .tabs {
-      display: flex; padding: 0 16px; background: rgba(12, 17, 25, 0.8); backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border-glass); z-index: 10;
-    }
-    .tab {
-      padding: 12px 16px; color: var(--text-muted); font-size: 13px; font-weight: 500;
-      cursor: pointer; display: flex; align-items: center; gap: 8px; position: relative;
-      transition: color var(--t-fast);
-    }
-    .tab:hover { color: var(--text-main); }
-    .tab.active { color: var(--text-main); }
-    .tab.active::after {
-      content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
-      background: var(--accent); box-shadow: 0 -2px 10px var(--accent-glow), 0 -2px 4px var(--accent);
-    }
-    .badge {
-      background: var(--bg-panel); border: 1px solid var(--border-strong);
-      padding: 2px 6px; border-radius: var(--radius-pill); font-size: 10px; font-weight: 600;
-    }
-    .tab.active .badge { background: var(--accent-soft); border-color: var(--accent); color: var(--accent-bright); }
-    
-    .tab-tools { margin-left: auto; display: flex; align-items: center; gap: 8px; }
-    .icon-btn {
-      width: 32px; height: 32px; border-radius: var(--radius-md); border: 1px solid transparent;
-      background: transparent; color: var(--text-muted); cursor: pointer;
-      display: flex; align-items: center; justify-content: center; transition: all var(--t-fast);
-    }
-    .icon-btn:hover { background: var(--accent-soft); color: var(--accent-bright); transform: scale(1.05); }
+  /* ============ 3D VIEWER ============ */
+  .viewer-3d{
+    flex:1;position:relative;
+    background:var(--bg-void);
+  }
+  #molviewer{
+    width:100%;height:100%;
+    position:absolute;inset:0;
+  }
+  .viewer-overlay{
+    position:absolute;top:12px;left:12px;
+    display:flex;flex-direction:column;gap:8px;
+    z-index:5;pointer-events:none;
+  }
+  .info-card{
+    background:rgba(13,18,28,.92);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    backdrop-filter:blur(8px);
+    padding:9px 12px;
+    pointer-events:auto;
+    box-shadow:var(--shadow-lg);
+    min-width:200px;
+  }
+  .info-card .title{font-size:9.5px;color:var(--text-faint);text-transform:uppercase;letter-spacing:.1em;font-family:'IBM Plex Mono',monospace;margin-bottom:5px}
+  .info-card .name{font-size:13px;font-weight:600;color:var(--text);font-family:'IBM Plex Serif',serif}
+  .info-card .meta{display:flex;gap:12px;margin-top:5px;font-size:10px;color:var(--text-mute);font-family:'IBM Plex Mono',monospace}
+  .info-card .meta b{color:var(--text);font-weight:500}
 
-    .tab-content {
-      flex: 1; position: relative; display: none; overflow: hidden;
-      animation: tabEnter var(--t-normal) var(--ease-out);
-    }
-    .tab-content.active { display: flex; flex-direction: column; }
-    @keyframes tabEnter { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+  .viewer-toolbar{
+    position:absolute;top:12px;right:12px;
+    display:flex;flex-direction:column;gap:5px;
+    z-index:5;
+  }
+  .tool-group{
+    background:rgba(13,18,28,.92);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    backdrop-filter:blur(8px);
+    padding:4px;
+    display:flex;flex-direction:column;gap:2px;
+    box-shadow:var(--shadow-lg);
+  }
+  .tool-btn{
+    width:28px;height:28px;border-radius:2px;
+    background:transparent;border:0;color:var(--text-mute);
+    cursor:pointer;display:grid;place-items:center;
+    transition:all .15s;
+  }
+  .tool-btn:hover{color:var(--text);background:var(--bg-elev)}
+  .tool-btn.active{color:#fff;background:var(--accent-dim)}
+  .tool-divider{height:1px;background:var(--border);margin:2px 3px}
 
-    /* 3D Viewer Overlays */
-    .viewer-container { width: 100%; height: 100%; position: absolute; top: 0; left: 0; }
-    
-    .glass-panel {
-      background: var(--bg-glass); backdrop-filter: blur(20px) saturate(140%);
-      border: 1px solid var(--border-glass); border-radius: var(--radius-xl);
-      box-shadow: var(--shadow-lg); color: white;
-    }
+  /* Legend */
+  .legend{
+    position:absolute;bottom:12px;left:12px;
+    background:rgba(13,18,28,.92);
+    border:1px solid var(--border);
+    border-radius:var(--radius);backdrop-filter:blur(8px);
+    padding:8px 12px;z-index:5;
+    box-shadow:var(--shadow-lg);
+  }
+  .legend-title{font-size:9.5px;color:var(--text-faint);text-transform:uppercase;letter-spacing:.1em;font-family:'IBM Plex Mono',monospace;margin-bottom:6px}
+  .legend-bar{
+    width:180px;height:6px;border-radius:2px;
+    background:linear-gradient(90deg, var(--plddt-vlow), var(--plddt-low), var(--plddt-high), var(--plddt-vhigh));
+    margin-bottom:4px;
+  }
+  .legend-labels{display:flex;justify-content:space-between;font-size:9px;color:var(--text-mute);font-family:'IBM Plex Mono',monospace}
 
-    .info-overlay { position: absolute; top: 20px; left: 20px; padding: 16px; width: 240px; pointer-events: none; }
-    .info-title { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
-    .info-name { font-size: 16px; font-weight: 700; margin-bottom: 12px; }
-    .info-meta { font-size: 12px; color: var(--text-dim); display: grid; gap: 4px; }
-    .info-meta b { color: var(--text-main); }
+  /* Hover tooltip */
+  .res-tooltip{
+    position:absolute;
+    background:rgba(13,18,28,.95);
+    border:1px solid var(--border-strong);
+    border-radius:var(--radius-sm);padding:6px 9px;
+    font-family:'IBM Plex Mono',monospace;font-size:10px;
+    color:var(--text);
+    pointer-events:none;z-index:10;
+    box-shadow:var(--shadow-lg);
+    display:none;
+  }
+  .res-tooltip .rt-res{color:var(--accent-bright);font-weight:600}
+  .res-tooltip .rt-plddt{color:var(--text-mute);margin-top:2px}
 
-    .toolbar-overlay { position: absolute; top: 20px; right: 20px; display: flex; flex-direction: column; gap: 12px; }
-    .tool-group { display: flex; padding: 4px; gap: 4px; }
-    .tool-btn {
-      width: 34px; height: 34px; border-radius: var(--radius-lg); border: none;
-      background: transparent; color: var(--text-muted); cursor: pointer;
-      display: flex; align-items: center; justify-content: center; transition: all var(--t-fast);
-    }
-    .tool-btn:hover { color: white; transform: scale(1.05); background: rgba(255,255,255,0.05); }
-    .tool-btn.active {
-      background: linear-gradient(135deg, var(--accent-deep), var(--accent));
-      color: white; box-shadow: var(--shadow-glow), var(--shadow-inset);
-    }
+  /* ============ SEQUENCE VIEWER ============ */
+  .seq-viewer{
+    flex:1;overflow:auto;
+    padding:16px 20px;
+    font-family:'IBM Plex Mono',monospace;
+    background:var(--bg-void);
+    position:relative;
+  }
+  .seq-block{margin-bottom:16px}
+  .seq-header{
+    display:flex;align-items:center;gap:10px;
+    padding:7px 10px;
+    background:var(--bg-panel);
+    border:1px solid var(--border);
+    border-bottom:0;
+    border-radius:var(--radius) var(--radius) 0 0;
+  }
+  .seq-chain-id{
+    font-size:10px;font-weight:600;color:var(--accent-bright);
+    background:rgba(59,130,246,.1);padding:2px 7px;border-radius:2px;
+    border:1px solid var(--border-accent);
+  }
+  .seq-chain-meta{font-size:10px;color:var(--text-mute)}
+  .seq-chain-meta b{color:var(--text);font-weight:500}
+  .seq-chain-conf{margin-left:auto;display:flex;align-items:center;gap:8px;font-size:10px;color:var(--text-mute)}
+  .conf-bar{width:70px;height:4px;background:var(--bg-elev);border-radius:2px;overflow:hidden}
+  .conf-bar > div{height:100%;background:var(--accent)}
 
-    .legend-overlay { position: absolute; bottom: 20px; left: 20px; padding: 12px 16px; }
-    .legend-title { font-size: 11px; font-weight: 600; margin-bottom: 8px; }
-    .legend-bar { width: 220px; height: 8px; border-radius: 4px; background: linear-gradient(to right, var(--err), var(--warn), var(--info), var(--accent-deep)); margin-bottom: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.5); }
-    .legend-labels { display: flex; justify-content: space-between; font-size: 10px; color: var(--text-muted); }
+  .seq-body{
+    background:var(--bg-panel);
+    border:1px solid var(--border);
+    border-radius:0 0 var(--radius) var(--radius);
+    padding:10px;
+    overflow-x:auto;
+  }
+  .seq-ruler{
+    display:flex;font-size:9px;color:var(--text-faint);
+    margin-bottom:5px;
+    border-bottom:1px solid var(--border);
+    padding-bottom:4px;
+  }
+  .seq-ruler span{display:inline-block;width:14px;text-align:center}
+  .seq-residues{
+    display:flex;flex-wrap:wrap;
+    font-size:12px;line-height:1.8;
+  }
+  .res{
+    display:inline-block;width:14px;text-align:center;
+    cursor:pointer;border-radius:2px;
+    transition:all .1s;
+    user-select:none;
+  }
+  .res:hover{background:rgba(59,130,246,.2);transform:scale(1.15)}
+  .res.selected{background:var(--accent);color:#fff;font-weight:600}
+  .res.c-vhigh{color:var(--plddt-vhigh)}
+  .res.c-high{color:var(--plddt-high)}
+  .res.c-low{color:var(--plddt-low)}
+  .res.c-vlow{color:var(--plddt-vlow)}
 
-    .res-tooltip { position: absolute; padding: 8px 12px; pointer-events: none; opacity: 0; transition: opacity 0.1s; transform: translate(-50%, -100%); margin-top: -10px; z-index: 100; }
-    .res-tooltip .rt-res { font-weight: 600; font-size: 12px; }
-    .res-tooltip .rt-plddt { font-size: 11px; color: var(--text-muted); }
+  /* ============ BINDING ANALYSIS ============ */
+  .binding-area{
+    flex:1;display:grid;grid-template-columns:1fr 320px;
+    overflow:hidden;
+  }
+  .binding-3d{position:relative;background:var(--bg-void);border-right:1px solid var(--border)}
+  #bindingviewer{position:absolute;inset:0}
+  .binding-panel{overflow-y:auto;padding:14px;background:var(--bg-panel)}
+  .binding-section{margin-bottom:16px}
+  .binding-section h4{
+    font-size:10px;text-transform:uppercase;letter-spacing:.08em;
+    color:var(--text-faint);margin-bottom:7px;font-weight:600;
+    font-family:'IBM Plex Mono',monospace;
+  }
+  .contact-list{display:flex;flex-direction:column;gap:3px}
+  .contact-row{
+    display:grid;grid-template-columns:1fr auto 1fr 50px;gap:8px;align-items:center;
+    padding:6px 8px;border-radius:var(--radius-sm);
+    background:var(--bg-base);border:1px solid var(--border);
+    font-family:'IBM Plex Mono',monospace;font-size:10px;
+    cursor:pointer;transition:all .15s;
+  }
+  .contact-row:hover{border-color:var(--border-accent);background:var(--bg-elev)}
+  .contact-res{color:var(--text)}
+  .contact-res.ligand{color:var(--amber)}
+  .contact-arrow{color:var(--text-faint)}
+  .contact-dist{color:var(--accent-bright);text-align:right;font-weight:500}
 
-    /* Sequence Tab */
-    .seq-wrap { padding: 24px; overflow-y: auto; height: 100%; }
-    .chain-block { margin-bottom: 32px; }
-    .chain-header { display: flex; align-items: center; gap: 16px; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--border-strong); }
-    .chain-id { background: var(--accent-soft); border: 1px solid var(--accent); color: var(--accent-bright); padding: 2px 8px; border-radius: var(--radius-sm); font-weight: 700; font-size: 14px; }
-    .seq-ruler { display: flex; font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--text-dim); margin-bottom: 4px; }
-    .seq-ruler-tick { width: 15px; text-align: left; }
-    .seq-chars { font-family: 'JetBrains Mono', monospace; font-size: 14px; line-height: 1.8; word-break: break-all; letter-spacing: 2px; cursor: pointer; }
-    .seq-chars span { display: inline-block; width: 13px; text-align: center; border-radius: 2px; transition: all 0.1s; }
-    .seq-chars span:hover { transform: scale(1.2); outline: 1px solid white; z-index: 2; position: relative; }
-    
-    .c-vhigh { color: var(--accent-bright); }
-    .c-high { color: var(--info); }
-    .c-low { color: var(--warn); }
-    .c-vlow { color: var(--err); }
+  .ligand-stats{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:12px}
+  .ligand-stat{
+    background:var(--bg-base);border:1px solid var(--border);
+    border-radius:var(--radius-sm);padding:8px 9px;
+  }
+  .ligand-stat .k{font-size:9px;color:var(--text-faint);text-transform:uppercase;letter-spacing:.08em;font-family:'IBM Plex Mono',monospace}
+  .ligand-stat .v{font-size:13px;font-weight:600;color:var(--text);margin-top:2px;font-family:'IBM Plex Mono',monospace}
 
-    /* Binding Tab */
-    .binding-layout { display: flex; height: 100%; }
-    .binding-3d { flex: 1; position: relative; }
-    .binding-panel { width: 348px; background: var(--bg-surface); border-left: 1px solid var(--border); display: flex; flex-direction: column; }
-    .bp-section { padding: 20px; border-bottom: 1px solid var(--border-soft); }
-    .bp-title { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
-    .bp-title::before { content: ''; width: 12px; height: 2px; background: linear-gradient(90deg, var(--accent), var(--accent-deep)); border-radius: 2px; box-shadow: var(--shadow-glow); }
-    
-    .contact-row { display: flex; justify-content: space-between; padding: 8px; border-bottom: 1px solid var(--border-glass); font-family: 'JetBrains Mono', monospace; font-size: 11px; transition: all var(--t-fast); cursor: pointer; }
-    .contact-row:hover { background: var(--bg-panel); transform: translateX(3px); border-left: 2px solid var(--accent); padding-left: 6px; }
-    .c-dist { color: var(--accent-bright); font-weight: 600; }
+  /* ============ PAE HEATMAP ============ */
+  .pae-area{
+    flex:1;display:flex;flex-direction:column;
+    background:var(--bg-void);
+    overflow:hidden;
+  }
+  .pae-toolbar{
+    padding:10px 16px;
+    border-bottom:1px solid var(--border);
+    display:flex;align-items:center;gap:12px;
+    background:var(--bg-panel);
+  }
+  .pae-toolbar .title{font-size:11px;font-weight:600;color:var(--text)}
+  .pae-toolbar .desc{font-size:10px;color:var(--text-mute);font-family:'IBM Plex Mono',monospace}
+  .pae-legend{
+    margin-left:auto;display:flex;align-items:center;gap:8px;
+    font-size:9px;color:var(--text-mute);font-family:'IBM Plex Mono',monospace;
+  }
+  .pae-legend-bar{width:100px;height:6px;border-radius:2px;background:linear-gradient(90deg,#1e3a5f,#3b82f6,#fbbf24,#fb7185)}
 
-    /* PAE Tab */
-    .pae-layout { display: flex; flex-direction: column; align-items: center; padding: 40px; height: 100%; overflow-y: auto; }
-    .pae-container { background: var(--bg-surface); padding: 24px; border-radius: var(--radius-xl); border: 1px solid var(--border); box-shadow: var(--shadow-xl); position: relative; }
-    canvas#paeCanvas { border: 1px solid var(--border-strong); border-radius: var(--radius-md); cursor: crosshair; }
-    .axis-h { position: absolute; top: 0; left: 50%; transform: translateX(-50%); font-size: 11px; color: var(--text-dim); }
-    .axis-v { position: absolute; left: -10px; top: 50%; transform: translateY(-50%) rotate(-90deg); font-size: 11px; color: var(--text-dim); }
+  .pae-canvas-wrap{
+    flex:1;display:grid;place-items:center;
+    padding:24px;overflow:auto;
+    position:relative;
+  }
+  #paeCanvas{
+    background:var(--bg-panel);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    box-shadow:var(--shadow-lg);
+    cursor:crosshair;
+    image-rendering:pixelated;
+  }
+  .pae-tooltip{
+    position:absolute;
+    background:rgba(13,18,28,.95);
+    border:1px solid var(--border-strong);
+    border-radius:var(--radius-sm);padding:6px 9px;
+    font-family:'IBM Plex Mono',monospace;font-size:10px;
+    pointer-events:none;display:none;z-index:5;
+    box-shadow:var(--shadow-lg);
+  }
+  .pae-tooltip .pt-pair{color:var(--accent-bright);font-weight:600}
+  .pae-tooltip .pt-val{color:var(--text-mute);margin-top:2px}
 
-    /* Run Overlay */
-    .run-overlay {
-      position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-      background: var(--bg-glass); backdrop-filter: blur(16px);
-      z-index: 50; display: flex; flex-direction: column; align-items: center; justify-content: center;
-      opacity: 0; pointer-events: none; transition: opacity var(--t-normal);
-    }
-    .run-overlay.active { opacity: 1; pointer-events: all; }
-    
-    .spinner {
-      width: 60px; height: 60px; border-radius: 50%;
-      border: 4px solid var(--border-strong);
-      border-top-color: var(--accent-bright);
-      border-right-color: var(--accent-deep);
-      animation: spin 1s linear infinite;
-      box-shadow: 0 0 32px var(--accent-glow);
-      margin-bottom: 24px;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
-    
-    .run-title { font-size: 20px; font-weight: 800; margin-bottom: 8px; }
-    .run-stage { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--accent); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 24px; }
-    
-    .progress-track { width: 320px; height: 5px; background: var(--border-strong); border-radius: var(--radius-pill); overflow: hidden; margin-bottom: 12px; }
-    .progress-bar { 
-      height: 100%; width: 0%; background: linear-gradient(90deg, var(--accent-deep), var(--accent-bright), var(--accent-deep)); 
-      background-size: 200% 100%; animation: shimmer 2s linear infinite; transition: width 0.3s var(--ease-out);
-    }
-    @keyframes shimmer { 0% { background-position: 100% 0; } 100% { background-position: -100% 0; } }
+  /* ============ RUN PROGRESS OVERLAY ============ */
+  .run-overlay{
+    position:absolute;inset:0;
+    background:rgba(8,11,17,.92);
+    backdrop-filter:blur(4px);
+    z-index:20;
+    display:none;
+    align-items:center;justify-content:center;
+    flex-direction:column;
+  }
+  .run-overlay.active{display:flex}
+  .run-spinner{
+    width:48px;height:48px;border-radius:50%;
+    border:3px solid var(--bg-elev);
+    border-top-color:var(--accent);
+    animation:spin 0.8s linear infinite;
+    margin-bottom:16px;
+  }
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .run-title{font-size:14px;font-weight:600;color:var(--text);font-family:'IBM Plex Serif',serif}
+  .run-stage{font-size:11px;color:var(--accent-bright);font-family:'IBM Plex Mono',monospace;margin-top:4px;text-transform:uppercase;letter-spacing:.06em}
+  .run-progress{
+    width:280px;height:3px;background:var(--bg-elev);border-radius:3px;
+    margin-top:16px;overflow:hidden;
+  }
+  .run-progress > div{
+    height:100%;background:var(--accent);
+    border-radius:3px;transition:width .3s;
+  }
+  .run-log{
+    width:380px;margin-top:12px;
+    font-family:'IBM Plex Mono',monospace;font-size:10px;
+    color:var(--text-mute);text-align:center;line-height:1.7;
+  }
 
-    /* Status Bar */
-    .statusbar {
-      display: flex; align-items: center; padding: 0 20px;
-      background: #000; border-top: 1px solid var(--border);
-      font-family: 'JetBrains Mono', monospace; font-size: 10.5px; color: var(--text-dim);
-    }
-    .sb-item { display: flex; align-items: center; gap: 6px; }
-    .sb-sep { margin: 0 12px; color: var(--border-strong); }
-    .sb-right { margin-left: auto; display: flex; align-items: center; }
-    .sb-link { color: var(--accent); text-decoration: none; }
-    .sb-link:hover { text-decoration: underline; }
+  /* ============ STATUS BAR ============ */
+  .statusbar{
+    display:flex;align-items:center;
+    padding:0 14px;gap:14px;
+    background:var(--bg-panel);
+    border-top:1px solid var(--border);
+    font-family:'IBM Plex Mono',monospace;
+    font-size:10px;color:var(--text-faint);
+    text-transform:uppercase;letter-spacing:.06em;
+  }
+  .statusbar .sep{color:var(--text-dim)}
+  .statusbar .ok{color:var(--emerald)}
+  .statusbar .accent{color:var(--accent-bright)}
+  .statusbar > div:last-child{margin-left:auto}
 
-  </style>
+  /* Responsive */
+  @media (max-width:1100px){
+    .main{grid-template-columns:300px 1fr}
+  }
+  @media (max-width:900px){
+    .main{grid-template-columns:1fr}
+    .sidebar{max-height:40vh}
+  }
+</style>
 </head>
 <body>
-
-<div class="app">
-  <!-- Topbar -->
-  <header class="topbar">
-    <div class="brand">
-      <i data-lucide="layers" class="w-6 h-6 text-blue-500"></i>
-      <div class="brand-text" style="color: white; font-family: 'Outfit', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: -0.02em; display: flex; align-items: center; gap: 4px;">
-        NILUS <span style="color: #3b82f6;">LAB</span>
-      </div>
-      <div class="brand-sub">Biocomputational Cloud</div>
-    </div>
-    <nav class="topnav">
-      <div class="nav-item"><i data-lucide="layout-dashboard" class="w-4 h-4"></i> Dashboard</div>
-      <div class="nav-item active"><i data-lucide="dna" class="w-4 h-4"></i> Structural Biology</div>
-      <div class="nav-item"><i data-lucide="align-left" class="w-4 h-4"></i> Sequence Analysis</div>
-      <div class="nav-item"><i data-lucide="database" class="w-4 h-4"></i> Datasets</div>
-      <div class="nav-item"><i data-lucide="book-open" class="w-4 h-4"></i> Documentation</div>
-    </nav>
-    <div class="top-right">
-      <div class="env-pill"><div class="pulse-dot"></div> Production</div>
-      <button class="icon-btn" title="Notifications"><i data-lucide="bell" class="w-4 h-4"></i></button>
-      <button class="icon-btn" title="Settings"><i data-lucide="settings" class="w-4 h-4"></i></button>
-      
-      <!-- Dynamic Firebase User Chip -->
-      <div class="user-chip" id="userChip" style="display: none;">
-        <div class="avatar" id="userAvatar">U</div>
-        <div class="user-info">
-          <span class="user-name" id="userName">User</span>
-          <span class="user-org">NILUS-MEMBER</span>
-        </div>
-        <button class="icon-btn" title="Sign Out" onclick="firebase.auth().signOut();" style="margin-left: 8px; width: 24px; height: 24px; border: none; background: transparent; padding: 0; display: flex; align-items: center; justify-content: center;"><i data-lucide="log-out" class="w-3.5 h-3.5" style="color: var(--text-muted);"></i></button>
-      </div>
-    </div>
-  </header>
-
-  <!-- Subbar -->
+  <!-- ============ SUB BAR ============ -->
   <div class="subbar">
-    <div class="breadcrumb">
-      <span>Nilus Lab</span> › <span>Structural Biology</span> › <span>Structure Prediction</span>
+    <div class="crumb">
+      <a href="index.html">Nilus Lab</a>
+      <span class="sep">/</span>
+      <a href="#">Structural Biology</a>
+      <span class="sep">/</span>
+      <span class="here">Structure Prediction</span>
     </div>
-    <div class="stat-chips">
-      <div class="stat-chip"><div class="pulse-dot" style="color:var(--ok)"></div> Bridge: online</div>
-      <div class="stat-chip">GPU Pool: 7/12</div>
-      <div class="stat-chip">Session: ses-2f8a1c</div>
-    </div>
+    <div class="subbar-spacer"></div>
+    <div class="stat-chip"><span class="dot"></span><span class="label">Bridge</span><span class="val">online</span></div>
+    <div class="stat-chip"><span class="label">GPU Pool</span><span class="val">7 / 12</span></div>
+
+    <div class="stat-chip"><span class="label">Session</span><span class="val" id="sessionId">ses-2f8a1c</span></div>
   </div>
 
-  <!-- Main Area -->
+  <!-- ============ MAIN ============ -->
   <main class="main">
-    <!-- Sidebar -->
-    <aside class="sidebar">
-      <div class="flow-indicator">
-        <div class="flow-seg active" id="fseg1"></div>
-        <div class="flow-seg" id="fseg2"></div>
-        <div class="flow-seg" id="fseg3"></div>
-        <div class="flow-seg" id="fseg4"></div>
-      </div>
 
-      <!-- Panel 1: Engine -->
-      <section class="panel active" id="pan1" onclick="activatePanel(1)">
-        <div class="panel-header">
-          <div class="step-num">1</div>
+    <!-- ============ SIDEBAR ============ -->
+    <aside class="sidebar">
+
+      <!-- Panel 1: Mode -->
+      <section class="panel">
+        <div class="panel-head">
+          <div class="panel-num">1</div>
           <div class="panel-title">Prediction Engine</div>
+          <div class="panel-tag" id="engineTag">Nilus Atomix</div>
         </div>
-        <div class="mode-switch">
-          <button class="mode-btn active" id="btnNilus" onclick="setMode('nilus', event)">
-            <span class="mode-name">Nilus Atomix</span>
-            <span class="mode-desc">Fast API, single chain</span>
-          </button>
-          <button class="mode-btn" id="btnZenith" onclick="setMode('zenith', event)">
-            <span class="mode-name">ZenithFold API</span>
-            <span class="mode-desc">Multimer & ligands</span>
-          </button>
+        <div class="panel-body">
+          <div class="mode-switch" id="modeSwitch">
+            <button class="mode-btn active" data-mode="esm">
+              <div class="mode-name">Nilus Atomix</div>
+              <div class="mode-desc">Single-chain Â· ~14s</div>
+            </button>
+            <button class="mode-btn" data-mode="boltz">
+              <div class="mode-name">Boltz API</div>
+              <div class="mode-desc">Native Complex Prediction</div>
+            </button>
+          </div>
+          <p style="font-size:10px;color:var(--text-faint);margin-top:8px;line-height:1.5;font-family:'IBM Plex Mono',monospace">
+            <span id="modeDescription">Evolutionary Scale Modeling for fast, single-chain protein folding. Returns atomic coordinates with per-residue pLDDT.</span>
+          </p>
         </div>
-        <p class="text-xs text-slate-400">Select the computational backend for structural inference.</p>
       </section>
 
-      <!-- Panel 2: Credentials -->
-      <section class="panel" id="pan2" onclick="activatePanel(2)">
-        <div class="panel-header">
-          <div class="step-num">2</div>
+      <!-- Panel 2: Authentication -->
+      <section class="panel">
+        <div class="panel-head">
+          <div class="panel-num">2</div>
           <div class="panel-title">Credentials</div>
+          <div class="panel-tag">Zen-Key</div>
         </div>
-        <div class="input-group">
-          <div class="input-label"><span>API Token</span><span id="tokenStatus" style="color:var(--text-dim)">Unset</span></div>
-          <input type="password" id="apiToken" placeholder="sk-...">
+        <div class="panel-body">
+          <div class="field">
+            <div class="field-label">
+              <span>API Key</span>
+              <span class="hint" id="apiStatus">default Â· company</span>
+            </div>
+            <div class="api-row">
+              <span class="api-status" id="apiDot"></span>
+              <input type="password" class="input" id="apiKeyInput" placeholder="Paste Zen-Key (optional)" />
+              <button class="btn-icon" id="apiSaveBtn" title="Persist to local storage">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+              </button>
+            </div>
+            <div class="api-hint">Falls back to secured company credentials when unset. Keys persist only to local storage.</div>
+          </div>
         </div>
-        <p class="text-xs text-slate-500">Keys are stored locally in browser session.</p>
       </section>
 
       <!-- Panel 3: Input -->
-      <section class="panel" id="pan3" onclick="activatePanel(3)">
-        <div class="panel-header">
-          <div class="step-num">3</div>
-          <div class="panel-title">Sequence Input</div>
+      <section class="panel">
+        <div class="panel-head">
+          <div class="panel-num">3</div>
+          <div class="panel-title">Input</div>
+          <div class="panel-tag" id="inputTag">FASTA Â· raw</div>
         </div>
-        <div class="input-group">
-          <div class="input-label"><span>Amino Acids</span><span id="charCount">0 aa</span></div>
-          <textarea id="seqInput" placeholder="MQIFVKTLTGKTITLEVEPSDTIENVKAKIQDKEGIPPDQQRLIFAGKQLEDGRTLSDYNIQKESTLHLVLRLRGG..." spellcheck="false"></textarea>
-        </div>
-        <div style="display:flex; gap:8px;">
-          <button class="btn btn-ghost" style="flex:1" onclick="loadExample()">Load Demo</button>
-          <button class="btn btn-ghost" onclick="document.getElementById('seqInput').value=''; updateCharCount()">Clear</button>
+        <div class="panel-body">
+          <!-- Nilus Atomix input -->
+          <div id="esmInput">
+            <div class="field">
+              <div class="field-label">
+                <span>Protein Sequence</span>
+                <span class="hint" id="seqLenHint">0 aa Â· max 1200</span>
+              </div>
+              <textarea class="textarea" id="seqInput" placeholder="> example ubiquitin&#10;MQIFVKTLTGKTITLEVEPSDTIENVKAKIQDKEGIPPDQQRLIFAGKQLEDGRTLSDYNIQKESTLHLVLRLRGG"></textarea>
+            </div>
+            <div class="field" style="display:flex;gap:5px">
+              <button class="btn btn-ghost" id="loadExampleBtn" style="flex:1">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                Load Example
+              </button>
+              <button class="btn btn-ghost" id="clearBtn" style="flex:1">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                Clear
+              </button>
+            </div>
+          </div>
+
+          <!-- Boltz input -->
+          <div id="boltzInput" style="display:none">
+            <div class="field">
+              <div class="field-label">
+                <span>Chains &amp; Stoichiometry</span>
+                <span class="hint">Protein Â· DNA Â· RNA Â· Ligand</span>
+              </div>
+              <div class="chain-list" id="chainList">
+                <!-- populated by JS -->
+              </div>
+              <button class="btn btn-ghost" id="addChainBtn" style="width:100%">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                Add Chain
+              </button>
+            </div>
+            <div class="field">
+              <div class="field-label"><span>Binding Mode</span></div>
+              <select class="select" id="boltz-binding-type">
+                <option value="none">none</option>
+                <option value="ligand_protein_binding">ligand-protein</option>
+                <option value="protein_protein_binding">protein-protein</option>
+              </select>
+            </div>
+            <div class="field hidden" id="boltz-binder-chain-row">
+              <div class="field-label"><span>Binder Chain ID</span></div>
+              <input type="text" class="input" id="boltz-binder-chain-id" placeholder="e.g. A" maxlength="4" />
+            </div>
+            <div class="field">
+              <div class="field-label"><span>Job Label</span></div>
+              <input type="text" class="input" id="jobLabel" placeholder="e.g. BRaf-MEK complex v3" />
+            </div>
+          </div>
+
+          <div class="field" style="margin-top:12px">
+            <div class="field-label">
+              <span>Advanced</span>
+              <span class="hint">defaults Â· recommended</span>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+              <select class="select" id="recyclingSel">
+                <option>Recycling: 3</option>
+                <option>Recycling: 1</option>
+                <option>Recycling: 5</option>
+              </select>
+              <select class="select" id="msaSel">
+                <option>MSA: auto</option>
+                <option>MSA: off</option>
+                <option>MSA: forced</option>
+              </select>
+            </div>
+          </div>
         </div>
       </section>
 
-      <!-- Panel 4: Validate -->
-      <section class="panel" id="pan4" onclick="activatePanel(4)">
-        <div class="panel-header">
-          <div class="step-num">4</div>
-          <div class="panel-title">Validate & Estimate</div>
+      <!-- Panel 4: Cost / Validate (Boltz only) -->
+      <section class="panel" id="costPanel" style="display:none">
+        <div class="panel-head">
+          <div class="panel-num">4</div>
+          <div class="panel-title">Validate &amp; Estimate</div>
+          <div class="panel-tag">pre-flight</div>
         </div>
-        <div class="cost-grid">
-          <div class="cost-cell"><div class="cost-lbl">Compute</div><div class="cost-val">A100</div></div>
-          <div class="cost-cell"><div class="cost-lbl">Credits</div><div class="cost-val">0.05</div></div>
-          <div class="cost-cell"><div class="cost-lbl">Residues</div><div class="cost-val" id="estRes">--</div></div>
-          <div class="cost-cell"><div class="cost-lbl">Est. Time</div><div class="cost-val">~12s</div></div>
+        <div class="panel-body">
+          <div class="cost-grid">
+            <div class="cost-cell">
+              <div class="k">GPU-min</div>
+              <div class="v" id="costGpu">â€”<span class="unit">min</span></div>
+            </div>
+            <div class="cost-cell">
+              <div class="k">Credits</div>
+              <div class="v" id="costCredits">â€”<span class="unit">cr</span></div>
+            </div>
+            <div class="cost-cell">
+              <div class="k">Residues</div>
+              <div class="v" id="costRes">â€”</div>
+            </div>
+            <div class="cost-cell">
+              <div class="k">ETA</div>
+              <div class="v" id="costEta">â€”<span class="unit">s</span></div>
+            </div>
+          </div>
+          <button class="btn btn-ghost" id="validateBtn" style="width:100%;margin-top:8px">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+            Validate Input
+          </button>
+          <div class="cost-note">Estimates are based on chain length, stoichiometry, and current GPU pool availability. Final cost confirmed at submission.</div>
         </div>
       </section>
 
-      <!-- Panel 5: Execute -->
-      <section class="panel" id="pan5" onclick="activatePanel(5)">
-        <div class="panel-header">
-          <div class="step-num">5</div>
+      <!-- Panel 5: Run -->
+      <section class="panel">
+        <div class="panel-head">
+          <div class="panel-num" id="runNum">4</div>
           <div class="panel-title">Execute</div>
+          <div class="panel-tag" id="runTag">ready</div>
         </div>
-        <button class="btn btn-primary" style="width:100%; margin-bottom:16px;" onclick="runPrediction()">
-          <i data-lucide="play" class="w-4 h-4"></i> Predict Structure
-        </button>
-        <div class="input-label">Diagnostics</div>
-        <div class="diag-log" id="diagLog">
-          <div class="log-line"><span class="log-ts">00:00:00</span><span class="log-info">IDE initialized.</span></div>
+        <div class="panel-body">
+          <button class="btn btn-primary" id="runBtn" style="width:100%">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            Predict Structure
+          </button>
+
+          <div style="margin-top:12px">
+            <div class="field-label" style="margin-bottom:5px">
+              <span>Diagnostics</span>
+              <span class="hint" id="diagCount">0 events</span>
+            </div>
+            <div class="diag" id="diagLog">
+              <div class="diag-line info"><span class="t">00:00:00</span><span class="m">bridge_server.py connected Â· v2.1.4</span></div>
+            </div>
+          </div>
         </div>
       </section>
     </aside>
 
-    <!-- Viewer Area -->
+    <!-- ============ VIEWER AREA ============ -->
     <section class="viewer-area">
+
       <!-- Tabs -->
       <div class="tabs">
-        <div class="tab active" data-tab="3d" onclick="switchTab('3d')">
-          <i data-lucide="box" class="w-4 h-4"></i> 3D Structure
-        </div>
-        <div class="tab" data-tab="seq" onclick="switchTab('seq')">
-          <i data-lucide="align-justify" class="w-4 h-4"></i> Sequence <span class="badge" id="tabSeqBadge">0 aa</span>
-        </div>
-        <div class="tab" data-tab="binding" onclick="switchTab('binding')">
-          <i data-lucide="git-commit" class="w-4 h-4"></i> Binding Analysis <span class="badge">14 ct</span>
-        </div>
-        <div class="tab" data-tab="pae" onclick="switchTab('pae')">
-          <i data-lucide="grid" class="w-4 h-4"></i> PAE Matrix
-        </div>
-        
+        <button class="tab active" data-tab="3d">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+          3D Structure
+        </button>
+        <button class="tab" data-tab="seq">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>
+          Sequence
+          <span class="badge" id="seqBadge">76 aa</span>
+        </button>
+        <button class="tab" data-tab="binding">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v6m0 10v6m11-11h-6m-10 0H1"/></svg>
+          Binding Analysis
+          <span class="badge">contacts</span>
+        </button>
+        <button class="tab" data-tab="pae">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18M15 3v18M3 9h18M3 15h18"/></svg>
+          PAE Matrix
+        </button>
+
         <div class="tab-tools">
-          <button class="icon-btn" title="Download PDB" onclick="downloadPDB()"><i data-lucide="download" class="w-4 h-4"></i></button>
-          <button class="icon-btn" title="Share Snapshot"><i data-lucide="share-2" class="w-4 h-4"></i></button>
+          <button class="btn-icon" title="Download PDB" id="downloadBtn">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          </button>
+          <button class="btn-icon" title="Share Snapshot" id="shareBtn">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+          </button>
         </div>
       </div>
 
-      <!-- Tab 1: 3D Structure -->
-      <div class="tab-content active" id="tab-3d">
-        <div id="molviewer" class="viewer-container"></div>
-        
-        <!-- Overlays -->
-        <div class="glass-panel info-overlay">
-          <div class="info-title">Predicted Model</div>
-          <div class="info-name" id="modelName">Awaiting Input</div>
-          <div class="info-meta">
-            <div><b id="metaRes">--</b> residues</div>
-            <div><b id="metaChain">A</b> chain</div>
-            <div><b id="metaConf">--</b> mean pLDDT</div>
-            <div><b id="metaEngine">Nilus Atomix</b></div>
-          </div>
-        </div>
+      <!-- ============ 3D VIEW ============ -->
+      <div class="tab-panel active" data-panel="3d">
+        <div class="viewer-3d">
+          <div id="molviewer"></div>
 
-        <div class="toolbar-overlay">
-          <div class="glass-panel tool-group">
-            <button class="tool-btn active" onclick="setStyle('cartoon', this)" title="Cartoon"><i data-lucide="activity" class="w-4 h-4"></i></button>
-            <button class="tool-btn" onclick="setStyle('stick', this)" title="Sticks"><i data-lucide="equal" class="w-4 h-4"></i></button>
-            <button class="tool-btn" onclick="setStyle('sphere', this)" title="Spheres"><i data-lucide="circle" class="w-4 h-4"></i></button>
-            <button class="tool-btn" onclick="setStyle('surface', this)" title="Surface"><i data-lucide="cloud" class="w-4 h-4"></i></button>
-          </div>
-          <div class="glass-panel tool-group">
-            <button class="tool-btn active" onclick="setColor('pLDDT', this)" title="Color by pLDDT"><i data-lucide="bar-chart-2" class="w-4 h-4"></i></button>
-            <button class="tool-btn" onclick="setColor('chain', this)" title="Color by Chain"><i data-lucide="link" class="w-4 h-4"></i></button>
-            <button class="tool-btn" onclick="setColor('spectrum', this)" title="Spectrum"><i data-lucide="palette" class="w-4 h-4"></i></button>
-          </div>
-          <div class="glass-panel tool-group">
-            <button class="tool-btn" onclick="viewer.zoomTo(); viewer.zoom(1.2); viewer.render();" title="Reset View"><i data-lucide="maximize" class="w-4 h-4"></i></button>
-            <button class="tool-btn" id="spinBtn" onclick="toggleSpin(this)" title="Toggle Spin"><i data-lucide="rotate-cw" class="w-4 h-4"></i></button>
-          </div>
-        </div>
-
-        <div class="glass-panel legend-overlay">
-          <div class="legend-title">Confidence · pLDDT</div>
-          <div class="legend-bar"></div>
-          <div class="legend-labels"><span>0</span><span>50</span><span>70</span><span>90</span><span>100</span></div>
-        </div>
-        
-        <div class="glass-panel res-tooltip" id="resTooltip">
-          <div class="rt-res">Residue</div>
-          <div class="rt-plddt">pLDDT: —</div>
-        </div>
-      </div>
-
-      <!-- Tab 2: Sequence -->
-      <div class="tab-content" id="tab-seq">
-        <div class="seq-wrap">
-          <div class="chain-block">
-            <div class="chain-header">
-              <div class="chain-id">Chain A</div>
-              <div class="text-xs text-slate-400"><b id="seqTabRes" class="text-slate-200">--</b> residues</div>
-              <div class="text-xs text-slate-400">Mean pLDDT: <b id="seqTabConf" class="text-accent-bright">--</b></div>
-            </div>
-            <div class="seq-ruler" id="seqRuler"></div>
-            <div class="seq-chars" id="seqChars"></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Tab 3: Binding -->
-      <div class="tab-content" id="tab-binding">
-        <div class="binding-layout">
-          <div class="binding-3d">
-            <div id="bindviewer" class="viewer-container"></div>
-          </div>
-          <div class="binding-panel">
-            <div class="bp-section">
-              <div class="bp-title">Ligand Statistics</div>
-              <div class="cost-grid">
-                <div class="cost-cell"><div class="cost-lbl">Atoms</div><div class="cost-val">29</div></div>
-                <div class="cost-cell"><div class="cost-lbl">Mol. Wt</div><div class="cost-val">427.2</div></div>
-                <div class="cost-cell"><div class="cost-lbl">H-Bonds</div><div class="cost-val">6</div></div>
-                <div class="cost-cell"><div class="cost-lbl">Hydrophobic</div><div class="cost-val">8</div></div>
+          <div class="viewer-overlay">
+            <div class="info-card">
+              <div class="title">Predicted Model</div>
+              <div class="name" id="modelName">Ubiquitin Â· B domain</div>
+              <div class="meta">
+                <div><b id="metaRes">76</b> residues</div>
+                <div><b id="metaChain">A</b> chain</div>
+                <div><b id="metaConf">87.4</b> mean pLDDT</div>
+                <div><b id="metaEngine">ZenithFold</b></div>
               </div>
             </div>
-            <div class="bp-section" style="flex:1; overflow-y:auto; padding:0;">
-              <div class="bp-title" style="padding: 20px 20px 0;">Contact Map (< 5.0 Å)</div>
-              <div id="contactList" style="padding: 10px 20px 20px;"></div>
+          </div>
+
+          <div class="viewer-toolbar">
+            <div class="tool-group">
+              <button class="tool-btn active" data-style="cartoon" title="Cartoon">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12c4-8 14-8 18 0M3 12c4 8 14 8 18 0"/></svg>
+              </button>
+              <button class="tool-btn" data-style="stick" title="Sticks">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="6" y1="4" x2="6" y2="20"/><line x1="18" y1="4" x2="18" y2="20"/><line x1="6" y1="12" x2="18" y2="12"/></svg>
+              </button>
+              <button class="tool-btn" data-style="sphere" title="Spheres">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="8"/><circle cx="9" cy="10" r="1.5"/></svg>
+              </button>
+              <button class="tool-btn" data-style="surface" title="Surface">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z"/></svg>
+              </button>
+              <div class="tool-divider"></div>
+              <button class="tool-btn active" data-color="pLDDT" title="Color by pLDDT">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 3v18M3 12h18"/></svg>
+              </button>
+              <button class="tool-btn" data-color="chain" title="Color by chain">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="8" height="8"/><rect x="13" y="13" width="8" height="8"/></svg>
+              </button>
+              <button class="tool-btn" data-color="spectrum" title="Spectrum">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M5 9l-2 3 2 3M19 9l2 3-2 3"/></svg>
+              </button>
+              <div class="tool-divider"></div>
+              <button class="tool-btn" id="zoomFitBtn" title="Reset View">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 14 10 14 10 20"/><polyline points="20 10 14 10 14 4"/><line x1="14" y1="10" x2="21" y2="3"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+              </button>
+              <button class="tool-btn" id="spinBtn" title="Toggle Spin">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1.06 6.7 2.82L21 8"/><polyline points="21 3 21 8 16 8"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="legend">
+            <div class="legend-title">Confidence Â· pLDDT</div>
+            <div class="legend-bar"></div>
+            <div class="legend-labels">
+              <span>0</span><span>50</span><span>70</span><span>90</span><span>100</span>
+            </div>
+          </div>
+
+          <div class="res-tooltip" id="resTooltip">
+            <div class="rt-res">Residue</div>
+            <div class="rt-plddt">pLDDT: â€”</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============ SEQUENCE VIEW ============ -->
+      <div class="tab-panel" data-panel="seq">
+        <div class="seq-viewer" id="seqViewer">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <!-- ============ BINDING ANALYSIS ============ -->
+      <div class="tab-panel" data-panel="binding">
+        <div class="binding-area">
+          <div class="binding-3d">
+            <div id="bindingviewer"></div>
+            <div class="viewer-overlay">
+              <div class="info-card">
+                <div class="title">Binding Pocket</div>
+                <div class="name">Ligand Â· ANP</div>
+                <div class="meta">
+                  <div><b>14</b> contacts</div>
+                  <div><b>3.4</b> Ã… mean</div>
+                  <div><b>5.0</b> Ã… cutoff</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="binding-panel">
+            <div class="binding-section">
+              <h4>Ligand Statistics</h4>
+              <div class="ligand-stats">
+                <div class="ligand-stat"><div class="k">Atoms</div><div class="v">29</div></div>
+                <div class="ligand-stat"><div class="k">Mol. Wt</div><div class="v">427.2</div></div>
+                <div class="ligand-stat"><div class="k">H-bonds</div><div class="v">6</div></div>
+                <div class="ligand-stat"><div class="k">Hydrophobic</div><div class="v">8</div></div>
+              </div>
+            </div>
+            <div class="binding-section">
+              <h4>Contact Map ( &lt; 5.0 Ã… )</h4>
+              <div class="contact-list" id="contactList">
+                <!-- populated by JS -->
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Tab 4: PAE -->
-      <div class="tab-content" id="tab-pae">
-        <div class="pae-layout">
-          <div style="text-align:center; margin-bottom: 24px;">
-            <h3 class="text-lg font-bold mb-2">Predicted Aligned Error</h3>
-            <p class="text-sm text-slate-400 mb-6">Relative domain position confidence · lower is better</p>
-            <div class="flex items-center justify-center gap-4 text-xs font-mono">
-              <span>0 Å</span>
-              <div style="width:160px; height:8px; border-radius:4px; background:linear-gradient(to right, #1b3e80, #408cff, #f5b042, #f26b6b);"></div>
-              <span>30 Å</span>
+      <!-- ============ PAE HEATMAP ============ -->
+      <div class="tab-panel" data-panel="pae">
+        <div class="pae-area">
+          <div class="pae-toolbar">
+            <div>
+              <div class="title">Predicted Aligned Error</div>
+              <div class="desc">Relative domain position confidence Â· lower is better</div>
+            </div>
+            <div class="pae-legend">
+              <span>0 Ã…</span>
+              <div class="pae-legend-bar"></div>
+              <span>30 Ã…</span>
             </div>
           </div>
-          <div class="pae-container">
-            <div class="axis-h">Scored residue i</div>
-            <div class="axis-v">Scored residue j</div>
-            <canvas id="paeCanvas" width="480" height="480"></canvas>
+          <div class="pae-canvas-wrap">
+            <canvas id="paeCanvas" width="540" height="540"></canvas>
+            <div class="pae-tooltip" id="paeTooltip">
+              <div class="pt-pair">i â†’ j</div>
+              <div class="pt-val">PAE: â€” Ã…</div>
+            </div>
           </div>
         </div>
       </div>
 
-      <!-- Run Overlay -->
+      <!-- ============ RUN OVERLAY ============ -->
       <div class="run-overlay" id="runOverlay">
-        <div class="spinner"></div>
-        <div class="run-title">Folding Sequence</div>
-        <div class="run-stage" id="runStage">Initializing...</div>
-        <div class="progress-track">
-          <div class="progress-bar" id="runProgress"></div>
-        </div>
-        <div class="font-mono text-xs text-slate-400 mt-4" id="runLogMsg">Connecting to compute cluster</div>
+        <div class="run-spinner"></div>
+        <div class="run-title" id="runTitle">Folding sequence</div>
+        <div class="run-stage" id="runStage">Initializing ZenithFold</div>
+        <div class="run-progress"><div id="runProgressBar" style="width:0%"></div></div>
+        <div class="run-log" id="runLog">Preparing MSA embeddings</div>
       </div>
     </section>
   </main>
 
-  <!-- Status Bar -->
+  <!-- ============ STATUS BAR ============ -->
   <footer class="statusbar">
-    <div class="sb-item"><div class="pulse-dot" style="color:var(--ok)"></div> bridge_server v2.1.4</div>
-    <span class="sb-sep">|</span>
-    <div class="sb-item">model: <span class="text-accent" id="sbModel">nilus-atomix-v1</span></div>
-    <span class="sb-sep">|</span>
-    <div class="sb-item">latency: <span id="sbLatency">42ms</span></div>
-    <span class="sb-sep">|</span>
-    <div class="sb-item">tokens: <span id="sbTokens">0</span></div>
-    <span class="sb-sep">|</span>
-    <div class="sb-item">cache: <span style="color:var(--ok)">warm</span></div>
-    
-    <div class="sb-right">
-      <div>CSP: strict · connect-src 6 hosts</div>
-      <span class="sb-sep">|</span>
-      <div>Outputs subject to <a href="legal.html#zenithfold-terms" class="sb-link" target="_blank">ZenithFold Terms</a></div>
-    </div>
+    <div><span class="ok">â—</span> bridge_server <span class="accent">v2.1.4</span></div>
+    <div class="sep">|</div>
+    <div>model: <span class="accent" id="sbModel">nilus-atomix-v1</span></div>
+    <div class="sep">|</div>
+    <div>latency: <span id="sbLatency">42ms</span></div>
+    <div class="sep">|</div>
+    <div>tokens: <span id="sbTokens">0</span></div>
+    <div class="sep">|</div>
+    <div>cache: <span class="ok">warm</span></div>
+    <div>CSP: strict Â· connect-src 6 hosts <span class="sep">|</span> <span style="text-transform:none;letter-spacing:0;">Outputs subject to <a href="legal.html#boltz-terms" target="_blank" style="color:var(--accent);text-decoration:underline;">ZenithFold Model Output Terms</a></span></div>
   </footer>
 </div>
 
+<script src="js/structure_controller.js" defer></script>
+
 <script>
-  lucide.createIcons();
-
   // --- FIREBASE AUTHENTICATION AND REDIRECT ---
   firebase.auth().onAuthStateChanged((user) => {
     if (user) {
       // User is logged in, show user chip with their credentials
-      const userChip = $('userChip');
-      if (userChip) userChip.style.display = 'flex';
-      
-      const displayName = user.displayName || user.email.split('@')[0].toUpperCase();
-      const userNameEl = $('userName');
-      const userAvatarEl = $('userAvatar');
-      
-      if (userNameEl) userNameEl.innerText = displayName;
-      if (userAvatarEl) userAvatarEl.innerText = displayName.substring(0, 2).toUpperCase();
-      
-      logDiag(`Session active: Authenticated as ${user.email}`, 'ok');
-      lucide.createIcons();
-    } else {
-      // User is not logged in, redirect them to sign in
-      logDiag("Authentication required. Redirecting to login...", "warn");
-      setTimeout(() => {
-        window.location.href = "login.html?redirect=structure.html";
-      }, 1200);
-    }
-  });
-
-  // --- STATE ---
-  const state = {
-    mode: 'nilus',
-    seq: '',
-    pdbData: null,
-    plddtArray: [],
-    viewer: null,
-    bindViewer: null,
-    spinning: false,
-    currStyle: 'cartoon',
-    currColor: 'spectrum'
-  };
-
-  // --- UTILS ---
-  const $ = id => document.getElementById(id);
-  const $$ = sel => document.querySelectorAll(sel);
-  
-  const nowFmt = () => {
-    const d = new Date();
-    return d.toTimeString().split(' ')[0] + '.' + String(d.getMilliseconds()).padStart(3,'0').slice(0,2);
-  };
-  
-  const logDiag = (msg, level='info') => {
-    const log = $('diagLog');
-    const div = document.createElement('div');
-    div.className = 'log-line';
-    div.innerHTML = `<span class="log-ts">${nowFmt()}</span><span class="log-${level}"> ${msg}</span>`;
-    log.appendChild(div);
-    log.scrollTop = log.scrollHeight;
-  };
-
-  // --- UI INTERACTIONS ---
-  function activatePanel(n) {
-    for(let i=1; i<=5; i++) $('pan'+i).classList.remove('active');
-    $('pan'+n).classList.add('active');
-    
-    // Update flow indicator
-    if (state.mode === 'nilus') {
-      // Map 1, 3, 5 panel clicks to flow segments
-      const seg1 = $('fseg1');
-      const seg2 = $('fseg2');
-      
-      seg1.className = 'flow-seg';
-      seg2.className = 'flow-seg';
-      
-      if (n === 1) {
-        seg1.classList.add('active');
-      } else if (n === 3) {
-        seg1.classList.add('done');
-        seg2.classList.add('active');
-      } else if (n === 5) {
-        seg1.classList.add('done');
-        seg2.classList.add('done');
-      }
-    } else {
-      for(let i=1; i<=4; i++) {
-        const seg = $('fseg'+i);
-        seg.className = 'flow-seg';
-        if(i < n && n <= 4) seg.classList.add('done');
-        if(i === n && n <= 4) seg.classList.add('active');
-        if(n === 5) seg.classList.add('done');
-      }
-    }
-  }
-
-  function setMode(mode, e) {
-    state.mode = mode;
-    $$('.mode-btn').forEach(b => b.classList.remove('active'));
-    e.currentTarget.classList.add('active');
-    
-    $('metaEngine').innerText = mode === 'nilus' ? 'Nilus Atomix' : 'ZenithFold';
-    $('sbModel').innerText = mode === 'nilus' ? 'nilus-atomix-v1' : 'zenithfold-2.1';
-    
-    // Hide panels not relevant to Nilus Atomix mode to keep interface clean & organized
-    if (mode === 'nilus') {
-      $('pan2').style.display = 'none';
-      $('pan4').style.display = 'none';
-      document.querySelector('#pan1 .step-num').innerText = '1';
-      document.querySelector('#pan3 .step-num').innerText = '2';
-      document.querySelector('#pan5 .step-num').innerText = '3';
-      
-      // Update flow segments to only show 3 steps
-      $('fseg3').style.display = 'none';
-      $('fseg4').style.display = 'none';
-    } else {
-      $('pan2').style.display = 'block';
-      $('pan4').style.display = 'block';
-      document.querySelector('#pan1 .step-num').innerText = '1';
-      document.querySelector('#pan2 .step-num').innerText = '2';
-      document.querySelector('#pan3 .step-num').innerText = '3';
-      document.querySelector('#pan4 .step-num').innerText = '4';
-      document.querySelector('#pan5 .step-num').innerText = '5';
-      
-      // Show all 4 flow segments
-      $('fseg3').style.display = 'block';
-      $('fseg4').style.display = 'block';
-    }
-    
-    logDiag(`Engine switched to ${mode.toUpperCase()}`);
-  }
-
-  $('seqInput').addEventListener('input', updateCharCount);
-  function updateCharCount() {
-    const v = $('seqInput').value.trim();
-    $('charCount').innerText = `${v.length} aa`;
-    $('estRes').innerText = v.length || '--';
-  }
-
-  function loadExample() {
-    const ubq = "MQIFVKTLTGKTITLEVEPSDTIENVKAKIQDKEGIPPDQQRLIFAGKQLEDGRTLSDYNIQKESTLHLVLRLRGG";
-    $('seqInput').value = ubq;
-    updateCharCount();
-    logDiag("Loaded Ubiquitin reference sequence.");
-    activatePanel(5);
-  }
-
-  function switchTab(tabId) {
-    $$('.tab').forEach(t => t.classList.remove('active'));
-    $$('.tab-content').forEach(c => c.classList.remove('active'));
-    
-    document.querySelector(`.tab[data-tab="${tabId}"]`).classList.add('active');
-    $('tab-'+tabId).classList.add('active');
-    
-    if(tabId === 'pae') setTimeout(renderPAE, 100);
-  }
-
-  // --- 3DMOL INTEGRATION & PDB GEN ---
-  function buildSyntheticPDB(seq) {
-    const resNames = {A:'ALA',R:'ARG',N:'ASN',D:'ASP',C:'CYS',Q:'GLN',E:'GLU',G:'GLY',H:'HIS',I:'ILE',L:'LEU',K:'LYS',M:'MET',F:'PHE',P:'PRO',S:'SER',T:'THR',W:'TRP',Y:'TYR',V:'VAL'};
-    let pdb = [];
-    let atomIdx = 1;
-    state.plddtArray = [];
-    
-    // Synthetic coordinates: create a hairpin fold
-    let currentPlddt = 85;
-    
-    for (let i = 0; i < seq.length; i++) {
-      const r = seq[i].toUpperCase();
-      const resName = resNames[r] || 'ALA';
-      const resSeq = i + 1;
-      
-      // Random walk pLDDT
-      currentPlddt += (Math.random() - 0.5) * 10;
-      if (i === Math.floor(seq.length * 0.4)) currentPlddt = 45; // loop dip
-      if (currentPlddt > 98) currentPlddt = 98;
-      if (currentPlddt < 30) currentPlddt = 30;
-      state.plddtArray.push(currentPlddt);
-      
-      const bfactor = currentPlddt.toFixed(2).padStart(6, ' ');
-      
-      // Geometry (Helix Hairpin)
-      let z = i * 1.5;
-      let angle = i * 100 * (Math.PI / 180);
-      let rRad = 2.3;
-      let x = rRad * Math.cos(angle);
-      let y = rRad * Math.sin(angle);
-      
-      // Fold back halfway
-      if (i > seq.length / 2) {
-        z = (seq.length - i) * 1.5;
-        x += 8.0; // Offset second helix
-      }
-      
-      const addAtom = (name, dx, dy, dz) => {
-        const ax = (x + dx).toFixed(3).padStart(8, ' ');
-        const ay = (y + dy).toFixed(3).padStart(8, ' ');
-        const az = (z + dz).toFixed(3).padStart(8, ' ');
-        const aname = name.padEnd(4, ' ');
-        pdb.push(`ATOM  ${String(atomIdx++).padStart(5, ' ')} ${aname} ${resName} A${String(resSeq).padStart(4, ' ')}    ${ax}${ay}${az}  1.00${bfactor}           ${name[0]}`);
-      };
-      
-      addAtom('N', -0.5, -0.5, 0);
-      addAtom('CA', 0, 0, 0);
-      addAtom('C', 0.5, 0.5, 0);
-      addAtom('O', 1.0, 1.0, 0.5);
-    }
-    
-    return pdb.join('\n');
-  }
-
-  function initViewer() {
-    state.viewer = $3Dmol.createViewer('molviewer', { backgroundColor: '#000000', alpha: 0 });
-    state.bindViewer = $3Dmol.createViewer('bindviewer', { backgroundColor: '#000000', alpha: 0 });
-  }
-
-  function updateViewers() {
-    if (!state.viewer) initViewer();
-    
-    const v = state.viewer;
-    v.clear();
-    v.addModel(state.pdbData, "pdb");
-    applyStyle();
-    v.zoomTo();
-    v.zoom(1.2);
-    v.render();
-    
-    // Binding Viewer
-    const bv = state.bindViewer;
-    bv.clear();
-    bv.addModel(state.pdbData, "pdb");
-    bv.setStyle({}, {cartoon: {color: 'spectrum', thickness: 0.8}, stick: {radius: 0.1, color: 'white'}});
-    // Add fake ligand spheres
-    bv.addSphere({center:{x:4, y:0, z:state.seq.length*0.75}, radius: 2.5, color: '#F59E0B'});
-    bv.zoomTo();
-    bv.render();
-
-    // Setup hover tooltip
-    v.setHoverable({}, true, function(atom, viewer, event, container) {
-      if(!atom.resi) return;
-      const tt = $('resTooltip');
-      tt.style.opacity = 1;
-      tt.style.left = event.clientX + 'px';
-      tt.style.top = event.clientY + 'px';
-      tt.querySelector('.rt-res').innerText = `${atom.resn} ${atom.resi}`;
-      tt.querySelector('.rt-plddt').innerText = `pLDDT: ${parseFloat(atom.b).toFixed(1)}`;
-    }, function() {
-      $('resTooltip').style.opacity = 0;
-    });
-
-    // Handle resize quirks
-    setTimeout(() => { v.resize(); v.render(); bv.resize(); bv.render(); }, 150);
-  }
-
-  function applyStyle() {
-    const v = state.viewer;
-    v.setStyle({}, {}); // clear
-    let color = state.currColor === 'spectrum' ? 'spectrum' : (state.currColor === 'chain' ? 'chain' : 'spectrum'); // Fallback to spectrum
-    
-    if(state.currStyle === 'cartoon') v.setStyle({}, {cartoon: {color: color, thickness: 1.4}, stick: {radius: 0.1, color: '#334155'}});
-    if(state.currStyle === 'stick') v.setStyle({}, {stick: {radius: 0.2, color: color}});
-    if(state.currStyle === 'sphere') v.setStyle({}, {sphere: {scale: 0.3, color: color}});
-    if(state.currStyle === 'surface') v.addSurface($3Dmol.SurfaceType.VDW, {opacity: 0.85, color: color});
-    v.render();
-  }
-
-  function setStyle(style, btn) {
-    state.currStyle = style;
-    btn.parentElement.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    applyStyle();
-  }
-
-  function setColor(color, btn) {
-    state.currColor = color;
-    btn.parentElement.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    applyStyle();
-  }
-
-  function toggleSpin(btn) {
-    state.spinning = !state.spinning;
-    btn.classList.toggle('active', state.spinning);
-    if (state.viewer) state.viewer.spin("y", state.spinning ? 0.5 : 0);
-  }
-
-  function downloadPDB() {
-    if(!state.pdbData) return alert("No structure available.");
-    const blob = new Blob([state.pdbData], {type: 'text/plain'});
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = `predicted_${state.mode}.pdb`;
-    a.click();
-  }
-
-  // --- SECONDARY TABS RENDERING ---
-  function renderSequence() {
-    let rulerHTML = '';
-    for(let i=10; i<=state.seq.length; i+=10) rulerHTML += `<div class="seq-ruler-tick">${i}</div>`;
-    $('seqRuler').innerHTML = rulerHTML;
-
-    let charsHTML = '';
-    let sum = 0;
-    for(let i=0; i<state.seq.length; i++) {
-      const p = state.plddtArray[i];
-      sum += p;
-      let cls = p>90 ? 'c-vhigh' : (p>70 ? 'c-high' : (p>50 ? 'c-low' : 'c-vlow'));
-      charsHTML += `<span class="${cls}" onclick="highlightRes(${i+1})">${state.seq[i]}</span>`;
-    }
-    $('seqChars').innerHTML = charsHTML;
-    
-    const mean = (sum / state.seq.length).toFixed(1);
-    $('seqTabRes').innerText = state.seq.length;
-    $('seqTabConf').innerText = mean;
-    $('tabSeqBadge').innerText = `${state.seq.length} aa`;
-  }
-
-  function highlightRes(resi) {
-    if(!state.viewer) return;
-    switchTab('3d');
-    applyStyle();
-    state.viewer.setStyle({resi: resi}, {cartoon: {color: 'magenta', thickness: 2.0}, sphere: {scale: 0.5, color: 'magenta'}});
-    state.viewer.zoomTo({resi: resi});
-    state.viewer.render();
-  }
-
-  function renderBinding() {
-    const list = $('contactList');
-    list.innerHTML = '';
-    const resNames = ['ALA','GLU','LYS','TYR','TRP','ASP','SER'];
-    for(let i=1; i<=14; i++) {
-      const resi = Math.floor(Math.random() * state.seq.length) + 1;
-      const resn = resNames[Math.floor(Math.random()*resNames.length)];
-      const dist = (2.1 + Math.random()*2.8).toFixed(2);
-      list.innerHTML += `<div class="contact-row"><span>${resn} ${resi} → ANP O${i%3+1}</span><span class="c-dist">${dist} Å</span></div>`;
-    }
-  }
-
-  function renderPAE() {
-    const canvas = $('paeCanvas');
-    if(!canvas) return;
-    const ctx = canvas.getContext('2d');
-    const n = state.seq.length;
-    if(n === 0) return;
-    
-    const size = 480;
-    const cell = size / n;
-    
-    // Color stops: blue(low) -> orange/red(high)
-    const getColor = (v) => {
-      if(v < 0.2) return '#1b3e80';
-      if(v < 0.5) return '#408cff';
-      if(v < 0.8) return '#f5b042';
-      return '#f26b6b';
-    };
-
-    ctx.clearRect(0,0,size,size);
-    for(let i=0; i<n; i++) {
-      for(let j=0; j<n; j++) {
-        // lower error near diagonal and within same domain
-        let dist = Math.abs(i-j);
-        let err = dist / n + (Math.random()*0.2);
-        if(i < n/2 && j < n/2) err *= 0.5; // Domain 1
-        if(i >= n/2 && j >= n/2) err *= 0.5; // Domain 2
-        
-        ctx.fillStyle = getColor(Math.min(err, 1.0));
-        ctx.fillRect(j*cell, i*cell, Math.ceil(cell), Math.ceil(cell));
-      }
-    }
-  }
-
-  // --- RUN PIPELINE ---
-  async function runPrediction() {
-    const seq = $('seqInput').value.trim();
-    if(!seq) return alert("Please enter a sequence.");
-    state.seq = seq;
-    
-    const overlay = $('runOverlay');
-    const prog = $('runProgress');
-    const stage = $('runStage');
-    const msg = $('runLogMsg');
-    
-    overlay.classList.add('active');
-    logDiag(`Starting prediction workflow via ${$('metaEngine').innerText}`);
-    
-    const stages = [
-      {p: 15, s: "Validating Input", m: "Checking sequence constraints..."},
-      {p: 30, s: "Initializing GPU", m: "Allocating tensor cores..."},
-      {p: 60, s: "MSA & Embeddings", m: "Computing evolutionary scale matrices..."},
-      {p: 85, s: "Structural Folding", m: "Executing equivariant transformer passes..."},
-      {p: 95, s: "Confidence Scoring", m: "Generating pLDDT and PAE arrays..."},
-      {p: 100, s: "Finalizing", m: "Building atomic coordinate PDB..."}
-    ];
-    
-    for(let i=0; i<stages.length; i++) {
-      stage.innerText = stages[i].s;
-      msg.innerText = stages[i].m;
-      prog.style.width = stages[i].p + '%';
-      logDiag(stages[i].m);
-      await new Promise(r => setTimeout(r, 60 + Math.random()*60));
-    }
-    
-    // Generate data
-    state.pdbData = buildSyntheticPDB(state.seq);
-    
-    // Update UI headers
-    const meanConf = (state.plddtArray.reduce((a,b)=>a+b,0)/state.seq.length).toFixed(1);
-    $('modelName').innerText = `Synthetic Construct · ${state.seq.length}aa`;
-    $('metaRes').innerText = state.seq.length;
-    $('metaConf').innerText = meanConf;
-    
-    // Render
-    updateViewers();
-    renderSequence();
-    renderBinding();
-    
-    setTimeout(() => {
-      overlay.classList.remove('active');
-      switchTab('3d');
-      logDiag(`SUCCESS: Structure predicted. Mean pLDDT: ${meanConf}`, 'ok');
-    }, 500);
-  }
-
-  // Auto-init demo if empty
-  window.addEventListener('DOMContentLoaded', () => {
-    // Set initial mode to trigger clean display
-    setMode('nilus', { currentTarget: $('btnNilus') });
-    
-    if(!$('seqInput').value) loadExample();
-    
-    // Latency ticker
-    setInterval(() => {
-      $('sbLatency').innerText = Math.floor(20 + Math.random()*40) + 'ms';
-      $('sbTokens').innerText = Math.floor(Math.random()*10000);
-    }, 3500);
-  });
-
-  // --- FIREBASE AUTHENTICATION AND REDIRECT ---
-  firebase.auth().onAuthStateChanged((user) => {
-    if (user) {
-      // User is logged in, show user chip with their credentials
-      const userChip = $('userChip');
+      const userChip = document.getElementById('userChip');
       if (userChip) userChip.style.display = 'flex';
       
       const displayName = user.displayName || (user.email ? user.email.split('@')[0].toUpperCase() : 'MEMBER');
-      const userNameEl = $('userName');
-      const userAvatarEl = $('userAvatar');
+      const userNameEl = document.getElementById('userName');
+      const userAvatarEl = document.getElementById('userAvatar');
       
       if (userNameEl) userNameEl.innerText = displayName;
       if (userAvatarEl) userAvatarEl.innerText = displayName.substring(0, 2).toUpperCase();
       
-      logDiag(`Session active: Authenticated as ${user.email || 'Anonymous'}`, 'ok');
       lucide.createIcons();
     } else {
       // User is not logged in, redirect them to sign in
-      logDiag("Authentication required. Redirecting to login...", "warn");
       setTimeout(() => {
         window.location.href = "login.html?redirect=structure.html";
-      }, 1200);
+      }, 1000);
     }
   });
 
+  // Initialize Lucide icons on DOM Load
+  document.addEventListener('DOMContentLoaded', () => {
+    lucide.createIcons();
+  });
 </script>
+
 </body>
 </html>
