@@ -90,16 +90,30 @@ function initApiKey() {
 
 function initSequenceInput() {
   const ta = $('#seqInput');
+  const ESM_MAX = 400; // ESMFold practical limit per residue memory
+  const HARD_MAX = 2000;
+
   ta.addEventListener('input', () => {
     const v = ta.value.replace(/^>.*\n/, '').replace(/\s/g, '').toUpperCase();
     const len = v.length;
-    $('#seqLenHint').textContent = `${len} aa · max 1200`;
     STATE.sequence = v;
-    if (len > 1200) {
-      $('#seqLenHint').style.color = 'var(--coral)';
-      log(`Sequence length ${len} exceeds Nilus Atomix limit (1200)`, 'warn');
+
+    if (STATE.mode === 'esm') {
+      if (len > HARD_MAX) {
+        $('#seqLenHint').textContent = `${len} aa — exceeds max`;
+        $('#seqLenHint').style.color = 'var(--coral)';
+        log(`Sequence (${len} aa) exceeds hard limit. Please trim or use ZenithFold mode.`, 'err');
+      } else if (len > ESM_MAX) {
+        $('#seqLenHint').textContent = `${len} aa — use ZenithFold for best results`;
+        $('#seqLenHint').style.color = 'var(--amber)';
+        log(`Long sequence detected (${len} aa). Nilus Atomix optimized for <400 aa — switching to ZenithFold API recommended for accuracy and speed.`, 'warn');
+      } else {
+        $('#seqLenHint').textContent = `${len} aa · max ${ESM_MAX} aa`;
+        $('#seqLenHint').style.color = '';
+      }
     } else {
-      $('#seqLenHint').style.color = '';
+      $('#seqLenHint').textContent = `${len} aa · max ${HARD_MAX} aa`;
+      $('#seqLenHint').style.color = len > HARD_MAX ? 'var(--coral)' : '';
     }
   });
   $('#loadExampleBtn').addEventListener('click', () => {
@@ -572,6 +586,21 @@ async function runPrediction() {
     if (!seq || seq.length < 10) {
       log('Sequence too short or empty — minimum 10 residues', 'err');
       btn.disabled = false;
+      return;
+    }
+    // Auto-route long sequences to Boltz (ZenithFold) for multi-chain/long support
+    if (seq.length > 400) {
+      log(`Sequence length ${seq.length} aa exceeds Nilus Atomix optimum. Auto-routing to ZenithFold API...`, 'warn');
+      // Pre-populate chain A with the sequence and switch mode
+      STATE.chains = [{ id: 'A', type: 'protein', sequence: seq, copies: 1 }];
+      STATE.mode = 'boltz';
+      document.querySelectorAll('.mode-btn').forEach(b => b.classList.toggle('active', b.dataset.mode === 'boltz'));
+      $('#engineTag').textContent = 'ZenithFold';
+      $('#modeDescription').textContent = 'Routing long sequence to ZenithFold multimer engine for full-length prediction.';
+      renderChainList();
+      // Fall through to boltz path below
+      btn.disabled = false;
+      setTimeout(() => runPrediction(), 200);
       return;
     }
 
