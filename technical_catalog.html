@@ -621,9 +621,9 @@
 
                         <div class="border-l-2 border-blue-500/30 pl-4 py-2">
 
-                            <div class="text-blue-400 font-bold mb-1">AlphaFold 3 Multimer Analysis</div>
+                            <div class="text-blue-400 font-bold mb-1">Boltz Multimer Analysis</div>
 
-                            <p class="text-slate-400 leading-relaxed">All transcription factor interactions discovered by Zenith are validated via AlphaFold 3 atomic-level 3D structure prediction. This ensures that predicted protein&mdash;protein and protein&mdash;DNA docking events are structurally feasible at the molecular level.</p>
+                            <p class="text-slate-400 leading-relaxed">All transcription factor interactions discovered by Zenith are validated via Boltz API atomic-level 3D structure prediction. This ensures that predicted protein&mdash;protein and protein&mdash;DNA docking events are structurally feasible at the molecular level.</p>
 
                             <div class="text-[10px] text-slate-500 mt-2 italic">Abramson et al., Nature (2024). DOI: 10.1038/s41586-024-07487-w</div>
 
@@ -6029,7 +6029,7 @@
 
 
 
-                                    "For years, simulating the conversion of adult epicardial cells to a myocardial fate was a 'Big Fail' (PAE < 0.25). Today, we reached the 0.70 Blue Zone."
+                                    "For years, simulating the conversion of adult epicardial cells to a myocardial fate was a 'Big Fail' Today, we reached the high-confidence zone."
 
 
 
@@ -6081,15 +6081,7 @@
 
 
 
-                            <div class="rounded-3xl overflow-hidden border border-white/10 shadow-3xl">
-
-
-
-                                <img src="./assets/new test 1.jpg" alt="Z-Move Validation" class="w-full h-auto">
-
-
-
-                            </div>
+                            
 
 
 
@@ -6161,15 +6153,7 @@
 
 
 
-                            <div class="order-2 lg:order-1 rounded-3xl overflow-hidden border border-white/10 shadow-3xl">
-
-
-
-                                <img src="./assets/new test 2.png" alt="Age Reset Validation" class="w-full h-auto">
-
-
-
-                            </div>
+                            
 
 
 
@@ -6233,7 +6217,7 @@
 
 
 
-                                        <span class="text-xs text-emerald-400 font-black">Autonomous (AlphaFold 3)</span>
+                                        <span class="text-xs text-emerald-400 font-black">Autonomous (Boltz API)</span>
 
 
 
@@ -6381,7 +6365,7 @@
 
 
 
-                            <h5 class="text-lg font-bold text-white">Domain-Only Sequences for AF3 Fusion</h5>
+                            <h5 class="text-lg font-bold text-white">Domain-Only Sequences for Boltz Fusion</h5>
 
 
 
@@ -6389,7 +6373,7 @@
 
 
 
-                        <p class="text-sm text-slate-300 mb-2"><strong class="text-white">Problem:</strong> The Z-Linker pipeline fused full-length protein sequences. For large proteins (TERT = 1132aa; MYH7 = 1935aa) this guaranteed an AlphaFold 3 chain limit failure (&gt;2000aa).</p>
+                        <p class="text-sm text-slate-300 mb-2"><strong class="text-white">Problem:</strong> The Z-Linker pipeline fused full-length protein sequences. For large proteins (TERT = 1132aa; MYH7 = 1935aa) this guaranteed a Boltz chain limit failure (&gt;2000aa).</p>
 
 
 
@@ -6469,7 +6453,7 @@
 
 
 
-                            <h5 class="text-lg font-bold text-white">True dsDNA in AF3 Manifest (Reverse Complement)</h5>
+                            <h5 class="text-lg font-bold text-white">True dsDNA in Boltz Manifest (Reverse Complement)</h5>
 
 
 
@@ -6477,7 +6461,7 @@
 
 
 
-                        <p class="text-sm text-slate-300 mb-2"><strong class="text-white">Problem:</strong> The AF3 JSON was sending both DNA strand IDs (B &amp; C) with the same sequence. TFs bind double-stranded DNA &mdash; strand C must be the reverse complement of B.</p>
+                        <p class="text-sm text-slate-300 mb-2"><strong class="text-white">Problem:</strong> The Boltz JSON was sending both DNA strand IDs (B &amp; C) with the same sequence. TFs bind double-stranded DNA &mdash; strand C must be the reverse complement of B.</p>
 
 
 
@@ -6485,7 +6469,7 @@
 
 
 
-                        <p class="text-sm text-slate-500">Ref: AF3 input spec &sect;3.2; Cramer 2019 (<em>Nat Struct Mol Biol</em>)</p>
+                        <p class="text-sm text-slate-500">Ref: Boltz input spec &sect;3.2; Cramer 2019 (<em>Nat Struct Mol Biol</em>)</p>
 
 
 
@@ -6765,7 +6749,7 @@
 
 
 
-                        <p class="text-sm text-slate-500">Allows researchers to immediately assess whether the predicted AF3 interaction has prior experimental validation.</p>
+                        <p class="text-sm text-slate-500">Allows researchers to immediately assess whether the predicted Boltz interaction has prior experimental validation.</p>
 
 
 
@@ -7173,7 +7157,7 @@
 
 
 
-                            <span class="font-mono text-white text-lg">/api/v1/clinical/af3-manifest</span>
+                            <span class="font-mono text-white text-lg">/api/v1/clinical/boltz-manifest</span>
 
 
 
@@ -7181,7 +7165,7 @@
 
 
 
-                        <p class="text-sm text-slate-300 mb-3">Generates a fully AF3-compliant JSON manifest from discovery factors. Applies domain-only trimming, (G4S)&times;4 Z-Linker fusion, IUPAC-validated DNA motif anchor with true dsDNA (sense + reverse complement strands).</p>
+                        <p class="text-sm text-slate-300 mb-3">Generates a fully Boltz-compliant JSON manifest from discovery factors. Applies domain-only trimming, (G4S)&times;4 Z-Linker fusion, IUPAC-validated DNA motif anchor with true dsDNA (sense + reverse complement strands).</p>
 
 
 
@@ -7272,9 +7256,7 @@ Response:
     "cache_hit": true | false,
     "scientific_limitations": [
       "Single-sequence structure prediction only",
-      "Not AlphaFold",
-      "Not AlphaFold3",
-      "Not ligand-aware",
+                  "Not ligand-aware",
       "Not validated for clinical use"
     ]
   }
@@ -13695,7 +13677,7 @@ RATE_LIMITS = {
 
 
 
-                        <h4 class="text-xl font-bold text-slate-300">v27.2 &mdash;  AlphaFold 3 Integration</h4>
+                        <h4 class="text-xl font-bold text-slate-300">v27.2 &mdash;  Boltz Engine Integration</h4>
 
 
 
@@ -13711,7 +13693,7 @@ RATE_LIMITS = {
 
 
 
-                        <li class="flex gap-2"><span class="text-emerald-400">+</span> Domain-Handshake Linker (DHL) pipeline for AF3 manifests</li>
+                        <li class="flex gap-2"><span class="text-emerald-400">+</span> Domain-Handshake Linker (DHL) pipeline for Boltz manifests</li>
 
 
 
