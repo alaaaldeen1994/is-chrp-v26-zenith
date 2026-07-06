@@ -106,13 +106,7 @@ NILUS_MASTER_PITCH_V2.html
 NILUS_PITCH_DECK.html
 REAL_ACADEMIC_POSTER_A0.html
 ZENITH_PHASE_A_*.html
-colony_microscopy_demo.html
-discovery_mockup.html
 is-chrp-v23-improved.html
-pilot_dashboard.html
-test_minimal.html
-v26_clinical_report.html
-v30_clinical_report.html
 
 # ── Documentation & Markdown (not runtime) ───────────────────────────────────
 ALIGNERR_SUBMISSION_FINAL.md
@@ -158,7 +152,6 @@ exp2_*.png
 osk_3d.png
 osk_pae.png
 zenith_identity.png
-logo_transparent.png
 *.bak
 profile.html.bak
 index.html.bak
@@ -209,7 +202,6 @@ mcp_server.py
 mcp_config.json
 
 # ── Google verification ──────────────────────────────────────────────────────
-googleb345720fc36e8810.html
 
 # ── Deployment config (Railway reads from repo, not from Docker image) ───────
 .railway-trigger
