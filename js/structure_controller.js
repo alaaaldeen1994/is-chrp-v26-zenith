@@ -444,13 +444,6 @@ function renderModel(style, colorScheme) {
 
   if (style === 'cartoon') {
     v.setStyle({ hetflag: false }, { cartoon: cartoonStyle });
-    v.setStyle(
-      { resn: ["DA", "DT", "DC", "DG", "A", "U", "C", "G", "RA", "RU", "RC", "RG"] },
-      { 
-        cartoon: cartoonStyle, 
-        stick: { colorscheme: 'Jmol', radius: 0.15 } 
-      }
-    );
     v.addStyle({ hetflag: true }, { stick: { colorscheme: 'Jmol', radius: 0.22 } });
   } else if (style === 'stick') {
     v.setStyle({}, { stick: { radius: 0.15, colorscheme: colorScheme === 'pLDDT' ? 'blueGreen' : 'default' } });
@@ -607,10 +600,6 @@ function _reapplyBaseStyle(style, colorScheme) {
 
   if (style === 'cartoon') {
     v.setStyle({ hetflag: false }, { cartoon: cartoonStyle });
-    v.setStyle(
-      { resn: ["DA", "DT", "DC", "DG", "A", "U", "C", "G", "RA", "RU", "RC", "RG"] },
-      { cartoon: cartoonStyle, stick: { colorscheme: 'Jmol', radius: 0.15 } }
-    );
     v.addStyle({ hetflag: true }, { stick: { colorscheme: 'Jmol', radius: 0.22 } });
   } else if (style === 'stick') {
     v.setStyle({}, { stick: { radius: 0.15, colorscheme: colorScheme === 'pLDDT' ? 'blueGreen' : 'default' } });
