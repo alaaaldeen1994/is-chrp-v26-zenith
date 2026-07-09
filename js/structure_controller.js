@@ -477,20 +477,91 @@ function highlightResidue(atom) {
   // Store the selected residue
   STATE.selectedResidue = atom;
 
-  // Get active style
+  // Get active style and color
   const activeStyle = document.querySelector('[data-style].active');
+  const activeColor = document.querySelector('[data-color].active');
   const style = activeStyle ? activeStyle.dataset.style : 'cartoon';
+  const color = activeColor ? activeColor.dataset.color : 'pLDDT';
 
-  // 1. Show CPK-colored ball-and-stick side chain for the selected residue (AlphaFold standard)
-  v.addStyle(
-    { chain: atom.chain, resi: atom.resi },
-    {
-      stick: { colorscheme: 'Jmol', radius: 0.15 },
-      sphere: { colorscheme: 'Jmol', scale: 0.25 }
+  // Helper color function to preserve pLDDT scheme on specific cartoon segments
+  const plddtColorfunc = function(a) {
+    let plddt = a.b || 0;
+    if (plddt <= 1.0 && plddt > 0.0) plddt = plddt * 100;
+    if (plddt > 90) return '#0053D6';
+    if (plddt > 70) return '#65B3E7';
+    if (plddt > 50) return '#F5B544';
+    return '#FB923C';
+  };
+
+  // 1. DIM THE BACKGROUND PROTEIN (AlphaFold Focus Effect)
+  // Re-apply the base structure styling at 20% opacity so the highlighted area pops
+  _reapplyBaseStyle(style, color, 0.2);
+
+  // 2. HIGHLIGHT THE CLICKED RESIDUE (Full 100% Opacity + Jmol Ball/Stick)
+  if (style === 'cartoon' || style === 'surface') {
+    v.addStyle(
+      { chain: atom.chain, resi: atom.resi },
+      {
+        cartoon: { colorfunc: plddtColorfunc, opacity: 1.0 },
+        stick: { colorscheme: 'Jmol', radius: 0.15, opacity: 1.0 },
+        sphere: { colorscheme: 'Jmol', scale: 0.25, opacity: 1.0 }
+      }
+    );
+  } else {
+    v.addStyle(
+      { chain: atom.chain, resi: atom.resi },
+      {
+        stick: { colorscheme: 'Jmol', radius: 0.15, opacity: 1.0 },
+        sphere: { colorscheme: 'Jmol', scale: 0.25, opacity: 1.0 }
+      }
+    );
+  }
+
+  // 3. FIND AND HIGHLIGHT NEIGHBORING RESIDUES (The "Contacts")
+  const allAtoms = v.selectedAtoms({});
+  const neighborResidues = new Set();
+  const cutoffDistance = 5.0; // 5 Angstroms for local interaction cluster
+
+  allAtoms.forEach(target => {
+    // Skip the selected residue itself
+    if (target.chain === atom.chain && target.resi === atom.resi) return;
+
+    const dx = atom.x - target.x;
+    const dy = atom.y - target.y;
+    const dz = atom.z - target.z;
+    const distance = Math.sqrt(dx*dx + dy*dy + dz*dz);
+
+    // If close enough to interact, add this residue to the contact group
+    if (distance <= cutoffDistance) {
+      neighborResidues.add(`${target.chain}:${target.resi}`);
     }
-  );
+  });
 
-  // 2. Add a soft magenta VDW surface wrapping the selected side chain
+  // Apply highlight styles to neighboring residues (60% cartoon opacity and 80% stick opacity)
+  neighborResidues.forEach(resKey => {
+    const parts = resKey.split(':');
+    const chainId = parts[0];
+    const resNum = parseInt(parts[1]);
+
+    if (style === 'cartoon' || style === 'surface') {
+      v.addStyle(
+        { chain: chainId, resi: resNum },
+        {
+          cartoon: { colorfunc: plddtColorfunc, opacity: 0.6 },
+          stick: { colorscheme: 'Jmol', radius: 0.1, opacity: 0.8 } // Thinner, semi-transparent sticks for neighbors
+        }
+      );
+    } else {
+      v.addStyle(
+        { chain: chainId, resi: resNum },
+        {
+          stick: { colorscheme: 'Jmol', radius: 0.1, opacity: 0.8 }
+        }
+      );
+    }
+  });
+
+  // 4. Apply Translucent Magenta Surface wrap ONLY to the clicked residue
   try {
     STATE.glowSurfaceId = v.addSurface(
       $3Dmol.SurfaceType.VDW,
@@ -501,13 +572,13 @@ function highlightResidue(atom) {
     console.error("Failed to add highlight surface: ", e);
   }
 
-  // 3. Draw hydrogen bonds near the selected residue
+  // 5. Draw H-bonds with distance labels
   _drawHBonds(atom);
 
-  // 4. Update the selection label at the bottom of the viewer
+  // 6. Update UI Label
   _updateSelectionLabel(atom);
 
-  // 5. Smooth zoom to the selected residue
+  // 7. Smooth zoom to the selected residue
   v.zoomTo({ chain: atom.chain, resi: atom.resi }, 600);
   v.render();
 }
@@ -573,7 +644,7 @@ function _clearSelectionVisuals() {
 /**
  * Internal: re-apply the base molecular style without clearing models.
  */
-function _reapplyBaseStyle(style, colorScheme) {
+function _reapplyBaseStyle(style, colorScheme, opacity = 1.0) {
   const v = STATE.viewer;
   if (!v) return;
 
@@ -587,19 +658,19 @@ function _reapplyBaseStyle(style, colorScheme) {
   };
 
   if (style === 'cartoon') {
-    v.setStyle({ hetflag: false }, { cartoon: { colorfunc: plddtColorfunc } });
+    v.setStyle({ hetflag: false }, { cartoon: { colorfunc: plddtColorfunc, opacity: opacity } });
     v.setStyle(
       { resn: ["DA", "DT", "DC", "DG", "A", "U", "C", "G", "RA", "RU", "RC", "RG"] },
-      { cartoon: { color: '#4da6ff' }, stick: { colorscheme: 'Jmol', radius: 0.15 } }
+      { cartoon: { color: '#4da6ff', opacity: opacity }, stick: { colorscheme: 'Jmol', radius: 0.15, opacity: opacity } }
     );
-    v.addStyle({ hetflag: true }, { stick: { colorscheme: 'Jmol', radius: 0.22 } });
+    v.addStyle({ hetflag: true }, { stick: { colorscheme: 'Jmol', radius: 0.22, opacity: opacity } });
   } else if (style === 'stick') {
-    v.setStyle({}, { stick: { radius: 0.15, colorscheme: colorScheme === 'pLDDT' ? 'blueGreen' : 'default' } });
+    v.setStyle({}, { stick: { radius: 0.15, colorscheme: colorScheme === 'pLDDT' ? 'blueGreen' : 'default', opacity: opacity } });
   } else if (style === 'sphere') {
-    v.setStyle({}, { sphere: { scale: 0.32, colorscheme: colorScheme === 'pLDDT' ? 'blueGreen' : 'default' } });
+    v.setStyle({}, { sphere: { scale: 0.32, colorscheme: colorScheme === 'pLDDT' ? 'blueGreen' : 'default', opacity: opacity } });
   } else if (style === 'surface') {
-    v.setStyle({}, { cartoon: { thickness: 0.1, opacity: 0.4 } });
-    v.addSurface($3Dmol.SurfaceType.VDW, { opacity: 0.7, colorscheme: colorScheme === 'pLDDT' ? 'blueGreen' : 'default' }, {});
+    v.setStyle({}, { cartoon: { thickness: 0.1, opacity: 0.4 * opacity } });
+    v.addSurface($3Dmol.SurfaceType.VDW, { opacity: 0.7 * opacity, colorscheme: colorScheme === 'pLDDT' ? 'blueGreen' : 'default' }, {});
   }
 
   // Re-register clickable atoms
@@ -619,29 +690,15 @@ function _removeHoverGlow() {
   const activeColor = document.querySelector('[data-color].active');
   const style = activeStyle ? activeStyle.dataset.style : 'cartoon';
   const color = activeColor ? activeColor.dataset.color : 'pLDDT';
-  _reapplyBaseStyle(style, color);
-
-  // Re-apply selection highlight and surface if a residue is selected
+  
   if (STATE.selectedResidue) {
-    const atom = STATE.selectedResidue;
-    v.addStyle(
-      { chain: atom.chain, resi: atom.resi },
-      {
-        stick: { colorscheme: 'Jmol', radius: 0.15 },
-        sphere: { colorscheme: 'Jmol', scale: 0.25 }
-      }
-    );
-    if (STATE.glowSurfaceId === null) {
-      try {
-        STATE.glowSurfaceId = v.addSurface(
-          $3Dmol.SurfaceType.VDW,
-          { opacity: 0.35, color: 'magenta' },
-          { chain: atom.chain, resi: atom.resi }
-        );
-      } catch (e) {}
-    }
+    // Re-apply the selection highlight and background dimming (focus mode)
+    highlightResidue(STATE.selectedResidue);
+  } else {
+    // Re-apply fully opaque base style
+    _reapplyBaseStyle(style, color, 1.0);
+    v.render();
   }
-  v.render();
 }
 
 /**
