@@ -1665,10 +1665,10 @@ function exportAIReportToPDF() {
     suggestions.push('Large protein detected — consider domain splitting for higher-accuracy prediction');
   }
 
-  printWindow.document.write(\`
+  printWindow.document.write(`
     <html>
       <head>
-        <title>ZenithFold AI Structure Analysis Report - res-\${f.length}</title>
+        <title>ZenithFold AI Structure Analysis Report - res-${f.length}</title>
         <style>
           body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; color: #1e293b; padding: 40px; line-height: 1.6; }
           .header { border-bottom: 2px solid #3b82f6; padding-bottom: 16px; margin-bottom: 24px; }
@@ -1693,54 +1693,54 @@ function exportAIReportToPDF() {
       <body>
         <div class="header">
           <div class="title">ZenithFold Structure Analysis Report</div>
-          <div class="subtitle">Generated on \${new Date().toLocaleDateString()} · Powered by Nilus Atomix</div>
+          <div class="subtitle">Generated on ${new Date().toLocaleDateString()} · Powered by Nilus Atomix</div>
         </div>
 
         <div class="summary-box">
           <div class="ring">
-            <div class="ring-val">\${plddt}</div>
+            <div class="ring-val">${plddt}</div>
             <div class="ring-lbl">pLDDT</div>
           </div>
           <div>
-            <div style="font-size: 16px; font-weight: 700; color: #0f172a;">\${status}</div>
-            <div style="font-size: 11px; color: #64748b; margin-top: 3px;">\${f.length} residues · Chain A · ZenithFold</div>
+            <div style="font-size: 16px; font-weight: 700; color: #0f172a;">${status}</div>
+            <div style="font-size: 11px; color: #64748b; margin-top: 3px;">${f.length} residues · Chain A · ZenithFold</div>
           </div>
         </div>
 
         <div class="section">
           <div class="section-title">1. Domain Architecture</div>
-          <p>This structure was predicted as a \${f.helixPercent}% helical / \${f.loopPercent}% loop fold with a mean pLDDT score of <strong>\${plddt}</strong>.</p>
+          <p>This structure was predicted as a ${f.helixPercent}% helical / ${f.loopPercent}% loop fold with a mean pLDDT score of <strong>${plddt}</strong>.</p>
           <div class="grid">
-            \${f.regionStats.map(r => \`
+            ${f.regionStats.map(r => `
               <div class="card">
-                <div class="k">\${r.name} (res \${r.start+1}-\${r.end})</div>
-                <div class="v">\${r.meanPlddt.toFixed(1)} pLDDT</div>
+                <div class="k">${r.name} (res ${r.start+1}-${r.end})</div>
+                <div class="v">${r.meanPlddt.toFixed(1)} pLDDT</div>
               </div>
-            \`).join('')}
+            `).join('')}
           </div>
         </div>
 
         <div class="section">
           <div class="section-title">2. Confidence Assessment</div>
-          <p>Overall, <strong>\${f.lowConfPercent}%</strong> of residues (\${f.lowConfCount}/\${f.length}) fall below the pLDDT 70 threshold.</p>
+          <p>Overall, <strong>${f.lowConfPercent}%</strong> of residues (${f.lowConfCount}/${f.length}) fall below the pLDDT 70 threshold.</p>
           <div class="grid">
-            <div class="card"><div class="k">Mean pLDDT</div><div class="v">\${plddt}</div></div>
-            <div class="card"><div class="k">Low-Conf Residues</div><div class="v">\${f.lowConfCount}</div></div>
-            <div class="card"><div class="k">Longest Stretch</div><div class="v">\${f.longestLowConfStretch.length} res</div></div>
+            <div class="card"><div class="k">Mean pLDDT</div><div class="v">${plddt}</div></div>
+            <div class="card"><div class="k">Low-Conf Residues</div><div class="v">${f.lowConfCount}</div></div>
+            <div class="card"><div class="k">Longest Stretch</div><div class="v">${f.longestLowConfStretch.length} res</div></div>
           </div>
         </div>
 
         <div class="section">
           <div class="section-title">3. Biochemical Properties</div>
-          <p>Hydrophobic residue content: <strong>\${f.hydrophobicity}%</strong>. Secondary structure consists of <strong>\${f.helixPercent}%</strong> helices/sheets and <strong>\${f.loopPercent}%</strong> loop regions.</p>
+          <p>Hydrophobic residue content: <strong>${f.hydrophobicity}%</strong>. Secondary structure consists of <strong>${f.helixPercent}%</strong> helices/sheets and <strong>${f.loopPercent}%</strong> loop regions.</p>
         </div>
 
         <div class="section">
           <div class="suggestions">
             <div class="suggestions-title">Suggested Next Steps</div>
-            \${suggestions.slice(0, 5).map((s, idx) => \`
-              <div class="suggestion-item"><strong>\${idx+1}.</strong> \${s}</div>
-            \`).join('')}
+            ${suggestions.slice(0, 5).map((s, idx) => `
+              <div class="suggestion-item"><strong>${idx+1}.</strong> ${s}</div>
+            `).join('')}
           </div>
         </div>
 
@@ -1752,7 +1752,7 @@ function exportAIReportToPDF() {
         </script>
       </body>
     </html>
-  \`);
+  `);
   printWindow.document.close();
 }
 
