@@ -522,7 +522,7 @@ function clearResidueSelection() {
   _clearSelectionVisuals();
 
   // Hide the selection label
-  const label = $('#selectionLabel');
+  const label = $('#af-selection-label');
   if (label) label.classList.remove('visible');
 
   // Re-apply the current base style to remove addStyle overlays
@@ -728,7 +728,7 @@ function _drawHBonds(selectedAtom) {
 
   // Update the selection label with H-bond count
   if (topBonds.length > 0) {
-    const labelEl = $('#selectionLabel');
+    const labelEl = $('#af-selection-label');
     // Remove existing hbond badge if present
     const existingBadge = labelEl.querySelector('.hbond-badge');
     if (existingBadge) existingBadge.remove();
@@ -743,7 +743,7 @@ function _drawHBonds(selectedAtom) {
  * Internal: update the bottom selection label with residue info.
  */
 function _updateSelectionLabel(atom) {
-  const label = $('#selectionLabel');
+  const label = $('#af-selection-label');
   if (!label || !atom) return;
 
   // Update chain badge
