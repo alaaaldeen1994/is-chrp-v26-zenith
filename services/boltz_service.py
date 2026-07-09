@@ -295,46 +295,96 @@ def convert_cif_to_pdb(cif_text: str) -> str:
     lines = cif_text.splitlines()
     pdb_lines = []
     
+    # Dynamic header parsing to support variable column orders in mmCIF
+    atom_site_fields = []
+    atom_lines = []
+    in_loop = False
+    
     for line in lines:
-        if line.startswith("ATOM") or line.startswith("HETATM"):
-            parts = line.split()
-            if len(parts) < 18:
-                continue
-                
-            group = parts[0] # ATOM or HETATM
-            serial = int(parts[1])
-            elem = parts[2]
-            atom_name = parts[3]
-            res_name = parts[5]
-            res_seq = int(parts[7])
-            chain_id = parts[9]
-            
-            x = float(parts[10])
-            y = float(parts[11])
-            z = float(parts[12])
-            
-            occ = float(parts[13])
-            b_factor = float(parts[17])
-            
-            # Format atom name (standard PDB formatting: 4 chars)
-            if len(elem) == 1 and len(atom_name) <= 3:
-                atom_field = f" {atom_name:<3}"
+        stripped = line.strip()
+        if not stripped:
+            continue
+        if stripped.startswith("loop_"):
+            in_loop = True
+            if any(f.startswith("_atom_site.") for f in atom_site_fields):
+                in_loop = False
             else:
-                atom_field = f"{atom_name:<4}"
-                
-            # Formatted PDB line
-            pdb_line = (
-                f"{group:<6}"
-                f"{serial:>5} "
-                f"{atom_field}"
-                f" {res_name:>3} "
-                f"{chain_id}{res_seq:>4}    "
-                f"{x:>8.3f}{y:>8.3f}{z:>8.3f}"
-                f"{occ:>6.2f}{b_factor:>6.2f}          "
-                f"{elem:>2}  "
-            )
-            pdb_lines.append(pdb_line)
+                atom_site_fields = []
+            continue
+        if in_loop and stripped.startswith("_atom_site."):
+            atom_site_fields.append(stripped)
+            continue
+        if stripped.startswith("ATOM") or stripped.startswith("HETATM"):
+            in_loop = False
+            atom_lines.append(stripped)
             
+    # Fallback to hardcoded indices if no headers are found
+    if not atom_site_fields:
+        atom_site_fields = [
+            "_atom_site.group_PDB", "_atom_site.id", "_atom_site.type_symbol",
+            "_atom_site.label_atom_id", "_atom_site.label_alt_id", "_atom_site.label_comp_id",
+            "_atom_site.label_asym_id", "_atom_site.label_entity_id", "_atom_site.label_seq_id",
+            "_atom_site.pdbx_PDB_ins_code", "_atom_site.Cartn_x", "_atom_site.Cartn_y",
+            "_atom_site.Cartn_z", "_atom_site.occupancy", "_atom_site.B_iso_or_equiv",
+            "_atom_site.pdbx_formal_charge", "_atom_site.auth_seq_id", "_atom_site.auth_comp_id",
+            "_atom_site.auth_asym_id", "_atom_site.auth_atom_id", "_atom_site.pdbx_PDB_model_num"
+        ]
+        
+    field_indices = {field: idx for idx, field in enumerate(atom_site_fields)}
+    
+    def get_val(parts, field_names, default, cast_type):
+        for name in field_names:
+            if name in field_indices:
+                idx = field_indices[name]
+                if idx < len(parts):
+                    try:
+                        val = parts[idx]
+                        if val in ('.', '?'):
+                            return default
+                        return cast_type(val)
+                    except ValueError:
+                        pass
+        return default
+
+    for atom_line in atom_lines:
+        parts = atom_line.split()
+        if len(parts) < len(atom_site_fields) and len(parts) < 12:
+            continue
+            
+        group = get_val(parts, ['_atom_site.group_PDB'], 'ATOM', str)
+        serial = get_val(parts, ['_atom_site.id'], 1, int)
+        elem = get_val(parts, ['_atom_site.type_symbol'], 'C', str)
+        atom_name = get_val(parts, ['_atom_site.label_atom_id', '_atom_site.auth_atom_id'], 'CA', str)
+        res_name = get_val(parts, ['_atom_site.label_comp_id', '_atom_site.auth_comp_id'], 'ALA', str)
+        res_seq = get_val(parts, ['_atom_site.auth_seq_id', '_atom_site.label_seq_id'], 1, int)
+        chain_id = get_val(parts, ['_atom_site.auth_asym_id', '_atom_site.label_asym_id'], 'A', str)
+        
+        x = get_val(parts, ['_atom_site.Cartn_x'], 0.0, float)
+        y = get_val(parts, ['_atom_site.Cartn_y'], 0.0, float)
+        z = get_val(parts, ['_atom_site.Cartn_z'], 0.0, float)
+        
+        occ = get_val(parts, ['_atom_site.occupancy'], 1.0, float)
+        b_factor = get_val(parts, ['_atom_site.B_iso_or_equiv', '_atom_site.B_iso'], 50.0, float)
+        
+        # Format atom name (standard PDB formatting: 4 chars)
+        if len(elem) == 1 and len(atom_name) <= 3:
+            atom_field = f" {atom_name:<3}"
+        else:
+            atom_field = f"{atom_name:<4}"
+            
+        # Formatted PDB line
+        pdb_line = (
+            f"{group:<6}"
+            f"{serial:>5} "
+            f"{atom_field}"
+            f" {res_name:>3} "
+            f"{chain_id}{res_seq:>4}    "
+            f"{x:>8.3f}{y:>8.3f}{z:>8.3f}"
+            f"{occ:>6.2f}{b_factor:>6.2f}          "
+            f"{elem:>2}  "
+        )
+        pdb_lines.append(pdb_line)
+        
     pdb_lines.append("END")
     return "\n".join(pdb_lines)
 
