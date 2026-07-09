@@ -50,7 +50,30 @@ function log(msg, kind='info') {
 
 const EXAMPLE_SEQ = 'MQIFVKTLTGKTITLEVEPSDTIENVKAKIQDKEGIPPDQQRLIFAGKQLEDGRTLSDYNIQKESTLHLVLRLRGG';
 
+function updatePAEWarningVisibility() {
+  const warningEl = document.getElementById('paeSimWarning');
+  if (!warningEl) return;
+  if (STATE.mode === 'esm' && STATE.currentModel && STATE.currentModel.pdb) {
+    warningEl.style.display = 'flex';
+  } else {
+    warningEl.style.display = 'none';
+  }
+}
+
 function switchMode(mode) {
+  // Bidirectional sequence synchronization between input views
+  if (mode === 'boltz' && STATE.mode === 'esm') {
+    const esmSeq = $('#seqInput').value.trim();
+    if (esmSeq && STATE.chains.length > 0 && STATE.chains[0].type === 'protein') {
+      STATE.chains[0].value = esmSeq;
+    }
+  } else if (mode === 'esm' && STATE.mode === 'boltz') {
+    const proteinChain = STATE.chains.find(c => c.type === 'protein');
+    if (proteinChain && proteinChain.value) {
+      $('#seqInput').value = proteinChain.value;
+    }
+  }
+
   STATE.mode = mode;
   $$('.mode-btn').forEach(b => b.classList.toggle('active', b.dataset.mode === mode));
   $('#esmInput').style.display = mode === 'esm' ? 'block' : 'none';
@@ -66,6 +89,7 @@ function switchMode(mode) {
   log(`Engine switched → ${mode === 'esm' ? 'Nilus Atomix' : 'zenithfold-2.1'}`, 'info');
   renderChainList();
   updateCostEstimate();
+  updatePAEWarningVisibility();
 }
 
 function initApiKey() {
@@ -894,6 +918,7 @@ function renderBindingContacts() {
 
 /* ============ PAE HEATMAP ============ */
 function renderPAE(plddt) {
+  updatePAEWarningVisibility();
   const canvas = $('#paeCanvas');
   const ctx = canvas.getContext('2d');
   const N = plddt.length;
@@ -1146,6 +1171,7 @@ function switchTab(name) {
   if (name === 'binding') {
     setTimeout(initBindingViewer, 50);
   }
+  updatePAEWarningVisibility();
 }
 
 function initBindingViewer() {
@@ -1494,8 +1520,9 @@ function renderAIReport(f) {
   const sumMetaEl = document.getElementById('aiSummaryMeta');
   if (sumMetaEl) {
     const chainStr = STATE.currentModel && STATE.currentModel.chains ? STATE.currentModel.chains.join(', ') : 'A';
+    const engineName = STATE.mode === 'esm' ? 'Nilus Atomix (ESMFold)' : 'ZenithFold (Boltz)';
     sumMetaEl.textContent =
-      `${f.length} residues · chain ${chainStr} · ZenithFold · ${STATE.mode === 'esm' ? 'Nilus Atomix' : 'Boltz'}`;
+      `${f.length} residues · chain ${chainStr} · ${engineName}`;
   }
 
   // Tags

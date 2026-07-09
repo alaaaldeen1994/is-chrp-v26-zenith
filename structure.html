@@ -1024,11 +1024,11 @@
           <div class="mode-switch" id="modeSwitch">
             <button class="mode-btn active" data-mode="esm">
               <div class="mode-name">Nilus Atomix</div>
-              <div class="mode-sub">SINGLE-CHAIN · ~14S</div>
+              <div class="mode-sub">FAST SINGLE-CHAIN (ESMFold)</div>
             </button>
             <button class="mode-btn" data-mode="boltz">
               <div class="mode-name">Boltz API</div>
-              <div class="mode-sub">COMPLEX PREDICTION</div>
+              <div class="mode-sub">SOTA SINGLE-CHAIN &amp; COMPLEX</div>
             </button>
           </div>
         </div>
@@ -1383,6 +1383,12 @@
       <!-- ============ PAE HEATMAP ============ -->
       <div class="tab-panel" data-panel="pae">
         <div class="pae-area">
+          <div id="paeSimWarning" style="display: none; margin-bottom: 15px; padding: 12px; background: rgba(245, 158, 11, 0.08); border: 1px dashed rgba(245, 158, 11, 0.3); border-radius: 8px; font-size: 12px; color: #F59E0B; align-items: flex-start; gap: 8px; line-height: 1.5;">
+            <span style="font-size: 14px; margin-top: 1px;">⚠️</span>
+            <div>
+              <strong>Simulated PAE Matrix</strong>: Nilus Atomix (ESMFold) does not predict aligned error. This PAE matrix is a distance-based simulation. Use the <strong>Boltz API</strong> engine for true Predicted Aligned Error (PAE) calculations.
+            </div>
+          </div>
           <div class="pae-toolbar">
             <div>
               <div class="title">Predicted Aligned Error</div>
