@@ -475,25 +475,35 @@ function highlightResidue(atom) {
   // Store the selected residue
   STATE.selectedResidue = atom;
 
-  // 1. Show side-chain sticks with element coloring (AlphaFold style: grey C, red O, blue N)
-  v.addStyle(
-    { chain: atom.chain, resi: atom.resi },
-    { stick: { radius: 0.15, colorscheme: 'Jmol' } }
-  );
+  // Get active style
+  const activeStyle = document.querySelector('[data-style].active');
+  const style = activeStyle ? activeStyle.dataset.style : 'cartoon';
 
-  // 2. Add a translucent magenta surface highlight around the selected residue
-  v.addSurface($3Dmol.SurfaceType.VDW,
-    { opacity: 0.25, color: '#E040FB' },
-    { chain: atom.chain, resi: atom.resi }
-  );
+  // Highlight the clicked residue's cartoon segment (or stick/sphere) in pink/magenta
+  if (style === 'cartoon' || style === 'surface') {
+    v.addStyle(
+      { chain: atom.chain, resi: atom.resi },
+      { cartoon: { color: '#FF4081' } } // Beautiful pink/magenta matching AlphaFold
+    );
+  } else if (style === 'stick') {
+    v.addStyle(
+      { chain: atom.chain, resi: atom.resi },
+      { stick: { radius: 0.22, color: '#FF4081' } }
+    );
+  } else if (style === 'sphere') {
+    v.addStyle(
+      { chain: atom.chain, resi: atom.resi },
+      { sphere: { scale: 0.4, color: '#FF4081' } }
+    );
+  }
 
-  // 3. Draw hydrogen bonds near the selected residue
+  // Draw hydrogen bonds near the selected residue
   _drawHBonds(atom);
 
-  // 4. Update the selection label at the bottom of the viewer
+  // Update the selection label at the bottom of the viewer
   _updateSelectionLabel(atom);
 
-  // 5. Smooth zoom to the selected residue
+  // Smooth zoom to the selected residue
   v.zoomTo({ chain: atom.chain, resi: atom.resi }, 600);
   v.render();
 }
@@ -597,14 +607,22 @@ function _removeHoverGlow() {
   // Re-apply selection highlight if a residue is selected
   if (STATE.selectedResidue) {
     const atom = STATE.selectedResidue;
-    v.addStyle(
-      { chain: atom.chain, resi: atom.resi },
-      { stick: { radius: 0.15, colorscheme: 'Jmol' } }
-    );
-    v.addSurface($3Dmol.SurfaceType.VDW,
-      { opacity: 0.25, color: '#E040FB' },
-      { chain: atom.chain, resi: atom.resi }
-    );
+    if (style === 'cartoon' || style === 'surface') {
+      v.addStyle(
+        { chain: atom.chain, resi: atom.resi },
+        { cartoon: { color: '#FF4081' } }
+      );
+    } else if (style === 'stick') {
+      v.addStyle(
+        { chain: atom.chain, resi: atom.resi },
+        { stick: { radius: 0.22, color: '#FF4081' } }
+      );
+    } else if (style === 'sphere') {
+      v.addStyle(
+        { chain: atom.chain, resi: atom.resi },
+        { sphere: { scale: 0.4, color: '#FF4081' } }
+      );
+    }
   }
   v.render();
 }
