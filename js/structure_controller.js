@@ -1220,9 +1220,7 @@ function init() {
 
   const aiExport = document.getElementById('aiExportBtn');
   if (aiExport) {
-    aiExport.addEventListener('click', () => {
-      log('AI report exported as PDF (stub)', 'ok');
-    });
+    aiExport.addEventListener('click', exportAIReportToPDF);
   }
 
   const aiTab = document.querySelector('[data-tab="ai"]');
@@ -1586,7 +1584,17 @@ function renderAIReport(f) {
         <div class="ai-suggestion-text">${s}</div>
         <svg class="ai-suggestion-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
       `;
-      el.addEventListener('click', () => log('AI suggestion selected: ' + s, 'info'));
+      el.addEventListener('click', () => {
+        log('AI suggestion selected: ' + s, 'info');
+        if (s.includes('binding site')) {
+          switchTab('binding');
+        } else if (s.includes('mutation analysis')) {
+          switchTab('seq');
+        } else if (s.includes('Export the PDB')) {
+          const downloadBtn = document.getElementById('downloadBtn');
+          if (downloadBtn) downloadBtn.click();
+        }
+      });
       sugList.appendChild(el);
     });
   }
@@ -1617,6 +1625,135 @@ function buildAISection(iconType, title, bodyHtml) {
     <div class="ai-section-body">${bodyHtml}</div>
   `;
   return div;
+}
+
+/**
+ * Generate a clean, print-formatted window focused exclusively on the AI analysis report,
+ * and call window.print() to prompt standard browser PDF generation.
+ */
+function exportAIReportToPDF() {
+  const f = computeStructureFeatures();
+  if (!f) {
+    log('No structural report available to export.', 'err');
+    return;
+  }
+
+  const printWindow = window.open('', '_blank');
+  if (!printWindow) {
+    log('Popup blocker prevented PDF export. Please allow popups for Nilus Lab.', 'err');
+    return;
+  }
+
+  const plddt = f.meanPlddt;
+  const status = plddt >= 80 ? 'High-confidence fold' : plddt >= 70 ? 'Good confidence fold' : plddt >= 50 ? 'Moderate-confidence fold' : 'Low-confidence fold';
+
+  // Construct recommendations list
+  const suggestions = [];
+  if (plddt >= 80) {
+    suggestions.push('Run binding site prediction to identify potential ligand pockets');
+    suggestions.push('Perform mutation analysis on catalytic residues to predict functional impact');
+  }
+  if (f.lowConfPercent > 20) {
+    const stretch = f.longestLowConfStretch;
+    suggestions.push(`Investigate residues ${stretch.start+1}-${stretch.start+stretch.length} — consider disorder prediction (IUPred)`);
+  }
+  if (f.paeMean !== null && f.paeMean > 10) {
+    suggestions.push('High PAE suggests domain mobility — run normal mode analysis to visualize motion');
+  }
+  suggestions.push('Export the PDB file and align to known structures in the PDB for functional annotation');
+  if (f.length > 200) {
+    suggestions.push('Large protein detected — consider domain splitting for higher-accuracy prediction');
+  }
+
+  printWindow.document.write(\`
+    <html>
+      <head>
+        <title>ZenithFold AI Structure Analysis Report - res-\${f.length}</title>
+        <style>
+          body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; color: #1e293b; padding: 40px; line-height: 1.6; }
+          .header { border-bottom: 2px solid #3b82f6; padding-bottom: 16px; margin-bottom: 24px; }
+          .title { font-size: 24px; font-weight: 800; margin: 0; color: #0f172a; }
+          .subtitle { font-size: 12px; color: #64748b; margin-top: 4px; font-family: monospace; }
+          .section { margin-bottom: 24px; page-break-inside: avoid; }
+          .section-title { font-size: 15px; font-weight: 700; color: #1e3a8a; border-bottom: 1.5px solid #e2e8f0; padding-bottom: 4px; margin-bottom: 10px; }
+          .summary-box { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px 20px; display: flex; align-items: center; gap: 24px; margin-bottom: 24px; }
+          .ring { width: 70px; height: 70px; border-radius: 50%; border: 5px solid #e2e8f0; display: flex; flex-direction: column; align-items: center; justify-content: center; font-family: monospace; }
+          .ring-val { font-size: 18px; font-weight: 800; color: #1e3a8a; }
+          .ring-lbl { font-size: 8px; color: #64748b; }
+          .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 12px 0; }
+          .card { background: #f1f5f9; border-radius: 6px; padding: 10px; border: 1px solid #e2e8f0; }
+          .card .k { font-size: 9px; color: #64748b; text-transform: uppercase; margin-bottom: 2px; font-family: monospace; }
+          .card .v { font-size: 14px; font-weight: 700; color: #0f172a; font-family: monospace; }
+          .suggestions { background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 14px 18px; }
+          .suggestions-title { font-size: 13px; font-weight: 700; color: #166534; margin-bottom: 8px; }
+          .suggestion-item { margin-bottom: 5px; font-size: 12px; color: #14532d; }
+          code { background: #e2e8f0; padding: 1px 4px; border-radius: 3px; font-family: monospace; font-size: 11.5px; }
+        </style>
+      </head>
+      <body>
+        <div class="header">
+          <div class="title">ZenithFold Structure Analysis Report</div>
+          <div class="subtitle">Generated on \${new Date().toLocaleDateString()} · Powered by Nilus Atomix</div>
+        </div>
+
+        <div class="summary-box">
+          <div class="ring">
+            <div class="ring-val">\${plddt}</div>
+            <div class="ring-lbl">pLDDT</div>
+          </div>
+          <div>
+            <div style="font-size: 16px; font-weight: 700; color: #0f172a;">\${status}</div>
+            <div style="font-size: 11px; color: #64748b; margin-top: 3px;">\${f.length} residues · Chain A · ZenithFold</div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">1. Domain Architecture</div>
+          <p>This structure was predicted as a \${f.helixPercent}% helical / \${f.loopPercent}% loop fold with a mean pLDDT score of <strong>\${plddt}</strong>.</p>
+          <div class="grid">
+            \${f.regionStats.map(r => \`
+              <div class="card">
+                <div class="k">\${r.name} (res \${r.start+1}-\${r.end})</div>
+                <div class="v">\${r.meanPlddt.toFixed(1)} pLDDT</div>
+              </div>
+            \`).join('')}
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">2. Confidence Assessment</div>
+          <p>Overall, <strong>\${f.lowConfPercent}%</strong> of residues (\${f.lowConfCount}/\${f.length}) fall below the pLDDT 70 threshold.</p>
+          <div class="grid">
+            <div class="card"><div class="k">Mean pLDDT</div><div class="v">\${plddt}</div></div>
+            <div class="card"><div class="k">Low-Conf Residues</div><div class="v">\${f.lowConfCount}</div></div>
+            <div class="card"><div class="k">Longest Stretch</div><div class="v">\${f.longestLowConfStretch.length} res</div></div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">3. Biochemical Properties</div>
+          <p>Hydrophobic residue content: <strong>\${f.hydrophobicity}%</strong>. Secondary structure consists of <strong>\${f.helixPercent}%</strong> helices/sheets and <strong>\${f.loopPercent}%</strong> loop regions.</p>
+        </div>
+
+        <div class="section">
+          <div class="suggestions">
+            <div class="suggestions-title">Suggested Next Steps</div>
+            \${suggestions.slice(0, 5).map((s, idx) => \`
+              <div class="suggestion-item"><strong>\${idx+1}.</strong> \${s}</div>
+            \`).join('')}
+          </div>
+        </div>
+
+        <script>
+          window.onload = function() {
+            window.print();
+            setTimeout(function() { window.close(); }, 500);
+          }
+        </script>
+      </body>
+    </html>
+  \`);
+  printWindow.document.close();
 }
 
 // ============================================================
