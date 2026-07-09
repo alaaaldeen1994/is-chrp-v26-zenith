@@ -22,6 +22,8 @@ const STATE = {
   boltzEstimated: false,
   boltzEstimatedCost: null,
   hbondShapes: [],
+  hbondLabels: [],
+  glowSurfaceId: null,
   hoveredResi: null
 };
 
@@ -479,31 +481,33 @@ function highlightResidue(atom) {
   const activeStyle = document.querySelector('[data-style].active');
   const style = activeStyle ? activeStyle.dataset.style : 'cartoon';
 
-  // Highlight the clicked residue's cartoon segment (or stick/sphere) in pink/magenta
-  if (style === 'cartoon' || style === 'surface') {
-    v.addStyle(
-      { chain: atom.chain, resi: atom.resi },
-      { cartoon: { color: '#FF4081' } } // Beautiful pink/magenta matching AlphaFold
+  // 1. Show CPK-colored ball-and-stick side chain for the selected residue (AlphaFold standard)
+  v.addStyle(
+    { chain: atom.chain, resi: atom.resi },
+    {
+      stick: { colorscheme: 'Jmol', radius: 0.15 },
+      sphere: { colorscheme: 'Jmol', scale: 0.25 }
+    }
+  );
+
+  // 2. Add a soft magenta VDW surface wrapping the selected side chain
+  try {
+    STATE.glowSurfaceId = v.addSurface(
+      $3Dmol.SurfaceType.VDW,
+      { opacity: 0.35, color: 'magenta' },
+      { chain: atom.chain, resi: atom.resi }
     );
-  } else if (style === 'stick') {
-    v.addStyle(
-      { chain: atom.chain, resi: atom.resi },
-      { stick: { radius: 0.22, color: '#FF4081' } }
-    );
-  } else if (style === 'sphere') {
-    v.addStyle(
-      { chain: atom.chain, resi: atom.resi },
-      { sphere: { scale: 0.4, color: '#FF4081' } }
-    );
+  } catch (e) {
+    console.error("Failed to add highlight surface: ", e);
   }
 
-  // Draw hydrogen bonds near the selected residue
+  // 3. Draw hydrogen bonds near the selected residue
   _drawHBonds(atom);
 
-  // Update the selection label at the bottom of the viewer
+  // 4. Update the selection label at the bottom of the viewer
   _updateSelectionLabel(atom);
 
-  // Smooth zoom to the selected residue
+  // 5. Smooth zoom to the selected residue
   v.zoomTo({ chain: atom.chain, resi: atom.resi }, 600);
   v.render();
 }
@@ -540,7 +544,7 @@ function _clearSelectionVisuals() {
   const v = STATE.viewer;
   if (!v) return;
 
-  // Remove all H-bond cylinders and labels
+  // Remove all H-bond cylinders
   if (STATE.hbondShapes && STATE.hbondShapes.length > 0) {
     STATE.hbondShapes.forEach(shape => {
       try { v.removeShape(shape); } catch(e) {}
@@ -548,9 +552,22 @@ function _clearSelectionVisuals() {
     STATE.hbondShapes = [];
   }
 
-  // Remove all 3Dmol labels and surfaces from selection
+  // Remove all H-bond labels
+  if (STATE.hbondLabels && STATE.hbondLabels.length > 0) {
+    STATE.hbondLabels.forEach(labelId => {
+      try { v.removeLabel(labelId); } catch(e) {}
+    });
+    STATE.hbondLabels = [];
+  }
+
+  // Remove selection glow surface
+  if (STATE.glowSurfaceId !== null) {
+    try { v.removeSurface(STATE.glowSurfaceId); } catch(e) {}
+    STATE.glowSurfaceId = null;
+  }
+
+  // Clear general labels
   v.removeAllLabels();
-  v.removeAllSurfaces();
 }
 
 /**
@@ -604,24 +621,24 @@ function _removeHoverGlow() {
   const color = activeColor ? activeColor.dataset.color : 'pLDDT';
   _reapplyBaseStyle(style, color);
 
-  // Re-apply selection highlight if a residue is selected
+  // Re-apply selection highlight and surface if a residue is selected
   if (STATE.selectedResidue) {
     const atom = STATE.selectedResidue;
-    if (style === 'cartoon' || style === 'surface') {
-      v.addStyle(
-        { chain: atom.chain, resi: atom.resi },
-        { cartoon: { color: '#FF4081' } }
-      );
-    } else if (style === 'stick') {
-      v.addStyle(
-        { chain: atom.chain, resi: atom.resi },
-        { stick: { radius: 0.22, color: '#FF4081' } }
-      );
-    } else if (style === 'sphere') {
-      v.addStyle(
-        { chain: atom.chain, resi: atom.resi },
-        { sphere: { scale: 0.4, color: '#FF4081' } }
-      );
+    v.addStyle(
+      { chain: atom.chain, resi: atom.resi },
+      {
+        stick: { colorscheme: 'Jmol', radius: 0.15 },
+        sphere: { colorscheme: 'Jmol', scale: 0.25 }
+      }
+    );
+    if (STATE.glowSurfaceId === null) {
+      try {
+        STATE.glowSurfaceId = v.addSurface(
+          $3Dmol.SurfaceType.VDW,
+          { opacity: 0.35, color: 'magenta' },
+          { chain: atom.chain, resi: atom.resi }
+        );
+      } catch (e) {}
     }
   }
   v.render();
@@ -678,8 +695,9 @@ function _drawHBonds(selectedAtom) {
   hbondPairs.sort((a, b) => a.dist - b.dist);
   const topBonds = hbondPairs.slice(0, 8);
 
-  // Draw each H-bond as a thin dashed cyan cylinder (AlphaFold style)
+  // Draw each H-bond as a thin dashed cyan cylinder (AlphaFold style) with floating distance labels
   topBonds.forEach(bond => {
+    // 1. Add dashed cylinder
     const shape = v.addCylinder({
       start: bond.from,
       end: bond.to,
@@ -691,6 +709,21 @@ function _drawHBonds(selectedAtom) {
       gapLength: 0.08
     });
     STATE.hbondShapes.push(shape);
+
+    // 2. Add floating distance label at the midpoint
+    const midX = (bond.from.x + bond.to.x) / 2;
+    const midY = (bond.from.y + bond.to.y) / 2;
+    const midZ = (bond.from.z + bond.to.z) / 2;
+
+    const labelId = v.addLabel(bond.dist.toFixed(1) + " Å", {
+      position: { x: midX, y: midY, z: midZ },
+      backgroundColor: 'black',
+      backgroundOpacity: 0.7,
+      fontColor: 'white',
+      fontSize: 10,
+      align: 'center'
+    });
+    STATE.hbondLabels.push(labelId);
   });
 
   // Update the selection label with H-bond count
