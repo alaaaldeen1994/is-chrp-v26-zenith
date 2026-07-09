@@ -475,16 +475,16 @@ function highlightResidue(atom) {
   // Store the selected residue
   STATE.selectedResidue = atom;
 
-  // 1. Add magenta side-chain sticks on the selected residue
+  // 1. Show side-chain sticks with element coloring (AlphaFold style: grey C, red O, blue N)
   v.addStyle(
     { chain: atom.chain, resi: atom.resi },
-    { stick: { radius: 0.18, color: '#E040FB' } }
+    { stick: { radius: 0.15, colorscheme: 'Jmol' } }
   );
 
-  // 2. Add a translucent highlight sphere on the clicked atom
-  v.addStyle(
-    { chain: atom.chain, resi: atom.resi, atom: atom.atom },
-    { sphere: { scale: 0.45, color: '#E040FB', opacity: 0.4 } }
+  // 2. Add a translucent magenta surface highlight around the selected residue
+  v.addSurface($3Dmol.SurfaceType.VDW,
+    { opacity: 0.25, color: '#E040FB' },
+    { chain: atom.chain, resi: atom.resi }
   );
 
   // 3. Draw hydrogen bonds near the selected residue
@@ -538,8 +538,9 @@ function _clearSelectionVisuals() {
     STATE.hbondShapes = [];
   }
 
-  // Remove all 3Dmol labels
+  // Remove all 3Dmol labels and surfaces from selection
   v.removeAllLabels();
+  v.removeAllSurfaces();
 }
 
 /**
@@ -598,11 +599,11 @@ function _removeHoverGlow() {
     const atom = STATE.selectedResidue;
     v.addStyle(
       { chain: atom.chain, resi: atom.resi },
-      { stick: { radius: 0.18, color: '#E040FB' } }
+      { stick: { radius: 0.15, colorscheme: 'Jmol' } }
     );
-    v.addStyle(
-      { chain: atom.chain, resi: atom.resi, atom: atom.atom },
-      { sphere: { scale: 0.45, color: '#E040FB', opacity: 0.4 } }
+    v.addSurface($3Dmol.SurfaceType.VDW,
+      { opacity: 0.25, color: '#E040FB' },
+      { chain: atom.chain, resi: atom.resi }
     );
   }
   v.render();
@@ -659,17 +660,17 @@ function _drawHBonds(selectedAtom) {
   hbondPairs.sort((a, b) => a.dist - b.dist);
   const topBonds = hbondPairs.slice(0, 8);
 
-  // Draw each H-bond as a dashed cyan cylinder
+  // Draw each H-bond as a thin dashed cyan cylinder (AlphaFold style)
   topBonds.forEach(bond => {
     const shape = v.addCylinder({
       start: bond.from,
       end: bond.to,
-      radius: 0.04,
+      radius: 0.03,
       color: '#00E5FF',
-      opacity: 0.7,
+      opacity: 0.65,
       dashed: true,
-      dashLength: 0.15,
-      gapLength: 0.1
+      dashLength: 0.12,
+      gapLength: 0.08
     });
     STATE.hbondShapes.push(shape);
   });
