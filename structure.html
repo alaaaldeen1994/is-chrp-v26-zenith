@@ -693,6 +693,264 @@
   /* ================================================================
      MEDIA QUERIES
   ================================================================ */
+  /* ================================================================
+     AI ANALYSIS TAB & ASSISTANT PANEL
+  ================================================================ */
+  .ai-analysis-area { display: flex; flex-direction: column; height: 100%; background: var(--bg-base); }
+  .ai-toolbar {
+    padding: 14px 20px; border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 12px; background: var(--bg-surface); flex-shrink: 0;
+  }
+  .ai-toolbar .title { font-size: 14px; font-weight: 700; color: white; }
+  .ai-toolbar .desc { font-size: 11px; color: var(--text-mute); margin-top: 2px; }
+  .ai-actions { margin-left: auto; display: flex; gap: 8px; }
+
+  .ai-content { flex: 1; overflow-y: auto; padding: 24px; }
+
+  /* Loading state */
+  .ai-loading { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; gap: 20px; }
+  .ai-loading-spinner {
+    width: 44px; height: 44px; border-radius: 50%;
+    border: 3px solid rgba(59,130,246,0.15); border-top-color: var(--accent);
+    animation: spin 0.8s linear infinite; box-shadow: 0 0 20px var(--accent-glow);
+  }
+  .ai-loading-title { font-size: 15px; font-weight: 700; color: white; }
+  .ai-loading-stages { display: flex; flex-direction: column; gap: 8px; width: 320px; }
+  .ai-stage-item {
+    display: flex; align-items: center; gap: 10px; padding: 9px 13px;
+    border-radius: 8px; background: rgba(255,255,255,0.02); border: 1px solid var(--border);
+    font-size: 11.5px; color: var(--text-dim); transition: all 0.18s;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .ai-stage-item.active { color: white; border-color: var(--accent); background: var(--accent-soft); }
+  .ai-stage-item.done { color: var(--green); }
+  .ai-stage-icon {
+    width: 16px; height: 16px; border-radius: 50%;
+    border: 1.5px solid var(--border-strong); flex-shrink: 0;
+  }
+  .ai-stage-item.active .ai-stage-icon { border-color: var(--accent); border-top-color: transparent; animation: spin 0.8s linear infinite; }
+  .ai-stage-item.done .ai-stage-icon { background: var(--green); border-color: var(--green); }
+
+  /* Report layout */
+  .ai-report { max-width: 760px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; }
+
+  /* Summary card with confidence ring */
+  .ai-summary-card {
+    background: var(--bg-panel); border: 1px solid var(--border); border-radius: 14px; padding: 24px;
+  }
+  .ai-summary-header { display: flex; align-items: center; gap: 24px; }
+  .ai-confidence-ring { position: relative; width: 110px; height: 110px; flex-shrink: 0; }
+  .ai-confidence-ring svg { width: 100%; height: 100%; }
+  .ai-conf-val {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -60%);
+    font-size: 26px; font-weight: 800; color: white; font-family: 'JetBrains Mono', monospace;
+  }
+  .ai-conf-label {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, 20px);
+    font-size: 9px; color: var(--text-mute); text-transform: uppercase; letter-spacing: 0.1em;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .ai-summary-text { flex: 1; }
+  .ai-summary-title { font-size: 20px; font-weight: 800; color: white; margin-bottom: 6px; }
+  .ai-summary-meta { font-size: 12px; color: var(--text-mute); font-family: 'JetBrains Mono', monospace; margin-bottom: 12px; }
+  .ai-summary-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .ai-tag {
+    padding: 4px 10px; border-radius: 6px; font-size: 10px; font-weight: 600;
+    font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.04em;
+  }
+  .ai-tag.blue { background: var(--accent-soft); color: var(--accent-bright); border: 1px solid rgba(59,130,246,0.3); }
+  .ai-tag.green { background: rgba(52,211,153,0.1); color: var(--green); border: 1px solid rgba(52,211,153,0.3); }
+  .ai-tag.amber { background: rgba(251,191,36,0.1); color: var(--amber); border: 1px solid rgba(251,191,36,0.3); }
+  .ai-tag.coral { background: rgba(248,113,113,0.1); color: var(--coral); border: 1px solid rgba(248,113,113,0.3); }
+
+  /* Report sections */
+  .ai-section { background: var(--bg-panel); border: 1px solid var(--border); border-radius: 12px; padding: 18px 20px; }
+  .ai-section-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+  .ai-section-icon {
+    width: 28px; height: 28px; border-radius: 7px; flex-shrink: 0;
+    background: var(--accent-soft); color: var(--accent-bright);
+    display: grid; place-items: center;
+  }
+  .ai-section-title { font-size: 14px; font-weight: 700; color: white; }
+  .ai-section-body { font-size: 13px; line-height: 1.7; color: var(--text-mute); }
+  .ai-section-body p { margin-bottom: 10px; }
+  .ai-section-body p:last-child { margin-bottom: 0; }
+  .ai-section-body strong { color: white; font-weight: 600; }
+  .ai-section-body code {
+    background: rgba(0,0,0,0.4); padding: 1px 6px; border-radius: 4px;
+    font-family: 'JetBrains Mono', monospace; font-size: 11.5px; color: var(--accent-bright);
+  }
+
+  /* Metrics grid inside sections */
+  .ai-metrics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-top: 12px; }
+  .ai-metric { background: rgba(0,0,0,0.3); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; }
+  .ai-metric .k { font-size: 9px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.06em; font-family: 'JetBrains Mono', monospace; margin-bottom: 3px; }
+  .ai-metric .v { font-size: 16px; font-weight: 700; color: white; font-family: 'JetBrains Mono', monospace; }
+
+  /* Suggestions */
+  .ai-suggestions { background: var(--bg-panel); border: 1px solid var(--border); border-radius: 12px; padding: 18px 20px; }
+  .ai-suggestions-title { font-size: 13px; font-weight: 700; color: white; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+  .ai-suggestion-list { display: flex; flex-direction: column; gap: 8px; }
+  .ai-suggestion {
+    display: flex; align-items: center; gap: 12px; padding: 11px 14px;
+    background: rgba(0,0,0,0.3); border: 1px solid var(--border); border-radius: 9px;
+    cursor: pointer; transition: all 0.15s;
+  }
+  .ai-suggestion:hover { border-color: var(--accent); background: var(--accent-soft); transform: translateX(3px); }
+  .ai-suggestion-num {
+    width: 24px; height: 24px; border-radius: 6px; flex-shrink: 0;
+    background: var(--accent-soft); color: var(--accent-bright);
+    display: grid; place-items: center; font-size: 11px; font-weight: 700;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .ai-suggestion-text { flex: 1; font-size: 12.5px; color: var(--text); }
+  .ai-suggestion-arrow { color: var(--text-dim); }
+
+  /* ================================================================
+     AI ASSISTANT PANEL
+  ================================================================ */
+  .assistant-toggle {
+    position: fixed; bottom: 40px; right: 20px; z-index: 500;
+    width: 48px; height: 48px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent) 0%, #8B5CF6 100%);
+    color: white; cursor: pointer; display: grid; place-items: center;
+    box-shadow: 0 8px 24px rgba(59,130,246,0.4), inset 0 1px 0 rgba(255,255,255,0.2);
+    transition: all 0.18s;
+  }
+  .assistant-toggle:hover { transform: scale(1.08); box-shadow: 0 12px 32px rgba(59,130,246,0.5); }
+  .assistant-toggle-badge {
+    position: absolute; top: -2px; right: -2px;
+    background: var(--green); color: #000;
+    font-size: 8px; font-weight: 800; font-family: 'JetBrains Mono', monospace;
+    padding: 2px 5px; border-radius: 6px; letter-spacing: 0.04em;
+  }
+
+  .assistant-panel {
+    position: fixed; top: 0; right: 0; bottom: 0; z-index: 600;
+    width: 380px; background: var(--bg-surface);
+    border-left: 1px solid var(--border);
+    display: flex; flex-direction: column;
+    transform: translateX(100%); transition: transform 0.3s cubic-bezier(0.16,1,0.3,1);
+    box-shadow: -10px 0 40px rgba(0,0,0,0.5);
+  }
+  .assistant-panel.open { transform: translateX(0); }
+
+  .assistant-header {
+    display: flex; align-items: center; gap: 12px;
+    padding: 16px 18px; border-bottom: 1px solid var(--border);
+    background: var(--bg-panel); flex-shrink: 0;
+  }
+  .assistant-title-wrap { display: flex; align-items: center; gap: 10px; }
+  .assistant-icon {
+    width: 34px; height: 34px; border-radius: 9px; flex-shrink: 0;
+    background: linear-gradient(135deg, var(--accent) 0%, #8B5CF6 100%);
+    color: white; display: grid; place-items: center;
+    box-shadow: 0 4px 12px rgba(59,130,246,0.3);
+  }
+  .assistant-title { font-size: 14px; font-weight: 700; color: white; }
+  .assistant-status { font-size: 10px; color: var(--text-mute); font-family: 'JetBrains Mono', monospace; margin-top: 2px; }
+  .assistant-status::before {
+    content: ''; display: inline-block; width: 6px; height: 6px; border-radius: 50%;
+    background: var(--green); margin-right: 5px; box-shadow: 0 0 4px var(--green);
+  }
+  .assistant-close {
+    margin-left: auto; width: 30px; height: 30px; border-radius: 7px;
+    background: transparent; border: 1px solid transparent; color: var(--text-mute);
+    cursor: pointer; display: grid; place-items: center; transition: all 0.15s;
+  }
+  .assistant-close:hover { color: var(--coral); background: rgba(248,113,113,0.1); }
+
+  .assistant-messages {
+    flex: 1; overflow-y: auto; padding: 16px;
+    display: flex; flex-direction: column; gap: 14px;
+  }
+
+  .assistant-msg { display: flex; gap: 10px; max-width: 92%; animation: msgIn 0.25s ease-out; }
+  @keyframes msgIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+  .assistant-msg.user { align-self: flex-end; flex-direction: row-reverse; }
+  .assistant-avatar {
+    width: 28px; height: 28px; border-radius: 8px; flex-shrink: 0;
+    font-size: 10px; font-weight: 800; font-family: 'JetBrains Mono', monospace;
+    display: grid; place-items: center;
+  }
+  .assistant-msg.assistant .assistant-avatar {
+    background: linear-gradient(135deg, var(--accent) 0%, #8B5CF6 100%); color: white;
+  }
+  .assistant-msg.user .assistant-avatar {
+    background: var(--bg-elev); color: var(--text-mute); border: 1px solid var(--border);
+  }
+
+  .assistant-bubble {
+    background: var(--bg-panel); border: 1px solid var(--border);
+    border-radius: 12px 12px 12px 4px; padding: 12px 14px;
+    font-size: 12.5px; line-height: 1.6; color: var(--text);
+  }
+  .assistant-msg.user .assistant-bubble {
+    background: var(--accent-soft); border-color: rgba(59,130,246,0.3);
+    border-radius: 12px 12px 4px 12px; color: white;
+  }
+  .assistant-bubble p { margin-bottom: 8px; }
+  .assistant-bubble p:last-child { margin-bottom: 0; }
+  .assistant-bubble strong { color: white; font-weight: 700; }
+  .assistant-bubble code {
+    background: rgba(0,0,0,0.4); padding: 1px 5px; border-radius: 3px;
+    font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--accent-bright);
+  }
+  .assistant-bubble ul { margin: 6px 0 6px 18px; }
+  .assistant-bubble li { margin-bottom: 3px; }
+
+  .assistant-suggestions { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+  .assistant-suggestion-chip {
+    padding: 6px 11px; border-radius: 14px;
+    background: rgba(59,130,246,0.08); border: 1px solid rgba(59,130,246,0.2);
+    color: var(--accent-bright); font-size: 11px; font-weight: 500;
+    cursor: pointer; transition: all 0.15s; font-family: inherit;
+  }
+  .assistant-suggestion-chip:hover { background: rgba(59,130,246,0.15); border-color: var(--accent); }
+
+  /* Typing indicator */
+  .assistant-typing { display: flex; gap: 4px; padding: 4px 0; }
+  .assistant-typing span {
+    width: 7px; height: 7px; border-radius: 50%; background: var(--text-mute);
+    animation: typingDot 1.4s infinite ease-in-out;
+  }
+  .assistant-typing span:nth-child(2) { animation-delay: 0.2s; }
+  .assistant-typing span:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes typingDot {
+    0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+    30% { transform: translateY(-6px); opacity: 1; }
+  }
+
+  /* Input area */
+  .assistant-input-wrap {
+    padding: 12px 14px; border-top: 1px solid var(--border);
+    background: var(--bg-panel); flex-shrink: 0;
+  }
+  .assistant-input-row { display: flex; gap: 8px; align-items: flex-end; }
+  .assistant-input {
+    flex: 1; resize: none; min-height: 38px; max-height: 120px;
+    background: rgba(0,0,0,0.4); border: 1px solid var(--border); border-radius: 10px;
+    padding: 9px 12px; color: var(--text);
+    font-family: 'Inter', sans-serif; font-size: 12.5px; line-height: 1.5;
+    outline: none; transition: border-color 0.15s;
+  }
+  .assistant-input:focus { border-color: var(--accent); }
+  .assistant-input::placeholder { color: var(--text-dim); }
+  .assistant-send {
+    width: 38px; height: 38px; border-radius: 10px; flex-shrink: 0;
+    background: linear-gradient(135deg, var(--accent) 0%, var(--accent-deep) 100%);
+    border: none; color: white; cursor: pointer; display: grid; place-items: center;
+    transition: all 0.15s;
+    box-shadow: 0 2px 8px rgba(59,130,246,0.3);
+  }
+  .assistant-send:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(59,130,246,0.4); }
+  .assistant-send:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+  .assistant-input-hint {
+    display: flex; justify-content: space-between; margin-top: 7px;
+    font-size: 9.5px; color: var(--text-dim); font-family: 'JetBrains Mono', monospace;
+  }
+
   @media (max-width: 1100px) { .main { grid-template-columns: 290px 1fr; } }
   @media (max-width: 900px) { .main { grid-template-columns: 1fr; grid-template-rows: auto 1fr; } .sidebar { height: auto; max-height: 45vh; } }
 </style>
@@ -982,6 +1240,14 @@
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18M15 3v18M3 9h18M3 15h18"/></svg>
           PAE Matrix
         </button>
+        <button class="tab" data-tab="ai" title="AI Analysis">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 2a8 8 0 1 1-8 8 8 8 0 0 1 8-8z"/>
+            <path d="M12 6v6l4 2"/>
+          </svg>
+          AI Analysis
+          <span class="badge" id="aiBadge">new</span>
+        </button>
 
         <div class="tab-tools">
           <button class="btn-icon" title="Download PDB" id="downloadBtn">
@@ -1138,6 +1404,101 @@
         </div>
       </div>
 
+      <!-- ============ AI ANALYSIS ============ -->
+      <div class="tab-panel" data-panel="ai">
+        <div class="ai-analysis-area">
+          <div class="ai-toolbar">
+            <div>
+              <div class="title">AI Structure Analysis</div>
+              <div class="desc">Auto-generated insights from ZenithFold prediction · powered by GPT-4</div>
+            </div>
+            <div class="ai-actions">
+              <button class="ghost-btn" id="aiRegenerateBtn">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1.06 6.7 2.82L21 8"/>
+                  <polyline points="21 3 21 8 16 8"/>
+                </svg>
+                Regenerate
+              </button>
+              <button class="ghost-btn" id="aiExportBtn">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                  <polyline points="7 10 12 15 17 10"/>
+                  <line x1="12" y1="15" x2="12" y2="3"/>
+                </svg>
+                Export PDF
+              </button>
+            </div>
+          </div>
+
+          <div class="ai-content" id="aiContent">
+            <!-- Loading state (shown during generation) -->
+            <div class="ai-loading" id="aiLoading">
+              <div class="ai-loading-spinner"></div>
+              <div class="ai-loading-title">Analyzing structure</div>
+              <div class="ai-loading-stages" id="aiLoadingStages">
+                <div class="ai-stage-item active">
+                  <div class="ai-stage-icon"></div>
+                  <span>Extracting structural features</span>
+                </div>
+                <div class="ai-stage-item">
+                  <div class="ai-stage-icon"></div>
+                  <span>Computing domain architecture</span>
+                </div>
+                <div class="ai-stage-item">
+                  <div class="ai-stage-icon"></div>
+                  <span>Evaluating confidence metrics</span>
+                </div>
+                <div class="ai-stage-item">
+                  <div class="ai-stage-icon"></div>
+                  <span>Generating natural language report</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Report content (populated by JS) -->
+            <div class="ai-report" id="aiReport" style="display:none;">
+              <!-- Summary card -->
+              <div class="ai-summary-card">
+                <div class="ai-summary-header">
+                  <div class="ai-confidence-ring" id="aiConfRing">
+                    <svg viewBox="0 0 100 100">
+                      <circle cx="50" cy="50" r="42" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="8"/>
+                      <circle id="aiConfArc" cx="50" cy="50" r="42" fill="none" stroke="url(#aiGrad)" stroke-width="8" stroke-linecap="round" stroke-dasharray="263.9" stroke-dashoffset="263.9" transform="rotate(-90 50 50)"/>
+                      <defs>
+                        <linearGradient id="aiGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                          <stop offset="0%" stop-color="#0053D6"/>
+                          <stop offset="100%" stop-color="#65CBF3"/>
+                        </linearGradient>
+                      </defs>
+                    </svg>
+                    <div class="ai-conf-val" id="aiConfVal">—</div>
+                    <div class="ai-conf-label">pLDDT</div>
+                  </div>
+                  <div class="ai-summary-text">
+                    <div class="ai-summary-title" id="aiSummaryTitle">Structure analyzed</div>
+                    <div class="ai-summary-meta" id="aiSummaryMeta">— residues · — chain · ZenithFold</div>
+                    <div class="ai-summary-tags" id="aiSummaryTags"></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Report sections (populated by JS) -->
+              <div class="ai-sections" id="aiSections"></div>
+
+              <!-- Action suggestions -->
+              <div class="ai-suggestions">
+                <div class="ai-suggestions-title font-bold text-white flex items-center gap-2">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+                  Suggested Next Steps
+                </div>
+                <div class="ai-suggestion-list" id="aiSuggestionList"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- ============ RUN OVERLAY ============ -->
       <div class="run-overlay" id="runOverlay">
         <div class="run-spinner"></div>
@@ -1223,6 +1584,75 @@
     lucide.createIcons();
   });
 </script>
+
+<!-- ============ AI ASSISTANT PANEL ============ -->
+<div class="assistant-toggle" id="assistantToggle" title="Ask AI (Ctrl+/)">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+  </svg>
+  <span class="assistant-toggle-badge" id="assistantBadge">AI</span>
+</div>
+
+<aside class="assistant-panel" id="assistantPanel">
+  <div class="assistant-header">
+    <div class="assistant-title-wrap">
+      <div class="assistant-icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 2a8 8 0 1 1-8 8 8 8 0 0 1 8-8z"/>
+          <path d="M8 12h.01M12 12h.01M16 12h.01"/>
+        </svg>
+      </div>
+      <div>
+        <div class="assistant-title">Structure Assistant</div>
+        <div class="assistant-status" id="assistantStatus">Ready · context loaded</div>
+      </div>
+    </div>
+    <button class="assistant-close" id="assistantClose" title="Close (Esc)">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4">
+        <line x1="18" y1="6" x2="6" y2="18"/>
+        <line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+    </button>
+  </div>
+
+  <div class="assistant-messages" id="assistantMessages">
+    <!-- Welcome message -->
+    <div class="assistant-msg assistant">
+      <div class="assistant-avatar">AI</div>
+      <div class="assistant-bubble">
+        <p>Hi! I'm your structure assistant. I can see you've loaded a <strong id="welcomeSeqLen">76-residue</strong> protein with mean pLDDT <strong id="welcomePlddt">87.4</strong>.</p>
+        <p style="margin-top:8px">Try asking:</p>
+        <div class="assistant-suggestions" id="welcomeSuggestions">
+          <button class="assistant-suggestion-chip" data-q="What does the pLDDT score tell me?">What does pLDDT mean?</button>
+          <button class="assistant-suggestion-chip" data-q="Which residues have low confidence?">Show low-confidence residues</button>
+          <button class="assistant-suggestion-chip" data-q="What secondary structure does this protein have?">Describe the secondary structure</button>
+          <button class="assistant-suggestion-chip" data-q="Is this prediction reliable?">Is this prediction reliable?</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="assistant-input-wrap">
+    <div class="assistant-input-row">
+      <textarea
+        id="assistantInput"
+        class="assistant-input"
+        placeholder="Ask about this structure..."
+        rows="1"
+      ></textarea>
+      <button class="assistant-send" id="assistantSend" title="Send (Enter)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="22" y1="2" x2="11" y2="13"/>
+          <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+        </svg>
+      </button>
+    </div>
+    <div class="assistant-input-hint">
+      <span>Enter to send · Shift+Enter for new line</span>
+      <span id="assistantContextInfo">Context: 0 residues</span>
+    </div>
+  </div>
+</aside>
 
 </body>
 </html>

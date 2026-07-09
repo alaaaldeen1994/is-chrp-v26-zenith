@@ -999,6 +999,7 @@ async function runPrediction() {
         renderSequenceViewer(parsedSeq, plddt);
         renderPAE(plddt);
         updateMetaCard(parsedSeq, plddt);
+        if (typeof generateAIReport === 'function') generateAIReport();
         log(`Nilus Atomix prediction complete · mean pLDDT ${(plddt.reduce((a,b)=>a+b,0)/plddt.length).toFixed(1)}`, 'ok');
       } else {
         log('Nilus Atomix failed: ' + (result.detail || 'API error'), 'err');
@@ -1102,6 +1103,7 @@ async function loadBoltzResult(overlay, btn) {
     renderSequenceViewer(seq, plddt);
     renderPAE(plddt);
     updateMetaCard(seq, plddt);
+    if (typeof generateAIReport === 'function') generateAIReport();
     log('Complex model loaded into workspace', 'ok');
 
   } catch (e) {
@@ -1212,6 +1214,58 @@ function init() {
 
   log('Structure module initialized · ready for predictions', 'ok');
 
+  // AI & Assistant Event Listeners Registration
+  const aiRegen = document.getElementById('aiRegenerateBtn');
+  if (aiRegen) aiRegen.addEventListener('click', generateAIReport);
+
+  const aiExport = document.getElementById('aiExportBtn');
+  if (aiExport) {
+    aiExport.addEventListener('click', () => {
+      log('AI report exported as PDF (stub)', 'ok');
+    });
+  }
+
+  const aiTab = document.querySelector('[data-tab="ai"]');
+  if (aiTab) {
+    aiTab.addEventListener('click', () => {
+      if (document.getElementById('aiReport').style.display === 'none' && STATE.currentModel && STATE.currentModel.pdb) {
+        generateAIReport();
+      }
+    });
+  }
+
+  const assistantTog = document.getElementById('assistantToggle');
+  if (assistantTog) assistantTog.addEventListener('click', () => toggleAssistant());
+
+  const assistantCls = document.getElementById('assistantClose');
+  if (assistantCls) assistantCls.addEventListener('click', () => toggleAssistant(false));
+
+  const assistantSnd = document.getElementById('assistantSend');
+  if (assistantSnd) {
+    assistantSnd.addEventListener('click', () => {
+      sendAssistantMessage(document.getElementById('assistantInput').value);
+    });
+  }
+
+  const assistantIn = document.getElementById('assistantInput');
+  if (assistantIn) {
+    assistantIn.addEventListener('input', autoResizeInput);
+    assistantIn.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        sendAssistantMessage(e.target.value);
+      }
+    });
+  }
+
+  // Keyboard shortcut: Ctrl+/ to toggle assistant
+  document.addEventListener('keydown', (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.key === '/') {
+      e.preventDefault();
+      toggleAssistant();
+    }
+  });
+
   // Read URL params — discovery page sends ?tab=boltz
   const params = new URLSearchParams(window.location.search);
   if (params.get('tab') === 'boltz') {
@@ -1256,3 +1310,534 @@ window.addEventListener('resize', () => {
   if (STATE.viewer) STATE.viewer.handleResize();
   if (STATE.bindingViewer) STATE.bindingViewer.handleResize();
 });
+
+// ============================================================
+// AI ANALYSIS MODULE (Zenith AI structure report)
+// ============================================================
+
+// -------- Compute structural features from current state --------
+function computeStructureFeatures() {
+  const seq = STATE.currentModel ? STATE.currentModel.sequence : '';
+  const plddt = STATE.currentModel ? STATE.currentModel.plddt : [];
+  if (!seq || plddt.length === 0) return null;
+
+  const n = seq.length;
+  const meanPlddt = plddt.reduce((a, b) => a + b, 0) / n;
+
+  // Region analysis: split into N-term, middle, C-term
+  const third = Math.floor(n / 3);
+  const regions = [
+    { name: 'N-terminal', start: 0, end: third },
+    { name: 'Central',    start: third, end: third * 2 },
+    { name: 'C-terminal', start: third * 2, end: n }
+  ];
+  const regionStats = regions.map(r => {
+    const slice = plddt.slice(r.start, r.end);
+    const mean = slice.reduce((a, b) => a + b, 0) / slice.length;
+    return { ...r, meanPlddt: mean, tier: plddtTier(mean) };
+  });
+
+  // Low-confidence residues (pLDDT < 70)
+  const lowConfResidues = plddt
+    .map((p, i) => ({ idx: i, plddt: p, aa: seq[i] }))
+    .filter(r => r.plddt < 70);
+
+  // Find longest low-confidence stretch
+  let longestStretch = { start: -1, length: 0 };
+  let currentStart = -1, currentLen = 0;
+  for (let i = 0; i < plddt.length; i++) {
+    if (plddt[i] < 70) {
+      if (currentStart === -1) currentStart = i;
+      currentLen++;
+      if (currentLen > longestStretch.length) {
+        longestStretch = { start: currentStart, length: currentLen };
+      }
+    } else {
+      currentStart = -1;
+      currentLen = 0;
+    }
+  }
+
+  // Amino acid composition
+  const composition = {};
+  for (const aa of seq) composition[aa] = (composition[aa] || 0) + 1;
+  const hydrophobic = ['A','V','I','L','M','F','W','P'];
+  const hydrophobicCount = hydrophobic.reduce((sum, aa) => sum + (composition[aa] || 0), 0);
+  const hydrophobicity = (hydrophobicCount / n * 100).toFixed(1);
+
+  // Secondary structure estimate from pLDDT pattern (simplified)
+  // High-confidence stretches are likely helices/sheets; low are loops
+  let helixCount = 0, loopCount = 0;
+  for (let i = 0; i < plddt.length; i++) {
+    if (plddt[i] > 80) helixCount++;
+    else if (plddt[i] < 60) loopCount++;
+  }
+
+  // PAE mean (if available)
+  let paeMean = null;
+  if (STATE.paeMatrix) {
+    let sum = 0, count = 0;
+    for (let i = 0; i < STATE.paeMatrix.length; i++) {
+      for (let j = 0; j < STATE.paeMatrix[i].length; j++) {
+        if (i !== j) { sum += STATE.paeMatrix[i][j]; count++; }
+      }
+    }
+    paeMean = count > 0 ? sum / count : null;
+  }
+
+  return {
+    length: n,
+    meanPlddt: Math.round(meanPlddt * 10) / 10,
+    regionStats,
+    lowConfCount: lowConfResidues.length,
+    lowConfPercent: Math.round(lowConfResidues.length / n * 100),
+    longestLowConfStretch: longestStretch,
+    hydrophobicity,
+    helixPercent: Math.round(helixCount / n * 100),
+    loopPercent: Math.round(loopCount / n * 100),
+    paeMean: paeMean ? Math.round(paeMean * 100) / 100 : null,
+    composition
+  };
+}
+
+function plddtTier(v) {
+  if (v >= 90) return { label: 'very high', class: 'blue' };
+  if (v >= 70) return { label: 'high',      class: 'green' };
+  if (v >= 50) return { label: 'low',       class: 'amber' };
+  return { label: 'very low', class: 'coral' };
+}
+
+// -------- Build the report (client-side simulation) --------
+function generateAIReport() {
+  const features = computeStructureFeatures();
+  if (!features) return;
+
+  // Show loading animation first
+  showAILoading();
+
+  // Animate through stages
+  const stages = document.querySelectorAll('#aiLoadingStages .ai-stage-item');
+  let stageIdx = 0;
+  const stageInterval = setInterval(() => {
+    if (stageIdx > 0) stages[stageIdx - 1].classList.replace('active', 'done');
+    if (stageIdx < stages.length) {
+      stages[stageIdx].classList.add('active');
+      stageIdx++;
+    } else {
+      clearInterval(stageInterval);
+      renderAIReport(features);
+    }
+  }, 600);
+}
+
+function showAILoading() {
+  const loadingEl = document.getElementById('aiLoading');
+  const reportEl = document.getElementById('aiReport');
+  if (loadingEl) loadingEl.style.display = 'flex';
+  if (reportEl) reportEl.style.display = 'none';
+  // Reset stages
+  document.querySelectorAll('#aiLoadingStages .ai-stage-item').forEach((s, i) => {
+    s.classList.remove('active', 'done');
+    if (i === 0) s.classList.add('active');
+  });
+  // Switch to AI tab
+  switchTab('ai');
+}
+
+function renderAIReport(f) {
+  const loadingEl = document.getElementById('aiLoading');
+  const reportEl = document.getElementById('aiReport');
+  if (loadingEl) loadingEl.style.display = 'none';
+  if (reportEl) reportEl.style.display = 'flex';
+
+  // Confidence ring
+  const arc = document.getElementById('aiConfArc');
+  if (arc) {
+    const circumference = 263.9;
+    const offset = circumference - (f.meanPlddt / 100) * circumference;
+    arc.style.strokeDashoffset = offset;
+    arc.style.transition = 'stroke-dashoffset 1.2s cubic-bezier(0.16,1,0.3,1)';
+  }
+  const confValEl = document.getElementById('aiConfVal');
+  if (confValEl) confValEl.textContent = f.meanPlddt;
+
+  // Summary
+  const tier = plddtTier(f.meanPlddt);
+  const sumTitleEl = document.getElementById('aiSummaryTitle');
+  if (sumTitleEl) {
+    sumTitleEl.textContent =
+      f.meanPlddt >= 80 ? 'High-confidence fold' :
+      f.meanPlddt >= 70 ? 'Good confidence fold' :
+      f.meanPlddt >= 50 ? 'Moderate-confidence fold' :
+      'Low-confidence fold — interpret with caution';
+  }
+  const sumMetaEl = document.getElementById('aiSummaryMeta');
+  if (sumMetaEl) {
+    sumMetaEl.textContent =
+      `${f.length} residues · chain A · ZenithFold · ${STATE.mode === 'esm' ? 'Nilus Atomix' : 'Boltz'}`;
+  }
+
+  // Tags
+  const tagsEl = document.getElementById('aiSummaryTags');
+  if (tagsEl) {
+    tagsEl.innerHTML = '';
+    const tags = [
+      { text: tier.label + ' confidence', class: tier.class },
+      { text: f.hydrophobicity > 40 ? 'hydrophobic core' : 'mixed surface', class: 'blue' },
+      { text: f.loopPercent > 30 ? 'disordered regions' : 'well-folded', class: f.loopPercent > 30 ? 'amber' : 'green' }
+    ];
+    if (f.paeMean !== null && f.paeMean > 10) tags.push({ text: 'multi-domain', class: 'amber' });
+    tags.forEach(t => {
+      const el = document.createElement('span');
+      el.className = `ai-tag ${t.class}`;
+      el.textContent = t.text;
+      tagsEl.appendChild(el);
+    });
+  }
+
+  // Build sections
+  const sectionsEl = document.getElementById('aiSections');
+  if (sectionsEl) {
+    sectionsEl.innerHTML = '';
+
+    // Section 1: Domain Architecture
+    sectionsEl.appendChild(buildAISection(
+      'domain',
+      'Domain Architecture',
+      `<p>This ${f.length}-residue structure was predicted as a ${f.helixPercent}% helical / ${f.loopPercent}% loop fold with a mean pLDDT of <strong>${f.meanPlddt}</strong>.</p>
+       <p>The protein can be divided into three regions:</p>
+       <div class="ai-metrics-grid">
+         ${f.regionStats.map(r => `
+           <div class="ai-metric">
+             <div class="k">${r.name} (res ${r.start+1}-${r.end})</div>
+             <div class="v">${r.meanPlddt.toFixed(1)} <span style="font-size:11px;color:var(--text-mute)">pLDDT</span></div>
+           </div>
+         `).join('')}
+       </div>
+       <p style="margin-top:12px">The ${f.regionStats.reduce((max, r) => r.meanPlddt > max.meanPlddt ? r : max).name} region shows the highest confidence, suggesting it forms the structural core. ${f.regionStats.reduce((min, r) => r.meanPlddt < min.meanPlddt ? r : min).name} residues may benefit from experimental validation.</p>`
+    ));
+
+    // Section 2: Confidence Assessment
+    const stretch = f.longestLowConfStretch;
+    const stretchText = stretch.length > 0
+      ? `The longest low-confidence stretch spans <strong>${stretch.length} residues</strong> (positions ${stretch.start+1}-${stretch.start+stretch.length}), likely indicating a flexible loop or disordered region.`
+      : `No significant low-confidence stretches were detected — the structure is uniformly well-predicted.`;
+
+    sectionsEl.appendChild(buildAISection(
+      'confidence',
+      'Confidence Assessment',
+      `<p>Overall, <strong>${f.lowConfPercent}%</strong> of residues (${f.lowConfCount}/${f.length}) fall below the pLDDT 70 threshold. ${stretchText}</p>
+       <div class="ai-metrics-grid">
+         <div class="ai-metric"><div class="k">Mean pLDDT</div><div class="v">${f.meanPlddt}</div></div>
+         <div class="ai-metric"><div class="k">Low-conf residues</div><div class="v">${f.lowConfCount}</div></div>
+         <div class="ai-metric"><div class="k">Longest stretch</div><div class="v">${stretch.length}</div></div>
+         ${f.paeMean !== null ? `<div class="ai-metric"><div class="k">Mean PAE</div><div class="v">${f.paeMean} Å</div></div>` : ''}
+       </div>
+       <p style="margin-top:12px">${f.meanPlddt >= 80
+         ? 'This prediction is suitable for functional annotation and docking studies.'
+         : f.meanPlddt >= 60
+         ? 'Use this prediction as a hypothesis. Cross-reference with experimental data where possible.'
+         : 'Treat low-confidence regions as flexible/disordered. Consider AlphaFold-Multimer or experimental structure determination.'}</p>`
+    ));
+
+    // Section 3: Biochemical Properties
+    const topAAs = Object.entries(f.composition).sort((a,b) => b[1]-a[1]).slice(0,5);
+    sectionsEl.appendChild(buildAISection(
+      'biochem',
+      'Biochemical Properties',
+      `<p>The sequence has a hydrophobic residue content of <strong>${f.hydrophobicity}%</strong> (A, V, I, L, M, F, W, P), suggesting a ${f.hydrophobicity > 40 ? 'buried core-dominated' : 'surface-exposed'} architecture.</p>
+       <p>Most abundant residues: ${topAAs.map(([aa, count]) => `<code>${aa}</code> (${count})`).join(', ')}.</p>
+       <p>Predicted secondary structure composition: <strong>${f.helixPercent}%</strong> ordered (helix/sheet) and <strong>${f.loopPercent}%</strong> loop/disordered.</p>`
+    ));
+  }
+
+  // Suggestions
+  const suggestions = [];
+  if (f.meanPlddt >= 80) {
+    suggestions.push('Run binding site prediction to identify potential ligand pockets');
+    suggestions.push('Perform mutation analysis on catalytic residues to predict functional impact');
+  }
+  if (f.lowConfPercent > 20) {
+    const stretch = f.longestLowConfStretch;
+    suggestions.push(`Investigate residues ${stretch.start+1}-${stretch.start+stretch.length} — consider disorder prediction (IUPred)`);
+  }
+  if (f.paeMean !== null && f.paeMean > 10) {
+    suggestions.push('High PAE suggests domain mobility — run normal mode analysis to visualize motion');
+  }
+  suggestions.push('Export the PDB file and align to known structures in the PDB for functional annotation');
+  if (f.length > 200) {
+    suggestions.push('Large protein detected — consider domain splitting for higher-accuracy prediction');
+  }
+
+  const sugList = document.getElementById('aiSuggestionList');
+  if (sugList) {
+    sugList.innerHTML = '';
+    suggestions.slice(0, 5).forEach((s, i) => {
+      const el = document.createElement('div');
+      el.className = 'ai-suggestion';
+      el.innerHTML = `
+        <div class="ai-suggestion-num">${i+1}</div>
+        <div class="ai-suggestion-text">${s}</div>
+        <svg class="ai-suggestion-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+      `;
+      el.addEventListener('click', () => log('AI suggestion selected: ' + s, 'info'));
+      sugList.appendChild(el);
+    });
+  }
+
+  // Update badge
+  const badge = document.getElementById('aiBadge');
+  if (badge) badge.textContent = 'ready';
+  
+  // Update assistant context metrics
+  updateAssistantContext();
+  
+  log('AI analysis report generated · ' + suggestions.length + ' suggestions', 'ok');
+}
+
+function buildAISection(iconType, title, bodyHtml) {
+  const icons = {
+    domain: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v6m0 10v6m11-11h-6m-10 0H1"/></svg>',
+    confidence: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 2a8 8 0 1 1-8 8 8 8 0 0 1 8-8z"/><path d="M12 6v6l4 2"/></svg>',
+    biochem: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>'
+  };
+  const div = document.createElement('div');
+  div.className = 'ai-section';
+  div.innerHTML = `
+    <div class="ai-section-header">
+      <div class="ai-section-icon">${icons[iconType] || icons.domain}</div>
+      <div class="ai-section-title">${title}</div>
+    </div>
+    <div class="ai-section-body">${bodyHtml}</div>
+  `;
+  return div;
+}
+
+// ============================================================
+// CONVERSATIONAL ASSISTANT MODULE (Chat Assistant overlay)
+// ============================================================
+
+const assistantState = {
+  open: false,
+  messages: [],
+  thinking: false
+};
+
+// -------- Toggle panel --------
+function toggleAssistant(force) {
+  assistantState.open = force !== undefined ? force : !assistantState.open;
+  const panel = document.getElementById('assistantPanel');
+  if (panel) panel.classList.toggle('open', assistantState.open);
+  const toggle = document.getElementById('assistantToggle');
+  if (toggle) toggle.style.display = assistantState.open ? 'none' : 'grid';
+  if (assistantState.open) {
+    const input = document.getElementById('assistantInput');
+    if (input) setTimeout(() => input.focus(), 300);
+    updateAssistantContext();
+  }
+}
+
+// -------- Update context info --------
+function updateAssistantContext() {
+  const seq = STATE.currentModel ? STATE.currentModel.sequence : '';
+  const plddt = STATE.currentModel ? STATE.currentModel.plddt : [];
+  const len = seq.length;
+  const meanPlddt = plddt.length > 0
+    ? (plddt.reduce((a,b)=>a+b,0) / plddt.length).toFixed(1)
+    : '—';
+  
+  const ctxInfo = document.getElementById('assistantContextInfo');
+  if (ctxInfo) ctxInfo.textContent = `Context: ${len} residues · pLDDT ${meanPlddt}`;
+  
+  const welcomeLen = document.getElementById('welcomeSeqLen');
+  if (welcomeLen) welcomeLen.textContent = len > 0 ? `${len}-residue` : '0-residue';
+  
+  const welcomePlddt = document.getElementById('welcomePlddt');
+  if (welcomePlddt) welcomePlddt.textContent = meanPlddt;
+}
+
+// -------- Send message --------
+async function sendAssistantMessage(text) {
+  if (!text || !text.trim() || assistantState.thinking) return;
+
+  // Add user message
+  addAssistantMessage(text, 'user');
+  const input = document.getElementById('assistantInput');
+  if (input) {
+    input.value = '';
+    autoResizeInput();
+  }
+
+  assistantState.thinking = true;
+  const btn = document.getElementById('assistantSend');
+  if (btn) btn.disabled = true;
+  const status = document.getElementById('assistantStatus');
+  if (status) status.textContent = 'Thinking...';
+
+  // Show typing indicator
+  const typingEl = addTypingIndicator();
+
+  try {
+    // Generate simulated intelligent response based on current sequence state
+    const response = await generateAssistantResponse(text);
+    typingEl.remove();
+    addAssistantMessage(response, 'assistant');
+  } catch (err) {
+    typingEl.remove();
+    addAssistantMessage('Sorry, I encountered an error: ' + err.message, 'assistant');
+  } finally {
+    assistantState.thinking = false;
+    if (btn) btn.disabled = false;
+    if (status) status.textContent = 'Ready · context loaded';
+  }
+}
+
+// -------- Add message to UI --------
+function addAssistantMessage(text, role) {
+  const messagesEl = document.getElementById('assistantMessages');
+  if (!messagesEl) return;
+  
+  const msgEl = document.createElement('div');
+  msgEl.className = `assistant-msg ${role}`;
+
+  const avatar = role === 'user' ? 'You' : 'AI';
+  msgEl.innerHTML = `
+    <div class="assistant-avatar">${avatar}</div>
+    <div class="assistant-bubble">${text}</div>
+  `;
+  messagesEl.appendChild(msgEl);
+  messagesEl.scrollTop = messagesEl.scrollHeight;
+  assistantState.messages.push({ role, text });
+}
+
+function addTypingIndicator() {
+  const messagesEl = document.getElementById('assistantMessages');
+  if (!messagesEl) return null;
+  
+  const el = document.createElement('div');
+  el.className = 'assistant-msg assistant';
+  el.innerHTML = `
+    <div class="assistant-avatar">AI</div>
+    <div class="assistant-bubble">
+      <div class="assistant-typing"><span></span><span></span><span></span></div>
+    </div>
+  `;
+  messagesEl.appendChild(el);
+  messagesEl.scrollTop = messagesEl.scrollHeight;
+  return el;
+}
+
+// -------- Auto-resize textarea --------
+function autoResizeInput() {
+  const input = document.getElementById('assistantInput');
+  if (!input) return;
+  input.style.height = 'auto';
+  input.style.height = Math.min(input.scrollHeight, 120) + 'px';
+}
+
+// -------- Response generator (client-side rule-based, or call OpenAI API) --------
+async function generateAssistantResponse(question) {
+  // Simulate thinking delay
+  await new Promise(r => setTimeout(r, 600 + Math.random() * 800));
+
+  const q = question.toLowerCase();
+  const f = computeStructureFeatures();
+  if (!f) return 'No structure loaded. Please run a fold prediction first.';
+
+  // Pattern matching for common questions
+  if (q.includes('plddt') || q.includes('confidence') || q.includes('score') || q.includes('reliable') || q.includes('trust')) {
+    return `<p>The <strong>mean pLDDT</strong> for this structure is <strong>${f.meanPlddt}</strong>.</p>
+            <ul>
+              <li><strong>Very High (pLDDT ≥ 90)</strong>: Core folding is highly reliable. Suitable for molecular docking studies.</li>
+              <li><strong>High (70-90)</strong>: Good backbone accuracy. Suitable for active site identification.</li>
+              <li><strong>Low (50-70)</strong>: Flexible loop or transition regions. Interpret backbone geometry with caution.</li>
+              <li><strong>Very Low (< 50)</strong>: Unstructured or intrinsically disordered region.</li>
+            </ul>
+            <p>Based on our metrics, this ESMFold prediction is <strong>${f.meanPlddt >= 85 ? 'highly reliable' : f.meanPlddt >= 70 ? 'reliable' : 'moderately reliable'}</strong>.</p>`;
+  }
+
+  if (q.includes('low') || q.includes('disorder') || q.includes('flexib')) {
+    if (f.lowConfCount === 0) return 'No low-confidence residues detected — the entire structure is well-predicted.';
+    const s = f.longestLowConfStretch;
+    return `<p><strong>${f.lowConfCount} residues</strong> (${f.lowConfPercent}%) have pLDDT below 70.</p>
+            <p>The longest low-confidence stretch spans <strong>${s.length} residues</strong> at positions <code>${s.start+1}-${s.start+s.length}</code>.</p>
+            <p>This region is likely flexible or disordered. Consider:</p>
+            <ul>
+              <li>Running IUPred disorder prediction</li>
+              <li>Checking if this region is a functional loop</li>
+              <li>Validating with NMR or HDX-MS experiments</li>
+            </ul>`;
+  }
+
+  if (q.includes('secondary') || q.includes('helix') || q.includes('sheet') || q.includes('loop') || q.includes('fold')) {
+    return `<p>Predicted secondary structure composition:</p>
+            <ul>
+              <li><strong>${f.helixPercent}%</strong> ordered (helix/sheet, pLDDT >80)</li>
+              <li><strong>${f.loopPercent}%</strong> loop/disordered (pLDDT <60)</li>
+              <li><strong>${100 - f.helixPercent - f.loopPercent}%</strong> intermediate confidence</li>
+            </ul>
+            <p>Region breakdown:</p>
+            <ul>
+              ${f.regionStats.map(r => `<li><strong>${r.name}</strong> (res ${r.start+1}-${r.end}): ${r.meanPlddt.toFixed(1)} pLDDT — ${r.tier.label} confidence</li>`).join('')}
+            </ul>`;
+  }
+
+  if (q.includes('binding') || q.includes('pocket') || q.includes('ligand') || q.includes('drug') || q.includes('site')) {
+    return `<p>Based on the structure, here are predicted binding considerations:</p>
+            <ul>
+              <li>Hydrophobic residues comprise <strong>${f.hydrophobicity}%</strong> of the sequence</li>
+              <li>${f.hydrophobicity > 40 ? 'High hydrophobic content suggests buried binding pockets' : 'Surface composition suggests solvent-exposed binding sites'}</li>
+              <li>Switch to the <strong>Binding Analysis</strong> tab to see contact maps</li>
+            </ul>
+            <p>For detailed pocket detection, consider running P2Rank or fpocket on the exported PDB.</p>`;
+  }
+
+  if (q.includes('mutat') || q.includes('alanine') || q.includes('substitut') || q.includes('change residue')) {
+    return `<p>Mutation analysis suggestions:</p>
+            <ul>
+              <li>Click any residue in the <strong>Sequence</strong> tab to inspect it</li>
+              <li>Low-confidence residues are most tolerant to mutation</li>
+              <li>High-confidence core residues are likely structurally critical</li>
+              <li>Conserved positions (check MSA) are functionally important</li>
+            </ul>
+            <p>For ΔΔG prediction, export the PDB and use FoldX or Rosetta.</p>`;
+  }
+
+  if (q.includes('export') || q.includes('download') || q.includes('pdb') || q.includes('save')) {
+    return `<p>You can export this structure in several ways:</p>
+            <ul>
+              <li>Click the <strong>download icon</strong> in the tab toolbar to get the .pdb file</li>
+              <li>Use the <strong>Share Snapshot</strong> button to generate a shareable link</li>
+              <li>Export the AI Analysis report as PDF from the AI tab</li>
+            </ul>
+            <p>The PDB file includes B-factors set to pLDDT values, compatible with PyMOL and ChimeraX.</p>`;
+  }
+
+  if (q.includes('domain') || q.includes('region') || q.includes('architect')) {
+    return `<p>The structure divides into three regions:</p>
+            <ul>
+              ${f.regionStats.map(r => `<li><strong>${r.name}</strong> (res ${r.start+1}-${r.end}): mean pLDDT ${r.meanPlddt.toFixed(1)} — ${r.tier.label} confidence</li>`).join('')}
+            </ul>
+            <p>${f.paeMean > 10 ? 'High PAE values suggest these regions may move independently (multi-domain).' : 'Low PAE values suggest a single rigid domain.'}</p>`;
+  }
+
+  if (q.includes('pae') || q.includes('aligned error') || q.includes('position')) {
+    return `<p><strong>PAE (Predicted Aligned Error)</strong> estimates the position error between residue pairs in Ångströms.</p>
+            <ul>
+              <li><strong>Low PAE (blue)</strong>: residues have confident relative positions</li>
+              <li><strong>High PAE (red)</strong>: domains may shift relative to each other</li>
+              <li>Mean PAE for this structure: <strong>${f.paeMean || 'N/A'} Å</strong></li>
+            </ul>
+            <p>View the full matrix in the <strong>PAE Matrix</strong> tab.</p>`;
+  }
+
+  // Default response
+  return `<p>I can help you understand this ${f.length}-residue structure. Try asking about:</p>
+          <ul>
+            <li>Confidence and reliability (<em>"Is this prediction reliable?"</em>)</li>
+            <li>Low-confidence regions (<em>"Which residues are disordered?"</em>)</li>
+            <li>Secondary structure (<em>"Describe the helices and sheets"</em>)</li>
+            <li>Binding sites (<em>"Where are the binding pockets?"</em>)</li>
+            <li>Domains (<em>"What are the structural domains?"</em>)</li>
+          </ul>`;
+}
