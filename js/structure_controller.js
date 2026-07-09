@@ -429,17 +429,17 @@ function renderModel(style, colorScheme) {
   const plddtColorfunc = function(atom) {
     let plddt = atom.b || 0;
     if (plddt <= 1.0 && plddt > 0.0) plddt = plddt * 100;
-    if (plddt > 90) return '#0053D6';
-    if (plddt > 70) return '#65B3E7';
-    if (plddt > 50) return '#F5B544';
-    return '#FB923C';
+    if (plddt > 90) return '#0053d6'; // Blue (Very High)
+    if (plddt > 70) return '#65cbf3'; // Cyan (Confident)
+    if (plddt > 55 || plddt > 50) return '#ffdb13'; // Yellow (Low)
+    return '#ff7d45'; // Orange (Very Low)
   };
 
-  let cartoonStyle = { colorfunc: plddtColorfunc };
+  let cartoonStyle = { colorfunc: plddtColorfunc, style: 'oval', thickness: 0.22, quality: 5 };
   if (colorScheme === 'chain') {
-    cartoonStyle = { colorscheme: 'chain' };
+    cartoonStyle = { colorscheme: 'chain', style: 'oval', thickness: 0.22, quality: 5 };
   } else if (colorScheme === 'spectrum') {
-    cartoonStyle = { colorscheme: 'spectrum' };
+    cartoonStyle = { colorscheme: 'spectrum', style: 'oval', thickness: 0.22, quality: 5 };
   }
 
   if (style === 'cartoon') {
@@ -585,17 +585,17 @@ function _reapplyBaseStyle(style, colorScheme) {
   const plddtColorfunc = function(atom) {
     let plddt = atom.b || 0;
     if (plddt <= 1.0 && plddt > 0.0) plddt = plddt * 100;
-    if (plddt > 90) return '#0053D6';
-    if (plddt > 70) return '#65B3E7';
-    if (plddt > 50) return '#F5B544';
-    return '#FB923C';
+    if (plddt > 90) return '#0053d6'; // Blue (Very High)
+    if (plddt > 70) return '#65cbf3'; // Cyan (Confident)
+    if (plddt > 55 || plddt > 50) return '#ffdb13'; // Yellow (Low)
+    return '#ff7d45'; // Orange (Very Low)
   };
 
-  let cartoonStyle = { colorfunc: plddtColorfunc };
+  let cartoonStyle = { colorfunc: plddtColorfunc, style: 'oval', thickness: 0.22, quality: 5 };
   if (colorScheme === 'chain') {
-    cartoonStyle = { colorscheme: 'chain' };
+    cartoonStyle = { colorscheme: 'chain', style: 'oval', thickness: 0.22, quality: 5 };
   } else if (colorScheme === 'spectrum') {
-    cartoonStyle = { colorscheme: 'spectrum' };
+    cartoonStyle = { colorscheme: 'spectrum', style: 'oval', thickness: 0.22, quality: 5 };
   }
 
   if (style === 'cartoon') {
