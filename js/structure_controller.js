@@ -1318,8 +1318,14 @@ window.addEventListener('resize', () => {
 // -------- Compute structural features from current state --------
 function computeStructureFeatures() {
   const seq = STATE.currentModel ? STATE.currentModel.sequence : '';
-  const plddt = STATE.currentModel ? STATE.currentModel.plddt : [];
+  let plddt = STATE.currentModel ? [...STATE.currentModel.plddt] : [];
   if (!seq || plddt.length === 0) return null;
+
+  // Normalize pLDDT values from 0-1 to 0-100 if they are in the fractional range
+  const isFractional = plddt.every(v => v >= 0.0 && v <= 1.01);
+  if (isFractional) {
+    plddt = plddt.map(v => v * 100);
+  }
 
   const n = seq.length;
   const meanPlddt = plddt.reduce((a, b) => a + b, 0) / n;
