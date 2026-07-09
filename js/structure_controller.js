@@ -20,7 +20,9 @@ const STATE = {
   boltzPolling: null,
   boltzValidated: false,
   boltzEstimated: false,
-  boltzEstimatedCost: null
+  boltzEstimatedCost: null,
+  hbondShapes: [],
+  hoveredResi: null
 };
 
 const $ = sel => document.querySelector(sel);
@@ -339,20 +341,69 @@ function initViewer() {
   // Initial demo model
   loadDemoModel();
 
-  // Hover handling
+  // Hover tooltip — follows cursor, shows residue info
   element.addEventListener('mousemove', (e) => {
     const rect = element.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
     viewer.hoverCallback({}, (atom) => {
-      if (!atom) { $('#resTooltip').style.display = 'none'; return; }
+      if (!atom) {
+        $('#resTooltip').style.display = 'none';
+        // Remove hover glow from previous residue
+        if (STATE.hoveredResi !== null) {
+          _removeHoverGlow();
+          STATE.hoveredResi = null;
+        }
+        return;
+      }
       const tt = $('#resTooltip');
       tt.style.display = 'block';
       tt.style.left = (x + 14) + 'px';
       tt.style.top = (y + 14) + 'px';
       tt.querySelector('.rt-res').textContent = `${atom.resn} ${atom.chain} ${atom.resi}`;
       tt.querySelector('.rt-plddt').textContent = `pLDDT: ${atom.b.toFixed(1)} · ${atom.atom}`;
+
+      // Add hover glow on the hovered residue (if different from current)
+      const hoverKey = `${atom.chain}_${atom.resi}`;
+      if (STATE.hoveredResi !== hoverKey) {
+        _removeHoverGlow();
+        // Only add glow if this residue is NOT the currently selected one
+        const selKey = STATE.selectedResidue ? `${STATE.selectedResidue.chain}_${STATE.selectedResidue.resi}` : null;
+        if (hoverKey !== selKey) {
+          viewer.addStyle(
+            { chain: atom.chain, resi: atom.resi },
+            { stick: { radius: 0.12, color: 'white', opacity: 0.35 } }
+          );
+          viewer.render();
+        }
+        STATE.hoveredResi = hoverKey;
+      }
     });
+  });
+
+  // Click-to-select — highlights residue, shows side-chain sticks and H-bonds
+  element.addEventListener('click', (e) => {
+    if (!STATE.currentModel || !STATE.currentModel.pdb) return;
+    // Use 3Dmol's built-in atom picking via mouseclick position
+    const rect = element.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const atom = viewer.selectedAtoms({ clickable: true })
+      ? null : null; // placeholder — we use the callback approach below
+  });
+
+  // 3Dmol click callback for atom selection
+  viewer.setClickable({}, true, function(atom) {
+    if (!atom) {
+      clearResidueSelection();
+      return;
+    }
+    highlightResidue(atom);
+  });
+
+  // Click on empty space to deselect
+  element.addEventListener('dblclick', () => {
+    clearResidueSelection();
   });
 }
 
@@ -396,8 +447,279 @@ function renderModel(style, colorScheme) {
     v.addSurface($3Dmol.SurfaceType.VDW, { opacity: 0.7, colorscheme: colorScheme === 'pLDDT' ? 'blueGreen' : 'default' }, {});
   }
 
+  // Clear any previous selection when re-rendering
+  clearResidueSelection();
+
+  // Make all atoms clickable for selection
+  v.setClickable({}, true, function(atom) {
+    if (atom) highlightResidue(atom);
+  });
+
   v.zoomTo();
   v.render();
+}
+
+/* ============ RESIDUE SELECTION & INTERACTION ============ */
+
+/**
+ * Highlight a clicked residue: magenta sticks for side-chain,
+ * translucent sphere, H-bond dashed lines, and selection label.
+ */
+function highlightResidue(atom) {
+  const v = STATE.viewer;
+  if (!v || !atom) return;
+
+  // Clear previous selection visuals (but keep the base model style)
+  _clearSelectionVisuals();
+
+  // Store the selected residue
+  STATE.selectedResidue = atom;
+
+  // 1. Add magenta side-chain sticks on the selected residue
+  v.addStyle(
+    { chain: atom.chain, resi: atom.resi },
+    { stick: { radius: 0.18, color: '#E040FB' } }
+  );
+
+  // 2. Add a translucent highlight sphere on the clicked atom
+  v.addStyle(
+    { chain: atom.chain, resi: atom.resi, atom: atom.atom },
+    { sphere: { scale: 0.45, color: '#E040FB', opacity: 0.4 } }
+  );
+
+  // 3. Draw hydrogen bonds near the selected residue
+  _drawHBonds(atom);
+
+  // 4. Update the selection label at the bottom of the viewer
+  _updateSelectionLabel(atom);
+
+  // 5. Smooth zoom to the selected residue
+  v.zoomTo({ chain: atom.chain, resi: atom.resi }, 600);
+  v.render();
+}
+
+/**
+ * Clear all selection visuals and hide the label.
+ */
+function clearResidueSelection() {
+  const v = STATE.viewer;
+  STATE.selectedResidue = null;
+
+  _clearSelectionVisuals();
+
+  // Hide the selection label
+  const label = $('#selectionLabel');
+  if (label) label.classList.remove('visible');
+
+  // Re-apply the current base style to remove addStyle overlays
+  if (v && STATE.currentModel && STATE.currentModel.pdb) {
+    const activeStyle = document.querySelector('[data-style].active');
+    const activeColor = document.querySelector('[data-color].active');
+    const style = activeStyle ? activeStyle.dataset.style : 'cartoon';
+    const color = activeColor ? activeColor.dataset.color : 'pLDDT';
+    // Re-render cleanly without recursive selection clear
+    _reapplyBaseStyle(style, color);
+    v.render();
+  }
+}
+
+/**
+ * Internal: remove H-bond shapes and selection highlights.
+ */
+function _clearSelectionVisuals() {
+  const v = STATE.viewer;
+  if (!v) return;
+
+  // Remove all H-bond cylinders and labels
+  if (STATE.hbondShapes && STATE.hbondShapes.length > 0) {
+    STATE.hbondShapes.forEach(shape => {
+      try { v.removeShape(shape); } catch(e) {}
+    });
+    STATE.hbondShapes = [];
+  }
+
+  // Remove all 3Dmol labels
+  v.removeAllLabels();
+}
+
+/**
+ * Internal: re-apply the base molecular style without clearing models.
+ */
+function _reapplyBaseStyle(style, colorScheme) {
+  const v = STATE.viewer;
+  if (!v) return;
+
+  const plddtColorfunc = function(atom) {
+    let plddt = atom.b || 0;
+    if (plddt <= 1.0 && plddt > 0.0) plddt = plddt * 100;
+    if (plddt > 90) return '#0053D6';
+    if (plddt > 70) return '#65B3E7';
+    if (plddt > 50) return '#F5B544';
+    return '#FB923C';
+  };
+
+  if (style === 'cartoon') {
+    v.setStyle({ hetflag: false }, { cartoon: { colorfunc: plddtColorfunc } });
+    v.setStyle(
+      { resn: ["DA", "DT", "DC", "DG", "A", "U", "C", "G", "RA", "RU", "RC", "RG"] },
+      { cartoon: { color: '#4da6ff' }, stick: { colorscheme: 'Jmol', radius: 0.15 } }
+    );
+    v.addStyle({ hetflag: true }, { stick: { colorscheme: 'Jmol', radius: 0.22 } });
+  } else if (style === 'stick') {
+    v.setStyle({}, { stick: { radius: 0.15, colorscheme: colorScheme === 'pLDDT' ? 'blueGreen' : 'default' } });
+  } else if (style === 'sphere') {
+    v.setStyle({}, { sphere: { scale: 0.32, colorscheme: colorScheme === 'pLDDT' ? 'blueGreen' : 'default' } });
+  } else if (style === 'surface') {
+    v.setStyle({}, { cartoon: { thickness: 0.1, opacity: 0.4 } });
+    v.addSurface($3Dmol.SurfaceType.VDW, { opacity: 0.7, colorscheme: colorScheme === 'pLDDT' ? 'blueGreen' : 'default' }, {});
+  }
+
+  // Re-register clickable atoms
+  v.setClickable({}, true, function(atom) {
+    if (atom) highlightResidue(atom);
+  });
+}
+
+/**
+ * Internal: remove hover glow styling by re-rendering base style.
+ */
+function _removeHoverGlow() {
+  const v = STATE.viewer;
+  if (!v || !STATE.currentModel || !STATE.currentModel.pdb) return;
+  // Re-apply base style to clear addStyle overlays from hover
+  const activeStyle = document.querySelector('[data-style].active');
+  const activeColor = document.querySelector('[data-color].active');
+  const style = activeStyle ? activeStyle.dataset.style : 'cartoon';
+  const color = activeColor ? activeColor.dataset.color : 'pLDDT';
+  _reapplyBaseStyle(style, color);
+
+  // Re-apply selection highlight if a residue is selected
+  if (STATE.selectedResidue) {
+    const atom = STATE.selectedResidue;
+    v.addStyle(
+      { chain: atom.chain, resi: atom.resi },
+      { stick: { radius: 0.18, color: '#E040FB' } }
+    );
+    v.addStyle(
+      { chain: atom.chain, resi: atom.resi, atom: atom.atom },
+      { sphere: { scale: 0.45, color: '#E040FB', opacity: 0.4 } }
+    );
+  }
+  v.render();
+}
+
+/**
+ * Internal: draw cyan dashed H-bond cylinders near the selected residue.
+ * Scans for N/O donor-acceptor pairs within 3.5 Angstroms.
+ */
+function _drawHBonds(selectedAtom) {
+  const v = STATE.viewer;
+  if (!v) return;
+
+  // Get all atoms in the model
+  const allAtoms = v.selectedAtoms({});
+  if (!allAtoms || allAtoms.length === 0) return;
+
+  // Get atoms in the selected residue that are potential H-bond donors/acceptors (N, O)
+  const selResAtoms = allAtoms.filter(a =>
+    a.chain === selectedAtom.chain &&
+    a.resi === selectedAtom.resi &&
+    (a.elem === 'N' || a.elem === 'O')
+  );
+
+  // Find nearby atoms in OTHER residues within 3.5 Å
+  const MAX_DIST = 3.5;
+  const hbondPairs = [];
+
+  selResAtoms.forEach(donor => {
+    allAtoms.forEach(acceptor => {
+      // Skip same residue
+      if (acceptor.chain === donor.chain && acceptor.resi === donor.resi) return;
+      // Only N and O can form H-bonds
+      if (acceptor.elem !== 'N' && acceptor.elem !== 'O') return;
+
+      const dx = donor.x - acceptor.x;
+      const dy = donor.y - acceptor.y;
+      const dz = donor.z - acceptor.z;
+      const dist = Math.sqrt(dx*dx + dy*dy + dz*dz);
+
+      if (dist <= MAX_DIST && dist > 0.5) {
+        hbondPairs.push({
+          from: { x: donor.x, y: donor.y, z: donor.z },
+          to: { x: acceptor.x, y: acceptor.y, z: acceptor.z },
+          dist: dist,
+          donorAtom: `${donor.resn} ${donor.resi} ${donor.atom}`,
+          acceptorAtom: `${acceptor.resn} ${acceptor.resi} ${acceptor.atom}`
+        });
+      }
+    });
+  });
+
+  // Limit to the closest 8 H-bonds to avoid visual clutter
+  hbondPairs.sort((a, b) => a.dist - b.dist);
+  const topBonds = hbondPairs.slice(0, 8);
+
+  // Draw each H-bond as a dashed cyan cylinder
+  topBonds.forEach(bond => {
+    const shape = v.addCylinder({
+      start: bond.from,
+      end: bond.to,
+      radius: 0.04,
+      color: '#00E5FF',
+      opacity: 0.7,
+      dashed: true,
+      dashLength: 0.15,
+      gapLength: 0.1
+    });
+    STATE.hbondShapes.push(shape);
+  });
+
+  // Update the selection label with H-bond count
+  if (topBonds.length > 0) {
+    const labelEl = $('#selectionLabel');
+    // Remove existing hbond badge if present
+    const existingBadge = labelEl.querySelector('.hbond-badge');
+    if (existingBadge) existingBadge.remove();
+    const badge = document.createElement('span');
+    badge.className = 'hbond-badge';
+    badge.textContent = `${topBonds.length} H-bond${topBonds.length > 1 ? 's' : ''}`;
+    labelEl.appendChild(badge);
+  }
+}
+
+/**
+ * Internal: update the bottom selection label with residue info.
+ */
+function _updateSelectionLabel(atom) {
+  const label = $('#selectionLabel');
+  if (!label || !atom) return;
+
+  // Update chain badge
+  const chainEl = $('#selChain');
+  if (chainEl) chainEl.textContent = atom.chain || 'A';
+
+  // Update residue name
+  const resnameEl = $('#selResName');
+  if (resnameEl) resnameEl.textContent = atom.resn || '???';
+
+  // Update residue index
+  const resindexEl = $('#selResIndex');
+  if (resindexEl) resindexEl.textContent = atom.resi || '';
+
+  // Update pLDDT
+  const plddtEl = $('#selPlddt');
+  if (plddtEl) {
+    let plddt = atom.b || 0;
+    if (plddt <= 1.0 && plddt > 0.0) plddt = plddt * 100;
+    plddtEl.textContent = `pLDDT ${plddt.toFixed(1)}`;
+  }
+
+  // Remove any old H-bond badge (will be re-added by _drawHBonds if applicable)
+  const existingBadge = label.querySelector('.hbond-badge');
+  if (existingBadge) existingBadge.remove();
+
+  // Show the label with animation
+  label.classList.add('visible');
 }
 
 function initToolbar() {
