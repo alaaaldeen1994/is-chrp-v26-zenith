@@ -234,16 +234,20 @@ function parsePDB(pdbText) {
   let seq = '';
   const plddt = [];
   const residues = {};
+  const chains = new Set();
   const aaMap = {
     'ALA':'A', 'ARG':'R', 'ASN':'N', 'ASP':'D', 'CYS':'C', 'GLN':'Q', 'GLU':'E', 
     'GLY':'G', 'HIS':'H', 'ILE':'I', 'LEU':'L', 'LYS':'K', 'MET':'M', 'PHE':'F', 
-    'PRO':'P', 'SER':'S', 'THR':'T', 'TRP':'W', 'TYR':'Y', 'VAL':'V'
+    'PRO':'P', 'SER':'S', 'THR':'T', 'TRP':'W', 'TYR':'Y', 'VAL':'V',
+    'DA':'a', 'DT':'t', 'DC':'c', 'DG':'g',
+    'A':'a', 'T':'t', 'C':'c', 'G':'g', 'U':'u',
+    'RA':'a', 'RU':'u', 'RC':'c', 'RG':'g'
   };
 
   lines.forEach(line => {
     if (line.startsWith('ATOM  ') || line.startsWith('HETATM')) {
       const atomName = line.substring(12, 16).trim();
-      if (atomName === 'CA') {
+      if (atomName === 'CA' || atomName === "C4'") {
         const resName = line.substring(17, 20).trim();
         const chain = line.substring(21, 22).trim();
         const resi = parseInt(line.substring(22, 26).trim());
@@ -253,12 +257,13 @@ function parsePDB(pdbText) {
           residues[key] = true;
           seq += aaMap[resName] || 'X';
           plddt.push(b);
+          if (chain) chains.add(chain);
         }
       }
     }
   });
 
-  return { seq, plddt };
+  return { seq, plddt, chains: Array.from(chains).sort() };
 }
 
 function updateCostEstimate() {
@@ -430,12 +435,19 @@ function renderModel(style, colorScheme) {
     return '#FB923C';
   };
 
+  let cartoonStyle = { colorfunc: plddtColorfunc };
+  if (colorScheme === 'chain') {
+    cartoonStyle = { colorscheme: 'chain' };
+  } else if (colorScheme === 'spectrum') {
+    cartoonStyle = { colorscheme: 'spectrum' };
+  }
+
   if (style === 'cartoon') {
-    v.setStyle({ hetflag: false }, { cartoon: { colorfunc: plddtColorfunc } });
+    v.setStyle({ hetflag: false }, { cartoon: cartoonStyle });
     v.setStyle(
       { resn: ["DA", "DT", "DC", "DG", "A", "U", "C", "G", "RA", "RU", "RC", "RG"] },
       { 
-        cartoon: { color: '#4da6ff' }, 
+        cartoon: cartoonStyle, 
         stick: { colorscheme: 'Jmol', radius: 0.15 } 
       }
     );
@@ -586,11 +598,18 @@ function _reapplyBaseStyle(style, colorScheme) {
     return '#FB923C';
   };
 
+  let cartoonStyle = { colorfunc: plddtColorfunc };
+  if (colorScheme === 'chain') {
+    cartoonStyle = { colorscheme: 'chain' };
+  } else if (colorScheme === 'spectrum') {
+    cartoonStyle = { colorscheme: 'spectrum' };
+  }
+
   if (style === 'cartoon') {
-    v.setStyle({ hetflag: false }, { cartoon: { colorfunc: plddtColorfunc } });
+    v.setStyle({ hetflag: false }, { cartoon: cartoonStyle });
     v.setStyle(
       { resn: ["DA", "DT", "DC", "DG", "A", "U", "C", "G", "RA", "RU", "RC", "RG"] },
-      { cartoon: { color: '#4da6ff' }, stick: { colorscheme: 'Jmol', radius: 0.15 } }
+      { cartoon: cartoonStyle, stick: { colorscheme: 'Jmol', radius: 0.15 } }
     );
     v.addStyle({ hetflag: true }, { stick: { colorscheme: 'Jmol', radius: 0.22 } });
   } else if (style === 'stick') {
@@ -991,8 +1010,8 @@ async function runPrediction() {
       const result = await resp.json();
       if (resp.ok && result.status === "success") {
         const pdbText = result.data.pdb_data;
-        const { seq: parsedSeq, plddt } = parsePDB(pdbText);
-        STATE.currentModel = { pdb: pdbText, plddt, sequence: parsedSeq };
+        const { seq: parsedSeq, plddt, chains } = parsePDB(pdbText);
+        STATE.currentModel = { pdb: pdbText, plddt, sequence: parsedSeq, chains };
         STATE.paeMatrix = null;
 
         renderModel('cartoon', 'pLDDT');
@@ -1083,8 +1102,8 @@ async function loadBoltzResult(overlay, btn) {
     if (!pdbResp.ok) throw new Error('Model download failed');
     const pdbText = await pdbResp.text();
 
-    const { seq, plddt } = parsePDB(pdbText);
-    STATE.currentModel = { pdb: pdbText, plddt, sequence: seq };
+    const { seq, plddt, chains } = parsePDB(pdbText);
+    STATE.currentModel = { pdb: pdbText, plddt, sequence: seq, chains };
 
     // Fetch PAE
     try {
@@ -1116,9 +1135,17 @@ async function loadBoltzResult(overlay, btn) {
 
 function updateMetaCard(seq, plddt) {
   $('#metaRes').textContent = seq.length;
-  $('#metaConf').textContent = (plddt.reduce((a,b)=>a+b,0)/plddt.length).toFixed(1);
+  let avgPlddt = (plddt.reduce((a,b)=>a+b,0)/plddt.length);
+  if (avgPlddt <= 1.0 && avgPlddt > 0.0) avgPlddt = avgPlddt * 100;
+  $('#metaConf').textContent = avgPlddt.toFixed(1);
   $('#metaEngine').textContent = STATE.mode === 'esm' ? 'Nilus Atomix' : 'zenithfold-2.1';
   $('#seqBadge').textContent = `${seq.length} aa`;
+  
+  if (STATE.currentModel && STATE.currentModel.chains && STATE.currentModel.chains.length) {
+    $('#metaChain').textContent = STATE.currentModel.chains.join(', ');
+  } else {
+    $('#metaChain').textContent = 'A';
+  }
 }
 
 function switchTab(name) {
@@ -1477,8 +1504,9 @@ function renderAIReport(f) {
   }
   const sumMetaEl = document.getElementById('aiSummaryMeta');
   if (sumMetaEl) {
+    const chainStr = STATE.currentModel && STATE.currentModel.chains ? STATE.currentModel.chains.join(', ') : 'A';
     sumMetaEl.textContent =
-      `${f.length} residues · chain A · ZenithFold · ${STATE.mode === 'esm' ? 'Nilus Atomix' : 'Boltz'}`;
+      `${f.length} residues · chain ${chainStr} · ZenithFold · ${STATE.mode === 'esm' ? 'Nilus Atomix' : 'Boltz'}`;
   }
 
   // Tags
@@ -1703,7 +1731,7 @@ function exportAIReportToPDF() {
           </div>
           <div>
             <div style="font-size: 16px; font-weight: 700; color: #0f172a;">${status}</div>
-            <div style="font-size: 11px; color: #64748b; margin-top: 3px;">${f.length} residues · Chain A · ZenithFold</div>
+            <div style="font-size: 11px; color: #64748b; margin-top: 3px;">${f.length} residues · Chain ${STATE.currentModel && STATE.currentModel.chains ? STATE.currentModel.chains.join(', ') : 'A'} · ZenithFold</div>
           </div>
         </div>
 
