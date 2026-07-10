@@ -29,7 +29,7 @@
 
         :root {
 
-            --zenith-teal: #0d9488;
+            --zenith-blue: #1d4ed8;
 
             --zenith-blue: #2563eb;
 
@@ -149,11 +149,11 @@
 
         .tag-institutional {
 
-            background: #f0fdfa;
+            background: #eff6ff;
 
-            color: #0d9488;
+            color: #1d4ed8;
 
-            border: 1px solid #ccfbf1;
+            border: 1px solid #dbeafe;
 
             padding: 6px 16px;
 
@@ -232,7 +232,7 @@
 
                 <h1 class="font-black text-sm tracking-widest text-slate-900 uppercase">Nilus Lab <span
 
-                        class="text-teal-600">Zenith v30.0 GOLD</span></h1>
+                        class="text-blue-600">Zenith v30.0 GOLD</span></h1>
 
                 <div class="text-[10px] text-slate-400 font-black tracking-[0.2em] uppercase">Virtual Clinical Trial
 
@@ -266,7 +266,7 @@
 
                 <select id="disease-select"
 
-                    class="w-full bg-white border border-slate-200 text-sm p-4 rounded-2xl text-slate-900 font-bold focus:border-teal-500 outline-none shadow-sm">
+                    class="w-full bg-white border border-slate-200 text-sm p-4 rounded-2xl text-slate-900 font-bold focus:border-blue-500 outline-none shadow-sm">
 
                     <option value="ALZ">Alzheimer's (Neurodegeneration)</option>
 
@@ -288,7 +288,7 @@
 
                 <select id="protocol-select"
 
-                    class="w-full bg-white border border-slate-200 text-sm p-4 rounded-2xl text-slate-900 font-bold focus:border-teal-500 outline-none shadow-sm">
+                    class="w-full bg-white border border-slate-200 text-sm p-4 rounded-2xl text-slate-900 font-bold focus:border-blue-500 outline-none shadow-sm">
 
                     <option value="DRP_ALPHA_12">DRP-Alpha-12 (Adaptive Pulse)</option>
 
@@ -318,13 +318,13 @@
 
                             <span class="text-slate-500 font-bold">Cohort Size (N)</span>
 
-                            <span class="text-teal-600 font-black" id="val-n">1000</span>
+                            <span class="text-blue-600 font-black" id="val-n">1000</span>
 
                         </div>
 
                         <input type="range" min="100" max="10000" step="100" value="1000"
 
-                            class="w-full accent-teal-500 h-1.5 bg-slate-200 rounded-lg appearance-none"
+                            class="w-full accent-blue-500 h-1.5 bg-slate-200 rounded-lg appearance-none"
 
                             oninput="document.getElementById('val-n').innerText = this.value">
 
@@ -364,7 +364,7 @@
 
                 <button onclick="startTrial()" id="btn-start"
 
-                    class="w-full bg-teal-600 hover:bg-teal-700 text-white font-black py-5 rounded-2xl shadow-xl shadow-teal-500/10 transition-all flex items-center justify-center gap-3 uppercase tracking-widest text-xs">
+                    class="w-full bg-blue-600 hover:bg-blue-700 text-white font-black py-5 rounded-2xl shadow-xl shadow-blue-500/10 transition-all flex items-center justify-center gap-3 uppercase tracking-widest text-xs">
 
                     <i data-lucide="play-circle" class="w-5 h-5"></i>
 
@@ -396,7 +396,7 @@
 
                             <span class="text-[10px] font-bold text-slate-500">PULSE ON</span>
 
-                            <span class="text-xs font-black text-teal-600" id="opt-on">--</span>
+                            <span class="text-xs font-black text-blue-600" id="opt-on">--</span>
 
                         </div>
 
@@ -460,13 +460,13 @@
 
             <div id="trial-status"
 
-                class="hidden absolute top-10 left-1/2 -translate-x-1/2 bg-white/90 backdrop-blur border border-teal-100 rounded-full px-8 py-3 flex items-center gap-4 shadow-2xl z-20">
+                class="hidden absolute top-10 left-1/2 -translate-x-1/2 bg-white/90 backdrop-blur border border-blue-100 rounded-full px-8 py-3 flex items-center gap-4 shadow-2xl z-20">
 
-                <div class="w-2.5 h-2.5 bg-teal-500 rounded-full animate-pulse"></div>
+                <div class="w-2.5 h-2.5 bg-blue-500 rounded-full animate-pulse"></div>
 
                 <span class="text-xs font-black text-slate-900 uppercase tracking-widest">Processing <span
 
-                        id="sim-counter" class="text-teal-600">0</span> Digital Twins</span>
+                        id="sim-counter" class="text-blue-600">0</span> Digital Twins</span>
 
             </div>
 
@@ -494,7 +494,7 @@
 
                             <div class="text-[10px] uppercase text-slate-400 font-black mb-1">Log-Rank p-value</div>
 
-                            <div class="text-3xl font-black text-teal-600" id="p-value">--</div>
+                            <div class="text-3xl font-black text-blue-600" id="p-value">--</div>
 
                         </div>
 
@@ -540,7 +540,7 @@
 
                     <div class="flex gap-8 text-[10px] font-black uppercase tracking-widest text-slate-400">
 
-                        <span class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-teal-500"></span>
+                        <span class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-blue-500"></span>
 
                             Responder</span>
 
@@ -688,7 +688,7 @@
 
                         { label: 'Control Arm', data: [], borderColor: '#cbd5e1', borderDash: [5, 5], step: 'before', pointRadius: 0, borderWidth: 3 },
 
-                        { label: 'DRP-Alpha-12 (v30.0)', data: [], borderColor: '#0d9488', step: 'before', pointRadius: 0, borderWidth: 4 }
+                        { label: 'DRP-Alpha-12 (v30.0)', data: [], borderColor: '#1d4ed8', step: 'before', pointRadius: 0, borderWidth: 4 }
 
                     ]
 
@@ -748,7 +748,7 @@
 
                 type: 'scatter',
 
-                data: { datasets: [{ label: 'Cell State Clusters', data: [], backgroundColor: '#0d9488', pointRadius: 5, hoverRadius: 8, borderWidth: 1, borderColor: 'white' }] },
+                data: { datasets: [{ label: 'Cell State Clusters', data: [], backgroundColor: '#1d4ed8', pointRadius: 5, hoverRadius: 8, borderWidth: 1, borderColor: 'white' }] },
 
                 options: {
 
@@ -846,7 +846,7 @@
 
                 waterfallChart.data.datasets[0].data = data.waterfall_data;
 
-                waterfallChart.data.datasets[0].backgroundColor = data.waterfall_data.map(v => v < 0 ? '#0d9488' : '#f97316');
+                waterfallChart.data.datasets[0].backgroundColor = data.waterfall_data.map(v => v < 0 ? '#1d4ed8' : '#f97316');
 
                 waterfallChart.update();
 
@@ -856,7 +856,7 @@
 
                 manifoldChart.data.datasets[0].data = manifoldData;
 
-                manifoldChart.data.datasets[0].backgroundColor = (data.responder_status || []).map(r => r ? '#0d9488' : '#f97316');
+                manifoldChart.data.datasets[0].backgroundColor = (data.responder_status || []).map(r => r ? '#1d4ed8' : '#f97316');
 
                 manifoldChart.update();
 
@@ -874,7 +874,7 @@
 
                 btn.innerHTML = `<i data-lucide="check-circle"></i> SIMULATION COMPLETE`;
 
-                btn.classList.replace('bg-teal-600', 'bg-slate-900');
+                btn.classList.replace('bg-blue-600', 'bg-slate-900');
 
                 document.getElementById('btn-export').classList.remove('hidden');
 
@@ -886,7 +886,7 @@
 
                 btn.innerHTML = `<i data-lucide="alert-circle"></i> CORE ERROR`;
 
-                btn.classList.replace('bg-teal-600', 'bg-red-600');
+                btn.classList.replace('bg-blue-600', 'bg-red-600');
 
                 btn.disabled = false;
 
