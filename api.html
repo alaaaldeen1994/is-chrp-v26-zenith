@@ -247,10 +247,11 @@
   "data": {
     "approved_factors": [
       "GATA4",
-      "TBX5"
+      "TBX5",
+      "OCT4"
     ],
     "blocked_factors": [
-      "OCT4"
+      "c-MYC"
     ],
     "sirtuin_engagement": {
       "pathway_score": 0.82,
@@ -265,7 +266,7 @@
       "probes_defaulted": 233,
       "total_clock_probes": 353
     },
-    "safety_summary": "Passed pioneer safety gate. Blocked potential oncogene: OCT4."
+    "safety_summary": "Passed pioneer safety gate. OSK partial mode active. Blocked oncogene: c-MYC."
   },
   "meta": {
     "model_version": "zenith-v30.0",
@@ -624,7 +625,7 @@ async function fetchProteinFold(sequence) {
     });
 
     const envelope = await response.json();
-    if (envelope.status === 'success' && envelope.data.status === 'success') {
+    if (envelope.status === 'success') {
       console.log('Coordinates loaded:');
       console.log(envelope.data.pdb_data.substring(0, 500) + '\n...');
     } else {
