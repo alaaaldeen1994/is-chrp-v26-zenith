@@ -103,6 +103,8 @@
     },
     "safety_summary": {
       "oncogene_clear": false,
+      "oncogene_blocked_count": 1,
+      "oncogene_protocol_safe": true,
       "dedifferentiation_blocked": false,
       "partial_ceiling": "enforced",
       "total_approved": 4,

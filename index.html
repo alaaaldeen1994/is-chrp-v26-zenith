@@ -299,13 +299,15 @@
 
                 padding: 0 1rem;
 
-                height: 44px;
+                height: 48px;
 
-                min-height: 44px;
+                min-height: 48px;
 
-                background: #000;
+                background: rgba(2, 2, 10, 0.9) !important;
 
-                border-bottom: 1px solid rgba(255,255,255,0.07);
+                backdrop-filter: blur(12px) !important;
+
+                border-bottom: 1px solid rgba(255,255,255,0.06) !important;
 
                 flex-shrink: 0;
 
@@ -351,9 +353,9 @@
 
                 letter-spacing: 0.1em;
 
-                background: rgba(16,185,129,0.1);
+                background: rgba(37,99,235,0.1);
 
-                border: 1px solid rgba(16,185,129,0.3);
+                border: 1px solid rgba(37,99,235,0.3);
 
                 padding: 3px 10px;
 
@@ -971,13 +973,13 @@
 
                 border: none;
 
-                border-top: 2px solid transparent;
+                border-top: 3px solid transparent;
 
-                color: #475569;
+                color: #64748b;
 
-                font-size: 10px;
+                font-size: 9px;
 
-                font-weight: 700;
+                font-weight: 800;
 
                 text-transform: uppercase;
 
@@ -985,27 +987,31 @@
 
                 cursor: pointer;
 
-                display: flex;
+                display: flex !important;
 
-                align-items: center;
+                flex-direction: column !important;
 
-                justify-content: center;
+                align-items: center !important;
 
-                gap: 6px;
+                justify-content: center !important;
+
+                gap: 3px !important;
 
                 transition: all 0.15s;
 
                 font-family: 'Inter', sans-serif;
 
+                padding: 4px 0 !important;
+
             }
 
             .mob-tab-btn.mob-tab-active {
 
-                color: #2563eb;
+                color: #3b82f6 !important;
 
-                border-top-color: #2563eb;
+                border-top-color: #3b82f6 !important;
 
-                background: rgba(37,99,235,0.05);
+                background: rgba(59, 130, 246, 0.05) !important;
 
             }
 
@@ -1478,7 +1484,7 @@
                 </div>
                 <div style="display:flex;gap:6px;margin-bottom:10px;">
                     <button onclick="setSafetyLevel('conservative');updateDiscSafetyButtons('conservative');" class="safety-btn" data-level="conservative"
-                        style="flex:1;padding:6px 8px;border-radius:8px;font-size:10px;font-weight:600;cursor:pointer;border:1.5px solid rgba(16,185,129,0.3);background:rgba(16,185,129,0.06);color:#2563eb;transition:all 0.15s;font-family:'Inter',sans-serif;">
+                        style="flex:1;padding:6px 8px;border-radius:8px;font-size:10px;font-weight:600;cursor:pointer;border:1.5px solid rgba(37,99,235,0.3);background:rgba(37,99,235,0.06);color:#2563eb;transition:all 0.15s;font-family:'Inter',sans-serif;">
                         Conservative
                     </button>
                     <button onclick="setSafetyLevel('balanced');updateDiscSafetyButtons('balanced');" class="safety-btn active-safety" data-level="balanced"
@@ -2350,7 +2356,7 @@
 
                     <div style="display:flex; gap:4px; margin-bottom:8px;">
 
-                        <button onclick="setSafetyLevel('conservative')" class="safety-btn" data-level="conservative" style="flex:1; padding:6px; border-radius:6px; font-size:8px; font-weight:800; cursor:pointer; background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.3); color:#60a5fa;">Conservative</button>
+                        <button onclick="setSafetyLevel('conservative')" class="safety-btn" data-level="conservative" style="flex:1; padding:6px; border-radius:6px; font-size:8px; font-weight:800; cursor:pointer; background:rgba(37,99,235,0.15); border:1px solid rgba(37,99,235,0.3); color:#60a5fa;">Conservative</button>
 
                         <button onclick="setSafetyLevel('balanced')" class="safety-btn active-safety" data-level="balanced" style="flex:1; padding:6px; border-radius:6px; font-size:8px; font-weight:800; cursor:pointer; background:rgba(245,158,11,0.25); border:2px solid rgba(245,158,11,0.6); color:#f59e0b;">Balanced</button>
 
@@ -2427,7 +2433,7 @@
                     document.getElementById('af3-in-ptm').value=document.getElementById('mob-af3-ptm').value;
                     document.getElementById('boltz-in-pae').value=document.getElementById('mob-boltz-pae').value;
                     if(typeof BiosimBridge!=='undefined')BiosimBridge.AF3Upload.applyRealMetrics();"
-                    style="width:100%; background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.3); color:#60a5fa; padding:9px; border-radius:8px; font-size:9px; font-weight:900; text-transform:uppercase; letter-spacing:0.08em; cursor:pointer;">
+                    style="width:100%; background:rgba(37,99,235,0.15); border:1px solid rgba(37,99,235,0.3); color:#60a5fa; padding:9px; border-radius:8px; font-size:9px; font-weight:900; text-transform:uppercase; letter-spacing:0.08em; cursor:pointer;">
                       APPLY REAL AF3 SCORES TO DISCOVERY
                 </button>
             </div>
@@ -2454,9 +2460,15 @@
 
 
         <!-- BOTTOM TAB BAR -->
-        <div id="mob-tabbar">
-            <button id="mob-tab-ai-btn" class="mob-tab-btn mob-tab-active" onclick="switchMobTab('ai')">  AI Protocol</button>
-            <button id="mob-tab-sim-btn" class="mob-tab-btn" onclick="switchMobTab('sim')">     Simulation</button>
+        <div id="mob-tabbar" class="flex border-t border-white/10 bg-black shrink-0 h-14">
+            <button id="mob-tab-ai-btn" class="mob-tab-btn mob-tab-active" onclick="switchMobTab('ai')">
+                <i data-lucide="zap" class="w-4 h-4"></i>
+                <span>AI Protocol</span>
+            </button>
+            <button id="mob-tab-sim-btn" class="mob-tab-btn" onclick="switchMobTab('sim')">
+                <i data-lucide="activity" class="w-4 h-4"></i>
+                <span>Simulation</span>
+            </button>
         </div>
 
 
@@ -4548,9 +4560,13 @@
 
         aiTab.style.display  = tab === 'ai'  ? 'flex'  : 'none';
 
-        simBtn.className = 'mob-tab-btn' + (tab === 'sim' ? ' mob-tab-active' : '');
-
-        aiBtn.className  = 'mob-tab-btn' + (tab === 'ai'  ? ' mob-tab-active' : '');
+        if (tab === 'sim') {
+            simBtn.classList.add('mob-tab-active');
+            aiBtn.classList.remove('mob-tab-active');
+        } else {
+            aiBtn.classList.add('mob-tab-active');
+            simBtn.classList.remove('mob-tab-active');
+        }
 
     };
 
@@ -4746,7 +4762,7 @@ function setSafetyLevel(level) {
 
             btn.style.opacity = '1';
 
-            if (l === 'conservative') { btn.style.borderColor = 'rgba(16,185,129,0.6)'; btn.style.background = 'rgba(16,185,129,0.25)'; }
+            if (l === 'conservative') { btn.style.borderColor = 'rgba(37,99,235,0.6)'; btn.style.background = 'rgba(37,99,235,0.25)'; }
 
             else if (l === 'balanced') { btn.style.borderColor = 'rgba(245,158,11,0.6)'; btn.style.background = 'rgba(245,158,11,0.25)'; }
 
@@ -4758,7 +4774,7 @@ function setSafetyLevel(level) {
 
             btn.style.opacity = '0.7';
 
-            if (l === 'conservative') { btn.style.borderColor = 'rgba(16,185,129,0.3)'; btn.style.background = 'rgba(16,185,129,0.1)'; }
+            if (l === 'conservative') { btn.style.borderColor = 'rgba(37,99,235,0.3)'; btn.style.background = 'rgba(37,99,235,0.1)'; }
 
             else if (l === 'balanced') { btn.style.borderColor = 'rgba(245,158,11,0.3)'; btn.style.background = 'rgba(245,158,11,0.1)'; }
 
@@ -4804,7 +4820,7 @@ function renderPartialReport(data) {
 
             var sirtTag = f.sirtuin_pathway ? '<span style="background:rgba(37,99,235,0.2);color:#60a5fa;padding:1px 4px;border-radius:3px;font-size:6px;margin-left:4px;">SIRT</span>' : '';
 
-            appDiv.innerHTML += '<div style="display:flex;align-items:center;justify-content:space-between;padding:4px 6px;background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.15);border-radius:6px;">'
+            appDiv.innerHTML += '<div style="display:flex;align-items:center;justify-content:space-between;padding:4px 6px;background:rgba(37,99,235,0.08);border:1px solid rgba(37,99,235,0.15);border-radius:6px;">'
 
                 + '<span style="font-size:9px;font-weight:900;color:#fff;">' + f.gene + sirtTag + '</span>'
 
@@ -4905,9 +4921,9 @@ function renderPartialReport(data) {
         }
     }
 
-    if (dediff) { dediff.innerHTML = ss.dedifferentiation_blocked ? '&#9989; Dediff Blocked' : '&#9888;&#65039; Dediff Risk'; dediff.style.background = ss.dedifferentiation_blocked ? 'rgba(16,185,129,0.15)' : 'rgba(245,158,11,0.15)'; dediff.style.color = ss.dedifferentiation_blocked ? '#60a5fa' : '#f59e0b'; dediff.style.border = '1px solid ' + (ss.dedifferentiation_blocked ? 'rgba(16,185,129,0.3)' : 'rgba(245,158,11,0.3)'); }
+    if (dediff) { dediff.innerHTML = ss.dedifferentiation_blocked ? '&#9989; Dediff Blocked' : '&#9888;&#65039; Dediff Risk'; dediff.style.background = ss.dedifferentiation_blocked ? 'rgba(37,99,235,0.15)' : 'rgba(245,158,11,0.15)'; dediff.style.color = ss.dedifferentiation_blocked ? '#60a5fa' : '#f59e0b'; dediff.style.border = '1px solid ' + (ss.dedifferentiation_blocked ? 'rgba(37,99,235,0.3)' : 'rgba(245,158,11,0.3)'); }
 
-    if (ceil) { ceil.innerHTML = ss.partial_ceiling === 'enforced' ? '&#9989; Ceiling ON' : '&#9888;&#65039; Ceiling OFF'; ceil.style.background = ss.partial_ceiling === 'enforced' ? 'rgba(16,185,129,0.15)' : 'rgba(239,68,68,0.15)'; ceil.style.color = ss.partial_ceiling === 'enforced' ? '#60a5fa' : '#f87171'; ceil.style.border = '1px solid ' + (ss.partial_ceiling === 'enforced' ? 'rgba(16,185,129,0.3)' : 'rgba(239,68,68,0.3)'); }
+    if (ceil) { ceil.innerHTML = ss.partial_ceiling === 'enforced' ? '&#9989; Ceiling ON' : '&#9888;&#65039; Ceiling OFF'; ceil.style.background = ss.partial_ceiling === 'enforced' ? 'rgba(37,99,235,0.15)' : 'rgba(239,68,68,0.15)'; ceil.style.color = ss.partial_ceiling === 'enforced' ? '#60a5fa' : '#f87171'; ceil.style.border = '1px solid ' + (ss.partial_ceiling === 'enforced' ? 'rgba(37,99,235,0.3)' : 'rgba(239,68,68,0.3)'); }
 
 }
 
@@ -4936,13 +4952,13 @@ function updateDiscSafetyButtons(level) {
         if (l === level) {
             btn.style.borderWidth = '2px';
             btn.style.opacity = '1';
-            if (l === 'conservative') { btn.style.borderColor = 'rgba(16,185,129,0.5)'; btn.style.background = 'rgba(16,185,129,0.1)'; }
+            if (l === 'conservative') { btn.style.borderColor = 'rgba(37,99,235,0.5)'; btn.style.background = 'rgba(37,99,235,0.1)'; }
             else if (l === 'balanced') { btn.style.borderColor = 'rgba(202,138,4,0.5)'; btn.style.background = 'rgba(202,138,4,0.08)'; }
             else { btn.style.borderColor = 'rgba(220,38,38,0.45)'; btn.style.background = 'rgba(220,38,38,0.06)'; }
         } else {
             btn.style.borderWidth = '1.5px';
             btn.style.opacity = '0.65';
-            if (l === 'conservative') { btn.style.borderColor = 'rgba(16,185,129,0.3)'; btn.style.background = 'rgba(16,185,129,0.04)'; }
+            if (l === 'conservative') { btn.style.borderColor = 'rgba(37,99,235,0.3)'; btn.style.background = 'rgba(37,99,235,0.04)'; }
             else if (l === 'balanced') { btn.style.borderColor = 'rgba(202,138,4,0.25)'; btn.style.background = 'rgba(202,138,4,0.04)'; }
             else { btn.style.borderColor = 'rgba(220,38,38,0.2)'; btn.style.background = 'rgba(220,38,38,0.02)'; }
         }
@@ -5156,7 +5172,7 @@ function renderOskReport(safetyData, dosageData, elapsed, cellTypeKey, query) {
         `).join('');
     } else {
         blockedHtml = `
-            <div style="padding:12px;background:rgba(16,185,129,0.04);border:1px solid rgba(16,185,129,0.15);border-radius:8px;text-align:center;color:#1e3a8a;font-size:10px;font-weight:600;">
+            <div style="padding:12px;background:rgba(37,99,235,0.04);border:1px solid rgba(37,99,235,0.15);border-radius:8px;text-align:center;color:#1e3a8a;font-size:10px;font-weight:600;">
                 [APPROVED] Complete Safety Clearance. No factors were blocked.
             </div>
         `;
@@ -5236,7 +5252,7 @@ function renderOskReport(safetyData, dosageData, elapsed, cellTypeKey, query) {
                 <div style="display:flex;flex-direction:column;gap:8px;">
                     <div style="font-size:10px;color:#8b8070;font-weight:700;letter-spacing:0.04em;text-transform:uppercase;display:flex;justify-content:space-between;align-items:center;">
                         <span>DRP Transient Dosage</span>
-                        <span style="font-size:8px;background:rgba(16,185,129,0.08);color:#1d4ed8;border:1px solid rgba(16,185,129,0.2);padding:1px 4px;border-radius:4px;font-weight:700;">${dosage.safety_status || 'VERIFIED'}</span>
+                        <span style="font-size:8px;background:rgba(37,99,235,0.08);color:#1d4ed8;border:1px solid rgba(37,99,235,0.2);padding:1px 4px;border-radius:4px;font-weight:700;">${dosage.safety_status || 'VERIFIED'}</span>
                     </div>
                     <div style="background:#fafafa;border:1px solid #d5d5d2;border-radius:10px;padding:10px 12px;display:flex;flex-direction:column;gap:6px;">
                         <div style="display:flex;justify-content:space-between;align-items:center;">
@@ -6185,7 +6201,7 @@ window.copyModalJSON = function() {
             <div style="padding: 12px; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; display: flex; flex-direction: column; gap: 12px;">
                 <div style="font-size: 7px; color: #818cf8; font-weight: bold; text-transform: uppercase; letter-spacing: 0.1em; display: flex; align-items: center; justify-content: space-between;">
                     <span>Sequencing Quality Control</span>
-                    <span id="qc-status-badge" style="padding: 2px 6px; border-radius: 4px; background: rgba(16,185,129,0.1); color: #2563eb; border: 1px solid rgba(16,185,129,0.2); font-size: 6px; font-weight: 900;">IDLE</span>
+                    <span id="qc-status-badge" style="padding: 2px 6px; border-radius: 4px; background: rgba(37,99,235,0.1); color: #2563eb; border: 1px solid rgba(37,99,235,0.2); font-size: 6px; font-weight: 900;">IDLE</span>
                 </div>
                 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">

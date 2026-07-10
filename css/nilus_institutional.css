@@ -12,7 +12,7 @@
   --nilus-bg: #F6F7F8;
   --nilus-card: rgba(255, 255, 255, 0.88);
   --nilus-gold: #B45309;
-  --nilus-green: #059669;
+  --nilus-green: #2563eb;
   --nilus-red: #DC2626;
 }
 
@@ -240,8 +240,8 @@ nav {
 
 .nilus-badge.success, .nilus-badge.green {
   color: var(--nilus-green) !important;
-  background: #ECFDF5 !important;
-  border-color: #A7F3D0 !important;
+  background: #eff6ff !important;
+  border-color: #bfdbfe !important;
 }
 
 /* SECTIONS */

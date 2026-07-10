@@ -33,6 +33,62 @@
             overflow-x: hidden;
         }
 
+        @media (max-width: 768px) {
+            .card-elite {
+                padding: 1.5rem !important;
+                border-radius: 1.25rem !important;
+            }
+            .spec-grid {
+                grid-template-columns: 1fr 1fr !important;
+                gap: 1.25rem !important;
+            }
+            .spec-value {
+                font-size: 1.75rem !important;
+            }
+            h1.text-7xl {
+                font-size: 2.75rem !important;
+                line-height: 1.1 !important;
+            }
+            .math-box {
+                padding: 1rem !important;
+                font-size: 0.7rem !important;
+                overflow-x: auto;
+            }
+            .table-wrap {
+                width: 100%;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .card-elite {
+                padding: 1.5rem !important;
+                border-radius: 1.25rem !important;
+            }
+            .spec-grid {
+                grid-template-columns: 1fr 1fr !important;
+                gap: 1.25rem !important;
+            }
+            .spec-value {
+                font-size: 1.75rem !important;
+            }
+            h1.text-7xl {
+                font-size: 2.75rem !important;
+                line-height: 1.1 !important;
+            }
+            .math-box {
+                padding: 1rem !important;
+                font-size: 0.7rem !important;
+                overflow-x: auto;
+            }
+            .table-wrap {
+                width: 100%;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+        }
+
         .card-elite {
             background: var(--card-bg);
             backdrop-filter: blur(30px);
@@ -491,7 +547,8 @@
         <div class="card-elite mb-12 overflow-hidden">
             <div class="section-badge">Section 07</div>
             <h2 class="text-4xl font-black mb-10 text-white">Comparative Specifications</h2>
-            <table class="w-full text-left">
+            <div class="table-wrap">
+                <table class="w-full text-left">
                 <thead>
                     <tr class="text-[10px] font-black text-slate-500 uppercase tracking-widest border-b border-white/5">
                         <th class="pb-6">Parameter</th>
@@ -537,6 +594,7 @@
                     </tr>
                 </tbody>
             </table>
+            </div>
         </div>
 
         <!-- Footer -->

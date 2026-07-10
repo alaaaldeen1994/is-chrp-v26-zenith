@@ -11,9 +11,9 @@
     <style>
         :root {
             --zenith-blue: #2563eb;
-            --zenith-blue: #3b82f6;
+            --zenith-blue-light: #3b82f6;
             --card-elite: rgba(15, 23, 42, 0.95);
-            --border-elite: rgba(20, 184, 166, 0.2);
+            --border-elite: rgba(37, 99, 235, 0.2);
         }
 
         body {
@@ -22,7 +22,7 @@
             font-family: 'Outfit', sans-serif;
             line-height: 1.8;
             background-image: 
-                radial-gradient(circle at 100% 0%, rgba(20, 184, 166, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 100% 0%, rgba(37, 99, 235, 0.1) 0%, transparent 40%),
                 radial-gradient(circle at 0% 100%, rgba(59, 130, 246, 0.1) 0%, transparent 40%);
             background-attachment: fixed;
             min-height: 100vh;
@@ -36,6 +36,28 @@
             padding: 3rem;
             box-shadow: 0 4px 30px rgba(0, 0, 0, 0.02);
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @media (max-width: 768px) {
+            .card-elite {
+                border-radius: 1.25rem !important;
+                padding: 1.25rem !important;
+            }
+            .grid-cols-2 {
+                grid-template-columns: 1fr !important;
+            }
+            .grid-cols-4 {
+                grid-template-columns: repeat(2, 1fr) !important;
+            }
+            .text-5xl {
+                font-size: 2.25rem !important;
+                line-height: 1.15 !important;
+            }
+            .table-wrap {
+                width: 100%;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
         }
 
         .exit-btn {
