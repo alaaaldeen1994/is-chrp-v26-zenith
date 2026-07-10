@@ -1,4 +1,4 @@
-﻿"""
+"""
 
 partial_safety.py
 
@@ -406,9 +406,18 @@ def filter_for_partial_reprogramming(
 
     # Safety summary
 
+    # oncogene_clear = True means NO oncogene was submitted in the input.
+    # oncogene_clear = False means oncogene(s) were submitted AND caught/blocked.
+    # In both cases, approved[] never contains an oncogene — the output is always safe.
     oncogene_clear = not any(b["category"] == "oncogene_blacklist" for b in blocked
 
                             if b.get("category"))
+
+    oncogene_blocked_count = sum(1 for b in blocked
+                                 if b.get("category") == "oncogene_blacklist")
+
+    # Protocol is always safe — approved factors never contain blacklisted oncogenes
+    oncogene_protocol_safe = True
 
     dediff_blocked = any(b["category"] == "dedifferentiation_risk" for b in blocked
 
@@ -432,7 +441,11 @@ def filter_for_partial_reprogramming(
 
         "safety_summary": {
 
-            "oncogene_clear": oncogene_clear,
+            "oncogene_clear": oncogene_clear,          # True = no oncogene submitted; False = oncogene submitted AND blocked
+
+            "oncogene_blocked_count": oncogene_blocked_count,  # How many oncogenes were caught and blocked
+
+            "oncogene_protocol_safe": oncogene_protocol_safe,  # Always True — approved[] is guaranteed oncogene-free
 
             "dedifferentiation_blocked": dediff_blocked,
 
@@ -794,7 +807,9 @@ if __name__ == "__main__":
 
     ss = result["safety_summary"]
 
-    print(f"  Oncogene Clear: {ss['oncogene_clear']} | Dediff Blocked: {ss['dedifferentiation_blocked']}")
+    print(f"  Oncogene Submitted & Clear (no oncogene in input): {ss['oncogene_clear']}")
+    print(f"  Oncogenes Caught & Blocked: {ss['oncogene_blocked_count']} | Protocol Safe (approved[] oncogene-free): {ss['oncogene_protocol_safe']}")
+    print(f"  Dediff Blocked: {ss['dedifferentiation_blocked']}")
 
     print(f"  Partial Ceiling: {ss['partial_ceiling']}")
 

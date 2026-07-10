@@ -4882,7 +4882,28 @@ function renderPartialReport(data) {
 
     var ceil = document.getElementById('pr-ceiling-badge');
 
-    if (onco) { onco.innerHTML = ss.oncogene_clear ? '&#9989; Oncogene Clear' : '&#9888;&#65039; Oncogene Risk'; onco.style.background = ss.oncogene_clear ? 'rgba(16,185,129,0.15)' : 'rgba(239,68,68,0.15)'; onco.style.color = ss.oncogene_clear ? '#60a5fa' : '#f87171'; onco.style.border = '1px solid ' + (ss.oncogene_clear ? 'rgba(16,185,129,0.3)' : 'rgba(239,68,68,0.3)'); }
+    if (onco) {
+        // oncogene_protocol_safe = true means approved[] is oncogene-free (always true)
+        // oncogene_clear = true means no oncogene was even submitted
+        var protocolSafe = ss.oncogene_protocol_safe !== false;
+        var blockedCount = ss.oncogene_blocked_count || 0;
+        if (protocolSafe && ss.oncogene_clear) {
+            onco.innerHTML = '&#9989; Oncogene Clear';
+            onco.style.background = 'rgba(37,99,235,0.15)';
+            onco.style.color = '#60a5fa';
+            onco.style.border = '1px solid rgba(37,99,235,0.3)';
+        } else if (protocolSafe && !ss.oncogene_clear) {
+            onco.innerHTML = '&#9989; Protocol Safe (' + blockedCount + ' blocked)';
+            onco.style.background = 'rgba(37,99,235,0.15)';
+            onco.style.color = '#60a5fa';
+            onco.style.border = '1px solid rgba(37,99,235,0.3)';
+        } else {
+            onco.innerHTML = '&#9888;&#65039; Oncogene Risk';
+            onco.style.background = 'rgba(239,68,68,0.15)';
+            onco.style.color = '#f87171';
+            onco.style.border = '1px solid rgba(239,68,68,0.3)';
+        }
+    }
 
     if (dediff) { dediff.innerHTML = ss.dedifferentiation_blocked ? '&#9989; Dediff Blocked' : '&#9888;&#65039; Dediff Risk'; dediff.style.background = ss.dedifferentiation_blocked ? 'rgba(16,185,129,0.15)' : 'rgba(245,158,11,0.15)'; dediff.style.color = ss.dedifferentiation_blocked ? '#60a5fa' : '#f59e0b'; dediff.style.border = '1px solid ' + (ss.dedifferentiation_blocked ? 'rgba(16,185,129,0.3)' : 'rgba(245,158,11,0.3)'); }
 
