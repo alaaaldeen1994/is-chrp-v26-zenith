@@ -79,14 +79,14 @@ function switchMode(mode) {
   $('#esmInput').style.display = mode === 'esm' ? 'block' : 'none';
   $('#boltzInput').style.display = mode === 'boltz' ? 'block' : 'none';
   $('#costPanel').style.display = mode === 'boltz' ? 'block' : 'none';
-  $('#engineTag').textContent = mode === 'esm' ? 'Nilus Atomix' : 'zenithfold-2.1';
+  $('#engineTag').textContent = mode === 'esm' ? 'Nilus Atomix' : 'NilusFold';
   $('#runNum').textContent = mode === 'boltz' ? '5' : '4';
   $('#inputTag').textContent = mode === 'esm' ? 'FASTA · raw' : 'multi-chain';
   $('#modeDescription').textContent = mode === 'esm'
     ? 'Evolutionary Scale Modeling for fast, single-chain protein folding. Returns atomic coordinates with per-residue pLDDT.'
-    : 'zenithfold-2.1 predicts multi-chain biomolecular complexes (protein · DNA · RNA · ligand) with PAE confidence matrices.';
-  $('#sbModel').textContent = mode === 'esm' ? 'nilus-atomix-v1' : 'zenithfold-2.1';
-  log(`Engine switched → ${mode === 'esm' ? 'Nilus Atomix' : 'zenithfold-2.1'}`, 'info');
+    : 'NilusFold predicts multi-chain biomolecular complexes (protein · DNA · RNA · ligand) with PAE confidence matrices.';
+  $('#sbModel').textContent = mode === 'esm' ? 'nilus-atomix-v1' : 'NilusFold';
+  log(`Engine switched → ${mode === 'esm' ? 'Nilus Atomix' : 'NilusFold'}`, 'info');
   renderChainList();
   updateCostEstimate();
   updatePAEWarningVisibility();
@@ -130,11 +130,11 @@ function initSequenceInput() {
       if (len > HARD_MAX) {
         $('#seqLenHint').textContent = `${len} aa — exceeds max`;
         $('#seqLenHint').style.color = 'var(--coral)';
-        log(`Sequence (${len} aa) exceeds hard limit. Please trim or use ZenithFold mode.`, 'err');
+        log(`Sequence (${len} aa) exceeds hard limit. Please trim or use NilusFold mode.`, 'err');
       } else if (len > ESM_MAX) {
-        $('#seqLenHint').textContent = `${len} aa — use ZenithFold for best results`;
+        $('#seqLenHint').textContent = `${len} aa — use NilusFold for best results`;
         $('#seqLenHint').style.color = 'var(--amber)';
-        log(`Long sequence detected (${len} aa). Nilus Atomix optimized for <400 aa — switching to ZenithFold API recommended for accuracy and speed.`, 'warn');
+        log(`Long sequence detected (${len} aa). Nilus Atomix optimized for <400 aa — switching to NilusFold API recommended for accuracy and speed.`, 'warn');
       } else {
         $('#seqLenHint').textContent = `${len} aa · max ${ESM_MAX} aa`;
         $('#seqLenHint').style.color = '';
@@ -231,7 +231,7 @@ function renderChainList() {
 function initChainBuilder() {
   $('#addChainBtn').addEventListener('click', () => {
     if (STATE.chains.length >= 6) {
-      log('Maximum 6 chains supported in zenithfold-2.1 UI', 'warn');
+      log('Maximum 6 chains supported in NilusFold UI', 'warn');
       return;
     }
     STATE.chains.push({ id: String.fromCharCode(65 + STATE.chains.length), type: 'protein', copies: 1, value: '' });
@@ -988,15 +988,15 @@ async function runPrediction() {
       btn.disabled = false;
       return;
     }
-    // Auto-route long sequences to Boltz (ZenithFold) for multi-chain/long support
+    // Auto-route long sequences to Boltz (NilusFold) for multi-chain/long support
     if (seq.length > 400) {
-      log(`Sequence length ${seq.length} aa exceeds Nilus Atomix optimum. Auto-routing to ZenithFold API...`, 'warn');
+      log(`Sequence length ${seq.length} aa exceeds Nilus Atomix optimum. Auto-routing to NilusFold API...`, 'warn');
       // Pre-populate chain A with the sequence and switch mode
       STATE.chains = [{ id: 'A', type: 'protein', sequence: seq, copies: 1 }];
       STATE.mode = 'boltz';
       document.querySelectorAll('.mode-btn').forEach(b => b.classList.toggle('active', b.dataset.mode === 'boltz'));
-      $('#engineTag').textContent = 'ZenithFold';
-      $('#modeDescription').textContent = 'Routing long sequence to ZenithFold multimer engine for full-length prediction.';
+      $('#engineTag').textContent = 'NilusFold';
+      $('#modeDescription').textContent = 'Routing long sequence to NilusFold multimer engine for full-length prediction.';
       renderChainList();
       // Fall through to boltz path below
       btn.disabled = false;
@@ -1052,7 +1052,7 @@ async function runPrediction() {
 
     const overlay = $('#runOverlay');
     overlay.classList.add('active');
-    $('#runTitle').textContent = 'Submitting zenithfold-2.1 complex';
+    $('#runTitle').textContent = 'Submitting NilusFold complex';
     $('#runStage').textContent = 'Validating and queuing...';
     $('#runProgressBar').style.width = '10%';
 
@@ -1152,7 +1152,7 @@ function updateMetaCard(seq, plddt) {
   let avgPlddt = (plddt.reduce((a,b)=>a+b,0)/plddt.length);
   if (avgPlddt <= 1.0 && avgPlddt > 0.0) avgPlddt = avgPlddt * 100;
   $('#metaConf').textContent = avgPlddt.toFixed(1);
-  $('#metaEngine').textContent = STATE.mode === 'esm' ? 'Nilus Atomix' : 'zenithfold-2.1';
+  $('#metaEngine').textContent = STATE.mode === 'esm' ? 'Nilus Atomix' : 'NilusFold';
   $('#seqBadge').textContent = `${seq.length} aa`;
   
   if (STATE.currentModel && STATE.currentModel.chains && STATE.currentModel.chains.length) {
@@ -1520,7 +1520,7 @@ function renderAIReport(f) {
   const sumMetaEl = document.getElementById('aiSummaryMeta');
   if (sumMetaEl) {
     const chainStr = STATE.currentModel && STATE.currentModel.chains ? STATE.currentModel.chains.join(', ') : 'A';
-    const engineName = STATE.mode === 'esm' ? 'Nilus Atomix (ESMFold)' : 'ZenithFold (Boltz)';
+    const engineName = STATE.mode === 'esm' ? 'Nilus Atomix (ESMFold)' : 'NilusFold (powered by Boltz-1)';
     sumMetaEl.textContent =
       `${f.length} residues · chain ${chainStr} · ${engineName}`;
   }
@@ -1712,7 +1712,7 @@ function exportAIReportToPDF() {
   printWindow.document.write(`
     <html>
       <head>
-        <title>ZenithFold AI Structure Analysis Report - res-${f.length}</title>
+        <title>NilusFold AI Structure Analysis Report - res-${f.length}</title>
         <style>
           body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; color: #1e293b; padding: 40px; line-height: 1.6; }
           .header { border-bottom: 2px solid #3b82f6; padding-bottom: 16px; margin-bottom: 24px; }
@@ -1736,7 +1736,7 @@ function exportAIReportToPDF() {
       </head>
       <body>
         <div class="header">
-          <div class="title">ZenithFold Structure Analysis Report</div>
+          <div class="title">NilusFold Structure Analysis Report</div>
           <div class="subtitle">Generated on ${new Date().toLocaleDateString()} · Powered by Nilus Atomix</div>
         </div>
 
@@ -1747,7 +1747,7 @@ function exportAIReportToPDF() {
           </div>
           <div>
             <div style="font-size: 16px; font-weight: 700; color: #0f172a;">${status}</div>
-            <div style="font-size: 11px; color: #64748b; margin-top: 3px;">${f.length} residues · Chain ${STATE.currentModel && STATE.currentModel.chains ? STATE.currentModel.chains.join(', ') : 'A'} · ZenithFold</div>
+            <div style="font-size: 11px; color: #64748b; margin-top: 3px;">${f.length} residues · Chain ${STATE.currentModel && STATE.currentModel.chains ? STATE.currentModel.chains.join(', ') : 'A'} · NilusFold</div>
           </div>
         </div>
 
