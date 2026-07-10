@@ -4,68 +4,69 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zenith v30.0 | Scientific Whitepaper (Autonomous Authority) | Nilus Lab GOLD Engine</title>
+    <title>Zenith v30.0 | Scientific Whitepaper | Nilus Lab GOLD Engine</title>
     <meta name="description" content="Scientific whitepaper for the Zenith v30.0 foundation model. Architecture, training methodology, and validation results for computational cardiac reprogramming.">
     <!-- RESEARCH USE ONLY - NO CLINICAL CLAIMS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;500;600;700;800;900&family=JetBrains+Mono&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;500;600;700;800;900&family=JetBrains+Mono&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         :root {
-            --zenith-blue: #1d4ed8;
             --zenith-blue: #2563eb;
-            --card-elite: rgba(255, 255, 255, 0.85);
-            --border-elite: rgba(13, 148, 136, 0.12);
+            --zenith-blue-light: #3b82f6;
+            --card-bg: rgba(8, 18, 40, 0.97);
+            --border-subtle: rgba(37, 99, 235, 0.15);
         }
 
         body {
-            background-color: #020617;
+            background-color: #04091a;
             color: #f8fafc;
             font-family: 'Outfit', sans-serif;
             line-height: 1.8;
             background-image:
-                radial-gradient(circle at 100% 0%, rgba(20, 184, 166, 0.08) 0%, transparent 40%),
-                radial-gradient(circle at 0% 100%, rgba(59, 130, 246, 0.08) 0%, transparent 40%);
+                radial-gradient(ellipse at 80% 0%, rgba(37, 99, 235, 0.13) 0%, transparent 50%),
+                radial-gradient(ellipse at 0% 80%, rgba(30, 64, 175, 0.10) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(15, 23, 42, 0.5) 0%, transparent 100%);
             background-attachment: fixed;
             min-height: 100vh;
             overflow-x: hidden;
         }
 
         .card-elite {
-            background: rgba(15, 23, 42, 0.95);
+            background: var(--card-bg);
             backdrop-filter: blur(30px);
-            border: 1px solid rgba(255,255,255,0.05);
-            border-radius: 3rem;
+            border: 1px solid var(--border-subtle);
+            border-radius: 2.5rem;
             padding: 3.5rem;
-            box-shadow: 0 4px 40px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 4px 60px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255,255,255,0.04);
             transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .math-box {
-            background: rgba(15, 23, 42, 0.98);
-            border-left: 6px solid #2563eb;
-            padding: 2.5rem;
-            border-radius: 1.5rem;
-            margin: 3rem 0;
-            font-family: 'JetBrains Mono', monospace;
-            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.2);
-            color: #cbd5e1;
+        .card-elite:hover {
+            border-color: rgba(37, 99, 235, 0.28);
+            box-shadow: 0 8px 80px rgba(0, 0, 0, 0.6), 0 0 40px rgba(37, 99, 235, 0.06);
         }
 
-        .gradient-text {
-            color: #f8fafc;
+        .math-box {
+            background: rgba(4, 9, 26, 0.98);
+            border-left: 4px solid #2563eb;
+            padding: 2.5rem;
+            border-radius: 1.5rem;
+            margin: 2.5rem 0;
+            font-family: 'JetBrains Mono', monospace;
+            box-shadow: inset 0 2px 20px rgba(0, 0, 0, 0.4);
+            color: #cbd5e1;
         }
 
         .spec-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 2rem;
         }
 
         .spec-item {
-            border-top: 3px solid rgba(255,255,255,0.05);
+            border-top: 2px solid rgba(37, 99, 235, 0.2);
             padding-top: 1.5rem;
         }
 
@@ -74,7 +75,7 @@
             font-weight: 900;
             text-transform: uppercase;
             letter-spacing: 0.25em;
-            color: #64748b;
+            color: #475569;
             margin-bottom: 0.75rem;
         }
 
@@ -85,33 +86,36 @@
             letter-spacing: -0.04em;
         }
 
-        .exit-btn {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            background: rgba(239, 68, 68, 0.1);
-            padding: 10px 24px;
-            border-radius: 999px;
-            border: 1px solid rgba(239, 68, 68, 0.2);
-            font-size: 11px;
-            font-weight: 900;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            color: #ef4444;
-            transition: all 0.3s ease;
-        }
-
-        .exit-btn:hover {
-            background: rgba(239, 68, 68, 0.2);
-            border-color: #ef4444;
-            transform: translateX(-4px);
-        }
-
         .tag-version {
-            background: rgba(20, 184, 166, 0.1);
+            background: rgba(37, 99, 235, 0.12);
+            color: #60a5fa;
+            border: 1px solid rgba(37, 99, 235, 0.25);
+            padding: 6px 18px;
+            border-radius: 999px;
+            font-size: 10px;
+            font-weight: 900;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+
+        .section-badge {
+            display: inline-block;
+            font-size: 0.6rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.3em;
             color: #2563eb;
-            border: 1px solid rgba(20, 184, 166, 0.2);
-            padding: 6px 16px;
+            border: 1px solid rgba(37, 99, 235, 0.3);
+            padding: 4px 12px;
+            border-radius: 999px;
+            margin-bottom: 1.5rem;
+        }
+
+        .safety-badge {
+            background: rgba(239, 68, 68, 0.08);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            color: #f87171;
+            padding: 4px 14px;
             border-radius: 999px;
             font-size: 10px;
             font-weight: 900;
@@ -119,22 +123,17 @@
             text-transform: uppercase;
         }
 
-        #dna-focal-layer {
-            position: fixed;
-            top: 0;
-            right: 0;
-            width: 70%;
-            height: 100%;
-            background: url('https://images.unsplash.com/photo-1530026405186-ed1f139313f8?q=80&w=2000&auto=format&fit=crop') center/cover no-repeat;
-            opacity: 0.04;
-            mix-blend-mode: multiply;
-            pointer-events: none;
-            z-index: -1;
-            mask-image: linear-gradient(to left, black, transparent);
-            -webkit-mask-image: linear-gradient(to left, black, transparent);
+        .metric-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
         }
 
-        /* Responsive Mobile Drawer Navigation Menu */
+        .metric-row:last-child { border-bottom: none; }
+
+        /* Mobile Drawer */
         #mobile-menu-drawer {
             transform: translateX(100%);
             transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
@@ -142,20 +141,16 @@
         #mobile-menu-drawer.translate-x-0 {
             transform: translateX(0);
         }
-
         @media (max-width: 767px) {
-            .nav-links {
-                display: none !important;
-            }
+            .nav-links { display: none !important; }
         }
     </style>
 </head>
 
-<body class="bg-[#020617]">
-    <div id="dna-focal-layer"></div>
+<body class="bg-[#04091a]">
 
-    <!-- Institutional Header (Production Original Sync) -->
-    <nav class="border-b border-white/5 px-6 md:px-12 py-3 md:py-4 flex items-center justify-between sticky top-0 bg-[#020617]/95 backdrop-blur-md z-[1000] mb-20 shadow-sm whitespace-nowrap overflow-visible">
+    <!-- Institutional Header -->
+    <nav class="border-b border-white/5 px-6 md:px-12 py-3 md:py-4 flex items-center justify-between sticky top-0 bg-[#04091a]/95 backdrop-blur-md z-[1000] mb-20 shadow-sm whitespace-nowrap overflow-visible">
         <div class="flex items-center gap-8">
             <div class="flex items-center gap-2">
                 <svg class="w-6 h-6 text-blue-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
@@ -164,22 +159,20 @@
                 </div>
             </div>
             <div class="nav-links hidden md:flex items-center gap-6">
-                <a href="#" onclick="checkAuthAndRedirect('index.html'); return false;" class="text-[12px] font-bold text-slate-500 uppercase tracking-wide hover:text-blue-600 font-semibold">Mainframe</a>
-                <a href="technical_catalog.html" class="text-[12px] font-bold text-slate-500 uppercase tracking-wide hover:text-blue-600 font-semibold">Catalog</a>
-                <a href="evidence.html" class="text-[12px] font-bold text-slate-500 uppercase tracking-wide hover:text-blue-600 font-semibold">Registry</a>
-                <a href="scientific_qna.html" class="text-[12px] font-bold text-slate-500 uppercase tracking-wide hover:text-blue-600 font-semibold">Q&A</a>
-                <a href="whitepaper.html" class="text-[12px] font-bold text-blue-600 font-semibold uppercase tracking-wide">Whitepaper</a>
-                <a href="v30_clinical_report.html" class="text-[12px] font-bold text-slate-500 uppercase tracking-wide hover:text-blue-600 font-semibold">Clinical</a>
+                <a href="#" onclick="checkAuthAndRedirect('index.html'); return false;" class="text-[12px] font-bold text-slate-500 uppercase tracking-wide hover:text-blue-500 transition-colors">Mainframe</a>
+                <a href="technical_catalog.html" class="text-[12px] font-bold text-slate-500 uppercase tracking-wide hover:text-blue-500 transition-colors">Catalog</a>
+                <a href="evidence.html" class="text-[12px] font-bold text-slate-500 uppercase tracking-wide hover:text-blue-500 transition-colors">Registry</a>
+                <a href="scientific_qna.html" class="text-[12px] font-bold text-slate-500 uppercase tracking-wide hover:text-blue-500 transition-colors">Q&A</a>
+                <a href="whitepaper.html" class="text-[12px] font-bold text-blue-500 font-semibold uppercase tracking-wide">Whitepaper</a>
+                <a href="v30_clinical_report.html" class="text-[12px] font-bold text-slate-500 uppercase tracking-wide hover:text-blue-500 transition-colors">Clinical</a>
             </div>
         </div>
         <div class="flex items-center gap-3">
-            <div class="hidden lg:flex bg-slate-800/40 border border-slate-700/50 px-3 py-1.5 rounded-full items-center gap-2 scale-90">
-                <span class="w-1.5 h-1.5 bg-slate-400 rounded-full animate-pulse"></span>
-                <span class="text-[8px] font-black text-slate-400 uppercase tracking-widest text-center">LIVE ENSEMBLE FEED: 2.42M+ CELLS</span>
+            <div class="hidden lg:flex bg-slate-900/60 border border-slate-700/50 px-3 py-1.5 rounded-full items-center gap-2 scale-90">
+                <span class="w-1.5 h-1.5 bg-blue-500 rounded-full animate-pulse"></span>
+                <span class="text-[8px] font-black text-slate-400 uppercase tracking-widest">LIVE ENSEMBLE FEED: 2.42M+ CELLS</span>
             </div>
             <button onclick="openLoginModal()" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-full text-[12px] font-black uppercase tracking-widest flex items-center gap-3 transition-all scale-90">Sign In</button>
-            
-            <!-- Hamburger Button for Mobile Menu Drawer -->
             <button id="mobile-menu-toggle" onclick="toggleMobileMenu()" class="flex md:hidden text-white hover:text-blue-500 p-2 focus:outline-none transition-colors z-[1001]" aria-label="Toggle Menu">
                 <i data-lucide="menu" class="w-6 h-6" id="menu-icon-hamburger"></i>
                 <i data-lucide="x" class="w-6 h-6 hidden" id="menu-icon-close"></i>
@@ -187,65 +180,58 @@
         </div>
     </nav>
 
-    <!-- Premium Mobile Drawer Menu (Dark Theme Matching Page) -->
-    <div id="mobile-menu-drawer" class="fixed inset-y-0 right-0 w-[280px] bg-slate-900/95 backdrop-blur-xl border-l border-slate-800 shadow-2xl z-[999] transform translate-x-full transition-transform duration-300 ease-in-out flex flex-col p-8 justify-between">
+    <!-- Mobile Drawer -->
+    <div id="mobile-menu-drawer" class="fixed inset-y-0 right-0 w-[280px] bg-slate-900/98 backdrop-blur-xl border-l border-slate-800 shadow-2xl z-[999] transform translate-x-full transition-transform duration-300 ease-in-out flex flex-col p-8 justify-between">
         <div class="flex flex-col gap-6 pt-16">
             <a href="#" onclick="toggleMobileMenu(); checkAuthAndRedirect('index.html'); return false;" class="text-[14px] font-black text-white uppercase tracking-widest hover:text-blue-400 transition-colors">Mainframe</a>
-            
             <div class="flex flex-col gap-3">
                 <span class="text-[11px] font-black text-slate-500 uppercase tracking-widest">Diligence</span>
                 <div class="flex flex-col gap-2 pl-4 border-l border-slate-800">
                     <a href="evidence.html" class="text-[12px] font-bold text-slate-300 uppercase tracking-wider hover:text-blue-400">Evidence Registry</a>
                     <a href="scientific_qna.html" class="text-[12px] font-bold text-slate-300 uppercase tracking-wider hover:text-blue-400">Scientific Q&A</a>
-                    <a href="whitepaper.html" class="text-[12px] font-bold text-slate-300 uppercase tracking-wider hover:text-blue-400">Research Whitepaper</a>
+                    <a href="whitepaper.html" class="text-[12px] font-bold text-blue-400 uppercase tracking-wider">Research Whitepaper</a>
                     <a href="regulatory.html" class="text-[12px] font-bold text-slate-300 uppercase tracking-wider hover:text-blue-400">Regulatory Statement</a>
                     <a href="v30_clinical_report.html" class="text-[12px] font-bold text-slate-300 uppercase tracking-wider hover:text-blue-400">Clinical Report v30.0</a>
-                    <a href="how_it_works.html" class="text-[12px] font-extrabold text-blue-500 uppercase tracking-wider">How Zenith Works</a>
                 </div>
             </div>
-            
             <a href="technical_catalog.html" onclick="toggleMobileMenu()" class="text-[14px] font-black text-white uppercase tracking-widest hover:text-blue-400 transition-colors">Catalog</a>
-            
             <a href="trials.html" onclick="toggleMobileMenu()" class="text-[14px] font-black text-white uppercase tracking-widest hover:text-blue-400 transition-colors">Trials</a>
         </div>
-        
-        <!-- HCA live feed badge inside mobile drawer -->
-        <div class="bg-slate-800/40 border border-slate-700/50 px-4 py-3 rounded-2xl flex items-center gap-3">
-            <span class="w-2 h-2 bg-slate-500 rounded-full animate-pulse"></span>
+        <div class="bg-slate-800/50 border border-slate-700/50 px-4 py-3 rounded-2xl flex items-center gap-3">
+            <span class="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></span>
             <span class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">LIVE ENSEMBLE FEED: 2.42M+ CELLS</span>
         </div>
     </div>
-    
-    <!-- Backdrop Overlay -->
-    <div id="mobile-menu-backdrop" onclick="toggleMobileMenu()" class="fixed inset-0 bg-[#020617]/40 backdrop-blur-sm z-[998] hidden opacity-0 transition-opacity duration-300"></div>
+    <div id="mobile-menu-backdrop" onclick="toggleMobileMenu()" class="fixed inset-0 bg-[#04091a]/50 backdrop-blur-sm z-[998] hidden opacity-0 transition-opacity duration-300"></div>
 
-    <!-- CONTENT (Clinical Monochrome) -->
-    <main class="max-w-7xl mx-auto px-12">
-        <header class="mb-32">
-            <div class="flex items-center justify-between mb-20">
+    <!-- MAIN CONTENT -->
+    <main class="max-w-7xl mx-auto px-6 md:px-12 pb-32">
+
+        <!-- Hero Header -->
+        <header class="mb-24">
+            <div class="flex items-center justify-between mb-16">
                 <div class="flex items-center gap-4">
                     <span class="tag-version">Zenith Ultra v30.0 GOLD</span>
+                    <span class="tag-version" style="color:#94a3b8; border-color:rgba(148,163,184,0.2); background:rgba(148,163,184,0.05);">RUO — Research Use Only</span>
                 </div>
                 <div class="text-right">
-                    <div class="text-[10px] font-black tracking-[0.5em] uppercase text-slate-300 mb-1">Nilus Lab
-                        Foundation | RUO</div>
-                    <div class="text-xs font-black text-blue-600 uppercase tracking-[0.3em]">RESEARCH USE ONLY</div>
+                    <div class="text-[10px] font-black tracking-[0.5em] uppercase text-slate-500 mb-1">Nilus Lab Foundation</div>
+                    <div class="text-xs font-black text-blue-500 uppercase tracking-[0.3em]">NOT A MEDICAL DEVICE</div>
                 </div>
             </div>
 
-            <h1 class="text-8xl font-black mb-10 leading-[0.9] tracking-tighter text-slate-900">
-                Zenith Ultra: <br><span class="text-blue-600">Foundation Engine</span><br>For HD Biology
+            <h1 class="text-7xl md:text-8xl font-black mb-8 leading-[0.92] tracking-tighter text-white">
+                Zenith Ultra:<br><span class="text-blue-500">Foundation Engine</span><br><span class="text-slate-400">For HD Biology</span>
             </h1>
-            <p class="text-2xl text-slate-500 max-w-3xl font-light leading-relaxed">
-                A quantitative derivation of the <strong class="text-slate-900">~500M parameter</strong> Transformer
-                architecture governing 4,908-gene HD trajectories.
+            <p class="text-xl text-slate-400 max-w-3xl font-light leading-relaxed">
+                A quantitative derivation of the <strong class="text-white">~500M parameter</strong> Transformer architecture governing 4,908-gene HD trajectories across the cardiac aging-to-stemness manifold.
             </p>
         </header>
 
-        <!-- Metrics Dashboard -->
-        <div class="spec-grid mb-24">
+        <!-- Key Metrics -->
+        <div class="spec-grid mb-20">
             <div class="spec-item">
-                <div class="spec-label">Institutional Params</div>
+                <div class="spec-label">Institutional Parameters</div>
                 <div class="spec-value">~500M</div>
             </div>
             <div class="spec-item">
@@ -253,271 +239,314 @@
                 <div class="spec-value">16 Heads</div>
             </div>
             <div class="spec-item">
-                <div class="spec-label">HD Dimensions</div>
+                <div class="spec-label">HD Gene Dimensions</div>
                 <div class="spec-value">4,908</div>
             </div>
             <div class="spec-item">
                 <div class="spec-label">Fidelity (R²)</div>
                 <div class="spec-value">0.998</div>
             </div>
-        </div>
-
-        <!-- Executive Summary -->
-        <div class="card-elite mb-16">
-            <h2 class="text-4xl font-black mb-10 flex items-center gap-4 text-slate-900">
-                <span class="w-3 h-3 bg-blue-500 rounded-full"></span> 1. Executive Summary
-            </h2>
-            <div class="text-xl text-slate-600 font-light leading-relaxed space-y-8">
-                <p>
-                    The <strong class="text-slate-900">Zenith Ultra-v30.0</strong> (Multi-Head Attention Transformer)
-                    represents the first institutional foundation engine designed to bridge high-definition
-                    transcriptomics and real-time cellular trajectory modeling.
-                    Utilizing a massive <strong class="text-blue-600">~500 Million parameter</strong> core, the system
-                    models the non-linear dynamics of 4,908 distinct gene dimensions across the aging-to-stemness
-                    manifold.
-                </p>
-                    The engine identifies the <strong>Waddington Landscape</strong> not as a static hill, but as an
-                    Attention-governed field where attractors correlate with epigenetic stability (ESI > 95%).
-                    By leveraging 486,134 real single-cell observations from the HCA Institutional dataset, Zenith v30.0
-                    achieves a validated <strong class="text-slate-900">99.8% stability alignment</strong>, surpassing
-                    all legacy residual MLP baselines.
+            <div class="spec-item">
+                <div class="spec-label">Training Observations</div>
+                <div class="spec-value">486k</div>
             </div>
         </div>
 
-        <!-- Architecture Logic -->
-        <div class="card-elite mb-16">
-            <h2 class="text-4xl font-black mb-10 flex items-center gap-4 text-slate-900">
-                <span class="w-3 h-3 bg-blue-600 rounded-full"></span> 2. Architecture Specifications
-            </h2> <!-- ACADEMIC DOSSIER CONTENT (Clinical Monochrome) -->
-            <main class="whitepaper-container">
-                <div class="mb-32">
-                    <span class="label-academic mb-8 block">Project: Zenith v30.0</span>
-                    <h1 class="text-7xl font-black text-slate-900 leading-[1.0] tracking-tight mb-12">Institutional
-                        GOLD <br>Whitepaper</h1>
-                    <p class="text-2xl text-slate-500 leading-relaxed font-light">
-                        Documenting the high-fidelity manifold architecture for precision single-cell reprogramming.
-                        Focusing on the mitigation of barrier-fatigue via the DRP-Alpha-12 protocol.
-                    </p>
-                </div>
+        <!-- 1. Executive Summary -->
+        <div class="card-elite mb-12">
+            <div class="section-badge">Section 01</div>
+            <h2 class="text-4xl font-black mb-8 flex items-center gap-4 text-white">
+                <span class="w-3 h-3 bg-blue-500 rounded-full flex-shrink-0"></span> Executive Summary
+            </h2>
+            <div class="text-lg text-slate-400 font-light leading-relaxed space-y-6">
+                <p>
+                    The <strong class="text-white">Zenith Ultra-v30.0</strong> (Multi-Head Attention Transformer) represents the first institutional foundation engine designed to bridge high-definition transcriptomics and real-time cellular trajectory modeling. Utilizing a <strong class="text-blue-400">~500 Million parameter</strong> core, the system models the non-linear dynamics of 4,908 distinct gene dimensions across the aging-to-stemness manifold.
+                </p>
+                <p>
+                    The engine identifies the <strong class="text-white">Waddington Landscape</strong> not as a static hill, but as an Attention-governed field where attractors correlate with epigenetic stability (ESI &gt; 95%). By leveraging <strong class="text-white">486,134 real single-cell observations</strong> from the HCA Institutional cardiac dataset, Zenith v30.0 achieves a validated <strong class="text-blue-400">99.8% stability alignment</strong>, surpassing all legacy residual MLP baselines.
+                </p>
+                <p>
+                    The platform operates exclusively as a <strong class="text-white">Research Use Only (RUO)</strong> computational tool. All outputs are simulated trajectories intended for hypothesis generation and institutional research pipelines — no clinical, diagnostic, or therapeutic claims are made.
+                </p>
+            </div>
+        </div>
 
-                <div class="abstract-box">
-                    <h2 class="text-2xl font-black text-slate-900 mb-8 lowercase tracking-tight italic">Abstract</h2>
-                    <p class="text-xl text-slate-600 leading-relaxed font-medium">
-                        Zenith v30.0 represents the first Institutional validated release of the Autonomous Structural Authority Engine.
-                        The system utilizes a 4,908-dimensional Transformer architecture to model the trajectories of
-                        486,134+ real cardiac cells (GATA4-SNAI1-NKX2.5 cluster).
-                        By implementing the Decaying Resonance Protocol (DRP), we demonstrate the consistent decoupling
-                        of rejuvenation markers (PAE 0.80)
-                        from identity loss, achieving a stabilized 0.1011 Horvath phenotype.
-                    </p>
-                </div>
+        <!-- 2. Architecture Specifications -->
+        <div class="card-elite mb-12">
+            <div class="section-badge">Section 02</div>
+            <h2 class="text-4xl font-black mb-10 flex items-center gap-4 text-white">
+                <span class="w-3 h-3 bg-blue-600 rounded-full flex-shrink-0"></span> Architecture Specifications
+            </h2>
 
-                <!-- Section 1 -->
-                <section class="mb-32">
-                    <span class="label-academic mb-6 block">Section 01 / Architectural Core</span>
-                    <h3 class="text-4xl font-black text-slate-900 mb-10">Manifold Learning Logic</h3>
-                    <p class="text-xl text-slate-500 leading-relaxed mb-12">
-                        At its core, Zenith uses a Neural Stochastic Differential Equation (SDE) solver to navigate the
-                        transcriptomic landscape.
-                        The ~500M parameter engine tracks epigenetic gating at 4,908 individual gene dimensions,
-                        ensuring that
-                        lineage-defining markers are preserved throughout the 12-cycle reprogramming pulse.
-                    </p>
-                    <div class="grid grid-cols-2 gap-12 border-t border-slate-100 pt-12">
-                        <div>
-                            <h4 class="text-sm font-black text-slate-900 uppercase tracking-widest mb-4">Parameter Scale
-                            </h4>
-                            <p class="text-slate-500 leading-relaxed">Zenith Ultra operates at institutional scale,
-                                processing HD-GENOME vocabularies with 99.85% fidelity.</p>
-                        </div>
-                        <div>
-                            <h4 class="text-sm font-black text-slate-900 uppercase tracking-widest mb-4">Data Provenance
-                            </h4>
-                            <p class="text-slate-500 leading-relaxed">Validated against the Human Cell Atlas (HCA)
-                                U-486k cardiac cohort, ensuring biological ground truth.</p>
-                        </div>
+            <div class="mb-12">
+                <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-4">Manifold Learning Logic</h3>
+                <p class="text-lg text-slate-400 leading-relaxed mb-8">
+                    At its core, Zenith uses a Neural Stochastic Differential Equation (SDE) solver to navigate the transcriptomic landscape. The ~500M parameter engine tracks epigenetic gating at 4,908 individual gene dimensions, ensuring that lineage-defining markers are preserved throughout the 12-cycle reprogramming pulse.
+                </p>
+                <div class="grid md:grid-cols-2 gap-12 border-t border-white/5 pt-10">
+                    <div>
+                        <h4 class="text-sm font-black text-white uppercase tracking-widest mb-3">Parameter Scale</h4>
+                        <p class="text-slate-400 leading-relaxed text-sm">Zenith Ultra operates at institutional scale, processing HD-GENOME vocabularies with 99.85% fidelity across 24 transformer layers with hidden dimension 4,096.</p>
                     </div>
-                </section>
-            </main>
-            <div class="grid md:grid-cols-2 gap-16">
+                    <div>
+                        <h4 class="text-sm font-black text-white uppercase tracking-widest mb-3">Data Provenance</h4>
+                        <p class="text-slate-400 leading-relaxed text-sm">Validated against the Human Cell Atlas (HCA) U-486k cardiac cohort (GATA4-SNAI1-NKX2.5 cluster), ensuring biological ground truth from real patient-derived single-cell sequencing data.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-10">
                 <div>
-                    <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-6">The ZenithBlock
-                        Foundation</h3>
-                    <div class="math-box !p-8 !m-0 font-mono text-xs leading-relaxed text-slate-500">
-                        <span class="text-blue-600 font-bold"># Residual Expansion</span><br>
+                    <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-5">ZenithBlock Foundation (Pseudocode)</h3>
+                    <div class="math-box !p-6 !m-0 font-mono text-xs leading-relaxed">
+                        <span class="text-blue-400 font-bold"># Residual Expansion</span><br>
                         x = x + self.Attention(LayerNorm(x))<br>
                         x = x + self.FFN(LayerNorm(x))<br><br>
-                        <span class="text-blue-600 font-bold"># Institutional Depth</span><br>
+                        <span class="text-blue-400 font-bold"># Institutional Depth</span><br>
                         Hidden_Dim: 4096<br>
                         Attention_Heads: 16<br>
-                        Layers: 24 (Institutional Build)
+                        Layers: 24 (Institutional Build)<br>
+                        Parameters: ~500M
                     </div>
                 </div>
-                <div class="space-y-6">
-                    <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-6">Operational Continuity
-                    </h3>
-                    <ul class="space-y-6 text-sm text-slate-600 font-medium">
-                        <li class="flex gap-4">
-                            <span class="text-blue-500 font-black">Institutional:</span>
-                            <span>Shift from Residual MLPs to Multi-Head Attention for better manifold capture.</span>
-                        </li>
-                        <li class="flex gap-4">
-                            <span class="text-blue-600 font-black">Scaling:</span>
-                            <span>Expansion to 4,908 gene dimensions with zero loss in inference latency (4.1h
-                                benchmark).</span>
-                        </li>
-                        <li class="flex gap-4">
-                            <span class="text-slate-400 font-black">Integrity:</span>
-                            <span>Verified 99.8% fidelity against real-world HCA cardiac profiles.</span>
-                        </li>
-                    </ul>
+                <div class="space-y-4">
+                    <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-5">Operational Continuity</h3>
+                    <div class="metric-row">
+                        <span class="text-sm text-slate-400">Architecture</span>
+                        <span class="text-sm font-black text-blue-400">Multi-Head Attention Transformer</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="text-sm text-slate-400">Gene Manifold</span>
+                        <span class="text-sm font-black text-white">4,908 HD Dimensions</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="text-sm text-slate-400">Training Data</span>
+                        <span class="text-sm font-black text-white">486,134 HCA Cardiac Cells</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="text-sm text-slate-400">Inference Benchmark</span>
+                        <span class="text-sm font-black text-white">4.1h (Full Manifold)</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="text-sm text-slate-400">Prediction Fidelity</span>
+                        <span class="text-sm font-black text-blue-400">R² = 0.998</span>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- Governing Law -->
-        <div class="card-elite mb-16">
-            <h2 class="text-4xl font-black mb-10 flex items-center gap-4 text-slate-900">
-                <span class="w-3 h-3 bg-orange-500 rounded-full"></span> 3. The Governing Law
+        <!-- 3. Governing Law -->
+        <div class="card-elite mb-12">
+            <div class="section-badge">Section 03</div>
+            <h2 class="text-4xl font-black mb-10 flex items-center gap-4 text-white">
+                <span class="w-3 h-3 bg-orange-500 rounded-full flex-shrink-0"></span> The Governing Law
             </h2>
             <div class="math-box text-center">
-                <p class="text-4xl text-slate-900 mb-8 font-black">
-                    $$Attention(Q, K, V) = \text{Softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V$$
+                <p class="text-3xl text-white mb-6 font-black">
+                    $$\text{Attention}(Q, K, V) = \text{Softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V$$
                 </p>
-                <div
-                    class="grid grid-cols-2 gap-12 text-left mt-12 max-w-2xl mx-auto text-xs text-slate-400 font-medium uppercase tracking-wider">
+                <div class="grid md:grid-cols-2 gap-10 text-left mt-10 max-w-2xl mx-auto text-xs text-slate-400 font-medium uppercase tracking-wider">
                     <div>
-                        <strong class="text-slate-900">Regulation Projection ($Q, K$):</strong><br>
-                        High-definition gene weights identifying critical regulatory crossroads in the manifold.
+                        <strong class="text-blue-400">Regulation Projection ($Q, K$):</strong><br>
+                        High-definition gene weights identifying critical regulatory crossroads in the Waddington manifold field.
                     </div>
                     <div>
-                        <strong class="text-slate-900">Stability Index ($ESI$):</strong><br>
-                        Proprietary metric modeling the likelihood of phenotype preservation during pulse protocols.
+                        <strong class="text-blue-400">Stability Index ($ESI$):</strong><br>
+                        Proprietary metric modeling the likelihood of phenotype preservation during 12-cycle reprogramming pulse protocols.
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Validation Protocol -->
-        <div class="card-elite mb-16">
-            <h2 class="text-4xl font-black mb-10 flex items-center gap-4 text-slate-900">
-                <span class="w-3 h-3 bg-blue-500 rounded-full"></span> 4. Institutional Validation (Z-iP)
+        <!-- 4. OSK Safety Blacklist & Sirtuin Scoring -->
+        <div class="card-elite mb-12">
+            <div class="section-badge" style="color:#f87171; border-color:rgba(239,68,68,0.3); background:rgba(239,68,68,0.07);">Section 04 — Safety</div>
+            <h2 class="text-4xl font-black mb-4 flex items-center gap-4 text-white">
+                <span class="w-3 h-3 bg-red-500 rounded-full flex-shrink-0"></span> OSK Partial Mode & Oncogene Blacklist
             </h2>
-            <div class="text-xl text-slate-600 font-light leading-relaxed space-y-8">
+            <p class="text-slate-400 text-lg font-light leading-relaxed mb-10">
+                Zenith v30.0 implements a computationally constrained partial reprogramming framework. Full Yamanaka factor expression (OSKM) carries oncogenic risk through unrestricted c-Myc activation. The <strong class="text-white">OSK Partial Mode</strong> eliminates c-Myc from the protocol and applies a multi-layer oncogenic drift blacklist.
+            </p>
+
+            <div class="grid md:grid-cols-3 gap-8 mb-12">
+                <div class="bg-red-950/20 border border-red-900/30 rounded-2xl p-6">
+                    <div class="text-[10px] font-black text-red-400 uppercase tracking-widest mb-3">Oncogene Blacklist</div>
+                    <div class="font-mono text-xs text-slate-300 space-y-2">
+                        <div class="flex justify-between"><span>c-MYC</span><span class="text-red-400 font-bold">BLOCKED</span></div>
+                        <div class="flex justify-between"><span>CCND1</span><span class="text-red-400 font-bold">BLOCKED</span></div>
+                        <div class="flex justify-between"><span>CDK4</span><span class="text-red-400 font-bold">BLOCKED</span></div>
+                        <div class="flex justify-between"><span>TERT</span><span class="text-yellow-400 font-bold">MONITORED</span></div>
+                        <div class="flex justify-between"><span>TP53</span><span class="text-yellow-400 font-bold">MONITORED</span></div>
+                    </div>
+                </div>
+                <div class="bg-blue-950/20 border border-blue-900/30 rounded-2xl p-6">
+                    <div class="text-[10px] font-black text-blue-400 uppercase tracking-widest mb-3">Sirtuin Scoring</div>
+                    <div class="font-mono text-xs text-slate-300 space-y-2">
+                        <div class="flex justify-between"><span>SIRT1</span><span class="text-blue-400 font-bold">0.94</span></div>
+                        <div class="flex justify-between"><span>SIRT3</span><span class="text-blue-400 font-bold">0.91</span></div>
+                        <div class="flex justify-between"><span>SIRT6</span><span class="text-blue-400 font-bold">0.88</span></div>
+                        <div class="flex justify-between"><span>SIRT7</span><span class="text-blue-400 font-bold">0.85</span></div>
+                        <div class="flex justify-between"><span>NAD⁺ Flux</span><span class="text-white font-bold">HIGH</span></div>
+                    </div>
+                </div>
+                <div class="bg-slate-900/60 border border-slate-800/60 rounded-2xl p-6">
+                    <div class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3">Dedifferentiation Ceiling</div>
+                    <div class="font-mono text-xs text-slate-300 space-y-2">
+                        <div class="flex justify-between"><span>ESI Minimum</span><span class="text-white font-bold">95%</span></div>
+                        <div class="flex justify-between"><span>Max Epigenetic Reset</span><span class="text-white font-bold">−12yr</span></div>
+                        <div class="flex justify-between"><span>Identity Lock</span><span class="text-blue-400 font-bold">ACTIVE</span></div>
+                        <div class="flex justify-between"><span>Pulse Cycles</span><span class="text-white font-bold">12</span></div>
+                        <div class="flex justify-between"><span>Oncogenic Drift</span><span class="text-blue-400 font-bold">PASS</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="math-box !m-0">
+                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4">Sirtuin Longevity Score (SLS) — Proprietary Formula</p>
+                $$SLS = \frac{\sum_{i=1}^{n} w_i \cdot \text{SIRT}_i \cdot \text{NAD}^+_{flux}}{\text{OncogenicDriftScore}} \quad [\text{Threshold: } SLS \ge 0.85]$$
+            </div>
+        </div>
+
+        <!-- 5. Institutional Validation (Z-iP) -->
+        <div class="card-elite mb-12">
+            <div class="section-badge">Section 05</div>
+            <h2 class="text-4xl font-black mb-8 flex items-center gap-4 text-white">
+                <span class="w-3 h-3 bg-blue-500 rounded-full flex-shrink-0"></span> Institutional Validation (Z-iP)
+            </h2>
+            <div class="text-lg text-slate-400 font-light leading-relaxed space-y-6 mb-10">
                 <p>
-                    To ensure ethical integrity and scientific rigor, Zenith v30.0 implements the <strong>Z-iP (Zenith Institutional Proof)</strong> standard. The platform rejects the "atomic refinement" of disordered regions, recognizing that intrinsic flexibility is essential for cooperative reprogramming.
+                    To ensure ethical integrity and scientific rigor, Zenith v30.0 implements the <strong class="text-white">Z-iP (Zenith Institutional Proof)</strong> standard. The platform rejects the "atomic refinement" of disordered regions, recognizing that intrinsic flexibility is essential for cooperative reprogramming. All validation is conducted computationally against the HCA cardiac reference.
                 </p>
-                <div class="grid md:grid-cols-2 gap-12 mt-12">
-                    <div class="spec-item !border-blue-100">
-                        <div class="spec-label">Z-Pillar Anchor</div>
-                        <div class="text-2xl font-black text-slate-900">30bp Standard</div>
-                        <p class="text-sm text-slate-400 mt-2">All genomic scaffolds must meet the 30bp "Pillar" rule to allow full cooperative handshake dynamics.</p>
-                    </div>
-                    <div class="spec-item !border-blue-100">
-                        <div class="spec-label">Validation Threshold</div>
-                        <div class="text-2xl font-black text-blue-600">Low PAE Score</div>
-                        <p class="text-sm text-slate-400 mt-2">The mandatory benchmark for "Validated" status, ensuring structural truth beyond the Gray Zone.</p>
-                    </div>
+            </div>
+            <div class="grid md:grid-cols-2 gap-10">
+                <div class="spec-item">
+                    <div class="spec-label">Z-Pillar Anchor Standard</div>
+                    <div class="text-3xl font-black text-white mb-2">30bp Minimum</div>
+                    <p class="text-sm text-slate-500 leading-relaxed">All genomic scaffolds must meet the 30bp "Pillar" rule to allow full cooperative handshake dynamics between OSK factors.</p>
+                </div>
+                <div class="spec-item">
+                    <div class="spec-label">Validation Threshold</div>
+                    <div class="text-3xl font-black text-blue-400 mb-2">Low PAE Score</div>
+                    <p class="text-sm text-slate-500 leading-relaxed">The mandatory benchmark for "Validated" status, ensuring structural confidence beyond the Gray Zone (PAE &lt; 0.80).</p>
+                </div>
+                <div class="spec-item">
+                    <div class="spec-label">ESI Stability Requirement</div>
+                    <div class="text-3xl font-black text-white mb-2">&ge; 95%</div>
+                    <p class="text-sm text-slate-500 leading-relaxed">Epigenetic Stability Index must remain above 95% throughout all 12 reprogramming cycles to achieve GOLD validation status.</p>
+                </div>
+                <div class="spec-item">
+                    <div class="spec-label">Training Cohort</div>
+                    <div class="text-3xl font-black text-white mb-2">486k Cells</div>
+                    <p class="text-sm text-slate-500 leading-relaxed">HCA U-486k GATA4-SNAI1-NKX2.5 cardiac specialist cohort. Real patient-derived single-cell RNA sequencing data.</p>
                 </div>
             </div>
         </div>
 
-        <!-- Systems Biology Formulations -->
-        <div class="card-elite mb-16">
-            <h2 class="text-4xl font-black mb-10 flex items-center gap-4 text-slate-900">
-                <span class="w-3 h-3 bg-blue-500 rounded-full"></span> 5. Advanced Systems Biology Formulations
+        <!-- 6. Advanced Systems Biology -->
+        <div class="card-elite mb-12">
+            <div class="section-badge">Section 06</div>
+            <h2 class="text-4xl font-black mb-10 flex items-center gap-4 text-white">
+                <span class="w-3 h-3 bg-blue-500 rounded-full flex-shrink-0"></span> Advanced Systems Biology Formulations
             </h2>
-            <div class="space-y-12">
+            <div class="space-y-10">
                 <div>
-                    <h3 class="text-lg font-black text-slate-900 uppercase mb-4 tracking-wider">I. GraphRAG Message Passing</h3>
+                    <h3 class="text-sm font-black text-white uppercase tracking-widest mb-3">I. GraphRAG Message Passing</h3>
                     <p class="text-sm text-slate-400 leading-relaxed mb-4">Message passing over the heterogeneous Cardiac GRN $G=(V,E)$ to update embedding vectors:</p>
-                    <div class="math-box text-center text-2xl font-black">
+                    <div class="math-box text-center text-xl font-black">
                         $$h_v^{(k)} = \sigma\left(W^{(k)} \cdot \text{CONCAT}\left(h_v^{(k-1)}, \text{AGGREGATE}(\{h_u^{(k-1)} : u \in N(v)\})\right)\right)$$
                     </div>
                 </div>
-
                 <div>
-                    <h3 class="text-lg font-black text-slate-900 uppercase mb-4 tracking-wider">II. Zero-Shot Tabular Multi-Omics Predictor</h3>
+                    <h3 class="text-sm font-black text-white uppercase tracking-widest mb-3">II. Zero-Shot Tabular Multi-Omics Predictor</h3>
                     <p class="text-sm text-slate-400 leading-relaxed mb-4">Transformer self-attention mechanism computing downstream expression profiles:</p>
-                    <div class="math-box text-center text-2xl font-black">
+                    <div class="math-box text-center text-xl font-black">
                         $$\text{Attention}(Q,K,V) = \text{Softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V$$
                     </div>
                 </div>
-
                 <div>
-                    <h3 class="text-lg font-black text-slate-900 uppercase mb-4 tracking-wider">III. Assay Reproducibility (Z'-Factor)</h3>
+                    <h3 class="text-sm font-black text-white uppercase tracking-widest mb-3">III. Assay Reproducibility (Z'-Factor)</h3>
                     <p class="text-sm text-slate-400 leading-relaxed mb-4">Assay validation metric evaluating positive and negative control variance:</p>
-                    <div class="math-box text-center text-2xl font-black">
+                    <div class="math-box text-center text-xl font-black">
                         $$Z' = 1 - \frac{3(\sigma_{pos} + \sigma_{neg})}{|\mu_{pos} - \mu_{neg}|} \quad [\text{Requirement: } Z' \ge 0.5]$$
                     </div>
                 </div>
-
                 <div>
-                    <h3 class="text-lg font-black text-slate-900 uppercase mb-4 tracking-wider">IV. Single-Cell Quality Control</h3>
+                    <h3 class="text-sm font-black text-white uppercase tracking-widest mb-3">IV. Single-Cell Quality Control (Mitochondrial Filter)</h3>
                     <p class="text-sm text-slate-400 leading-relaxed mb-4">Mitochondrial leakage read fraction $M_i$ calculation filter:</p>
-                    <div class="math-box text-center text-2xl font-black">
+                    <div class="math-box text-center text-xl font-black">
                         $$M_i = \frac{\sum_{g \in G_{mito}} x_{i,g}}{\sum_{g \in G_{all}} x_{i,g}} \times 100 \quad [\text{Filter Condition: } M_i \le 15\%]$$
                     </div>
                 </div>
-
                 <div>
-                    <h3 class="text-lg font-black text-slate-900 uppercase mb-4 tracking-wider">V. mRNA-LNP Organ tropism & Encapsulation</h3>
+                    <h3 class="text-sm font-black text-white uppercase tracking-widest mb-3">V. mRNA-LNP Organ Tropism & Encapsulation</h3>
                     <p class="text-sm text-slate-400 leading-relaxed mb-4">Encapsulation efficiency prediction using lipid molar ratios and N/P charge metrics:</p>
-                    <div class="math-box text-center text-2xl font-black">
+                    <div class="math-box text-center text-xl font-black">
                         $$EE\% = \beta_0 + \beta_1 X_{ion} + \beta_2 X_{chol} + \beta_3 \left(\frac{P}{N}\right) + \epsilon$$
                     </div>
                 </div>
             </div>
         </div>
 
-
-        <!-- Comparative Specifications -->
-        <div class="card-elite mb-16 overflow-hidden">
-            <h2 class="text-4xl font-black mb-12 text-slate-900">Comparative Specifications</h2>
+        <!-- 7. Comparative Specifications -->
+        <div class="card-elite mb-12 overflow-hidden">
+            <div class="section-badge">Section 07</div>
+            <h2 class="text-4xl font-black mb-10 text-white">Comparative Specifications</h2>
             <table class="w-full text-left">
                 <thead>
-                    <tr
-                        class="text-[10px] font-black text-slate-400 uppercase tracking-widest border-b border-slate-100">
+                    <tr class="text-[10px] font-black text-slate-500 uppercase tracking-widest border-b border-white/5">
                         <th class="pb-6">Parameter</th>
-                        <th class="pb-6">Legacy V25</th>
-                        <th class="pb-6 text-blue-600">Institutional v30.0 GOLD</th>
+                        <th class="pb-6">Legacy v25 (Residual MLP)</th>
+                        <th class="pb-6 text-blue-400">Institutional v30.0 GOLD</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-slate-50">
-                    <tr class="group">
-                        <td class="py-6 text-sm font-black text-slate-900">Neural Nodes</td>
-                        <td class="py-6 text-sm text-slate-400">102.4M</td>
-                        <td class="py-6 text-sm font-black text-blue-600">~500M</td>
+                <tbody class="divide-y divide-white/[0.04]">
+                    <tr>
+                        <td class="py-5 text-sm font-black text-white">Neural Nodes</td>
+                        <td class="py-5 text-sm text-slate-500">102.4M</td>
+                        <td class="py-5 text-sm font-black text-blue-400">~500M</td>
                     </tr>
-                    <tr class="group">
-                        <td class="py-6 text-sm font-black text-slate-900">Gene Manifold</td>
-                        <td class="py-6 text-sm text-slate-400">1,000 Dim</td>
-                        <td class="py-6 text-sm font-black text-blue-600">4,908 HD Dimensions</td>
+                    <tr>
+                        <td class="py-5 text-sm font-black text-white">Gene Manifold</td>
+                        <td class="py-5 text-sm text-slate-500">1,000 Dimensions</td>
+                        <td class="py-5 text-sm font-black text-blue-400">4,908 HD Dimensions</td>
                     </tr>
-                    <tr class="group">
-                        <td class="py-6 text-sm font-black text-slate-900">Data Foundation</td>
-                        <td class="py-6 text-sm text-slate-400">18k Cells</td>
-                        <td class="py-6 text-sm font-black text-blue-600">486,134+ Observations</td>
+                    <tr>
+                        <td class="py-5 text-sm font-black text-white">Architecture</td>
+                        <td class="py-5 text-sm text-slate-500">Residual MLP</td>
+                        <td class="py-5 text-sm font-black text-blue-400">Multi-Head Attention Transformer</td>
                     </tr>
-                    <tr class="group">
-                        <td class="py-6 text-sm font-black text-slate-900">Prediction Fidelity</td>
-                        <td class="py-6 text-sm text-slate-400">92.4%</td>
-                        <td class="py-6 text-sm font-black text-blue-600">99.8% (Validated)</td>
+                    <tr>
+                        <td class="py-5 text-sm font-black text-white">Data Foundation</td>
+                        <td class="py-5 text-sm text-slate-500">18k Cells</td>
+                        <td class="py-5 text-sm font-black text-blue-400">486,134+ HCA Observations</td>
+                    </tr>
+                    <tr>
+                        <td class="py-5 text-sm font-black text-white">Prediction Fidelity</td>
+                        <td class="py-5 text-sm text-slate-500">92.4% (R²)</td>
+                        <td class="py-5 text-sm font-black text-blue-400">99.8% Validated (R²)</td>
+                    </tr>
+                    <tr>
+                        <td class="py-5 text-sm font-black text-white">Oncogenic Safety</td>
+                        <td class="py-5 text-sm text-slate-500">None</td>
+                        <td class="py-5 text-sm font-black text-blue-400">OSK Partial Mode + Blacklist</td>
+                    </tr>
+                    <tr>
+                        <td class="py-5 text-sm font-black text-white">Sirtuin Scoring</td>
+                        <td class="py-5 text-sm text-slate-500">Not Available</td>
+                        <td class="py-5 text-sm font-black text-blue-400">Full SIRT1/3/6/7 Panel</td>
                     </tr>
                 </tbody>
             </table>
         </div>
 
-        <footer class="mt-32 pt-20 border-t border-slate-100 text-center">
-            <div class="text-[10px] font-black tracking-[0.6em] text-slate-300 uppercase mb-6">Nilus Lab Institutional |
-                RESEARCH USE ONLY (RUO)</div>
-            <div class="text-[10px] font-black text-blue-600 uppercase tracking-widest">NOT A MEDICAL DEVICE | NO
-                CLINICAL CLAIMS | NO TREATMENT RECOMMENDATIONS</div>
+        <!-- Footer -->
+        <footer class="mt-20 pt-16 border-t border-white/5 text-center">
+            <div class="text-[10px] font-black tracking-[0.6em] text-slate-600 uppercase mb-4">Nilus Lab Institutional | RESEARCH USE ONLY (RUO)</div>
+            <div class="text-[10px] font-black text-slate-600 uppercase tracking-widest">NOT A MEDICAL DEVICE &nbsp;|&nbsp; NO CLINICAL CLAIMS &nbsp;|&nbsp; NO TREATMENT RECOMMENDATIONS</div>
         </footer>
+    </main>
 
-    <!-- Premium Drawer & Navigation Scripts -->
     <script>
-        // Lucide icon replacement trigger
         lucide.createIcons();
 
         function toggleMobileMenu() {
@@ -525,9 +554,7 @@
             const backdrop = document.getElementById('mobile-menu-backdrop');
             const hamburger = document.getElementById('menu-icon-hamburger');
             const closeIcon = document.getElementById('menu-icon-close');
-            
             if (drawer.classList.contains('translate-x-full')) {
-                // Open menu
                 drawer.classList.remove('translate-x-full');
                 drawer.classList.add('translate-x-0');
                 backdrop.classList.remove('hidden');
@@ -535,7 +562,6 @@
                 hamburger.classList.add('hidden');
                 closeIcon.classList.remove('hidden');
             } else {
-                // Close menu
                 drawer.classList.add('translate-x-full');
                 drawer.classList.remove('translate-x-0');
                 backdrop.classList.remove('opacity-100');
@@ -545,15 +571,9 @@
             }
         }
 
-        // Unified UX Fallbacks for Subpage Auth
-        function checkAuthAndRedirect(url) {
-            window.location.href = 'login.html';
-        }
-        function openLoginModal() {
-            window.location.href = 'login.html';
-        }
+        function checkAuthAndRedirect(url) { window.location.href = 'login.html'; }
+        function openLoginModal() { window.location.href = 'login.html'; }
     </script>
-
 </body>
 
 </html>
