@@ -152,6 +152,12 @@ function initSequenceInput() {
   $('#clearBtn').addEventListener('click', () => {
     ta.value = '';
     ta.dispatchEvent(new Event('input'));
+    STATE.chains = [
+      { id: 'A', type: 'protein', copies: 1, value: '' }
+    ];
+    renderChainList();
+    updateCostEstimate();
+    log('Cleared simple sequence input and reset multi-chain state', 'info');
   });
 }
 
@@ -247,7 +253,14 @@ function initChainBuilder() {
       ];
       renderChainList();
       updateCostEstimate();
-      log('Chains reset to default empty protein chain', 'info');
+      
+      // Synchronize and clear simple view sequence input
+      const ta = document.getElementById('seqInput');
+      if (ta) {
+        ta.value = '';
+        ta.dispatchEvent(new Event('input'));
+      }
+      log('Chains reset to default empty protein chain and simple input cleared', 'info');
     });
   }
 
