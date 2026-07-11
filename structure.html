@@ -1117,8 +1117,8 @@
         </div>
       </section>
 
-      <!-- ─── Panel 2: Credentials ─── -->
-      <section class="panel">
+      <!-- ─── Panel 2: Credentials (NilusFold only) ─── -->
+      <section class="panel" id="credentialsPanel" style="display:none">
         <div class="panel-head">
           <div class="panel-num">2</div>
           <div class="panel-title">Credentials</div>
@@ -1140,10 +1140,10 @@
         </div>
       </section>
 
-      <!-- ─── Panel 3: Input ─── -->
+      <!-- ─── Panel 3/2: Input ─── -->
       <section class="panel">
         <div class="panel-head">
-          <div class="panel-num">3</div>
+          <div class="panel-num" id="inputPanelNum">2</div>
           <div class="panel-title">Input</div>
           <div class="panel-tag" id="inputTag">FASTA · RAW</div>
         </div>
@@ -1351,7 +1351,7 @@
       <!-- ─── Panel 5: Execute ─── -->
       <section class="panel">
         <div class="panel-head">
-          <div class="panel-num" id="runNum">4</div>
+          <div class="panel-num" id="runNum" style="min-width:26px;text-align:center;">3</div>
           <div class="panel-title">Execute</div>
           <div class="panel-tag" id="runTag">READY</div>
         </div>

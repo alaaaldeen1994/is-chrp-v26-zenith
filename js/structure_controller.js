@@ -80,7 +80,25 @@ function switchMode(mode) {
   $('#boltzInput').style.display = mode === 'boltz' ? 'block' : 'none';
   $('#costPanel').style.display = mode === 'boltz' ? 'block' : 'none';
   $('#engineTag').textContent = mode === 'esm' ? 'Nilus Atomix' : 'NilusFold';
-  $('#runNum').textContent = mode === 'boltz' ? '5' : '4';
+
+  // Hide credentials panel in Nilus Atomix — ESMFold needs no API key
+  const credPanel = document.getElementById('credentialsPanel');
+  if (credPanel) {
+    credPanel.style.display = mode === 'boltz' ? '' : 'none';
+  }
+  // Renumber the input panel: 2 when credentials hidden (ESM), 3 when shown (Boltz)
+  const inputPanelNum = document.getElementById('inputPanelNum');
+  if (inputPanelNum) {
+    inputPanelNum.textContent = mode === 'esm' ? '2' : '3';
+  }
+  const execPanelNum = document.getElementById('execPanelNum');
+  if (execPanelNum) {
+    execPanelNum.textContent = mode === 'esm' ? '3' : '4';
+  }
+
+  // ESM: panels = 1 Engine, 2 Input, 3 Execute
+  // Boltz: panels = 1 Engine, 2 Credentials, 3 Input, 4 Pre-flight, 5 Execute
+  $('#runNum').textContent = mode === 'boltz' ? '5' : '3';
   $('#inputTag').textContent = mode === 'esm' ? 'FASTA · raw' : 'multi-chain';
   $('#modeDescription').textContent = mode === 'esm'
     ? 'Evolutionary Scale Modeling for fast, single-chain protein folding. Returns atomic coordinates with per-residue pLDDT.'
