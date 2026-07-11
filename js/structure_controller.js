@@ -117,7 +117,10 @@ function initApiKey() {
 }
 
 // ── UniProt Protein Lookup ─────────────────────────────────────────────────
-// Queries UniProt Swiss-Prot REST for a gene symbol (Homo sapiens, reviewed).
+// 3-tier strategy (mirrors UniProtLookup in script.js):
+//   Tier 1: backend /api/uniprot-lookup?gene=   (returns sequence + metadata)
+//   Tier 2: direct UniProt REST API             (CORS-safe public endpoint)
+//   Tier 3: show clear actionable error
 // mode: 'esm' | 'boltz'
 async function uniprotLookupForStructure(mode) {
   const inputId  = mode === 'esm' ? 'esm-uniprot-input'   : 'boltz-uniprot-input';
@@ -147,63 +150,103 @@ async function uniprotLookupForStructure(mode) {
     btn.innerHTML = '<span class="uniprot-spinner"></span> Fetching...';
   }
 
+  let data = null; // Will be populated by Tier 1 or Tier 2
+
   try {
-    // Query UniProt Swiss-Prot REST directly — no backend needed
-    const url = `https://rest.uniprot.org/uniprotkb/search?query=gene_exact:${encodeURIComponent(gene)}+AND+organism_id:9606+AND+reviewed:true` +
-      `&fields=accession,protein_name,sequence,cc_function,cc_subcellular_location&format=json&size=1`;
+    // ── Tier 1: backend endpoint (applies 3-tier UniProt strategy, returns sequence) ──
+    try {
+      const r = await fetch(`/api/uniprot-lookup?gene=${encodeURIComponent(gene)}`, {
+        signal: AbortSignal.timeout(6000)
+      });
+      if (r.ok) {
+        const json = await r.json();
+        if (json && json.sequence) data = json;
+      }
+    } catch (_) { /* backend unreachable — fall through to direct fetch */ }
 
-    const resp = await fetch(url, { headers: { 'Accept': 'application/json' } });
-    if (!resp.ok) throw new Error(`UniProt HTTP ${resp.status}`);
+    // ── Tier 2: direct UniProt REST API (public, CORS-enabled) ──
+    if (!data) {
+      const url = 'https://rest.uniprot.org/uniprotkb/search?' +
+        `query=gene_exact:${encodeURIComponent(gene)}+AND+organism_id:9606+AND+reviewed:true` +
+        '&fields=accession,protein_name,sequence,cc_function,cc_subcellular_location' +
+        '&format=json&size=1';
 
-    const json = await resp.json();
-    const entry = (json.results || [])[0];
+      const r = await fetch(url, {
+        headers: { 'Accept': 'application/json' },
+        signal: AbortSignal.timeout(10000)
+      });
+      if (!r.ok) throw new Error(`UniProt HTTP ${r.status}`);
 
-    if (!entry || !entry.sequence) {
-      document.getElementById(errorMsg).textContent =
-        `No reviewed Swiss-Prot entry found for "${gene}" (Homo sapiens). Try the official gene symbol.`;
+      const raw = await r.json();
+      const entry = (raw.results || [])[0];
+
+      if (entry && entry.sequence) {
+        const acc2     = entry.primaryAccession || '';
+        const seq2     = entry.sequence?.value || '';
+        const seqLen2  = entry.sequence?.length || seq2.length;
+        const names2   = entry.proteinDescription || {};
+        const recName2 = names2.recommendedName || names2.submittedNames?.[0] || {};
+        const fullName = recName2.fullName?.value || gene;
+        let funcText = null, locText = null;
+        for (const c of entry.comments || []) {
+          if (c.commentType === 'FUNCTION' && !funcText)
+            funcText = (c.texts || [])[0]?.value || null;
+          if (c.commentType === 'SUBCELLULAR LOCATION' && !locText)
+            locText = c.subcellularLocations?.[0]?.location?.value || null;
+        }
+        data = {
+          gene, accession: acc2, sequence: seq2,
+          sequence_length: seqLen2,
+          protein_name: fullName,
+          subcellular_location: locText,
+          function: funcText,
+          source: 'UniProt Swiss-Prot (Direct)'
+        };
+      }
+    }
+
+    // ── Tier 3: Show result or error ──
+    if (!data || !data.sequence) {
+      const msgEl = document.getElementById(errorMsg);
+      if (msgEl) msgEl.textContent =
+        `"${gene}" not found in UniProt Swiss-Prot (Homo sapiens). ` +
+        `Try the official HGNC gene symbol (e.g. POU5F1 for OCT4, TP53 for p53).`;
       document.getElementById(errorId)?.classList.remove('hidden');
-      log(`UniProt: no result for "${gene}"`, 'warn');
+      log(`UniProt: no reviewed entry for "${gene}"`, 'warn');
       return;
     }
 
-    // Extract fields
-    const acc      = entry.primaryAccession || '';
-    const seq      = entry.sequence?.value || '';
-    const seqLen   = entry.sequence?.length || seq.length;
-    const names    = entry.proteinDescription || {};
-    const recName  = names.recommendedName || names.submittedNames?.[0] || {};
-    const fullName = recName.fullName?.value || gene;
-    let funcText = null, locText = null;
-    for (const c of entry.comments || []) {
-      if (c.commentType === 'FUNCTION' && !funcText)
-        funcText = (c.texts || [])[0]?.value || null;
-      if (c.commentType === 'SUBCELLULAR LOCATION' && !locText)
-        locText  = c.subcellularLocations?.[0]?.location?.value || null;
-    }
-
     // Populate result card
-    document.getElementById(geneEl).textContent  = gene;
-    document.getElementById(accEl).textContent   = acc;
-    document.getElementById(lenEl).textContent   = `${seqLen} aa`;
-    document.getElementById(nameEl).textContent  = fullName + (locText ? ` · ${locText}` : '');
-    document.getElementById(funcEl).textContent  = funcText || '';
+    document.getElementById(geneEl).textContent = data.gene || gene;
+    document.getElementById(accEl).textContent  = data.accession || '';
+    document.getElementById(lenEl).textContent  = `${data.sequence_length} aa`;
+    document.getElementById(nameEl).textContent =
+      (data.protein_name || '') + (data.subcellular_location ? ` · ${data.subcellular_location}` : '');
+    document.getElementById(funcEl).textContent = data.function || '';
     document.getElementById(resultId)?.classList.remove('hidden');
 
-    // Store sequence on the Use button via dataset
+    // Store sequence on the Use button via dataset for use later
     const useBtn = document.getElementById(useBtnId);
     if (useBtn) {
-      useBtn.dataset.sequence = seq;
-      useBtn.dataset.gene     = gene;
-      useBtn.dataset.acc      = acc;
-      useBtn.dataset.len      = seqLen;
+      useBtn.dataset.sequence = data.sequence;
+      useBtn.dataset.gene     = data.gene || gene;
+      useBtn.dataset.acc      = data.accession || '';
+      useBtn.dataset.len      = data.sequence_length;
     }
 
-    log(`UniProt: ${gene} → ${acc} (${seqLen} aa)`, 'ok');
+    log(`UniProt: ${data.gene} → ${data.accession} (${data.sequence_length} aa) [${data.source || 'Swiss-Prot'}]`, 'ok');
 
   } catch (e) {
-    document.getElementById(errorMsg).textContent = `Lookup failed: ${e.message}`;
+    const msgEl = document.getElementById(errorMsg);
+    if (msgEl) {
+      if (e.name === 'TimeoutError' || (e.message && e.message.includes('timed out'))) {
+        msgEl.textContent = 'Request timed out. Check your internet connection and try again.';
+      } else {
+        msgEl.textContent = `Network error: ${e.message}. Check connection and try again.`;
+      }
+    }
     document.getElementById(errorId)?.classList.remove('hidden');
-    log(`UniProt lookup error: ${e.message}`, 'err');
+    log(`UniProt lookup error for "${gene}": ${e.message}`, 'err');
   } finally {
     if (btn) { btn.disabled = false; btn.innerHTML = origBtnHTML; }
   }
