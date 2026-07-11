@@ -116,6 +116,129 @@ function initApiKey() {
   });
 }
 
+// ── UniProt Protein Lookup ─────────────────────────────────────────────────
+// Queries UniProt Swiss-Prot REST for a gene symbol (Homo sapiens, reviewed).
+// mode: 'esm' | 'boltz'
+async function uniprotLookupForStructure(mode) {
+  const inputId  = mode === 'esm' ? 'esm-uniprot-input'   : 'boltz-uniprot-input';
+  const resultId = mode === 'esm' ? 'esm-uniprot-result'  : 'boltz-uniprot-result';
+  const errorId  = mode === 'esm' ? 'esm-uniprot-error'   : 'boltz-uniprot-error';
+  const errorMsg = mode === 'esm' ? 'esm-uniprot-error-msg' : 'boltz-uniprot-error-msg';
+  const fetchBtn = mode === 'esm' ? 'esm-uniprot-fetch-btn' : 'boltz-uniprot-fetch-btn';
+  const geneEl   = mode === 'esm' ? 'esm-uniprot-gene' : 'boltz-uniprot-gene';
+  const accEl    = mode === 'esm' ? 'esm-uniprot-acc'  : 'boltz-uniprot-acc';
+  const lenEl    = mode === 'esm' ? 'esm-uniprot-len'  : 'boltz-uniprot-len';
+  const nameEl   = mode === 'esm' ? 'esm-uniprot-name' : 'boltz-uniprot-name';
+  const funcEl   = mode === 'esm' ? 'esm-uniprot-func' : 'boltz-uniprot-func';
+  const useBtnId = mode === 'esm' ? 'esm-uniprot-use-btn' : 'boltz-uniprot-use-btn';
+
+  const gene = (document.getElementById(inputId)?.value || '').trim().toUpperCase();
+  if (!gene) { log('Enter a gene or protein name first', 'warn'); return; }
+
+  // Reset UI
+  document.getElementById(resultId)?.classList.add('hidden');
+  document.getElementById(errorId)?.classList.add('hidden');
+
+  // Show spinner in fetch button
+  const btn = document.getElementById(fetchBtn);
+  const origBtnHTML = btn ? btn.innerHTML : '';
+  if (btn) {
+    btn.disabled = true;
+    btn.innerHTML = '<span class="uniprot-spinner"></span> Fetching...';
+  }
+
+  try {
+    // Query UniProt Swiss-Prot REST directly — no backend needed
+    const url = `https://rest.uniprot.org/uniprotkb/search?query=gene_exact:${encodeURIComponent(gene)}+AND+organism_id:9606+AND+reviewed:true` +
+      `&fields=accession,protein_name,sequence,cc_function,cc_subcellular_location&format=json&size=1`;
+
+    const resp = await fetch(url, { headers: { 'Accept': 'application/json' } });
+    if (!resp.ok) throw new Error(`UniProt HTTP ${resp.status}`);
+
+    const json = await resp.json();
+    const entry = (json.results || [])[0];
+
+    if (!entry || !entry.sequence) {
+      document.getElementById(errorMsg).textContent =
+        `No reviewed Swiss-Prot entry found for "${gene}" (Homo sapiens). Try the official gene symbol.`;
+      document.getElementById(errorId)?.classList.remove('hidden');
+      log(`UniProt: no result for "${gene}"`, 'warn');
+      return;
+    }
+
+    // Extract fields
+    const acc      = entry.primaryAccession || '';
+    const seq      = entry.sequence?.value || '';
+    const seqLen   = entry.sequence?.length || seq.length;
+    const names    = entry.proteinDescription || {};
+    const recName  = names.recommendedName || names.submittedNames?.[0] || {};
+    const fullName = recName.fullName?.value || gene;
+    let funcText = null, locText = null;
+    for (const c of entry.comments || []) {
+      if (c.commentType === 'FUNCTION' && !funcText)
+        funcText = (c.texts || [])[0]?.value || null;
+      if (c.commentType === 'SUBCELLULAR LOCATION' && !locText)
+        locText  = c.subcellularLocations?.[0]?.location?.value || null;
+    }
+
+    // Populate result card
+    document.getElementById(geneEl).textContent  = gene;
+    document.getElementById(accEl).textContent   = acc;
+    document.getElementById(lenEl).textContent   = `${seqLen} aa`;
+    document.getElementById(nameEl).textContent  = fullName + (locText ? ` · ${locText}` : '');
+    document.getElementById(funcEl).textContent  = funcText || '';
+    document.getElementById(resultId)?.classList.remove('hidden');
+
+    // Store sequence on the Use button via dataset
+    const useBtn = document.getElementById(useBtnId);
+    if (useBtn) {
+      useBtn.dataset.sequence = seq;
+      useBtn.dataset.gene     = gene;
+      useBtn.dataset.acc      = acc;
+      useBtn.dataset.len      = seqLen;
+    }
+
+    log(`UniProt: ${gene} → ${acc} (${seqLen} aa)`, 'ok');
+
+  } catch (e) {
+    document.getElementById(errorMsg).textContent = `Lookup failed: ${e.message}`;
+    document.getElementById(errorId)?.classList.remove('hidden');
+    log(`UniProt lookup error: ${e.message}`, 'err');
+  } finally {
+    if (btn) { btn.disabled = false; btn.innerHTML = origBtnHTML; }
+  }
+}
+
+function uniprotUseSequence(mode) {
+  const useBtnId = mode === 'esm' ? 'esm-uniprot-use-btn' : 'boltz-uniprot-use-btn';
+  const useBtn   = document.getElementById(useBtnId);
+  if (!useBtn || !useBtn.dataset.sequence) return;
+
+  const seq  = useBtn.dataset.sequence;
+  const gene = useBtn.dataset.gene || 'protein';
+  const acc  = useBtn.dataset.acc  || '';
+  const len  = useBtn.dataset.len  || seq.length;
+
+  if (mode === 'esm') {
+    const ta = document.getElementById('seqInput');
+    if (ta) {
+      ta.value = `>${gene} | ${acc} | Homo sapiens | ${len} aa\n${seq}`;
+      ta.dispatchEvent(new Event('input'));
+    }
+    log(`Loaded ${gene} (${len} aa) into Nilus Atomix sequence input`, 'ok');
+  } else {
+    // Fill Chain A (first protein chain) in NilusFold
+    const firstProtein = STATE.chains.findIndex(c => c.type === 'protein');
+    const chainIdx = firstProtein >= 0 ? firstProtein : 0;
+    if (STATE.chains[chainIdx]) {
+      STATE.chains[chainIdx].value = seq;
+      renderChainList();
+      updateCostEstimate();
+    }
+    log(`Loaded ${gene} (${len} aa) into NilusFold Chain ${STATE.chains[chainIdx]?.id || 'A'}`, 'ok');
+  }
+}
+
 function initSequenceInput() {
   const ta = $('#seqInput');
   const ESM_MAX = 400; // ESMFold practical limit per residue memory
@@ -159,6 +282,18 @@ function initSequenceInput() {
     updateCostEstimate();
     log('Cleared simple sequence input and reset multi-chain state', 'info');
   });
+
+  // UniProt Lookup — ESM mode wiring
+  const esmFetchBtn = document.getElementById('esm-uniprot-fetch-btn');
+  if (esmFetchBtn) esmFetchBtn.addEventListener('click', () => uniprotLookupForStructure('esm'));
+
+  const esmInput = document.getElementById('esm-uniprot-input');
+  if (esmInput) esmInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') { e.preventDefault(); uniprotLookupForStructure('esm'); }
+  });
+
+  const esmUseBtn = document.getElementById('esm-uniprot-use-btn');
+  if (esmUseBtn) esmUseBtn.addEventListener('click', () => uniprotUseSequence('esm'));
 }
 
 function renderChainList() {
@@ -263,6 +398,18 @@ function initChainBuilder() {
       log('Chains reset to default empty protein chain and simple input cleared', 'info');
     });
   }
+
+  // UniProt Lookup — Boltz mode wiring
+  const boltzFetchBtn = document.getElementById('boltz-uniprot-fetch-btn');
+  if (boltzFetchBtn) boltzFetchBtn.addEventListener('click', () => uniprotLookupForStructure('boltz'));
+
+  const boltzInput = document.getElementById('boltz-uniprot-input');
+  if (boltzInput) boltzInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') { e.preventDefault(); uniprotLookupForStructure('boltz'); }
+  });
+
+  const boltzUseBtn = document.getElementById('boltz-uniprot-use-btn');
+  if (boltzUseBtn) boltzUseBtn.addEventListener('click', () => uniprotUseSequence('boltz'));
 
   // Binder chain row show/hide
   const typeSelect = document.getElementById('boltz-binding-type');
