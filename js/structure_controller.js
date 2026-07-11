@@ -239,6 +239,18 @@ function initChainBuilder() {
     updateCostEstimate();
   });
 
+  const clearChainsBtn = document.getElementById('clearChainsBtn');
+  if (clearChainsBtn) {
+    clearChainsBtn.addEventListener('click', () => {
+      STATE.chains = [
+        { id: 'A', type: 'protein', copies: 1, value: '' }
+      ];
+      renderChainList();
+      updateCostEstimate();
+      log('Chains reset to default empty protein chain', 'info');
+    });
+  }
+
   // Binder chain row show/hide
   const typeSelect = document.getElementById('boltz-binding-type');
   if (typeSelect) {
@@ -1204,6 +1216,9 @@ function loadTransferData() {
   try {
     const raw = sessionStorage.getItem("zenith_boltz_transfer");
     if (raw) {
+      // Clear immediately to prevent infinite reloading loops on error
+      sessionStorage.removeItem("zenith_boltz_transfer");
+      
       const data = JSON.parse(raw);
       if (data && data.chains && data.chains.length) {
         log(`Loading complex transfer from Discovery for ${data.jobName}`, 'info');
@@ -1232,7 +1247,6 @@ function loadTransferData() {
         
         boltzValidate();
       }
-      sessionStorage.removeItem("zenith_boltz_transfer");
     }
   } catch (e) {
     console.error("Failed to load transfer data:", e);
@@ -1319,6 +1333,10 @@ function init() {
   try {
     const transferRaw = sessionStorage.getItem('nilus_transfer_payload') || localStorage.getItem('nilus_transfer_payload');
     if (transferRaw) {
+      // Clear immediately to prevent infinite reloading loops on error
+      sessionStorage.removeItem('nilus_transfer_payload');
+      localStorage.removeItem('nilus_transfer_payload');
+
       const payload = JSON.parse(transferRaw);
       log('Transfer payload detected from localStorage', 'info');
       if (payload.chains && payload.chains.length) {
@@ -1338,7 +1356,6 @@ function init() {
           if (bInput) { bInput.value = payload.binder_chain || 'A'; }
         }
       }
-      sessionStorage.removeItem('nilus_transfer_payload'); localStorage.removeItem('nilus_transfer_payload');
     }
   } catch (e) {
     console.error('Failed to parse transfer payload:', e);
