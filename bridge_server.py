@@ -7362,6 +7362,6 @@ if __name__ == "__main__":
 
 
 
-from routers.neural_router import router as neural_router
+from services.neural_router import router as neural_router
 app.include_router(neural_router)
 
