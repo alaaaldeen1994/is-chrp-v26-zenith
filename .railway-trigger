@@ -1,6 +1,6 @@
 # Deployment Trigger
 # This file forces Railway to redeploy when changed
-# Last updated: 2026-05-20 14:25 UTC
+# Last updated: 2026-07-13 11:58 UTC
 
-DEPLOYMENT_VERSION=v14.0.0
-TRIGGER=microscopy_rewrite_layout_fix_panel_cleanup
+DEPLOYMENT_VERSION=v14.1.0
+TRIGGER=neuros_x_dual_age_clock_complete_integration_v2

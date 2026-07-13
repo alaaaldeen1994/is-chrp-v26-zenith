@@ -1,4 +1,4 @@
-import uvicorn
+﻿import uvicorn
 
 # --- Helper class to support deserialization of pickled age clock model ---
 class DummyModel:
@@ -1275,7 +1275,7 @@ _base_symbols = [
 
 
 # Load REAL gene symbols from HCA scVI model output (no padding, no fakes)
-# Source: real_ip_genes_full.json — 200 genes ranked by correlation with rejuvenation vector
+# Source: real_ip_genes_full.json â€” 200 genes ranked by correlation with rejuvenation vector
 # Computed from: Litvinukova et al., Nature 2020 (2M cells, 83 donors)
 
 def _load_real_gene_symbols():
@@ -1879,7 +1879,7 @@ if not os.path.exists("af3_jobs"):
 
 app.mount("/af3_jobs", StaticFiles(directory="af3_jobs"), name="af3_jobs")
 
-# Self-hosted vendor libraries (jQuery, 3Dmol.js) — eliminates external CDN CSP dependencies
+# Self-hosted vendor libraries (jQuery, 3Dmol.js) â€” eliminates external CDN CSP dependencies
 if not os.path.exists("vendor"):
     os.makedirs("vendor")
 app.mount("/vendor", StaticFiles(directory="vendor"), name="vendor")
@@ -5569,7 +5569,7 @@ async def discover_protocol_v1(req: DiscoveryRequest):
 
 
 
-    # 3. Real Age Clock Computation (Phase 5 — Litvinukova et al. 2020)
+    # 3. Real Age Clock Computation (Phase 5 â€” Litvinukova et al. 2020)
     # Uses real ElasticNet clock trained on 14 donors with real ages from Supplementary Table 1
     try:
         import pickle, numpy as _np
@@ -6604,10 +6604,10 @@ async def wot_trajectory_fate(req: WotRequest):
 
 
 # ============================================================
-# REAL IP DISCOVERY ENDPOINT — From HCA Latent Space
+# REAL IP DISCOVERY ENDPOINT â€” From HCA Latent Space
 # Source: Litvinukova et al., Nature 2020
-# Method: Gene correlation with the young→aged rejuvenation vector
-# NO GPT INVOLVED — These numbers come from 14 real donor cells
+# Method: Gene correlation with the youngâ†’aged rejuvenation vector
+# NO GPT INVOLVED â€” These numbers come from 14 real donor cells
 # ============================================================
 
 @app.get("/api/real-discovery")
@@ -6766,7 +6766,7 @@ async def run_real_discovery(request: Request):
 
 
 # ============================================================
-# GPT DISCOVERY ENDPOINT — Query-aware, uses real HCA genes as context
+# GPT DISCOVERY ENDPOINT â€” Query-aware, uses real HCA genes as context
 # ============================================================
 
 @app.post("/api/gpt-discovery/run")
@@ -6799,7 +6799,7 @@ async def run_gpt_discovery(request: Request):
         raise HTTPException(status_code=401,
             detail="OpenAI API key not configured. Add OPENAI_API_KEY=sk-... to server environment and restart.")
 
-    # ── Step 1: Load genes — cell-type-specific OR all ──────────
+    # â”€â”€ Step 1: Load genes â€” cell-type-specific OR all â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     ct_data = None
     ct_key = cell_type.replace(",", "").replace("-", "_").replace(" ", "_").lower() if cell_type != "all" else None
 
@@ -6826,7 +6826,7 @@ async def run_gpt_discovery(request: Request):
             ip_data = json.load(f)
         pro_genes = ip_data.get("pro_rejuvenation_genes", [])[:200]
         aging_genes = ip_data.get("aging_marker_genes", [])[:200]
-        gene_source_label = "All cardiac cells (~2.42M cells, 14 donors · Generalist + Specialist)"
+        gene_source_label = "All cardiac cells (~2.42M cells, 14 donors Â· Generalist + Specialist)"
         cell_type_age_delta = None
 
     pro_str = ", ".join([
@@ -6845,7 +6845,7 @@ async def run_gpt_discovery(request: Request):
     from openai import AsyncOpenAI
     client = AsyncOpenAI(api_key=openai_key)
 
-    # ── Step 2: TOURNAMENT — 3 parallel GPT calls ────────────────
+    # â”€â”€ Step 2: TOURNAMENT â€” 3 parallel GPT calls â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     mode = body.get("mode", "real").strip()
     cell_labels = {
         "all": "cardiac cells",
@@ -6886,7 +6886,7 @@ async def run_gpt_discovery(request: Request):
         f"{{"
         f"  \"genes\": [{{\"gene\": \"SYMBOL\", \"correlation\": 0.XXX, \"direction\": \"UP_IN_YOUNG|UP_IN_AGED\", "
         f"\"role\": \"1-sentence explanation of relevance to the query\", "
-        f"\"mechanism\": \"gene → protein → pathway → phenotype chain\"}}], "
+        f"\"mechanism\": \"gene â†’ protein â†’ pathway â†’ phenotype chain\"}}], "
         f"  \"summary\": \"2-3 sentence protocol recommendation\", "
         f"  \"query_interpretation\": \"biological objective identified\""
         f"}}"
@@ -6925,7 +6925,7 @@ async def run_gpt_discovery(request: Request):
     if not valid_panels:
         raise HTTPException(status_code=500, detail="All tournament panels failed")
 
-    # ── Step 3: JUDGE — Select the best panel ────────────────────
+    # â”€â”€ Step 3: JUDGE â€” Select the best panel â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     if len(valid_panels) >= 2:
         panels_summary = ""
         for p in valid_panels:
@@ -6977,7 +6977,7 @@ async def run_gpt_discovery(request: Request):
         tournament_confidence = 0.6
         judge_reasoning = "Single panel available"
 
-    # ── Step 4: REFINEMENT — Robin-style iterative improvement ───
+    # â”€â”€ Step 4: REFINEMENT â€” Robin-style iterative improvement â”€â”€â”€
     winner_genes = [g.get("gene", "?") for g in winner.get("genes", [])]
     try:
         refine_prompt = (
@@ -6992,7 +6992,7 @@ async def run_gpt_discovery(request: Request):
             f"{{"
             f"  \"genes\": [{{\"gene\": \"SYMBOL\", \"correlation\": 0.XXX, \"direction\": \"UP_IN_YOUNG|UP_IN_AGED\", "
             f"\"role\": \"1-sentence explanation\", "
-            f"\"mechanism\": \"gene → protein → pathway → phenotype\"}}], "
+            f"\"mechanism\": \"gene â†’ protein â†’ pathway â†’ phenotype\"}}], "
             f"  \"summary\": \"2-3 sentence refined protocol\", "
             f"  \"query_interpretation\": \"refined biological objective\", "
             f"  \"refinement_notes\": \"what changed and why\""
@@ -7018,12 +7018,12 @@ async def run_gpt_discovery(request: Request):
         rounds_completed = 1
         refinement_notes = "Refinement skipped"
 
-    # ── Step 5: Add PubMed links ─────────────────────────────────
+    # â”€â”€ Step 5: Add PubMed links â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     for g in refined.get("genes", []):
         gene_name = g.get("gene", "")
         g["pubmed_url"] = f"https://pubmed.ncbi.nlm.nih.gov/?term={gene_name}+cardiac+aging+rejuvenation"
 
-    # ── Step 6: Compute real age delta from trained clock ────────
+    # â”€â”€ Step 6: Compute real age delta from trained clock â”€â”€â”€â”€â”€â”€â”€â”€
     import random
     age_delta = 11.9  # validated cohort mean fallback
     try:
@@ -7042,7 +7042,7 @@ async def run_gpt_discovery(request: Request):
     except Exception as e:
         print(f"[GPT-Discovery] Age clock error: {e}")
 
-    # ── Build final response ─────────────────────────────────────
+    # â”€â”€ Build final response â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     # Use cell-type-specific age delta if available
     if cell_type_age_delta is not None:
         age_delta = cell_type_age_delta
@@ -7360,4 +7360,8 @@ if __name__ == "__main__":
     uvicorn.run("bridge_server:app", host="127.0.0.1", port=port, workers=1)
 
 
+
+
+from services.neural_router import router as neural_router
+app.include_router(neural_router)
 

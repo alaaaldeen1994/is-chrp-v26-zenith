@@ -72,3 +72,61 @@ class HorvathClockService:
             "total_clock_probes": len(self.coefficients),
             "concordance_score": round(probes_used / len(self.coefficients), 3)
         }
+
+# === NEUROS-X Neural Age Clock integration ===
+import logging
+logger = logging.getLogger("horvath_clock")
+
+class DualAgeReport:
+    """Combined Horvath (epigenetic) + Neural (functional) age report."""
+
+    @staticmethod
+    async def assess(horvath_clock, methylation_betas, gene_expression, chronological_age=50.0):
+        try:
+            horvath_age = horvath_clock.predict(methylation_betas)
+        except Exception as e:
+            logger.warning(f"Horvath prediction failed: {e}")
+            horvath_age = chronological_age
+
+        try:
+            from services.neural_age_clock import get_neural_clock
+            from services.neuros_substrate_service import get_substrate_service
+            svc = get_substrate_service()
+            clock = get_neural_clock(substrate_service=svc)
+            neural_result = await clock.predict_with_substrate(gene_expression, chronological_age)
+            neural_age = neural_result["neural_age"]
+            phi_hat = neural_result.get("phi_hat")
+            confidence = neural_result.get("confidence", 0)
+        except Exception as e:
+            logger.warning(f"Neural prediction failed: {e}")
+            neural_age = chronological_age
+            phi_hat = None
+            confidence = 0.0
+
+        horvath_gap = horvath_age - chronological_age
+        neural_gap = neural_age - chronological_age
+        dual_gap = neural_age - horvath_age
+
+        if abs(dual_gap) < 3.0:
+            phenotype = "concordant"
+            phenotype_desc = "Epigenetic and neural ages aligned."
+        elif dual_gap > 3.0:
+            phenotype = "neural_dominant"
+            phenotype_desc = "Neural aging outpaces genomic."
+        else:
+            phenotype = "genomic_dominant"
+            phenotype_desc = "Genomic aging outpaces neural."
+
+        return {
+            "horvath_age": float(horvath_age),
+            "neural_age": float(neural_age),
+            "chronological_age": float(chronological_age),
+            "horvath_gap": float(horvath_gap),
+            "neural_gap": float(neural_gap),
+            "dual_gap": float(dual_gap),
+            "phenotype": phenotype,
+            "phenotype_description": phenotype_desc,
+            "phi_hat": phi_hat,
+            "neural_confidence": confidence,
+            "summary": f"Dual-age: Horvath {horvath_age:.1f}y, Neural {neural_age:.1f}y, Chronological {chronological_age:.0f}. Phenotype: {phenotype}.",
+        }
