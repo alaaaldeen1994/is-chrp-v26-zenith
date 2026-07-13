@@ -407,11 +407,11 @@ class RidgeNeuralAgeClock:
         self._load_model()
 
     def _load_model(self) -> None:
-        """Load config.json and ridge_model.pkl from models/neural_age_clock_v1/."""
+        """Load config.json from models/neural_age_clock_v1/."""
         try:
-            if not _CONFIG_PATH.exists() or not _RIDGE_PATH.exists():
+            if not _CONFIG_PATH.exists():
                 logger.warning(
-                    "[RidgeNeuralAgeClock] Model files not found at %s — "
+                    "[RidgeNeuralAgeClock] config.json not found at %s — "
                     "using fallback linear clock.", _MODEL_DIR
                 )
                 return
@@ -419,12 +419,22 @@ class RidgeNeuralAgeClock:
             with open(_CONFIG_PATH, "r", encoding="utf-8") as f:
                 self._config = json.load(f)
 
-            with open(_RIDGE_PATH, "rb") as f:
-                self._ridge = pickle.load(f)
-
             self._markers   = self._config["markers"]
             self._weights   = self._config["weights"]
             self._intercept = self._config["intercept"]
+            
+            # Load scaling parameters (for standardized models)
+            self._scaler_mean = self._config.get("scaler_mean")
+            self._scaler_scale = self._config.get("scaler_scale")
+
+            # Try loading ridge_model.pkl if present, but support manual fallback
+            try:
+                if _RIDGE_PATH.exists():
+                    with open(_RIDGE_PATH, "rb") as f:
+                        self._ridge = pickle.load(f)
+            except Exception as pkl_exc:
+                logger.warning("[RidgeNeuralAgeClock] Could not load pickle model (will use manual math fallback): %s", pkl_exc)
+                self._ridge = None
 
             logger.info(
                 "[RidgeNeuralAgeClock] Loaded v31 dual-model clock — "
@@ -439,7 +449,8 @@ class RidgeNeuralAgeClock:
 
     @property
     def is_loaded(self) -> bool:
-        return self._ridge is not None
+        # Loaded if we have a config with weights
+        return len(self._weights) > 0
 
     # Horvath-style inverse transform
     def _inverse_transform(self, y_log: float) -> float:
@@ -471,9 +482,28 @@ class RidgeNeuralAgeClock:
             dtype=np.float64
         ).reshape(1, -1)
 
-        # Predict in log-space then invert
-        y_log_pred = float(self._ridge.predict(x)[0])
-        neural_age = self._inverse_transform(y_log_pred)
+        # Apply log1p transform (matching training script)
+        x_log = np.log1p(x)
+
+        # Predict using Ridge pipeline, with manual math fallback to bypass unpickling issues
+        if self._ridge is not None:
+            pred_val = float(self._ridge.predict(x_log)[0])
+        else:
+            # Manual StandardScaler + Ridge prediction math
+            x_scaled = x_log.copy()
+            if self._scaler_mean is not None and self._scaler_scale is not None:
+                x_scaled = (x_log - np.array(self._scaler_mean)) / np.array(self._scaler_scale)
+            
+            # Predict: sum(x_scaled * weights) + intercept
+            weights_arr = np.array([self._weights.get(g, 0.0) for g in self._markers])
+            pred_val = float(np.sum(x_scaled * weights_arr) + self._intercept)
+        
+        # If it is the donor-level model, it predicts raw age directly (no log-transform on target)
+        if "donor" in self._config.get("version", ""):
+            neural_age = pred_val
+        else:
+            neural_age = self._inverse_transform(pred_val)
+            
         neural_age = float(np.clip(neural_age, age_min, age_max))
 
         # Count detected markers (non-zero)
