@@ -1663,14 +1663,15 @@ async def lifespan(app: FastAPI):
 
 
 
+import os
+env_mode = os.getenv("ENV", "production")
 app = FastAPI(
-
     title="Nilus Lab | IS-CHRP v29.0 GOLD Clinical AI Bridge", 
-
     description="Professional-grade AI bridge for Clinical Digital Twins by Nilus Lab (Zenith Edition).",
-
-    lifespan=lifespan
-
+    lifespan=lifespan,
+    docs_url="/docs" if env_mode != "production" else None,
+    redoc_url="/redoc" if env_mode != "production" else None,
+    openapi_url="/openapi.json" if env_mode != "production" else None
 )
 
 
@@ -2418,33 +2419,31 @@ async def get_login_path():
 
 
 @app.get("/contact.html")
-
 async def get_contact():
-
     return FileResponse("contact.html")
 
-
+@app.get("/contact")
+async def get_contact_path():
+    return FileResponse("contact.html")
 
 @app.get("/about.html")
-
 async def get_about():
-
     return FileResponse("about.html")
 
-
+@app.get("/about")
+async def get_about_path():
+    return FileResponse("about.html")
 
 @app.get("/legal.html")
-
 async def get_legal():
-
     return FileResponse("legal.html")
 
-
+@app.get("/legal")
+async def get_legal_path():
+    return FileResponse("legal.html")
 
 @app.get("/whitepaper.html")
-
 async def get_whitepaper():
-
     return FileResponse("whitepaper.html")
 
 
@@ -2506,9 +2505,11 @@ async def get_whitepaper_path():
 
 
 @app.get("/3d_view.html")
-
 async def get_3d_view():
+    return FileResponse("3d_view.html")
 
+@app.get("/3d_view")
+async def get_3d_view_path():
     return FileResponse("3d_view.html")
 
 
@@ -2530,17 +2531,19 @@ async def get_microscopy_path():
 
 
 @app.get("/drp_validation_report.html")
-
 async def get_drp_report():
-
     return FileResponse("drp_validation_report.html")
 
-
+@app.get("/drp_validation_report")
+async def get_drp_report_path():
+    return FileResponse("drp_validation_report.html")
 
 @app.get("/v26_clinical_report.html")
-
 async def get_clinical_report():
+    return FileResponse("v26_clinical_report.html")
 
+@app.get("/v26_clinical_report")
+async def get_clinical_report_path():
     return FileResponse("v26_clinical_report.html")
 
 
