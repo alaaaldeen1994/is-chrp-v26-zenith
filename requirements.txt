@@ -24,3 +24,14 @@ sqlalchemy>=2.0.27
 pydantic-settings>=2.2.1
 structlog>=24.1.0
 redis>=5.0.1
+
+# Added by DevOps Verification
+scikit-learn
+authlib
+passlib
+bcrypt
+python-jose
+python-multipart
+cryptography
+email-validator
+pyjwt

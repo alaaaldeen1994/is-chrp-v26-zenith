@@ -1,6 +1,6 @@
 # Deployment Trigger
 # This file forces Railway to redeploy when changed
-# Last updated: 2026-07-13 12:38 UTC
+# Last updated: 2026-07-13 12:45 UTC
 
-DEPLOYMENT_VERSION=v14.2.0
-TRIGGER=neuros_x_v31_integration_engineering_handoff_reorganization
+DEPLOYMENT_VERSION=v14.3.0
+TRIGGER=neuros_x_v31_integration_final_devops_verification
