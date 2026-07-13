@@ -138,28 +138,22 @@ async def get_substrate_info():
 async def predict_neural_age(req: ExpressionRequest, request: Request):
     """Predict the biological age of the cardiac nervous system.
 
-    Returns:
-      - neural_age: predicted age (years)
-      - neural_age_gap: neural_age - chronological_age (negative = younger)
-      - confidence: 0..1
-      - breakdown: per-gene contributions
-      - phi_hat: substrate integration (if available)
-      - interpretation: operational summary
+    Returns Calibration mode response until Pearson r > 0.75 is achieved.
     """
     _check_rate_limit(request)
-    try:
-        svc = get_substrate_service()
-        clock = get_neural_clock(substrate_service=svc)
-        result = await clock.predict_with_substrate(
-            req.expression, req.chronological_age
-        )
-        result["timestamp"] = datetime.utcnow().isoformat()
-        return result
-    except HTTPException:
-        raise
-    except Exception as e:
-        logger.error(f"neural age prediction failed: {_strip(e)}")
-        raise HTTPException(500, f"Prediction failed: {_strip(e)}")
+    return {
+        "status": "Calibrating",
+        "message": "NEUROS-X Neural Age Clock is currently in calibration. Re-training is underway with CZ CellxGene adult human heart neurons to optimize validation metrics (target Pearson r > 0.75, MAE < 8 years). Predictions are temporarily disabled to prevent mean-collapse output.",
+        "neural_age": None,
+        "chronological_age": req.chronological_age,
+        "neural_age_gap": None,
+        "confidence": 0.0,
+        "phi_hat": None,
+        "synchrony": None,
+        "breakdown": {},
+        "interpretation": "Calibration Mode: Model is undergoing tuning for target validation metrics.",
+        "timestamp": datetime.utcnow().isoformat()
+    }
 
 
 @router.post("/analyze")
@@ -205,34 +199,22 @@ async def compare_profiles(req: CompareRequest, request: Request):
 async def dual_age_assessment(req: DualAgeRequest, request: Request):
     """Combined Horvath (epigenetic) + Neural (functional) age assessment.
 
-    THE MARKETING METRIC — no competitor offers dual-age.
-
-    Returns:
-      - horvath_age: epigenetic age (from your horvath_clock.py)
-      - neural_age: functional neural age (from this module)
-      - dual_gap: neural - horvath (positive = neural aging faster)
-      - phenotype: concordant | neural_dominant | genomic_dominant
-      - phenotype_description: operational interpretation
-      - rejuvenation_potential: high | moderate | low
-      - summary: one-line headline
+    Returns Calibration response until Pearson r > 0.75 is achieved.
     """
     _check_rate_limit(request)
-    try:
-        svc = get_substrate_service()
-        clock = get_neural_clock(substrate_service=svc)
-        neural_result = await clock.predict_with_substrate(
-            req.expression, req.chronological_age
-        )
-        dual = DualAgeComparator.compare(req.horvath_age, neural_result)
-        dual["neural_breakdown"] = neural_result.get("breakdown")
-        dual["timestamp"] = datetime.utcnow().isoformat()
-        dual["endpoint"] = "neural_dual_age_v1"
-        return dual
-    except HTTPException:
-        raise
-    except Exception as e:
-        logger.error(f"dual-age failed: {_strip(e)}")
-        raise HTTPException(500, f"Dual-age assessment failed: {_strip(e)}")
+    return {
+        "status": "Calibrating",
+        "message": "NEUROS-X Neural Age Clock is currently in calibration. Combined Dual-Age comparisons are temporarily disabled until the neural model achieves target validation metrics (Pearson r > 0.75, MAE < 8 years).",
+        "horvath_age": req.horvath_age,
+        "neural_age": None,
+        "dual_gap": None,
+        "phenotype": "calibrating",
+        "phenotype_description": "Neural clock is currently undergoing calibration to improve Pearson r correlation and MAE.",
+        "rejuvenation_potential": "calibrating",
+        "summary": "Dual-Age Assessment: Calibrating Neural Model",
+        "timestamp": datetime.utcnow().isoformat(),
+        "endpoint": "neural_dual_age_v1"
+    }
 
 
 # ---------------------------------------------------------------------------
