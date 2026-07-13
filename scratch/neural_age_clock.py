@@ -24,23 +24,14 @@ IMPORTANT: Operational marker for research. Not a clinical diagnosis.
 
 from __future__ import annotations
 
-import json
 import logging
 import math
-import os
-import pickle
-from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
 import numpy as np
 import torch
 
 logger = logging.getLogger("neural_age_clock")
-
-# Path to the real trained Ridge model from Colab training (v31 dual-model)
-_MODEL_DIR = Path(__file__).parent.parent / "models" / "neural_age_clock_v1"
-_CONFIG_PATH = _MODEL_DIR / "config.json"
-_RIDGE_PATH  = _MODEL_DIR / "ridge_model.pkl"
 
 
 # ---------------------------------------------------------------------------
@@ -377,206 +368,15 @@ class DualAgeComparator:
 
 
 # ---------------------------------------------------------------------------
-# Ridge Neural Age Clock — real trained model from Colab (v31 dual-model)
+# Singleton
 # ---------------------------------------------------------------------------
 
-class RidgeNeuralAgeClock:
-    """Neural Age Clock backed by the real Ridge regression trained in Colab.
+_neural_clock: Optional[NeuralAgeClock] = None
 
-    Trained on 3,569 cells from TWO scVI models:
-      - 486k cardiac specialist  (Litviňuková et al., Nature 2020)
-      - 1.94M foundation model   (HCA Heart Atlas)
-
-    Uses 8 real markers with Horvath-style log-transform:
-      F0 = 40 (adult threshold)
-      y_log = log(age+1)        if age <= 40
-      y_log = (age-40)/20 + log(41)  if age > 40
-
-    Falls back silently to the original NeuralAgeClock if model files
-    are missing.
-    """
-
-    def __init__(self, substrate_service=None):
-        self.substrate_service = substrate_service
-        self._ridge   = None
-        self._config  = None
-        self._markers: List[str] = []
-        self._weights: Dict[str, float] = {}
-        self._intercept: float = 0.0
-        self._fallback = NeuralAgeClock(substrate_service=substrate_service)
-        self._load_model()
-
-    def _load_model(self) -> None:
-        """Load config.json and ridge_model.pkl from models/neural_age_clock_v1/."""
-        try:
-            if not _CONFIG_PATH.exists() or not _RIDGE_PATH.exists():
-                logger.warning(
-                    "[RidgeNeuralAgeClock] Model files not found at %s — "
-                    "using fallback linear clock.", _MODEL_DIR
-                )
-                return
-
-            with open(_CONFIG_PATH, "r", encoding="utf-8") as f:
-                self._config = json.load(f)
-
-            with open(_RIDGE_PATH, "rb") as f:
-                self._ridge = pickle.load(f)
-
-            self._markers   = self._config["markers"]
-            self._weights   = self._config["weights"]
-            self._intercept = self._config["intercept"]
-
-            logger.info(
-                "[RidgeNeuralAgeClock] Loaded v31 dual-model clock — "
-                "%d markers, Pearson r=%.3f, MAE=%.1f yrs (training set)",
-                len(self._markers),
-                self._config["training"]["pearson_r"],
-                self._config["training"]["mae_years"],
-            )
-        except Exception as exc:
-            logger.error("[RidgeNeuralAgeClock] Failed to load model: %s", exc)
-            self._ridge = None
-
-    @property
-    def is_loaded(self) -> bool:
-        return self._ridge is not None
-
-    # Horvath-style inverse transform
-    def _inverse_transform(self, y_log: float) -> float:
-        F0 = float(self._config.get("adult_threshold", 40))
-        log_F0p1 = math.log(F0 + 1)
-        if y_log <= log_F0p1:
-            return math.exp(y_log) - 1.0
-        else:
-            return (y_log - log_F0p1) * 20.0 + F0
-
-    def predict(
-        self,
-        expression_vector: Dict[str, float],
-        chronological_age: float = 50.0,
-    ) -> Tuple[float, float, Dict[str, Any]]:
-        """Predict neural age using real trained Ridge regression.
-
-        Falls back to the original linear model if Ridge files are missing.
-        """
-        if not self.is_loaded:
-            return self._fallback.predict(expression_vector, chronological_age)
-
-        age_min = float(self._config.get("age_min", 20))
-        age_max = float(self._config.get("age_max", 100))
-
-        # Build feature vector in marker order
-        x = np.array(
-            [expression_vector.get(g, 0.0) for g in self._markers],
-            dtype=np.float64
-        ).reshape(1, -1)
-
-        # Predict in log-space then invert
-        y_log_pred = float(self._ridge.predict(x)[0])
-        neural_age = self._inverse_transform(y_log_pred)
-        neural_age = float(np.clip(neural_age, age_min, age_max))
-
-        # Count detected markers (non-zero)
-        detected = [g for g in self._markers if expression_vector.get(g, 0.0) > 0]
-        n_detected = len(detected)
-        confidence = min(1.0, n_detected / max(1, len(self._markers)))
-
-        # Per-marker contributions for breakdown
-        contributions = [
-            {
-                "gene": g,
-                "expression": float(expression_vector.get(g, 0.0)),
-                "weight": self._weights.get(g, 0.0),
-                "category": NEURAL_AGE_PANEL.get(g, {}).get("category", "unknown"),
-            }
-            for g in self._markers
-        ]
-
-        breakdown = {
-            "model": "RidgeNeuralAgeClock_v31_dual",
-            "n_markers_detected": n_detected,
-            "markers_used": self._markers,
-            "contributions": contributions,
-            "chronological_age": float(chronological_age),
-            "neural_age_gap": float(neural_age - chronological_age),
-            "confidence": float(confidence),
-            "training_pearson_r": self._config["training"]["pearson_r"],
-            "training_mae_years": self._config["training"]["mae_years"],
-        }
-
-        return neural_age, confidence, breakdown
-
-    async def predict_with_substrate(
-        self,
-        expression_vector: Dict[str, float],
-        chronological_age: float = 50.0,
-    ) -> Dict[str, Any]:
-        """Async version — delegates substrate enrichment then returns dual-age result."""
-        neural_age, confidence, breakdown = self.predict(
-            expression_vector, chronological_age
-        )
-
-        # Optional Φ-hat enrichment (same logic as NeuralAgeClock)
-        phi_hat = None
-        synchrony = None
-        if self.substrate_service is not None:
-            sub_result = await self.substrate_service.analyze_ion_profile(
-                expression_vector
-            )
-            if sub_result.get("ok"):
-                phi_hat  = sub_result["phi_hat"]
-                synchrony = sub_result["synchrony"]
-                if phi_hat and phi_hat > 0:
-                    phi_norm = min(1.0, phi_hat / 0.01)
-                    phi_modulation = (phi_norm - 0.5) * 10.0
-                    if synchrony and synchrony > 0.5:
-                        phi_modulation += (synchrony - 0.5) * 10.0
-                    neural_age = float(
-                        np.clip(neural_age + phi_modulation, AGE_MIN, AGE_MAX)
-                    )
-                    breakdown["phi_hat"] = phi_hat
-                    breakdown["synchrony"] = synchrony
-                    breakdown["phi_modulation"] = phi_modulation
-                    confidence = min(1.0, confidence + 0.1)
-
-        dual_age_gap = neural_age - chronological_age
-        return {
-            "neural_age":       float(neural_age),
-            "chronological_age": float(chronological_age),
-            "neural_age_gap":   float(dual_age_gap),
-            "confidence":       float(confidence),
-            "phi_hat":          phi_hat,
-            "synchrony":        synchrony,
-            "breakdown":        breakdown,
-            "interpretation":   self._interpret(neural_age, chronological_age, confidence),
-        }
-
-    def _interpret(self, neural_age: float, chrono_age: float, confidence: float) -> str:
-        """Reuse same interpretation as NeuralAgeClock."""
-        return self._fallback._interpret(neural_age, chrono_age, confidence)
-
-    def get_panel(self) -> Dict[str, Dict[str, Any]]:
-        return NEURAL_AGE_PANEL
-
-    def get_marker_genes(self) -> List[str]:
-        return self._markers if self._markers else list(NEURAL_AGE_PANEL.keys())
-
-
-# ---------------------------------------------------------------------------
-# Singleton — prefers RidgeNeuralAgeClock (real trained) over linear fallback
-# ---------------------------------------------------------------------------
-
-_neural_clock: Optional[RidgeNeuralAgeClock] = None
-
-def get_neural_clock(substrate_service=None) -> RidgeNeuralAgeClock:
-    """Return the singleton RidgeNeuralAgeClock (real v31 dual-model trained weights)."""
+def get_neural_clock(substrate_service=None) -> NeuralAgeClock:
     global _neural_clock
     if _neural_clock is None:
-        _neural_clock = RidgeNeuralAgeClock(substrate_service=substrate_service)
-        if _neural_clock.is_loaded:
-            logger.info("[NeuralAgeClock] Using real trained RidgeNeuralAgeClock v31.")
-        else:
-            logger.warning("[NeuralAgeClock] Ridge model not found — using linear fallback.")
+        _neural_clock = NeuralAgeClock(substrate_service=substrate_service)
     elif substrate_service is not None and _neural_clock.substrate_service is None:
         _neural_clock.substrate_service = substrate_service
     return _neural_clock

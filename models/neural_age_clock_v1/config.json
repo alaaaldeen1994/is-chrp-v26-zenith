@@ -1,0 +1,90 @@
+{
+  "version": "v31_neural_v2_dual_model",
+  "markers": [
+    "SLC18A3",
+    "CHRM2",
+    "TH",
+    "DBH",
+    "NTN1",
+    "ISL1",
+    "GJA1",
+    "GJA5"
+  ],
+  "weights": {
+    "SLC18A3": -0.00940889120055424,
+    "CHRM2": -0.008790678839915897,
+    "TH": -0.15027626179851825,
+    "DBH": 0.3105916794647129,
+    "NTN1": 0.009161998697597866,
+    "ISL1": 0.7338897409408461,
+    "GJA1": 0.02888692074700103,
+    "GJA5": -0.06843048227090194
+  },
+  "intercept": 4.573739742796311,
+  "age_min": 20,
+  "age_max": 100,
+  "adult_threshold": 40,
+  "training": {
+    "total_cells": 3569,
+    "cells_486k": 1400,
+    "cells_194m": 2169,
+    "pearson_r": -0.6998560660604205,
+    "mae_years": 13.114162334782351
+  },
+  "models_used": [
+    {
+      "name": "scvi_model_486k_real",
+      "cells": 486134,
+      "role": "Cardiac specialist (high-resolution cardiac neuron signal)",
+      "source": "Litvi\u0148ukov\u00e1 et al., Nature 2020",
+      "doi": "10.1038/s41586-020-2797-4"
+    },
+    {
+      "name": "zenith_foundation_v1",
+      "cells": 1940000,
+      "role": "Foundation generalist (cross-tissue, cross-disease robustness)",
+      "source": "HCA Heart Atlas + Multi-tissue Foundation",
+      "doi": "10.1038/s41586-020-2797-4"
+    }
+  ],
+  "donor_ages": {
+    "1221": 40,
+    "1600": 45,
+    "1666": 55,
+    "1681": 50,
+    "1702": 65,
+    "1708": 70,
+    "1723": 72,
+    "10_Chowdhury": 53,
+    "11_Chowdhury": 61,
+    "12_Chowdhury": 47
+  },
+  "specialist_donor_ages": {
+    "D1": 52.5,
+    "D2": 62.5,
+    "D3": 57.5,
+    "D4": 72.5,
+    "D5": 67.5,
+    "D6": 72.5,
+    "D7": 62.5,
+    "D11": 62.5,
+    "H2": 52.5,
+    "H3": 52.5,
+    "H4": 57.5,
+    "H5": 52.5,
+    "H6": 42.5,
+    "H7": 47.5
+  },
+  "dataset_ages": {
+    "1c739a3e-c3f5-49d5-98e0-73975e751201": 53,
+    "2adb1f8a-a6b1-4909-8ee8-484814e2d4bf": 42,
+    "2e9d2f32-4cfb-49b5-b990-cbf4c241214e": 58,
+    "364bd0c7-f7fd-48ed-99c1-ae26872b1042": 67,
+    "43245158-5ae1-4e71-a9a6-67eef49c26bc": 75,
+    "53d208b0-2cfd-4366-9866-c3c6114081bc": 45,
+    "65badd7a-9262-4fd1-9ce2-eb5dc0ca8039": 55,
+    "72955cdb-bd92-4135-aa52-21f33f9640db": 50,
+    "d4e69e01-3ba2-4d6b-a15d-e7048f78f22e": 65,
+    "d567b692-c374-4628-a508-8008f6778f22": 70
+  }
+}
