@@ -1,4 +1,4 @@
-﻿import uvicorn
+import uvicorn
 
 # --- Helper class to support deserialization of pickled age clock model ---
 class DummyModel:
@@ -7362,6 +7362,6 @@ if __name__ == "__main__":
 
 
 
-from services.neural_router import router as neural_router
+from routers.neural_router import router as neural_router
 app.include_router(neural_router)
 
