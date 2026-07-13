@@ -1,6 +1,6 @@
 # Deployment Trigger
 # This file forces Railway to redeploy when changed
-# Last updated: 2026-07-13 13:06 UTC
+# Last updated: 2026-07-13 13:10 UTC
 
-DEPLOYMENT_VERSION=v14.4.0
-TRIGGER=neuros_x_v31_alias_routes_and_docs_security_hardening
+DEPLOYMENT_VERSION=v14.5.0
+TRIGGER=neuros_x_v31_profile_request_access_link_fix
