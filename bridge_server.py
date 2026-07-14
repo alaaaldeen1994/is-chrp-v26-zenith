@@ -1669,9 +1669,9 @@ app = FastAPI(
     title="Nilus Lab | IS-CHRP v29.0 GOLD Clinical AI Bridge", 
     description="Professional-grade AI bridge for Clinical Digital Twins by Nilus Lab (Zenith Edition).",
     lifespan=lifespan,
-    docs_url="/docs" if env_mode != "production" else None,
-    redoc_url="/redoc" if env_mode != "production" else None,
-    openapi_url="/openapi.json" if env_mode != "production" else None
+    docs_url="/docs",
+    redoc_url="/redoc",
+    openapi_url="/openapi.json"
 )
 
 
