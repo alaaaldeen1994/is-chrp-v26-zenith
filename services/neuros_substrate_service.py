@@ -384,6 +384,33 @@ class CardiacNeuralSubstrate(nn.Module):
             "ok": True
         }
 
+    def check_fibrillation_risk(self, expression_vector: Dict[str, float]) -> Dict[str, Any]:
+        """
+        Secondary double-check specifically looking for ventricular fibrillation
+        and chaotic reentry patterns by analyzing spike-train entropy.
+        """
+        I = self.encode_ion_profile(expression_vector)
+        # Run a longer simulation to catch chaotic dynamics
+        result = self.simulate(I, steps=100)
+        
+        # Calculate population spike entropy (high entropy = chaos)
+        spikes = result["spikes"] # (100, 512)
+        pop_activity = spikes.sum(dim=1).float() # (100,)
+        
+        # Calculate variance of inter-spike intervals
+        diffs = pop_activity[1:] - pop_activity[:-1]
+        isi_variance = float(torch.var(diffs).item())
+        
+        # If ISI variance is extremely high, it's fibrillating
+        is_fibrillating = isi_variance > 5.0 or result["synchrony"] > 0.8
+        
+        return {
+            "fibrillation_detected": bool(is_fibrillating),
+            "isi_variance": float(isi_variance),
+            "synchrony": float(result["synchrony"]),
+            "phi_hat": float(result["phi_hat"])
+        }
+
 
 # ---------------------------------------------------------------------------
 # Service layer (async, matches boltz_service.py patterns)

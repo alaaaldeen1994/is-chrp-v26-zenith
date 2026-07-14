@@ -7070,6 +7070,67 @@ async def run_gpt_discovery(request: Request):
         "source_data": "Litvinukova et al., Nature 2020"
     }
 
+    # Extract the winning gene symbols for NEUROS-X safety audit
+    winning_gene_panel = []
+    for g in result.get("genes", []):
+        gname = g.get("gene", "")
+        if gname:
+            winning_gene_panel.append(gname)
+
+    # --- NEUROS-X SAFETY INTEGRATION ---
+    if winning_gene_panel:
+        try:
+            from services.neuros_substrate_service import get_substrate_service
+            from perturbation_engine import PerturbationEngine
+
+            # 1. Initialize the engines
+            perts = PerturbationEngine()
+            perts.initialize()
+            svc = get_substrate_service()
+            
+            # 2. Run the perturbation simulation to get predicted ion-channel expression
+            perturbation_result = perts.predict_factor_effect(
+                factors=winning_gene_panel,
+                source_type="Fibroblast",
+                target_type="Cardiomyocyte",
+                dose=1.0
+            )
+            
+            # 3. Extract the safety audit from the perturbation result
+            safety_audit = perturbation_result.get("arrhythmia_safety", {})
+            
+            # 4. Run the Anti-Fibrillation Double-Check
+            # Extract the ion channel expression from the perturbation result
+            ion_expr = {}
+            for gene in svc.substrate.ION_CHANNEL_GENES:
+                if gene in perts.gene_to_idx:
+                    idx = perts.gene_to_idx[gene]
+                    # Safely extract the expression value
+                    expr_array = perturbation_result.get("predicted_expression")
+                    if expr_array is not None and idx < len(expr_array):
+                         ion_expr[gene] = float(expr_array[idx])
+                    else:
+                         ion_expr[gene] = 0.0
+                else:
+                    ion_expr[gene] = 0.0
+
+            fib_check = svc.substrate.check_fibrillation_risk(ion_expr)
+            safety_audit["fibrillation_check"] = fib_check
+            
+            # Override classification if fibrillation is detected
+            if fib_check["fibrillation_detected"] and safety_audit.get("classification") == "SAFE":
+                safety_audit["classification"] = "WARNING"
+                safety_audit["reason"] = "Anti-Fibrillation Check: Chaotic reentry detected. Ventricular fibrillation risk."
+                
+            # 5. Attach the safety audit to the final response payload
+            result["arrhythmia_safety"] = safety_audit
+            
+        except Exception as e:
+            print(f"NEUROS-X Safety audit failed: {e}")
+            result["arrhythmia_safety"] = {"classification": "ERROR", "reason": str(e)}
+    else:
+        result["arrhythmia_safety"] = {"classification": "WARNING", "reason": "No genes returned by discovery engine."}
+
     return JSONResponse(result)
 
 

@@ -250,7 +250,8 @@ class PerturbationEngine:
             "provenance": "PREDICTED",
             "dose": dose,
             "status": "SUCCESS",
-            "arrhythmia_safety": arrhythmia_safety
+            "arrhythmia_safety": arrhythmia_safety,
+            "predicted_expression": predicted_expr.tolist()
         }
 
     def predict_trajectory(self, source_type: str, target_type: str, n_steps: int = 20, genes_of_interest: List[str] = None):

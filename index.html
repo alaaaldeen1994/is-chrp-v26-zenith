@@ -5798,6 +5798,20 @@ async function runDiscovery() {
                         </div>
                     </div>
                     
+                    <div id="safety-result-card" style="display: none; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; margin-top: 24px; margin-bottom: 24px; box-shadow: 0 4px 6px rgba(0,0,0,0.02)">
+                      <h3 style="font-size: 18px; font-weight: 700; color: #0f172a; margin-bottom: 16px;">In Silico Arrhythmia Safety Audit</h3>
+                      <div style="display: flex; gap: 24px; align-items: center;">
+                        <div id="safety-class-display" style="font-size: 24px; font-weight: bold; font-family: monospace; padding: 12px 20px; border-radius: 8px; background: #f1f5f9; color: #64748b; min-width: 150px; text-align: center; border: 1px solid #cbd5e1;">
+                          PENDING
+                        </div>
+                        <div style="flex: 1;">
+                          <div id="safety-reason" style="font-size: 14px; color: #334155; margin-bottom: 12px;">Running 512-neuron substrate simulation...</div>
+                          <div id="fib-check-display" style="font-size: 12px; color: #64748b; margin-bottom: 8px; font-weight: 600;"></div>
+                          <canvas id="ecg-canvas-result" width="400" height="80" style="background: #f8fafc; border-radius: 6px; width: 100%; height: 80px; border: 1px solid #e2e8f0;"></canvas>
+                        </div>
+                      </div>
+                    </div>
+                    
                     <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:16px;padding:24px;margin-bottom:32px;">
                         <div style="font-size:13px;color:#64748b;font-weight:800;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px;">Methodology & Reasoning</div>
                         <div style="font-size:15px;color:#334155;line-height:1.6;margin-bottom:12px;">${data.methodology || 'Tournament Discovery + Iterative Refinement'}</div>
@@ -5812,8 +5826,42 @@ async function runDiscovery() {
                             <button onclick="BiosimBridge.sendToBoltzComplex()" style="background:#7c3aed;border:1px solid #7c3aed;color:#ffffff;font-size:15px;font-weight:600;padding:12px 28px;border-radius:10px;cursor:pointer;transition:all 0.2s;box-shadow:0 4px 6px -1px rgba(124,58,237,0.15), 0 2px 4px -1px rgba(124,58,237,0.1);" onmouseover="this.style.background='#6d28d9';this.style.transform='translateY(-2px)';" onmouseout="this.style.background='#7c3aed';this.style.transform='translateY(0)';">Fold Complex (Boltz)</button>
                             <button onclick="downloadAF3JSON()" style="background:#0f172a;border:1px solid #0f172a;color:#ffffff;font-size:15px;font-weight:600;padding:12px 32px;border-radius:10px;cursor:pointer;transition:all 0.2s;box-shadow:0 4px 6px -1px rgba(15,23,42,0.1), 0 2px 4px -1px rgba(15,23,42,0.06);" onmouseover="this.style.background='#1e293b';this.style.transform='translateY(-2px)';" onmouseout="this.style.background='#0f172a';this.style.transform='translateY(0)';">Export AF3 Fold</button>
                         </div>
-                    </div>
                 </div>`;
+
+            if (data.arrhythmia_safety) {
+                const card = document.getElementById('safety-result-card');
+                if (card) {
+                    card.style.display = 'block';
+                    const safetyClass = data.arrhythmia_safety.classification;
+                    const safetyReason = data.arrhythmia_safety.reason;
+                    const fibCheck = data.arrhythmia_safety.fibrillation_check;
+                    
+                    const classDisplay = document.getElementById('safety-class-display');
+                    const reasonDisplay = document.getElementById('safety-reason');
+                    const fibDisplay = document.getElementById('fib-check-display');
+                    
+                    if (classDisplay) classDisplay.innerText = safetyClass;
+                    if (reasonDisplay) reasonDisplay.innerText = safetyReason;
+                    
+                    if (fibCheck && fibDisplay) {
+                        fibDisplay.innerText = `Anti-Fibrillation Check: ${fibCheck.fibrillation_detected ? 'CHAOS DETECTED' : 'STABLE'} (ISI Var: ${fibCheck.isi_variance.toFixed(2)})`;
+                    }
+                    
+                    if (classDisplay) {
+                        if (safetyClass === 'SAFE') {
+                            classDisplay.style.background = '#ecfdf5'; classDisplay.style.color = '#10b981';
+                        } else if (safetyClass === 'WARNING') {
+                            classDisplay.style.background = '#fffbeb'; classDisplay.style.color = '#f59e0b';
+                        } else {
+                            classDisplay.style.background = '#fef2f2'; classDisplay.style.color = '#ef4444';
+                        }
+                    }
+                    
+                    if (data.arrhythmia_safety.ecg_proxy) {
+                        plotResultECG(data.arrhythmia_safety.ecg_proxy);
+                    }
+                }
+            }
             
             // Display the new B2B panels container
             const b2bPanels = document.getElementById('discovery-b2b-panels');
@@ -5944,6 +5992,20 @@ async function runDiscovery() {
                         <div style="font-size:10px;color:#8b8070;font-weight:700;text-transform:uppercase;margin-bottom:6px;">Protocol Summary</div>
                         <div style="font-size:12px;color:#191919;line-height:1.7;">${gptSummary}</div>
                     </div>
+                    
+                    <div id="safety-result-card" style="display: none; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; margin-top: 24px; margin-bottom: 24px; box-shadow: 0 4px 6px rgba(0,0,0,0.02)">
+                      <h3 style="font-size: 18px; font-weight: 700; color: #0f172a; margin-bottom: 16px;">In Silico Arrhythmia Safety Audit</h3>
+                      <div style="display: flex; gap: 24px; align-items: center;">
+                        <div id="safety-class-display" style="font-size: 24px; font-weight: bold; font-family: monospace; padding: 12px 20px; border-radius: 8px; background: #f1f5f9; color: #64748b; min-width: 150px; text-align: center; border: 1px solid #cbd5e1;">
+                          PENDING
+                        </div>
+                        <div style="flex: 1;">
+                          <div id="safety-reason" style="font-size: 14px; color: #334155; margin-bottom: 12px;">Running 512-neuron substrate simulation...</div>
+                          <div id="fib-check-display" style="font-size: 12px; color: #64748b; margin-bottom: 8px; font-weight: 600;"></div>
+                          <canvas id="ecg-canvas-result" width="400" height="80" style="background: #f8fafc; border-radius: 6px; width: 100%; height: 80px; border: 1px solid #e2e8f0;"></canvas>
+                        </div>
+                      </div>
+                    </div>
 
                     <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;padding-top:12px;border-top:1px solid #D6CEBF;">
                         <div style="font-size:10px;color:#8b8b8b;">⚠ AI output — not peer-reviewed. Use Zenith for verified results.</div>
@@ -5953,8 +6015,42 @@ async function runDiscovery() {
                             <button onclick="BiosimBridge.sendToBoltzComplex()" style="background:#7c3aed;border:none;color:#ffffff;font-size:11px;font-weight:600;padding:6px 14px;border-radius:8px;cursor:pointer;transition:all 0.15s;" onmouseover="this.style.background='#6d28d9';" onmouseout="this.style.background='#7c3aed';">Fold Complex (Boltz)</button>
                             <button onclick="downloadAF3JSON()" style="background:#1a1a1a;border:none;color:#f8f8f6;font-size:11px;font-weight:600;padding:6px 14px;border-radius:8px;cursor:pointer;transition:all 0.15s;" onmouseover="this.style.background='#333';" onmouseout="this.style.background='#1a1a1a';">Extract JSON (AF3)</button>
                         </div>
-                    </div>
                 </div>`;
+
+            if (data.arrhythmia_safety) {
+                const card = document.getElementById('safety-result-card');
+                if (card) {
+                    card.style.display = 'block';
+                    const safetyClass = data.arrhythmia_safety.classification;
+                    const safetyReason = data.arrhythmia_safety.reason;
+                    const fibCheck = data.arrhythmia_safety.fibrillation_check;
+                    
+                    const classDisplay = document.getElementById('safety-class-display');
+                    const reasonDisplay = document.getElementById('safety-reason');
+                    const fibDisplay = document.getElementById('fib-check-display');
+                    
+                    if (classDisplay) classDisplay.innerText = safetyClass;
+                    if (reasonDisplay) reasonDisplay.innerText = safetyReason;
+                    
+                    if (fibCheck && fibDisplay) {
+                        fibDisplay.innerText = `Anti-Fibrillation Check: ${fibCheck.fibrillation_detected ? 'CHAOS DETECTED' : 'STABLE'} (ISI Var: ${fibCheck.isi_variance.toFixed(2)})`;
+                    }
+                    
+                    if (classDisplay) {
+                        if (safetyClass === 'SAFE') {
+                            classDisplay.style.background = '#ecfdf5'; classDisplay.style.color = '#10b981';
+                        } else if (safetyClass === 'WARNING') {
+                            classDisplay.style.background = '#fffbeb'; classDisplay.style.color = '#f59e0b';
+                        } else {
+                            classDisplay.style.background = '#fef2f2'; classDisplay.style.color = '#ef4444';
+                        }
+                    }
+                    
+                    if (data.arrhythmia_safety.ecg_proxy) {
+                        plotResultECG(data.arrhythmia_safety.ecg_proxy);
+                    }
+                }
+            }
             
             // Display the new B2B panels container
             const b2bPanels = document.getElementById('discovery-b2b-panels');
@@ -6148,8 +6244,23 @@ window.copyModalJSON = function() {
     alert('JSON copied to clipboard!');
 };
 
-
-
+function plotResultECG(ecgData) {
+  const canvas = document.getElementById('ecg-canvas-result');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  const sum = ecgData.reduce((a, b) => a + b, 0);
+  ctx.strokeStyle = sum < 10 ? '#ef4444' : '#10b981';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  const stepX = canvas.width / ecgData.length;
+  ecgData.forEach((val, i) => {
+    const x = i * stepX;
+    const y = canvas.height - (val * canvas.height * 0.8) - 10;
+    if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+  });
+  ctx.stroke();
+}
 </script>
 
 
