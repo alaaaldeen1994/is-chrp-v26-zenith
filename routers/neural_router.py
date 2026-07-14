@@ -157,41 +157,56 @@ async def predict_neural_age(req: ExpressionRequest, request: Request):
 
 
 @router.post("/analyze")
-async def analyze_substrate(req: AnalyzeRequest, request: Request):
-    """Run the spiking substrate on an ion-channel expression profile.
-
-    Returns phi_hat, synchrony, active_fraction, ecg_proxy, etc.
+async def analyze_cocktail_safety(req: AnalyzeRequest, request: Request):
+    """
+    Audit a reprogramming cocktail for arrhythmia risk.
+    
+    Returns a safety classification: SAFE, WARNING, or BLOCKED.
+    Uses the 512-neuron spiking cardiac substrate to simulate
+    action potential propagation.
     """
     _check_rate_limit(request)
     try:
         svc = get_substrate_service()
-        result = await svc.analyze_ion_profile(req.expression, steps=req.steps)
+        result = svc.substrate.audit_arrhythmia_risk(req.expression)
         result["timestamp"] = datetime.utcnow().isoformat()
+        result["endpoint"] = "neural_arrhythmia_audit_v1"
         return result
-    except HTTPException:
-        raise
     except Exception as e:
-        logger.error(f"substrate analysis failed: {_strip(e)}")
-        raise HTTPException(500, f"Analysis failed: {_strip(e)}")
+        logger.error(f"arrhythmia audit failed: {_strip(e)}")
+        raise HTTPException(500, f"Audit failed: {_strip(e)}")
 
 
 @router.post("/compare")
-async def compare_profiles(req: CompareRequest, request: Request):
-    """Compare substrate response before/after a perturbation.
-
-    Shows how a gene perturbation changes the simulated cardiac electrical
-    activity (phi_delta, synchrony_delta, stability assessment).
-    """
+async def compare_safety(req: CompareRequest, request: Request):
+    """Compare arrhythmia risk before and after a perturbation."""
     _check_rate_limit(request)
     try:
         svc = get_substrate_service()
-        result = await svc.compare_profiles(req.baseline, req.perturbed)
-        result["timestamp"] = datetime.utcnow().isoformat()
-        return result
-    except HTTPException:
-        raise
+        baseline = svc.substrate.audit_arrhythmia_risk(req.baseline)
+        perturbed = svc.substrate.audit_arrhythmia_risk(req.perturbed)
+        
+        # Determine if the perturbation improved or worsened safety
+        class_order = {"SAFE": 0, "WARNING": 1, "BLOCKED": 2}
+        delta = class_order[perturbed["safety_classification"]] - class_order[baseline["safety_classification"]]
+        
+        if delta < 0:
+            assessment = "IMPROVED: Perturbation reduced arrhythmia risk."
+        elif delta > 0:
+            assessment = "DEGRADED: Perturbation increased arrhythmia risk."
+        else:
+            assessment = "NEUTRAL: Safety classification unchanged."
+        
+        return {
+            "ok": True,
+            "baseline": baseline,
+            "perturbed": perturbed,
+            "assessment": assessment,
+            "phi_delta": perturbed["phi_hat"] - baseline["phi_hat"],
+            "synchrony_delta": perturbed["synchrony"] - baseline["synchrony"],
+        }
     except Exception as e:
-        logger.error(f"compare failed: {_strip(e)}")
+        logger.error(f"arrhythmia comparison failed: {_strip(e)}")
         raise HTTPException(500, f"Comparison failed: {_strip(e)}")
 
 

@@ -300,6 +300,88 @@ class CardiacNeuralSubstrate(nn.Module):
             pop = pop / pop.max()
         return pop.tolist()
 
+    def audit_arrhythmia_risk(self, expression_vector: Dict[str, float]) -> Dict[str, Any]:
+        """
+        Audits a reprogramming cocktail for arrhythmia risk.
+        Maps ion-channel gene expression to cardiac electrical stability.
+        
+        Returns:
+            - safety_classification: SAFE | WARNING | BLOCKED
+            - reason: Human-readable explanation
+            - phi_hat: Integration score (higher = more stable)
+            - synchrony: Population spike synchrony (extreme = dangerous)
+            - ecg_proxy: Synthetic ECG trace for visualization
+            - ion_channels_analyzed: Which genes were detected
+        """
+        # 1. Check for known arrhythmia-causing genes (blacklist check)
+        CRITICAL_GENES = {
+            "SCN5A": {"risk": "Long QT Type 3 (Na+ gain-of-function)", "threshold": 8.0},
+            "KCNH2": {"risk": "Long QT Type 2 (hERG K+ loss)", "threshold": 0.5},
+            "KCNQ1": {"risk": "Long QT Type 1 (Kv7.1 loss)", "threshold": 0.5},
+            "CACNA1C": {"risk": "Timothy Syndrome (LQT8, Ca2+ gain)", "threshold": 6.0},
+            "RYR2": {"risk": "CPVT (Ca2+ leak)", "threshold": 7.0},
+            "HCN4": {"risk": "Sick Sinus Syndrome", "threshold": 0.3},
+        }
+        
+        blacklist_flags = []
+        for gene, info in CRITICAL_GENES.items():
+            level = expression_vector.get(gene, 0.0)
+            is_risk = False
+            if gene in ["SCN5A", "CACNA1C", "RYR2"]:
+                # Na+ and Ca2+ channels (SCN5A, CACNA1C, RYR2) are risk when overexpressed (gain of function)
+                is_risk = level > info["threshold"]
+            else:
+                # K+ channels (KCNH2, KCNQ1) and HCN4 are risk when underexpressed (loss of function)
+                is_risk = level < info["threshold"]
+                
+            if is_risk:
+                blacklist_flags.append({
+                    "gene": gene,
+                    "level": float(level),
+                    "threshold": info["threshold"],
+                    "risk": info["risk"]
+                })
+        
+        # 2. Run the spiking substrate simulation
+        I = self.encode_ion_profile(expression_vector)
+        result = self.simulate(I, steps=50)
+        ecg = self.generate_ecg_proxy(expression_vector, duration=200)
+        
+        phi_hat = result["phi_hat"]
+        synchrony = result["synchrony"]
+        active_fraction = result["active_fraction"]
+        
+        # 3. Classify safety
+        if blacklist_flags:
+            safety_class = "BLOCKED"
+            reason = f"Conduction Collapse: {len(blacklist_flags)} critical ion-channel gene(s) exceed safety threshold. Risk of {', '.join(f['risk'] for f in blacklist_flags)}."
+        elif synchrony > 0.6 or phi_hat < 0.001:
+            safety_class = "BLOCKED"
+            reason = "Conduction Collapse: Action potential failure or severe reentry detected in substrate simulation."
+        elif synchrony > 0.4 or phi_hat < 0.003:
+            safety_class = "WARNING"
+            reason = "Arrhythmia Risk: Partial conduction block detected. Dosage optimization recommended."
+        elif active_fraction < 0.1:
+            safety_class = "WARNING"
+            reason = "Low Substrate Activity: Insufficient neural engagement. Cocktail may be ineffective."
+        else:
+            safety_class = "SAFE"
+            reason = "Stable Conduction: Normal ECG synchrony and integration. Cocktail approved for wet-lab validation."
+        
+        return {
+            "safety_classification": safety_class,
+            "reason": reason,
+            "phi_hat": float(phi_hat),
+            "synchrony": float(synchrony),
+            "active_fraction": float(active_fraction),
+            "ecg_proxy": ecg,
+            "blacklist_flags": blacklist_flags,
+            "ion_channels_analyzed": [g for g in self.ION_CHANNEL_GENES if g in expression_vector],
+            "n_neurons": self.n_total,
+            "n_edges": self.n_edges,
+            "ok": True
+        }
+
 
 # ---------------------------------------------------------------------------
 # Service layer (async, matches boltz_service.py patterns)

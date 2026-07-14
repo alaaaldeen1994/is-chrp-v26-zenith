@@ -203,6 +203,38 @@ class PerturbationEngine:
         nearest_type = min(distances, key=distances.get)
         nearest_dist = distances[nearest_type]
 
+        # NEUROS-X: Attach arrhythmia safety audit
+        arrhythmia_safety = {}
+        try:
+            from services.neuros_substrate_service import get_substrate_service
+            svc = get_substrate_service()
+            
+            # Extract ion-channel genes from the predicted expression
+            ion_genes = svc.substrate.ION_CHANNEL_GENES
+            ion_expr = {}
+            for gene in ion_genes:
+                if gene in self.gene_to_idx:
+                    idx = self.gene_to_idx[gene]
+                    if idx < len(predicted_expr):
+                        ion_expr[gene] = float(predicted_expr[idx])
+                    else:
+                        ion_expr[gene] = 0.0
+                else:
+                    ion_expr[gene] = 0.0
+            
+            # Run the safety audit
+            safety = svc.substrate.audit_arrhythmia_risk(ion_expr)
+            
+            arrhythmia_safety = {
+                "classification": safety["safety_classification"],
+                "reason": safety["reason"],
+                "phi_hat": safety["phi_hat"],
+                "synchrony": safety["synchrony"],
+                "blacklist_flags": safety.get("blacklist_flags", [])
+            }
+        except Exception as e:
+            arrhythmia_safety = {"error": str(e)[:200]}
+
         return {
             "source_type": source_type,
             "target_type": target_type,
@@ -217,7 +249,8 @@ class PerturbationEngine:
             "method": "scvi_latent_arithmetic_grn_v27_final",
             "provenance": "PREDICTED",
             "dose": dose,
-            "status": "SUCCESS"
+            "status": "SUCCESS",
+            "arrhythmia_safety": arrhythmia_safety
         }
 
     def predict_trajectory(self, source_type: str, target_type: str, n_steps: int = 20, genes_of_interest: List[str] = None):
