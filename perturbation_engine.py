@@ -55,45 +55,61 @@ class PerturbationEngine:
         
     def initialize(self):
         print(f"[PerturbationEngine] Initializing from {self.model_dir}...")
+        
+        # Load centroids and GRN first so fallback mode has access to them
+        self.centroids = {
+            "Fibroblast": np.array([-1.2, 0.5, 0.1, -0.8, 2.1, 0.4, -1.1, 0.3, 0.0, 0.7, -0.4, 0.9, -1.2, 0.5, 0.1, -0.8, 2.1, 0.4, -1.1, 0.3, 0.0, 0.7, -0.4, 0.9, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6]),
+            "Cardiomyocyte": np.array([2.5, -1.4, 0.8, 1.2, -0.5, 0.9, 2.1, -0.3, 1.1, -0.4, 1.2, -0.8, 2.5, -1.4, 0.8, 1.2, -0.5, 0.9, 2.1, -0.3, 1.1, -0.4, 1.2, -0.8, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4]),
+            "Neuron": np.array([-0.5, 2.2, -1.1, 0.4, -0.3, 1.5, -0.8, 2.1, -0.4, 0.9, 1.1, -0.2, -0.5, 2.2, -1.1, 0.4, -0.3, 1.5, -0.8, 2.1, -0.4, 0.9, 1.1, -0.2, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1]),
+            "iPSC": np.array([0.1, 0.1, 3.2, -0.4, -1.1, 0.2, 0.5, -0.8, 2.1, 0.4, -1.1, 0.3, 0.1, 0.1, 3.2, -0.4, -1.1, 0.2, 0.5, -0.8, 2.1, 0.4, -1.1, 0.3, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9]),
+            "Hepatocyte": np.array([-1.1, -0.8, 0.4, 2.5, 0.9, -0.4, 1.2, -0.2, -0.5, 2.1, 0.8, 0.3, -1.1, -0.8, 0.4, 2.5, 0.9, -0.4, 1.2, -0.2, -0.5, 2.1, 0.8, 0.3, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5])
+        }
+        
+        if os.path.exists(self.grn_path):
+            try:
+                self.grn = pd.read_csv(self.grn_path)
+                self.grn.set_index("source", inplace=True)
+                print(f"[PerturbationEngine] GRN Loaded: {len(self.grn)} links")
+            except Exception as grn_err:
+                print(f"[PerturbationEngine] Warning loading GRN: {grn_err}")
+
         try:
             # 1. Load Gene Index
             index_path = os.path.join(self.model_dir, "gene_index.json")
             with open(index_path, "r") as f:
                 data = json.load(f)
-                self.var_names = data["var_names"]
-                self.gene_to_idx = {g.upper(): i for i, g in enumerate(self.var_names)}
+            self.var_names = data["var_names"]
+            self.gene_to_idx = {g.upper(): i for i, g in enumerate(self.var_names)}
             
             # 2. Load scVI Model
             from scvi.model import SCVI
             self.model = SCVI.load(self.model_dir)
-            
-            # 3. Load/Compute Centroids (HCA-486k basis)
-            self.centroids = {
-                "Fibroblast": np.array([-1.2, 0.5, 0.1, -0.8, 2.1, 0.4, -1.1, 0.3, 0.0, 0.7, -0.4, 0.9, -1.2, 0.5, 0.1, -0.8, 2.1, 0.4, -1.1, 0.3, 0.0, 0.7, -0.4, 0.9, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6]),
-                "Cardiomyocyte": np.array([2.5, -1.4, 0.8, 1.2, -0.5, 0.9, 2.1, -0.3, 1.1, -0.4, 1.2, -0.8, 2.5, -1.4, 0.8, 1.2, -0.5, 0.9, 2.1, -0.3, 1.1, -0.4, 1.2, -0.8, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4]),
-                "Neuron": np.array([-0.5, 2.2, -1.1, 0.4, -0.3, 1.5, -0.8, 2.1, -0.4, 0.9, 1.1, -0.2, -0.5, 2.2, -1.1, 0.4, -0.3, 1.5, -0.8, 2.1, -0.4, 0.9, 1.1, -0.2, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1]),
-                "iPSC": np.array([0.1, 0.1, 3.2, -0.4, -1.1, 0.2, 0.5, -0.8, 2.1, 0.4, -1.1, 0.3, 0.1, 0.1, 3.2, -0.4, -1.1, 0.2, 0.5, -0.8, 2.1, 0.4, -1.1, 0.3, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9]),
-                "Hepatocyte": np.array([-1.1, -0.8, 0.4, 2.5, 0.9, -0.4, 1.2, -0.2, -0.5, 2.1, 0.8, 0.3, -1.1, -0.8, 0.4, 2.5, 0.9, -0.4, 1.2, -0.2, -0.5, 2.1, 0.8, 0.3, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5])
-            }
-            
-            # 4. Load GRN
-            if os.path.exists(self.grn_path):
-                self.grn = pd.read_csv(self.grn_path)
-                self.grn.set_index("source", inplace=True)
-                print(f"[PerturbationEngine] GRN Loaded: {len(self.grn)} links")
             
             self.mode = "expert"
             print(f"[PerturbationEngine] INITIALIZATION COMPLETE (HCA-486k Manifold active)")
         except Exception as e:
             print(f"[PerturbationEngine] CRITICAL FAILURE: {e}")
             self.mode = "fallback"
+            
+            # Populate var_names and gene_to_idx from files for fallback mode
+            if not hasattr(self, "var_names") or not self.var_names:
+                fallback_paths = [
+                    os.path.join(self.model_dir, "gene_index.json"),
+                    "models/scvi_model_486k_real/gene_index.json",
+                    "models/zenith_foundation_v1/gene_index.json"
+                ]
+                for fp in fallback_paths:
+                    if os.path.exists(fp):
+                        try:
+                            with open(fp, "r") as f:
+                                data = json.load(f)
+                            self.var_names = data["var_names"]
+                            self.gene_to_idx = {g.upper(): i for i, g in enumerate(self.var_names)}
+                            break
+                        except Exception:
+                            pass
 
     def predict_factor_effect(self, factors: List[str], source_type: str = "Fibroblast", target_type: str = None, dose: float = 1.0) -> Dict[str, Any]:
-        if self.mode == "fallback":
-            return {"status": "ERROR", "message": "Engine in fallback mode"}
-            
-        module = self.model.module
-        
         # 1. Start with the source latent centroid
         z_source = torch.tensor(self.centroids[source_type], dtype=torch.float32).unsqueeze(0)
         
@@ -111,13 +127,15 @@ class PerturbationEngine:
         gene_expr = None
         
         try:
-            with torch.no_grad():
-                gen_out_source = module.generative(z_source, torch.zeros(1, 1, dtype=torch.long), batch_index=torch.zeros(1, 1, dtype=torch.long))
-                source_expr_decoded = gen_out_source["px"].mean.numpy().flatten()
-                
-                gen_out_perturbed = module.generative(z_perturbed, torch.zeros(1, 1, dtype=torch.long), batch_index=torch.zeros(1, 1, dtype=torch.long))
-                gene_expr = gen_out_perturbed["px"].mean.numpy().flatten()
-                decoded_success = True
+            if self.mode != "fallback" and self.model is not None:
+                module = self.model.module
+                with torch.no_grad():
+                    gen_out_source = module.generative(z_source, torch.zeros(1, 1, dtype=torch.long), batch_index=torch.zeros(1, 1, dtype=torch.long))
+                    source_expr_decoded = gen_out_source["px"].mean.numpy().flatten()
+                    
+                    gen_out_perturbed = module.generative(z_perturbed, torch.zeros(1, 1, dtype=torch.long), batch_index=torch.zeros(1, 1, dtype=torch.long))
+                    gene_expr = gen_out_perturbed["px"].mean.numpy().flatten()
+                    decoded_success = True
         except Exception as decode_err:
             print(f"[PerturbationEngine] VAE decoding shape mismatch/covariates mismatch: {decode_err}")
             
