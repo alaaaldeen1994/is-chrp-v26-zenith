@@ -230,10 +230,18 @@ class PerturbationEngine:
                 "reason": safety["reason"],
                 "phi_hat": safety["phi_hat"],
                 "synchrony": safety["synchrony"],
+                "ecg_proxy": safety.get("ecg_proxy", []),
                 "blacklist_flags": safety.get("blacklist_flags", [])
             }
         except Exception as e:
-            arrhythmia_safety = {"error": str(e)[:200]}
+            arrhythmia_safety = {
+                "classification": "WARNING",
+                "reason": f"Arrhythmia Safety Audit unavailable: {str(e)[:150]}",
+                "phi_hat": 0.0,
+                "synchrony": 0.0,
+                "ecg_proxy": [],
+                "error": str(e)[:200]
+            }
 
         return {
             "source_type": source_type,

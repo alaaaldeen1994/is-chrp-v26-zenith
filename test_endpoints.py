@@ -11,7 +11,7 @@ client = TestClient(app)
 
 import hashlib
 from database.connection import engine, Base, SessionLocal
-from database.models import APIKey, StructureCache
+from database.models import APIKey, StructureCache, WebhookSubscription
 
 # Auto-create all tables for testing
 Base.metadata.create_all(bind=engine)
@@ -22,6 +22,9 @@ TEST_API_KEY = os.getenv("ZENITH_API_KEY", "zk_live_mock_key_for_testing")
 # Seed the test key hash in the SQLite database to allow integration tests to pass
 db = SessionLocal()
 try:
+    # Clear existing subscriptions to prevent hitting the 5 active subscriptions limit
+    db.query(WebhookSubscription).delete()
+    
     test_hash = hashlib.sha256(TEST_API_KEY.encode()).hexdigest()
     if not db.query(APIKey).filter(APIKey.key_hash == test_hash).first():
         db.add(APIKey(
@@ -30,7 +33,7 @@ try:
             owner="Test Suite",
             tier="enterprise"
         ))
-        db.commit()
+    db.commit()
 finally:
     db.close()
 

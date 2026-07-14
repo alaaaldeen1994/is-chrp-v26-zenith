@@ -5832,8 +5832,8 @@ async function runDiscovery() {
                 const card = document.getElementById('safety-result-card');
                 if (card) {
                     card.style.display = 'block';
-                    const safetyClass = data.arrhythmia_safety.classification;
-                    const safetyReason = data.arrhythmia_safety.reason;
+                    const safetyClass = data.arrhythmia_safety.classification || 'ERROR';
+                    const safetyReason = data.arrhythmia_safety.reason || 'Safety audit failed to return a reason.';
                     const fibCheck = data.arrhythmia_safety.fibrillation_check;
                     
                     const classDisplay = document.getElementById('safety-class-display');
@@ -5857,7 +5857,7 @@ async function runDiscovery() {
                         }
                     }
                     
-                    if (data.arrhythmia_safety.ecg_proxy) {
+                    if (data.arrhythmia_safety.ecg_proxy && Array.isArray(data.arrhythmia_safety.ecg_proxy)) {
                         plotResultECG(data.arrhythmia_safety.ecg_proxy);
                     }
                 }
@@ -6021,8 +6021,8 @@ async function runDiscovery() {
                 const card = document.getElementById('safety-result-card');
                 if (card) {
                     card.style.display = 'block';
-                    const safetyClass = data.arrhythmia_safety.classification;
-                    const safetyReason = data.arrhythmia_safety.reason;
+                    const safetyClass = data.arrhythmia_safety.classification || 'ERROR';
+                    const safetyReason = data.arrhythmia_safety.reason || 'Safety audit failed to return a reason.';
                     const fibCheck = data.arrhythmia_safety.fibrillation_check;
                     
                     const classDisplay = document.getElementById('safety-class-display');
@@ -6046,7 +6046,7 @@ async function runDiscovery() {
                         }
                     }
                     
-                    if (data.arrhythmia_safety.ecg_proxy) {
+                    if (data.arrhythmia_safety.ecg_proxy && Array.isArray(data.arrhythmia_safety.ecg_proxy)) {
                         plotResultECG(data.arrhythmia_safety.ecg_proxy);
                     }
                 }
