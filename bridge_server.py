@@ -7084,7 +7084,7 @@ async def run_gpt_discovery(request: Request):
             from perturbation_engine import PerturbationEngine
 
             # 1. Initialize the engines
-            perts = PerturbationEngine()
+            perts = PerturbationEngine(model_dir="models/zenith_foundation_v1")
             perts.initialize()
             svc = get_substrate_service()
             
@@ -7096,34 +7096,49 @@ async def run_gpt_discovery(request: Request):
                 dose=1.0
             )
             
+            print(f"[DEBUG] Perturbation result keys: {list(perturbation_result.keys())}")
+            print(f"[DEBUG] predicted_expression present: {'predicted_expression' in perturbation_result}")
+            
+            for gene in svc.substrate.ION_CHANNEL_GENES:
+                print(f"[DEBUG] {gene} in gene_to_idx: {gene in perts.gene_to_idx}")
+            
             # 3. Extract the safety audit from the perturbation result
             safety_audit = perturbation_result.get("arrhythmia_safety", {})
             
             # 4. Run the Anti-Fibrillation Double-Check
             # Extract the ion channel expression from the perturbation result
-            ion_expr = {}
-            for gene in svc.substrate.ION_CHANNEL_GENES:
-                if gene in perts.gene_to_idx:
-                    idx = perts.gene_to_idx[gene]
-                    # Safely extract the expression value
-                    expr_array = perturbation_result.get("predicted_expression")
-                    if expr_array is not None and idx < len(expr_array):
-                         ion_expr[gene] = float(expr_array[idx])
+            import traceback
+            try:
+                ion_expr = {}
+                for gene in svc.substrate.ION_CHANNEL_GENES:
+                    if gene in perts.gene_to_idx:
+                        idx = perts.gene_to_idx[gene]
+                        # Safely extract the expression value
+                        expr_array = perturbation_result.get("predicted_expression")
+                        if expr_array is not None and idx < len(expr_array):
+                             ion_expr[gene] = float(expr_array[idx])
+                        else:
+                             ion_expr[gene] = 0.0
                     else:
-                         ion_expr[gene] = 0.0
-                else:
-                    ion_expr[gene] = 0.0
+                        ion_expr[gene] = 0.0
 
-            fib_check = svc.substrate.check_fibrillation_risk(ion_expr)
-            safety_audit["fibrillation_check"] = fib_check
-            
-            # Override classification if fibrillation is detected
-            if fib_check["fibrillation_detected"] and safety_audit.get("classification") == "SAFE":
-                safety_audit["classification"] = "WARNING"
-                safety_audit["reason"] = "Anti-Fibrillation Check: Chaotic reentry detected. Ventricular fibrillation risk."
+                fib_check = svc.substrate.check_fibrillation_risk(ion_expr)
+                safety_audit["fibrillation_check"] = fib_check
                 
-            # 5. Attach the safety audit to the final response payload
-            result["arrhythmia_safety"] = safety_audit
+                # Override classification if fibrillation is detected
+                if fib_check["fibrillation_detected"] and safety_audit.get("classification") == "SAFE":
+                    safety_audit["classification"] = "WARNING"
+                    safety_audit["reason"] = "Anti-Fibrillation Check: Chaotic reentry detected. Ventricular fibrillation risk."
+                    
+                # 5. Attach the safety audit to the final response payload
+                result["arrhythmia_safety"] = safety_audit
+            except Exception as e:
+                print(f"[DEBUG] Safety audit failed with error: {e}")
+                traceback.print_exc()
+                result["arrhythmia_safety"] = {
+                    "classification": "ERROR", 
+                    "reason": str(e)[:200]
+                }
             
         except Exception as e:
             print(f"NEUROS-X Safety audit failed: {e}")
