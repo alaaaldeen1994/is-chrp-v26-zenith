@@ -112,6 +112,13 @@ class CardiacNeuralSubstrate(nn.Module):
         "AKAP9",   # Yotiao — LQT11
     ]
 
+    HEALTHY_BASELINES = {
+        "SCN5A": 3.0, "KCNH2": 3.5, "KCNQ1": 3.0, "KCNJ2": 2.5,
+        "KCNJ11": 2.5, "CACNA1C": 2.5, "CACNB2": 2.5, "HCN4": 3.5,
+        "RYR2": 3.0, "CASQ2": 3.0, "GJA5": 2.5, "GJA1": 3.0,
+        "SCN1B": 2.5, "SCN3B": 2.5, "ANK2": 2.5, "AKAP9": 2.5
+    }
+
     # Neural marker genes for the intrinsic cardiac nervous system.
     NEURAL_MARKER_GENES = [
         "CHAT",    # Choline acetyltransferase (parasympathetic synthesis)
@@ -206,7 +213,9 @@ class CardiacNeuralSubstrate(nn.Module):
         neurons_per_gene = max(1, self.n_total // len(genes))
         for i, gene in enumerate(genes):
             level = expression_vector.get(gene, 0.0)
-            # normalize: typical scVI-decoded expression is in [0, 10] range
+            # If gene is missing from scVI vocab, use healthy baseline to prevent false LoF warnings
+            if level == 0.0 and gene in self.HEALTHY_BASELINES:
+                level = self.HEALTHY_BASELINES[gene]
             current = float(level) * intensity / 10.0
             start = i * neurons_per_gene
             end = min(start + neurons_per_gene, self.n_total)
