@@ -95,6 +95,21 @@ class DualAgeRequest(BaseModel):
     chronological_age: float = Field(50.0, ge=0, le=120, description="Donor chronological age")
 
 
+class RescueRequest(BaseModel):
+    """Dosage rescue request for blocked cocktails."""
+    factors: List[str] = Field(..., description="List of transcription factors")
+    source_type: str = Field("Fibroblast", description="Starting cell type")
+    target_type: str = Field("Cardiomyocyte", description="Target cell type")
+    initial_dose: float = Field(1.0, ge=0.1, le=5.0, description="Starting dosage scale")
+
+
+class SuggestRequest(BaseModel):
+    """Cocktail alternative suggestions request."""
+    blocked_factors: List[str] = Field(..., description="List of blocked transcription factors")
+    source_type: str = Field("Fibroblast", description="Starting cell type")
+    target_type: str = Field("Cardiomyocyte", description="Target cell type")
+
+
 # ---------------------------------------------------------------------------
 # Endpoints
 # ---------------------------------------------------------------------------
@@ -230,6 +245,57 @@ async def dual_age_assessment(req: DualAgeRequest, request: Request):
         "timestamp": datetime.utcnow().isoformat(),
         "endpoint": "neural_dual_age_v1"
     }
+
+
+@router.post("/rescue")
+async def rescue_blocked_cocktail(req: RescueRequest, request: Request):
+    """
+    Search for a safe dosage that downgrades a BLOCKED cocktail to SAFE.
+    """
+    _check_rate_limit(request)
+    try:
+        from bridge_server import get_perturbation_engine
+        from dosage_optimization_engine import DosageRescueOptimizer
+        
+        pe = get_perturbation_engine()
+        svc = get_substrate_service()
+        
+        optimizer = DosageRescueOptimizer(pe, svc)
+        result = optimizer.rescue_blocked_cocktail(
+            factors=req.factors,
+            source_type=req.source_type,
+            target_type=req.target_type,
+            initial_dose=req.initial_dose
+        )
+        return result
+    except Exception as e:
+        logger.error(f"dosage rescue failed: {_strip(e)}")
+        raise HTTPException(500, f"Rescue failed: {_strip(e)}")
+
+
+@router.post("/suggest")
+async def suggest_alternative_cocktail(req: SuggestRequest, request: Request):
+    """
+    Suggest alternative factor combinations to bypass arrhythmia risk.
+    """
+    _check_rate_limit(request)
+    try:
+        from bridge_server import get_perturbation_engine
+        from services.cocktail_suggester import CocktailSuggester
+        
+        pe = get_perturbation_engine()
+        svc = get_substrate_service()
+        
+        suggester = CocktailSuggester(pe, svc)
+        result = suggester.suggest_alternatives(
+            blocked_factors=req.blocked_factors,
+            source_type=req.source_type,
+            target_type=req.target_type
+        )
+        return result
+    except Exception as e:
+        logger.error(f"cocktail suggestion failed: {_strip(e)}")
+        raise HTTPException(500, f"Suggestion failed: {_strip(e)}")
 
 
 # ---------------------------------------------------------------------------

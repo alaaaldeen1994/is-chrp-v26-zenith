@@ -249,6 +249,69 @@ class DosageOptimizer:
 
         return audit
 
+class DosageRescueOptimizer:
+    """
+    Automatically searches for a dosage that downgrades a BLOCKED cocktail to SAFE.
+    Uses the NEUROS-X arrhythmia safety engine as the validation metric.
+    """
+    def __init__(self, perturbation_engine, substrate_service):
+        self.perturbation_engine = perturbation_engine
+        self.substrate = substrate_service.substrate
+
+    def rescue_blocked_cocktail(self, factors: list, source_type: str, target_type: str, initial_dose: float = 1.0) -> Dict[str, Any]:
+        """
+        Runs a binary search across dosages to find the maximum safe dose.
+        """
+        print("[RescueOptimizer] Searching for safe dosage...")
+        low_dose = 0.0
+        high_dose = initial_dose
+        best_safe_dose = 0.0
+        best_safety_result = None
+        best_perturbation_result = None
+        
+        # Test 5 dosage steps
+        for i in range(5):
+            test_dose = low_dose + (high_dose - low_dose) / 2.0
+            
+            # 1. Run the perturbation at this dose
+            perturbation_result = self.perturbation_engine.predict_factor_effect(
+                factors=factors, 
+                source_type=source_type, 
+                target_type=target_type, 
+                dose=test_dose
+            )
+            
+            # 2. Extract the safety audit from the result
+            safety_audit = perturbation_result.get("arrhythmia_safety", {})
+            classification = safety_audit.get("classification", "BLOCKED")
+            
+            print(f"  -> Testing dose {test_dose:.2f}: {classification}")
+            
+            if classification == "SAFE":
+                best_safe_dose = test_dose
+                best_safety_result = safety_audit
+                best_perturbation_result = perturbation_result
+                # Try to push dose higher to maximize reprogramming effect
+                low_dose = test_dose
+            else:
+                # Too dangerous, lower the dose
+                high_dose = test_dose
+                
+        if best_safe_dose > 0.0:
+            return {
+                "status": "RESCUE_SUCCESS",
+                "safe_dosage": best_safe_dose,
+                "safety_audit": best_safety_result,
+                "perturbation_result": best_perturbation_result,
+                "message": f"Successfully identified safe dosage at {best_safe_dose:.2f}x potency."
+            }
+        else:
+            return {
+                "status": "RESCUE_FAILED",
+                "safe_dosage": 0.0,
+                "message": "Cocktail remains BLOCKED at all dosages. Consider alternative factors."
+            }
+
 if __name__ == "__main__":
 
     optimizer = DosageOptimizer(target_reduction=12.0)

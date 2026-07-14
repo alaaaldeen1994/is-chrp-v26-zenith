@@ -328,11 +328,13 @@ class CardiacNeuralSubstrate(nn.Module):
             level = expression_vector.get(gene, 0.0)
             is_risk = False
             if gene in ["SCN5A", "CACNA1C", "RYR2"]:
-                # Na+ and Ca2+ channels (SCN5A, CACNA1C, RYR2) are risk when overexpressed (gain of function)
+                # Na+ and Ca2+ channels are risk when overexpressed (gain of function)
                 is_risk = level > info["threshold"]
             else:
-                # K+ channels (KCNH2, KCNQ1) and HCN4 are risk when underexpressed (loss of function)
-                is_risk = level < info["threshold"]
+                # K+ channels and HCN4 are risk when underexpressed (loss of function).
+                # We only trigger this if the gene is partially expressed (level > 0.0) but below threshold,
+                # preventing default zero-expression fibroblast states from blocking the audit.
+                is_risk = 0.0 < level < info["threshold"]
                 
             if is_risk:
                 blacklist_flags.append({
