@@ -6867,19 +6867,18 @@ async def run_gpt_discovery(request: Request):
     }
     ct_label = cell_labels.get(cell_type, cell_type)
     mode_label = "Complete Reprogramming (Direct Lineage Conversion)" if mode == "real" else "Literature-based GPT Analysis"
-
     system_base = (
         f"You are an elite computational biologist and bioinformatician specializing in epigenetic rejuvenation and cell state modeling. "
         f"The target cell type is: {ct_label}. "
         f"The reprogramming mode is: {mode_label}. "
         f"You have access to 400 genes ranked by Pearson correlation from the Specialist Cardiac Atlas (Litvinukova et al., Nature 2020). "
         f"Under the Information Theory of Aging (Yang et al., Cell 2023), cell state rejuvenation is the recovery of epigenetic information and silencing of transcriptional noise. "
-        f"Therefore, you MUST prioritize upstream pioneer transcription factors (such as OCT4, SOX2, KLF4) and epigenetic silencers/modifiers "
-        f"(such as SIRT1, SIRT5, SIRT6) over downstream structural genes, even if those structural genes are highly correlated in the atlas. "
-        f"You must actively avoid recommending oncogenic factors like c-Myc (MYC) to eliminate tumor risks, instead recommending safe partial reprogramming or chemical reprogramming alternatives (Yang et al., Aging 2023). "
+        f"You MUST strictly follow all negative constraints in the user's research query (e.g. if the user says 'Do not use pioneer factors or oncogenes', you must NOT propose OCT4, SOX2, KLF4, or MYC). "
+        f"For pure epigenetic rejuvenation/sirtuin stabilization queries, you must NOT propose downstream structural genes (like DMD, PDE4DIP, or cytoskeletal markers) or direct cardiac ion channels (like SCN5A, CACNA1C, RYR2, KCNH2) unless they are explicitly requested, as they cause calcium dysregulation and false cardiotoxicity alerts. "
+        f"Otherwise, if no constraints are given, prioritize upstream pioneer transcription factors (such as OCT4, SOX2, KLF4) and epigenetic silencers/modifiers (such as SIRT1, SIRT5, SIRT6) over downstream structural genes. "
+        f"Always exclude oncogenic factors like c-Myc (MYC) to eliminate tumor risks. "
         f"If you include an external gene target (such as OCT4, SOX2, KLF4, SIRT1, SIRT5, SIRT6, NMN), set its correlation to 0.999 and explicitly state '[External Pioneer Target]', '[External Sirtuin Target]', or '[External Metabolic Target]' in the role to maintain absolute scientific transparency."
     )
-
 
     candidate_prompt = (
         f"Research question: {query}\n\n"
@@ -6895,7 +6894,7 @@ async def run_gpt_discovery(request: Request):
         f"}}"
     )
 
-    temperatures = [0.1, 0.3, 0.5]
+    temperatures = [0.0, 0.0, 0.0]
 
     async def generate_panel(temp, panel_id):
         try:
@@ -6917,11 +6916,11 @@ async def run_gpt_discovery(request: Request):
             print(f"[Tournament] Panel {panel_id} failed: {e}")
             return None
 
-    # Run all 3 in parallel
+    # Run all 3 in parallel at temperature 0.0 for absolute determinism
     panels = await asyncio.gather(
-        generate_panel(0.1, "A"),
-        generate_panel(0.3, "B"),
-        generate_panel(0.5, "C")
+        generate_panel(0.0, "A"),
+        generate_panel(0.0, "B"),
+        generate_panel(0.0, "C")
     )
     valid_panels = [p for p in panels if p is not None]
 
@@ -7009,7 +7008,7 @@ async def run_gpt_discovery(request: Request):
                 {"role": "user", "content": refine_prompt}
             ],
             max_tokens=1400,
-            temperature=0.1,
+            temperature=0.0,
             response_format={"type": "json_object"}
         )
         refined = json.loads(refine_resp.choices[0].message.content)
