@@ -7269,6 +7269,75 @@ Response:
                     </div>
 
 
+                    <!-- Endpoint: Zenith Boltz API (v31.0 GOLD) -->
+                    <div class="bg-black/40 p-6 rounded-xl border border-emerald-500/20">
+                        <div class="flex items-center gap-3 mb-3">
+                            <span class="text-[10px] bg-slate-500/20 text-slate-300 px-3 py-1 rounded font-bold">POST / GET</span>
+                            <span class="font-mono text-white text-lg">/api/v1/structure/boltz/*</span>
+                            <span class="text-[9px] bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded-full font-bold uppercase tracking-wider">Zenith Boltz</span>
+                        </div>
+                        <p class="text-sm text-slate-300 mb-4">Submit complex manifests to predict 3D atomic coordinates of multi-entity molecular complexes (protein-protein, protein-DNA, protein-RNA, and protein-ligand) using the <strong class="text-white">Boltz-1</strong> model. Enforces <code class="bg-black/50 px-1 py-0.5 rounded font-mono text-xs">COMPLEX_SYNTHETIC_FALLBACK=false</code> to ensure only high-fidelity physical predictions are returned. Includes manifest validation and cost estimation.</p>
+                        
+                        <div class="space-y-3">
+                            <div class="pl-4 border-l-2 border-slate-700">
+                                <div class="text-xs font-mono text-slate-400">POST /api/v1/structure/boltz/submit (Submit job)</div>
+                                <div class="code-block text-[11px] mt-1">Request:
+{
+  "manifest": {
+    "entities": [
+      {"type": "protein", "value": "MQPILLE...", "chain_ids": ["A"]},
+      {"type": "ligand_smiles", "value": "CC(=O)NC1...", "chain_ids": ["B"]}
+    ],
+    "binding": {
+      "type": "ligand_protein_binding",
+      "binder_chain_id": "B"
+    }
+  },
+  "job_name": "ligand_complex_alpha",
+  "num_samples": 1
+}</div>
+                            </div>
+                            <div class="pl-4 border-l-2 border-slate-700">
+                                <div class="text-xs font-mono text-slate-400">GET /api/v1/structure/boltz/jobs/{job_id}/download/model.cif (Download CIF)</div>
+                                <p class="text-slate-400 text-xs mt-1">Downloads the predicted CIF structure file for the completed job (sample index 0-4). Proxied through Zenith backend to secure upstream credentials.</p>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!-- Endpoint: NEUROS-X Spiking Substrate API (v31.0 GOLD) -->
+                    <div class="bg-black/40 p-6 rounded-xl border border-rose-500/20">
+                        <div class="flex items-center gap-3 mb-3">
+                            <span class="text-[10px] bg-slate-500/20 text-slate-300 px-3 py-1 rounded font-bold">POST / GET</span>
+                            <span class="font-mono text-white text-lg">/api/v1/neural/*</span>
+                            <span class="text-[9px] bg-rose-500/20 text-rose-300 px-2 py-0.5 rounded-full font-bold uppercase tracking-wider">NEUROS-X</span>
+                        </div>
+                        <p class="text-sm text-slate-300 mb-4">Integrates functional age clocks and spiking cardiac substrates to evaluate simulated cell state safety and arrhythmia risks. Exposes the functional substrate directly to frontend dashboards.</p>
+                        
+                        <div class="space-y-3">
+                            <div class="pl-4 border-l-2 border-slate-700">
+                                <div class="text-xs font-mono text-slate-400">POST /api/v1/neural/analyze (Arrhythmia Spiking Simulation)</div>
+                                <p class="text-slate-400 text-xs mt-1">Runs a 512-neuron spiking cardiac substrate simulation using local gene expressions to evaluate synchrony, active fraction, and generate an ECG proxy trace.</p>
+                                <div class="code-block text-[11px] mt-1">Request:
+{
+  "expression": {
+    "SCN5A": 3.0, "KCNH2": 3.5, "KCNQ1": 3.0, "HCN4": 3.5, "RYR2": 3.0, "CACNA1C": 2.5
+  }
+}
+
+Response:
+{
+  "safety_classification": "SAFE" | "WARNING" | "BLOCKED",
+  "ecg_proxy": [0.0, 0.05, 0.23, 0.89, ...], // Simulated voltage trace
+  "synchrony": 0.942,
+  "active_fraction": 0.885,
+  "phi_hat": 0.024
+}</div>
+                            </div>
+                        </div>
+                    </div>
+
+
                     <!-- Endpoint: Census Perturbation -->
                     <div class="bg-black/40 p-6 rounded-xl border border-blue-500/20">
                         <div class="flex items-center gap-3 mb-3">
