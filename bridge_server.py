@@ -91,15 +91,9 @@ def get_robotic_bridge():
 
 # --- ZENITH PARTIAL REPROGRAMMING ENGINE ---
 
-try:
-
-    from partial_safety import filter_for_partial_reprogramming
-
-    PARTIAL_MODE_AVAILABLE = True
-
-except ImportError:
-
-    PARTIAL_MODE_AVAILABLE = False
+# NOTE: partial_safety is imported fully at line ~582 with all required symbols.
+# A second import here was removed (Fix 7) to prevent NameError if the second
+# import ever fails while this one succeeds.
 
 
 
@@ -7080,12 +7074,25 @@ async def run_gpt_discovery(request: Request):
     if winning_gene_panel:
         try:
             from services.neuros_substrate_service import get_substrate_service
-            from perturbation_engine import PerturbationEngine
 
-            # 1. Initialize the engines
-            perts = PerturbationEngine(model_dir="models/zenith_foundation_v1")
-            perts.initialize()
+            # FIX 6: Use the pre-loaded singleton — do NOT create a new engine here.
+            # Creating a new PerturbationEngine + calling initialize() on every request
+            # was loading the full scVI model into RAM on each API call, exhausting
+            # Railway's memory budget and forcing the engine into fallback mode.
+            perts = get_perturbation_engine()
             svc = get_substrate_service()
+
+            # Guard: if engine is not ready, return a clean error
+            if perts is None or perts.mode in ("uninitialized", "fallback"):
+                result["arrhythmia_safety"] = {
+                    "classification": "ERROR",
+                    "reason": (
+                        "Perturbation engine not ready. "
+                        "Ensure cell_type_centroids.json exists in models/ and "
+                        "scvi_model_486k_real loaded successfully at startup."
+                    )
+                }
+                return JSONResponse(result)
             
             # 2. Run the perturbation simulation to get predicted ion-channel expression
             perturbation_result = perts.predict_factor_effect(

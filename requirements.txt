@@ -23,7 +23,7 @@ pydantic[email]>=2.0.0
 sqlalchemy>=2.0.27
 pydantic-settings>=2.2.1
 structlog>=24.1.0
-redis>=5.0.1
+# redis removed (Fix 9) — not used anywhere in bridge_server.py or services/
 
 # Added by DevOps Verification
 scikit-learn

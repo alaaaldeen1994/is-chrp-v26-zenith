@@ -7,8 +7,14 @@ import time
 from typing import Dict, List, Any
 
 # =================================================================
-# ZENITH v27: EXPERT PERTURBATION ENGINE
+# ZENITH v28: EXPERT PERTURBATION ENGINE
 # Grounded in HCA-486k manifold and empirical GRN inference
+#
+# FIX LOG (2026-07-18):
+#   Fix 3 — Model selection order: scvi_model_486k_real is PRIMARY
+#   Fix 2 — Centroids loaded from real JSON file with dim verification
+#   Fix 4 — library tensor dtype corrected to float32 everywhere
+#   Fix 5 — module variable initialised to None, guarded before use
 # =================================================================
 from grn_authority import GRNAuthority
 
@@ -25,46 +31,44 @@ class PerturbationEngine:
     """
     Expert-level simulation engine for cellular reprogramming.
     Uses latent space arithmetic in the scVI manifold (486k cells).
+
+    Production model: scvi_model_486k_real (n_latent=20, no covariates)
+    Centroids source: models/cell_type_centroids.json (computed via Colab)
     """
-    
+
     def __init__(self, model_dir: str = None):
         if model_dir is None:
-            # Dynamic path resolution for local development and production environments
+            # FIX 3: Model selection order — specialist (20-dim, no covariates) is PRIMARY.
+            # zenith_foundation_v1 (64-dim) requires full covariate handling not yet
+            # implemented. It is listed last to prevent accidental selection.
             candidates = [
-                "models/zenith_foundation_v1",
-                "models/scvi_model_486k",
-                "models/scvi_model_486k_real",
-                "models/scvi_model_hca"
+                "models/scvi_model_486k_real",   # PRIMARY — 20-dim, real HCA, no covariates
+                "models/scvi_model_486k",         # FALLBACK — older specialist build
+                "models/scvi_model_hca",          # LAST RESORT
+                "models/zenith_foundation_v1",    # NOT READY — covariate handling incomplete
             ]
-            self.model_dir = "models/scvi_model_486k"  # Default fallback
+            self.model_dir = "models/scvi_model_486k_real"  # Safe default
             for c in candidates:
                 if os.path.exists(c):
                     self.model_dir = c
                     break
         else:
             self.model_dir = model_dir
+
         self.model = None
         self.var_names = []
         self.gene_to_idx = {}
         self.centroids = {}
         self.mode = "uninitialized"
-        
-        # Sprint 2: GRN
+
+        # GRN path
         self.grn_path = "models/celloracle_grn.csv"
         self.grn = None
-        
+
     def initialize(self):
         print(f"[PerturbationEngine] Initializing from {self.model_dir}...")
-        
-        # Load centroids and GRN first so fallback mode has access to them
-        self.centroids = {
-            "Fibroblast": np.array([-1.2, 0.5, 0.1, -0.8, 2.1, 0.4, -1.1, 0.3, 0.0, 0.7, -0.4, 0.9, -1.2, 0.5, 0.1, -0.8, 2.1, 0.4, -1.1, 0.3, 0.0, 0.7, -0.4, 0.9, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6]),
-            "Cardiomyocyte": np.array([2.5, -1.4, 0.8, 1.2, -0.5, 0.9, 2.1, -0.3, 1.1, -0.4, 1.2, -0.8, 2.5, -1.4, 0.8, 1.2, -0.5, 0.9, 2.1, -0.3, 1.1, -0.4, 1.2, -0.8, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4]),
-            "Neuron": np.array([-0.5, 2.2, -1.1, 0.4, -0.3, 1.5, -0.8, 2.1, -0.4, 0.9, 1.1, -0.2, -0.5, 2.2, -1.1, 0.4, -0.3, 1.5, -0.8, 2.1, -0.4, 0.9, 1.1, -0.2, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1]),
-            "iPSC": np.array([0.1, 0.1, 3.2, -0.4, -1.1, 0.2, 0.5, -0.8, 2.1, 0.4, -1.1, 0.3, 0.1, 0.1, 3.2, -0.4, -1.1, 0.2, 0.5, -0.8, 2.1, 0.4, -1.1, 0.3, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9]),
-            "Hepatocyte": np.array([-1.1, -0.8, 0.4, 2.5, 0.9, -0.4, 1.2, -0.2, -0.5, 2.1, 0.8, 0.3, -1.1, -0.8, 0.4, 2.5, 0.9, -0.4, 1.2, -0.2, -0.5, 2.1, 0.8, 0.3, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5])
-        }
-        
+
+        # --- Step A: Load GRN (non-critical, always attempt) ---
         if os.path.exists(self.grn_path):
             try:
                 self.grn = pd.read_csv(self.grn_path)
@@ -73,6 +77,7 @@ class PerturbationEngine:
             except Exception as grn_err:
                 print(f"[PerturbationEngine] Warning loading GRN: {grn_err}")
 
+        # --- Step B: Load scVI model and gene index ---
         try:
             # 1. Load Gene Index
             index_path = os.path.join(self.model_dir, "gene_index.json")
@@ -80,154 +85,278 @@ class PerturbationEngine:
                 data = json.load(f)
             self.var_names = data["var_names"]
             self.gene_to_idx = {g.upper(): i for i, g in enumerate(self.var_names)}
-            
+
             # 2. Load scVI Model
             from scvi.model import SCVI
             self.model = SCVI.load(self.model_dir)
-            
+
+            n_latent = self.model.module.n_latent
+            print(f"[PerturbationEngine] Model loaded. n_latent={n_latent}, "
+                  f"vocab_size={len(self.var_names)}")
+
+            # --- Step C: FIX 2 — Load real cell-type centroids from JSON ---
+            # Resolve centroid file relative to the models/ directory
+            models_dir = os.path.dirname(self.model_dir)
+            centroid_path = os.path.join(models_dir, "cell_type_centroids.json")
+
+            if not os.path.exists(centroid_path):
+                raise FileNotFoundError(
+                    f"cell_type_centroids.json not found at '{centroid_path}'. "
+                    "This file must be generated by running the Colab centroid "
+                    "computation notebook against scvi_model_486k_real. "
+                    "See implementation_plan.md Fix 1 for exact steps."
+                )
+
+            with open(centroid_path, "r") as f:
+                raw_centroids = json.load(f)
+
+            self.centroids = {}
+            for cell_type, vec in raw_centroids.items():
+                if len(vec) != n_latent:
+                    raise ValueError(
+                        f"Centroid for '{cell_type}' has {len(vec)} dimensions "
+                        f"but loaded model has n_latent={n_latent}. "
+                        "Recompute cell_type_centroids.json against the correct model."
+                    )
+                self.centroids[cell_type] = np.array(vec, dtype=np.float32)
+
+            required = {"Fibroblast", "Cardiomyocyte"}
+            missing_types = required - set(self.centroids.keys())
+            if missing_types:
+                raise KeyError(
+                    f"cell_type_centroids.json is missing required cell types: "
+                    f"{missing_types}. Add them to the Colab computation script."
+                )
+
             self.mode = "expert"
-            print(f"[PerturbationEngine] INITIALIZATION COMPLETE (HCA-486k Manifold active)")
+            print(f"[PerturbationEngine] INITIALIZATION COMPLETE. "
+                  f"Cell types loaded: {sorted(self.centroids.keys())}")
+
         except Exception as e:
-            print(f"[PerturbationEngine] CRITICAL FAILURE: {e}")
+            print(f"[PerturbationEngine] INITIALIZATION FAILED: {e}")
             self.mode = "fallback"
-            
-            # Populate var_names and gene_to_idx from files for fallback mode
-            if not hasattr(self, "var_names") or not self.var_names:
-                fallback_paths = [
+
+            # In fallback, still try to populate gene index for safety audit use
+            if not self.var_names:
+                fallback_gene_paths = [
                     os.path.join(self.model_dir, "gene_index.json"),
                     "models/scvi_model_486k_real/gene_index.json",
-                    "models/zenith_foundation_v1/gene_index.json"
+                    "models/scvi_model_486k/gene_index.json",
                 ]
-                for fp in fallback_paths:
+                for fp in fallback_gene_paths:
                     if os.path.exists(fp):
                         try:
                             with open(fp, "r") as f:
                                 data = json.load(f)
                             self.var_names = data["var_names"]
                             self.gene_to_idx = {g.upper(): i for i, g in enumerate(self.var_names)}
+                            print(f"[PerturbationEngine] Fallback gene index loaded "
+                                  f"from {fp} ({len(self.var_names)} genes)")
                             break
                         except Exception:
                             pass
 
-    def predict_factor_effect(self, factors: List[str], source_type: str = "Fibroblast", target_type: str = None, dose: float = 1.0) -> Dict[str, Any]:
-        # 1. Start with the source latent centroid
+            # No fake centroid fallback. Centroids remain empty.
+            # Callers must check self.mode before attempting simulation.
+            print("[PerturbationEngine] Running in FALLBACK mode. "
+                  "Simulations are disabled. Gene lookups for safety audit still available.")
+
+    def predict_factor_effect(
+        self,
+        factors: List[str],
+        source_type: str = "Fibroblast",
+        target_type: str = None,
+        dose: float = 1.0
+    ) -> Dict[str, Any]:
+
+        # Guard: cannot simulate without centroids
+        if self.mode == "fallback" or not self.centroids:
+            return {
+                "status": "ERROR",
+                "message": (
+                    "PerturbationEngine is in fallback mode. "
+                    "Real simulation requires cell_type_centroids.json. "
+                    "See implementation_plan.md for fix instructions."
+                ),
+                "factors_applied": [],
+                "factors_missing": [f.upper() for f in factors],
+                "predicted_expression": [],
+                "arrhythmia_safety": {
+                    "classification": "ERROR",
+                    "reason": "Simulation engine not ready."
+                }
+            }
+
+        if source_type not in self.centroids:
+            return {
+                "status": "ERROR",
+                "message": f"Source cell type '{source_type}' not in loaded centroids. "
+                           f"Available: {list(self.centroids.keys())}",
+                "predicted_expression": [],
+                "arrhythmia_safety": {"classification": "ERROR", "reason": "Unknown source type."}
+            }
+
+        # 1. Start from the source latent centroid
         z_source = torch.tensor(self.centroids[source_type], dtype=torch.float32).unsqueeze(0)
-        
-        # 2. Apply Direct Latent Shift (Sprint 4 - Phenotype Attractor)
+
+        # 2. Apply latent shift toward target if specified
         z_perturbed = z_source.clone()
         if target_type and target_type in self.centroids:
-            target_centroid = torch.tensor(self.centroids[target_type], dtype=torch.float32).unsqueeze(0)
+            target_centroid = torch.tensor(
+                self.centroids[target_type], dtype=torch.float32
+            ).unsqueeze(0)
             target_vec = target_centroid - z_source
-            z_perturbed += target_vec * (dose * 0.6)
-            print(f"[PerturbationEngine] Sprint 4: Applied Latent Shift toward {target_type}")
+            z_perturbed = z_source + target_vec * (dose * 0.6)
+            print(f"[PerturbationEngine] Applied latent shift toward {target_type}")
 
-        # 3. Decode to gene space to apply GRN perturbations
+        # 3. Decode to gene expression space
+        # FIX 5: module initialised to None — prevents UnboundLocalError
+        module = None
         decoded_success = False
         source_expr_decoded = None
         gene_expr = None
-        
+
         try:
-            if self.mode != "fallback" and self.model is not None:
+            if self.mode == "expert" and self.model is not None:
                 module = self.model.module
                 with torch.no_grad():
-                    gen_out_source = module.generative(z_source, torch.zeros(1, 1, dtype=torch.long), batch_index=torch.zeros(1, 1, dtype=torch.long))
+                    # FIX 4: library dtype is float32 — log-normalised library size
+                    # is a continuous quantity. torch.long caused numerical instability.
+                    lib = torch.zeros(1, 1, dtype=torch.float32)
+                    batch_idx = torch.zeros(1, 1, dtype=torch.long)
+
+                    gen_out_source = module.generative(
+                        z_source, lib, batch_index=batch_idx
+                    )
                     source_expr_decoded = gen_out_source["px"].mean.numpy().flatten()
-                    
-                    gen_out_perturbed = module.generative(z_perturbed, torch.zeros(1, 1, dtype=torch.long), batch_index=torch.zeros(1, 1, dtype=torch.long))
+
+                    gen_out_perturbed = module.generative(
+                        z_perturbed, lib, batch_index=batch_idx
+                    )
                     gene_expr = gen_out_perturbed["px"].mean.numpy().flatten()
                     decoded_success = True
+                    print("[PerturbationEngine] VAE decode successful.")
+
         except Exception as decode_err:
-            print(f"[PerturbationEngine] VAE decoding shape mismatch/covariates mismatch: {decode_err}")
-            
+            print(f"[PerturbationEngine] VAE decoding failed: {decode_err}")
+
+        # If decoder failed, initialise gene_expr from zero with known cardiac markers
         if not decoded_success:
-            # High-fidelity biological centroid projection fallback
-            n_genes_vocab = len(self.var_names)
-            source_expr_decoded = np.zeros(n_genes_vocab, dtype=np.float32)
-            
-            # Populate starting expression based on GATA4, MEF2C, TBX5 indices
+            print("[PerturbationEngine] Using GRN-only projection (decoder unavailable).")
+            n_genes = len(self.var_names)
+            source_expr_decoded = np.zeros(n_genes, dtype=np.float32)
+
+            # Populate baseline fibroblast markers (low cardiac expression)
             for g, idx in self.gene_to_idx.items():
-                if g in ["TNNT2", "TTN", "MYH7", "MYH6", "RYR2"]:
-                    source_expr_decoded[idx] = 0.1 # Low baseline in fibroblast
-                    
+                if g in {"TNNT2", "TTN", "MYH7", "MYH6", "RYR2"}:
+                    source_expr_decoded[idx] = 0.1
+
             gene_expr = source_expr_decoded.copy()
+
             if target_type and target_type in self.centroids:
-                # Direct phenotypic shift toward cardiomyocyte
                 for g, idx in self.gene_to_idx.items():
-                    if g in ["TNNT2", "TTN", "MYH7", "MYH6", "RYR2", "ACTN2", "SCN5A"]:
+                    if g in {"TNNT2", "TTN", "MYH7", "MYH6", "RYR2", "ACTN2", "SCN5A"}:
                         gene_expr[idx] += 4.5 * dose
-                    elif g in ["COL1A1", "DCN"]:
+                    elif g in {"COL1A1", "DCN"}:
                         gene_expr[idx] -= 3.0 * dose
 
-        # 4. Apply GRN-Driven Gene Perturbations (Sprint 2)
+        # 4. Apply factor perturbations directly on gene expression vector
         applied_factors = []
         missing_factors = []
-        
+
         for f in factors:
             gene_name = f.upper()
-            
-            # Literature Fallback (Sprint 2 - Expert Tuning)
-            # We check for proxies even if the factor itself is not in the model vocabulary
+
             has_proxy = False
             if gene_name in GENE_PROXY_HUB:
                 proxies = GENE_PROXY_HUB[gene_name]
-                print(f"[PerturbationEngine] Sprint 2 Proxy: {gene_name} -> {proxies}")
+                print(f"[PerturbationEngine] Proxy: {gene_name} -> {proxies}")
                 for p in proxies:
                     if p in self.gene_to_idx:
-                        gene_expr[self.gene_to_idx[p]] += 12.0 * dose # MASSIVE BOOST
+                        gene_expr[self.gene_to_idx[p]] += 12.0 * dose
                         has_proxy = True
-            
+
             if gene_name not in self.gene_to_idx:
                 if has_proxy:
                     applied_factors.append(f"{gene_name} (via Proxy)")
                 else:
                     missing_factors.append(gene_name)
                 continue
-            
+
             applied_factors.append(gene_name)
             idx = self.gene_to_idx[gene_name]
-            gene_expr[idx] += 10.0 * dose 
+            gene_expr[idx] += 10.0 * dose
 
-        # 4b. Apply GRN Regulatory Ripple Effects (Priority 4)
-        print("[PerturbationEngine] Priority 4: Computing GRN regulatory influence...")
+        # 4b. Apply GRN regulatory ripple effects
+        print("[PerturbationEngine] Computing GRN regulatory influence...")
         active_tfs = {f: dose for f in applied_factors}
         influence_vec = GRNAuthority.compute_network_influence(active_tfs, self.var_names)
-        
-        # Merge influence into expression vector
-        gene_expr += influence_vec * 2.0 # Scaling factor for visualization
-        
-        # 5. Re-encode to final latent state (Manifold Fusion)
-        z_final = z_perturbed.numpy().flatten() if hasattr(z_perturbed, "numpy") else np.array(z_perturbed).flatten()
+        gene_expr = gene_expr + influence_vec * 2.0
+
+        # 5. Re-encode perturbed expression to final latent position
+        # FIX 5: module is only used if it was successfully assigned above
+        z_final = z_perturbed.detach().numpy().flatten()
         predicted_expr = gene_expr.copy()
-        
-        try:
-            x_input = torch.tensor(gene_expr[:4000], dtype=torch.float32).unsqueeze(0)
-            with torch.no_grad():
-                encoder_out = module.z_encoder(x_input, torch.zeros(1, 1, dtype=torch.long))
-                z_final = encoder_out[0].loc.numpy().flatten()
-                
-                # Final decode for reporting
-                gen_out_final = module.generative(torch.tensor(z_final).unsqueeze(0), torch.zeros(1, 1, dtype=torch.long), batch_index=torch.zeros(1, 1, dtype=torch.long))
-                predicted_expr = gen_out_final["px"].mean.numpy().flatten()
-        except Exception as encode_err:
-            pass
 
-        # 6. Calculate Top DEGs (Sprint 5 - Concordance Basis)
-        diff = predicted_expr - source_expr_decoded
-        deg_up = [self.var_names[i] for i in np.argsort(diff)[-200:][::-1] if diff[i] > 0.05]
-        deg_down = [self.var_names[i] for i in np.argsort(diff)[:200] if diff[i] < -0.05]
+        if module is not None:
+            try:
+                # Only use as many genes as the model's input dimension
+                n_input = self.model.module.n_input
+                x_input = torch.tensor(
+                    gene_expr[:n_input], dtype=torch.float32
+                ).unsqueeze(0)
 
-        # 7. Nearest Neighbor
-        distances = {t: np.linalg.norm(z_final - c) for t, c in self.centroids.items()}
+                with torch.no_grad():
+                    lib = torch.zeros(1, 1, dtype=torch.float32)  # FIX 4
+                    batch_idx = torch.zeros(1, 1, dtype=torch.long)
+
+                    encoder_out = module.z_encoder(x_input, lib)
+                    z_final = encoder_out[0].loc.detach().numpy().flatten()
+
+                    # Final decode for reporting
+                    gen_out_final = module.generative(
+                        torch.tensor(z_final, dtype=torch.float32).unsqueeze(0),
+                        lib,
+                        batch_index=batch_idx
+                    )
+                    predicted_expr = gen_out_final["px"].mean.numpy().flatten()
+                    print("[PerturbationEngine] Re-encode successful.")
+
+            except Exception as encode_err:
+                # Graceful fallback: use z_perturbed as final position
+                print(f"[PerturbationEngine] Re-encode failed (using perturbed z): {encode_err}")
+                z_final = z_perturbed.detach().numpy().flatten()
+
+        # 6. Compute differentially expressed genes
+        if source_expr_decoded is not None and len(source_expr_decoded) == len(predicted_expr):
+            diff = predicted_expr - source_expr_decoded
+            deg_up = [
+                self.var_names[i]
+                for i in np.argsort(diff)[-200:][::-1]
+                if diff[i] > 0.05
+            ]
+            deg_down = [
+                self.var_names[i]
+                for i in np.argsort(diff)[:200]
+                if diff[i] < -0.05
+            ]
+        else:
+            deg_up, deg_down = [], []
+
+        # 7. Nearest cell type in latent space
+        distances = {
+            t: float(np.linalg.norm(z_final - c))
+            for t, c in self.centroids.items()
+        }
         nearest_type = min(distances, key=distances.get)
         nearest_dist = distances[nearest_type]
 
-        # NEUROS-X: Attach arrhythmia safety audit
+        # 8. Arrhythmia safety audit via NEUROS-X substrate
         arrhythmia_safety = {}
         try:
             from services.neuros_substrate_service import get_substrate_service
             svc = get_substrate_service()
-            
-            # Extract ion-channel genes from the predicted expression
+
             ion_genes = svc.substrate.ION_CHANNEL_GENES
             ion_expr = {}
             for gene in ion_genes:
@@ -239,10 +368,8 @@ class PerturbationEngine:
                         ion_expr[gene] = 0.0
                 else:
                     ion_expr[gene] = 0.0
-            
-            # Run the safety audit
+
             safety = svc.substrate.audit_arrhythmia_risk(ion_expr)
-            
             arrhythmia_safety = {
                 "classification": safety["safety_classification"],
                 "reason": safety["reason"],
@@ -254,12 +381,15 @@ class PerturbationEngine:
         except Exception as e:
             arrhythmia_safety = {
                 "classification": "WARNING",
-                "reason": f"Arrhythmia Safety Audit unavailable: {str(e)[:150]}",
+                "reason": f"Arrhythmia safety audit unavailable: {str(e)[:150]}",
                 "phi_hat": 0.0,
                 "synchrony": 0.0,
                 "ecg_proxy": [],
                 "error": str(e)[:200]
             }
+
+        source_centroid = self.centroids.get(source_type, z_final)
+        latent_displacement = float(np.linalg.norm(z_final - source_centroid))
 
         return {
             "source_type": source_type,
@@ -268,85 +398,96 @@ class PerturbationEngine:
             "factors_missing": missing_factors,
             "deg_up": deg_up,
             "deg_down": deg_down,
-            "latent_displacement": round(float(np.linalg.norm(z_final - self.centroids[source_type])), 4),
+            "latent_displacement": round(latent_displacement, 4),
             "nearest_type": nearest_type,
-            "distance_to_nearest": round(float(nearest_dist), 4),
+            "distance_to_nearest": round(nearest_dist, 4),
             "z": z_final.tolist(),
-            "method": "scvi_latent_arithmetic_grn_v27_final",
-            "provenance": "PREDICTED",
+            "method": "scvi_latent_arithmetic_grn_v28",
+            "provenance": "PREDICTED" if decoded_success else "GRN_PROJECTION",
             "dose": dose,
             "status": "SUCCESS",
             "arrhythmia_safety": arrhythmia_safety,
             "predicted_expression": predicted_expr.tolist()
         }
 
-    def predict_trajectory(self, source_type: str, target_type: str, n_steps: int = 20, genes_of_interest: List[str] = None):
+    def predict_trajectory(
+        self,
+        source_type: str,
+        target_type: str,
+        n_steps: int = 20,
+        genes_of_interest: List[str] = None
+    ):
         """
-        LEVEL 4 SCIENTIST INTEGRATION: 
         Predict gene expression trajectory via scVI latent space arithmetic.
-        Mathematical basis: z_alpha = z_s + alpha*(z_t - z_s)
-        This is mathematically equivalent to optimal transport in latent space.
+        z_alpha = z_source + alpha * (z_target - z_source)
         """
-        if self.mode == "fallback":
-            return {"status": "ERROR", "message": "Engine in fallback mode"}
-            
-        z_s = self.centroids.get(source_type, self.centroids["Fibroblast"])
-        z_t = self.centroids.get(target_type, self.centroids["Cardiomyocyte"])
-        
+        if self.mode == "fallback" or not self.centroids:
+            return {
+                "status": "ERROR",
+                "message": "Engine in fallback mode. Trajectory requires real centroids."
+            }
+
+        z_s = self.centroids.get(source_type, self.centroids.get("Fibroblast"))
+        z_t = self.centroids.get(target_type, self.centroids.get("Cardiomyocyte"))
+
+        if z_s is None or z_t is None:
+            return {
+                "status": "ERROR",
+                "message": f"Cell types '{source_type}' or '{target_type}' not in centroids."
+            }
+
         delta = z_t - z_s
-        
         timeline = []
-        genes_data = {g: [] for g in (genes_of_interest or ["POU5F1", "SOX2", "NANOG", "KLF4", "MYC"])}
-        
-        module = self.model.module
-        
+        default_genes = genes_of_interest or ["POU5F1", "SOX2", "NANOG", "KLF4", "MYC"]
+        genes_data = {g: [] for g in default_genes}
+
+        # FIX 5: module initialised to None
+        module = None
+        if self.mode == "expert" and self.model is not None:
+            module = self.model.module
+
         for step in range(n_steps):
             alpha = step / float(max(1, n_steps - 1))
             z_alpha = z_s + alpha * delta
-            
-            # Decode to gene space (sample from generative distribution p(x|z))
-            decoded_success = False
+
             expr = None
-            
-            try:
-                with torch.no_grad():
-                    z_tensor = torch.tensor(z_alpha, dtype=torch.float32).unsqueeze(0)
-                    gen_out = module.generative(
-                        z_tensor,
-                        torch.zeros(1, 1, dtype=torch.long),
-                        batch_index=torch.zeros(1, 1, dtype=torch.long)
-                    )
-                    expr = gen_out["px"].mean.numpy().flatten()
-                    decoded_success = True
-            except Exception as decode_err:
-                pass
-                
+            decoded_success = False
+
+            if module is not None:
+                try:
+                    with torch.no_grad():
+                        z_tensor = torch.tensor(z_alpha, dtype=torch.float32).unsqueeze(0)
+                        # FIX 4: float32 for library
+                        lib = torch.zeros(1, 1, dtype=torch.float32)
+                        batch_idx = torch.zeros(1, 1, dtype=torch.long)
+                        gen_out = module.generative(z_tensor, lib, batch_index=batch_idx)
+                        expr = gen_out["px"].mean.numpy().flatten()
+                        decoded_success = True
+                except Exception:
+                    pass
+
             if not decoded_success:
-                # High-fidelity linear interpolation in gene expression space
-                n_genes_vocab = len(self.var_names)
-                expr = np.zeros(n_genes_vocab, dtype=np.float32)
-                
-                # Upregulate cardiac genes along trajectory
+                n_genes = len(self.var_names)
+                expr = np.zeros(n_genes, dtype=np.float32)
                 for g, idx in self.gene_to_idx.items():
-                    if g in ["TNNT2", "TTN", "MYH7", "MYH6", "RYR2"]:
+                    if g in {"TNNT2", "TTN", "MYH7", "MYH6", "RYR2"}:
                         expr[idx] = 0.1 + alpha * 4.5
-                    elif g in ["COL1A1", "DCN"]:
-                        expr[idx] = 3.0 - alpha * 3.0
-                
+                    elif g in {"COL1A1", "DCN"}:
+                        expr[idx] = max(0.0, 3.0 - alpha * 3.0)
+
             timeline.append(float(alpha))
-            for g in genes_data.keys():
+            for g in default_genes:
                 if g in self.gene_to_idx:
                     genes_data[g].append(float(expr[self.gene_to_idx[g]]))
                 else:
                     genes_data[g].append(0.0)
-                    
+
         return {
             "source": source_type,
             "target": target_type,
             "steps": n_steps,
             "timeline": timeline,
             "expression": genes_data,
-            "model": "scvi_latent_arithmetic",
+            "model": "scvi_latent_arithmetic_v28",
             "status": "SUCCESS"
         }
-
