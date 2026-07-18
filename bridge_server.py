@@ -7501,6 +7501,7 @@ if __name__ == "__main__":
 
 
 
-from services.neural_router import router as neural_router
+# Mount the original, complete NEUROS-X neural router containing all 6 endpoints
+from routers.neural_router import router as neural_router
 app.include_router(neural_router)
 
