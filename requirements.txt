@@ -35,3 +35,4 @@ python-multipart
 cryptography
 email-validator
 pyjwt
+pyarrow
