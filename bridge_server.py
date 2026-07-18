@@ -1273,8 +1273,8 @@ _base_symbols = [
 # Computed from: Litvinukova et al., Nature 2020 (2M cells, 83 donors)
 
 def _load_real_gene_symbols():
-    """Load exact 5858 var_names from scVI model schema if available. Otherwise fallback."""
-    path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "models", "zenith_foundation_v1", "gene_index.json")
+    """Load exact 5009 var_names from scVI model schema if available. Otherwise fallback."""
+    path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "models", "scvi_model_486k_real", "gene_index.json")
     if os.path.exists(path):
         try:
             with open(path, "r", encoding="utf-8") as f:
