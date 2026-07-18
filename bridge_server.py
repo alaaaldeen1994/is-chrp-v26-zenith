@@ -7164,6 +7164,24 @@ async def run_gpt_discovery(request: Request):
                         "Cocktail approved for wet-lab validation."
                     )
                     
+                # ---------------------------------------------------------------
+                # ONCOGENE & PLURIPOTENCY SAFETY AUDIT CHECK:
+                # Absolute safety overrides: if any recommended gene is in the
+                # oncogene blacklist or dedifferentiation risk list, the cocktail
+                # is classified as BLOCKED with a clear explanation of the risk.
+                # ---------------------------------------------------------------
+                from partial_safety import ONCOGENE_BLACKLIST, FULL_DEDIFF_RISK
+                
+                oncogenes_found = sorted(list(discovered_genes & set(ONCOGENE_BLACKLIST.keys())))
+                dediff_found = sorted(list(discovered_genes & set(FULL_DEDIFF_RISK.keys())))
+                
+                if oncogenes_found:
+                    safety_audit["classification"] = "BLOCKED"
+                    safety_audit["reason"] = f"Oncogenic Risk: {len(oncogenes_found)} proto-oncogene(s) detected ({', '.join(oncogenes_found)}). High tumor/proliferation risk. Cocktail blocked."
+                elif dediff_found:
+                    safety_audit["classification"] = "BLOCKED"
+                    safety_audit["reason"] = f"Pluripotency Risk: {len(dediff_found)} full dedifferentiation factor(s) detected ({', '.join(dediff_found)}). High teratoma/loss of cell identity risk. Cocktail blocked."
+
                 # 5. Attach the safety audit to the final response payload
                 result["arrhythmia_safety"] = safety_audit
 
