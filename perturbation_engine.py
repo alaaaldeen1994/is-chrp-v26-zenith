@@ -210,6 +210,23 @@ class PerturbationEngine:
             except Exception as e:
                 print(f"[PerturbationEngine] Warning loading cell_type_genes.json mapping: {e}")
 
+            # Explicitly register the 11 target cardiac ion channels
+            cardiac_ion_channels = {
+                "ENSG00000184489": "KCNH2",
+                "ENSG00000123700": "KCNJ2",
+                "ENSG00000151140": "SCN5A",
+                "ENSG00000151067": "CACNA1C",
+                "ENSG00000138622": "HCN4",
+                "ENSG00000143842": "KCNA5",
+                "ENSG00000197965": "KCND3",
+                "ENSG00000148818": "KCNIP2",
+                "ENSG00000198626": "RYR2",
+                "ENSG00000183023": "SLC8A1",
+                "ENSG00000174776": "KCNQ1"
+            }
+            for ens, sym in cardiac_ion_channels.items():
+                self.ensembl_to_symbol[ens] = sym
+
             self.symbol_to_ensembl = {v.upper(): k for k, v in self.ensembl_to_symbol.items()}
             print(f"[PerturbationEngine] Ensembl mapping loaded: {len(self.ensembl_to_symbol)} genes mapped.")
 
