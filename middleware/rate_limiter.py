@@ -1,5 +1,20 @@
 import time
-import redis
+try:
+    import redis
+except ImportError:
+    redis = None
+
+class DummyRedisError(Exception):
+    pass
+
+class DummyRedisModule:
+    RedisError = DummyRedisError
+    def from_url(self, *args, **kwargs):
+        return None
+
+if redis is None:
+    redis = DummyRedisModule()
+
 from fastapi import Request
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.responses import JSONResponse
@@ -8,16 +23,21 @@ from config.settings import settings
 class APIRateLimiterMiddleware(BaseHTTPMiddleware):
     def __init__(self, app):
         super().__init__(app)
-        # Try to connect to Redis
-        try:
-            self.redis_client = redis.from_url(settings.REDIS_URL, decode_responses=True)
-            self.redis_client.ping()
-            self.use_redis = True
-            print("[INFO] Redis connected for rate limiting.")
-        except Exception as e:
-            self.use_redis = False
-            self.local_limits = {}  # In-memory fallback
-            print(f"[WARNING] Redis connection failed: {e}. Falling back to in-memory rate limiting.")
+        self.redis_client = None
+        self.use_redis = False
+        self.local_limits = {}  # In-memory fallback
+
+        # Only try to connect if it's the real redis module
+        if not isinstance(redis, DummyRedisModule):
+            try:
+                self.redis_client = redis.from_url(settings.REDIS_URL, decode_responses=True)
+                self.redis_client.ping()
+                self.use_redis = True
+                print("[INFO] Redis connected for rate limiting.")
+            except Exception as e:
+                print(f"[WARNING] Redis connection failed: {e}. Falling back to in-memory rate limiting.")
+        else:
+            print("[INFO] Redis package is not installed. Falling back to in-memory rate limiting.")
 
     def _get_tier_limits(self, tier: str) -> tuple:
         """Returns (hourly_limit, concurrent_limit) based on key tier."""
