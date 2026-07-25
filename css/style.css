@@ -24,7 +24,7 @@
 * {
     box-sizing: border-box;
     outline: none;
-    user-select: none;
+    user-select: auto;
     -webkit-font-smoothing: antialiased;
 }
 
