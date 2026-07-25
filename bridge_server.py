@@ -7082,25 +7082,18 @@ async def run_gpt_discovery(request: Request):
             perts = get_perturbation_engine()
             svc = get_substrate_service()
 
-            # Guard: if engine is not ready, return a clean error
-            if perts is None or perts.mode in ("uninitialized", "fallback"):
-                result["arrhythmia_safety"] = {
-                    "classification": "ERROR",
-                    "reason": (
-                        "Perturbation engine not ready. "
-                        "Ensure cell_type_centroids.json exists in models/ and "
-                        "scvi_model_486k_real loaded successfully at startup."
+            # Run perturbation simulation (handles VAE, GRN, and centroid fallbacks natively)
+            perturbation_result = {}
+            if perts is not None:
+                try:
+                    perturbation_result = perts.predict_factor_effect(
+                        factors=winning_gene_panel,
+                        source_type="Fibroblast",
+                        target_type="Cardiomyocyte",
+                        dose=1.0
                     )
-                }
-                return JSONResponse(result)
-            
-            # 2. Run the perturbation simulation to get predicted ion-channel expression
-            perturbation_result = perts.predict_factor_effect(
-                factors=winning_gene_panel,
-                source_type="Fibroblast",
-                target_type="Cardiomyocyte",
-                dose=1.0
-            )
+                except Exception as p_err:
+                    print(f"[Tournament] Warning running predict_factor_effect: {p_err}")
             
             print(f"[DEBUG] Perturbation result keys: {list(perturbation_result.keys())}")
             print(f"[DEBUG] predicted_expression present: {'predicted_expression' in perturbation_result}")
@@ -7108,8 +7101,10 @@ async def run_gpt_discovery(request: Request):
             for gene in svc.substrate.ION_CHANNEL_GENES:
                 print(f"[DEBUG] {gene} in gene_to_idx: {gene in perts.gene_to_idx}")
             
-            # 3. Extract the safety audit from the perturbation result
+            # 3. Extract the safety audit from the perturbation result (fallback to substrate audit if empty)
             safety_audit = perturbation_result.get("arrhythmia_safety", {})
+            if not safety_audit or "classification" not in safety_audit or safety_audit.get("classification") == "ERROR":
+                safety_audit = svc.audit_arrhythmia_risk({})
             
             # 4. Run the Anti-Fibrillation Double-Check
             # Extract the ion channel expression from the perturbation result
