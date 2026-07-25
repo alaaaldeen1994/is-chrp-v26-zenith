@@ -5628,10 +5628,29 @@ async function runDiscovery() {
 
         const t0 = Date.now();
         try {
+            let activeCt = window._selectedCellType || 'all';
+            if (activeCt === 'all' && query) {
+                const qL = query.toLowerCase();
+                if (qL.includes('epicardial adipocyte') || qL.includes('adipocyte')) activeCt = 'epicardial_adipocyte';
+                else if (qL.includes('ventricular myocyte') || qL.includes('ventricular cardiomyocyte')) activeCt = 'regular_ventricular_cardiac_myocyte';
+                else if (qL.includes('atrial myocyte') || qL.includes('pacemaker') || qL.includes('sinoatrial')) activeCt = 'regular_atrial_cardiac_myocyte';
+                else if (qL.includes('fibroblast')) activeCt = 'fibroblast';
+                else if (qL.includes('pericyte')) activeCt = 'pericyte';
+                else if (qL.includes('endothelial')) activeCt = 'endothelial_cell';
+                else if (qL.includes('macrophage')) activeCt = 'macrophage';
+                else if (qL.includes('smooth muscle')) activeCt = 'smooth_muscle_cell';
+                else if (qL.includes('neuron') || qL.includes('neural')) activeCt = 'neural_cell';
+                
+                if (activeCt !== 'all') {
+                    const activeName = document.getElementById('active-celltype-name');
+                    if (activeName) activeName.textContent = activeCt.replace(/_/g, ' ');
+                }
+            }
+
             const r = await fetch('/api/gpt-discovery/run', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ query: query, cell_type: window._selectedCellType || 'all', top_n: 8, mode: 'real' })
+                body: JSON.stringify({ query: query, cell_type: activeCt, top_n: 8, mode: 'real' })
             });
             if (!r.ok) throw new Error(`Server returned ${r.status}`);
             const data = await r.json();
@@ -5759,7 +5778,7 @@ async function runDiscovery() {
                                 <svg width="14" height="14" fill="none" stroke="#2563eb" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                                 <span style="color:#1d4ed8;font-size:12px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;">Zenith Tournament Discovery</span>
                             </div>
-                            <div style="color:#0f172a;font-size:18px;font-weight:700;margin-bottom:4px;">${data.source_data || 'Litviňuková et al., Nature 2020 (~486k cells, 14 donors)'}</div>
+                            <div style="color:#0f172a;font-size:18px;font-weight:700;margin-bottom:4px;">${data.source_data || 'Litviňuková et al., Nature 2020'}</div>
                             <div style="color:#64748b;font-size:14px;margin-bottom:16px;">${data.cell_type_label || 'All cardiac cells'} • Processed in ${elapsed}s</div>
                             
                             <div style="display:flex;gap:10px;flex-wrap:wrap;">

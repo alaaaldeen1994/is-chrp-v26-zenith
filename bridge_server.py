@@ -6813,7 +6813,8 @@ async def run_gpt_discovery(request: Request):
     if ct_data:
         pro_genes = ct_data.get("pro_rejuvenation_genes", [])[:50]
         aging_genes = ct_data.get("aging_marker_genes", [])[:50]
-        gene_source_label = f"{ct_data['cell_type']} ({ct_data['n_cells']:,} cells, young={ct_data['n_young']:,}, aged={ct_data['n_aged']:,})"
+        ct_display_name = ct_data['cell_type'].replace('_', ' ').title()
+        gene_source_label = f"{ct_display_name} ({ct_data['n_cells']:,} cells | Litviňuková et al. 2020, 14 donors)"
         cell_type_age_delta = ct_data.get("age_delta_years")
     else:
         ip_path = os.path.join(os.path.dirname(__file__), "models", "real_ip_genes_full.json")
@@ -6823,7 +6824,7 @@ async def run_gpt_discovery(request: Request):
             ip_data = json.load(f)
         pro_genes = ip_data.get("pro_rejuvenation_genes", [])[:200]
         aging_genes = ip_data.get("aging_marker_genes", [])[:200]
-        gene_source_label = "All cardiac cells (~2.42M integrated ensemble, 83 donors | Litviňuková et al. 2020 ~486k cohort, 14 donors)"
+        gene_source_label = "All cardiac cells (~2.42M integrated ensemble | Litviňuková et al. 2020 ~486k cohort, 14 donors)"
         cell_type_age_delta = None
 
     pro_str = ", ".join([
@@ -7060,7 +7061,7 @@ async def run_gpt_discovery(request: Request):
         "cell_type": cell_type,
         "cell_type_label": gene_source_label,
         "query": query,
-        "source_data": "Litviňuková et al., Nature 2020 (~486k cells, 14 donors)"
+        "source_data": "Litviňuková et al., Nature 2020"
     }
 
     # Extract the winning gene symbols for NEUROS-X safety audit
