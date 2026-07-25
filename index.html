@@ -5759,14 +5759,15 @@ async function runDiscovery() {
                                 <svg width="14" height="14" fill="none" stroke="#2563eb" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                                 <span style="color:#1d4ed8;font-size:12px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;">Zenith Tournament Discovery</span>
                             </div>
-                            <div style="color:#0f172a;font-size:18px;font-weight:700;margin-bottom:4px;">Litviňuková et al., Nature 2020</div>
-                            <div style="color:#64748b;font-size:14px;margin-bottom:16px;">${data.cell_type_label || 'All cardiac cells (10,000 cells)'} • Processed in ${elapsed}s</div>
+                            <div style="color:#0f172a;font-size:18px;font-weight:700;margin-bottom:4px;">${data.source_data || 'Litviňuková et al., Nature 2020 (~486k cells, 14 donors)'}</div>
+                            <div style="color:#64748b;font-size:14px;margin-bottom:16px;">${data.cell_type_label || 'All cardiac cells'} • Processed in ${elapsed}s</div>
                             
                             <div style="display:flex;gap:10px;flex-wrap:wrap;">
                                 <span style="font-size:13px;background:#1a1a1a;color:#f8f8f6;border:1px solid #1a1a1a;padding:6px 12px;border-radius:8px;font-weight:600;">${data.competing_panels || 3} competing panels</span>
                                 <span style="font-size:13px;background:#1a1a1a;color:#f8f8f6;border:1px solid #1a1a1a;padding:6px 12px;border-radius:8px;font-weight:600;">${data.rounds_completed || 2} refinement rounds</span>
                                 <span style="font-size:13px;background:#1a1a1a;color:#f8f8f6;border:1px solid #1a1a1a;padding:6px 12px;border-radius:8px;font-weight:600;">Conf: ${data.tournament_confidence ? (data.tournament_confidence * 100).toFixed(0) : '—'}%</span>
-                                <span style="font-size:13px;background:#1a1a1a;color:#f8f8f6;border:1px solid #1a1a1a;padding:6px 12px;border-radius:8px;font-weight:600;">${data.total_hca_genes_provided || 400} candidate genes</span>
+                                <span style="font-size:13px;background:#1e293b;color:#38bdf8;border:1px solid #334155;padding:6px 12px;border-radius:8px;font-weight:600;">5,009D HD Manifold</span>
+                                <span style="font-size:13px;background:#1a1a1a;color:#f8f8f6;border:1px solid #1a1a1a;padding:6px 12px;border-radius:8px;font-weight:600;">${data.total_hca_genes_provided || 400} Differential Candidates</span>
                             </div>
                         </div>
                         <div style="text-align:center;background:#f8fafc;border:1px solid #e2e8f0;border-radius:20px;padding:24px 32px;flex-shrink:0;margin-left:32px;box-shadow:inset 0 2px 4px rgba(0,0,0,0.02);">

@@ -6823,7 +6823,7 @@ async def run_gpt_discovery(request: Request):
             ip_data = json.load(f)
         pro_genes = ip_data.get("pro_rejuvenation_genes", [])[:200]
         aging_genes = ip_data.get("aging_marker_genes", [])[:200]
-        gene_source_label = "All cardiac cells (~2.42M cells, 14 donors Â· Generalist + Specialist)"
+        gene_source_label = "All cardiac cells (~2.42M integrated ensemble, 83 donors | Litviňuková et al. 2020 ~486k cohort, 14 donors)"
         cell_type_age_delta = None
 
     pro_str = ", ".join([
@@ -7053,14 +7053,14 @@ async def run_gpt_discovery(request: Request):
         "judge_reasoning": judge_reasoning,
         "rounds_completed": rounds_completed,
         "competing_panels": len(valid_panels),
-        "methodology": "Tournament Discovery (Co-Scientist, Nature 2026) + Iterative Refinement (Robin, Nature 2026)",
         "model": "gpt-4o",
         "real_hca_context_used": True,
         "total_hca_genes_provided": len(pro_genes) + len(aging_genes),
+        "manifold_dimensions": 5009,
         "cell_type": cell_type,
         "cell_type_label": gene_source_label,
         "query": query,
-        "source_data": "Litvinukova et al., Nature 2020"
+        "source_data": "Litviňuková et al., Nature 2020 (~486k cells, 14 donors)"
     }
 
     # Extract the winning gene symbols for NEUROS-X safety audit
