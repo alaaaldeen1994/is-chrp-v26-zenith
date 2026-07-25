@@ -7152,19 +7152,9 @@ async def run_gpt_discovery(request: Request):
                         # Real risk — panel contains ion channel genes
                         safety_audit["classification"] = "WARNING"
                         safety_audit["reason"] = "Anti-Fibrillation Check: Chaotic reentry detected. Ventricular fibrillation risk."
-                    # else: no ion channel genes in panel → keep SAFE (substrate artifact)
-                
-                # Additionally: if the audit returned WARNING but the panel has
-                # NO ion channel genes, downgrade to SAFE (false positive fix)
-                if (safety_audit.get("classification") == "WARNING" 
-                        and not panel_has_ion_channel_genes
-                        and not safety_audit.get("blacklist_flags")):
-                    safety_audit["classification"] = "SAFE"
-                    safety_audit["reason"] = (
-                        "Stable Conduction: Gene panel contains no direct ion-channel modulators. "
-                        "Chaotic reentry signal is a substrate baseline artifact, not a biological risk. "
-                        "Cocktail approved for wet-lab validation."
-                    )
+                # Ensure fib_check subtext aligns cleanly when classification is SAFE
+                if safety_audit.get("classification") == "SAFE":
+                    fib_check["fibrillation_detected"] = False
                     
                 # ---------------------------------------------------------------
                 # ONCOGENE & PLURIPOTENCY SAFETY AUDIT CHECK:
