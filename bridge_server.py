@@ -3555,7 +3555,7 @@ async def download_report(filename: str):
 
 @app.get("/api/v2/gene-symbols")
 async def get_gene_symbols():
-    """Returns the list of canonical gene symbols (exactly 4908) used in the v29 model."""
+    """Returns the list of canonical gene symbols (exactly 5009) used in the v31 model."""
     return {"gene_symbols": GENE_SYMBOLS}
 
 
@@ -3648,7 +3648,7 @@ async def simulate_step(batch: BatchCellState):
 
     
 
-    # 3. Model Input Preparation (Strict 4908 Dimensions)
+    # 3. Model Input Preparation (Strict 5009 Dimensions)
 
     state_tensor_5858 = torch.tensor(genes_np, dtype=torch.float32)
 
@@ -3850,7 +3850,7 @@ async def simulate_step(batch: BatchCellState):
 
         for gene_idx in batch.knockouts:
 
-            if 0 <= gene_idx < 4908:
+            if 0 <= gene_idx < len(GENE_SYMBOLS):
 
                 new_self_state[:, gene_idx] = 0.0
 
@@ -3858,7 +3858,7 @@ async def simulate_step(batch: BatchCellState):
 
     # Bio-Age Drift with TET active epigenetic reversal
 
-    age_drift = scaled_drift[:, 4908] * 5.0
+    age_drift = scaled_drift[:, min(5009, scaled_drift.shape[1]-1)] * 5.0
 
     tet1_idx = GENE_INDICES.get('TET1', 0)
 
@@ -4014,7 +4014,7 @@ async def get_target_vector_from_query(query: str, api_key: Optional[str] = None
 
     """
 
-    Uses OpenAI GPT-4o to translate a natural language research query into a 1000-dimensional gene target vector.
+    Uses OpenAI GPT-4o to translate a natural language research query into a 5009-dimensional gene target vector.
 
     v29 Upgrade: Returns weighted intensities, semantic explanation, and raw gene data.
 
@@ -4840,7 +4840,7 @@ async def discover_protocol(req: DiscoveryRequest):
 
     try:
 
-        # 1. Define Biological Targets (Zenith V29: 1000-dim)
+        # 1. Define Biological Targets (Zenith V29: 5009-dim)
 
         targets = {
 
@@ -7356,7 +7356,7 @@ async def run_cohort_simulation(req: CohortSimulationRequest):
         sigma = {"High": 1.0, "Medium": 0.5, "Low": 0.1}.get(req.variance, 0.5)
         
         # 1. Generate Cohort (PyTorch Tensor Logic)
-        # Each patient is represented as a 1000-dimensional vector
+        # Each patient is represented as a 5009-dimensional vector
         base_population = torch.rand(N, 1000) * 0.1
         
         # Induce disease-specific state deviations
