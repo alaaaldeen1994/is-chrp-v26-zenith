@@ -2281,12 +2281,35 @@ async def oauth_authorize(redirect_uri: str = "https://claude.ai/api/auth/callba
 @app.post("/oauth/token")
 @app.get("/oauth/token")
 async def oauth_token(request: Request):
-    return {
-        "access_token": "zenith_public_access_token_2026",
-        "token_type": "bearer",
-        "expires_in": 315360000,
-        "scope": "read write"
-    }
+    from fastapi.responses import JSONResponse
+    # Handle both form-encoded and JSON bodies
+    content_type = request.headers.get("content-type", "")
+    grant_type = "authorization_code"
+    try:
+        if "application/x-www-form-urlencoded" in content_type or "multipart" in content_type:
+            form = await request.form()
+            grant_type = form.get("grant_type", "authorization_code")
+        elif "application/json" in content_type:
+            body = await request.json()
+            grant_type = body.get("grant_type", "authorization_code")
+    except Exception:
+        pass
+
+    return JSONResponse(
+        content={
+            "access_token": "zenith_public_access_token_2026",
+            "token_type": "Bearer",
+            "expires_in": 315360000,
+            "scope": "read write",
+            "refresh_token": "zenith_refresh_token_2026"
+        },
+        headers={
+            "Cache-Control": "no-store",
+            "Pragma": "no-cache",
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Headers": "Authorization, Content-Type"
+        }
+    )
 
 # Dynamic Client Registration (RFC 7591) for Claude Remote MCP
 @app.post("/oauth/register")
