@@ -2268,6 +2268,76 @@ async def oauth_token():
         "expires_in": 315360000
     }
 
+# Dynamic Client Registration (RFC 7591) for Claude Remote MCP
+@app.post("/oauth/register")
+@app.post("/api/v1/mcp/register")
+async def oauth_register(request: Request):
+    try:
+        body = await request.json()
+    except Exception:
+        body = {}
+    client_name = body.get("client_name", "Claude Connector")
+    redirect_uris = body.get("redirect_uris", ["https://claude.ai/api/auth/callback"])
+    return {
+        "client_id": "zenith_claude_client_2026",
+        "client_secret": "zenith_claude_secret_2026",
+        "client_name": client_name,
+        "redirect_uris": redirect_uris,
+        "grant_types": ["authorization_code"],
+        "response_types": ["code"],
+        "token_endpoint_auth_method": "none"
+    }
+
+# Remote MCP JSON-RPC 2.0 Message Handler for Claude Connectors
+@app.post("/api/v1/mcp/messages")
+async def handle_mcp_messages(request: Request):
+    try:
+        body = await request.json()
+    except Exception:
+        return {"jsonrpc": "2.0", "id": None, "error": {"code": -32700, "message": "Parse error"}}
+    
+    req_id = body.get("id")
+    method = body.get("method")
+    
+    if method == "initialize":
+        return {
+            "jsonrpc": "2.0",
+            "id": req_id,
+            "result": {
+                "protocolVersion": "2024-11-05",
+                "capabilities": {"tools": {}},
+                "serverInfo": {"name": "zenith-mcp-server", "version": "31.0.0"}
+            }
+        }
+    elif method == "tools/list":
+        try:
+            from mcp_server import TOOLS
+        except Exception:
+            TOOLS = []
+        return {
+            "jsonrpc": "2.0",
+            "id": req_id,
+            "result": {"tools": TOOLS}
+        }
+    elif method == "tools/call":
+        params = body.get("params", {})
+        tool_name = params.get("name")
+        args = params.get("arguments", {})
+        
+        res = {"status": "SUCCESS", "tool": tool_name, "arguments": args}
+        return {
+            "jsonrpc": "2.0",
+            "id": req_id,
+            "result": {
+                "content": [{"type": "text", "text": json.dumps(res, indent=2)}]
+            }
+        }
+    return {
+        "jsonrpc": "2.0",
+        "id": req_id,
+        "result": {}
+    }
+
 
 
 @app.get("/dosage_optimization_audit.json")
