@@ -2231,6 +2231,14 @@ async def get_mcp_manifest():
         return FileResponse(path, media_type="application/json")
     return Response(status_code=404)
 
+@app.get("/api/v1/mcp/sse")
+@app.get("/mcp")
+async def get_mcp_sse(request: Request):
+    from fastapi.responses import StreamingResponse
+    async def event_stream():
+        yield f"event: endpoint\ndata: https://niluslab.com/api/v1/mcp/messages\n\n"
+    return StreamingResponse(event_stream(), media_type="text/event-stream")
+
 
 
 @app.get("/dosage_optimization_audit.json")
