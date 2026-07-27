@@ -145,39 +145,51 @@ class ZenithMCPServer:
         req_id = req.get("id")
         method = req.get("method")
         
-        # Check standard JSON-RPC 2.0 fields
         if req.get("jsonrpc") != "2.0":
             self.send_error(req_id, -32600, "Invalid Request")
             return
             
         log_debug(f"Handling method: {method}")
-        
+
+        # MCP Notifications have no "id" — must NOT send a response
+        if req_id is None and method and method.startswith("notifications/"):
+            log_debug(f"Ignoring notification: {method}")
+            return
+
+        if method == "ping":
+            self.send_result(req_id, {})
+            return
+
         if method == "initialize":
             self.send_result(req_id, {
                 "protocolVersion": "2024-11-05",
-                "capabilities": {
-                    "tools": {}
-                },
-                "serverInfo": {
-                    "name": "zenith-mcp-server",
-                    "version": "30.1.0"
-                }
+                "capabilities": {"tools": {}},
+                "serverInfo": {"name": "zenith-mcp-server", "version": "31.0.0"}
             })
         elif method == "tools/list":
-            self.send_result(req_id, {
-                "tools": TOOLS
-            })
+            self.send_result(req_id, {"tools": TOOLS})
         elif method == "tools/call":
             params = req.get("params", {})
             tool_name = params.get("name")
             arguments = params.get("arguments", {})
             self.execute_tool(req_id, tool_name, arguments)
+        elif method is None:
+            # Ignore messages with no method (malformed)
+            log_debug("Received message with no method, ignoring.")
+            return
         else:
             self.send_error(req_id, -32601, f"Method not found: {method}")
 
+
     def execute_tool(self, req_id: any, name: str, args: dict):
         if not self.client:
-            self.send_error(req_id, -32000, "Authentication error: ZENITH_API_KEY is not set.")
+            # Return friendly message instead of crashing — tools still appear in list
+            self.send_result(req_id, {
+                "content": [{
+                    "type": "text",
+                    "text": f"Tool '{name}' is registered. To execute it, the Zenith backend server at www.niluslab.com must be running and the ZENITH_API_KEY environment variable must be set."
+                }]
+            })
             return
 
         try:
