@@ -1432,7 +1432,7 @@
                     </button>
                     <!-- Dropdown List -->
                     <div id="model-dropdown-list"
-                        style="display:none;position:absolute;bottom:calc(100% + 6px);left:0;background:#ffffff;border:1px solid #d5d5d2;border-radius:14px;padding:6px;box-shadow:0 4px 20px rgba(0,0,0,0.08);flex-direction:column;gap:3px;z-index:1000;min-width:220px;">
+                        style="display:none;position:absolute;top:calc(100% + 6px);left:0;background:#ffffff;border:1px solid #d5d5d2;border-radius:14px;padding:6px;box-shadow:0 10px 30px rgba(0,0,0,0.12);flex-direction:column;gap:3px;z-index:9999;min-width:220px;">
                         <!-- Option 1: Zenith Ensemble -->
                         <button onclick="selectModelOption('real', 'Zenith Ensemble')" id="model-opt-real"
                             style="background:#f5f3ef;color:#191919;border:none;text-align:left;padding:8px 12px;border-radius:8px;cursor:pointer;width:100%;font-family:'Inter','Segoe UI',sans-serif;display:flex;flex-direction:column;gap:2px;transition:all 0.15s;">
@@ -1466,7 +1466,7 @@
                     </button>
                     <!-- Dropdown List -->
                     <div id="celltype-dropdown-list"
-                        style="display:none;position:absolute;bottom:calc(100% + 6px);left:0;background:#ffffff;border:1px solid #d5d5d2;border-radius:14px;padding:6px;box-shadow:0 4px 20px rgba(0,0,0,0.08);flex-direction:column;gap:3px;z-index:1000;min-width:260px;max-height:280px;overflow-y:auto;">
+                        style="display:none;position:absolute;top:calc(100% + 6px);left:0;background:#ffffff;border:1px solid #d5d5d2;border-radius:14px;padding:6px;box-shadow:0 10px 30px rgba(0,0,0,0.12);flex-direction:column;gap:3px;z-index:9999;min-width:260px;max-height:280px;overflow-y:auto;">
                         <div style="font-size:10px;color:#8b8b8b;padding:8px 12px;text-align:center;">Loading cell types...</div>
                     </div>
                 </div>
@@ -1522,23 +1522,23 @@
 
         <!-- Suggestion pills -->
         <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:14px;justify-content:center;width:100%;max-width:640px;">
-            <button class="sugg-pill" onclick="document.getElementById('disc-query').value=this.dataset.q;document.getElementById('disc-query').dispatchEvent(new Event('input'))" data-q="Reverse cardiac aging in HMVEC cells using CACNA1C and RYR2 pathways"
+            <button class="sugg-pill" onclick="selectSuggestionPill(this.dataset.q)" data-q="Reverse cardiac aging in HMVEC cells using CACNA1C and RYR2 pathways"
                 style="background:transparent;border:1px solid #d5d5d2;color:#7a7a7a;font-size:12px;font-weight:400;padding:6px 14px;border-radius:20px;cursor:pointer;transition:all 0.15s;font-family:'Inter','Segoe UI',sans-serif;" onmouseover="this.style.borderColor='#bbb8b3';this.style.color='#1a1a1a';this.style.background='#f7f7f6'" onmouseout="this.style.borderColor='#d5d5d2';this.style.color='#7a7a7a';this.style.background='transparent'">
                 Cardiac aging reversal
             </button>
-            <button class="sugg-pill" onclick="document.getElementById('disc-query').value=this.dataset.q;document.getElementById('disc-query').dispatchEvent(new Event('input'))" data-q="Identify anti-senescence genes that suppress B2M and TMSB4X aging markers"
+            <button class="sugg-pill" onclick="selectSuggestionPill(this.dataset.q)" data-q="Identify anti-senescence genes that suppress B2M and TMSB4X aging markers"
                 style="background:transparent;border:1px solid #d5d5d2;color:#7a7a7a;font-size:12px;font-weight:400;padding:6px 14px;border-radius:20px;cursor:pointer;transition:all 0.15s;font-family:'Inter','Segoe UI',sans-serif;" onmouseover="this.style.borderColor='#bbb8b3';this.style.color='#1a1a1a';this.style.background='#f7f7f6'" onmouseout="this.style.borderColor='#d5d5d2';this.style.color='#7a7a7a';this.style.background='transparent'">
                 Anti-senescence targets
             </button>
-            <button class="sugg-pill" onclick="document.getElementById('disc-query').value=this.dataset.q;document.getElementById('disc-query').dispatchEvent(new Event('input'))" data-q="Vascular endothelial rejuvenation: reactivate calcium signalling via PRKG1 and SLC8A1"
+            <button class="sugg-pill" onclick="selectSuggestionPill(this.dataset.q)" data-q="Vascular endothelial rejuvenation: reactivate calcium signalling via PRKG1 and SLC8A1"
                 style="background:transparent;border:1px solid #d5d5d2;color:#7a7a7a;font-size:12px;font-weight:400;padding:6px 14px;border-radius:20px;cursor:pointer;transition:all 0.15s;font-family:'Inter','Segoe UI',sans-serif;" onmouseover="this.style.borderColor='#bbb8b3';this.style.color='#1a1a1a';this.style.background='#f7f7f6'" onmouseout="this.style.borderColor='#d5d5d2';this.style.color='#7a7a7a';this.style.background='transparent'">
                 Vascular endothelial
             </button>
-            <button class="sugg-pill" onclick="document.getElementById('disc-query').value=this.dataset.q;document.getElementById('disc-query').dispatchEvent(new Event('input'))" data-q="Sarcomere integrity restoration: identify TTN, MYH7, NEXN pathway genes in young donors"
+            <button class="sugg-pill" onclick="selectSuggestionPill(this.dataset.q)" data-q="Sarcomere integrity restoration: identify TTN, MYH7, NEXN pathway genes in young donors"
                 style="background:transparent;border:1px solid #d5d5d2;color:#7a7a7a;font-size:12px;font-weight:400;padding:6px 14px;border-radius:20px;cursor:pointer;transition:all 0.15s;font-family:'Inter','Segoe UI',sans-serif;" onmouseover="this.style.borderColor='#bbb8b3';this.style.color='#1a1a1a';this.style.background='#f7f7f6'" onmouseout="this.style.borderColor='#d5d5d2';this.style.color='#7a7a7a';this.style.background='transparent'">
                 Sarcomere integrity
             </button>
-            <button class="sugg-pill" onclick="document.getElementById('disc-query').value=this.dataset.q;document.getElementById('disc-query').dispatchEvent(new Event('input'))" data-q="Find epigenetic clock reversal genes targeting DNMT3A and TET2 pathways in cardiac fibroblasts"
+            <button class="sugg-pill" onclick="selectSuggestionPill(this.dataset.q)" data-q="Find epigenetic clock reversal genes targeting DNMT3A and TET2 pathways in cardiac fibroblasts"
                 style="background:transparent;border:1px solid #d5d5d2;color:#7a7a7a;font-size:12px;font-weight:400;padding:6px 14px;border-radius:20px;cursor:pointer;transition:all 0.15s;font-family:'Inter','Segoe UI',sans-serif;" onmouseover="this.style.borderColor='#bbb8b3';this.style.color='#1a1a1a';this.style.background='#f7f7f6'" onmouseout="this.style.borderColor='#d5d5d2';this.style.color='#7a7a7a';this.style.background='transparent'">
                 Epigenetic clock reset
             </button>
@@ -5482,21 +5482,37 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
+function selectSuggestionPill(queryText) {
+    const qEl = document.getElementById('disc-query');
+    if (qEl) {
+        qEl.value = queryText;
+        qEl.style.height = 'auto';
+        qEl.style.height = Math.min(qEl.scrollHeight, 200) + 'px';
+        updateSubmitButton(true);
+        runDiscovery();
+    }
+}
+
 // ── Discovery runner — query-aware dual mode ───────────────────────
 async function runDiscovery() {
 
     const resultsEl = document.getElementById('disc-results');
     const mode  = window._discMode || 'real';
-    const query = (document.getElementById('disc-query').value || '').trim();
+    const qInput = document.getElementById('disc-query');
+    let query = (qInput ? qInput.value || '' : '').trim();
 
     const b2bPanels = document.getElementById('discovery-b2b-panels');
     if (b2bPanels) b2bPanels.style.display = 'none';
 
+    // Auto-fill default prompt if user clicked Analyse with empty input
     if (!query) {
-        resultsEl.style.display = 'block';
-        resultsEl.innerHTML = `<div style="background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.25);border-radius:12px;padding:14px;text-align:center;color:#f59e0b;font-size:10px;font-weight:700;">
-            ⚠ Please enter a research question first</div>`;
-        return;
+        query = "Identify a minimum-factor transcription cocktail to directly reprogram human cardiac fibroblasts into functional ventricular cardiomyocytes while keeping membrane capacitance stable";
+        if (qInput) {
+            qInput.value = query;
+            qInput.style.height = 'auto';
+            qInput.style.height = Math.min(qInput.scrollHeight, 200) + 'px';
+            updateSubmitButton(true);
+        }
     }
 
     document.getElementById('view-discovery').classList.add('has-results');
