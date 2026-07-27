@@ -4,7 +4,10 @@
   "server_version": "31.0.0",
   "description": "Anthropic Model Context Protocol (MCP) server for single-cell discovery, 512-neuron cardiac safety audit, and Boltz complex folding.",
   "authentication": {
-    "required": false
+    "type": "oauth2",
+    "authorization_url": "https://niluslab.com/oauth/authorize",
+    "token_url": "https://niluslab.com/oauth/token",
+    "client_id": "zenith-public-client"
   },
   "transport": {
     "type": "sse",

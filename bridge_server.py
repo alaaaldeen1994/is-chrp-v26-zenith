@@ -2265,13 +2265,14 @@ async def get_oauth_server_config():
         "authorization_endpoint": "https://niluslab.com/oauth/authorize",
         "token_endpoint": "https://niluslab.com/oauth/token",
         "registration_endpoint": "https://niluslab.com/oauth/register",
+        "scopes_supported": ["read", "write"],
         "response_types_supported": ["code"],
-        "grant_types_supported": ["authorization_code"],
-        "code_challenge_methods_supported": ["S256", "plain"]
+        "grant_types_supported": ["authorization_code", "client_credentials"],
+        "token_endpoint_auth_methods_supported": ["client_secret_post", "client_secret_basic", "none"]
     }
 
 @app.get("/oauth/authorize")
-async def oauth_authorize(redirect_uri: str = "https://claude.ai/api/auth/callback", state: str = ""):
+async def oauth_authorize(redirect_uri: str = "https://claude.ai/api/auth/callback", state: str = "", client_id: str = "zenith-public-client"):
     from fastapi.responses import RedirectResponse
     delimiter = "&" if "?" in redirect_uri else "?"
     target_url = f"{redirect_uri}{delimiter}code=zenith_public_code_2026&state={state}"
@@ -2279,29 +2280,24 @@ async def oauth_authorize(redirect_uri: str = "https://claude.ai/api/auth/callba
 
 @app.post("/oauth/token")
 @app.get("/oauth/token")
-async def oauth_token():
+async def oauth_token(request: Request):
     return {
         "access_token": "zenith_public_access_token_2026",
         "token_type": "bearer",
-        "expires_in": 315360000
+        "expires_in": 315360000,
+        "scope": "read write"
     }
 
 # Dynamic Client Registration (RFC 7591) for Claude Remote MCP
 @app.post("/oauth/register")
 @app.post("/api/v1/mcp/register")
 async def oauth_register(request: Request):
-    try:
-        body = await request.json()
-    except Exception:
-        body = {}
-    client_name = body.get("client_name", "Claude Connector")
-    redirect_uris = body.get("redirect_uris", ["https://claude.ai/api/auth/callback"])
     return {
-        "client_id": "zenith_claude_client_2026",
-        "client_secret": "zenith_claude_secret_2026",
-        "client_name": client_name,
-        "redirect_uris": redirect_uris,
-        "grant_types": ["authorization_code"],
+        "client_id": "zenith-public-client",
+        "client_secret": "zenith-public-secret",
+        "client_name": "Claude Connector",
+        "redirect_uris": ["https://claude.ai/api/auth/callback"],
+        "grant_types": ["authorization_code", "client_credentials"],
         "response_types": ["code"],
         "token_endpoint_auth_method": "none"
     }
