@@ -280,8 +280,12 @@ class MultiOmicsPredictorService:
                 Wk0, Ek0 = 0.50, 0.50
                 Wk, Ek = Wk0, Ek0
                 
-            # Steady-state methylation fraction
-            Mk = Wk / (Wk + Ek)
+            # Ensure rates remain non-negative
+            Wk = max(0.01, Wk)
+            Ek = max(0.01, Ek)
+                
+            # Steady-state methylation fraction bounded to [0.0, 1.0]
+            Mk = float(np.clip(Wk / (Wk + Ek), 0.0, 1.0))
             cpg_states.append(float(np.round(Mk, 4)))
             
         timeseq_age = baseline_age + predicted_age_delta
