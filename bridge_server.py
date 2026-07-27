@@ -2239,6 +2239,35 @@ async def get_mcp_sse(request: Request):
         yield f"event: endpoint\ndata: https://niluslab.com/api/v1/mcp/messages\n\n"
     return StreamingResponse(event_stream(), media_type="text/event-stream")
 
+# --- ANTHROPIC CLAUDE CONNECTOR OAUTH AUTO-GRANT ENDPOINTS ---
+@app.get("/.well-known/oauth-authorization-server")
+@app.get("/.well-known/openid-configuration")
+async def get_oauth_server_config():
+    return {
+        "issuer": "https://niluslab.com",
+        "authorization_endpoint": "https://niluslab.com/oauth/authorize",
+        "token_endpoint": "https://niluslab.com/oauth/token",
+        "response_types_supported": ["code"],
+        "grant_types_supported": ["authorization_code"],
+        "code_challenge_methods_supported": ["S256", "plain"]
+    }
+
+@app.get("/oauth/authorize")
+async def oauth_authorize(redirect_uri: str = "https://claude.ai/api/auth/callback", state: str = ""):
+    from fastapi.responses import RedirectResponse
+    delimiter = "&" if "?" in redirect_uri else "?"
+    target_url = f"{redirect_uri}{delimiter}code=zenith_public_code_2026&state={state}"
+    return RedirectResponse(target_url)
+
+@app.post("/oauth/token")
+@app.get("/oauth/token")
+async def oauth_token():
+    return {
+        "access_token": "zenith_public_access_token_2026",
+        "token_type": "bearer",
+        "expires_in": 315360000
+    }
+
 
 
 @app.get("/dosage_optimization_audit.json")

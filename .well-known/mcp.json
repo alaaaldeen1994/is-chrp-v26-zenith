@@ -3,6 +3,9 @@
   "server_name": "zenith-cellular-reprogramming-api",
   "server_version": "31.0.0",
   "description": "Anthropic Model Context Protocol (MCP) server for single-cell discovery, 512-neuron cardiac safety audit, and Boltz complex folding.",
+  "authentication": {
+    "required": false
+  },
   "transport": {
     "type": "sse",
     "url": "https://niluslab.com/api/v1/mcp/sse"
