@@ -1,0 +1,17 @@
+{
+  "schema_version": "v1",
+  "name_for_human": "Zenith Cellular Reprogramming & Boltz 3D API",
+  "name_for_model": "zenith_cellular_reprogramming_and_boltz_api",
+  "description_for_human": "Cellular reprogramming, 5,009D scVI single-cell discovery, 512-neuron LIF spiking arrhythmia safety audit, mRNA-LNP formulation optimizer, and Boltz-1 3D biomolecular complex folding.",
+  "description_for_model": "Complete biological AI platform for extracting cellular rejuvenation gene targets, running in silico cardiac safety audits, optimizing mRNA-LNP formulations, and generating 3D biomolecular complex predictions.",
+  "auth": {
+    "type": "none"
+  },
+  "api": {
+    "type": "openapi",
+    "url": "https://niluslab.com/openapi.json"
+  },
+  "logo_url": "https://niluslab.com/logo.png",
+  "contact_email": "compliance@niluslab.com",
+  "legal_info_url": "https://niluslab.com/regulatory.html"
+}

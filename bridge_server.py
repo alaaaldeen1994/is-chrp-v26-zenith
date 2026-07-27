@@ -2217,6 +2217,20 @@ async def get_robots():
 
     return FileResponse("robots.txt")
 
+@app.get("/.well-known/claude.json")
+async def get_claude_manifest():
+    path = os.path.join(".well-known", "claude.json")
+    if os.path.exists(path):
+        return FileResponse(path, media_type="application/json")
+    return Response(status_code=404)
+
+@app.get("/.well-known/mcp.json")
+async def get_mcp_manifest():
+    path = os.path.join(".well-known", "mcp.json")
+    if os.path.exists(path):
+        return FileResponse(path, media_type="application/json")
+    return Response(status_code=404)
+
 
 
 @app.get("/dosage_optimization_audit.json")
