@@ -2232,12 +2232,29 @@ async def get_mcp_manifest():
     return Response(status_code=404)
 
 @app.get("/api/v1/mcp/sse")
+@app.get("/mcp/sse")
 @app.get("/mcp")
 async def get_mcp_sse(request: Request):
     from fastapi.responses import StreamingResponse
+    import asyncio
     async def event_stream():
-        yield f"event: endpoint\ndata: https://niluslab.com/api/v1/mcp/messages\n\n"
-    return StreamingResponse(event_stream(), media_type="text/event-stream")
+        yield "event: endpoint\ndata: /api/v1/mcp/messages\n\n"
+        while True:
+            if await request.is_disconnected():
+                break
+            await asyncio.sleep(15)
+            yield "event: ping\ndata: {}\n\n"
+            
+    return StreamingResponse(
+        event_stream(),
+        media_type="text/event-stream",
+        headers={
+            "Cache-Control": "no-cache",
+            "Connection": "keep-alive",
+            "X-Accel-Buffering": "no",
+            "Access-Control-Allow-Origin": "*"
+        }
+    )
 
 # --- ANTHROPIC CLAUDE CONNECTOR OAUTH AUTO-GRANT ENDPOINTS ---
 @app.get("/.well-known/oauth-authorization-server")
@@ -2247,6 +2264,7 @@ async def get_oauth_server_config():
         "issuer": "https://niluslab.com",
         "authorization_endpoint": "https://niluslab.com/oauth/authorize",
         "token_endpoint": "https://niluslab.com/oauth/token",
+        "registration_endpoint": "https://niluslab.com/oauth/register",
         "response_types_supported": ["code"],
         "grant_types_supported": ["authorization_code"],
         "code_challenge_methods_supported": ["S256", "plain"]
@@ -2290,6 +2308,7 @@ async def oauth_register(request: Request):
 
 # Remote MCP JSON-RPC 2.0 Message Handler for Claude Connectors
 @app.post("/api/v1/mcp/messages")
+@app.post("/mcp/messages")
 async def handle_mcp_messages(request: Request):
     try:
         body = await request.json()
@@ -2299,6 +2318,12 @@ async def handle_mcp_messages(request: Request):
     req_id = body.get("id")
     method = body.get("method")
     
+    if method == "notifications/initialized":
+        return Response(status_code=204)
+        
+    if method == "ping":
+        return {"jsonrpc": "2.0", "id": req_id, "result": {}}
+        
     if method == "initialize":
         return {
             "jsonrpc": "2.0",
