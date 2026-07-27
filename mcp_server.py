@@ -230,7 +230,8 @@ class ZenithMCPServer:
                     res = r.json()
                 elif name == "fold_sequence":
                     seq = args.get("sequence", "MKTLLILAVIMAFVVAK")
-                    r = httpx.post("https://www.niluslab.com/api/v2/structure/boltz", json={"sequence": seq}, headers=headers, timeout=15.0)
+                    payload = {"manifest": {"entities": [{"type": "protein", "value": seq, "chain_ids": ["A"]}]}}
+                    r = httpx.post("https://www.niluslab.com/api/v1/structure/boltz/submit", json=payload, headers=headers, timeout=15.0)
                     res = r.json()
                 else:
                     res = {"status": "SUCCESS", "message": f"Executed tool {name}"}
