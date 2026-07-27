@@ -2261,10 +2261,10 @@ async def get_mcp_sse(request: Request):
 @app.get("/.well-known/openid-configuration")
 async def get_oauth_server_config():
     return {
-        "issuer": "https://niluslab.com",
-        "authorization_endpoint": "https://niluslab.com/oauth/authorize",
-        "token_endpoint": "https://niluslab.com/oauth/token",
-        "registration_endpoint": "https://niluslab.com/oauth/register",
+        "issuer": "https://www.niluslab.com",
+        "authorization_endpoint": "https://www.niluslab.com/oauth/authorize",
+        "token_endpoint": "https://www.niluslab.com/oauth/token",
+        "registration_endpoint": "https://www.niluslab.com/oauth/register",
         "scopes_supported": ["read", "write"],
         "response_types_supported": ["code"],
         "grant_types_supported": ["authorization_code", "client_credentials"],

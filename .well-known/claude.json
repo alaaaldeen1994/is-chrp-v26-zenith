@@ -9,9 +9,9 @@
   },
   "api": {
     "type": "openapi",
-    "url": "https://niluslab.com/openapi.json"
+    "url": "https://www.niluslab.com/openapi.json"
   },
-  "logo_url": "https://niluslab.com/logo.png",
+  "logo_url": "https://www.niluslab.com/logo.png",
   "contact_email": "compliance@niluslab.com",
-  "legal_info_url": "https://niluslab.com/regulatory.html"
+  "legal_info_url": "https://www.niluslab.com/regulatory.html"
 }
