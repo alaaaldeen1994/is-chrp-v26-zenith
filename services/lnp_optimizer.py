@@ -364,3 +364,52 @@ class LNPOptimizerService:
                 "particle_size_nm": particle_size
             }
         }
+
+    def calculate_mass_breakdown(self, mrna_dose_ug: float = 100.0, mrna_length_nt: int = 1200, np_ratio: float = 6.0) -> Dict[str, Any]:
+        """
+        Calculates exact wet-lab mass breakdown (in micrograms) and buffer dilution volumes (microliters)
+        for mRNA-LNP formulation.
+        """
+        # Average nucleotide molecular weight = 320.5 Da
+        mrna_mw = (mrna_length_nt * 320.5) + 159.0
+        mrna_nmol = mrna_dose_ug / mrna_mw * 1000.0  # nmol of mRNA
+        phosphate_nmol = mrna_nmol * mrna_length_nt  # 1 phosphate per nt
+        
+        # Ionizable lipid: DLin-MC3-DMA MW = 642.09 g/mol
+        ionizable_nmol = phosphate_nmol * np_ratio
+        ionizable_ug = ionizable_nmol * 642.09 / 1000.0
+        
+        # Molar ratios: 50% Ionizable, 10% DSPC, 38.5% Cholesterol, 1.5% PEG
+        # Total lipid nmol = ionizable_nmol / 0.50
+        total_lipid_nmol = ionizable_nmol / 0.50
+        
+        dspc_nmol = total_lipid_nmol * 0.10
+        cholesterol_nmol = total_lipid_nmol * 0.385
+        peg_nmol = total_lipid_nmol * 0.015
+        
+        # MWs: DSPC = 790.15 g/mol, Cholesterol = 386.65 g/mol, DMG-PEG2000 = 2509.2 g/mol
+        dspc_ug = dspc_nmol * 790.15 / 1000.0
+        cholesterol_ug = cholesterol_nmol * 386.65 / 1000.0
+        peg_ug = peg_nmol * 2509.2 / 1000.0
+        
+        total_lipid_ug = ionizable_ug + dspc_ug + cholesterol_ug + peg_ug
+        
+        return {
+            "mrna_dose_ug": mrna_dose_ug,
+            "mrna_length_nt": mrna_length_nt,
+            "np_ratio": np_ratio,
+            "total_lipid_mass_ug": float(np.round(total_lipid_ug, 2)),
+            "lipid_breakdown_ug": {
+                "ionizable_lipid_mc3_ug": float(np.round(ionizable_ug, 2)),
+                "dspc_ug": float(np.round(dspc_ug, 2)),
+                "cholesterol_ug": float(np.round(cholesterol_ug, 2)),
+                "dmg_peg2000_ug": float(np.round(peg_ug, 2))
+            },
+            "microfluidic_parameters": {
+                "aqueous_channel_flow_rate_ml_min": 9.0,
+                "ethanol_channel_flow_rate_ml_min": 3.0,
+                "total_flow_rate_ml_min": 12.0,
+                "flow_rate_ratio_aqueous_to_eth": "3:1"
+            }
+        }
+

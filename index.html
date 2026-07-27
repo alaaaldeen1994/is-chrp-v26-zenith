@@ -5849,6 +5849,7 @@ async function runDiscovery() {
                         <div style="font-size:14px;color:#64748b;font-weight:500;">Reference: <a href="#" style="color:#3b82f6;text-decoration:none;font-weight:600;">10.1038/s41586-020-2797-4</a></div>
                         <div style="display:flex;gap:12px;flex-wrap:wrap;">
                             <button onclick="downloadResultCSV()" style="background:#ffffff;border:1px solid #cbd5e1;color:#1e293b;font-size:14px;font-weight:600;padding:10px 18px;border-radius:10px;cursor:pointer;transition:all 0.2s;box-shadow:0 1px 2px rgba(0,0,0,0.05);" onmouseover="this.style.background='#f8fafc';this.style.borderColor='#94a3b8';" onmouseout="this.style.background='#ffffff';this.style.borderColor='#cbd5e1';">Export CSV</button>
+                            <button onclick="downloadOpentronsScript()" style="background:#ffffff;border:1px solid #d97706;color:#d97706;font-size:14px;font-weight:600;padding:10px 18px;border-radius:10px;cursor:pointer;transition:all 0.2s;box-shadow:0 1px 2px rgba(0,0,0,0.05);" onmouseover="this.style.background='#fffbeb';" onmouseout="this.style.background='#ffffff';">🤖 Export OT-2 Script</button>
                             <button onclick="printClinicalDossier()" style="background:#ffffff;border:1px solid #0284c7;color:#0284c7;font-size:14px;font-weight:600;padding:10px 18px;border-radius:10px;cursor:pointer;transition:all 0.2s;box-shadow:0 1px 2px rgba(0,0,0,0.05);" onmouseover="this.style.background='#f0f9ff';" onmouseout="this.style.background='#ffffff';">Print Wet-Lab Dossier</button>
                             <button onclick="showLnpCalculatorModal()" style="background:#ffffff;border:1px solid #16a34a;color:#15803d;font-size:14px;font-weight:600;padding:10px 18px;border-radius:10px;cursor:pointer;transition:all 0.2s;box-shadow:0 1px 2px rgba(0,0,0,0.05);" onmouseover="this.style.background='#f0fdf4';" onmouseout="this.style.background='#ffffff';">LNP Formulation</button>
                             <button onclick="downloadResultJSON()" style="background:#ffffff;border:1px solid #cbd5e1;color:#334155;font-size:14px;font-weight:600;padding:10px 18px;border-radius:10px;cursor:pointer;transition:all 0.2s;box-shadow:0 1px 2px rgba(0,0,0,0.05);" onmouseover="this.style.background='#f8fafc';this.style.borderColor='#94a3b8';" onmouseout="this.style.background='#ffffff';this.style.borderColor='#cbd5e1';">Export JSON</button>
@@ -6286,15 +6287,66 @@ window.printClinicalDossier = function() {
     printWin.document.close();
 };
 
-window.showLnpCalculatorModal = function() {
-    alert("=== Zenith LNP Delivery Formulation Calculator ===\n\n" +
-          "• Ionizable Lipid (DLin-MC3-DMA / SM-102): 50.0 molar %\n" +
-          "• Structural Lipid (DSPC): 10.0 molar %\n" +
-          "• Sterol (Cholesterol): 38.5 molar %\n" +
-          "• PEG-Lipid (DMG-PEG2000): 1.5 molar %\n\n" +
-          "N/P Ratio: 6.0 | Particle Size: ~85 nm\n" +
-          "Encapsulation Efficiency: >94.2%\n" +
-          "Target Cell Tropism: Cardiac Myocyte & Epicardial Adipocyte mRNA delivery");
+window.downloadOpentronsScript = async function() {
+    if (!window._lastResult) {
+        alert('Please run a discovery first.');
+        return;
+    }
+    const genes = (window._lastResult.pro || []).map(g => g.gene);
+    try {
+        const res = await fetch('/api/v2/robotics/opentrons', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ genes: genes.length ? genes : ["SIRT1", "SIRT6", "PRKN", "PINK1"] })
+        });
+        const data = await res.json();
+        const blob = new Blob([data.script], { type: 'text/x-python;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = data.filename || `zenith_opentrons_${Date.now()}.py`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        if (window.BiosimUI && typeof window.BiosimUI.notify === 'function') {
+            window.BiosimUI.notify('OT-2 SCRIPT EXPORTED', 'Opentrons Python script downloaded!', 'suc');
+        }
+    } catch (e) {
+        console.error("Opentrons script generation failed", e);
+        alert('Failed to generate Opentrons script.');
+    }
+};
+
+window.showLnpCalculatorModal = async function() {
+    try {
+        const res = await fetch('/api/v2/lnp/calculate', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ mrna_dose_ug: 100.0, mrna_length_nt: 1200, np_ratio: 6.0 })
+        });
+        const data = await res.json();
+        const b = data.lipid_breakdown_ug;
+        alert(`=== Zenith LNP Delivery Formulation Calculator ===\n\n` +
+              `• Ionizable Lipid (DLin-MC3-DMA / SM-102): ${b.ionizable_lipid_mc3_ug} µg (50.0 molar %)\n` +
+              `• Structural Lipid (DSPC): ${b.dspc_ug} µg (10.0 molar %)\n` +
+              `• Sterol (Cholesterol): ${b.cholesterol_ug} µg (38.5 molar %)\n` +
+              `• PEG-Lipid (DMG-PEG2000): ${b.dmg_peg2000_ug} µg (1.5 molar %)\n\n` +
+              `Total Lipid Mass: ${data.total_lipid_mass_ug} µg\n` +
+              `N/P Ratio: ${data.np_ratio} | Flow Rate Ratio (Aqueous:Eth): ${data.microfluidic_parameters.flow_rate_ratio_aqueous_to_eth}\n` +
+              `Total Flow Rate: ${data.microfluidic_parameters.total_flow_rate_ml_min} mL/min\n` +
+              `Encapsulation Efficiency: >94.2%\n` +
+              `Target Cell Tropism: Cardiac Myocyte & Epicardial Adipocyte mRNA delivery`);
+    } catch (e) {
+        alert("=== Zenith LNP Delivery Formulation Calculator ===\n\n" +
+              "• Ionizable Lipid (DLin-MC3-DMA / SM-102): 50.0 molar %\n" +
+              "• Structural Lipid (DSPC): 10.0 molar %\n" +
+              "• Sterol (Cholesterol): 38.5 molar %\n" +
+              "• PEG-Lipid (DMG-PEG2000): 1.5 molar %\n\n" +
+              "N/P Ratio: 6.0 | Particle Size: ~85 nm\n" +
+              "Encapsulation Efficiency: >94.2%\n" +
+              "Target Cell Tropism: Cardiac Myocyte & Epicardial Adipocyte mRNA delivery");
+    }
 };
 
 window.downloadAF3JSON = async function() {
