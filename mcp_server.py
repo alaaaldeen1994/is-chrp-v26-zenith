@@ -211,22 +211,26 @@ class ZenithMCPServer:
             # Direct production endpoint fallback if client is not configured or fails
             if res is None:
                 import httpx
+                headers = {"X-API-Key": "zenith_public_demo_key_2026"}
                 if name == "safety_audit":
                     factors = args.get("factors", ["GATA4", "TBX5", "MEF2C", "HAND2"])
                     expr_map = {f: 3.0 for f in factors}
                     expr_map.update({"SCN5A": 3.0, "KCNH2": 3.5, "KCNQ1": 3.0, "CACNA1C": 2.5})
-                    r = httpx.post("https://www.niluslab.com/api/v1/neural/analyze", json={"expression": expr_map}, timeout=15.0)
+                    r = httpx.post("https://www.niluslab.com/api/v1/neural/analyze", json={"expression": expr_map}, headers=headers, timeout=15.0)
                     res = r.json()
                 elif name == "optimize_lnp":
                     molar_ratios = args.get("molar_ratios", {"ionizable": 50.0, "helper": 10.0, "cholesterol": 38.5, "peg": 1.5})
-                    r = httpx.post("https://www.niluslab.com/api/v2/lnp/calculate", json={"molar_ratios": molar_ratios, "np_ratio": args.get("np_ratio", 6.0)}, timeout=15.0)
+                    r = httpx.post("https://www.niluslab.com/api/v2/lnp/calculate", json={"molar_ratios": molar_ratios, "np_ratio": args.get("np_ratio", 6.0)}, headers=headers, timeout=15.0)
                     res = r.json()
                 elif name == "predict_perturbation":
-                    r = httpx.get("https://www.niluslab.com/api/real-discovery", timeout=15.0)
+                    p_factors = args.get("perturbation_factors") or {"GATA4": 1.0, "TBX5": 1.0, "MEF2C": 1.0, "HAND2": 1.0}
+                    b_type = args.get("baseline_cell_type") or "fibroblast"
+                    payload = {"baseline_cell_type": b_type, "perturbation_factors": p_factors}
+                    r = httpx.post("https://www.niluslab.com/api/v1/clinical/predict/perturbation", json=payload, headers=headers, timeout=15.0)
                     res = r.json()
                 elif name == "fold_sequence":
                     seq = args.get("sequence", "MKTLLILAVIMAFVVAK")
-                    r = httpx.post("https://www.niluslab.com/api/v2/structure/boltz", json={"sequence": seq}, timeout=15.0)
+                    r = httpx.post("https://www.niluslab.com/api/v2/structure/boltz", json={"sequence": seq}, headers=headers, timeout=15.0)
                     res = r.json()
                 else:
                     res = {"status": "SUCCESS", "message": f"Executed tool {name}"}
