@@ -195,6 +195,43 @@
                 </div>
             </section>
 
+            <!-- Section 2.5: Clinical Safety Audit Architecture (NEUROS-X) -->
+            <section class="card-elite">
+                <div class="flex items-center gap-3 mb-6">
+                    <span class="px-3 py-1 bg-blue-50 border border-blue-200 text-blue-700 text-[10px] font-black rounded-full uppercase tracking-wider">In Silico Safety Architecture</span>
+                </div>
+                <h2 class="text-3xl font-black mb-4 text-slate-900">
+                    NEUROS-X Arrhythmia Safety Engine
+                </h2>
+                <p class="text-slate-600 mb-8 font-medium">
+                    The NEUROS-X Safety Engine uses a 512-neuron spiking cardiac substrate to audit candidate reprogramming cocktails for arrhythmia risk (Long QT, CPVT) <em>in silico</em> prior to wet-lab LNP formulation and animal validation.
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    <div class="p-6 bg-emerald-50/50 border border-emerald-200/60 rounded-2xl">
+                        <div class="text-[10px] font-black text-emerald-700 uppercase tracking-widest mb-2">SAFE</div>
+                        <h4 class="text-base font-black text-slate-900 mb-1">Stable Conduction</h4>
+                        <p class="text-xs text-slate-500 font-medium">Normal ECG synchrony and action potential integration. Approved for wet-lab validation.</p>
+                    </div>
+                    <div class="p-6 bg-amber-50/50 border border-amber-200/60 rounded-2xl">
+                        <div class="text-[10px] font-black text-amber-700 uppercase tracking-widest mb-2">WARNING</div>
+                        <h4 class="text-base font-black text-slate-900 mb-1">Arrhythmia Risk</h4>
+                        <p class="text-xs text-slate-500 font-medium">Partial conduction block detected. Automated Bayesian dosage optimization recommended.</p>
+                    </div>
+                    <div class="p-6 bg-rose-50/50 border border-rose-200/60 rounded-2xl">
+                        <div class="text-[10px] font-black text-rose-700 uppercase tracking-widest mb-2">BLOCKED</div>
+                        <h4 class="text-base font-black text-slate-900 mb-1">Conduction Collapse</h4>
+                        <p class="text-xs text-slate-500 font-medium">Action potential failure. Candidate cocktail blacklisted. Alternative factors suggested.</p>
+                    </div>
+                </div>
+                <div class="p-6 bg-slate-900 text-white rounded-2xl flex items-center justify-between gap-6 flex-wrap">
+                    <div>
+                        <h4 class="font-black text-sm text-white mb-1">Neural Safety API Endpoint</h4>
+                        <code class="text-xs font-mono text-cyan-400 bg-slate-800 px-3 py-1 rounded-md">POST /api/v1/neural/analyze</code>
+                    </div>
+                    <a href="/docs" class="px-5 py-2.5 bg-blue-600 text-white font-bold text-xs rounded-xl shadow-lg hover:bg-blue-700 transition-all">View API Docs</a>
+                </div>
+            </section>
+
             <!-- Section 3: Evidence Roadmap -->
             <section class="card-elite">
                 <h2 class="text-3xl font-black mb-12 flex items-center gap-4 text-slate-900">

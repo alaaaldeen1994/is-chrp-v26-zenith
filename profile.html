@@ -4885,12 +4885,12 @@
           <div style="background:#ffffff;border:1px solid #e2e8f0;border-radius:20px;padding:36px;margin-bottom:36px;box-shadow:0 10px 30px rgba(0,0,0,0.02)">
             <h3 style="font-size:20px;font-weight:800;text-align:center;margin-bottom:20px;color:#0f172a;font-family:'Outfit', sans-serif;">Live Spiking Substrate Audit</h3>
             <div style="text-align:center;margin-bottom:24px;">
-              <div id="safety-badge" style="display:inline-block;font-size:16px;font-weight:800;font-family:'JetBrains Mono', monospace;padding:10px 24px;border-radius:10px;background:#0f172a;color:#38bdf8;border:1px solid #1e293b;">AWAITING INPUT</div>
+              <div id="safety-badge" style="display:inline-block;font-size:15px;font-weight:800;font-family:'JetBrains Mono', monospace;padding:10px 24px;border-radius:10px;background:rgba(5,150,105,0.08);color:#047857;border:1px solid rgba(5,150,105,0.2);">VERIFIED SAFE — STABLE CONDUCTION (512 LIF NEURONS)</div>
             </div>
             <canvas id="ecg-canvas" width="800" height="200" style="background:#020617;border-radius:12px;display:block;margin:0 auto;width:100%;max-width:800px;height:200px;border:1px solid #1e293b;"></canvas>
             <div style="text-align:center;margin-top:24px">
-              <button onclick="runSafetyTest('SAFE')" style="background:#2563eb;color:#fff;border:none;padding:10px 22px;border-radius:10px;cursor:pointer;margin:0 6px;font-weight:700;font-size:13px;box-shadow:0 4px 12px rgba(37,99,235,0.15);transition:all 0.15s;" onmouseover="this.style.background='#1d4ed8'" onmouseout="this.style.background='#2563eb'">Test SAFE Cocktail</button>
-              <button onclick="runSafetyTest('BLOCKED')" style="background:#e11d48;color:#fff;border:none;padding:10px 22px;border-radius:10px;cursor:pointer;margin:0 6px;font-weight:700;font-size:13px;box-shadow:0 4px 12px rgba(225,29,72,0.15);transition:all 0.15s;" onmouseover="this.style.background='#be123c'" onmouseout="this.style.background='#e11d48'">Test BLOCKED Cocktail</button>
+              <button onclick="runSafetyTest('SAFE')" style="background:#2563eb;color:#fff;border:none;padding:10px 22px;border-radius:10px;cursor:pointer;margin:0 6px;font-weight:700;font-size:13px;box-shadow:0 4px 12px rgba(37,99,235,0.15);transition:all 0.15s;" onmouseover="this.style.background='#1d4ed8'" onmouseout="this.style.background='#2563eb'">Simulate SAFE Cocktail</button>
+              <button onclick="runSafetyTest('BLOCKED')" style="background:#e11d48;color:#fff;border:none;padding:10px 22px;border-radius:10px;cursor:pointer;margin:0 6px;font-weight:700;font-size:13px;box-shadow:0 4px 12px rgba(225,29,72,0.15);transition:all 0.15s;" onmouseover="this.style.background='#be123c'" onmouseout="this.style.background='#e11d48'">Simulate BLOCKED Cocktail</button>
             </div>
           </div>
           <div style="background:#ffffff;border:1px solid #cbd5e1;border-radius:16px;padding:28px;display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap">
@@ -6144,6 +6144,12 @@ function plotECG(ecgData) {
   });
   ctx.stroke();
 }
+
+window.addEventListener('DOMContentLoaded', () => {
+  setTimeout(() => {
+    runSafetyTest('SAFE');
+  }, 400);
+});
 </script>
 
         <!-- PLATFORM STATUS FOOTER (Dark Mode Redesign) -->
