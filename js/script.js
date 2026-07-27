@@ -3861,6 +3861,9 @@ const BiosimBridge = {
         const height = svg.clientHeight || 20;
         
         const minTime = Math.min(...timePoints);
+        const maxTime = Math.max(...timePoints);
+        const minConc = 0;
+        const maxConc = Math.max(...concentrationValues, 1.0);
         const timeRange = (maxTime - minTime) || 1.0;
         const concRange = (maxConc - minConc) || 1.0;
         
