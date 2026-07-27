@@ -206,14 +206,13 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
             response.headers["Expires"] = "0"
 
         # Production CSP: Restrict to known trusted domains
-        # jQuery and 3Dmol.js are now self-hosted under /vendor — no external CDN needed
         response.headers["Content-Security-Policy"] = (
             "default-src 'self'; "
-            "script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://cdn.jsdelivr.net https://apis.google.com https://www.gstatic.com https://unpkg.com; "
-            "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net https://unpkg.com; "
+            "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.tailwindcss.com https://cdn.jsdelivr.net https://apis.google.com https://www.gstatic.com https://unpkg.com https://cdnjs.cloudflare.com; "
+            "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net https://unpkg.com https://cdnjs.cloudflare.com; "
             "img-src 'self' data: blob: https:; "
-            "font-src 'self' data: https://fonts.gstatic.com https://cdn.jsdelivr.net; "
-            "connect-src 'self' https://api.esm.metainfrastructure.org https://api.openai.com https://cellxgene.cziscience.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://nilus-lab.firebaseapp.com https://*.googleapis.com https://*.firebaseapp.com wss:; "
+            "font-src 'self' data: https://fonts.gstatic.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; "
+            "connect-src 'self' https://niluslab.com https://*.niluslab.com https://api.esm.metainfrastructure.org https://api.openai.com https://cellxgene.cziscience.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://nilus-lab.firebaseapp.com https://*.googleapis.com https://*.firebaseapp.com wss:; "
             "frame-src 'self' https://alphafoldserver.com https://nilus-lab.firebaseapp.com https://*.firebaseapp.com https://apis.google.com; "
             "worker-src 'self' blob:; "
             "child-src 'self' blob:; "

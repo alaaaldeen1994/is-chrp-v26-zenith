@@ -3861,20 +3861,22 @@ const BiosimBridge = {
         const height = svg.clientHeight || 20;
         
         const minTime = Math.min(...timePoints);
-        const maxTime = Math.max(...timePoints);
-        const minConc = 0;
-        const maxConc = Math.max(...concentrationValues, 1.0);
+        const timeRange = (maxTime - minTime) || 1.0;
+        const concRange = (maxConc - minConc) || 1.0;
         
         let pathD = '';
         for (let i = 0; i < timePoints.length; i++) {
-            const x = ((timePoints[i] - minTime) / (maxTime - minTime)) * width;
-            const y = height - ((concentrationValues[i] - minConc) / (maxConc - minConc)) * (height - 4) - 2;
-            if (i === 0) {
-                pathD += `M ${x} ${y}`;
+            const x = ((timePoints[i] - minTime) / timeRange) * width;
+            const y = height - ((concentrationValues[i] - minConc) / concRange) * (height - 4) - 2;
+            if (isNaN(x) || isNaN(y)) continue;
+            if (pathD === '') {
+                pathD += `M ${x.toFixed(2)} ${y.toFixed(2)}`;
             } else {
-                pathD += ` L ${x} ${y}`;
+                pathD += ` L ${x.toFixed(2)} ${y.toFixed(2)}`;
             }
         }
+        
+        if (!pathD) return;
         
         const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
         path.setAttribute('d', pathD);
