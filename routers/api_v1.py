@@ -350,10 +350,10 @@ def post_predict_perturbation(
             eta_seconds=6.0
         )
         
-    # Otherwise, run the default synchronous projection
+    factors_map = payload.perturbation_factors if payload.perturbation_factors else {"GATA4": 3.0, "TBX5": 3.0, "MEF2C": 3.0, "HAND2": 3.0}
     result = predictor.predict_perturbation_trajectory(
         baseline_cell_type=payload.baseline_cell_type,
-        factors=payload.perturbation_factors
+        factors=factors_map
     )
     
     duration = int((time.time() - start_time) * 1000)

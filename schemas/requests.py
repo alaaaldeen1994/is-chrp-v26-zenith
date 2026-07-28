@@ -2,20 +2,20 @@ from pydantic import BaseModel, Field
 from typing import List, Dict, Optional
 
 class LNPOptimizeRequest(BaseModel):
-    molar_ratios: Dict[str, float] = Field(
-        ..., 
+    molar_ratios: Optional[Dict[str, float]] = Field(
+        default=None, 
         example={"ionizable": 0.50, "helper": 0.10, "cholesterol": 0.385, "peg": 0.015},
-        description="Molar percentages of ionizable, helper, cholesterol, and PEG lipids (must sum to 1.0)"
+        description="Molar percentages of ionizable, helper, cholesterol, and PEG lipids"
     )
-    np_ratio: float = Field(..., ge=1.0, le=20.0, description="Nitrogen-to-Phosphate molar ratio")
+    np_ratio: float = Field(6.0, ge=1.0, le=20.0, description="Nitrogen-to-Phosphate molar ratio")
     active_ligand_conjugation: bool = Field(False, description="Whether active targeting ligands are conjugated to the surface")
     ligand_density: float = Field(0.0, ge=0.0, le=10.0, description="Percentage density of targeted surface ligands")
     peg_mw: float = Field(2000.0, description="Molecular weight of PEG lipids (usually 2000 Da)")
 
 class PerturbationRequest(BaseModel):
     baseline_cell_type: str = Field("ventricular_myocyte", description="Cell type: fibroblast, ventricular_myocyte, endo, etc.")
-    perturbation_factors: Dict[str, float] = Field(
-        ..., 
+    perturbation_factors: Optional[Dict[str, float]] = Field(
+        default=None, 
         example={"GATA4": 1.0, "SIRT1": 2.0},
         description="Map of candidate gene symbols or compounds and their dosage/activation level"
     )
