@@ -2045,15 +2045,13 @@ async def serve_discovery_html():
 
 @app.get("/zenith_dna.mp4")
 async def serve_dna_video():
-    try:
-        for root_dir, dirs, files in os.walk("."):
-            for fname in ["zenith_dna.mp4", "9.mp4"]:
-                if fname in files:
-                    p = os.path.abspath(os.path.join(root_dir, fname))
-                    with open(p, "rb") as f:
-                        return Response(content=f.read(), media_type="video/mp4")
-    except Exception:
-        pass
+    for candidate in ["zenith_dna.mp4", "assets/9.mp4", "assets/zenith_dna.mp4"]:
+        if os.path.exists(candidate):
+            try:
+                with open(candidate, "rb") as f:
+                    return Response(content=f.read(), media_type="video/mp4")
+            except Exception:
+                pass
     return Response(content=b"", status_code=200, media_type="video/mp4")
 
 
