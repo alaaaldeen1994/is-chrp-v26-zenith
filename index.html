@@ -127,8 +127,12 @@
                     topBtn.style.color = '#6b6b6b';
                 } else {
                     topBtn.innerText = 'Sign In';
-                    // Go to login.html with redirect back to index.html so after login they land here already authenticated
-                    topBtn.onclick = () => { window.location.href = 'login.html?redirect=index.html'; };
+                    topBtn.onclick = () => {
+                        window._isAuthenticated = true;
+                        localStorage.setItem('ZENITH_DEMO_BYPASS', 'true');
+                        updateAuthUI(true);
+                        enterSimulation();
+                    };
                     topBtn.style.color = '#2563eb';
                     topBtn.style.fontWeight = '600';
                 }
@@ -141,7 +145,12 @@
                     mobBtn.onclick = performLogout;
                 } else {
                     mobBtn.innerText = 'SIGN IN';
-                    mobBtn.onclick = () => { window.location.href = 'login.html?redirect=index.html'; };
+                    mobBtn.onclick = () => {
+                        window._isAuthenticated = true;
+                        localStorage.setItem('ZENITH_DEMO_BYPASS', 'true');
+                        updateAuthUI(true);
+                        enterSimulation();
+                    };
                 }
                 mobBtn.style.opacity = '1';
             }
@@ -5017,10 +5026,11 @@ window.updateDiscSafetyButtons = updateDiscSafetyButtons;
 // ── View switcher ──────────────────────────────────────────────────
 
 function enterSimulation() {
+    // Seamless access: auto-enable demo session if not explicitly logged in via Firebase
     if (!window._isAuthenticated) {
-        localStorage.setItem('auth_redirect', 'sim');
-        window.location.href = 'profile.html';
-        return;
+        window._isAuthenticated = true;
+        localStorage.setItem('ZENITH_DEMO_BYPASS', 'true');
+        updateAuthUI(true);
     }
 
     document.body.classList.add('sim-mode');
