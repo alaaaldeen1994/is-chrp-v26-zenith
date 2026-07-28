@@ -1671,6 +1671,120 @@ app = FastAPI(
     openapi_url="/openapi.json"
 )
 
+def custom_openapi():
+    if app.openapi_schema:
+        return app.openapi_schema
+    spec = {
+        "openapi": "3.0.0",
+        "info": {
+            "title": "Zenith Cellular Reprogramming & Boltz 3D API",
+            "description": "Single-cell discovery, 512-neuron LIF cardiac arrhythmia audit, mRNA-LNP formulation optimizer, and Boltz-1 3D complex folding.",
+            "version": "31.0.0"
+        },
+        "servers": [
+            {"url": "https://www.niluslab.com", "description": "Zenith Production API Server"}
+        ],
+        "paths": {
+            "/api/v1/neural/analyze": {
+                "post": {
+                    "summary": "Run 512-neuron cardiac arrhythmia safety audit",
+                    "operationId": "safety_audit",
+                    "requestBody": {
+                        "required": True,
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "expression": {
+                                            "type": "object",
+                                            "description": "Gene expression vector for reprogramming factors and ion channels e.g. GATA4: 3.0, TBX5: 3.0"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "responses": {
+                        "200": {"description": "Successful audit response"}
+                    }
+                }
+            },
+            "/api/v1/clinical/predict/perturbation": {
+                "post": {
+                    "summary": "Predict scVI multi-omics cell rejuvenation trajectory",
+                    "operationId": "predict_perturbation",
+                    "requestBody": {
+                        "required": True,
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "baseline_cell_type": {"type": "string", "default": "fibroblast"},
+                                        "perturbation_factors": {"type": "object"}
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "responses": {
+                        "200": {"description": "Successful trajectory prediction"}
+                    }
+                }
+            },
+            "/api/v2/lnp/calculate": {
+                "post": {
+                    "summary": "Calculate wet-lab mRNA-LNP formulation",
+                    "operationId": "optimize_lnp",
+                    "requestBody": {
+                        "required": True,
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "molar_ratios": {"type": "object"},
+                                        "np_ratio": {"type": "number", "default": 6.0}
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "responses": {
+                        "200": {"description": "Successful LNP formulation breakdown"}
+                    }
+                }
+            },
+            "/api/v1/structure/boltz/submit": {
+                "post": {
+                    "summary": "Fold 3D biomolecular protein-ligand complex via Boltz-1",
+                    "operationId": "fold_sequence",
+                    "requestBody": {
+                        "required": True,
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "manifest": {"type": "object"}
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "responses": {
+                        "200": {"description": "Successful Boltz prediction submission"}
+                    }
+                }
+            }
+        }
+    }
+    app.openapi_schema = spec
+    return app.openapi_schema
+
+app.openapi = custom_openapi
+
 
 
 # ==================== SECURITY MIDDLEWARE ====================
