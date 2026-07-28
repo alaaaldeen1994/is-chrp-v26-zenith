@@ -1672,8 +1672,6 @@ app = FastAPI(
 )
 
 def custom_openapi():
-    if app.openapi_schema:
-        return app.openapi_schema
     spec = {
         "openapi": "3.0.0",
         "info": {
@@ -1780,8 +1778,7 @@ def custom_openapi():
             }
         }
     }
-    app.openapi_schema = spec
-    return app.openapi_schema
+    return spec
 
 app.openapi = custom_openapi
 
