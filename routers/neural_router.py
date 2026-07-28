@@ -77,8 +77,9 @@ class ExpressionRequest(BaseModel):
 
 
 class AnalyzeRequest(BaseModel):
-    """Substrate analysis request (ion-channel profile -> phi/synchrony/ecg)."""
-    expression: Dict[str, float] = Field(..., description="Ion-channel gene expression")
+    """Substrate analysis request (flexible payload for LLM actions)."""
+    expression: Optional[Dict[str, Any]] = Field(default=None, description="Ion-channel or TF gene expression map")
+    factors: Optional[List[str]] = Field(default=None, description="Optional list of gene factors")
     steps: int = Field(50, ge=10, le=500, description="Simulation steps")
 
 
@@ -183,7 +184,23 @@ async def analyze_cocktail_safety(req: AnalyzeRequest, request: Request):
     _check_rate_limit(request)
     try:
         svc = get_substrate_service()
-        result = svc.substrate.audit_arrhythmia_risk(req.expression)
+        
+        # Parse expression map flexibly across dict, factors list, or raw keys
+        expr_map: Dict[str, float] = {}
+        if req.expression:
+            for k, v in req.expression.items():
+                try:
+                    expr_map[str(k).upper()] = float(v)
+                except (ValueError, TypeError):
+                    expr_map[str(k).upper()] = 1.0
+        elif req.factors:
+            for f in req.factors:
+                expr_map[str(f).upper()] = 1.0
+                
+        if not expr_map:
+            expr_map = {"GATA4": 1.0, "TBX5": 1.0, "MEF2C": 1.0, "HAND2": 1.0}
+            
+        result = svc.substrate.audit_arrhythmia_risk(expr_map)
         result["timestamp"] = datetime.utcnow().isoformat()
         result["endpoint"] = "neural_arrhythmia_audit_v1"
         return result
