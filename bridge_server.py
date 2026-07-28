@@ -2221,6 +2221,7 @@ async def get_robots():
     return FileResponse("robots.txt")
 
 @app.get("/chatgpt/openapi.json")
+@app.get("/api/chatgpt/openapi.json")
 async def get_chatgpt_openapi_spec():
     from fastapi.responses import JSONResponse
     spec = {
