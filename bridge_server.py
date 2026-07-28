@@ -2045,7 +2045,10 @@ async def serve_discovery_html():
 
 @app.get("/zenith_dna.mp4")
 async def serve_dna_video():
-    return FileResponse("zenith_dna.mp4", media_type="video/mp4")
+    video_path = os.path.abspath("zenith_dna.mp4")
+    if not os.path.exists(video_path):
+        return Response(content=b"", status_code=404, media_type="video/mp4")
+    return FileResponse(video_path, media_type="video/mp4")
 
 
 
