@@ -2048,7 +2048,12 @@ async def serve_dna_video():
     video_path = os.path.abspath("zenith_dna.mp4")
     if not os.path.exists(video_path):
         return Response(content=b"", status_code=404, media_type="video/mp4")
-    return FileResponse(video_path, media_type="video/mp4")
+    try:
+        with open(video_path, "rb") as f:
+            data = f.read()
+        return Response(content=data, media_type="video/mp4")
+    except Exception:
+        return Response(content=b"", status_code=404, media_type="video/mp4")
 
 
 
