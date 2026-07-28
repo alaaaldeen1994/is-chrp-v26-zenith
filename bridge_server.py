@@ -1662,6 +1662,9 @@ env_mode = os.getenv("ENV", "production")
 app = FastAPI(
     title="Nilus Lab | IS-CHRP v29.0 GOLD Clinical AI Bridge", 
     description="Professional-grade AI bridge for Clinical Digital Twins by Nilus Lab (Zenith Edition).",
+    servers=[
+        {"url": "https://www.niluslab.com", "description": "Zenith Production API Server"}
+    ],
     lifespan=lifespan,
     docs_url="/docs",
     redoc_url="/redoc",
