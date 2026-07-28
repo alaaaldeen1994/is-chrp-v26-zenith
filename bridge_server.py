@@ -7622,7 +7622,8 @@ async def list_cell_types():
 # ============================================================
 class PerturbationRequest(BaseModel):
     baseline_cell_type: str = "fibroblast"
-    perturbation_factors: Dict[str, float]
+    perturbation_factors: Optional[Dict[str, float]] = None
+    factors: Optional[List[str]] = None
 
 @app.post("/api/v1/clinical/predict/perturbation")
 async def predict_perturbation(req: PerturbationRequest):
@@ -7631,9 +7632,19 @@ async def predict_perturbation(req: PerturbationRequest):
     """
     from services.multiomics_service import MultiOmicsPredictorService
     service = MultiOmicsPredictorService()
+    
+    factors_map = {}
+    if req.perturbation_factors:
+        factors_map = {str(k): float(v) for k, v in req.perturbation_factors.items()}
+    elif req.factors:
+        factors_map = {str(f).upper(): 3.0 for f in req.factors}
+        
+    if not factors_map:
+        factors_map = {"GATA4": 3.0, "TBX5": 3.0, "MEF2C": 3.0, "HAND2": 3.0}
+        
     return service.predict_perturbation_trajectory(
         baseline_cell_type=req.baseline_cell_type,
-        factors=req.perturbation_factors
+        factors=factors_map
     )
 
 @app.post("/api/v1/predict/perturbation")
@@ -7645,7 +7656,7 @@ async def predict_perturbation_api_v1_alias(req: PerturbationRequest):
 # LNP OPTIMIZATION DELIVERY ENDPOINT
 # ============================================================
 class LNPOptimizeRequest(BaseModel):
-    molar_ratios: Dict[str, float]
+    molar_ratios: Optional[Dict[str, float]] = None
     np_ratio: float = 6.0
     active_ligand_conjugation: bool = False
     ligand_density: float = 0.0
