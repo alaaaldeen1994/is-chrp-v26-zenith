@@ -2044,10 +2044,8 @@ async def serve_discovery_html():
 
 
 @app.get("/zenith_dna.mp4")
-
 async def serve_dna_video():
-
-    return FileResponse("zenith_dna.mp4")
+    return FileResponse("zenith_dna.mp4", media_type="video/mp4")
 
 
 
