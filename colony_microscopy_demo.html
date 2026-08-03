@@ -157,6 +157,30 @@ nav, .nav-dock, #mob-nav {
     }
 }
 </style>
+<style>
+/* Executive Navbar Logo Alignment & Responsive Sizing */
+.nav-logo-responsive {
+    height: 38px !important;
+    width: auto !important;
+    max-height: 38px !important;
+    object-fit: contain;
+    display: block;
+    transform: translateY(-3px);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.nav-logo-responsive:hover {
+    opacity: 0.85;
+}
+
+@media (max-width: 768px) {
+    .nav-logo-responsive {
+        height: 32px !important;
+        max-height: 32px !important;
+        transform: translateY(-2px);
+    }
+}
+</style>
 </head>
 <body>
     <div class="scanline-overlay"></div>
