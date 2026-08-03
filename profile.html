@@ -1730,7 +1730,7 @@
 
                 padding: 1rem 5% !important;
 
-                flex-direction: column;
+                flex-direction: row !important;
 
                 gap: 1.5rem;
 
@@ -3380,6 +3380,23 @@
         }
     </style>
 <link rel="stylesheet" href="css/nilus_institutional.css">
+<style>
+/* Guarantee Horizontal Navbar Layout on Mobile & Desktop */
+nav, .nav-dock, #mob-nav {
+    flex-direction: row !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+}
+
+@media (max-width: 1024px) {
+    nav, .nav-dock {
+        flex-direction: row !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        padding: 0.75rem 1.25rem !important;
+    }
+}
+</style>
 </head>
 
 

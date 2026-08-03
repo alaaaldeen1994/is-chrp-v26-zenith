@@ -76,6 +76,23 @@
             text-transform: uppercase;
         }
     </style>
+<style>
+/* Guarantee Horizontal Navbar Layout on Mobile & Desktop */
+nav, .nav-dock, #mob-nav {
+    flex-direction: row !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+}
+
+@media (max-width: 1024px) {
+    nav, .nav-dock {
+        flex-direction: row !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        padding: 0.75rem 1.25rem !important;
+    }
+}
+</style>
 </head>
 
 <body class="p-8 md:p-20">

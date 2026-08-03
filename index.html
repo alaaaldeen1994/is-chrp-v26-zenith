@@ -1248,6 +1248,23 @@
             .cap-card { padding: 2rem !important; }
         }
     </style>
+<style>
+/* Guarantee Horizontal Navbar Layout on Mobile & Desktop */
+nav, .nav-dock, #mob-nav {
+    flex-direction: row !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+}
+
+@media (max-width: 1024px) {
+    nav, .nav-dock {
+        flex-direction: row !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        padding: 0.75rem 1.25rem !important;
+    }
+}
+</style>
 </head>
 
 
@@ -6358,7 +6375,24 @@ window.printClinicalDossier = function() {
                 th, td { border: 1px solid #cbd5e1; padding: 8px 12px; text-align: left; }
                 th { background: #f1f5f9; }
             </style>
-        </head>
+        <style>
+/* Guarantee Horizontal Navbar Layout on Mobile & Desktop */
+nav, .nav-dock, #mob-nav {
+    flex-direction: row !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+}
+
+@media (max-width: 1024px) {
+    nav, .nav-dock {
+        flex-direction: row !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        padding: 0.75rem 1.25rem !important;
+    }
+}
+</style>
+</head>
         <body>
             <h1>Nilus Lab Zenith — Wet-Lab Biosafety & Clinical Validation Dossier</h1>
             <p><strong>Query:</strong> ${res.query || 'Epigenetic Rejuvenation'}</p>
