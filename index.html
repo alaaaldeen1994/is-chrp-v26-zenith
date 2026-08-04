@@ -2700,16 +2700,14 @@ nav, .nav-dock, #mob-nav {
                 </div>
                 <div class="h-6 w-px bg-white/10 mx-2"></div>
 
-                <!-- MOLECULAR 3D VIEW TOGGLES (Ribbon, Surface, CPK, 2D) -->
-                <div class="flex items-center gap-1 bg-slate-900/80 p-1 rounded-lg border border-blue-500/30">
-                    <button id="btn-mode-ribbon" class="px-2.5 py-1 text-[9px] font-black text-white bg-blue-600 rounded border border-blue-400 transition-all shadow-sm"
-                        onclick="BiosimRenderer.setRenderMode('RIBBON_3D')" title="3D Cartoon Ribbon (AlphaFold / Antibody Ribbons)">Ribbon 3D</button>
-                    <button id="btn-mode-surface" class="px-2.5 py-1 text-[9px] font-black text-slate-300 hover:text-white bg-transparent rounded border border-transparent transition-all"
-                        onclick="BiosimRenderer.setRenderMode('SURFACE_3D')" title="3D Volumetric Surface Contours">Surface 3D</button>
-                    <button id="btn-mode-cpk" class="px-2.5 py-1 text-[9px] font-black text-slate-300 hover:text-white bg-transparent rounded border border-transparent transition-all"
-                        onclick="BiosimRenderer.setRenderMode('CPK_ATOMIC')" title="CPK Atomic Spheres Model">CPK Spheres</button>
-                    <button id="btn-mode-2d" class="px-2.5 py-1 text-[9px] font-black text-slate-300 hover:text-white bg-transparent rounded border border-transparent transition-all"
-                        onclick="BiosimRenderer.setRenderMode('SPHERE')" title="2D Micro View">2D Micro</button>
+                <!-- UNIFIED MOLECULAR 3D VIEW TOGGLE -->
+                <div class="flex items-center gap-1 bg-slate-900/80 p-0.5 rounded-lg border border-blue-500/30">
+                    <button id="btn-mode-3d" class="px-3 py-1 text-[9px] font-black text-white bg-blue-600 rounded border border-blue-400 transition-all shadow-sm flex items-center gap-1"
+                        onclick="BiosimRenderer.setRenderMode('3D_MOLECULAR')" title="Unified 3D Molecular Representation (Ribbon, Surface & Atomic Clusters)">
+                        <i data-lucide="box" class="w-3 h-3"></i> 3D MOLECULAR
+                    </button>
+                    <button id="btn-mode-2d" class="px-2.5 py-1 text-[9px] font-black text-slate-400 hover:text-white bg-transparent rounded border border-transparent transition-all"
+                        onclick="BiosimRenderer.setRenderMode('2D_MICRO')" title="2D Microscopic View">2D MICRO</button>
                 </div>
 
                 <!-- DASHBOARD TOGGLE -->

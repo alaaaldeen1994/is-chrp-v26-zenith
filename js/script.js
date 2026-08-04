@@ -344,52 +344,140 @@ class SpatialHash {
 
 // --- RENDERER ---
 const BiosimRenderer = {
-    mode: 'RIBBON_3D', // RIBBON_3D, SURFACE_3D, CPK_ATOMIC, SPHERE
+    mode: '3D_MOLECULAR', // 3D_MOLECULAR (Unified), 2D_MICRO
     showHeatmap: false,
 
     setRenderMode(newMode) {
         this.mode = newMode;
         if (typeof BiosimUI !== 'undefined' && BiosimUI.notify) {
-            BiosimUI.notify('Molecular View', `Render Mode: ${newMode.replace('_', ' ')}`, 'suc');
+            BiosimUI.notify('Molecular View', `Mode: ${newMode === '3D_MOLECULAR' ? '3D Molecular Representation' : '2D Micro'}`, 'suc');
         }
-        // Update top bar mode button styles
-        const btns = ['btn-mode-ribbon', 'btn-mode-surface', 'btn-mode-cpk', 'btn-mode-2d'];
-        btns.forEach(id => {
-            const btn = document.getElementById(id);
-            if (btn) {
-                if ((id === 'btn-mode-ribbon' && newMode === 'RIBBON_3D') ||
-                    (id === 'btn-mode-surface' && newMode === 'SURFACE_3D') ||
-                    (id === 'btn-mode-cpk' && newMode === 'CPK_ATOMIC') ||
-                    (id === 'btn-mode-2d' && newMode === 'SPHERE')) {
-                    btn.classList.add('bg-blue-600', 'text-white', 'border-blue-400');
-                    btn.classList.remove('bg-transparent', 'text-slate-400', 'border-white/10');
-                } else {
-                    btn.classList.remove('bg-blue-600', 'text-white', 'border-blue-400');
-                    btn.classList.add('bg-transparent', 'text-slate-400', 'border-white/10');
-                }
+        const btn3d = document.getElementById('btn-mode-3d');
+        const btn2d = document.getElementById('btn-mode-2d');
+        if (btn3d && btn2d) {
+            if (newMode === '3D_MOLECULAR') {
+                btn3d.className = 'px-3 py-1 text-[9px] font-black text-white bg-blue-600 rounded border border-blue-400 transition-all shadow-sm flex items-center gap-1';
+                btn2d.className = 'px-2.5 py-1 text-[9px] font-black text-slate-400 hover:text-white bg-transparent rounded border border-transparent transition-all';
+            } else {
+                btn2d.className = 'px-3 py-1 text-[9px] font-black text-white bg-blue-600 rounded border border-blue-400 transition-all shadow-sm flex items-center gap-1';
+                btn3d.className = 'px-2.5 py-1 text-[9px] font-black text-slate-400 hover:text-white bg-transparent rounded border border-transparent transition-all';
             }
-        });
+        }
     },
 
     toggleStyle() {
-        const modes = ['RIBBON_3D', 'SURFACE_3D', 'CPK_ATOMIC', 'SPHERE'];
-        let idx = modes.indexOf(this.mode);
-        this.setRenderMode(modes[(idx + 1) % modes.length]);
+        this.setRenderMode(this.mode === '3D_MOLECULAR' ? '2D_MICRO' : '3D_MOLECULAR');
     },
 
     drawCell(ctx, agent, x, y, size) {
         if (!agent.angle) agent.angle = (agent.id * 0.77) % (Math.PI * 2);
         agent.angle += 0.012; // Continuous 3D rotation
 
-        if (this.mode === 'RIBBON_3D') {
-            this.drawRibbon3D(ctx, agent, x, y, size * 2.2);
-        } else if (this.mode === 'SURFACE_3D') {
-            this.drawSurface3D(ctx, agent, x, y, size * 2.4);
-        } else if (this.mode === 'CPK_ATOMIC') {
-            this.drawCPKAtomic(ctx, agent, x, y, size * 2.2);
+        if (this.mode === '3D_MOLECULAR') {
+            this.drawUnifiedMolecular3D(ctx, agent, x, y, size * 2.2);
         } else {
             this.drawSphere2D(ctx, agent, x, y, size);
         }
+    },
+
+    // ── UNIFIED 3D MOLECULAR REPRESENTATION (Combining Ribbon, Surface & CPK Ball-and-Stick) ──
+    drawUnifiedMolecular3D(ctx, agent, x, y, size) {
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.rotate(agent.angle);
+
+        // 1. Subtle Molecular Surface Contour Underlay (Volumetric Soft Surface)
+        const drawSurfaceDomain = (ox, oy, radius, colorHex) => {
+            const grad = ctx.createRadialGradient(ox - radius * 0.3, oy - radius * 0.3, radius * 0.1, ox, oy, radius * 1.2);
+            grad.addColorStop(0, 'rgba(255, 255, 255, 0.7)');
+            grad.addColorStop(0.4, colorHex);
+            grad.addColorStop(1, 'rgba(3, 15, 38, 0.8)');
+
+            ctx.fillStyle = grad;
+            ctx.beginPath();
+            ctx.arc(ox, oy, radius, 0, Math.PI * 2);
+            ctx.fill();
+        };
+
+        drawSurfaceDomain(-size * 0.45, -size * 0.35, size * 0.32, 'rgba(244, 63, 94, 0.4)');  // Fab Left (Rose Pink Surface)
+        drawSurfaceDomain(size * 0.45, -size * 0.35, size * 0.32, 'rgba(234, 179, 8, 0.4)');   // Fab Right (Gold Yellow Surface)
+        drawSurfaceDomain(0, size * 0.4, size * 0.35, 'rgba(16, 185, 129, 0.4)');              // Fc Stem (Emerald Green Surface)
+
+        // 2. Cartoon Ribbon Overlay (Beta Strands & Alpha Helices)
+        const drawChainRibbon = (angleOffset, ribbonColor, darkColor) => {
+            ctx.save();
+            ctx.rotate(angleOffset);
+
+            // Beta Strand Arrow Ribbon
+            ctx.fillStyle = ribbonColor;
+            ctx.strokeStyle = darkColor;
+            ctx.lineWidth = 1.2;
+
+            ctx.beginPath();
+            ctx.moveTo(0, 0);
+            ctx.bezierCurveTo(size * 0.3, -size * 0.2, size * 0.6, -size * 0.1, size * 0.8, -size * 0.3);
+            ctx.lineTo(size * 0.75, -size * 0.38);
+            ctx.bezierCurveTo(size * 0.55, -size * 0.18, size * 0.28, -size * 0.26, 0, -0.08);
+            ctx.closePath();
+            ctx.fill();
+            ctx.stroke();
+
+            // Beta Strand Arrow Tip
+            ctx.beginPath();
+            ctx.moveTo(size * 0.6, -size * 0.25);
+            ctx.lineTo(size * 0.9, -size * 0.45);
+            ctx.lineTo(size * 0.7, -size * 0.52);
+            ctx.closePath();
+            ctx.fill();
+            ctx.stroke();
+
+            // Alpha Helix Coiled Loops
+            ctx.strokeStyle = ribbonColor;
+            ctx.lineWidth = 2.4;
+            ctx.lineCap = 'round';
+            ctx.beginPath();
+            for (let t = 0; t < Math.PI * 2.2; t += 0.2) {
+                const hx = size * 0.2 + t * (size * 0.16);
+                const hy = Math.sin(t * 3) * (size * 0.12) + (size * 0.15);
+                if (t === 0) ctx.moveTo(hx, hy);
+                else ctx.lineTo(hx, hy);
+            }
+            ctx.stroke();
+
+            ctx.restore();
+        };
+
+        drawChainRibbon(-Math.PI * 0.7, '#fda4af', '#e11d48'); // Left Arm (Rose Pink Ribbon)
+        drawChainRibbon(-Math.PI * 0.1, '#fde047', '#ca8a04'); // Right Arm (Gold Yellow Ribbon)
+        drawChainRibbon(Math.PI * 0.5, '#6ee7b7', '#059669');  // Stem (Emerald Green Ribbon)
+
+        // 3. Ball-and-Stick CPK Ligand Cluster (At Core Hinge)
+        const cpkAtoms = [
+            { x: -size * 0.1, y: -size * 0.05, r: size * 0.09, col: '#ef4444' }, // Oxygen
+            { x: size * 0.1, y: -size * 0.08, r: size * 0.08, col: '#3b82f6' },  // Nitrogen
+            { x: 0, y: size * 0.1, r: size * 0.10, col: '#f59e0b' },              // Sulfur Hinge
+            { x: size * 0.08, y: size * 0.16, r: size * 0.06, col: '#ffffff' }   // Hydrogen
+        ];
+
+        ctx.strokeStyle = '#cbd5e1';
+        ctx.lineWidth = 1.6;
+        ctx.beginPath();
+        ctx.moveTo(cpkAtoms[0].x, cpkAtoms[0].y); ctx.lineTo(cpkAtoms[1].x, cpkAtoms[1].y);
+        ctx.moveTo(cpkAtoms[1].x, cpkAtoms[1].y); ctx.lineTo(cpkAtoms[2].x, cpkAtoms[2].y);
+        ctx.moveTo(cpkAtoms[2].x, cpkAtoms[2].y); ctx.lineTo(cpkAtoms[3].x, cpkAtoms[3].y);
+        ctx.stroke();
+
+        cpkAtoms.forEach(a => {
+            ctx.fillStyle = a.col;
+            ctx.beginPath();
+            ctx.arc(a.x, a.y, a.r, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.strokeStyle = '#020617';
+            ctx.lineWidth = 0.6;
+            ctx.stroke();
+        });
+
+        ctx.restore();
     },
 
     // ── 3D MOLECULAR RIBBON CARTOON (Matching Image 3 & 4) ──
