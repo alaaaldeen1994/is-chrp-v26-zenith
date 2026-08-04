@@ -3145,7 +3145,7 @@ nav, .nav-dock, #mob-nav {
 
                 <!-- 2D Canvas View -->
                 <div class="relative w-full h-full overflow-hidden">
-                    <canvas id="canvas"></canvas>
+                    <canvas id="canvas" class="w-full h-full block"></canvas>
 
                     <!-- COMPUTE MODE CONTROLS (Problem 9 & Phase 4 Fix) -->
                     <div class="absolute bottom-6 left-6 flex items-center gap-2 z-50">
@@ -5141,16 +5141,19 @@ function enterSimulation() {
         }
     }
 
-    // STEP 1: Force 2D canvas to have real dimensions (wait for CSS transition)
+    // STEP 1: Force 2D canvas to have real dimensions & ensure engine is booted
     setTimeout(function() {
         if (typeof BiosimEngine !== 'undefined') {
+            if (!BiosimEngine.isInitialized || !BiosimEngine.canvas) {
+                BiosimEngine.init();
+                BiosimEngine.isInitialized = true;
+            }
             BiosimEngine.resize();
-            // Re-boot so agents exist and physics runs
-            if (BiosimEngine.agents.length === 0) {
+            if (!BiosimEngine.agents || BiosimEngine.agents.length === 0) {
                 BiosimEngine.boot();
             }
         }
-    }, 200);
+    }, 100);
 
     // STEP 2: Ensure 2D view is active and canvas is properly sized
     setTimeout(function() {

@@ -604,10 +604,13 @@ const BiosimEngine = {
     },
 
     resize() {
+        if (!this.canvas) this.canvas = document.getElementById('canvas');
+        if (this.canvas && !this.ctx) this.ctx = this.canvas.getContext('2d');
+        if (!this.canvas) return;
         const p = this.canvas.parentElement;
+        if (!p) return;
         const w = p.clientWidth;
         const h = p.clientHeight;
-        // Don't zero out canvas when it's hidden (microscope mode)
         if (w > 0 && h > 0) {
             this.canvas.width = w;
             this.canvas.height = h;
@@ -665,8 +668,12 @@ const BiosimEngine = {
 
     loop() {
         try {
-            // Physics & Logic
-            // Simple N^2 repulsion for this demo (optimized with grid in full version)
+            if (!this.canvas) this.canvas = document.getElementById('canvas');
+            if (this.canvas && !this.ctx) this.ctx = this.canvas.getContext('2d');
+            if (!this.canvas || !this.ctx) {
+                requestAnimationFrame(() => this.loop());
+                return;
+            }
             const w = this.canvas.width || 800;  // fallback when canvas hidden (microscope mode)
             const h = this.canvas.height || 600;
             if (w === 0 || h === 0) {
