@@ -2506,6 +2506,31 @@ async def get_mcp_manifest():
         return FileResponse(path, media_type="application/json")
     return Response(status_code=404)
 
+# --- SCIENTIFIC PAPER SERVING ENDPOINTS ---
+@app.get("/zenith_scientific_paper.pdf")
+@app.get("/paper.pdf")
+async def get_scientific_paper_pdf():
+    pdf_path = os.path.join(os.path.dirname(__file__), "zenith_scientific_paper.pdf")
+    if os.path.exists(pdf_path):
+        return FileResponse(pdf_path, media_type="application/pdf", filename="zenith_scientific_paper.pdf")
+    return Response(status_code=404, content="Paper PDF not found")
+
+@app.get("/zenith_scientific_paper.html")
+@app.get("/paper.html")
+async def get_scientific_paper_html():
+    html_path = os.path.join(os.path.dirname(__file__), "zenith_scientific_paper.html")
+    if os.path.exists(html_path):
+        return FileResponse(html_path, media_type="text/html")
+    return Response(status_code=404, content="Paper HTML not found")
+
+@app.get("/zenith_scientific_paper.md")
+async def get_scientific_paper_md():
+    md_path = os.path.join(os.path.dirname(__file__), "zenith_scientific_paper.md")
+    if os.path.exists(md_path):
+        return FileResponse(md_path, media_type="text/markdown")
+    return Response(status_code=404, content="Paper MD not found")
+
+
 @app.get("/api/v1/mcp/sse")
 @app.get("/mcp/sse")
 @app.get("/mcp")
