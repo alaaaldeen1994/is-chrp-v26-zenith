@@ -2614,7 +2614,7 @@ const BiosimBridge = {
             a.download = `IS-CHRP_Clinical_Report_${Date.now()}.pdf`;
             document.body.appendChild(a);
             a.click();
-            a.remove();
+            if (a) { if (a.remove) a.remove(); else if (a.parentNode) a.parentNode.removeChild(a); }
             BiosimUI.notify('System', 'Report Downloaded', 'suc');
         } catch (e) {
             console.error(e);
@@ -5162,7 +5162,7 @@ const BiosimUI = {
         else if (t === 'suc') div.style.borderLeft = '3px solid #10b981';
         else div.style.borderLeft = '3px solid blue';
         el.appendChild(div);
-        setTimeout(() => div.remove(), 3000);
+        setTimeout(() => { if (div) { if (div.remove) div.remove(); else if (div.parentNode) div.parentNode.removeChild(div); } }, 3000);
     },
 
     showSidebarAlert(msg) {
@@ -5358,7 +5358,7 @@ const BiosimUI = {
                     }
                     lockEl.style.opacity = (1.0 - chromatinVal);
                 } else if (lockEl) {
-                    lockEl.remove();
+                    if (lockEl) { if (lockEl.remove) lockEl.remove(); else if (lockEl.parentNode) lockEl.parentNode.removeChild(lockEl); }
                 }
             }
         };
@@ -5799,7 +5799,7 @@ const AIAssistant = {
                 body: JSON.stringify(payload)
             });
 
-            loadingDiv.remove();
+            if (loadingDiv) { if (loadingDiv.remove) loadingDiv.remove(); else if (loadingDiv.parentNode) loadingDiv.parentNode.removeChild(loadingDiv); }
 
             if (!response.ok) throw new Error('Backend Proxy Error');
             const data = await response.json();
@@ -5808,7 +5808,7 @@ const AIAssistant = {
             this.addMessage('assistant', reply);
 
         } catch (e) {
-            loadingDiv.remove();
+            if (loadingDiv) { if (loadingDiv.remove) loadingDiv.remove(); else if (loadingDiv.parentNode) loadingDiv.parentNode.removeChild(loadingDiv); }
             this.addMessage('system', `Error: ${e.message}`);
         }
     },
@@ -6533,3 +6533,16 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Zenith Sync Patch 04:40
+
+// ── EXPLICIT GLOBAL WINDOW BINDINGS FOR CROSS-MODULE ACCESS ──
+if (typeof window !== 'undefined') {
+    window.CONFIG = typeof CONFIG !== 'undefined' ? CONFIG : window.CONFIG;
+    window.BiosimRenderer = typeof BiosimRenderer !== 'undefined' ? BiosimRenderer : window.BiosimRenderer;
+    window.BiosimEngine = typeof BiosimEngine !== 'undefined' ? BiosimEngine : window.BiosimEngine;
+    window.BiosimBridge = typeof BiosimBridge !== 'undefined' ? BiosimBridge : window.BiosimBridge;
+    window.BiosimUI = typeof BiosimUI !== 'undefined' ? BiosimUI : window.BiosimUI;
+    window.BiosimStore = typeof BiosimStore !== 'undefined' ? BiosimStore : window.BiosimStore;
+    window.BiosimLab = typeof BiosimLab !== 'undefined' ? BiosimLab : window.BiosimLab;
+    window.BiosimHistory = typeof BiosimHistory !== 'undefined' ? BiosimHistory : window.BiosimHistory;
+    window.Agent = typeof Agent !== 'undefined' ? Agent : window.Agent;
+}

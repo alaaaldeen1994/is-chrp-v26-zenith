@@ -2670,7 +2670,7 @@ nav, .nav-dock, #mob-nav {
                 </a>
                 <button
                     class="h-7 px-3 bg-blue-900/20 border border-blue-500/30 text-blue-400 rounded hover:bg-blue-900/40 flex items-center gap-2 transition-all"
-                    onclick="BiosimEngine.boot()">
+                    onclick="engine.boot()">
                     <i data-lucide="power" class="w-3 h-3"></i>
                     <span class="text-[8px] font-black uppercase">Reboot</span>
                 </button>
@@ -5147,14 +5147,15 @@ function enterSimulation() {
 
     // STEP 1: Force 2D canvas to have real dimensions & ensure engine is booted
     setTimeout(function() {
-        if (typeof BiosimEngine !== 'undefined') {
-            if (!BiosimEngine.isInitialized || !BiosimEngine.canvas) {
-                BiosimEngine.init();
-                BiosimEngine.isInitialized = true;
+        const engine = window.BiosimEngine || (typeof BiosimEngine !== 'undefined' ? BiosimEngine : null);
+        if (engine) {
+            if (!engine.isInitialized || !engine.canvas) {
+                engine.init();
+                engine.isInitialized = true;
             }
-            BiosimEngine.resize();
-            if (!BiosimEngine.agents || BiosimEngine.agents.length === 0) {
-                BiosimEngine.boot();
+            engine.resize();
+            if (!engine.agents || engine.agents.length === 0) {
+                engine.boot();
             }
         }
     }, 100);
@@ -5162,8 +5163,9 @@ function enterSimulation() {
     // STEP 2: Ensure 2D view is active and canvas is properly sized
     setTimeout(function() {
         // Resize again to be safe
-        if (typeof BiosimEngine !== 'undefined') {
-            BiosimEngine.resize();
+        const engine = window.BiosimEngine || (typeof BiosimEngine !== 'undefined' ? BiosimEngine : null);
+        if (engine) {
+            engine.resize();
         }
         // Show 2D simulation view
         if (typeof BiosimBridge !== 'undefined' && BiosimBridge.LatentMap) {
