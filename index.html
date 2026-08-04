@@ -80,6 +80,8 @@
             line-height: 1.6 !important;
             color: #1a1a1a !important;
             resize: none !important;
+            will-change: height;
+            contain: inline-size;
         }
         #disc-query::placeholder {
             color: #9b9b9b !important;
@@ -1481,7 +1483,7 @@ nav, .nav-dock, #mob-nav {
             <textarea id="disc-query" rows="3"
                 style="width:100%;padding:20px 22px 12px 22px;box-sizing:border-box;display:block;"
                 placeholder="Ask about genes, pathways, or mechanisms in cardiac ageing..."
-                oninput="this.style.height='auto';this.style.height=Math.min(this.scrollHeight,200)+'px';if(typeof updateSubmitButton==='function')updateSubmitButton(this.value.trim().length>0);"
+                oninput="if(typeof handleDiscQueryInput==='function')handleDiscQueryInput(this);" 
                 onkeydown="if(event.key==='Enter'&&(event.metaKey||event.ctrlKey))runDiscovery();"></textarea>
 
             <!-- Bottom action row -->
@@ -5590,7 +5592,10 @@ async function loadCellTypes() {
     }
 }
 
+var _lastHasTextState = null;
 function updateSubmitButton(hasText) {
+    if (_lastHasTextState === hasText) return;
+    _lastHasTextState = hasText;
     const btn = document.getElementById('disc-run-btn');
     const txt = document.getElementById('disc-btn-text');
     if (!btn || !txt) return;
@@ -5606,6 +5611,20 @@ function updateSubmitButton(hasText) {
         btn.style.borderRadius = '50%';
         btn.style.width = '32px';
         btn.style.height = '32px';
+    }
+}
+
+function handleDiscQueryInput(el) {
+    if (!el) return;
+    var hasText = el.value.trim().length > 0;
+    if (typeof updateSubmitButton === 'function') {
+        updateSubmitButton(hasText);
+    }
+    var curH = el.offsetHeight;
+    var targetH = Math.min(el.scrollHeight, 200);
+    if (Math.abs(curH - targetH) > 4) {
+        el.style.height = 'auto';
+        el.style.height = Math.min(el.scrollHeight, 200) + 'px';
     }
 }
 
