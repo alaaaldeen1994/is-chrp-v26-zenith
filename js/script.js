@@ -6761,3 +6761,53 @@ if (typeof window !== 'undefined') {
     window.BiosimHistory = typeof BiosimHistory !== 'undefined' ? BiosimHistory : window.BiosimHistory;
     window.Agent = typeof Agent !== 'undefined' ? Agent : window.Agent;
 }
+
+
+// ── ALPHAGENOME 98% NON-CODING VARIANT & CRISPR CORRECTION ENGINE ──
+window.runAlphaGenomeVariantAudit = async function() {
+    const variantInput = document.getElementById('alphagenome-variant-input');
+    const resultCard = document.getElementById('alphagenome-result-card');
+    const variant = variantInput ? variantInput.value : "chr12:111,842,901 C>T";
+
+    if (resultCard) {
+        resultCard.classList.remove('hidden');
+        resultCard.innerHTML = `<div class="text-indigo-400 font-bold animate-pulse"><i data-lucide="loader" class="w-3 h-3 inline animate-spin mr-1"></i> Running AlphaGenome 98% Non-Coding AI Model...</div>`;
+    }
+
+    try {
+        const response = await fetch('/api/v2/alphagenome/variant-audit', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ variant: variant, disease_context: "Cardiomyopathy", gene_target: "MYH6" })
+        });
+        const data = await response.json();
+
+        if (resultCard && data.status === 'SUCCESS') {
+            const strat = data.crispr_correction_strategy;
+            const cas = data.multigenic_cascade;
+            resultCard.innerHTML = `
+                <div class="text-indigo-300 font-black border-b border-indigo-900/50 pb-1 mb-1 flex justify-between">
+                    <span>ALPHAGENOME 98% DECODER</span>
+                    <span class="text-emerald-400 font-bold">${(data.alphagenome_score * 100).toFixed(1)}% PATHOGENIC</span>
+                </div>
+                <div class="text-slate-300"><strong class="text-slate-400">Region:</strong> ${data.region_type}</div>
+                <div class="text-rose-400"><strong class="text-slate-400">Impact:</strong> ${data.chromatin_accessibility_delta}</div>
+                <div class="text-amber-300"><strong class="text-slate-400">Cascade:</strong> ${cas.grn_network_perturbation}</div>
+                <div class="mt-1.5 pt-1.5 border-t border-indigo-900/50">
+                    <div class="text-emerald-400 font-bold mb-0.5">CRISPR / BASE EDITOR STRATEGY</div>
+                    <div class="text-white"><strong>Editor:</strong> ${strat.editor_type}</div>
+                    <div class="text-indigo-300"><strong>sgRNA:</strong> <code class="bg-black/60 px-1 py-0.5 rounded text-emerald-300">${strat.sgRNA_sequence}</code></div>
+                    <div class="text-slate-400"><strong>PAM:</strong> ${strat.pam_site}</div>
+                    <div class="text-emerald-300 font-bold mt-1"><strong>Gain:</strong> ${strat.predicted_rejuvenation_recovery}</div>
+                </div>
+            `;
+            if (typeof BiosimUI !== 'undefined' && BiosimUI.notify) {
+                BiosimUI.notify('AlphaGenome', `Variant Audit Complete: CRISPR Base Editor Generated`, 'suc');
+            }
+        }
+    } catch (e) {
+        if (resultCard) {
+            resultCard.innerHTML = `<div class="text-rose-400 font-bold">AlphaGenome Pipeline Offline. Re-check server connection.</div>`;
+        }
+    }
+};
