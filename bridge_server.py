@@ -1938,6 +1938,8 @@ app.add_middleware(StructuredLoggingMiddleware)
 app.include_router(api_v1_router)
 app.include_router(webhooks_router)
 app.include_router(boltz_router)
+from routers.alphagenome_router import router as alphagenome_router
+app.include_router(alphagenome_router)
 
 
 
