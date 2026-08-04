@@ -373,8 +373,22 @@ const BiosimRenderer = {
         if (!agent.angle) agent.angle = (agent.id * 0.77) % (Math.PI * 2);
         agent.angle += 0.012; // Continuous 3D rotation
 
+        // Animate Transformation: Morph from initial sphere state to full 3D protein ribbon by the end
+        if (typeof agent.morphProgress === 'undefined') {
+            agent.morphProgress = 0.0;
+        }
+        // Smoothly increase transformation progress over time up to 1.0 (100% protein structure)
+        if (agent.morphProgress < 1.0) {
+            agent.morphProgress += 0.005;
+        }
+
         if (this.mode === '3D_MOLECULAR') {
-            this.drawUnifiedMolecular3D(ctx, agent, x, y, size * 2.2);
+            const morph = agent.morphProgress;
+            ctx.save();
+            // Blended opacity & scale morphing to 3D protein structure
+            ctx.globalAlpha = 0.3 + 0.7 * morph;
+            this.drawUnifiedMolecular3D(ctx, agent, x, y, size * (1.2 + 1.0 * morph));
+            ctx.restore();
         } else {
             this.drawSphere2D(ctx, agent, x, y, size);
         }

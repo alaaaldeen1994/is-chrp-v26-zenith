@@ -110,6 +110,26 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <script src="js/firebase_config.js"></script>
+
+<script>
+// Immediate Hash Check for Direct Simulation Links (#simulation)
+function handleDirectSimulationLink() {
+    if (window.location.hash === '#simulation' || window.location.hash.includes('simulation') || localStorage.getItem('auth_redirect') === 'sim') {
+        document.body.classList.add('sim-mode');
+        setTimeout(function() {
+            const enterFn = window.enterSimulation || (typeof enterSimulation === 'function' ? enterSimulation : null);
+            if (enterFn) enterFn();
+        }, 80);
+    }
+}
+window.addEventListener('hashchange', handleDirectSimulationLink);
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', handleDirectSimulationLink);
+} else {
+    handleDirectSimulationLink();
+}
+</script>
+
     <!-- AUTH GUARD: Discovery page is public. Simulation requires auth. -->
     <script>
         const ZENITH_DEMO_BYPASS = localStorage.getItem('ZENITH_DEMO_BYPASS') === 'true';
@@ -168,11 +188,13 @@
                 updateAuthUI(window._isAuthenticated);
                 
                 // Auto-redirect to simulation lab if flag is set or hash is present
-                if (window._isAuthenticated && (localStorage.getItem('auth_redirect') === 'sim' || window.location.hash === '#simulation')) {
+                if (localStorage.getItem('auth_redirect') === 'sim' || window.location.hash === '#simulation' || window.location.hash.includes('simulation')) {
                     localStorage.removeItem('auth_redirect');
                     setTimeout(() => {
-                        if (typeof enterSimulation === 'function') enterSimulation();
-                    }, 100);
+                        const enterFn = window.enterSimulation || (typeof enterSimulation === 'function' ? enterSimulation : null);
+                        if (enterFn) enterFn();
+                        else document.body.classList.add('sim-mode');
+                    }, 50);
                 }
             });
         });
@@ -1289,6 +1311,9 @@ nav, .nav-dock, #mob-nav {
     }
 }
 </style>
+
+
+
 </head>
 
 
@@ -6374,6 +6399,29 @@ window.downloadResultCSV = function() {
     }
 };
 
+
+window.switchMainView = function(mode) {
+    const btn3d = document.getElementById('btn-view-3d');
+    const btnMicro = document.getElementById('btn-view-micro');
+
+    if (mode === '3D') {
+        if (btn3d) btn3d.className = 'px-3.5 py-1 text-[9px] font-black text-white bg-blue-600 rounded border border-blue-400 transition-all shadow-sm flex items-center gap-1.5';
+        if (btnMicro) btnMicro.className = 'px-3.5 py-1 text-[9px] font-black text-slate-400 hover:text-white bg-transparent rounded border border-transparent transition-all flex items-center gap-1.5';
+
+        const renderer = window.BiosimRenderer || (typeof BiosimRenderer !== 'undefined' ? BiosimRenderer : null);
+        if (renderer && renderer.setRenderMode) renderer.setRenderMode('3D_MOLECULAR');
+
+        const latentMap = (window.BiosimBridge && window.BiosimBridge.LatentMap) ? window.BiosimBridge.LatentMap : null;
+        if (latentMap && latentMap.toggleView) latentMap.toggleView('3D');
+    } else if (mode === 'MICRO') {
+        if (btnMicro) btnMicro.className = 'px-3.5 py-1 text-[9px] font-black text-white bg-blue-600 rounded border border-blue-400 transition-all shadow-sm flex items-center gap-1.5';
+        if (btn3d) btn3d.className = 'px-3.5 py-1 text-[9px] font-black text-slate-400 hover:text-white bg-transparent rounded border border-transparent transition-all flex items-center gap-1.5';
+
+        const latentMap = (window.BiosimBridge && window.BiosimBridge.LatentMap) ? window.BiosimBridge.LatentMap : null;
+        if (latentMap && latentMap.toggleView) latentMap.toggleView('MICROSCOPE');
+    }
+};
+
 window.printClinicalDossier = function() {
     if (!window._lastResult) {
         alert('Please run a discovery first.');
@@ -6439,6 +6487,9 @@ nav, .nav-dock, #mob-nav {
     }
 }
 </style>
+
+
+
 </head>
         <body>
             <h1>Nilus Lab Zenith — Wet-Lab Biosafety & Clinical Validation Dossier</h1>
@@ -6474,32 +6525,9 @@ nav, .nav-dock, #mob-nav {
                 <ul>${proList}</ul>
             </div>
             
-            <script>window.onload = function() { window.print(); };<\/script>
+            \x3Cscript\x3Ewindow.onload = function() { window.print(); };\x3C/script\x3E
         
-<script>
-function switchMainView(mode) {
-    const btn3d = document.getElementById('btn-view-3d');
-    const btnMicro = document.getElementById('btn-view-micro');
 
-    if (mode === '3D') {
-        if (btn3d) btn3d.className = 'px-3.5 py-1 text-[9px] font-black text-white bg-blue-600 rounded border border-blue-400 transition-all shadow-sm flex items-center gap-1.5';
-        if (btnMicro) btnMicro.className = 'px-3.5 py-1 text-[9px] font-black text-slate-400 hover:text-white bg-transparent rounded border border-transparent transition-all flex items-center gap-1.5';
-
-        const renderer = window.BiosimRenderer || (typeof BiosimRenderer !== 'undefined' ? BiosimRenderer : null);
-        if (renderer && renderer.setRenderMode) renderer.setRenderMode('3D_MOLECULAR');
-
-        const latentMap = (window.BiosimBridge && window.BiosimBridge.LatentMap) ? window.BiosimBridge.LatentMap : null;
-        if (latentMap && latentMap.toggleView) latentMap.toggleView('3D');
-    } else if (mode === 'MICRO') {
-        if (btnMicro) btnMicro.className = 'px-3.5 py-1 text-[9px] font-black text-white bg-blue-600 rounded border border-blue-400 transition-all shadow-sm flex items-center gap-1.5';
-        if (btn3d) btn3d.className = 'px-3.5 py-1 text-[9px] font-black text-slate-400 hover:text-white bg-transparent rounded border border-transparent transition-all flex items-center gap-1.5';
-
-        const latentMap = (window.BiosimBridge && window.BiosimBridge.LatentMap) ? window.BiosimBridge.LatentMap : null;
-        if (latentMap && latentMap.toggleView) latentMap.toggleView('MICROSCOPE');
-    }
-}
-window.switchMainView = switchMainView;
-</script>
 
 </body>
         </html>
@@ -6811,30 +6839,7 @@ function plotResultECG(ecgData) {
     </div>
 
 
-<script>
-function switchMainView(mode) {
-    const btn3d = document.getElementById('btn-view-3d');
-    const btnMicro = document.getElementById('btn-view-micro');
 
-    if (mode === '3D') {
-        if (btn3d) btn3d.className = 'px-3.5 py-1 text-[9px] font-black text-white bg-blue-600 rounded border border-blue-400 transition-all shadow-sm flex items-center gap-1.5';
-        if (btnMicro) btnMicro.className = 'px-3.5 py-1 text-[9px] font-black text-slate-400 hover:text-white bg-transparent rounded border border-transparent transition-all flex items-center gap-1.5';
-
-        const renderer = window.BiosimRenderer || (typeof BiosimRenderer !== 'undefined' ? BiosimRenderer : null);
-        if (renderer && renderer.setRenderMode) renderer.setRenderMode('3D_MOLECULAR');
-
-        const latentMap = (window.BiosimBridge && window.BiosimBridge.LatentMap) ? window.BiosimBridge.LatentMap : null;
-        if (latentMap && latentMap.toggleView) latentMap.toggleView('3D');
-    } else if (mode === 'MICRO') {
-        if (btnMicro) btnMicro.className = 'px-3.5 py-1 text-[9px] font-black text-white bg-blue-600 rounded border border-blue-400 transition-all shadow-sm flex items-center gap-1.5';
-        if (btn3d) btn3d.className = 'px-3.5 py-1 text-[9px] font-black text-slate-400 hover:text-white bg-transparent rounded border border-transparent transition-all flex items-center gap-1.5';
-
-        const latentMap = (window.BiosimBridge && window.BiosimBridge.LatentMap) ? window.BiosimBridge.LatentMap : null;
-        if (latentMap && latentMap.toggleView) latentMap.toggleView('MICROSCOPE');
-    }
-}
-window.switchMainView = switchMainView;
-</script>
 
 </body>
 
