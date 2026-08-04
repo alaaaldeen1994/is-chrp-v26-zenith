@@ -1941,6 +1941,47 @@ app.include_router(boltz_router)
 from routers.alphagenome_router import router as alphagenome_router
 app.include_router(alphagenome_router)
 
+# Phase 1 Zenith Routers
+from routers.polygenic_risk_router import router as polygenic_risk_router
+from routers.alphagenome_pwm_router import router as alphagenome_pwm_router
+from routers.admet_router import router as admet_router
+
+app.include_router(polygenic_risk_router)
+app.include_router(alphagenome_pwm_router)
+app.include_router(admet_router)
+
+# Phase 2 Zenith Routers (Causal Inference Engine)
+from routers.causal_mr_router import router as causal_mr_router
+from routers.multiomics_router import router as multiomics_router
+from routers.causal_grn_router import router as causal_grn_router
+
+app.include_router(causal_mr_router)
+app.include_router(multiomics_router)
+app.include_router(causal_grn_router)
+
+# Phase 3 Zenith Routers (Molecular Intervention Engine)
+from routers.docking_router import router as docking_router
+from routers.prime_editor_router import router as prime_editor_router
+from routers.lnp_v2_router import router as lnp_v2_router
+
+app.include_router(docking_router)
+app.include_router(prime_editor_router)
+app.include_router(lnp_v2_router)
+
+# Phase 4 Zenith Routers (AlphaZen & Virtual Adaptive Trials Engine)
+from routers.alphazen_router import router as alphazen_router
+from routers.virtual_trial_router import router as virtual_trial_router
+
+app.include_router(alphazen_router)
+app.include_router(virtual_trial_router)
+
+# Phase 5 Zenith Routers (Zenith Intelligence Layer)
+from routers.agent_router import router as agent_router
+from routers.knowledge_graph_router import router as knowledge_graph_router
+
+app.include_router(agent_router)
+app.include_router(knowledge_graph_router)
+
 
 
 # Serve static files (Frontend)

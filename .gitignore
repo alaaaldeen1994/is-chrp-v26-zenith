@@ -39,6 +39,12 @@ analyze_heart_index.py
 full_data_audit.py
 download_full_hca_heart.py
 
+# Python bytecode & SQLite DBs
+__pycache__/
+*.pyc
+*.db
+database/*.db
+
 # System items
 .DS_Store
 Thumbs.db
@@ -46,5 +52,3 @@ node_modules/
 dist/
 build/
 .env
-zenith_api.db
-
