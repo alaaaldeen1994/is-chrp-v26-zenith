@@ -1055,14 +1055,12 @@ const BiosimEngine = {
             if (!this.canvas) this.canvas = document.getElementById('canvas');
             if (this.canvas && !this.ctx) this.ctx = this.canvas.getContext('2d');
             if (!this.canvas || !this.ctx) {
-                requestAnimationFrame(() => this.loop());
-                return;
+                return; // Stop spinning loop when canvas is missing
             }
-            const w = this.canvas.width || 800;  // fallback when canvas hidden (microscope mode)
+            const w = this.canvas.width || 800;
             const h = this.canvas.height || 600;
-            if (w === 0 || h === 0) {
-                requestAnimationFrame(() => this.loop());
-                return;
+            if (w === 0 || h === 0 || this.canvas.offsetParent === null) {
+                return; // Stop spinning loop when canvas is hidden
             }
             const aspect = w / h;
 
@@ -3511,7 +3509,9 @@ const BiosimBridge = {
         },
 
         animate3D() {
-            if (!this.running3D) return;
+            if (!this.running3D || this.viewMode !== '3D') {
+                return; // Stop spinning 3D loop when not in 3D mode
+            }
             requestAnimationFrame(() => this.animate3D());
 
             if (!this.time) this.time = 0;
@@ -3747,8 +3747,7 @@ const BiosimBridge = {
 
         animateMicroscope() {
             if (this.viewMode !== 'MICROSCOPE') {
-                requestAnimationFrame(() => this.animateMicroscope());
-                return;
+                return; // Stop spinning loop when not in MICROSCOPE mode
             }
 
             const ctx = this.mCtx;
