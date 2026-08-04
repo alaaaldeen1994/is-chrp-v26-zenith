@@ -2700,14 +2700,16 @@ nav, .nav-dock, #mob-nav {
                 </div>
                 <div class="h-6 w-px bg-white/10 mx-2"></div>
 
-                <!-- UNIFIED MOLECULAR 3D VIEW TOGGLE -->
+                <!-- VIEW TOGGLES (3D and Micro ONLY - No 2D) -->
                 <div class="flex items-center gap-1 bg-slate-900/80 p-0.5 rounded-lg border border-blue-500/30">
-                    <button id="btn-mode-3d" class="px-3 py-1 text-[9px] font-black text-white bg-blue-600 rounded border border-blue-400 transition-all shadow-sm flex items-center gap-1"
-                        onclick="BiosimRenderer.setRenderMode('3D_MOLECULAR')" title="Unified 3D Molecular Representation (Ribbon, Surface & Atomic Clusters)">
-                        <i data-lucide="box" class="w-3 h-3"></i> 3D MOLECULAR
+                    <button id="btn-view-3d" class="px-3.5 py-1 text-[9px] font-black text-white bg-blue-600 rounded border border-blue-400 transition-all shadow-sm flex items-center gap-1.5"
+                        onclick="switchMainView('3D')" title="3D Molecular View">
+                        <i data-lucide="box" class="w-3 h-3"></i> 3D
                     </button>
-                    <button id="btn-mode-2d" class="px-2.5 py-1 text-[9px] font-black text-slate-400 hover:text-white bg-transparent rounded border border-transparent transition-all"
-                        onclick="BiosimRenderer.setRenderMode('2D_MICRO')" title="2D Microscopic View">2D MICRO</button>
+                    <button id="btn-view-micro" class="px-3.5 py-1 text-[9px] font-black text-slate-400 hover:text-white bg-transparent rounded border border-transparent transition-all flex items-center gap-1.5"
+                        onclick="switchMainView('MICRO')" title="Microscopy Analysis View">
+                        <i data-lucide="microscope" class="w-3 h-3"></i> Micro
+                    </button>
                 </div>
 
                 <!-- DASHBOARD TOGGLE -->
@@ -6473,7 +6475,33 @@ nav, .nav-dock, #mob-nav {
             </div>
             
             <script>window.onload = function() { window.print(); };<\/script>
-        </body>
+        
+<script>
+function switchMainView(mode) {
+    const btn3d = document.getElementById('btn-view-3d');
+    const btnMicro = document.getElementById('btn-view-micro');
+
+    if (mode === '3D') {
+        if (btn3d) btn3d.className = 'px-3.5 py-1 text-[9px] font-black text-white bg-blue-600 rounded border border-blue-400 transition-all shadow-sm flex items-center gap-1.5';
+        if (btnMicro) btnMicro.className = 'px-3.5 py-1 text-[9px] font-black text-slate-400 hover:text-white bg-transparent rounded border border-transparent transition-all flex items-center gap-1.5';
+
+        const renderer = window.BiosimRenderer || (typeof BiosimRenderer !== 'undefined' ? BiosimRenderer : null);
+        if (renderer && renderer.setRenderMode) renderer.setRenderMode('3D_MOLECULAR');
+
+        const latentMap = (window.BiosimBridge && window.BiosimBridge.LatentMap) ? window.BiosimBridge.LatentMap : null;
+        if (latentMap && latentMap.toggleView) latentMap.toggleView('3D');
+    } else if (mode === 'MICRO') {
+        if (btnMicro) btnMicro.className = 'px-3.5 py-1 text-[9px] font-black text-white bg-blue-600 rounded border border-blue-400 transition-all shadow-sm flex items-center gap-1.5';
+        if (btn3d) btn3d.className = 'px-3.5 py-1 text-[9px] font-black text-slate-400 hover:text-white bg-transparent rounded border border-transparent transition-all flex items-center gap-1.5';
+
+        const latentMap = (window.BiosimBridge && window.BiosimBridge.LatentMap) ? window.BiosimBridge.LatentMap : null;
+        if (latentMap && latentMap.toggleView) latentMap.toggleView('MICROSCOPE');
+    }
+}
+window.switchMainView = switchMainView;
+</script>
+
+</body>
         </html>
     `);
     printWin.document.close();
@@ -6781,6 +6809,32 @@ function plotResultECG(ecgData) {
             </button>
         </div>
     </div>
+
+
+<script>
+function switchMainView(mode) {
+    const btn3d = document.getElementById('btn-view-3d');
+    const btnMicro = document.getElementById('btn-view-micro');
+
+    if (mode === '3D') {
+        if (btn3d) btn3d.className = 'px-3.5 py-1 text-[9px] font-black text-white bg-blue-600 rounded border border-blue-400 transition-all shadow-sm flex items-center gap-1.5';
+        if (btnMicro) btnMicro.className = 'px-3.5 py-1 text-[9px] font-black text-slate-400 hover:text-white bg-transparent rounded border border-transparent transition-all flex items-center gap-1.5';
+
+        const renderer = window.BiosimRenderer || (typeof BiosimRenderer !== 'undefined' ? BiosimRenderer : null);
+        if (renderer && renderer.setRenderMode) renderer.setRenderMode('3D_MOLECULAR');
+
+        const latentMap = (window.BiosimBridge && window.BiosimBridge.LatentMap) ? window.BiosimBridge.LatentMap : null;
+        if (latentMap && latentMap.toggleView) latentMap.toggleView('3D');
+    } else if (mode === 'MICRO') {
+        if (btnMicro) btnMicro.className = 'px-3.5 py-1 text-[9px] font-black text-white bg-blue-600 rounded border border-blue-400 transition-all shadow-sm flex items-center gap-1.5';
+        if (btn3d) btn3d.className = 'px-3.5 py-1 text-[9px] font-black text-slate-400 hover:text-white bg-transparent rounded border border-transparent transition-all flex items-center gap-1.5';
+
+        const latentMap = (window.BiosimBridge && window.BiosimBridge.LatentMap) ? window.BiosimBridge.LatentMap : null;
+        if (latentMap && latentMap.toggleView) latentMap.toggleView('MICROSCOPE');
+    }
+}
+window.switchMainView = switchMainView;
+</script>
 
 </body>
 
