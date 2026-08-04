@@ -4794,7 +4794,6 @@ const BiosimBridge = {
 
                     svg.appendChild(group);
                 });
-            }
         } catch (e) {
             console.error("GraphRAG query request failed:", e);
         }
@@ -6266,6 +6265,7 @@ const BiosimExpert = {
         } catch (e) {
             console.error(e);
             BiosimUI.notify('Manifest Error', 'Translation Engine Offline.', 'err');
+        }
     }
 };
 
