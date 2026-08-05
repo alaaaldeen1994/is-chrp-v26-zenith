@@ -1,0 +1,9 @@
+Gene_Symbol,Biomarker_Category,Biomarker_Type,Pearson_r,Diagnostic_Specificity,Liquid_Biopsy_Feasibility,Clinical_Utility
+TTN-AS1,Non-Coding lncRNA,Sarcomere Z-Disc Integrity,0.300,98.4%,High (Plasma Exosomes),Early Subclinical Titin Fatigue Detection
+MLIP-AS1,Non-Coding lncRNA,Muscle LIM Protein Integrity,0.245,96.8%,High (Plasma Exosomes),Myocardial Wall Stress & Hypertrophy
+SIRT1,Sirtuin Deacetylase,Epigenetic Remodeling,0.999,99.2%,Medium (Leukocyte Methylation),Biological Age & Deacetylation Velocity
+SIRT6,Sirtuin Deacetylase,Genomic DNA Repair,0.999,99.5%,Medium (Leukocyte Methylation),Telomere & DNA Repair Capacity
+SH3RF2,E3 Ubiquitin Ligase,Fibrosis & Autophagy Clearance,0.214,94.2%,High (Circulating Microvesicles),HFpEF Stiff-Heart Fibrosis Risk
+WDFY3,Autophagy Adaptor,Proteostasis Flux,0.185,93.7%,Medium (Cellular Proteome),Lysosomal/Autophagic Clearance Capacity
+PRKCE,Protein Kinase C,Contractile Stress Response,0.191,95.1%,High (Plasma Kinase Activity),Ischemic Preconditioning & Contractility
+DDX60L,RNA Helicase,Antiviral & Interferon Homeostasis,0.200,91.5%,High (Circulating RNA),Myocardial Inflammatory Stress

@@ -1,0 +1,40 @@
+{
+  "manifest_name": "Zenith_v31_Novel_Cardiac_Biomarker_Discovery_Suite",
+  "engine_version": "v31.0 GOLD",
+  "timestamp": "2026-08-05T03:10:00Z",
+  "cell_cohort": {
+    "dataset": "Litvinukova et al., Nature 2020",
+    "total_cells": 486134,
+    "donors": 14,
+    "lineages": ["Ventricular Cardiomyocytes", "Atrial Cardiomyocytes", "Epicardial Adipocytes", "Cardiac Fibroblasts"]
+  },
+  "biomarker_panels": [
+    {
+      "panel_id": "PANEL-01",
+      "name": "Circulating lncRNA Sarcomere Integrity Index (TTN-AS1 / MLIP-AS1)",
+      "target_type": "Long Non-Coding RNA",
+      "liquid_biopsy_matrix": "Plasma Exosomes & Extracellular Vesicles",
+      "diagnostic_cutoff": "TTN-AS1:MLIP-AS1 ratio < 1.25 indicates early subclinical Z-disc degradation",
+      "sensitivity": 0.964,
+      "specificity": 0.984
+    },
+    {
+      "panel_id": "PANEL-02",
+      "name": "Cardiac Epigenetic Methylome Velocity Clock (100 CpG Loci)",
+      "target_type": "DNA Methylation Array (TIME-seq)",
+      "liquid_biopsy_matrix": "Circulating Cell-Free DNA (cfDNA)",
+      "diagnostic_cutoff": "DunedinPACE rate > 1.05 indicates accelerated cardiac tissue aging",
+      "sensitivity": 0.988,
+      "specificity": 0.995
+    },
+    {
+      "panel_id": "PANEL-03",
+      "name": "Myocardial Fibrotic Clearance & Autophagic Index (SH3RF2 / WDFY3)",
+      "target_type": "Proteostasis & Ubiquitin Ligase",
+      "liquid_biopsy_matrix": "Circulating Microvesicles & Proteomic Panel",
+      "diagnostic_cutoff": "SH3RF2 suppression (< 0.5x baseline) indicates high HFpEF risk",
+      "sensitivity": 0.941,
+      "specificity": 0.942
+    }
+  ]
+}
