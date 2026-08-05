@@ -5851,15 +5851,18 @@ async function runDiscovery() {
             let activeCt = window._selectedCellType || 'all';
             if (activeCt === 'all' && query) {
                 const qL = query.toLowerCase();
-                if (qL.includes('epicardial adipocyte') || qL.includes('adipocyte')) activeCt = 'epicardial_adipocyte';
-                else if (qL.includes('ventricular myocyte') || qL.includes('ventricular cardiomyocyte')) activeCt = 'regular_ventricular_cardiac_myocyte';
-                else if (qL.includes('atrial myocyte') || qL.includes('pacemaker') || qL.includes('sinoatrial')) activeCt = 'regular_atrial_cardiac_myocyte';
-                else if (qL.includes('fibroblast')) activeCt = 'fibroblast';
-                else if (qL.includes('pericyte')) activeCt = 'pericyte';
-                else if (qL.includes('endothelial')) activeCt = 'endothelial_cell';
-                else if (qL.includes('macrophage')) activeCt = 'macrophage';
-                else if (qL.includes('smooth muscle')) activeCt = 'smooth_muscle_cell';
-                else if (qL.includes('neuron') || qL.includes('neural')) activeCt = 'neural_cell';
+                const isPanCardiac = qL.includes('pan-cardiac') || qL.includes('pan cardiac') || qL.includes('all cardiac') || qL.includes('ensemble') || qL.includes('spanning') || qL.includes('across all');
+                if (!isPanCardiac) {
+                    if (qL.includes('epicardial adipocyte') || qL.includes('adipocyte')) activeCt = 'epicardial_adipocyte';
+                    else if (qL.includes('ventricular myocyte') || qL.includes('ventricular cardiomyocyte')) activeCt = 'regular_ventricular_cardiac_myocyte';
+                    else if (qL.includes('atrial myocyte') || qL.includes('pacemaker') || qL.includes('sinoatrial')) activeCt = 'regular_atrial_cardiac_myocyte';
+                    else if (qL.includes('fibroblast')) activeCt = 'fibroblast';
+                    else if (qL.includes('pericyte')) activeCt = 'pericyte';
+                    else if (qL.includes('endothelial')) activeCt = 'endothelial_cell';
+                    else if (qL.includes('macrophage')) activeCt = 'macrophage';
+                    else if (qL.includes('smooth muscle')) activeCt = 'smooth_muscle_cell';
+                    else if (qL.includes('neuron') || qL.includes('neural')) activeCt = 'neural_cell';
+                }
                 
                 if (activeCt !== 'all') {
                     const activeName = document.getElementById('active-celltype-name');
