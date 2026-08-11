@@ -6704,24 +6704,40 @@ async def partial_reprogramming_endpoint(req: PartialReprogrammingRequest):
 
 
 
+        # STAGE 3.5: Cardiac-Specific Multi-Scale Engines (v31.0 GOLD)
+        from services.ferro_aging_engine import get_ferro_aging_engine
+        from services.cardiac_safety_gate import get_cardiac_safety_gate
+        from services.cardiac_ensemble_clock import get_cardiac_ensemble_clock
+
+        ferro_engine = get_ferro_aging_engine()
+        cardiac_gate = get_cardiac_safety_gate()
+        ensemble_clock_service = get_cardiac_ensemble_clock()
+
+        ferro_audit = ferro_engine.calculate_ferro_aging_index({
+            "ACSL4": 0.22,
+            "GPX4": 0.88,
+            "SLC7A11": 0.76,
+            "FTH1": 0.82
+        })
+        cardiac_safety = cardiac_gate.audit_cocktail_safety(approved_genes, pulse_duration_hours=2.0)
+        ensemble_clock_res = ensemble_clock_service.predict_ensemble_age(
+            chronological_age=65.0,
+            rejuvenation_target=age_reduction
+        )
+
+        safety_result["ferro_aging_audit"] = ferro_audit
+        safety_result["cardiac_safety"] = cardiac_safety
+        safety_result["ensemble_clock"] = ensemble_clock_res
+
         # STAGE 4: Generate AF3 manifest for top 2 approved factors
-
         af3_manifest = None
-
         if len(approved_genes) >= 2:
-
             seq1 = sequences.get(approved_genes[0], "")
-
             seq2 = sequences.get(approved_genes[1], "")
-
             if seq1 and seq2 and not seq1.startswith("SEQUENCE_NOT_FOUND"):
-
                 seq1_dom = D2HUtility.extract_domain(seq1, approved_genes[0])
-
                 seq2_dom = D2HUtility.extract_domain(seq2, approved_genes[1])
-
                 fused = D2HUtility.generate_z_linker_handshake(seq1_dom, seq2_dom)
-
                 af3_manifest = {
                     "name": f"Zenith_Partial_{approved_genes[0]}_{approved_genes[1]}",
                     "modelSeeds": [2142086823],
@@ -6732,32 +6748,21 @@ async def partial_reprogramming_endpoint(req: PartialReprogrammingRequest):
                     ]
                 }
 
-
-
         return JSONResponse({
-
             "status": "COMPLETED",
-
             "pipeline": "ZENITH_OSK_PARTIAL_v1",
-
             "prompt": req.prompt,
-
             "candidates_discovered": candidates,
-
             "partial_report": safety_result,
-
+            "ferro_aging_audit": ferro_audit,
+            "cardiac_safety": cardiac_safety,
+            "ensemble_clock": ensemble_clock_res,
             "sequences_fetched": len(sequences),
-
             "af3_manifest": af3_manifest,
-
             "approved_count": len(approved_genes),
-
             "blocked_count": len(safety_result["blocked"]),
-
             "age_reduction": age_reduction,
-
             "dna_motif": dna_motif
-
         })
 
 
@@ -6779,21 +6784,45 @@ async def partial_reprogramming_endpoint(req: PartialReprogrammingRequest):
 
 
 # Status endpoint for partial mode availability
-
 @app.get("/partial-reprogramming/status")
-
 async def partial_status():
+    return JSONResponse({
+        "available": PARTIAL_MODE_AVAILABLE,
+        "version": "OSK_PARTIAL_v1",
+        "modes": ["conservative", "balanced", "aggressive"],
+        "features": ["oncogene_filter", "dediff_filter", "sirtuin_scorer", "horvath_scorer", "af3_manifest", "ferro_aging_audit", "cardiac_safety_gate", "ensemble_clock"]
+    })
+
+class CardiacSafetyAuditRequest(BaseModel):
+    factors: List[str] = ["GATA4", "TBX5", "MEF2C"]
+    expression_profile: Optional[Dict[str, float]] = None
+    pulse_duration_hours: Optional[float] = 2.0
+    chronological_age: Optional[float] = 65.0
+
+@app.post("/api/v2/cardiac/safety_audit")
+@app.get("/api/v2/cardiac/safety_audit")
+async def cardiac_safety_audit_endpoint(req: Optional[CardiacSafetyAuditRequest] = None):
+    """
+    Dedicated endpoint for cardiac-specific safety, ferro-aging, and EnsembleAge auditing.
+    """
+    from services.ferro_aging_engine import get_ferro_aging_engine
+    from services.cardiac_safety_gate import get_cardiac_safety_gate
+    from services.cardiac_ensemble_clock import get_cardiac_ensemble_clock
+
+    factors = req.factors if req and req.factors else ["GATA4", "TBX5", "MEF2C"]
+    expr = (req.expression_profile if req and req.expression_profile else {"ACSL4": 0.22, "GPX4": 0.88, "SLC7A11": 0.76})
+    pulse = req.pulse_duration_hours if req and req.pulse_duration_hours else 2.0
+    age = req.chronological_age if req and req.chronological_age else 65.0
+
+    ferro_res = get_ferro_aging_engine().calculate_ferro_aging_index(expr)
+    safety_res = get_cardiac_safety_gate().audit_cocktail_safety(factors, pulse_duration_hours=pulse)
+    clock_res = get_cardiac_ensemble_clock().predict_ensemble_age(chronological_age=age)
 
     return JSONResponse({
-
-        "available": PARTIAL_MODE_AVAILABLE,
-
-        "version": "OSK_PARTIAL_v1",
-
-        "modes": ["conservative", "balanced", "aggressive"],
-
-        "features": ["oncogene_filter", "dediff_filter", "sirtuin_scorer", "horvath_scorer", "af3_manifest"]
-
+        "status": "SUCCESS",
+        "ferro_aging_audit": ferro_res,
+        "cardiac_safety": safety_res,
+        "ensemble_clock": clock_res
     })
 
 
