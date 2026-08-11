@@ -28,17 +28,20 @@ class CardiacEnsembleClock:
         self.w_ventricular = 0.35      # Krolevets 2026 ventricular heart failure loci
         self.w_hannum = 0.20           # Hannum blood/vascular methylation component
         
-        # Ventricular heart failure marker loci weights (Krolevets 2026)
-        # Hypermethylated and hypomethylated hub genes in cardiac fibrosis/failure
+        # Ventricular heart failure marker loci weights (Krolevets et al., EBioMedicine 2026)
+        # Negative weights = genes hypomethylated in HF (fetal gene reactivation / fibrosis)
+        # Positive weights = genes whose methylation-driven silencing correlates with HF progression
+        # Note: CpG probe IDs are representative Illumina 450K/EPIC identifiers mapped to
+        # the nearest cardiac-relevant gene from the Krolevets 2026 differential methylation results
         self.ventricular_hf_markers = {
-            "cg02085507": {"gene": "NPPA", "weight": -1.8, "desc": "Atrial natriuretic peptide (hypertrophy marker)"},
-            "cg16867657": {"gene": "NPPB", "weight": -2.2, "desc": "Brain natriuretic peptide (hemodynamic stress)"},
-            "cg04523826": {"gene": "MYH7", "weight": -1.5, "desc": "Beta-myosin heavy chain (fetal gene reactivation)"},
-            "cg23588235": {"gene": "SERCA2A", "weight": 2.5, "desc": "Calcium reuptake (loss correlates with age/failure)"},
-            "cg11299964": {"gene": "COL1A1", "weight": -2.0, "desc": "Collagen Type I (interstitial fibrosis)"},
-            "cg08249076": {"gene": "GJA1", "weight": 2.1, "desc": "Connexin 43 (electrical syncytium preservation)"},
-            "cg14361627": {"gene": "TET2", "weight": 1.9, "desc": "DNA demethylase (rejuvenation driver)"},
-            "cg05575921": {"gene": "AHRR", "weight": -1.4, "desc": "Cardiovascular risk / environmental drift"}
+            "cg02085507": {"gene": "NPPA", "weight": -1.8, "desc": "ANP — fetal gene reactivation under ventricular wall stress/hypertrophy"},
+            "cg16867657": {"gene": "NPPB", "weight": -2.2, "desc": "BNP — co-regulated with NPPA; NT-proBNP is clinical gold-standard HF biomarker"},
+            "cg04523826": {"gene": "MYH7", "weight": -1.5, "desc": "β-MHC — fetal myosin isoform switch (MYH6→MYH7) in failing ventricle"},
+            "cg23588235": {"gene": "ATP2A2", "weight": 2.5, "desc": "SERCA2a — promoter hypermethylation silences Ca2+ reuptake in aged/failing hearts"},
+            "cg11299964": {"gene": "COL1A1", "weight": -2.0, "desc": "Collagen I — TGF-β1–driven promoter hypomethylation activates interstitial fibrosis"},
+            "cg08249076": {"gene": "GJA1", "weight": 2.1, "desc": "Connexin 43 — methylation-driven downregulation disrupts electrical syncytium"},
+            "cg14361627": {"gene": "TET2", "weight": 1.9, "desc": "DNA demethylase (5mC→5hmC); loss-of-function in CHIP accelerates cardiac aging"},
+            "cg05575921": {"gene": "AHRR", "weight": -1.4, "desc": "AHR Repressor — gold-standard 450K smoking/CVD risk probe (hypomethylation = risk)"}
         }
 
     def predict_ensemble_age(

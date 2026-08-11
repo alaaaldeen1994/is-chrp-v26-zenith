@@ -15,21 +15,28 @@ class CardiacSafetyGate:
 
     def __init__(self):
         # Strict minimum preservation floors (normalized 0.0 - 1.0)
+        # These genes define the irreducible functional identity of an adult cardiomyocyte.
+        # Loss of any marker below its floor during transient reprogramming causes:
+        #   - Sarcomere disassembly (TNNT2/MYH7/TTN) -> contractile failure
+        #   - Gap junction uncoupling (GJA1/Cx43) -> fatal re-entrant VT/VF arrhythmias
+        #   - Calcium handling collapse (ATP2A2/RYR2/CACNA1C) -> diastolic dysfunction / triggered activity
         self.safety_floors = {
-            "TNNT2": 0.85,    # Cardiac Troponin T (Sarcomere anchor)
-            "MYH7": 0.80,     # Beta-Myosin Heavy Chain (Ventricular contractility)
-            "TTN": 0.80,      # Titin (Passive stiffness & structural continuity)
-            "GJA1": 0.80,     # Connexin 43 (Gap junction electrical syncytium)
-            "ATP2A2": 0.85,   # SERCA2a (Diastolic calcium reuptake)
-            "RYR2": 0.80,     # Ryanodine Receptor 2 (Calcium-induced calcium release)
-            "CACNA1C": 0.80   # L-type Voltage-gated Calcium Channel
+            "TNNT2": 0.85,    # Cardiac Troponin T — thin filament Ca2+ sensitivity switch
+            "MYH7": 0.80,     # β-Myosin Heavy Chain — adult ventricular motor protein (ATPase)
+            "TTN": 0.80,      # Titin — Z-disc to M-line elastic spring (passive stiffness + Frank-Starling)
+            "GJA1": 0.80,     # Connexin 43 — hexameric connexon gap junction at intercalated discs
+            "ATP2A2": 0.85,   # SERCA2a — SR Ca2+ reuptake pump (~70% diastolic Ca2+ clearance)
+            "RYR2": 0.80,     # Ryanodine Receptor 2 — SR Ca2+-induced Ca2+ release (CICR) channel
+            "CACNA1C": 0.80   # Cav1.2 L-type Ca2+ channel — Phase 2 plateau, triggers CICR
         }
 
         # Pluripotency and dedifferentiation danger caps
+        # These Yamanaka / stemness factors must remain below strict ceilings
+        # to prevent irreversible loss of somatic cardiomyocyte identity
         self.dedifferentiation_caps = {
-            "POU5F1": 0.35,   # OCT4 (Limit high expression to prevent teratoma)
-            "MYC": 0.30,      # c-MYC (Strictly limited to prevent oncogenesis)
-            "LIN28A": 0.40    # LIN28 (Prevent complete stemness transition)
+            "POU5F1": 0.35,   # OCT4 — core pluripotency TF; >0.35 risks teratoma
+            "MYC": 0.30,      # c-MYC — oncogene; drives sarcomere disassembly + cell cycle re-entry
+            "LIN28A": 0.40    # LIN28A — RNA-binding protein; blocks let-7 maturation -> stemness
         }
 
     def audit_cocktail_safety(
