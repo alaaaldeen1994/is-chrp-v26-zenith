@@ -1,4 +1,12 @@
 User-agent: *
 Allow: /
+Disallow: /api/
+Disallow: /partial-reprogramming
+Disallow: /run_virtual_trial
+Disallow: /generate_opentrons_protocol
+Disallow: /af3_jobs/
+Disallow: /health
+Disallow: /docs
+Disallow: /openapi.json
 
 Sitemap: https://www.niluslab.com/sitemap.xml
