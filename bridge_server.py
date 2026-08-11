@@ -6650,19 +6650,18 @@ async def partial_reprogramming_endpoint(req: PartialReprogrammingRequest):
 
         raw_age = float(gpt_result.get("age_reduction", 0.0))
 
-        # Parse user's age cap from prompt (e.g. "cap at 9 years", "9 years")
-
+        # Parse user's target age reduction from prompt (e.g. "by 2 years", "by 2years", "cap at 9 years")
         import re
+        target_match = re.search(r'(?:by|cap\s*(?:at|of|to)?|target\s*(?:of)?)\s*(\d+\.?\d*)\s*years?', req.prompt, re.IGNORECASE)
+        if not target_match:
+            target_match = re.search(r'(\d+\.?\d*)\s*years?', req.prompt, re.IGNORECASE)
 
-        cap_match = re.search(r'cap\s*(?:at|of|to)?\s*(\d+\.?\d*)\s*years?', req.prompt, re.IGNORECASE)
-
-        user_cap = float(cap_match.group(1)) if cap_match else MAX_AGE_REDUCTION_YEARS
-
-        age_reduction = min(raw_age, MAX_AGE_REDUCTION_YEARS, user_cap)
-
-        if raw_age > user_cap:
-
-            print(f"       GPT returned age_reduction={raw_age}y  --  capped at user-requested {user_cap}y")
+        if target_match:
+            user_target_age = float(target_match.group(1))
+            age_reduction = min(user_target_age, MAX_AGE_REDUCTION_YEARS)
+            print(f"       OSK PARTIAL: Parsed user target age reduction = {user_target_age}y (enforced: {age_reduction}y)")
+        else:
+            age_reduction = min(raw_age, MAX_AGE_REDUCTION_YEARS) if raw_age > 0 else 5.0
 
         
 
