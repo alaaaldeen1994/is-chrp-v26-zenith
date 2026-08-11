@@ -212,7 +212,7 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
             "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net https://unpkg.com https://cdnjs.cloudflare.com; "
             "img-src 'self' data: blob: https:; "
             "font-src 'self' data: https://fonts.gstatic.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; "
-            "connect-src 'self' https://niluslab.com https://*.niluslab.com https://api.esm.metainfrastructure.org https://api.openai.com https://cellxgene.cziscience.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://nilus-lab.firebaseapp.com https://*.googleapis.com https://*.firebaseapp.com wss:; "
+            "connect-src 'self' https://niluslab.com https://*.niluslab.com https://api.esm.metainfrastructure.org https://api.openai.com https://cellxgene.cziscience.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://nilus-lab.firebaseapp.com https://*.googleapis.com https://*.firebaseapp.com https://rest.uniprot.org https://alphafold.ebi.ac.uk https://files.rcsb.org https://*.rcsb.org wss:; "
             "frame-src 'self' https://alphafoldserver.com https://nilus-lab.firebaseapp.com https://*.firebaseapp.com https://apis.google.com; "
             "worker-src 'self' blob:; "
             "child-src 'self' blob:; "

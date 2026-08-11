@@ -78,8 +78,8 @@ const CONFIG = {
         return genes.slice(0, 4908);
     })(),
 
-    // 4908x4908 GRN Matrix (Sparse)
-    GRN: Array.from({ length: 4908 }, () => new Float32Array(4908).fill(0))
+    // 4908x4908 GRN Matrix (Lazily allocated in idle callback to avoid main-thread LCP blockage)
+    GRN: null
 };
 
 // Global lookup map for key gene indices in CONFIG.geneSymbols
@@ -96,8 +96,9 @@ function initGeneIndices() {
 // Initialize default index lookup mapping
 initGeneIndices();
 
-// Initialize GRN with structure
+// Initialize GRN with structure (deferred to avoid blocking main thread on page load)
 function initGRN() {
+    if (CONFIG.GRN && CONFIG.GRN.length === 4908) return;
     CONFIG.GRN = Array.from({ length: 4908 }, () => new Float32Array(4908).fill(0));
     // Self-excitation for stability
     for (let i = 0; i < 4908; i++) CONFIG.GRN[i][i] = 0.8;
@@ -130,7 +131,14 @@ function initGRN() {
     CONFIG.GRN[tp53Idx][mycIdx] = -2.0;
 }
 
-initGRN();
+// Defer non-critical GRN matrix allocation until browser is idle
+if (typeof window !== 'undefined') {
+    if ('requestIdleCallback' in window) {
+        requestIdleCallback(() => initGRN(), { timeout: 2000 });
+    } else {
+        setTimeout(initGRN, 200);
+    }
+}
 
 
 // --- AGENT (CELL) CLASS ---
@@ -1252,7 +1260,7 @@ const BiosimBridge = {
             if (response.ok) {
                 const data = await response.json();
                 const symbols = data.gene_symbols;
-                if (Array.isArray(symbols) && symbols.length === 4908) {
+                if (Array.isArray(symbols) && symbols.length > 0) {
                     CONFIG.geneSymbols = symbols;
                     initGeneIndices();
                     initGRN();
@@ -4259,23 +4267,29 @@ const BiosimBridge = {
         if (!svg) return;
         
         svg.innerHTML = '';
-        if (!timePoints || timePoints.length === 0) return;
+        if (!timePoints || timePoints.length === 0 || !concentrationValues || concentrationValues.length === 0) return;
         
-        const width = svg.clientWidth || 150;
-        const height = svg.clientHeight || 20;
+        const width = Math.max(svg.clientWidth || 0, 150);
+        const height = Math.max(svg.clientHeight || 0, 20);
         
         const minTime = Math.min(...timePoints);
         const maxTime = Math.max(...timePoints);
         const minConc = 0;
-        const maxConc = Math.max(...concentrationValues, 1.0);
+        const validConcs = concentrationValues.filter(v => Number.isFinite(v));
+        const maxConc = validConcs.length > 0 ? Math.max(...validConcs, 1.0) : 1.0;
         const timeRange = (maxTime - minTime) || 1.0;
         const concRange = (maxConc - minConc) || 1.0;
         
         let pathD = '';
         for (let i = 0; i < timePoints.length; i++) {
-            const x = ((timePoints[i] - minTime) / timeRange) * width;
-            const y = height - ((concentrationValues[i] - minConc) / concRange) * (height - 4) - 2;
-            if (isNaN(x) || isNaN(y)) continue;
+            const rawX = ((timePoints[i] - minTime) / timeRange) * width;
+            const concVal = Number.isFinite(concentrationValues[i]) ? concentrationValues[i] : 0;
+            const rawY = height - ((concVal - minConc) / concRange) * Math.max(height - 4, 1) - 2;
+            
+            if (!Number.isFinite(rawX) || !Number.isFinite(rawY)) continue;
+            const x = Math.max(0, Math.min(width, rawX));
+            const y = Math.max(1, Math.min(height - 1, rawY));
+            
             if (pathD === '') {
                 pathD += `M ${x.toFixed(2)} ${y.toFixed(2)}`;
             } else {

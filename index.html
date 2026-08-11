@@ -19,6 +19,7 @@
 
     <!-- Inter font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 
     <!-- VIEW SWITCHING — must be in <head> to apply before paint -->
@@ -1063,13 +1064,13 @@ if (document.readyState === 'loading') {
 
 
 
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.tailwindcss.com" defer></script>
 
     <!-- Firebase already initialized in auth guard above. Do not load again. -->
 
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://unpkg.com/lucide@latest" defer></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
 
     <!-- THREE.js removed — 3D viewport disabled -->
 
@@ -4586,11 +4587,17 @@ nav, .nav-dock, #mob-nav {
 
 
     <!-- Initialize Icons -->
-
     <script>
-
-        lucide.createIcons();
-
+        function initLucideIcons() {
+            if (typeof lucide !== 'undefined' && lucide.createIcons) {
+                lucide.createIcons();
+            }
+        }
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initLucideIcons);
+        } else {
+            initLucideIcons();
+        }
     </script>
 
 
@@ -5681,7 +5688,7 @@ function selectSuggestionPill(queryText) {
         qEl.style.height = 'auto';
         qEl.style.height = Math.min(qEl.scrollHeight, 200) + 'px';
         updateSubmitButton(true);
-        runDiscovery();
+        qEl.focus();
     }
 }
 
