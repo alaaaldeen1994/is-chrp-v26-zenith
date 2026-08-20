@@ -2043,7 +2043,13 @@ app.mount("/vendor", StaticFiles(directory="vendor"), name="vendor")
 
 async def serve_index():
 
-    return FileResponse("index.html")
+    return FileResponse("profile.html")
+
+@app.get("/index", response_class=HTMLResponse)
+
+async def serve_index_route():
+
+    return FileResponse("profile.html")
 
 
 
@@ -2778,7 +2784,7 @@ async def health_check():
 
 async def get_landing():
 
-    return FileResponse("index.html")
+    return FileResponse("profile.html")
 
 
 
