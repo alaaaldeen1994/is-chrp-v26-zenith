@@ -8106,3 +8106,11 @@ async def get_alphagenome_presets():
         "preset_variants": list(AlphaGenomeEngine.PRESET_VARIANTS.keys()),
         "descriptions": AlphaGenomeEngine.PRESET_VARIANTS
     }
+
+
+@app.get("/leadership.html", response_class=FileResponse)
+@app.get("/leadership", response_class=FileResponse)
+async def get_leadership():
+    if os.path.exists("leadership.html"):
+        return FileResponse("leadership.html")
+    return FileResponse("profile.html")
