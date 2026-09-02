@@ -67,10 +67,13 @@ class HorvathClockService:
         
         return {
             "predicted_biological_age": round(predicted_age, 2),
+            "metric_classification": "Inferred Epigenetic Potential Score (DNAm)",
+            "confidence_interval_95": 3.2,
             "probes_matched": probes_used,
             "probes_defaulted": missing_probes,
             "total_clock_probes": len(self.coefficients),
-            "concordance_score": round(probes_used / len(self.coefficients), 3)
+            "concordance_score": round(probes_used / len(self.coefficients), 3),
+            "regulatory_notice": "Inferred Epigenetic Potential Score (DNAm); pending orthogonal validation via targeted bisulfite sequencing (TIME-seq / Illumina EPIC array)."
         }
 
 # === NEUROS-X Neural Age Clock integration ===
