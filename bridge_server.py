@@ -7102,7 +7102,7 @@ async def wot_trajectory_fate(req: WotRequest):
 # ============================================================
 # REAL IP DISCOVERY ENDPOINT â€” From HCA Latent Space
 # Source: Litvinukova et al., Nature 2020
-# Method: Gene correlation with the youngâ†’aged rejuvenation vector
+# Method: Gene correlation with the young->aged rejuvenation vector
 # NO GPT INVOLVED â€” These numbers come from 14 real donor cells
 # ============================================================
 
@@ -7382,7 +7382,7 @@ async def run_gpt_discovery(request: Request):
         f"{{"
         f"  \"genes\": [{{\"gene\": \"SYMBOL\", \"correlation\": 0.XXX, \"direction\": \"UP_IN_YOUNG|UP_IN_AGED\", "
         f"\"role\": \"1-sentence explanation of relevance to the query\", "
-        f"\"mechanism\": \"gene â†’ protein â†’ pathway â†’ phenotype chain\"}}], "
+        f"\"mechanism\": \"gene -> protein -> pathway -> phenotype chain\"}}], "
         f"  \"summary\": \"2-3 sentence protocol recommendation\", "
         f"  \"query_interpretation\": \"biological objective identified\""
         f"}}"
@@ -7488,7 +7488,7 @@ async def run_gpt_discovery(request: Request):
             f"{{"
             f"  \"genes\": [{{\"gene\": \"SYMBOL\", \"correlation\": 0.XXX, \"direction\": \"UP_IN_YOUNG|UP_IN_AGED\", "
             f"\"role\": \"1-sentence explanation\", "
-            f"\"mechanism\": \"gene â†’ protein â†’ pathway â†’ phenotype\"}}], "
+            f"\"mechanism\": \"gene -> protein -> pathway -> phenotype\"}}], "
             f"  \"summary\": \"2-3 sentence refined protocol\", "
             f"  \"query_interpretation\": \"refined biological objective\", "
             f"  \"refinement_notes\": \"what changed and why\""

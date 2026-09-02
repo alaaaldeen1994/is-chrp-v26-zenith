@@ -2296,6 +2296,13 @@ const BiosimBridge = {
                 }
             });
 
+            // Auto-activate cardiac-targeted delivery if user query specifies cardiac/heart/tropic/LNP
+            const qLower = (queryVal || '').toLowerCase();
+            const chkActive = document.getElementById('chk-lnp-active');
+            if (chkActive && (qLower.includes('cardiac') || qLower.includes('heart') || qLower.includes('tropic') || qLower.includes('targeted') || qLower.includes('nanoparticle') || qLower.includes('lnp'))) {
+                chkActive.checked = true;
+            }
+
             // Run GraphRAG query and draw network
             BiosimBridge.renderGraphRAG(queryVal);
 
