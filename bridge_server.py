@@ -4707,6 +4707,8 @@ async def get_target_vector_from_query(query: str, api_key: Optional[str] = None
 
 
 
+@app.post("/api/v1/clinical/structure-manifest")
+@app.post("/api/v1/clinical/boltz-manifest")
 @app.post("/api/v1/clinical/af3-manifest")
 
 async def generate_af3_manifest(req: dict):
@@ -4715,7 +4717,7 @@ async def generate_af3_manifest(req: dict):
 
     ZENITH MASTER PIPELINE: DISCOVERY-TO-HANDSHAKE (D2H)
 
-    Transforms a high-fidelity discovery profile into a stable AlphaFold 3 physical manifest.
+    Transforms a high-fidelity discovery profile into an open Boltz-1 biomolecular structure manifest (MIT License).
 
     """
 
@@ -4859,7 +4861,7 @@ async def generate_af3_manifest(req: dict):
 
             ],
 
-            "dialect": "alphafold3",
+            "dialect": "boltz1",
 
             "version": 1
 

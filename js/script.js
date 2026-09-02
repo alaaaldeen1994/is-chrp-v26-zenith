@@ -1698,7 +1698,7 @@ const BiosimBridge = {
                         "MAPPING HORVATH CLOCK LOCI...",
                         "FETCHING UniProt SEQUENCES (Tier 1)...",
                         "GENERATING DOMAIN-HANDSHAKE FUSION...",
-                        "BUILDING AF3 STRUCTURAL MANIFEST...",
+                        "BUILDING BOLTZ-1 STRUCTURAL MANIFEST (MIT)...",
                         "COMPILING PARTIAL SAFETY REPORT...",
                         "FINALIZING OSK PROTOCOL..."
                     ];
@@ -1904,7 +1904,7 @@ const BiosimBridge = {
                 const phases = [
                     "INITIALIZING MANIFOLD...",
                     "ANALYZING TRAJECTORY...",
-                    "STRUCTURAL VALIDATION (AF3)...",
+                    "STRUCTURAL VALIDATION (BOLTZ-1)...",
                     "MAPPING MOTIF: CTTTGTTATG...",
                     "EXTRACTING TRANSCRIPTION FACTORS...",
                     "CALCULATING SYNERGY GRADIENT...",
@@ -2658,7 +2658,8 @@ const BiosimBridge = {
         }
     },
 
-    async exportAlphaFoldManifest() {
+    async exportAlphaFoldManifest() { return this.exportStructureManifest(); },
+    async exportStructureManifest() {
         try {
             if (!this.lastDiscovery) {
                 BiosimUI.notify('Export Error', 'Run a discovery first.', 'err');
@@ -2687,7 +2688,7 @@ const BiosimBridge = {
                 "sequences": sequences
             }];
 
-            BiosimUI.notify('Native Export', `ZenithFold Server JSON Generated`, 'suc');
+            BiosimUI.notify('Native Export', `Boltz-1 Structure Manifest Generated (MIT License)`, 'suc');
 
             const jsonStr = JSON.stringify(manifest, null, 2);
 
@@ -2696,7 +2697,7 @@ const BiosimBridge = {
                 BiosimUI.notify('COPIED', 'JSON manifest copied to clipboard!', 'suc');
             } catch(e) {}
 
-            const backupFileName = `Zenith_Full_${targetTF.toUpperCase()}.json`;
+            const backupFileName = `${targetTF.toUpperCase()}_complex_boltz1.json`;
 
             const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(jsonStr);
             const a = document.createElement('a');
@@ -2712,7 +2713,7 @@ const BiosimBridge = {
             BiosimUI.logTerminal(`--- [JSON CODE END] ---`);
             BiosimUI.logTerminal(`TARGET PROTEIN: ${targetTF}`);
             BiosimUI.logTerminal(`ENTITIES: ${sequences.length} total chains`);
-            BiosimUI.logTerminal(`[ZENITH v28] Dynamic DeepMind Format Verified.`);
+            BiosimUI.logTerminal(`[ZENITH v28] Dynamic Boltz-1 Format Verified (MIT License).`);
         } catch (error) {
             console.error("ZenithFold Export Error: ", error);
             BiosimUI.notify('Export Error', error.message, 'err');

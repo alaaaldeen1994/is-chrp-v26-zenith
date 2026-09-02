@@ -732,7 +732,7 @@ function highlightResidue(atom) {
   const activeStyle = document.querySelector('[data-style].active');
   const style = activeStyle ? activeStyle.dataset.style : 'cartoon';
 
-  // 1. Show CPK-colored ball-and-stick side chain for the selected residue (AlphaFold standard)
+  // 1. Show CPK-colored ball-and-stick side chain for the selected residue (Biomolecular standard)
   v.addStyle(
     { chain: atom.chain, resi: atom.resi },
     {
@@ -949,7 +949,7 @@ function _drawHBonds(selectedAtom) {
   hbondPairs.sort((a, b) => a.dist - b.dist);
   const topBonds = hbondPairs.slice(0, 8);
 
-  // Draw each H-bond as a thin dashed cyan cylinder (AlphaFold style) with floating distance labels
+  // Draw each H-bond as a thin dashed cyan cylinder (Biomolecular standard) with floating distance labels
   topBonds.forEach(bond => {
     // 1. Add dashed cylinder
     const shape = v.addCylinder({
@@ -1054,7 +1054,7 @@ function initToolbar() {
     const blob = new Blob([STATE.currentModel.pdb], { type: 'chemical/x-pdb' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
-    a.href = url; a.download = 'nilus_prediction.pdb';
+    a.href = url; a.download = 'NL101_complex_boltz1.pdb';
     a.click();
     URL.revokeObjectURL(url);
     log('PDB file downloaded', 'ok');
@@ -1812,7 +1812,7 @@ function renderAIReport(f) {
          ? 'This prediction is suitable for functional annotation and docking studies.'
          : f.meanPlddt >= 60
          ? 'Use this prediction as a hypothesis. Cross-reference with experimental data where possible.'
-         : 'Treat low-confidence regions as flexible/disordered. Consider AlphaFold-Multimer or experimental structure determination.'}</p>`
+         : 'Treat low-confidence regions as flexible/disordered. Consider Boltz-1 Multimer or experimental structure determination.'}</p>`
     ));
 
     // Section 3: Biochemical Properties
