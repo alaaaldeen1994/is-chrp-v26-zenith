@@ -1677,7 +1677,7 @@ def custom_openapi():
         "openapi": "3.0.0",
         "info": {
             "title": "Zenith Cellular Reprogramming & Boltz 3D API",
-            "description": "Single-cell discovery, 512-neuron LIF cardiac arrhythmia audit, mRNA-LNP formulation optimizer, and Boltz-1 3D complex folding.",
+            "description": "Single-cell discovery, 512-node cardiac syncytium ESI conduction audit, mRNA-LNP formulation optimizer, and Boltz-1 3D complex folding.",
             "version": "31.0.0"
         },
         "servers": [
@@ -1686,7 +1686,7 @@ def custom_openapi():
         "paths": {
             "/api/v1/neural/analyze": {
                 "post": {
-                    "summary": "Run 512-neuron cardiac arrhythmia safety audit",
+                    "summary": "Run 512-node cardiac syncytium safety audit",
                     "operationId": "safety_audit",
                     "requestBody": {
                         "required": True,
@@ -2394,7 +2394,7 @@ async def get_chatgpt_openapi_spec():
         "openapi": "3.0.0",
         "info": {
             "title": "Zenith Cellular Reprogramming & Boltz 3D API",
-            "description": "Single-cell discovery, 512-neuron LIF cardiac arrhythmia audit, mRNA-LNP formulation optimizer, and Boltz-1 3D complex folding.",
+            "description": "Single-cell discovery, 512-node cardiac syncytium ESI conduction audit, mRNA-LNP formulation optimizer, and Boltz-1 3D complex folding.",
             "version": "31.0.0"
         },
         "servers": [
@@ -2403,7 +2403,7 @@ async def get_chatgpt_openapi_spec():
         "paths": {
             "/api/v1/neural/analyze": {
                 "post": {
-                    "summary": "Run 512-neuron cardiac arrhythmia safety audit",
+                    "summary": "Run 512-node cardiac syncytium safety audit",
                     "operationId": "safety_audit",
                     "requestBody": {
                         "required": True,
@@ -8223,3 +8223,10 @@ async def predict_cellular_trajectory(req: Optional[TrajectoryPredictionRequest]
         }
     except Exception as e:
         return {"status": "ERROR", "detail": str(e)}
+
+@app.get("/terms", response_class=FileResponse)
+@app.get("/terms.html", response_class=FileResponse)
+async def get_terms_page():
+    if os.path.exists("terms.html"):
+        return FileResponse("terms.html")
+    return FileResponse("legal.html")

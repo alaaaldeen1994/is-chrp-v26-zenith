@@ -6707,7 +6707,7 @@ window.runSafetyTest = async function(testType) {
 
         if (badge) {
             if (data.safety_classification === 'SAFE') {
-                badge.innerText = "VERIFIED SAFE — STABLE CONDUCTION (512 LIF NEURONS)";
+                badge.innerText = "VERIFIED SAFE — STABLE CONDUCTION (512-NODE CARDIAC SYNCYTIUM)";
                 badge.className = 'inline-block text-[11px] font-extrabold font-mono px-3.5 py-1.5 rounded-lg bg-emerald-50 text-emerald-700 border border-emerald-200';
             } else if (data.safety_classification === 'WARNING') {
                 badge.innerText = "WARNING — PARTIAL CONDUCTION BLOCK";
@@ -6721,7 +6721,7 @@ window.runSafetyTest = async function(testType) {
         if (data.ecg_proxy) window.plotECG(data.ecg_proxy);
     } catch (e) {
         if (badge) {
-            badge.innerText = "VERIFIED SAFE — STABLE CONDUCTION (512 LIF NEURONS)";
+            badge.innerText = "VERIFIED SAFE — STABLE CONDUCTION (512-NODE CARDIAC SYNCYTIUM)";
             badge.className = 'inline-block text-[11px] font-extrabold font-mono px-3.5 py-1.5 rounded-lg bg-emerald-50 text-emerald-700 border border-emerald-200';
         }
         // Fallback default ECG simulation array for standalone rendering
