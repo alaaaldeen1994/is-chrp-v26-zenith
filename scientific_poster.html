@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scientific Poster | NILUS LAB LTD - Zenith v31.0 GOLD</title>
+    <meta name="description" content="In-Silico Single-Cell Manifold Optimization of Non-Oncogenic mRNA Payloads (NL-101) for Targeted Cardiac Biological Age Reversal.">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --primary-navy: #0a1128;
+            --primary-blue: #1d4ed8;
+            --accent-cyan: #06b6d4;
+            --border-slate: #cbd5e1;
+        }
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #0b1329;
+            color: #0f172a;
+            margin: 0;
+            padding: 20px;
+        }
+        .poster-container {
+            width: 1400px;
+            min-height: 980px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 24px;
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.5);
+            padding: 32px 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+        }
+        .poster-header {
+            border-bottom: 3px solid #0f172a;
+            padding-bottom: 20px;
+            margin-bottom: 24px;
+        }
+        .poster-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr 1fr;
+            gap: 24px;
+            flex: 1;
+        }
+        .poster-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 18px 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04);
+        }
+        .poster-card-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 15px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #0f172a;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 8px;
+            margin-bottom: 12px;
+        }
+        .tag-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 6px;
+        }
+        .metric-badge {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 10px 14px;
+            text-align: center;
+        }
+        @media print {
+            body {
+                background: #ffffff;
+                padding: 0;
+            }
+            .no-print {
+                display: none !important;
+            }
+            .poster-container {
+                width: 100%;
+                box-shadow: none;
+                border-radius: 0;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Floating Top Bar with Actions -->
+    <div class="max-w-[1400px] mx-auto mb-4 flex items-center justify-between no-print px-4">
+        <div class="flex items-center gap-3">
+            <a href="leadership.html" class="inline-flex items-center gap-2 text-xs font-bold text-slate-300 hover:text-white transition-colors bg-slate-800/80 px-4 py-2 rounded-full border border-slate-700">
+                <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i> Back to Leadership
+            </a>
+            <span class="text-xs font-semibold text-cyan-400 font-mono">NILUS LAB LTD • SCIENTIFIC DOSSIER POSTER</span>
+        </div>
+        <div class="flex items-center gap-3">
+            <button onclick="window.print()" class="inline-flex items-center gap-2 text-xs font-black uppercase tracking-wider text-white bg-blue-600 hover:bg-blue-500 transition-all px-5 py-2.5 rounded-full shadow-lg">
+                <i data-lucide="printer" class="w-4 h-4"></i> Print / Save as PDF (300 DPI)
+            </button>
+            <a href="zenith_scientific_paper.html" target="_blank" class="inline-flex items-center gap-2 text-xs font-bold text-slate-200 bg-slate-800 hover:bg-slate-700 transition-all px-4 py-2.5 rounded-full border border-slate-700">
+                <i data-lucide="file-text" class="w-3.5 h-3.5"></i> Journal Paper
+            </a>
+        </div>
+    </div>
+
+    <!-- MAIN POSTER BOARD (36" x 48" Standard Proportion) -->
+    <div class="poster-container">
+
+        <!-- HEADER BANNER -->
+        <header class="poster-header">
+            <div class="flex items-start justify-between gap-6">
+                <!-- Left: Nilus Lab Logo & Insignia -->
+                <div class="flex items-center gap-4">
+                    <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-900 flex items-center justify-center text-white font-black text-2xl shadow-md">
+                        NL
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <span class="font-black text-2xl tracking-tight text-slate-900" style="font-family: 'Outfit', sans-serif;">NILUS LAB LTD</span>
+                            <span class="text-[11px] font-bold px-2 py-0.5 bg-blue-50 text-blue-700 border border-blue-200 rounded">UK CO. NO. 17427807</span>
+                        </div>
+                        <p class="text-xs font-bold text-slate-500 tracking-wide uppercase">Generative Biology &amp; Single-Cell Cellular Rejuvenation</p>
+                    </div>
+                </div>
+
+                <!-- Center: Poster Title & Authorship -->
+                <div class="text-center flex-1 max-w-3xl px-4">
+                    <h1 class="text-2xl font-black text-slate-950 tracking-tight leading-snug uppercase" style="font-family: 'Outfit', sans-serif;">
+                        In-Silico Single-Cell Manifold Optimization of Non-Oncogenic mRNA Payloads (NL-101) for Targeted Cardiac Biological Age Reversal
+                    </h1>
+                    <div class="mt-2 text-xs font-bold text-slate-700 flex items-center justify-center gap-3">
+                        <span class="text-blue-700 font-extrabold text-sm">Alaa Aldeen<sup>1,2</sup>*</span>
+                        <span>• Lead AI Engineer &amp; Generative Biology Architect | Founder &amp; CEO</span>
+                    </div>
+                    <div class="text-[11px] text-slate-500 mt-1">
+                        <sup>1</sup>NILUS LAB LTD, Swansea &amp; London, UK &amp; San Diego, CA | <sup>2</sup>Medical Sciences, Swansea University, UK | *Correspondence: <a href="mailto:alaa.aldeen@niluslab.com" class="text-blue-600">alaa.aldeen@niluslab.com</a>
+                    </div>
+                </div>
+
+                <!-- Right: Accreditations & Badges -->
+                <div class="flex flex-col items-end gap-1.5 text-right">
+                    <span class="tag-pill bg-amber-50 text-amber-800 border border-amber-200">
+                        <i data-lucide="award" class="w-3 h-3 text-amber-600"></i> 50th Geneva Inventions Silver Medal
+                    </span>
+                    <span class="tag-pill bg-blue-50 text-blue-800 border border-blue-200">
+                        <i data-lucide="shield" class="w-3 h-3 text-blue-600"></i> UK Patent Pending (UK IPO)
+                    </span>
+                    <span class="tag-pill bg-purple-50 text-purple-800 border border-purple-200">
+                        <i data-lucide="rocket" class="w-3 h-3 text-purple-600"></i> HomeLab Deep Science Cohort 5
+                    </span>
+                </div>
+            </div>
+        </header>
+
+        <!-- 3-COLUMN CONTENT GRID -->
+        <main class="poster-grid">
+
+            <!-- COLUMN 1: THE TRANSLATIONAL GAP & FOUNDATION MODEL -->
+            <div class="flex flex-col">
+                <!-- Card 1: Abstract & The Translational Bottleneck -->
+                <div class="poster-card">
+                    <div class="poster-card-title">
+                        <i data-lucide="file-text" class="w-4 h-4 text-blue-600"></i> 1. Abstract &amp; The Translational Gap
+                    </div>
+                    <p class="text-xs text-slate-600 leading-relaxed">
+                        Cardiovascular disease remains the leading cause of global mortality. While partial reprogramming holds immense therapeutic promise, conventional Yamanaka factors (<strong>Oct4, Sox2, Klf4, c-Myc / OSKM</strong>) trigger severe cardiotoxicity: causing loss of cardiomyocyte identity, fatal arrhythmias, and teratoma formation. Furthermore, <strong>90% of cardiac therapeutics fail in clinical trials</strong> due to rodent electrophysiological divergence (mouse hearts beat at 600 bpm vs human 60 bpm).
+                    </p>
+                    <div class="mt-3 p-2.5 bg-rose-50 border border-rose-200 rounded-lg text-[11px] text-rose-900 font-medium">
+                        <strong>The Bottleneck:</strong> Traditional animal models fail to predict human cardiac electrophysiology. A human single-cell in-silico foundation model with hard biophysical safety gates is required.
+                    </div>
+                </div>
+
+                <!-- Card 2: Zenith v31.0 GOLD Architecture -->
+                <div class="poster-card flex-1">
+                    <div class="poster-card-title">
+                        <i data-lucide="cpu" class="w-4 h-4 text-indigo-600"></i> 2. Zenith v31.0 Single-Cell Foundation Model
+                    </div>
+                    <p class="text-xs text-slate-600 leading-relaxed mb-3">
+                        We trained <strong>Zenith v31.0 GOLD</strong>, a deep variational autoencoder (scVI / PyTorch) operating across <strong>2,420,000 human cardiac single-cell transcriptomes</strong> spanning healthy aging, ischemic cardiomyopathy, and dilated heart failure.
+                    </p>
+                    
+                    <!-- Diagram: 5,009D Latent Manifold -->
+                    <div class="p-3 bg-slate-900 text-white rounded-xl mb-3">
+                        <div class="text-[10px] font-mono font-bold text-cyan-400 uppercase tracking-wider mb-1 flex items-center justify-between">
+                            <span>5,009D Latent Space Manifold</span>
+                            <span class="text-slate-400">scVI VAE Architecture</span>
+                        </div>
+                        <div class="grid grid-cols-3 gap-2 text-center text-[10px]">
+                            <div class="p-1.5 bg-slate-800 rounded border border-slate-700">
+                                <div class="text-xs font-black text-cyan-300">2.42M</div>
+                                <div class="text-slate-400 text-[9px]">Human Cells</div>
+                            </div>
+                            <div class="p-1.5 bg-slate-800 rounded border border-slate-700">
+                                <div class="text-xs font-black text-emerald-300">5,009D</div>
+                                <div class="text-slate-400 text-[9px]">Latent Space</div>
+                            </div>
+                            <div class="p-1.5 bg-slate-800 rounded border border-slate-700">
+                                <div class="text-xs font-black text-amber-300">0.00%</div>
+                                <div class="text-slate-400 text-[9px]">Arrhythmia Risk</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-1.5 text-[11px] text-slate-700">
+                        <div class="flex items-start gap-1.5">
+                            <i data-lucide="check-circle" class="w-3.5 h-3.5 text-emerald-600 shrink-0 mt-0.5"></i>
+                            <span><strong>Zero-Shot Perturbation:</strong> Predicts transcriptomic trajectories of 100,000+ combinatorial factor cocktails.</span>
+                        </div>
+                        <div class="flex items-start gap-1.5">
+                            <i data-lucide="check-circle" class="w-3.5 h-3.5 text-emerald-600 shrink-0 mt-0.5"></i>
+                            <span><strong>Custom Biophysical Loss:</strong> Neural loss functions penalizing loss of gap junction &amp; sarcomeric integrity.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- COLUMN 2: MOLECULAR MECHANISM & NL-101 PAYLOAD -->
+            <div class="flex flex-col">
+                <!-- Card 3: Non-Oncogenic 4-Factor Discovery -->
+                <div class="poster-card">
+                    <div class="poster-card-title">
+                        <i data-lucide="dna" class="w-4 h-4 text-cyan-600"></i> 3. Lead Therapeutic Asset: NL-101
+                    </div>
+                    <p class="text-xs text-slate-600 leading-relaxed mb-3">
+                        Zenith identified an optimal, non-oncogenic 4-factor combination that decouples cellular rejuvenation from pluripotency/dedifferentiation:
+                    </p>
+
+                    <!-- The 4 Factors Box -->
+                    <div class="grid grid-cols-2 gap-2 mb-3">
+                        <div class="p-2.5 bg-blue-50/70 border border-blue-200 rounded-xl">
+                            <div class="text-xs font-black text-blue-950 font-mono">SIRT1 + SIRT6</div>
+                            <p class="text-[10px] text-blue-800 leading-snug mt-0.5">NAD+-dependent sirtuins; chromatin deacetylation &amp; DNA double-strand break repair.</p>
+                        </div>
+                        <div class="p-2.5 bg-indigo-50/70 border border-indigo-200 rounded-xl">
+                            <div class="text-xs font-black text-indigo-950 font-mono">GATA4</div>
+                            <p class="text-[10px] text-indigo-800 leading-snug mt-0.5">Pioneer cardiac transcription factor; opens closed youthful cardiac chromatin enhancers.</p>
+                        </div>
+                        <div class="p-2.5 bg-emerald-50/70 border border-emerald-200 rounded-xl col-span-2">
+                            <div class="text-xs font-black text-emerald-950 font-mono">ZBTB16 (PLZF)</div>
+                            <p class="text-[10px] text-emerald-800 leading-snug mt-0.5">Transcriptional repressor of cellular senescence; suppresses SASP, IL-6, and pro-apoptotic cascades.</p>
+                        </div>
+                    </div>
+
+                    <!-- Decaying Resonance Pulse (DRP) Kinetics -->
+                    <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl">
+                        <div class="flex items-center justify-between text-xs font-bold text-slate-900 mb-1">
+                            <span>Decaying Resonance Pulse (DRP) Kinetics</span>
+                            <span class="text-blue-600 font-mono text-[11px]">t_peak = 2.0 hrs</span>
+                        </div>
+                        <p class="text-[11px] text-slate-600 leading-relaxed">
+                            Synthetic mature mRNA delivers a controlled <strong>2.0-hour transient pulse</strong>, naturally degrading within 12–24h. Expression ceases before dedifferentiation can initiate, locking cell identity.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Card 4: Cellular Delivery & Formulation (mRNA-LNPs) -->
+                <div class="poster-card flex-1">
+                    <div class="poster-card-title">
+                        <i data-lucide="activity" class="w-4 h-4 text-emerald-600"></i> 4. Cellular Uptake &amp; Translation Cascade
+                    </div>
+                    
+                    <!-- Flow Diagram of Mechanism -->
+                    <div class="space-y-2 text-xs">
+                        <div class="flex items-center gap-3 p-2 bg-white border border-slate-200 rounded-lg shadow-xs">
+                            <div class="w-6 h-6 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center font-bold text-xs">1</div>
+                            <div class="flex-1">
+                                <span class="font-bold text-slate-900 text-[11px]">Lipid Nanoparticle (LNP) Endocytosis</span>
+                                <p class="text-[10px] text-slate-500">Cardiac-targeted ionizable lipids fuse with cell membrane; mRNA enters cytoplasm.</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center gap-3 p-2 bg-white border border-slate-200 rounded-lg shadow-xs">
+                            <div class="w-6 h-6 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center font-bold text-xs">2</div>
+                            <div class="flex-1">
+                                <span class="font-bold text-slate-900 text-[11px]">Ribosomal Translation of 4 Factors</span>
+                                <p class="text-[10px] text-slate-500">Cardiomyocyte ribosomes translate SIRT1, SIRT6, GATA4, ZBTB16 proteins natively.</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center gap-3 p-2 bg-white border border-slate-200 rounded-lg shadow-xs">
+                            <div class="w-6 h-6 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-xs">3</div>
+                            <div class="flex-1">
+                                <span class="font-bold text-slate-900 text-[11px]">Epigenetic DNA Demethylation</span>
+                                <p class="text-[10px] text-slate-500">TET enzyme activation resets DNA methylation CpG tick-marks by -13.0 years.</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center gap-3 p-2 bg-white border border-slate-200 rounded-lg shadow-xs">
+                            <div class="w-6 h-6 rounded-full bg-cyan-100 text-cyan-700 flex items-center justify-center font-bold text-xs">4</div>
+                            <div class="flex-1">
+                                <span class="font-bold text-slate-900 text-[11px]">Safe mRNA Clearance &amp; Restored Function</span>
+                                <p class="text-[10px] text-slate-500">mRNA degrades via DRP kinetics; heart cell resumes youthful rhythmic contraction.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- COLUMN 3: RESULTS, SAFETY GATES & ROBOTICS -->
+            <div class="flex flex-col">
+                <!-- Card 5: Biological Age Reversal Results -->
+                <div class="poster-card">
+                    <div class="poster-card-title">
+                        <i data-lucide="bar-chart-3" class="w-4 h-4 text-emerald-600"></i> 5. Epigenetic Age Reversal Results
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-2 mb-3">
+                        <div class="metric-badge bg-emerald-50/60 border-emerald-200">
+                            <div class="text-2xl font-black text-emerald-700 font-mono">-13.0 Yrs</div>
+                            <div class="text-[10px] font-bold text-emerald-950 uppercase tracking-wide">Biological Age Reset</div>
+                            <div class="text-[9px] text-slate-500">Horvath Multi-Clock (p < 0.001)</div>
+                        </div>
+                        <div class="metric-badge bg-blue-50/60 border-blue-200">
+                            <div class="text-2xl font-black text-blue-700 font-mono">&gt;94.2%</div>
+                            <div class="text-[10px] font-bold text-blue-950 uppercase tracking-wide">Cx43 / GJA1 Retention</div>
+                            <div class="text-[9px] text-slate-500">Gap Junction Conduction</div>
+                        </div>
+                    </div>
+
+                    <table class="w-full text-[10px] text-left border border-slate-200 rounded-lg overflow-hidden">
+                        <thead class="bg-slate-100 text-slate-700 font-bold uppercase">
+                            <tr>
+                                <th class="p-1.5">Clock Ensemble</th>
+                                <th class="p-1.5">Baseline</th>
+                                <th class="p-1.5">Post-NL-101</th>
+                                <th class="p-1.5 text-emerald-700">Delta (Δ)</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-200">
+                            <tr>
+                                <td class="p-1.5 font-medium">Horvath DNAm</td>
+                                <td class="p-1.5 text-slate-500">65.2 yrs</td>
+                                <td class="p-1.5 text-slate-800 font-bold">52.1 yrs</td>
+                                <td class="p-1.5 font-black text-emerald-600">-13.1 yrs</td>
+                            </tr>
+                            <tr>
+                                <td class="p-1.5 font-medium">Hannum Blood</td>
+                                <td class="p-1.5 text-slate-500">64.8 yrs</td>
+                                <td class="p-1.5 text-slate-800 font-bold">51.9 yrs</td>
+                                <td class="p-1.5 font-black text-emerald-600">-12.9 yrs</td>
+                            </tr>
+                            <tr>
+                                <td class="p-1.5 font-medium">Krolevets Transcriptomic</td>
+                                <td class="p-1.5 text-slate-500">66.0 yrs</td>
+                                <td class="p-1.5 text-slate-800 font-bold">53.0 yrs</td>
+                                <td class="p-1.5 font-black text-emerald-600">-13.0 yrs</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Card 6: Electrophysiological Safety & Non-Oncogenic Lock -->
+                <div class="poster-card">
+                    <div class="poster-card-title">
+                        <i data-lucide="shield-check" class="w-4 h-4 text-blue-600"></i> 6. Electrophysiological Safety Gates
+                    </div>
+                    <div class="space-y-2 text-xs">
+                        <div class="p-2 bg-slate-50 border border-slate-200 rounded-lg flex items-center justify-between">
+                            <div>
+                                <span class="font-bold text-slate-800 text-[11px] block">Troponin T (TNNT2) Retention</span>
+                                <span class="text-[10px] text-slate-500">Sarcomeric contractile apparatus integrity</span>
+                            </div>
+                            <span class="text-xs font-black text-blue-700 font-mono">94.8%</span>
+                        </div>
+                        <div class="p-2 bg-slate-50 border border-slate-200 rounded-lg flex items-center justify-between">
+                            <div>
+                                <span class="font-bold text-slate-800 text-[11px] block">Oncogenic Gene Lock</span>
+                                <span class="text-[10px] text-slate-500">OCT4 &le; 0.35 | c-MYC &le; 0.30</span>
+                            </div>
+                            <span class="text-xs font-black text-emerald-600 font-mono">0.00% Teratoma</span>
+                        </div>
+                        <div class="p-2 bg-slate-50 border border-slate-200 rounded-lg flex items-center justify-between">
+                            <div>
+                                <span class="font-bold text-slate-800 text-[11px] block">Arrhythmia Liability Audit</span>
+                                <span class="text-[10px] text-slate-500">512-node spiking neural net simulation</span>
+                            </div>
+                            <span class="text-xs font-black text-emerald-600 font-mono">0.00% Risk</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 7: High-Throughput Wet-Lab Automation -->
+                <div class="poster-card flex-1">
+                    <div class="poster-card-title">
+                        <i data-lucide="bot" class="w-4 h-4 text-purple-600"></i> 7. OT-2 Robotics Automation Engine
+                    </div>
+                    <p class="text-xs text-slate-600 leading-relaxed mb-2">
+                        Zenith generates <strong>1-click executable Python/CSV protocols</strong> for Opentrons OT-2 liquid handling robots, eliminating human pipetting error and accelerating preclinical CRO validation.
+                    </p>
+                    <div class="p-2.5 bg-purple-50 border border-purple-200 rounded-lg flex items-center gap-3">
+                        <i data-lucide="check-circle-2" class="w-5 h-5 text-purple-600 shrink-0"></i>
+                        <span class="text-[11px] text-purple-950 font-semibold">
+                            Asset-Light Licensing: CRO-ready protocols ready for Big Pharma out-licensing ($10M–$50M upfronts).
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+
+        <!-- FOOTER: CITATIONS, DATA ACCESS & ACKNOWLEDGMENTS -->
+        <footer class="mt-4 pt-3 border-t-2 border-slate-200 flex items-center justify-between text-[11px] text-slate-500">
+            <div class="flex items-center gap-4">
+                <span><strong>NILUS LAB LTD</strong> (UK Co. No. 17427807)</span>
+                <span>•</span>
+                <span>Portal: <a href="https://www.niluslab.com" class="text-blue-600 font-bold hover:underline">niluslab.com</a></span>
+                <span>•</span>
+                <span>Paper: <a href="https://www.niluslab.com/zenith_scientific_paper.html" class="text-blue-600 font-bold hover:underline">zenith_scientific_paper.html</a></span>
+            </div>
+            <div class="flex items-center gap-3 font-medium">
+                <span>Presented by Founder &amp; CEO Alaa Aldeen</span>
+                <span>•</span>
+                <span>HomeLab Deep Science Accelerator (Cohort 5)</span>
+            </div>
+        </footer>
+
+    </div>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>
