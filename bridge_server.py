@@ -8116,10 +8116,4 @@ async def get_leadership():
     return FileResponse("profile.html")
 
 
-@app.get("/scientific_poster.html", response_class=FileResponse)
-@app.get("/poster", response_class=FileResponse)
-@app.get("/scientific_poster", response_class=FileResponse)
-async def get_scientific_poster():
-    if os.path.exists("scientific_poster.html"):
-        return FileResponse("scientific_poster.html")
     return FileResponse("profile.html")
