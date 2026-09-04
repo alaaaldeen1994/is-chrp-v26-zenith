@@ -8232,3 +8232,7 @@ async def get_terms_page():
     if os.path.exists("terms.html"):
         return FileResponse("terms.html")
     return FileResponse("legal.html")
+
+@app.get("/nilus_lab_logo.jpg", response_class=FileResponse)
+async def get_root_logo():
+    return FileResponse("nilus_lab_logo.jpg")
