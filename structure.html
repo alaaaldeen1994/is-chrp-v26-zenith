@@ -686,11 +686,11 @@ MKTIIALSY...)..."></textarea>
           </div>
           <div class="inst-meta-row">
             <span class="inst-meta-k">Chains</span>
-            <span class="inst-meta-v">1</span>
+            <span class="inst-meta-v" id="metaDetailsChains">1</span>
           </div>
           <div class="inst-meta-row">
             <span class="inst-meta-k">Job ID</span>
-            <span class="inst-meta-v" style="color:#3B82F6; cursor:pointer;" onclick="navigator.clipboard && navigator.clipboard.writeText('pred_782f3e990a'); alert('Job ID copied!');" title="Copy Job ID">pred_782f3e...</span>
+            <span class="inst-meta-v" id="metaDetailsJobId" style="color:#3B82F6; cursor:pointer;" onclick="navigator.clipboard && navigator.clipboard.writeText(this.textContent); alert('Job ID copied!');" title="Copy Job ID">pred_782f3e...</span>
           </div>
           <div class="inst-meta-row">
             <span class="inst-meta-k">Runtime</span>
@@ -698,7 +698,7 @@ MKTIIALSY...)..."></textarea>
           </div>
           <div class="inst-meta-row">
             <span class="inst-meta-k">Completed</span>
-            <span class="inst-meta-v">Dec 12, 2024, 14:32</span>
+            <span class="inst-meta-v" id="metaDetailsCompleted">Dec 12, 2024, 14:32</span>
           </div>
           <div class="inst-meta-row">
             <span class="inst-meta-k">Status</span>
