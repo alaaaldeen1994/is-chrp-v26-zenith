@@ -3328,8 +3328,8 @@ window.runPrediction = async function() {
     }
 
     // Check if this complex contains OCT4 / POU homeodomain and/or octamer dsDNA
-    const proteinChains = activeChains.filter(c => c.type === 'protein');
-    const dnaChains = activeChains.filter(c => c.type === 'dna' || /^[ACGTU]+$/i.test(c.value));
+    const proteinChains = activeChains.filter(c => c.type === 'protein' || (!['dna', 'rna', 'ligand'].includes(c.type) && !/^[ACGTU]+$/i.test(c.value)));
+    const dnaChains = activeChains.filter(c => c.type === 'dna' || c.type === 'rna' || (/^[ACGTU]+$/i.test(c.value) && c.type !== 'protein'));
 
     const isOct4Protein = activeChains.some(c => 
       c.type === 'protein' && (
@@ -3340,14 +3340,20 @@ window.runPrediction = async function() {
       )
     );
     const hasOctamerDna = activeChains.some(c =>
-      (c.type === 'dna' || /^[ACGTU]+$/i.test(c.value)) && (
+      (c.type === 'dna' || (c.type !== 'protein' && /^[ACGTU]+$/i.test(c.value))) && (
         c.value.toUpperCase().includes('ATGCAAAT') ||
         c.value.toUpperCase().includes('ATTTGCAT')
       )
     );
-    const isOct4DnaComplex = isOct4Protein || (proteinChains.length > 0 && hasOctamerDna);
+    // CRITICAL: isOct4DnaComplex is ONLY true when BOTH the OCT4 protein AND the DNA octamer sequence are present!
+    const isOct4DnaComplex = isOct4Protein && hasOctamerDna;
 
-    const targetLabel = isOct4DnaComplex ? 'POU5F1 (OCT4) + dsDNA Octamer' : `Multi-Chain Complex (${activeChains.length} chains)`;
+    let targetLabel = `Multi-Chain Complex (${activeChains.length} chains)`;
+    if (isOct4DnaComplex) {
+      targetLabel = 'POU5F1 (OCT4) + dsDNA Octamer';
+    } else if (isOct4Protein) {
+      targetLabel = 'POU5F1 (OCT4) Domain';
+    }
     const totalRes = activeChains.reduce((s, c) => s + (c.value ? c.value.length : 20) * (c.copies || 1), 0);
 
     if (btn) btn.disabled = true;
