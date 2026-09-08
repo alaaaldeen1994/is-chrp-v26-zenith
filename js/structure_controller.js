@@ -2350,19 +2350,19 @@ function updateInstitutionalMetrics(presetKey) {
   if (subEl) subEl.textContent = p.sub;
   if (resCountEl) resCountEl.textContent = p.length;
 
-  // 2. Circular Quality Gauge
+  // 2. Compact Circular Quality Gauge
   const scoreEl = document.getElementById('qualityGaugeScore');
   const statusEl = document.getElementById('qualityGaugeStatus');
   const descEl = document.getElementById('qualityGaugeDesc');
   const arcEl = document.getElementById('qualityGaugeArc');
 
-  if (scoreEl) scoreEl.innerHTML = `${p.gauge}<span>/100</span>`;
+  if (scoreEl) scoreEl.textContent = p.gauge.toFixed(1);
   if (statusEl) statusEl.innerHTML = `<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> ${p.gaugeStatus}`;
   if (descEl) descEl.textContent = p.gaugeDesc;
 
   if (arcEl) {
-    // Total circumference for r=40 is ~125.6 (half circle is 125.6)
-    const maxDash = 125.6;
+    // Total circumference for full circle with r=32 is 2*pi*32 ~ 201.06
+    const maxDash = 201.06;
     const pct = Math.min(100, Math.max(0, p.gauge));
     const offset = maxDash * (1 - (pct / 100));
     arcEl.style.strokeDashoffset = offset.toFixed(1);
@@ -2733,4 +2733,203 @@ window.runPrediction = async function() {
   // Load model & refresh graphics
   window.loadPreset('SIRT1_HUMAN');
   log(`Prediction complete for sequence (${seq.length} aa) · mean pLDDT 87.4`, 'ok');
+};
+
+
+/* =====================================================================
+   STREAMLINED TAB SWITCHER & MULTI-ENTITY HANDLERS
+   ===================================================================== */
+
+window.switchInstitutionalTab = function(tabName) {
+  document.querySelectorAll('[data-inst-tab]').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.instTab === tabName);
+  });
+
+  const pOverview = document.getElementById('tabPanelOverview');
+  const pPae = document.getElementById('tabPanelPae');
+  const pSeq = document.getElementById('tabPanelSeq');
+
+  if (pOverview) pOverview.style.display = tabName === 'overview' ? 'grid' : 'none';
+  if (pPae) {
+    pPae.style.display = tabName === 'pae' ? 'flex' : 'none';
+    if (tabName === 'pae') renderFullPAECanvas();
+  }
+  if (pSeq) {
+    pSeq.style.display = tabName === 'seq' ? 'flex' : 'none';
+    if (tabName === 'seq') {
+      const ta = document.getElementById('seqInput');
+      const seq = ta ? ta.value.replace(/^>.*\n/, '').replace(/[^A-Za-z]/g, '') : '';
+      renderSequenceViewer(seq, STATE.currentModel?.plddt || []);
+    }
+  }
+  log(`Switched view tab to: ${tabName}`, 'info');
+};
+
+function renderFullPAECanvas() {
+  const canvas = document.getElementById('paeCanvasFull');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const w = canvas.width, h = canvas.height;
+  ctx.clearRect(0, 0, w, h);
+
+  const imgData = ctx.createImageData(w, h);
+  for (let y = 0; y < h; y++) {
+    for (let x = 0; x < w; x++) {
+      const idx = (y * w + x) * 4;
+      // Distance from diagonal
+      const d = Math.abs(x - (y * w / h));
+      const normD = Math.min(1, d / (w * 0.45));
+      // Rainbow blue to red gradient
+      let r = 0, g = 0, b = 0;
+      if (normD < 0.25) {
+        // Dark blue
+        b = 210; g = Math.floor(normD * 4 * 180);
+      } else if (normD < 0.5) {
+        // Cyan to Green
+        g = 220; b = Math.floor((0.5 - normD) * 4 * 210);
+      } else if (normD < 0.75) {
+        // Yellow to Orange
+        r = Math.floor((normD - 0.5) * 4 * 240); g = 200;
+      } else {
+        // Red
+        r = 230; g = Math.floor((1 - normD) * 4 * 120);
+      }
+      imgData.data[idx] = r;
+      imgData.data[idx+1] = g;
+      imgData.data[idx+2] = b;
+      imgData.data[idx+3] = 255;
+    }
+  }
+  ctx.putImageData(imgData, 0, 0);
+}
+
+// Left input mode switcher
+window.switchInputMode = function(mode) {
+  document.querySelectorAll('[data-tab-mode]').forEach(b => {
+    b.classList.toggle('active', b.dataset.tabMode === mode);
+  });
+
+  const pSeq = document.getElementById('seqWorkspacePanel');
+  const pComplex = document.getElementById('complexWorkspacePanel');
+  const pUpload = document.getElementById('uploadWorkspacePanel');
+  const pUni = document.getElementById('uniprotWorkspacePanel');
+
+  if (pSeq) pSeq.style.display = mode === 'seq' ? 'block' : 'none';
+  if (pComplex) {
+    pComplex.style.display = mode === 'complex' ? 'block' : 'none';
+    if (mode === 'complex') {
+      if (!STATE.chains || STATE.chains.length === 0) {
+        STATE.chains = [
+          { id: 'A', type: 'protein', copies: 1, value: CANONICAL_SEQS.sirt1.replace(/^>.*\n/, '') },
+          { id: 'B', type: 'ligand_ccd', copies: 1, value: 'ATP' }
+        ];
+      }
+      renderChainList();
+    }
+  }
+  if (pUpload) pUpload.style.display = mode === 'upload' ? 'block' : 'none';
+  if (pUni) pUni.style.display = mode === 'uniprot' ? 'block' : 'none';
+  log(`Input mode: ${mode}`, 'info');
+};
+
+// File upload handler
+window.handleFileSelected = function(files) {
+  if (!files || !files.length) return;
+  const file = files[0];
+  const statusEl = document.getElementById('uploadStatusText');
+  if (statusEl) statusEl.textContent = `Reading ${file.name} (${(file.size/1024).toFixed(1)} KB)...`;
+
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const text = e.target.result;
+    if (file.name.endsWith('.pdb') || text.startsWith('HEADER') || text.startsWith('ATOM')) {
+      if (typeof loadDemoModel === 'function') {
+        window.DEMO_PDB_SIRT1 = text;
+        renderModel('cartoon', 'pLDDT');
+      }
+      if (statusEl) statusEl.innerHTML = `<span style="color:#10B981;">PDB structure loaded directly into 3D viewer!</span>`;
+      log(`Loaded PDB file: ${file.name}`, 'ok');
+      return;
+    }
+
+    // Parse FASTA
+    const fastaEntries = [];
+    const lines = text.split('\n');
+    let currentHeader = '';
+    let currentSeq = '';
+
+    for (const l of lines) {
+      const line = l.trim();
+      if (line.startsWith('>')) {
+        if (currentSeq) {
+          fastaEntries.push({ header: currentHeader, seq: currentSeq });
+          currentSeq = '';
+        }
+        currentHeader = line;
+      } else {
+        currentSeq += line.replace(/[^A-Za-z]/g, '').toUpperCase();
+      }
+    }
+    if (currentSeq) fastaEntries.push({ header: currentHeader, seq: currentSeq });
+
+    if (fastaEntries.length > 1) {
+      // Multi-chain complex!
+      STATE.chains = fastaEntries.map((entry, idx) => ({
+        id: String.fromCharCode(65 + idx),
+        type: 'protein',
+        copies: 1,
+        value: entry.seq
+      }));
+      window.switchInputMode('complex');
+      if (statusEl) statusEl.innerHTML = `<span style="color:#10B981;">Parsed ${fastaEntries.length} chains into Multi-Chain Complex.</span>`;
+      log(`Multi-FASTA parsed into ${fastaEntries.length} chains`, 'ok');
+    } else if (fastaEntries.length === 1) {
+      // Single sequence
+      const ta = document.getElementById('seqInput');
+      if (ta) {
+        ta.value = `${fastaEntries[0].header || '>Uploaded Sequence'}\n${fastaEntries[0].seq}`;
+        ta.dispatchEvent(new Event('input'));
+      }
+      window.switchInputMode('seq');
+      if (statusEl) statusEl.innerHTML = `<span style="color:#10B981;">Sequence loaded into single workspace.</span>`;
+      log(`Single sequence loaded (${fastaEntries[0].seq.length} aa)`, 'ok');
+    }
+  };
+  reader.readAsText(file);
+};
+
+window.handleDropFile = function(evt) {
+  evt.preventDefault();
+  const dz = document.getElementById('fileDropzone');
+  if (dz) dz.classList.remove('dragover');
+  if (evt.dataTransfer && evt.dataTransfer.files) {
+    window.handleFileSelected(evt.dataTransfer.files);
+  }
+};
+
+window.uniprotFillActive = function(target) {
+  const ta = document.getElementById('seqInput');
+  const resText = document.getElementById('uniprotResultText');
+  const geneInput = document.getElementById('uniprotSearchField');
+  const gene = geneInput ? geneInput.value.trim().toUpperCase() : 'SIRT1';
+  const seq = CANONICAL_SEQS[gene.toLowerCase()] || CANONICAL_SEQS.sirt1;
+
+  if (target === 'single') {
+    if (ta) {
+      ta.value = seq;
+      ta.dispatchEvent(new Event('input'));
+    }
+    window.switchInputMode('seq');
+    log(`Filled Single Sequence with ${gene}`, 'ok');
+  } else {
+    if (!STATE.chains) STATE.chains = [];
+    STATE.chains.push({
+      id: String.fromCharCode(65 + STATE.chains.length),
+      type: 'protein',
+      copies: 1,
+      value: seq.replace(/^>.*\n/, '')
+    });
+    window.switchInputMode('complex');
+    log(`Added ${gene} as Chain ${STATE.chains[STATE.chains.length-1].id}`, 'ok');
+  }
 };

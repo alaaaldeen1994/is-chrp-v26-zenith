@@ -1224,3 +1224,93 @@ body {
     display: none !important;
   }
 }
+
+
+/* ── Compact Circular Gauge ── */
+.inst-gauge-compact-wrap {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 4px 0;
+}
+.inst-gauge-ring {
+  position: relative;
+  width: 76px;
+  height: 76px;
+  flex-shrink: 0;
+}
+.inst-gauge-ring-svg {
+  width: 76px;
+  height: 76px;
+  transform: rotate(0deg);
+}
+.inst-gauge-ring-center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+.inst-gauge-score-num {
+  font-size: 20px;
+  font-weight: 800;
+  font-family: var(--inst-font-mono);
+  color: #FFFFFF;
+  letter-spacing: -0.03em;
+}
+.inst-gauge-score-sub {
+  font-size: 9.5px;
+  color: #64748B;
+  font-family: var(--inst-font-mono);
+  margin-top: 2px;
+}
+.inst-gauge-ring-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+  min-width: 0;
+}
+
+/* ── Compact Cards & Panels ── */
+.inst-card-compact {
+  padding: 10px 12px !important;
+  gap: 6px !important;
+}
+.inst-card-compact .inst-card-title-text {
+  font-size: 11.5px !important;
+}
+
+/* ── Dropzone Styles ── */
+.inst-dropzone {
+  border: 2px dashed rgba(59, 130, 246, 0.35);
+  border-radius: 9px;
+  padding: 16px 12px;
+  text-align: center;
+  background: rgba(0, 0, 0, 0.25);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+.inst-dropzone:hover, .inst-dropzone.dragover {
+  border-color: var(--inst-blue-bright);
+  background: rgba(37, 99, 235, 0.08);
+}
+.inst-dropzone-icon {
+  color: var(--inst-blue-bright);
+  margin-bottom: 2px;
+}
+
+/* ── Tab Switcher Animations ── */
+.inst-tab-panel {
+  animation: instFadeIn 0.2s ease-out;
+}
+@keyframes instFadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}

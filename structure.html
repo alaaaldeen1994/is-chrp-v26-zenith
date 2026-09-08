@@ -103,13 +103,13 @@
 
         <!-- Mode Pills -->
         <div class="inst-input-tabs">
-          <button type="button" class="inst-input-tab active" data-tab-mode="seq" onclick="switchInputMode('seq')">Sequence</button>
+          <button type="button" class="inst-input-tab active" data-tab-mode="seq" onclick="switchInputMode('seq')">Single</button>
+          <button type="button" class="inst-input-tab" data-tab-mode="complex" onclick="switchInputMode('complex')">Complex (Multi)</button>
+          <button type="button" class="inst-input-tab" data-tab-mode="upload" onclick="switchInputMode('upload')">Upload</button>
           <button type="button" class="inst-input-tab" data-tab-mode="uniprot" onclick="switchInputMode('uniprot')">UniProt</button>
-          <button type="button" class="inst-input-tab" data-tab-mode="complex" onclick="switchInputMode('complex')">Complex</button>
-          <button type="button" class="inst-input-tab" data-tab-mode="mutations" onclick="switchInputMode('mutations')">Mutations</button>
         </div>
 
-        <!-- Sequence Workspace Area -->
+        <!-- 1. Single Sequence Workspace Panel -->
         <div id="seqWorkspacePanel" class="inst-field-wrap">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;">
             <label class="inst-label">Protein sequence</label>
@@ -121,11 +121,9 @@
             </div>
           </div>
 
-          <!-- Generous Monospace Textarea (180px Height) -->
-          <textarea id="seqInput" class="inst-textarea" rows="7" placeholder="Paste single protein sequence or FASTA format...">>SIRT1_HUMAN (Sirtuin 1, 747 aa)
+          <textarea id="seqInput" class="inst-textarea" rows="6" placeholder="Paste single protein sequence or FASTA format...">>SIRT1_HUMAN (Sirtuin 1, 747 aa)
 MADEAALALQPGGSPSAAGADREAASSPAGEPLRKRPRRDGPGLERSPGEPGGAAPEREVPAAARGCPGAAAAALWREAEAEAAAAGGEQEAQATAAAGEGDNGPGLQGPSREPPLADNLYDEDDDDEGEEEEEAAAAAIGYRDNLLFGDEIITNGFHSCESDEEDRASHASSSDWTPRPRIGPYTFVQQHLMIGTDPRTILKDLLPETIPPPELDDMTLWQIVINILSEPPKRKKRKDINTIEDAVKLLQECKKIIVLTGAGVSVSCGIPDFRSRDGIYARLAVDFPDLPDPQAMFDIEYFRKDPRPFFKFAKEIYPGQFQPSLCHKFIALSDKEGKLLRNYTQNIDTLEQVAGIQRIIQCHGSFATASCLICKYKVDCEAVRGDIFNQVVPRCPRCPADEPLAIMKPEIVFFGENLPEQFHRAMKYDKDEVDLLIVIGSSLKVRPVALIPSSIPHEVPQILINREPLPHLHFDVELLGDCDVIINELCHRLGGEYAKLCCNPVKLSEITEKPPRTQKELAYLSELPPTPLHVSEDSSSPERTSPPDSSVIVTLLDQAAKSNDDLDVSESKGCMEEKPQEVQTSRNVESIAEQMENPDLKNVGSSTGEKNERTSVAGTVRKCWPNRVAKEQISRRLDGNQYLFLPPNRYIFHGAEVYSDSEDDVLSSSSCGSNSDSGTCQSPSLEEPMEDESEIEEFYNGLEDEPDVPERAGGAGFGTDGDDQEAINEAISVKQEVTDMNYPSNKS</textarea>
 
-          <!-- Sequence Status & Actions Bar -->
           <div style="display:flex; justify-content:space-between; align-items:center; margin-top:5px; font-size:10.5px; color:#64748B;">
             <div style="display:flex; align-items:center; gap:8px;">
               <span>Length: <b id="seqLenText" style="color:#94A3B8;">747 amino acids</b></span>
@@ -138,7 +136,59 @@ MADEAALALQPGGSPSAAGADREAASSPAGEPLRKRPRRDGPGLERSPGEPGGAAPEREVPAAARGCPGAAAAALWREAE
           </div>
         </div>
 
-        <!-- UniProt Search Inline View (Toggleable) -->
+        <!-- 2. Multi-Chain Complex Workspace Panel -->
+        <div id="complexWorkspacePanel" class="inst-field-wrap" style="display:none;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;">
+            <label class="inst-label">Chains &amp; Stoichiometry</label>
+            <span style="font-size:10px; color:#00E5FF; font-family:'IBM Plex Mono',monospace;">Protein · DNA · RNA · Ligand</span>
+          </div>
+
+          <!-- Dynamic Chain List Container -->
+          <div class="inst-chain-list" id="chainList" style="display:flex; flex-direction:column; gap:8px; max-height:220px; overflow-y:auto; padding-right:2px;"></div>
+
+          <div style="display:flex; align-items:center; gap:8px; margin-top:8px;">
+            <button type="button" class="inst-btn-sub" id="addChainBtn" style="flex:1;">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              Add Chain
+            </button>
+            <button type="button" class="inst-btn-sub" id="clearChainsBtn" style="color:#F87171;">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+              Reset
+            </button>
+          </div>
+
+          <div style="margin-top:10px; display:flex; flex-direction:column; gap:6px;">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <span style="font-size:11px; color:#94A3B8; font-weight:600;">Binding Mode</span>
+              <select class="inst-select-sm" id="boltz-binding-type">
+                <option value="none" selected>Auto-detect (All-vs-All)</option>
+                <option value="protein_protein_binding">Protein-Protein Interface</option>
+                <option value="ligand_protein_binding">Protein-Ligand Pocket</option>
+              </select>
+            </div>
+            <div id="boltz-binder-chain-row" class="hidden" style="display:flex; justify-content:space-between; align-items:center;">
+              <span style="font-size:10.5px; color:#94A3B8;">Binder Chain ID</span>
+              <input type="text" id="boltz-binder-chain-id" class="inst-input-text" style="width:50px; text-align:center; padding:3px 6px;" value="A" maxlength="4" />
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. Upload File Workspace Panel -->
+        <div id="uploadWorkspacePanel" class="inst-field-wrap" style="display:none;">
+          <label class="inst-label">Upload Sequence or Structure</label>
+          <div id="fileDropzone" class="inst-dropzone" onclick="document.getElementById('structureFileInput').click()">
+            <input type="file" id="structureFileInput" accept=".fasta,.fa,.pdb,.cif,.txt" style="display:none;" onchange="handleFileSelected(this.files)" />
+            <div class="inst-dropzone-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            </div>
+            <div style="font-size:12px; font-weight:600; color:#FFFFFF;">Drop FASTA / PDB file here</div>
+            <div style="font-size:10.5px; color:#64748B; margin-top:2px;">Multi-FASTA auto-splits into chains</div>
+            <button type="button" class="inst-btn-sub" style="margin-top:8px; pointer-events:none;">Browse Files</button>
+          </div>
+          <div id="uploadStatusText" style="font-size:11px; color:#94A3B8; margin-top:6px; font-family:'IBM Plex Mono',monospace;"></div>
+        </div>
+
+        <!-- 4. UniProt Search Workspace Panel -->
         <div id="uniprotWorkspacePanel" class="inst-field-wrap" style="display:none;">
           <label class="inst-label">UniProt Database Search</label>
           <div style="display:flex; gap:6px; margin-top:4px;">
@@ -146,6 +196,10 @@ MADEAALALQPGGSPSAAGADREAASSPAGEPLRKRPRRDGPGLERSPGEPGGAAPEREVPAAARGCPGAAAAALWREAE
             <button type="button" class="inst-btn-sub" onclick="searchAndLoadUniProt()">Fetch</button>
           </div>
           <div id="uniprotResultText" style="font-size:10.5px; color:#94A3B8; margin-top:6px;">Ready to query UniProt REST API.</div>
+          <div style="display:flex; gap:6px; margin-top:8px;">
+            <button type="button" class="inst-btn-sub" onclick="uniprotFillActive('single')">Use for Single Sequence</button>
+            <button type="button" class="inst-btn-sub" onclick="uniprotFillActive('chain')">+ Add as Complex Chain</button>
+          </div>
         </div>
 
         <!-- Quick Action Buttons -->
@@ -302,17 +356,20 @@ MADEAALALQPGGSPSAAGADREAASSPAGEPLRKRPRRDGPGLERSPGEPGGAAPEREVPAAARGCPGAAAAALWREAE
         </div>
       </div>
 
-      <!-- View Navigation Tabs -->
+      <!-- View Navigation Tabs (Streamlined 3 Purposeful Tabs) -->
       <div class="inst-view-tabs">
-        <button type="button" class="inst-view-tab active" data-tab="overview">Overview</button>
-        <button type="button" class="inst-view-tab" data-tab="3d">3D Structure</button>
-        <button type="button" class="inst-view-tab" data-tab="confidence">Confidence</button>
-        <button type="button" class="inst-view-tab" data-tab="interfaces">Interfaces</button>
-        <button type="button" class="inst-view-tab" data-tab="binding">Binding</button>
-        <button type="button" class="inst-view-tab" data-tab="seq">Sequence</button>
-        <button type="button" class="inst-view-tab" data-tab="domains">Domains</button>
-        <button type="button" class="inst-view-tab" data-tab="mutations">Mutations</button>
-        <button type="button" class="inst-view-tab" data-tab="ai">AI Analysis</button>
+        <button type="button" class="inst-view-tab active" data-inst-tab="overview" onclick="switchInstitutionalTab('overview')">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+          Overview &amp; 3D
+        </button>
+        <button type="button" class="inst-view-tab" data-inst-tab="pae" onclick="switchInstitutionalTab('pae')">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+          PAE &amp; Confidence
+        </button>
+        <button type="button" class="inst-view-tab" data-inst-tab="seq" onclick="switchInstitutionalTab('seq')">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="9" x2="20" y2="9"/><line x1="4" y1="15" x2="20" y2="15"/><line x1="10" y1="3" x2="8" y2="21"/><line x1="16" y1="3" x2="14" y2="21"/></svg>
+          Sequence &amp; Domains
+        </button>
       </div>
 
       <!-- ── 3D MOLECULAR CANVAS BOX (GUARANTEED 460px HEIGHT) ── -->
@@ -392,47 +449,104 @@ MADEAALALQPGGSPSAAGADREAASSPAGEPLRKRPRRDGPGLERSPGEPGGAAPEREVPAAARGCPGAAAAALWREAE
         </div>
       </div>
 
-      <!-- ANALYTICS ROW 1 (3 Cards) -->
-      <div class="inst-analytics-row-3">
-        <!-- Card 1: Residue Confidence Map -->
-        <div class="inst-card">
+      <!-- COMPACT BOTTOM ANALYTICS DOCK (3 Tabbed Views) -->
+      
+      <!-- Tab 1: Overview & 3D (Compact 3-Card Strip) -->
+      <div id="tabPanelOverview" class="inst-analytics-row-3 inst-tab-panel">
+        <!-- Mini PAE Matrix Preview -->
+        <div class="inst-card inst-card-compact">
           <div class="inst-card-header-row">
-            <span class="inst-card-title-text">Residue confidence map</span>
-            <a href="#" class="inst-link-action" onclick="switchRepresentation('cartoon'); return false;">View in 3D &rarr;</a>
+            <span class="inst-card-title-text">PAE Matrix Preview</span>
+            <span class="inst-link-action" onclick="switchInstitutionalTab('pae')">Full Heatmap &rarr;</span>
           </div>
-          <div class="inst-track-bar" id="instResidueTrackBar"></div>
-          <div class="inst-track-ticks">
-            <span>1</span><span>100</span><span>200</span><span>300</span><span>400</span><span>500</span><span>600</span><span id="instResidueMaxTick">747</span>
-          </div>
-          <div class="inst-track-legend">
-            <span><span class="inst-dot" style="background:#0053D6;"></span> Very high</span>
-            <span><span class="inst-dot" style="background:#65CBF3;"></span> High</span>
-            <span><span class="inst-dot" style="background:#E7CB44;"></span> Low</span>
-            <span><span class="inst-dot" style="background:#FF7D45;"></span> Very low</span>
-          </div>
-        </div>
-
-        <!-- Card 2: PAE Matrix -->
-        <div class="inst-card">
-          <div class="inst-card-header-row">
-            <span class="inst-card-title-text">PAE matrix</span>
-            <span class="inst-link-action" onclick="renderPAEPreview(); alert('PAE Matrix generated. Mean cross-domain alignment error: 4.8 Å.')">View details &rarr;</span>
-          </div>
-          <div class="inst-pae-preview-wrap">
-            <canvas id="paeCanvasPreview" width="220" height="110" style="width:100%; height:105px; border-radius:4px; background:#070B14;"></canvas>
-            <div class="inst-pae-legend-col">
-              <span>0 &Aring;</span>
+          <div class="inst-pae-preview-wrap" style="height:90px; cursor:pointer;" onclick="switchInstitutionalTab('pae')" title="Click to open full PAE analysis">
+            <canvas id="paeCanvasPreview" width="180" height="90" style="width:100%; height:90px; border-radius:4px; background:#070B14;"></canvas>
+            <div class="inst-pae-legend-col" style="font-size:9px;">
+              <span>0&Aring;</span>
               <div class="inst-pae-bar-v"></div>
-              <span>30 &Aring;</span>
+              <span>30&Aring;</span>
             </div>
           </div>
         </div>
 
-        <!-- Card 3: Structural Domains -->
+        <!-- Key Structural Features -->
+        <div class="inst-card inst-card-compact">
+          <div class="inst-card-header-row">
+            <span class="inst-card-title-text">Key Structural Features</span>
+            <span class="inst-link-action" onclick="switchInstitutionalTab('seq')">Domains &rarr;</span>
+          </div>
+          <div class="inst-feature-list" id="instFeatureList" style="font-size:10.5px; gap:4px;">
+            <div><span class="inst-dot-bullet">&#9670;</span> <strong>12 &alpha;-helices</strong> (32% coverage)</div>
+            <div><span class="inst-dot-bullet">&#9670;</span> <strong>18 &beta;-sheets</strong> (24% coverage)</div>
+            <div><span class="inst-dot-bullet">&#9670;</span> <strong>3 predicted structural domains</strong></div>
+            <div><span class="inst-dot-bullet">&#9670;</span> <strong>NAD+ catalytic site</strong> (high conf)</div>
+          </div>
+        </div>
+
+        <!-- AI Scientific Interpretation -->
+        <div class="inst-ai-card inst-card-compact">
+          <div class="inst-card-header-row">
+            <span class="inst-card-title-text" style="color:#FFFFFF;">AI Interpretation</span>
+            <span style="font-size:9.5px; color:#00E5FF; font-family:'IBM Plex Mono',monospace;">ZenithFold v2.1</span>
+          </div>
+          <p class="inst-ai-text" id="instAiInterpretationText" style="font-size:10.5px; line-height:1.45; max-height:55px; overflow-y:auto; margin:0;">
+            SIRT1 is an NAD+-dependent protein deacetylase with critical roles in aging, cardiac metabolic homeostasis, and chromatin stabilization. Structural inference indicates a high-confidence catalytic core domain with conserved Rossmann fold.
+          </p>
+          <div class="inst-tag-row" style="margin-top:4px;">
+            <span class="inst-tag">Deacetylase</span>
+            <span class="inst-tag">NAD+ binding</span>
+            <span class="inst-tag">Aging</span>
+            <span class="inst-tag">DNA repair</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab 2: Full PAE & Confidence View -->
+      <div id="tabPanelPae" class="inst-tab-panel" style="display:none; flex-direction:column; gap:10px;">
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+          <!-- Full PAE Heatmap -->
+          <div class="inst-card">
+            <div class="inst-card-header-row">
+              <span class="inst-card-title-text">Predicted Aligned Error (PAE Heatmap)</span>
+              <span style="font-size:10px; color:#94A3B8;">Interactive C&alpha;&ndash;C&alpha; Alignment</span>
+            </div>
+            <div style="display:flex; gap:10px; align-items:center;">
+              <canvas id="paeCanvasFull" width="220" height="160" style="width:100%; height:160px; border-radius:6px; background:#070B14;"></canvas>
+              <div style="display:flex; flex-direction:column; align-items:center; gap:2px; font-size:9px; color:#94A3B8; font-family:'IBM Plex Mono',monospace;">
+                <span>0&Aring;</span>
+                <div class="inst-pae-bar-v" style="height:120px;"></div>
+                <span>30&Aring;</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Residue Confidence & Hotspots -->
+          <div class="inst-card">
+            <div class="inst-card-header-row">
+              <span class="inst-card-title-text">Residue Confidence &amp; Hotspots</span>
+            </div>
+            <div class="inst-track-bar" id="instResidueTrackBar"></div>
+            <div class="inst-track-ticks">
+              <span>1</span><span>100</span><span>200</span><span>300</span><span>400</span><span>500</span><span>600</span><span id="instResidueMaxTick">747</span>
+            </div>
+            <table class="inst-table" style="margin-top:6px;">
+              <thead><tr><th>Region</th><th>Residues</th><th>pLDDT</th><th>Interpretation</th></tr></thead>
+              <tbody id="instHotspotsBody">
+                <tr><td>N-terminal</td><td>1 &ndash; 24</td><td><b style="color:#FF7D45;">46.2</b></td><td>Likely flexible</td></tr>
+                <tr><td>Loop L3</td><td>281 &ndash; 303</td><td><b style="color:#E7CB44;">58.7</b></td><td>Uncertain conf.</td></tr>
+                <tr><td>C-terminal</td><td>710 &ndash; 747</td><td><b style="color:#FF7D45;">41.9</b></td><td>Disordered</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab 3: Sequence & Domains View -->
+      <div id="tabPanelSeq" class="inst-tab-panel" style="display:none; flex-direction:column; gap:10px;">
         <div class="inst-card">
           <div class="inst-card-header-row">
-            <span class="inst-card-title-text">Structural domains (predicted)</span>
-            <span class="inst-link-action" onclick="alert('Predicted 5 structural domains for SIRT1_HUMAN.')">View all &rarr;</span>
+            <span class="inst-card-title-text">Interactive Sequence &amp; Domains</span>
+            <span style="font-size:10px; color:#94A3B8;">Colored by pLDDT confidence</span>
           </div>
           <div class="inst-domain-bar" id="instDomainBar">
             <div style="width:13%; background:#06B6D4;" title="N-terminal (1-95)"></div>
@@ -441,67 +555,14 @@ MADEAALALQPGGSPSAAGADREAASSPAGEPLRKRPRRDGPGLERSPGEPGGAAPEREVPAAARGCPGAAAAALWREAE
             <div style="width:27%; background:#8B5CF6;" title="Regulatory (351-550)"></div>
             <div style="width:26%; background:#EC4899;" title="C-terminal (551-747)"></div>
           </div>
-          <div class="inst-domain-list">
-            <div><span class="inst-dot" style="background:#06B6D4;"></span> N-terminal region (1&ndash;95)</div>
-            <div><span class="inst-dot" style="background:#3B82F6;"></span> Catalytic core domain (96&ndash;244)</div>
-            <div><span class="inst-dot" style="background:#EAB308;"></span> Zinc-binding domain (245&ndash;350)</div>
-            <div><span class="inst-dot" style="background:#8B5CF6;"></span> Regulatory domain (351&ndash;550)</div>
-            <div><span class="inst-dot" style="background:#EC4899;"></span> C-terminal region (551&ndash;747)</div>
+          <div class="inst-domain-list" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:10px; font-size:10px;">
+            <div><span class="inst-dot" style="background:#06B6D4;"></span> N-term (1&ndash;95)</div>
+            <div><span class="inst-dot" style="background:#3B82F6;"></span> Core (96&ndash;244)</div>
+            <div><span class="inst-dot" style="background:#EAB308;"></span> Zn-binding (245&ndash;350)</div>
+            <div><span class="inst-dot" style="background:#8B5CF6;"></span> Regulatory (351&ndash;550)</div>
+            <div><span class="inst-dot" style="background:#EC4899;"></span> C-term (551&ndash;747)</div>
           </div>
-        </div>
-      </div>
-
-      <!-- ANALYTICS ROW 2 (3 Cards) -->
-      <div class="inst-analytics-row-3">
-        <!-- Card 4: Uncertainty Hotspots -->
-        <div class="inst-card">
-          <div class="inst-card-header-row">
-            <span class="inst-card-title-text">Uncertainty hotspots</span>
-            <span class="inst-link-action" onclick="if(window.highlightHotspot) highlightHotspot(0)">View in 3D &rarr;</span>
-          </div>
-          <table class="inst-table">
-            <thead>
-              <tr><th>Region</th><th>Residues</th><th>Mean pLDDT</th><th>Interpretation</th></tr>
-            </thead>
-            <tbody id="instHotspotsBody">
-              <tr><td>N-terminal</td><td>1 &ndash; 24</td><td><b style="color:#FF7D45;">46.2</b></td><td style="color:#94A3B8;">Likely flexible</td></tr>
-              <tr><td>Loop L3</td><td>281 &ndash; 303</td><td><b style="color:#E7CB44;">58.7</b></td><td style="color:#94A3B8;">Uncertain conformation</td></tr>
-              <tr><td>C-terminal</td><td>710 &ndash; 747</td><td><b style="color:#FF7D45;">41.9</b></td><td style="color:#94A3B8;">Potentially disordered</td></tr>
-            </tbody>
-          </table>
-        </div>
-
-        <!-- Card 5: Key Structural Features -->
-        <div class="inst-card">
-          <div class="inst-card-header-row">
-            <span class="inst-card-title-text">Key structural features</span>
-          </div>
-          <div class="inst-feature-list" id="instFeatureList">
-            <div><span class="inst-dot-bullet">&#9670;</span> <strong>12 &alpha;-helices</strong> (32% sequence coverage)</div>
-            <div><span class="inst-dot-bullet">&#9670;</span> <strong>18 &beta;-sheets</strong> (24% sequence coverage)</div>
-            <div><span class="inst-dot-bullet">&#9670;</span> <strong>3 predicted structural domains</strong></div>
-            <div><span class="inst-dot-bullet">&#9670;</span> <strong>NAD+ binding site</strong> (high confidence)</div>
-            <div><span class="inst-dot-bullet">&#9670;</span> <strong>Low-confidence loop regions (2)</strong></div>
-            <div><span class="inst-dot-bullet">&#9670;</span> <strong>No transmembrane regions</strong></div>
-          </div>
-        </div>
-
-        <!-- Card 6: AI Scientific Interpretation -->
-        <div class="inst-ai-card">
-          <div class="inst-card-header-row">
-            <span class="inst-card-title-text" style="color:#FFFFFF;">AI scientific interpretation</span>
-            <span style="font-size:10px; color:#00E5FF; font-family:'IBM Plex Mono',monospace;">ZenithFold v2.1</span>
-          </div>
-          <p class="inst-ai-text" id="instAiInterpretationText">
-            SIRT1 is an NAD+-dependent deacetylase involved in aging, metabolism and genome stability. The predicted structure shows high confidence in the catalytic core domain and conserved Rossmann fold, consistent with experimental structures. Two low-confidence regions are likely flexible and may mediate protein&ndash;protein interactions or regulation.
-          </p>
-          <div class="inst-tag-row">
-            <span class="inst-tag">Deacetylase</span>
-            <span class="inst-tag">NAD+ binding</span>
-            <span class="inst-tag">Aging</span>
-            <span class="inst-tag">DNA repair</span>
-            <span class="inst-tag">Regulation</span>
-          </div>
+          <div id="seqViewer" style="margin-top:8px; max-height:100px; overflow-y:auto; font-family:'IBM Plex Mono',monospace; font-size:11px; line-height:1.6; word-break:break-all; background:rgba(0,0,0,0.3); padding:8px; border-radius:6px; border:1px solid #1E293B;"></div>
         </div>
       </div>
 
@@ -516,33 +577,34 @@ MADEAALALQPGGSPSAAGADREAASSPAGEPLRKRPRRDGPGLERSPGEPGGAAPEREVPAAARGCPGAAAAALWREAE
           <span>Prediction quality</span>
         </div>
 
-        <!-- Radial Gauge Arc -->
-        <div class="inst-gauge-wrap">
-          <svg viewBox="0 0 100 55" class="inst-gauge-svg">
-            <path d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="8" stroke-linecap="round"/>
-            <path id="qualityGaugeArc" d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke="url(#blueCyanGrad)" stroke-width="8" stroke-linecap="round" stroke-dasharray="125.6" stroke-dashoffset="11.0"/>
-            <defs>
-              <linearGradient id="blueCyanGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stop-color="#00E5FF"/>
-                <stop offset="100%" stop-color="#2563EB"/>
-              </linearGradient>
-            </defs>
-          </svg>
-          <div class="inst-gauge-val-box">
-            <div class="inst-gauge-num" id="qualityGaugeScore">91.2</div>
-            <div class="inst-gauge-den">/100</div>
+        <!-- Sleek Compact Circular Gauge Meter -->
+        <div class="inst-gauge-compact-wrap">
+          <div class="inst-gauge-ring">
+            <svg viewBox="0 0 76 76" class="inst-gauge-ring-svg">
+              <circle cx="38" cy="38" r="32" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="6"/>
+              <circle id="qualityGaugeArc" cx="38" cy="38" r="32" fill="none" stroke="url(#blueCyanGrad)" stroke-width="6" stroke-linecap="round" stroke-dasharray="201.06" stroke-dashoffset="18.0" transform="rotate(-90 38 38)"/>
+              <defs>
+                <linearGradient id="blueCyanGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#00E5FF"/>
+                  <stop offset="100%" stop-color="#3B82F6"/>
+                </linearGradient>
+              </defs>
+            </svg>
+            <div class="inst-gauge-ring-center">
+              <div class="inst-gauge-score-num" id="qualityGaugeScore">91.2</div>
+              <div class="inst-gauge-score-sub">/100</div>
+            </div>
+          </div>
+          <div class="inst-gauge-ring-info">
+            <div class="inst-gauge-status-pill" id="qualityGaugeStatus">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+              High confidence
+            </div>
+            <div class="inst-gauge-desc" id="qualityGaugeDesc">
+              Global structure strongly supported. Catalytic core validated.
+            </div>
           </div>
         </div>
-
-        <!-- Gauge status -->
-        <div class="inst-gauge-status-pill">
-          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
-          <span id="qualityGaugeStatus">High-confidence structural prediction</span>
-        </div>
-
-        <p class="inst-gauge-desc" id="qualityGaugeDesc">
-          Global structure is strongly supported. Two low-confidence loop regions detected. Suitable for research analysis.
-        </p>
 
         <!-- 2x2 Metric Grid -->
         <div class="inst-stat-grid-2x2">
