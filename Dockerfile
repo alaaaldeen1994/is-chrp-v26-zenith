@@ -19,8 +19,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Copy the requirements file into the container at /app
 COPY requirements.txt .
 
+# Upgrade pip to ensure proper wheel metadata parsing and build tool resolution
+RUN pip install --no-cache-dir --upgrade pip
+
 # Install CPU-only version of PyTorch first to reduce image size
-RUN pip install --no-cache-dir torch --index-url https://download.pytorch.org/whl/cpu
+RUN pip install --no-cache-dir torch --extra-index-url https://download.pytorch.org/whl/cpu
 
 # Install any needed packages specified in requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
