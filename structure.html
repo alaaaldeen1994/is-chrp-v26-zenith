@@ -1078,8 +1078,62 @@ nav, .nav-dock, #mob-nav {
     }
 }
 </style>
+  <link rel="stylesheet" href="css/structure_institutional.css" />
 </head>
 <body>
+  <!-- ============ INSTITUTIONAL TOPBAR ============ -->
+  <header class="inst-topbar">
+    <a href="index.html" class="inst-brand">
+      <div class="inst-logo-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+      </div>
+      <div class="inst-brand-text">
+        <span class="inst-brand-title">Nilus Lab</span>
+        <span class="inst-brand-sub">Generative Biology</span>
+      </div>
+    </a>
+
+    <nav class="inst-nav-pills">
+      <a href="structure.html" class="inst-pill active">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+        Structure
+      </a>
+      <a href="index.html" class="inst-pill">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        Explore
+      </a>
+      <a href="structure.html" class="inst-pill">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 3h5v5"/><path d="M4 20L21 3"/><path d="M21 16v5h-5"/><path d="M15 15l6 6"/></svg>
+        Compare
+      </a>
+      <a href="#" class="inst-pill" onclick="document.getElementById('assistantToggle').click(); return false;">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a8 8 0 0 0-8 8c0 3.4 2.1 6.3 5.1 7.4L9 22l3-1.5L15 22l-.1-4.6c3-1.1 5.1-4 5.1-7.4a8 8 0 0 0-8-8z"/></svg>
+        AI Scientist
+      </a>
+      <a href="https://cellxgene.cziscience.com" target="_blank" class="inst-pill">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+        Datasets
+      </a>
+      <a href="legal.html" class="inst-pill">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        Docs
+      </a>
+    </nav>
+
+    <div class="inst-topbar-right">
+      <div class="inst-search-box">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#64748B" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="globalProteinSearch" placeholder="Search proteins, mutations, diseases..." />
+      </div>
+      <div style="font-size:10px; color:#64748B; font-family:'IBM Plex Mono',monospace; text-align:right;">
+        <span style="display:block; color:#94A3B8; font-weight:600;">Building a healthier tomorrow</span>
+        <span style="color:#2563EB;">Nilus Precision</span>
+      </div>
+      <div style="width:28px; height:28px; border-radius:50%; background:linear-gradient(135deg, #2563EB, #00E5FF); display:grid; place-items:center; font-size:11px; font-weight:700; color:white; cursor:pointer;" title="Alaa Aldeen (AA)">
+        AA
+      </div>
+    </div>
+  </header>
   <!-- ============ SUB BAR ============ -->
   <div class="subbar">
     <div class="crumb" style="display:flex; align-items:center;">
@@ -1413,10 +1467,77 @@ nav, .nav-dock, #mob-nav {
         </div>
       </section>
 
+    
+      <!-- ─── Institutional Panel: Recent Predictions ─── -->
+      <section class="panel" style="margin-top:auto;">
+        <div class="panel-head">
+          <div class="panel-title" style="font-size:12px; font-weight:700;">Recent Predictions</div>
+          <span style="font-size:10px; color:var(--inst-cyan); cursor:pointer;">View all</span>
+        </div>
+        <div class="panel-body" style="padding:10px 12px;">
+          <div class="inst-recent-list" id="recentRunsList">
+            <div class="inst-recent-item active" data-preset="sirt1">
+              <div class="inst-recent-icon">S1</div>
+              <div class="inst-recent-info">
+                <div class="inst-recent-name">SIRT1_HUMAN</div>
+                <div class="inst-recent-meta">747 aa · 2m 18s</div>
+              </div>
+              <span class="inst-badge-ok">Completed</span>
+            </div>
+            <div class="inst-recent-item" data-preset="brca1">
+              <div class="inst-recent-icon" style="background:linear-gradient(135deg,#7C3AED,#C084FC);">B1</div>
+              <div class="inst-recent-info">
+                <div class="inst-recent-name">BRCA1_HUMAN</div>
+                <div class="inst-recent-meta">1863 aa · 4m 12s</div>
+              </div>
+              <span class="inst-badge-ok">Completed</span>
+            </div>
+            <div class="inst-recent-item" data-preset="tp53">
+              <div class="inst-recent-icon" style="background:linear-gradient(135deg,#059669,#34D399);">P5</div>
+              <div class="inst-recent-info">
+                <div class="inst-recent-name">TP53_HUMAN</div>
+                <div class="inst-recent-meta">393 aa · 1m 32s</div>
+              </div>
+              <span class="inst-badge-ok">Completed</span>
+            </div>
+            <div class="inst-recent-item" data-preset="ace2">
+              <div class="inst-recent-icon" style="background:linear-gradient(135deg,#D97706,#FBBF24);">A2</div>
+              <div class="inst-recent-info">
+                <div class="inst-recent-name">ACE2_HUMAN + Ligand</div>
+                <div class="inst-recent-meta">805 aa · 3m 45s</div>
+              </div>
+              <span class="inst-badge-ok">Completed</span>
+            </div>
+          </div>
+        </div>
+      </section>
     </aside>
 
     <!-- ============ VIEWER AREA ============ -->
     <section class="viewer-area">
+
+      <!-- ============ TARGET HEADER ============ -->
+      <div class="inst-target-header">
+        <div class="inst-target-title-wrap">
+          <div class="inst-target-title-row">
+            <h2 class="inst-target-title" id="instTargetTitle">SIRT1_HUMAN</h2>
+            <span class="inst-badge-ok" id="instTargetBadge">Completed</span>
+          </div>
+          <div class="inst-target-sub" id="instTargetSub">
+            Sirtuin 1 (NAD+-dependent protein deacetylase) &bull; <span id="instTargetResCount">747</span> amino acids &bull; Boltz-2.1 &bull; 2m 18s
+          </div>
+        </div>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <button class="ghost-btn" id="instDownloadBtn" title="Download PDB" onclick="document.getElementById('downloadBtn').click();">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Download
+          </button>
+          <button class="ghost-btn" id="instShareBtn" title="Share Snapshot" onclick="document.getElementById('shareBtn').click();">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+            Share
+          </button>
+        </div>
+      </div>
 
       <!-- Tabs -->
       <div class="tabs">
@@ -1461,6 +1582,137 @@ nav, .nav-dock, #mob-nav {
       <div class="tab-panel active" data-panel="3d">
         <div class="viewer-3d">
           <div id="molviewer"></div>
+
+          <!-- Minimal Floating Toolbar -->
+          <div class="inst-floating-bar">
+            <button class="inst-float-btn" id="floatResetBtn" title="Reset View" onclick="if(STATE.viewer){STATE.viewer.zoomTo();STATE.viewer.render();}">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 14 10 14 10 20"/><polyline points="20 10 14 10 14 4"/><line x1="14" y1="10" x2="21" y2="3"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+              Reset
+            </button>
+            <button class="inst-float-btn" id="floatRotateBtn" title="Auto Rotate" onclick="if(STATE.viewer){STATE.spin=!STATE.spin;STATE.viewer.spin(STATE.spin);}">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1.06 6.7 2.82L21 8"/><polyline points="21 3 21 8 16 8"/></svg>
+              Auto-rotate
+            </button>
+            <button class="inst-float-btn" id="floatScreenshotBtn" title="Take Screenshot" onclick="document.getElementById('shareBtn').click();">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+              Screenshot
+            </button>
+            <button class="inst-float-btn" id="floatFullscreenBtn" title="Toggle Fullscreen" onclick="const b=document.querySelector('.viewer-3d'); if(!document.fullscreenElement){b.requestFullscreen();}else{document.exitFullscreen();}">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+              Fullscreen
+            </button>
+          </div>
+
+          <!-- Floating Confidence Legend -->
+          <div class="inst-floating-legend">
+            <div class="inst-legend-title">pLDDT (confidence)</div>
+            <div class="inst-legend-row"><div class="inst-legend-dot" style="background:#0053D6;"></div> Very high (90&ndash;100)</div>
+            <div class="inst-legend-row"><div class="inst-legend-dot" style="background:#65CBF3;"></div> High (70&ndash;90)</div>
+            <div class="inst-legend-row"><div class="inst-legend-dot" style="background:#E7CB44;"></div> Low (50&ndash;70)</div>
+            <div class="inst-legend-row" style="margin-bottom:0;"><div class="inst-legend-dot" style="background:#FF7D45;"></div> Very low (&lt;50)</div>
+          
+        <!-- ============ INSTITUTIONAL BOTTOM ANALYTICS ============ -->
+        <div class="inst-bottom-grid" style="margin-top:14px;">
+          
+          <!-- Card 1: Residue Confidence Map -->
+          <div class="inst-track-card">
+            <div style="display:flex; align-items:center; justify-content:space-between;">
+              <span style="font-size:12px; font-weight:700; color:#FFFFFF;">Residue confidence map</span>
+              <span style="font-size:10px; color:var(--inst-cyan); font-family:'IBM Plex Mono',monospace; cursor:pointer;" onclick="document.querySelector('[data-tab=\'3d\']').click();">View in 3D &rarr;</span>
+            </div>
+            <div class="inst-track-bar" id="instResidueTrackBar"></div>
+            <div class="inst-track-ticks">
+              <span>1</span>
+              <span>100</span>
+              <span>200</span>
+              <span>300</span>
+              <span>400</span>
+              <span>500</span>
+              <span>600</span>
+              <span id="instResidueMaxTick">747</span>
+            </div>
+            <div style="display:flex; align-items:center; gap:12px; margin-top:8px; font-size:10.5px; color:var(--inst-text-mute);">
+              <span style="display:flex; align-items:center; gap:4px;"><span style="width:7px; height:7px; background:#0053D6; border-radius:1px;"></span> Very high</span>
+              <span style="display:flex; align-items:center; gap:4px;"><span style="width:7px; height:7px; background:#65CBF3; border-radius:1px;"></span> High</span>
+              <span style="display:flex; align-items:center; gap:4px;"><span style="width:7px; height:7px; background:#E7CB44; border-radius:1px;"></span> Low</span>
+              <span style="display:flex; align-items:center; gap:4px;"><span style="width:7px; height:7px; background:#FF7D45; border-radius:1px;"></span> Very low</span>
+            </div>
+          </div>
+
+          <!-- Card 2: Uncertainty Hotspots Table -->
+          <div class="inst-track-card">
+            <div style="display:flex; align-items:center; justify-content:space-between;">
+              <span style="font-size:12px; font-weight:700; color:#FFFFFF;">Uncertainty hotspots</span>
+              <span style="font-size:10px; color:var(--inst-cyan); font-family:'IBM Plex Mono',monospace; cursor:pointer;" onclick="document.querySelector('[data-tab=\'pae\']').click();">View PAE &rarr;</span>
+            </div>
+            <table class="inst-table">
+              <thead>
+                <tr>
+                  <th>Region</th>
+                  <th>Residues</th>
+                  <th>Mean pLDDT</th>
+                  <th>Interpretation</th>
+                </tr>
+              </thead>
+              <tbody id="instHotspotsBody">
+                <tr>
+                  <td>N-terminal</td>
+                  <td>1 &ndash; 24</td>
+                  <td><b style="color:#FF7D45;">46.2</b></td>
+                  <td style="color:#94A3B8;">Likely flexible</td>
+                </tr>
+                <tr>
+                  <td>Loop L3</td>
+                  <td>281 &ndash; 303</td>
+                  <td><b style="color:#E7CB44;">58.7</b></td>
+                  <td style="color:#94A3B8;">Uncertain conformation</td>
+                </tr>
+                <tr>
+                  <td>C-terminal</td>
+                  <td>710 &ndash; 747</td>
+                  <td><b style="color:#FF7D45;">41.9</b></td>
+                  <td style="color:#94A3B8;">Potentially disordered</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Card 3: Key Structural Features -->
+          <div class="inst-card">
+            <div class="inst-card-title">
+              <span>Key structural features</span>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:6px; font-size:11.5px; color:#E2E8F0;">
+              <div>&#x1F539; <strong>12 &alpha;-helices</strong> (32% sequence coverage)</div>
+              <div>&#x1F539; <strong>18 &beta;-sheets</strong> (24% sequence coverage)</div>
+              <div>&#x1F539; <strong>3 predicted structural domains</strong></div>
+              <div>&#x1F539; <strong>NAD+ binding site</strong> (high confidence catalytic core)</div>
+              <div>&#x1F539; <strong>0 transmembrane regions</strong> (soluble catalytic factor)</div>
+            </div>
+          </div>
+
+          <!-- Card 4: AI Scientific Interpretation -->
+          <div class="inst-ai-card">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:6px;">
+              <span style="font-size:12px; font-weight:700; color:#FFFFFF;">AI scientific interpretation</span>
+              <span style="font-size:10px; color:var(--inst-cyan); font-family:'IBM Plex Mono',monospace;">ZenithFold v2.1</span>
+            </div>
+            <p style="font-size:11.5px; color:#94A3B8; line-height:1.5;" id="instAiInterpretationText">
+              SIRT1 is an NAD+-dependent protein deacetylase with critical roles in aging, cardiac metabolic homeostasis, and chromatin stabilization. Structural inference indicates a high-confidence catalytic core domain with conserved Rossmann fold. Flanking low-confidence termini represent flexible regulatory motifs mediating protein-protein interactions.
+            </p>
+            <div class="inst-tag-row">
+              <span class="inst-tag">Deacetylase</span>
+              <span class="inst-tag">NAD+ binding</span>
+              <span class="inst-tag">Aging</span>
+              <span class="inst-tag">Cardiac Syncytium</span>
+              <span class="inst-tag">Regulation</span>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
 
           <div class="viewer-overlay">
             <div class="info-card">
@@ -1712,6 +1964,124 @@ nav, .nav-dock, #mob-nav {
         <div class="run-log" id="runLog">Preparing MSA embeddings</div>
       </div>
     </section>
+
+    <!-- ============ INSTITUTIONAL ANALYSIS & METRICS PANEL (RIGHT COLUMN) ============ -->
+    <aside class="analysis-panel" id="analysisPanel">
+
+      <!-- Card 1: Prediction Quality Gauge -->
+      <div class="inst-gauge-card">
+        <div style="font-size:11px; font-family:'IBM Plex Mono',monospace; color:var(--inst-text-dim); text-transform:uppercase; margin-bottom:8px; align-self:flex-start;">
+          Prediction Quality
+        </div>
+        
+        <div style="position:relative; width:130px; height:75px; margin:4px auto 0 auto;">
+          <svg viewBox="0 0 100 55" style="width:100%; height:100%; overflow:visible;">
+            <!-- Background Arc -->
+            <path d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="8" stroke-linecap="round"/>
+            <!-- Value Arc (91.2%) -->
+            <path id="qualityGaugeArc" d="M 10 50 A 40 40 0 0 1 90 50" fill="none" stroke="url(#instBlueGrad)" stroke-width="8" stroke-linecap="round" stroke-dasharray="125.6" stroke-dashoffset="11.0"/>
+            <defs>
+              <linearGradient id="instBlueGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#00E5FF"/>
+                <stop offset="100%" stop-color="#2563EB"/>
+              </linearGradient>
+            </defs>
+          </svg>
+          <div style="position:absolute; bottom:0; left:50%; transform:translateX(-50%); text-align:center;">
+            <div class="inst-gauge-score" id="qualityGaugeScore">91.2<span>/100</span></div>
+          </div>
+        </div>
+
+        <div class="inst-gauge-status" id="qualityGaugeStatus">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+          High-confidence structural prediction
+        </div>
+        <p class="inst-gauge-desc" id="qualityGaugeDesc">
+          Global structure is strongly supported. Two low-confidence loop regions detected. Suitable for research analysis.
+        </p>
+      </div>
+
+      <!-- Card 2: 2x2 Metric Grid -->
+      <div class="inst-stat-grid">
+        <div class="inst-stat-box">
+          <div class="inst-stat-k">Mean pLDDT</div>
+          <div class="inst-stat-v" id="statMeanPlddt">87.4</div>
+        </div>
+        <div class="inst-stat-box">
+          <div class="inst-stat-k">Structure Conf.</div>
+          <div class="inst-stat-v" id="statStructConf" style="color:#00E5FF;">89.1%</div>
+        </div>
+        <div class="inst-stat-box">
+          <div class="inst-stat-k">pTM</div>
+          <div class="inst-stat-v" id="statPtm">0.846</div>
+        </div>
+        <div class="inst-stat-box">
+          <div class="inst-stat-k">ipTM</div>
+          <div class="inst-stat-v" id="statIptm">0.812</div>
+        </div>
+      </div>
+
+      <!-- Card 3: Residue Confidence Distribution -->
+      <div class="inst-card">
+        <div class="inst-card-title">
+          <span>Residue confidence distribution</span>
+        </div>
+        <div class="inst-dist-bar">
+          <div class="inst-dist-seg" id="distBarVeryHigh" style="width:63%; background:#0053D6;" title="Very high (90-100)"></div>
+          <div class="inst-dist-seg" id="distBarHigh" style="width:24%; background:#65CBF3;" title="High (70-90)"></div>
+          <div class="inst-dist-seg" id="distBarLow" style="width:9%; background:#E7CB44;" title="Low (50-70)"></div>
+          <div class="inst-dist-seg" id="distBarVeryLow" style="width:4%; background:#FF7D45;" title="Very low (<50)"></div>
+        </div>
+        <div class="inst-dist-legend">
+          <span><b id="distPctVeryHigh">63%</b> Very high</span>
+          <span><b id="distPctHigh">24%</b> High</span>
+          <span><b id="distPctLow">9%</b> Low</span>
+          <span><b id="distPctVeryLow">4%</b> Very low</span>
+        </div>
+      </div>
+
+      <!-- Card 4: Model Details -->
+      <div class="inst-card">
+        <div class="inst-card-title">
+          <span>Model Details</span>
+          <span style="display:flex; align-items:center; gap:5px; font-size:10px; color:#00E5FF;">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg>
+            Boltz
+          </span>
+        </div>
+        <div class="inst-meta-table">
+          <div class="inst-meta-row">
+            <span class="inst-meta-k">Model</span>
+            <span class="inst-meta-v" id="metaDetailsModel">boltz-2.1</span>
+          </div>
+          <div class="inst-meta-row">
+            <span class="inst-meta-k">Input</span>
+            <span class="inst-meta-v" id="metaDetailsInput">SIRT1_HUMAN</span>
+          </div>
+          <div class="inst-meta-row">
+            <span class="inst-meta-k">Length</span>
+            <span class="inst-meta-v" id="metaDetailsLength">747 amino acids</span>
+          </div>
+          <div class="inst-meta-row">
+            <span class="inst-meta-k">Chains</span>
+            <span class="inst-meta-v">1</span>
+          </div>
+          <div class="inst-meta-row">
+            <span class="inst-meta-k">Job ID</span>
+            <span class="inst-meta-v" style="color:var(--inst-blue-bright); cursor:pointer;" title="Copy Job ID">pred_782f3e...</span>
+          </div>
+          <div class="inst-meta-row">
+            <span class="inst-meta-k">Runtime</span>
+            <span class="inst-meta-v">2m 18s</span>
+          </div>
+          <div class="inst-meta-row">
+            <span class="inst-meta-k">Status</span>
+            <span class="inst-meta-v" style="color:var(--inst-green);">● Completed</span>
+          </div>
+        </div>
+      </div>
+
+    </aside>
   </main>
 
   <!-- ============ STATUS BAR ============ -->

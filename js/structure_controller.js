@@ -2255,3 +2255,217 @@ async function generateAssistantResponse(question) {
             <li>Domains (<em>"What are the structural domains?"</em>)</li>
           </ul>`;
 }
+
+
+/* =====================================================================
+   INSTITUTIONAL DASHBOARD EXTENSIONS
+   Dynamic metrics, quality gauge, distribution bar, and recent runs
+   ===================================================================== */
+
+const PRESETS = {
+  sirt1: {
+    name: 'SIRT1_HUMAN',
+    sub: 'Sirtuin 1 (NAD+-dependent protein deacetylase) · 747 amino acids · Boltz-2.1 · 2m 18s',
+    length: 747,
+    gauge: 91.2,
+    gaugeStatus: 'High-confidence structural prediction',
+    gaugeDesc: 'Global structure is strongly supported. Two low-confidence loop regions detected. Suitable for research analysis.',
+    meanPlddt: 87.4,
+    structConf: '89.1%',
+    ptm: 0.846,
+    iptm: 0.812,
+    dist: [63, 24, 9, 4],
+    hotspots: [
+      { region: 'N-terminal', res: '1 – 24', plddt: '46.2', color: '#FF7D45', interp: 'Likely flexible' },
+      { region: 'Loop L3', res: '281 – 303', plddt: '58.7', color: '#E7CB44', interp: 'Uncertain conformation' },
+      { region: 'C-terminal', res: '710 – 747', plddt: '41.9', color: '#FF7D45', interp: 'Potentially disordered' }
+    ],
+    aiText: 'SIRT1 is an NAD+-dependent protein deacetylase with critical roles in aging, cardiac metabolic homeostasis, and chromatin stabilization. Structural inference indicates a high-confidence catalytic core domain with conserved Rossmann fold. Flanking low-confidence termini represent flexible regulatory motifs mediating protein-protein interactions.'
+  },
+  brca1: {
+    name: 'BRCA1_HUMAN',
+    sub: 'Breast cancer type 1 susceptibility protein · 1863 amino acids · Boltz-2.1 · 4m 12s',
+    length: 1863,
+    gauge: 82.4,
+    gaugeStatus: 'Good confidence structural prediction',
+    gaugeDesc: 'N-terminal RING domain and C-terminal BRCT repeats strongly predicted. Central disordered linker detected.',
+    meanPlddt: 79.2,
+    structConf: '81.5%',
+    ptm: 0.782,
+    iptm: 0.745,
+    dist: [48, 31, 14, 7],
+    hotspots: [
+      { region: 'Central Linker', res: '304 – 1649', plddt: '42.1', color: '#FF7D45', interp: 'Intrinsically disordered' },
+      { region: 'Loop B2', res: '1720 – 1735', plddt: '56.4', color: '#E7CB44', interp: 'Flexible turn' }
+    ],
+    aiText: 'BRCA1 functions as a tumor suppressor involved in DNA repair and genomic stability. The structural fold shows rigid globular RING and paired BRCT domains separated by an extensive dynamic linker region that binds regulatory proteins.'
+  },
+  tp53: {
+    name: 'TP53_HUMAN',
+    sub: 'Cellular tumor antigen p53 · 393 amino acids · Boltz-2.1 · 1m 32s',
+    length: 393,
+    gauge: 88.6,
+    gaugeStatus: 'High-confidence DNA-binding domain',
+    gaugeDesc: 'Central core domain shows crystal-grade confidence. Transactivation and regulatory domains remain intrinsically flexible.',
+    meanPlddt: 85.1,
+    structConf: '87.2%',
+    ptm: 0.814,
+    iptm: 0.790,
+    dist: [58, 27, 10, 5],
+    hotspots: [
+      { region: 'TAD (N-term)', res: '1 – 61', plddt: '39.8', color: '#FF7D45', interp: 'Disordered activation domain' },
+      { region: 'Tetramer Linker', res: '356 – 393', plddt: '48.3', color: '#FF7D45', interp: 'Flexible regulatory tail' }
+    ],
+    aiText: 'TP53 is the master guardian of the genome. The central DNA-binding core (residues 94–292) is predicted with high structural precision, preserving the conserved zinc-finger coordination and minor groove contact loops.'
+  },
+  ace2: {
+    name: 'ACE2_HUMAN + Ligand',
+    sub: 'Angiotensin-converting enzyme 2 complex · 805 amino acids · Boltz-2.1 · 3m 45s',
+    length: 805,
+    gauge: 94.1,
+    gaugeStatus: 'Very high confidence complex',
+    gaugeDesc: 'Catalytic cleft and ligand-bound conformation strongly converged with experimental cryo-EM models.',
+    meanPlddt: 91.3,
+    structConf: '93.8%',
+    ptm: 0.892,
+    iptm: 0.865,
+    dist: [72, 21, 5, 2],
+    hotspots: [
+      { region: 'Collectrin Domain', res: '615 – 740', plddt: '68.2', color: '#E7CB44', interp: 'Moderate flexibility' }
+    ],
+    aiText: 'ACE2 is a carboxypeptidase and key viral entry receptor. The predicted complex captures the closed catalytic cleft with high interface confidence, highlighting conserved zinc coordination residues HEXXH.'
+  }
+};
+
+function updateInstitutionalMetrics(presetKey) {
+  const p = PRESETS[presetKey] || PRESETS.sirt1;
+
+  // 1. Target Header
+  const titleEl = document.getElementById('instTargetTitle');
+  const subEl = document.getElementById('instTargetSub');
+  const resCountEl = document.getElementById('instTargetResCount');
+  if (titleEl) titleEl.textContent = p.name;
+  if (subEl) subEl.textContent = p.sub;
+  if (resCountEl) resCountEl.textContent = p.length;
+
+  // 2. Circular Quality Gauge
+  const scoreEl = document.getElementById('qualityGaugeScore');
+  const statusEl = document.getElementById('qualityGaugeStatus');
+  const descEl = document.getElementById('qualityGaugeDesc');
+  const arcEl = document.getElementById('qualityGaugeArc');
+
+  if (scoreEl) scoreEl.innerHTML = `${p.gauge}<span>/100</span>`;
+  if (statusEl) statusEl.innerHTML = `<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg> ${p.gaugeStatus}`;
+  if (descEl) descEl.textContent = p.gaugeDesc;
+
+  if (arcEl) {
+    // Total circumference for r=40 is ~125.6 (half circle is 125.6)
+    const maxDash = 125.6;
+    const pct = Math.min(100, Math.max(0, p.gauge));
+    const offset = maxDash * (1 - (pct / 100));
+    arcEl.style.strokeDashoffset = offset.toFixed(1);
+  }
+
+  // 3. 2x2 Metric Badges
+  const mPlddt = document.getElementById('statMeanPlddt');
+  const sConf = document.getElementById('statStructConf');
+  const sPtm = document.getElementById('statPtm');
+  const sIptm = document.getElementById('statIptm');
+
+  if (mPlddt) mPlddt.textContent = p.meanPlddt.toFixed(1);
+  if (sConf) sConf.textContent = p.structConf;
+  if (sPtm) sPtm.textContent = p.ptm.toFixed(3);
+  if (sIptm) sIptm.textContent = p.iptm.toFixed(3);
+
+  // 4. Residue Confidence Distribution Bar
+  const bVH = document.getElementById('distBarVeryHigh');
+  const bH = document.getElementById('distBarHigh');
+  const bL = document.getElementById('distBarLow');
+  const bVL = document.getElementById('distBarVeryLow');
+
+  const pVH = document.getElementById('distPctVeryHigh');
+  const pH = document.getElementById('distPctHigh');
+  const pL = document.getElementById('distPctLow');
+  const pVL = document.getElementById('distPctVeryLow');
+
+  if (bVH && p.dist) {
+    bVH.style.width = `${p.dist[0]}%`;
+    bH.style.width = `${p.dist[1]}%`;
+    bL.style.width = `${p.dist[2]}%`;
+    bVL.style.width = `${p.dist[3]}%`;
+
+    if (pVH) pVH.textContent = `${p.dist[0]}%`;
+    if (pH) pH.textContent = `${p.dist[1]}%`;
+    if (pL) pL.textContent = `${p.dist[2]}%`;
+    if (pVL) pVL.textContent = `${p.dist[3]}%`;
+  }
+
+  // 5. Uncertainty Hotspots Table
+  const tbody = document.getElementById('instHotspotsBody');
+  if (tbody && p.hotspots) {
+    tbody.innerHTML = p.hotspots.map(h => `
+      <tr>
+        <td>${h.region}</td>
+        <td>${h.res}</td>
+        <td><b style="color:${h.color};">${h.plddt}</b></td>
+        <td style="color:#94A3B8;">${h.interp}</td>
+      </tr>
+    `).join('');
+  }
+
+  // 6. AI Text
+  const aiText = document.getElementById('instAiInterpretationText');
+  if (aiText && p.aiText) aiText.textContent = p.aiText;
+
+  // 7. Model Details Panel
+  const mdInput = document.getElementById('metaDetailsInput');
+  const mdLen = document.getElementById('metaDetailsLength');
+  if (mdInput) mdInput.textContent = p.name;
+  if (mdLen) mdLen.textContent = `${p.length} amino acids`;
+
+  const tickMax = document.getElementById('instResidueMaxTick');
+  if (tickMax) tickMax.textContent = p.length;
+}
+
+// Attach Recent Runs Click Listeners
+document.addEventListener('DOMContentLoaded', () => {
+  const recentItems = document.querySelectorAll('.inst-recent-item');
+  recentItems.forEach(item => {
+    item.addEventListener('click', () => {
+      recentItems.forEach(i => i.classList.remove('active'));
+      item.classList.add('active');
+      const presetKey = item.dataset.preset;
+      updateInstitutionalMetrics(presetKey);
+
+      // Trigger 3D view center animation
+      if (STATE.viewer) {
+        STATE.viewer.zoomTo();
+        STATE.viewer.render();
+      }
+    });
+  });
+
+  // Global search enter handler
+  const searchInput = document.getElementById('globalProteinSearch');
+  if (searchInput) {
+    searchInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        const val = searchInput.value.trim().toLowerCase();
+        for (const k of Object.keys(PRESETS)) {
+          if (PRESETS[k].name.toLowerCase().includes(val) || k.includes(val)) {
+            updateInstitutionalMetrics(k);
+            const activeItem = document.querySelector(`.inst-recent-item[data-preset="${k}"]`);
+            if (activeItem) {
+              recentItems.forEach(i => i.classList.remove('active'));
+              activeItem.classList.add('active');
+            }
+            break;
+          }
+        }
+      }
+    });
+  }
+
+  // Initial update
+  updateInstitutionalMetrics('sirt1');
+});
