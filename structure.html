@@ -1077,6 +1077,269 @@ nav, .nav-dock, #mob-nav {
         transform: translateY(-2px);
     }
 }
+
+/* ============ ADVANCED SCIENTIFIC SUITE STYLES ============ */
+.af-top-ribbon {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 25;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  pointer-events: auto;
+  max-width: 94%;
+}
+.af-pills-row {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(8, 11, 17, 0.88);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+  padding: 3px 8px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+}
+.af-pill {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 500;
+  color: #94A3B8;
+  padding: 2px 7px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+.af-pill-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.af-pill-pct {
+  font-size: 9px;
+  font-weight: 700;
+  color: #E2E8F0;
+  margin-left: 1px;
+  background: rgba(255,255,255,0.08);
+  padding: 1px 4px;
+  border-radius: 4px;
+}
+.af-metrics-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(8, 11, 17, 0.82);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 8px;
+  padding: 3px 10px;
+}
+.af-metric-chip {
+  font-size: 10.5px;
+  font-family: 'JetBrains Mono', monospace;
+  color: #94A3B8;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.af-metric-chip .val {
+  color: #F8FAFC;
+  font-weight: 700;
+}
+.af-seed-select {
+  background: rgba(0,0,0,0.4);
+  border: 1px solid #1E293B;
+  border-radius: 5px;
+  color: #38BDF8;
+  font-size: 10px;
+  font-family: 'JetBrains Mono', monospace;
+  padding: 2px 4px;
+  outline: none;
+  cursor: pointer;
+}
+.af-compare-group {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  border-left: 1px solid #1E293B;
+  padding-left: 8px;
+  margin-left: 4px;
+}
+.af-compare-btn {
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  color: #64748B;
+  font-size: 10px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  padding: 2px 7px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.af-compare-btn:hover {
+  color: #E2E8F0;
+  background: rgba(255,255,255,0.05);
+}
+.af-compare-btn.active {
+  color: #38BDF8;
+  background: rgba(56, 189, 248, 0.12);
+  border-color: rgba(56, 189, 248, 0.3);
+}
+.rmsd-badge {
+  font-size: 9px;
+  color: #10B981;
+  background: rgba(16, 185, 129, 0.15);
+  border-radius: 4px;
+  padding: 1px 4px;
+}
+
+/* Split Viewer */
+.viewer-split-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  overflow: hidden;
+  position: relative;
+}
+#molviewer {
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  min-width: 0;
+}
+.split-pae-dock {
+  width: 400px;
+  flex-shrink: 0;
+  background: #080B11;
+  border-left: 1px solid #1E293B;
+  display: flex;
+  flex-direction: column;
+  padding: 12px;
+  z-index: 15;
+  box-shadow: -4px 0 20px rgba(0,0,0,0.5);
+}
+.split-pae-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+.split-pae-title {
+  font-size: 11px;
+  font-weight: 600;
+  color: #E2E8F0;
+  font-family: 'Inter', sans-serif;
+}
+.split-pae-scale {
+  font-size: 9px;
+  color: #94A3B8;
+  font-family: 'JetBrains Mono', monospace;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.split-pae-bar {
+  width: 36px;
+  height: 6px;
+  border-radius: 3px;
+  background: linear-gradient(to right, #166534, #84cc16, #eab308, #f8fafc);
+  display: inline-block;
+}
+.split-close-btn {
+  background: transparent;
+  border: none;
+  color: #64748B;
+  cursor: pointer;
+  font-size: 12px;
+  padding: 2px 4px;
+}
+.split-close-btn:hover { color: #F87171; }
+.split-pae-body {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+#splitPaeCanvas {
+  border-radius: 6px;
+  border: 1px solid #1E293B;
+  cursor: crosshair;
+}
+.split-pae-foot {
+  font-size: 9px;
+  color: #64748B;
+  text-align: center;
+  margin-top: 6px;
+  font-family: 'Inter', sans-serif;
+}
+
+/* Export Menu */
+.export-suite-btn {
+  background: rgba(30, 41, 59, 0.6);
+  border: 1px solid #334155;
+  color: #E2E8F0;
+  font-size: 11px;
+  font-weight: 600;
+  font-family: 'Inter', sans-serif;
+  padding: 4px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.15s ease;
+}
+.export-suite-btn:hover {
+  background: rgba(56, 189, 248, 0.15);
+  border-color: #38BDF8;
+  color: #38BDF8;
+}
+.export-menu {
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  background: #0C1119;
+  border: 1px solid #1E293B;
+  border-radius: 8px;
+  padding: 4px;
+  min-width: 220px;
+  z-index: 1000;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.6);
+}
+.export-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 10px;
+  font-size: 11px;
+  color: #CBD5E1;
+  text-decoration: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  transition: all 0.12s ease;
+}
+.export-item:hover {
+  background: rgba(56, 189, 248, 0.12);
+  color: #38BDF8;
+}
+.export-divider {
+  height: 1px;
+  background: #1E293B;
+  margin: 3px 0;
+}
 </style>
 </head>
 <body>
@@ -1448,7 +1711,37 @@ nav, .nav-dock, #mob-nav {
         </button>
 
         <div class="tab-tools">
-          <button class="btn-icon" title="Download PDB" id="downloadBtn">
+          <div class="export-dropdown-wrapper" style="position: relative;">
+            <button class="export-suite-btn" id="exportSuiteToggleBtn" title="Export Scientific Suite">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              <span>Export Suite</span>
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <div class="export-menu" id="exportMenu" style="display: none;">
+              <div class="export-item" id="exportPdbItem">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                <span>Atomic Coordinates (.pdb)</span>
+              </div>
+              <div class="export-item" id="exportCifItem">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                <span>Macromolecular CIF (.cif)</span>
+              </div>
+              <div class="export-item" id="exportPaeItem">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+                <span>Predicted Aligned Error (.json)</span>
+              </div>
+              <div class="export-divider"></div>
+              <div class="export-item" id="exportPngItem">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                <span>Publication Render (4K PNG)</span>
+              </div>
+              <div class="export-item" id="exportReportItem">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                <span>Clinical &amp; Structure Dossier (.pdf)</span>
+              </div>
+            </div>
+          </div>
+          <button class="btn-icon" title="Download PDB" id="downloadBtn" style="display:none;">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
           </button>
           <button class="btn-icon" title="Share Snapshot" id="shareBtn">
@@ -1460,7 +1753,71 @@ nav, .nav-dock, #mob-nav {
       <!-- ============ 3D VIEW ============ -->
       <div class="tab-panel active" data-panel="3d">
         <div class="viewer-3d">
-          <div id="molviewer"></div>
+          <!-- Split Viewer Container (3Dmol + Interactive Side-by-Side PAE Dock) -->
+          <div class="viewer-split-container" id="splitViewerContainer">
+            <div class="molviewer-pane" style="position: relative; flex: 1; width: 100%; height: 100%; min-width: 0; display: flex; flex-direction: column;">
+              <!-- AlphaFold-Style Top Confidence Bar & Live Metrics -->
+              <div class="af-top-ribbon" id="afTopRibbon">
+                <div class="af-pills-row">
+                  <div class="af-pill" style="color: #0ea5e9;">
+                    <span class="af-pill-dot" style="background: #0284c7;"></span>
+                    <span>Very high (&gt;90)</span>
+                    <span class="af-pill-pct" id="pctVeryHigh">--%</span>
+                  </div>
+                  <div class="af-pill" style="color: #38bdf8;">
+                    <span class="af-pill-dot" style="background: #38bdf8;"></span>
+                    <span>Confident (70-90)</span>
+                    <span class="af-pill-pct" id="pctConfident">--%</span>
+                  </div>
+                  <div class="af-pill" style="color: #facc15;">
+                    <span class="af-pill-dot" style="background: #eab308;"></span>
+                    <span>Low (50-70)</span>
+                    <span class="af-pill-pct" id="pctLow">--%</span>
+                  </div>
+                  <div class="af-pill" style="color: #f97316;">
+                    <span class="af-pill-dot" style="background: #ea580c;"></span>
+                    <span>Very low (&lt;50)</span>
+                    <span class="af-pill-pct" id="pctVeryLow">--%</span>
+                  </div>
+                </div>
+                <div class="af-metrics-row">
+                  <div class="af-metric-chip" title="Predicted TM-score">pTM: <span class="val" id="valPTM">--</span></div>
+                  <div class="af-metric-chip" id="chipIPTM" title="Interface predicted TM-score" style="display: none;">ipTM: <span class="val" id="valIPTM">--</span></div>
+                  <div class="af-metric-chip">
+                    <span>Seed:</span>
+                    <select class="af-seed-select" id="conformationSeedSelect" title="Sample alternative conformational seed">
+                      <option value="1">Seed 1 (Primary)</option>
+                      <option value="2">Seed 2</option>
+                      <option value="3">Seed 3</option>
+                      <option value="4">Seed 4</option>
+                      <option value="5">Seed 5</option>
+                    </select>
+                  </div>
+                  <div class="af-compare-group">
+                    <button class="af-compare-btn active" id="btnModelAtomix" data-model="atomix" title="Nilus ESMFold De Novo">Nilus Atomix</button>
+                    <button class="af-compare-btn" id="btnModelAFDB" data-model="afdb" title="AlphaFold Protein Structure Database Reference">AlphaFold DB</button>
+                    <button class="af-compare-btn" id="btnModelSuper" data-model="super" title="Superimpose both models &amp; compute RMSD">Dual Superimpose <span class="rmsd-badge" id="superRmsdBadge" style="display:none;">0.00Å</span></button>
+                  </div>
+                </div>
+              </div>
+              <div id="molviewer" style="position: absolute; inset: 0; width: 100%; height: 100%;"></div>
+            </div>
+            <div class="split-pae-dock" id="splitPaeDock" style="display: none;">
+              <div class="split-pae-head">
+                <div class="split-pae-title">Interactive PAE Matrix (Å)</div>
+                <div class="split-pae-scale">
+                  <span>0</span>
+                  <span class="split-pae-bar"></span>
+                  <span>30</span>
+                </div>
+                <button class="split-close-btn" id="closeSplitPaeBtn" title="Close Split View">✕</button>
+              </div>
+              <div class="split-pae-body">
+                <canvas id="splitPaeCanvas" width="360" height="360"></canvas>
+              </div>
+              <div class="split-pae-foot" id="splitPaeFoot">Hover residue pair to inspect aligned error &amp; 3D distance</div>
+            </div>
+          </div>
 
           <div class="viewer-overlay">
             <div class="info-card">
@@ -1505,6 +1862,10 @@ nav, .nav-dock, #mob-nav {
               </button>
               <button class="tool-btn" id="spinBtn" title="Toggle Spin">
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1.06 6.7 2.82L21 8"/><polyline points="21 3 21 8 16 8"/></svg>
+              </button>
+              <div class="tool-divider"></div>
+              <button class="tool-btn" id="splitViewBtn" title="Toggle Side-by-Side 3D + PAE Split View">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="12" y1="3" x2="12" y2="21"/></svg>
               </button>
             </div>
           </div>
