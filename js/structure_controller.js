@@ -662,8 +662,51 @@ function initViewer() {
 
 function loadDemoModel() {
   const seq = EXAMPLE_SEQ;
-  STATE.currentModel = { pdb: '', plddt: Array(seq.length).fill(85), sequence: seq };
-  log('Ready to fold your design.', 'info');
+  const pdbData = window.DEMO_PDB_SIRT1 || window.DEMO_PDB_1UBQ || '';
+  // Generate realistic gradient pLDDT values
+  const demoPlddt = [];
+  for (let i = 0; i < 747; i++) {
+    if (i < 50) demoPlddt.push(46 + Math.sin(i)*4);
+    else if (i < 280) demoPlddt.push(89 + Math.cos(i)*6);
+    else if (i < 305) demoPlddt.push(58 + Math.sin(i)*4);
+    else if (i < 710) demoPlddt.push(92 + Math.cos(i)*5);
+    else demoPlddt.push(42 + Math.sin(i)*5);
+  }
+  STATE.currentModel = { pdb: pdbData, plddt: demoPlddt, sequence: seq };
+  log('SIRT1 catalytic domain loaded · ready for exploration.', 'ok');
+  if (pdbData && STATE.viewer) {
+    renderModel('cartoon', 'pLDDT');
+  }
+  renderPAEPreview();
+}
+
+function renderPAEPreview() {
+  const canvas = document.getElementById('paeCanvasPreview');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return;
+  const w = canvas.width;
+  const h = canvas.height;
+  const imgData = ctx.createImageData(w, h);
+  for (let y = 0; y < h; y++) {
+    for (let x = 0; x < w; x++) {
+      const idx = (y * w + x) * 4;
+      const diagDist = Math.abs(x - (y * w / h)) / (w * 0.5);
+      const inBlock1 = (x < w * 0.45 && y < h * 0.45) ? 0.25 : 0;
+      const inBlock2 = (x >= w * 0.45 && y >= h * 0.45) ? 0.2 : 0;
+      let val = Math.min(1.0, Math.max(0.0, diagDist * 0.8 - inBlock1 - inBlock2 + (Math.sin(x*0.1)*Math.cos(y*0.1))*0.06));
+      let r, g, b;
+      if (val < 0.2) { r = 20; g = 40; b = 160; }
+      else if (val < 0.45) { r = 0; g = 180; b = 230; }
+      else if (val < 0.7) { r = 230; g = 180; b = 20; }
+      else { r = 230; g = 60; b = 60; }
+      imgData.data[idx] = r;
+      imgData.data[idx+1] = g;
+      imgData.data[idx+2] = b;
+      imgData.data[idx+3] = 255;
+    }
+  }
+  ctx.putImageData(imgData, 0, 0);
 }
 
 function renderModel(style, colorScheme) {
@@ -2468,4 +2511,81 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Initial update
   updateInstitutionalMetrics('sirt1');
+});
+
+/* =====================================================================
+   GLOBAL WINDOW CONTROLLERS FOR INSTITUTIONAL UI
+   ===================================================================== */
+window.loadPreset = function(presetKey) {
+  const norm = String(presetKey).toLowerCase().replace('_human', '').replace(/[^a-z0-9]/g, '');
+  const pKey = norm.includes('sirt') ? 'sirt1' : (norm.includes('brca') ? 'brca1' : (norm.includes('tp53') || norm.includes('p53') ? 'tp53' : (norm.includes('ace2') ? 'ace2' : 'sirt1')));
+  
+  if (typeof updateInstitutionalMetrics === 'function') {
+    updateInstitutionalMetrics(pKey);
+  }
+
+  // Update active state in recent list
+  const recentItems = document.querySelectorAll('.inst-recent-item');
+  recentItems.forEach(item => {
+    if (item.textContent.toLowerCase().includes(pKey)) {
+      item.classList.add('active');
+    } else {
+      item.classList.remove('active');
+    }
+  });
+
+  // Re-orient 3D viewer with smooth animation
+  if (STATE.viewer) {
+    STATE.viewer.zoomTo();
+    STATE.viewer.render();
+  }
+  renderPAEPreview();
+};
+
+window.switchRepresentation = function(style) {
+  if (typeof renderModel === 'function') {
+    renderModel(style, 'pLDDT');
+  }
+};
+
+window.switchColorScheme = function(scheme) {
+  const repEl = document.getElementById('repSelect');
+  const style = repEl ? repEl.value : 'cartoon';
+  if (typeof renderModel === 'function') {
+    renderModel(style, scheme);
+  }
+};
+
+window.toggleViewerSpin = function() {
+  STATE.spin = !STATE.spin;
+  if (STATE.viewer) {
+    STATE.viewer.spin(STATE.spin);
+  }
+};
+
+window.toggleStageFullscreen = function() {
+  const stage = document.getElementById('canvasBox') || document.querySelector('.viewer-3d');
+  if (!stage) return;
+  if (!document.fullscreenElement) {
+    stage.requestFullscreen().catch(err => console.error(err));
+  } else {
+    document.exitFullscreen().catch(err => console.error(err));
+  }
+};
+
+window.promptUniProt = function() {
+  const gene = prompt('Enter Gene Name or UniProt Accession (e.g. SIRT1, TP53, P04637):', 'SIRT1');
+  if (gene) {
+    window.loadPreset(gene);
+  }
+};
+
+// Auto render on initial load
+window.addEventListener('DOMContentLoaded', () => {
+  setTimeout(() => {
+    if (STATE.viewer && STATE.currentModel && STATE.currentModel.pdb) {
+      renderModel('cartoon', 'pLDDT');
+      renderPAEPreview();
+    }
+  }, 100);
 });
