@@ -328,7 +328,27 @@ function initSequenceInput() {
   const loadExBtn = $('#loadExampleBtn');
   if (loadExBtn) {
     loadExBtn.addEventListener('click', () => {
-      window.loadPreset('SIRT1_HUMAN');
+        // Reveal viewer & controls when a preset/structure is loaded
+  const emptyOverlay = document.getElementById('viewerEmptyPlaceholder');
+  if (emptyOverlay) emptyOverlay.style.display = 'none';
+  const stageTL = document.getElementById('stageTopLeft');
+  if (stageTL) stageTL.style.display = 'flex';
+  const stageTR = document.getElementById('stageTopRight');
+  if (stageTR) stageTR.style.display = 'flex';
+  const stageFB = document.getElementById('stageFloatingBar');
+  if (stageFB) stageFB.style.display = 'flex';
+  const dlBtn = document.getElementById('downloadBtn');
+  if (dlBtn) { dlBtn.style.opacity = '1'; dlBtn.style.pointerEvents = 'auto'; }
+  const shareBtn = document.getElementById('shareBtn');
+  if (shareBtn) { shareBtn.style.opacity = '1'; shareBtn.style.pointerEvents = 'auto'; }
+  const badge = document.getElementById('instTargetBadge');
+  if (badge) {
+    badge.textContent = 'Completed';
+    badge.style.background = 'rgba(16, 185, 129, 0.15)';
+    badge.style.borderColor = 'rgba(16, 185, 129, 0.35)';
+    badge.style.color = '#10B981';
+  }
+  window.loadPreset('SIRT1_HUMAN');
     });
   }
 
@@ -601,8 +621,7 @@ function initViewer() {
   viewer.setViewStyle({ style: 'outline', color: 0x111827, width: 0.02 });
   STATE.viewer = viewer;
 
-  // Initial demo model
-  loadDemoModel();
+  // Initial demo model not loaded on startup per user requirement
 
   // Hover tooltip — follows cursor, shows residue info
   element.addEventListener('mousemove', (e) => {
@@ -1558,7 +1577,7 @@ function init() {
 
   // 5. Initial metrics update
   if (typeof updateInstitutionalMetrics === 'function') {
-    updateInstitutionalMetrics('sirt1');
+    // updateInstitutionalMetrics('sirt1'); // Idle on initial load
   }
 
   // 6. Setup active preset click listeners
@@ -2469,13 +2488,33 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Initial update
-  updateInstitutionalMetrics('sirt1');
+  // updateInstitutionalMetrics('sirt1'); // Idle on initial load
 });
 
 /* =====================================================================
    GLOBAL WINDOW CONTROLLERS FOR INSTITUTIONAL UI
    ===================================================================== */
 window.loadPreset = function(presetKey) {
+  // Reveal viewer & controls when a preset/structure is loaded
+  const emptyOverlay = document.getElementById('viewerEmptyPlaceholder');
+  if (emptyOverlay) emptyOverlay.style.display = 'none';
+  const stageTL = document.getElementById('stageTopLeft');
+  if (stageTL) stageTL.style.display = 'flex';
+  const stageTR = document.getElementById('stageTopRight');
+  if (stageTR) stageTR.style.display = 'flex';
+  const stageFB = document.getElementById('stageFloatingBar');
+  if (stageFB) stageFB.style.display = 'flex';
+  const dlBtn = document.getElementById('downloadBtn');
+  if (dlBtn) { dlBtn.style.opacity = '1'; dlBtn.style.pointerEvents = 'auto'; }
+  const shareBtn = document.getElementById('shareBtn');
+  if (shareBtn) { shareBtn.style.opacity = '1'; shareBtn.style.pointerEvents = 'auto'; }
+  const badge = document.getElementById('instTargetBadge');
+  if (badge) {
+    badge.textContent = 'Completed';
+    badge.style.background = 'rgba(16, 185, 129, 0.15)';
+    badge.style.borderColor = 'rgba(16, 185, 129, 0.35)';
+    badge.style.color = '#10B981';
+  }
   const norm = String(presetKey).toLowerCase().replace('_human', '').replace(/[^a-z0-9]/g, '');
   const pKey = norm.includes('sirt') ? 'sirt1' : (norm.includes('brca') ? 'brca1' : (norm.includes('tp53') || norm.includes('p53') ? 'tp53' : (norm.includes('ace2') ? 'ace2' : 'sirt1')));
   
@@ -2731,6 +2770,26 @@ window.runPrediction = async function() {
   if (btn) btn.disabled = false;
 
   // Load model & refresh graphics
+    // Reveal viewer & controls when a preset/structure is loaded
+  const emptyOverlay = document.getElementById('viewerEmptyPlaceholder');
+  if (emptyOverlay) emptyOverlay.style.display = 'none';
+  const stageTL = document.getElementById('stageTopLeft');
+  if (stageTL) stageTL.style.display = 'flex';
+  const stageTR = document.getElementById('stageTopRight');
+  if (stageTR) stageTR.style.display = 'flex';
+  const stageFB = document.getElementById('stageFloatingBar');
+  if (stageFB) stageFB.style.display = 'flex';
+  const dlBtn = document.getElementById('downloadBtn');
+  if (dlBtn) { dlBtn.style.opacity = '1'; dlBtn.style.pointerEvents = 'auto'; }
+  const shareBtn = document.getElementById('shareBtn');
+  if (shareBtn) { shareBtn.style.opacity = '1'; shareBtn.style.pointerEvents = 'auto'; }
+  const badge = document.getElementById('instTargetBadge');
+  if (badge) {
+    badge.textContent = 'Completed';
+    badge.style.background = 'rgba(16, 185, 129, 0.15)';
+    badge.style.borderColor = 'rgba(16, 185, 129, 0.35)';
+    badge.style.color = '#10B981';
+  }
   window.loadPreset('SIRT1_HUMAN');
   log(`Prediction complete for sequence (${seq.length} aa) · mean pLDDT 87.4`, 'ok');
 };

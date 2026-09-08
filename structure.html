@@ -40,7 +40,7 @@
       </div>
       <div class="inst-brand-text">
         <span class="inst-brand-title">Nilus Lab</span>
-        <span class="inst-brand-sub">Generative Biology</span>
+        
       </div>
     </a>
 
@@ -76,10 +76,7 @@
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#64748B" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
         <input type="text" id="globalProteinSearch" placeholder="Search proteins, mutations, diseases..." />
       </div>
-      <div style="font-size:10px; color:#64748B; font-family:'IBM Plex Mono',monospace; text-align:right;">
-        <span style="display:block; color:#94A3B8; font-weight:600;">Building a healthier tomorrow</span>
-        <span style="color:#2563EB;">Nilus Precision</span>
-      </div>
+      
       <div style="width:28px; height:28px; border-radius:50%; background:linear-gradient(135deg, #2563EB, #00E5FF); display:grid; place-items:center; font-size:11px; font-weight:700; color:white; cursor:pointer;" title="Alaa Aldeen (AA)">
         AA
       </div>
@@ -121,13 +118,13 @@
             </div>
           </div>
 
-          <textarea id="seqInput" class="inst-textarea" rows="6" placeholder="Paste single protein sequence or FASTA format...">>SIRT1_HUMAN (Sirtuin 1, 747 aa)
-MADEAALALQPGGSPSAAGADREAASSPAGEPLRKRPRRDGPGLERSPGEPGGAAPEREVPAAARGCPGAAAAALWREAEAEAAAAGGEQEAQATAAAGEGDNGPGLQGPSREPPLADNLYDEDDDDEGEEEEEAAAAAIGYRDNLLFGDEIITNGFHSCESDEEDRASHASSSDWTPRPRIGPYTFVQQHLMIGTDPRTILKDLLPETIPPPELDDMTLWQIVINILSEPPKRKKRKDINTIEDAVKLLQECKKIIVLTGAGVSVSCGIPDFRSRDGIYARLAVDFPDLPDPQAMFDIEYFRKDPRPFFKFAKEIYPGQFQPSLCHKFIALSDKEGKLLRNYTQNIDTLEQVAGIQRIIQCHGSFATASCLICKYKVDCEAVRGDIFNQVVPRCPRCPADEPLAIMKPEIVFFGENLPEQFHRAMKYDKDEVDLLIVIGSSLKVRPVALIPSSIPHEVPQILINREPLPHLHFDVELLGDCDVIINELCHRLGGEYAKLCCNPVKLSEITEKPPRTQKELAYLSELPPTPLHVSEDSSSPERTSPPDSSVIVTLLDQAAKSNDDLDVSESKGCMEEKPQEVQTSRNVESIAEQMENPDLKNVGSSTGEKNERTSVAGTVRKCWPNRVAKEQISRRLDGNQYLFLPPNRYIFHGAEVYSDSEDDVLSSSSCGSNSDSGTCQSPSLEEPMEDESEIEEFYNGLEDEPDVPERAGGAGFGTDGDDQEAINEAISVKQEVTDMNYPSNKS</textarea>
+          <textarea id="seqInput" class="inst-textarea" rows="6" placeholder="Paste single protein sequence or FASTA format (e.g. >Target
+MKTIIALSY...)..."></textarea>
 
           <div style="display:flex; justify-content:space-between; align-items:center; margin-top:5px; font-size:10.5px; color:#64748B;">
             <div style="display:flex; align-items:center; gap:8px;">
-              <span>Length: <b id="seqLenText" style="color:#94A3B8;">747 amino acids</b></span>
-              <span id="seqValidationBadge" style="color:#10B981; font-weight:600;">&#x25CF; Valid AA</span>
+              <span>Length: <b id="seqLenText" style="color:#94A3B8;">0 amino acids</b></span>
+              <span id="seqValidationBadge" style="color:#64748B; font-weight:500;">&#x25CB; Awaiting input</span>
             </div>
             <div style="display:flex; gap:8px;">
               <button type="button" class="inst-text-btn" id="formatFastaBtn" onclick="formatFastaInput()">Format FASTA</button>
@@ -337,19 +334,19 @@ MADEAALALQPGGSPSAAGADREAASSPAGEPLRKRPRRDGPGLERSPGEPGGAAPEREVPAAARGCPGAAAAALWREAE
       <div class="inst-target-header">
         <div class="inst-target-title-wrap">
           <div class="inst-target-title-row">
-            <h1 class="inst-target-title" id="instTargetTitle">SIRT1_HUMAN</h1>
-            <span class="inst-badge-completed" id="instTargetBadge">Completed</span>
+            <h1 class="inst-target-title" id="instTargetTitle">Structure Prediction Workspace</h1>
+            <span class="inst-badge-completed" id="instTargetBadge" style="background:rgba(100,116,139,0.15); border-color:rgba(100,116,139,0.3); color:#94A3B8;">Idle · Ready</span>
           </div>
           <div class="inst-target-sub" id="instTargetSub">
-            Sirtuin 1 (NAD+-dependent protein deacetylase) &middot; <span id="instTargetLen">747</span> amino acids &middot; <span id="instTargetEngine">Boltz-2.1</span> &middot; <span id="instTargetRuntime">2m 18s</span>
+            Select a target preset, paste FASTA sequence, or upload a multi-chain file to begin.
           </div>
         </div>
         <div class="inst-target-actions">
-          <button type="button" class="inst-btn-ghost" id="downloadBtn" onclick="downloadCurrentPdb()" title="Download PDB Structure">
+          <button type="button" class="inst-btn-ghost" id="downloadBtn" onclick="downloadCurrentPdb()" title="Download PDB Structure" style="opacity:0.5; pointer-events:none;">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
             Download
           </button>
-          <button type="button" class="inst-btn-ghost" id="shareBtn" onclick="takeViewerScreenshot()" title="Share Snapshot">
+          <button type="button" class="inst-btn-ghost" id="shareBtn" onclick="takeViewerScreenshot()" title="Share Snapshot" style="opacity:0.5; pointer-events:none;">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
             Share
           </button>
@@ -377,8 +374,29 @@ MADEAALALQPGGSPSAAGADREAASSPAGEPLRKRPRRDGPGLERSPGEPGGAAPEREVPAAARGCPGAAAAALWREAE
         <!-- 3Dmol mounts right here -->
         <div id="molviewer"></div>
 
+        <!-- Empty / Awaiting Prediction Placeholder Overlay -->
+        <div id="viewerEmptyPlaceholder" style="position:absolute; inset:0; z-index:15; display:flex; flex-direction:column; align-items:center; justify-content:center; background:radial-gradient(circle at center, rgba(15,23,42,0.85) 0%, rgba(6,9,16,0.98) 100%); pointer-events:all; transition:opacity 0.3s ease;">
+          <div style="width:64px; height:64px; border-radius:18px; background:rgba(59,130,246,0.1); border:1px solid rgba(59,130,246,0.25); display:grid; place-items:center; margin-bottom:14px; box-shadow:0 0 30px rgba(59,130,246,0.15);">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#00E5FF" stroke-width="1.8">
+              <polygon points="12 2 2 7 12 12 22 7 12 2"/>
+              <polyline points="2 17 12 22 22 17"/>
+              <polyline points="2 12 12 17 22 12"/>
+            </svg>
+          </div>
+          <div style="font-size:15px; font-weight:700; color:#FFFFFF; letter-spacing:-0.01em;">No Active Structure Loaded</div>
+          <div style="font-size:11.5px; color:#94A3B8; max-width:360px; text-align:center; margin-top:6px; line-height:1.5;">
+            Input a sequence or multi-chain complex on the left, or upload a FASTA file, then click <b style="color:#38BDF8;">Predict Structure</b>.
+          </div>
+          <div style="display:flex; gap:8px; margin-top:14px;">
+            <button type="button" class="inst-btn-sub" onclick="loadPreset('SIRT1_HUMAN')" style="font-size:11px; padding:6px 14px;">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+              Load SIRT1 Example
+            </button>
+          </div>
+        </div>
+
         <!-- Representation & Color Controls -->
-        <div class="inst-stage-top-left">
+        <div class="inst-stage-top-left" id="stageTopLeft" style="display:none;">
           <select class="inst-rep-select" id="repSelect" onchange="switchRepresentation(this.value)">
             <option value="cartoon">Ribbon</option>
             <option value="stick">Sticks</option>
@@ -397,7 +415,7 @@ MADEAALALQPGGSPSAAGADREAASSPAGEPLRKRPRRDGPGLERSPGEPGGAAPEREVPAAARGCPGAAAAALWREAE
         </div>
 
         <!-- Fullscreen & pLDDT Legend Overlay -->
-        <div class="inst-stage-top-right">
+        <div class="inst-stage-top-right" id="stageTopRight" style="display:none;">
           <button type="button" class="inst-fullscreen-btn" onclick="toggleStageFullscreen()" title="Fullscreen">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
           </button>
@@ -423,7 +441,7 @@ MADEAALALQPGGSPSAAGADREAASSPAGEPLRKRPRRDGPGLERSPGEPGGAAPEREVPAAARGCPGAAAAALWREAE
         </div>
 
         <!-- Floating Controls Pill -->
-        <div class="inst-floating-bar">
+        <div class="inst-floating-bar" id="stageFloatingBar" style="display:none;">
           <button type="button" class="inst-float-btn" id="floatResetBtn" onclick="if(STATE.viewer){STATE.viewer.zoomTo();STATE.viewer.render();}">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 14 10 14 10 20"/><polyline points="20 10 14 10 14 4"/><line x1="14" y1="10" x2="21" y2="3"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
             Reset
@@ -591,18 +609,13 @@ MADEAALALQPGGSPSAAGADREAASSPAGEPLRKRPRRDGPGLERSPGEPGGAAPEREVPAAARGCPGAAAAALWREAE
               </defs>
             </svg>
             <div class="inst-gauge-ring-center">
-              <div class="inst-gauge-score-num" id="qualityGaugeScore">91.2</div>
+              <div class="inst-gauge-score-num" id="qualityGaugeScore">--</div>
               <div class="inst-gauge-score-sub">/100</div>
             </div>
           </div>
           <div class="inst-gauge-ring-info">
-            <div class="inst-gauge-status-pill" id="qualityGaugeStatus">
-              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
-              High confidence
-            </div>
-            <div class="inst-gauge-desc" id="qualityGaugeDesc">
-              Global structure strongly supported. Catalytic core validated.
-            </div>
+            <div class="inst-gauge-status-pill" id="qualityGaugeStatus" style="color:#94A3B8; background:rgba(255,255,255,0.05); border-color:rgba(255,255,255,0.1);"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/></svg> Awaiting prediction</div>
+            <div class="inst-gauge-desc" id="qualityGaugeDesc">Confidence scores (pLDDT, pTM, ipTM) will calculate upon job submission.</div>
           </div>
         </div>
 
@@ -610,19 +623,19 @@ MADEAALALQPGGSPSAAGADREAASSPAGEPLRKRPRRDGPGLERSPGEPGGAAPEREVPAAARGCPGAAAAALWREAE
         <div class="inst-stat-grid-2x2">
           <div class="inst-metric-tile">
             <div class="inst-metric-label">Mean pLDDT</div>
-            <div class="inst-metric-val" id="statMeanPlddt">87.4</div>
+            <div class="inst-metric-val" id="statMeanPlddt">--</div>
           </div>
           <div class="inst-metric-tile">
             <div class="inst-metric-label">Structure conf.</div>
-            <div class="inst-metric-val" id="statStructConf" style="color:#00E5FF;">89.1%</div>
+            <div class="inst-metric-val" id="statStructConf" style="color:#94A3B8;">--</div>
           </div>
           <div class="inst-metric-tile">
             <div class="inst-metric-label">pTM</div>
-            <div class="inst-metric-val" id="statPtm">0.846</div>
+            <div class="inst-metric-val" id="statPtm">--</div>
           </div>
           <div class="inst-metric-tile">
             <div class="inst-metric-label">ipTM</div>
-            <div class="inst-metric-val" id="statIptm">0.812</div>
+            <div class="inst-metric-val" id="statIptm">--</div>
           </div>
         </div>
       </div>
