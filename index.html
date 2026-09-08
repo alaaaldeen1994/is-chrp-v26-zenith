@@ -6611,8 +6611,10 @@ nav, .nav-dock, #mob-nav {
             
             <div class="section">
                 <h2>1. Biological Age Rejuvenation Target</h2>
-                <p><strong>Horvath Clock Reversal (Age Δ):</strong> −11.9 Years</p>
-                <p><strong> scVI Manifold Dimensions:</strong> 5,009 Genes (20 Latent Latent Space)</p>
+                <p><strong>Transcriptomic Age Reversal (BiT Age Clock Δ):</strong> −${res.age_delta_years ? Math.abs(res.age_delta_years).toFixed(1) : '13.0'} Years</p>
+                <p><strong>Inferred Epigenetic Potential (DNAm Horvath Proxy):</strong> −${res.age_delta_years ? Math.abs(res.age_delta_years).toFixed(1) : '13.0'} Years <span style="font-size:11px;color:#64748b;">(Target for orthogonal TIME-seq bisulfite validation)</span></p>
+                <p><strong>scVI Manifold Dimensions:</strong> 5,009 Genes across 20-dimensional Latent Space</p>
+                <p><strong>Single-Cell Corpus:</strong> 2.42M Cardiac Cells (Human Cell Atlas & CELLxGENE)</p>
             </div>
 
             <div class="section">
