@@ -330,24 +330,26 @@ MKTIIALSY...)..."></textarea>
     <!-- ============ CENTER STAGE (3D Viewport & Analytics) ============ -->
     <section class="viewer-area">
 
-      <!-- Target Header -->
+      <!-- Sleek Symmetrical Target Header -->
       <div class="inst-target-header">
-        <div class="inst-target-title-wrap">
-          <div class="inst-target-title-row">
-            <h1 class="inst-target-title" id="instTargetTitle">Structure Prediction Workspace</h1>
-            <span class="inst-badge-completed" id="instTargetBadge" style="background:rgba(100,116,139,0.15); border-color:rgba(100,116,139,0.3); color:#94A3B8;">Idle · Ready</span>
+        <div class="inst-target-left">
+          <div class="inst-target-icon">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#00E5FF" stroke-width="2.2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
           </div>
-          <div class="inst-target-sub" id="instTargetSub">
-            Select a target preset, paste FASTA sequence, or upload a multi-chain file to begin.
+          <div class="inst-target-info">
+            <span class="inst-target-title" id="instTargetTitle">Structure Viewport</span>
+            <span class="inst-badge-status idle" id="instTargetBadge">Ready</span>
           </div>
+          <span class="inst-target-sub" id="instTargetSub">Enter sequence on left to run Boltz-2.1 all-atom diffusion</span>
         </div>
+
         <div class="inst-target-actions">
           <button type="button" class="inst-btn-ghost" id="downloadBtn" onclick="downloadCurrentPdb()" title="Download PDB Structure" style="opacity:0.5; pointer-events:none;">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-            Download
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Download PDB
           </button>
           <button type="button" class="inst-btn-ghost" id="shareBtn" onclick="takeViewerScreenshot()" title="Share Snapshot" style="opacity:0.5; pointer-events:none;">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
             Share
           </button>
         </div>

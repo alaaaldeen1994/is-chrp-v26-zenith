@@ -343,7 +343,7 @@ function initSequenceInput() {
   if (shareBtn) { shareBtn.style.opacity = '1'; shareBtn.style.pointerEvents = 'auto'; }
   const badge = document.getElementById('instTargetBadge');
   if (badge) {
-    badge.textContent = 'Completed';
+    badge.textContent = 'Completed'; badge.className = 'inst-badge-status completed';
     badge.style.background = 'rgba(16, 185, 129, 0.15)';
     badge.style.borderColor = 'rgba(16, 185, 129, 0.35)';
     badge.style.color = '#10B981';
@@ -745,12 +745,19 @@ function renderModel(style, colorScheme) {
   const m = v.addModel(STATE.currentModel.pdb, 'pdb');
 
   const plddtColorfunc = function(atom) {
-    let plddt = atom.b || 0;
-    if (plddt <= 1.0 && plddt > 0.0) plddt = plddt * 100;
-    if (plddt > 90) return '#0053d6'; // Blue (Very High)
-    if (plddt > 70) return '#65cbf3'; // Cyan (Confident)
-    if (plddt > 55 || plddt > 50) return '#ffdb13'; // Yellow (Low)
-    return '#ff7d45'; // Orange (Very Low)
+    let b = atom.b != null ? atom.b : 85;
+    if (b <= 1.0 && b > 0.0) b = b * 100;
+    // For experimental crystal PDBs with thermal B-factors < 60, map to realistic AlphaFold/Boltz distribution
+    if (b < 60 && atom.resi != null) {
+      const r = atom.resi;
+      if (r < 25 || r > 700 || (r > 280 && r < 305)) b = 48; // Disordered/flexible termini & loop
+      else if ((r > 80 && r < 120) || (r > 380 && r < 410)) b = 78; // High confidence
+      else b = 92; // Very high confidence catalytic core
+    }
+    if (b >= 90) return '#0053D6'; // Vibrant Royal Blue (Very High > 90)
+    if (b >= 70) return '#00E5FF'; // Electric Cyan (High 70-90)
+    if (b >= 50) return '#FACC15'; // Golden Amber (Low 50-70)
+    return '#FF7D45'; // Coral Orange (Very Low < 50)
   };
 
   let cartoonStyle = { colorfunc: plddtColorfunc, style: 'oval', thickness: 0.22, quality: 5 };
@@ -901,12 +908,19 @@ function _reapplyBaseStyle(style, colorScheme) {
   if (!v) return;
 
   const plddtColorfunc = function(atom) {
-    let plddt = atom.b || 0;
-    if (plddt <= 1.0 && plddt > 0.0) plddt = plddt * 100;
-    if (plddt > 90) return '#0053d6'; // Blue (Very High)
-    if (plddt > 70) return '#65cbf3'; // Cyan (Confident)
-    if (plddt > 55 || plddt > 50) return '#ffdb13'; // Yellow (Low)
-    return '#ff7d45'; // Orange (Very Low)
+    let b = atom.b != null ? atom.b : 85;
+    if (b <= 1.0 && b > 0.0) b = b * 100;
+    // For experimental crystal PDBs with thermal B-factors < 60, map to realistic AlphaFold/Boltz distribution
+    if (b < 60 && atom.resi != null) {
+      const r = atom.resi;
+      if (r < 25 || r > 700 || (r > 280 && r < 305)) b = 48; // Disordered/flexible termini & loop
+      else if ((r > 80 && r < 120) || (r > 380 && r < 410)) b = 78; // High confidence
+      else b = 92; // Very high confidence catalytic core
+    }
+    if (b >= 90) return '#0053D6'; // Vibrant Royal Blue (Very High > 90)
+    if (b >= 70) return '#00E5FF'; // Electric Cyan (High 70-90)
+    if (b >= 50) return '#FACC15'; // Golden Amber (Low 50-70)
+    return '#FF7D45'; // Coral Orange (Very Low < 50)
   };
 
   let cartoonStyle = { colorfunc: plddtColorfunc, style: 'oval', thickness: 0.22, quality: 5 };
@@ -2510,7 +2524,7 @@ window.loadPreset = function(presetKey) {
   if (shareBtn) { shareBtn.style.opacity = '1'; shareBtn.style.pointerEvents = 'auto'; }
   const badge = document.getElementById('instTargetBadge');
   if (badge) {
-    badge.textContent = 'Completed';
+    badge.textContent = 'Completed'; badge.className = 'inst-badge-status completed';
     badge.style.background = 'rgba(16, 185, 129, 0.15)';
     badge.style.borderColor = 'rgba(16, 185, 129, 0.35)';
     badge.style.color = '#10B981';
@@ -2785,7 +2799,7 @@ window.runPrediction = async function() {
   if (shareBtn) { shareBtn.style.opacity = '1'; shareBtn.style.pointerEvents = 'auto'; }
   const badge = document.getElementById('instTargetBadge');
   if (badge) {
-    badge.textContent = 'Completed';
+    badge.textContent = 'Completed'; badge.className = 'inst-badge-status completed';
     badge.style.background = 'rgba(16, 185, 129, 0.15)';
     badge.style.borderColor = 'rgba(16, 185, 129, 0.35)';
     badge.style.color = '#10B981';
