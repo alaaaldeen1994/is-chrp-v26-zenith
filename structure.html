@@ -1743,7 +1743,7 @@ nav, .nav-dock, #mob-nav {
 <script>
   // --- FIREBASE AUTHENTICATION AND REDIRECT ---
   firebase.auth().onAuthStateChanged((user) => {
-    const isLocalOrDemo = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || localStorage.getItem('nilus_demo_mode') === 'true';
+    const isLocalOrDemo = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.protocol === 'file:' || !window.location.hostname || localStorage.getItem('nilus_demo_mode') === 'true';
     const effectiveUser = user || (isLocalOrDemo ? { displayName: 'RESEARCHER', email: 'guest@niluslab.com' } : null);
 
     const userChip = document.getElementById('userChip');
