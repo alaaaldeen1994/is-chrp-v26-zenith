@@ -16,7 +16,17 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="css/structure_institutional.css" />
-<script src="https://cdn.jsdelivr.net/npm/3dmol@2.4.2/build/3Dmol-min.js"></script>
+
+<!-- Local Self-Hosted 3Dmol + jQuery with CDN fallback -->
+<script src="vendor/jquery-3.6.0.min.js"></script>
+<script src="vendor/3Dmol-min.js"></script>
+<script>
+  if (typeof $3Dmol === 'undefined') {
+    document.write('<script src="https://cdn.jsdelivr.net/npm/3dmol@2.4.2/build/3Dmol-min.js"><\/script>');
+  }
+</script>
+
+<!-- Embedded Molecular PDB Libraries for Instant Rendering -->
 <script src="js/demo_pdb.js"></script>
 <script src="js/demo_sirt1_pdb.js"></script>
 </head>
@@ -79,10 +89,10 @@
   <!-- ============ 3-COLUMN ENTERPRISE MAIN LAYOUT ============ -->
   <main class="main">
 
-    <!-- ============ LEFT SIDEBAR (Controls & Presets) ============ -->
+    <!-- ============ LEFT SIDEBAR (Controls & Generous Sequence Workspace) ============ -->
     <aside class="sidebar">
 
-      <!-- Card 1: Structure Prediction Controls -->
+      <!-- Card 1: Structure Prediction & Spacious Sequence Input -->
       <div class="inst-card">
         <div class="inst-card-title">
           <div>
@@ -93,32 +103,57 @@
 
         <!-- Mode Pills -->
         <div class="inst-input-tabs">
-          <button type="button" class="inst-input-tab active" data-tab-mode="seq">Sequence</button>
-          <button type="button" class="inst-input-tab" data-tab-mode="uniprot">UniProt</button>
-          <button type="button" class="inst-input-tab" data-tab-mode="complex">Complex</button>
-          <button type="button" class="inst-input-tab" data-tab-mode="mutations">Mutations</button>
+          <button type="button" class="inst-input-tab active" data-tab-mode="seq" onclick="switchInputMode('seq')">Sequence</button>
+          <button type="button" class="inst-input-tab" data-tab-mode="uniprot" onclick="switchInputMode('uniprot')">UniProt</button>
+          <button type="button" class="inst-input-tab" data-tab-mode="complex" onclick="switchInputMode('complex')">Complex</button>
+          <button type="button" class="inst-input-tab" data-tab-mode="mutations" onclick="switchInputMode('mutations')">Mutations</button>
         </div>
 
-        <!-- Sequence Input -->
-        <div class="inst-field-wrap">
+        <!-- Sequence Workspace Area -->
+        <div id="seqWorkspacePanel" class="inst-field-wrap">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;">
             <label class="inst-label">Protein sequence</label>
-            <span class="inst-sublabel" onclick="window.loadPreset && window.loadPreset('SIRT1_HUMAN')" style="cursor:pointer;" title="Load SIRT1 sequence">Example: SIRT1 (human)</span>
+            <div style="display:flex; gap:4px;">
+              <span class="inst-chip-btn" onclick="loadPreset('SIRT1_HUMAN')" title="Load SIRT1">SIRT1</span>
+              <span class="inst-chip-btn" onclick="loadPreset('TP53_HUMAN')" title="Load TP53">TP53</span>
+              <span class="inst-chip-btn" onclick="loadPreset('BRCA1_HUMAN')" title="Load BRCA1">BRCA1</span>
+              <span class="inst-chip-btn" onclick="loadPreset('ACE2_HUMAN')" title="Load ACE2">ACE2</span>
+            </div>
           </div>
-          <textarea id="seqInput" class="inst-textarea" rows="4" placeholder=">SIRT1_HUMAN&#10;MGSSHHHHHHSSGLVPRGSHMASMTGGQQMG..."></textarea>
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-top:5px; font-size:10px; color:#64748B;">
-            <span>Length: <b id="seqLenText" style="color:#94A3B8;">747 amino acids</b></span>
-            <button type="button" class="inst-text-btn" onclick="document.getElementById('seqInput').value=''; document.getElementById('seqLenText').textContent='0 amino acids';">Clear</button>
+
+          <!-- Generous Monospace Textarea (180px Height) -->
+          <textarea id="seqInput" class="inst-textarea" rows="7" placeholder=">SIRT1_HUMAN (Sirtuin 1, 747 aa)&#10;MADEAALALQPGGSPSAAGADREAASSPAGEPLRKRPRRDGPGLERSPGEPGGAAPEREVPAAARGCPGAAAAALWREAEAEAAAAGGEQEAQATAAAGEGDNGPGLQGPSREPPLADNLYDEDDDDEGEEEEEAAAAAIGYRDNLLFGDEIITNGFHSCESDEEDRASHASSSDWTPRPRIGPYTFVQQHLMIGTDPRTILKDLLPETIPPPELDDMTLWQIVINILSEPPKRKKRKDINTIEDAVKLLQECKKIIVLTGAGVSVSCGIPDFRSRDGIYARLAVDFPDLPDPQAMFDIEYFRKDPRPFFKFAKEIYPGQFQPSLCHKFIALSDKEGKLLRNYTQNIDTLEQVAGIQRIIQCHGSFATASCLICKYKVDCEAVRGDIFNQVVPRCPRCPADEPLAIMKPEIVFFGENLPEQFHRAMKYDKDEVDLLIVIGSSLKVRPVALIPSSIPHEVPQILINREPLPHLHFDVELLGDCDVIINELCHRLGGEYAKLCCNPVKLSEITEKPPRTQKELAYLSELPPTPLHVSEDSSSPERTSPPDSSVIVTLLDQAAKSNDDLDVSESKGCMEEKPQEVQTSRNVESIAEQMENPDLKNVGSSTGEKNERTSVAGTVRKCWPNRVAKEQISRRLDGNQYLFLPPNRYIFHGAEVYSDSEDDVLSSSSCGSNSDSGTCQSPSLEEPMEDESEIEEFYNGLEDEPDVPERAGGAGFGTDGDDQEAINEAISVKQEVTDMNYPSNKS"></textarea>
+
+          <!-- Sequence Status & Actions Bar -->
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-top:5px; font-size:10.5px; color:#64748B;">
+            <div style="display:flex; align-items:center; gap:8px;">
+              <span>Length: <b id="seqLenText" style="color:#94A3B8;">747 amino acids</b></span>
+              <span id="seqValidationBadge" style="color:#10B981; font-weight:600;">&#x25CF; Valid AA</span>
+            </div>
+            <div style="display:flex; gap:8px;">
+              <button type="button" class="inst-text-btn" id="formatFastaBtn" onclick="formatFastaInput()">Format FASTA</button>
+              <button type="button" class="inst-text-btn" id="clearBtn" onclick="clearSequenceInput()">Clear</button>
+            </div>
           </div>
+        </div>
+
+        <!-- UniProt Search Inline View (Toggleable) -->
+        <div id="uniprotWorkspacePanel" class="inst-field-wrap" style="display:none;">
+          <label class="inst-label">UniProt Database Search</label>
+          <div style="display:flex; gap:6px; margin-top:4px;">
+            <input type="text" id="uniprotSearchField" class="inst-input-text" placeholder="Enter Gene or ID (e.g. SIRT1, TP53, P04637)..." value="SIRT1" />
+            <button type="button" class="inst-btn-sub" onclick="searchAndLoadUniProt()">Fetch</button>
+          </div>
+          <div id="uniprotResultText" style="font-size:10.5px; color:#94A3B8; margin-top:6px;">Ready to query UniProt REST API.</div>
         </div>
 
         <!-- Quick Action Buttons -->
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px;">
-          <button type="button" class="inst-btn-sub" onclick="window.loadPreset && window.loadPreset('SIRT1_HUMAN')">
+          <button type="button" class="inst-btn-sub" id="loadExampleBtn" onclick="loadPreset('SIRT1_HUMAN')">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
             Load example
           </button>
-          <button type="button" class="inst-btn-sub" onclick="window.promptUniProt && window.promptUniProt()">
+          <button type="button" class="inst-btn-sub" onclick="switchInputMode('uniprot')">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
             From UniProt
           </button>
@@ -128,9 +163,9 @@
         <div class="inst-field-wrap">
           <label class="inst-label">Prediction engine</label>
           <select id="engineSelect" class="inst-select">
-            <option value="boltz" selected>Boltz-2.1 (Recommended)</option>
-            <option value="esm">Nilus Atomix (Fast ESMFold)</option>
-            <option value="alphafold">AlphaFold3 Multimer</option>
+            <option value="boltz" selected>Boltz-2.1 (Deep Learning SOTA · Recommended)</option>
+            <option value="esm">Nilus Atomix (Ultra-Fast ESMFold · 5s)</option>
+            <option value="alphafold">AlphaFold3 Multimer (Complex Modeling)</option>
           </select>
         </div>
 
@@ -138,9 +173,9 @@
         <div class="inst-field-wrap">
           <label class="inst-label">Prediction type</label>
           <div class="inst-type-pills">
-            <button type="button" class="inst-type-pill active" data-pred-type="protein">Protein</button>
-            <button type="button" class="inst-type-pill" data-pred-type="ligand">Protein + Ligand</button>
-            <button type="button" class="inst-type-pill" data-pred-type="complex">Protein + Protein</button>
+            <button type="button" class="inst-type-pill active" data-pred-type="protein" onclick="selectPredType(this, 'protein')">Protein</button>
+            <button type="button" class="inst-type-pill" data-pred-type="ligand" onclick="selectPredType(this, 'ligand')">Protein + Ligand</button>
+            <button type="button" class="inst-type-pill" data-pred-type="complex" onclick="selectPredType(this, 'complex')">Protein + Protein</button>
           </div>
         </div>
 
@@ -169,7 +204,7 @@
         </details>
 
         <!-- Big Predict Button -->
-        <button type="button" class="inst-predict-btn" id="runBtn">
+        <button type="button" class="inst-predict-btn" id="runBtn" onclick="runPrediction()">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
           Predict Structure
         </button>
@@ -189,7 +224,7 @@
         </div>
         <div class="inst-recent-list" id="recentRunsList">
           <!-- SIRT1 -->
-          <div class="inst-recent-item active" onclick="window.loadPreset && window.loadPreset('SIRT1_HUMAN')">
+          <div class="inst-recent-item active" data-preset="sirt1" onclick="loadPreset('SIRT1_HUMAN')">
             <div class="inst-recent-thumb" style="background:linear-gradient(135deg, #1E3A8A, #3B82F6);">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
             </div>
@@ -201,7 +236,7 @@
           </div>
 
           <!-- BRCA1 -->
-          <div class="inst-recent-item" onclick="window.loadPreset && window.loadPreset('BRCA1_HUMAN')">
+          <div class="inst-recent-item" data-preset="brca1" onclick="loadPreset('BRCA1_HUMAN')">
             <div class="inst-recent-thumb" style="background:linear-gradient(135deg, #4C1D95, #8B5CF6);">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><circle cx="12" cy="12" r="9"/></svg>
             </div>
@@ -213,7 +248,7 @@
           </div>
 
           <!-- TP53 -->
-          <div class="inst-recent-item" onclick="window.loadPreset && window.loadPreset('TP53_HUMAN')">
+          <div class="inst-recent-item" data-preset="tp53" onclick="loadPreset('TP53_HUMAN')">
             <div class="inst-recent-thumb" style="background:linear-gradient(135deg, #065F46, #10B981);">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"/></svg>
             </div>
@@ -225,7 +260,7 @@
           </div>
 
           <!-- ACE2 -->
-          <div class="inst-recent-item" onclick="window.loadPreset && window.loadPreset('ACE2_HUMAN')">
+          <div class="inst-recent-item" data-preset="ace2" onclick="loadPreset('ACE2_HUMAN')">
             <div class="inst-recent-thumb" style="background:linear-gradient(135deg, #0369A1, #00E5FF);">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><circle cx="12" cy="12" r="3"/><circle cx="19" cy="5" r="2"/><circle cx="5" cy="19" r="2"/></svg>
             </div>
@@ -255,11 +290,11 @@
           </div>
         </div>
         <div class="inst-target-actions">
-          <button type="button" class="inst-btn-ghost" id="downloadBtn" title="Download PDB Structure">
+          <button type="button" class="inst-btn-ghost" id="downloadBtn" onclick="downloadCurrentPdb()" title="Download PDB Structure">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
             Download
           </button>
-          <button type="button" class="inst-btn-ghost" id="shareBtn" title="Share Snapshot">
+          <button type="button" class="inst-btn-ghost" id="shareBtn" onclick="takeViewerScreenshot()" title="Share Snapshot">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
             Share
           </button>
@@ -286,26 +321,26 @@
 
         <!-- Representation & Color Controls -->
         <div class="inst-stage-top-left">
-          <select class="inst-rep-select" id="repSelect" onchange="window.switchRepresentation && window.switchRepresentation(this.value)">
+          <select class="inst-rep-select" id="repSelect" onchange="switchRepresentation(this.value)">
             <option value="cartoon">Ribbon</option>
             <option value="stick">Sticks</option>
             <option value="sphere">Spheres</option>
             <option value="surface">Surface</option>
           </select>
-          <button type="button" class="inst-icon-tool" onclick="window.switchColorScheme && window.switchColorScheme('pLDDT')" title="Color by pLDDT">
+          <button type="button" class="inst-icon-tool" onclick="switchColorScheme('pLDDT')" title="Color by pLDDT">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 3v18M3 12h18"/></svg>
           </button>
-          <button type="button" class="inst-icon-tool" onclick="window.switchColorScheme && window.switchColorScheme('chain')" title="Color by Chain">
+          <button type="button" class="inst-icon-tool" onclick="switchColorScheme('chain')" title="Color by Chain">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="8" height="8"/><rect x="13" y="13" width="8" height="8"/></svg>
           </button>
-          <button type="button" class="inst-icon-tool" onclick="window.switchColorScheme && window.switchColorScheme('spectrum')" title="Spectrum">
+          <button type="button" class="inst-icon-tool" onclick="switchColorScheme('spectrum')" title="Spectrum">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M5 9l-2 3 2 3M19 9l2 3-2 3"/></svg>
           </button>
         </div>
 
         <!-- Fullscreen & pLDDT Legend Overlay -->
         <div class="inst-stage-top-right">
-          <button type="button" class="inst-fullscreen-btn" onclick="window.toggleStageFullscreen && window.toggleStageFullscreen()" title="Fullscreen">
+          <button type="button" class="inst-fullscreen-btn" onclick="toggleStageFullscreen()" title="Fullscreen">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
           </button>
           <div class="inst-floating-legend">
@@ -335,15 +370,15 @@
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 14 10 14 10 20"/><polyline points="20 10 14 10 14 4"/><line x1="14" y1="10" x2="21" y2="3"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
             Reset
           </button>
-          <button type="button" class="inst-float-btn" id="floatRotateBtn" onclick="window.toggleViewerSpin && window.toggleViewerSpin()">
+          <button type="button" class="inst-float-btn" id="floatRotateBtn" onclick="toggleViewerSpin()">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1.06 6.7 2.82L21 8"/><polyline points="21 3 21 8 16 8"/></svg>
             Auto-rotate
           </button>
-          <button type="button" class="inst-float-btn" id="floatScreenshotBtn" onclick="document.getElementById('shareBtn').click()">
+          <button type="button" class="inst-float-btn" id="floatScreenshotBtn" onclick="takeViewerScreenshot()">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
             Screenshot
           </button>
-          <button type="button" class="inst-float-btn" onclick="window.toggleStageFullscreen && window.toggleStageFullscreen()">
+          <button type="button" class="inst-float-btn" onclick="toggleStageFullscreen()">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
             Fullscreen
           </button>
@@ -362,7 +397,7 @@
         <div class="inst-card">
           <div class="inst-card-header-row">
             <span class="inst-card-title-text">Residue confidence map</span>
-            <a href="#" class="inst-link-action" onclick="if(window.switchRepresentation) switchRepresentation('cartoon'); return false;">View in 3D &rarr;</a>
+            <a href="#" class="inst-link-action" onclick="switchRepresentation('cartoon'); return false;">View in 3D &rarr;</a>
           </div>
           <div class="inst-track-bar" id="instResidueTrackBar"></div>
           <div class="inst-track-ticks">
@@ -380,7 +415,7 @@
         <div class="inst-card">
           <div class="inst-card-header-row">
             <span class="inst-card-title-text">PAE matrix</span>
-            <span class="inst-link-action" onclick="alert('PAE Matrix resolution: 747x747 residues. Mean domain error: 4.8 Å.')">View details &rarr;</span>
+            <span class="inst-link-action" onclick="renderPAEPreview(); alert('PAE Matrix generated. Mean cross-domain alignment error: 4.8 Å.')">View details &rarr;</span>
           </div>
           <div class="inst-pae-preview-wrap">
             <canvas id="paeCanvasPreview" width="220" height="110" style="width:100%; height:105px; border-radius:4px; background:#070B14;"></canvas>
@@ -396,7 +431,7 @@
         <div class="inst-card">
           <div class="inst-card-header-row">
             <span class="inst-card-title-text">Structural domains (predicted)</span>
-            <span class="inst-link-action">View all &rarr;</span>
+            <span class="inst-link-action" onclick="alert('Predicted 5 structural domains for SIRT1_HUMAN.')">View all &rarr;</span>
           </div>
           <div class="inst-domain-bar" id="instDomainBar">
             <div style="width:13%; background:#06B6D4;" title="N-terminal (1-95)"></div>
@@ -598,12 +633,12 @@
   </main>
 
   <!-- Run Loading Overlay -->
-  <div id="runOverlay" class="run-overlay" style="display:none; position:fixed; inset:0; z-index:9999; background:rgba(7,10,17,0.85); backdrop-filter:blur(8px); flex-direction:column; align-items:center; justify-content:center; gap:16px;">
-    <div style="width:48px; height:48px; border-radius:50%; border:3px solid rgba(59,130,246,0.2); border-top-color:#3B82F6; animation:instSpin 0.8s linear infinite;"></div>
+  <div id="runOverlay" class="run-overlay" style="display:none; position:fixed; inset:0; z-index:9999; background:rgba(7,10,17,0.88); backdrop-filter:blur(10px); flex-direction:column; align-items:center; justify-content:center; gap:16px;">
+    <div style="width:52px; height:52px; border-radius:50%; border:3px solid rgba(59,130,246,0.2); border-top-color:#3B82F6; animation:instSpin 0.8s linear infinite;"></div>
     <div style="font-size:16px; font-weight:700; color:#FFFFFF;" id="runTitle">Folding protein...</div>
-    <div style="font-size:11px; color:#94A3B8; font-family:'IBM Plex Mono',monospace;" id="runStage">Running Boltz-2.1 structural inference...</div>
-    <div style="width:220px; height:4px; background:rgba(255,255,255,0.1); border-radius:2px; overflow:hidden;">
-      <div id="runProgressBar" style="width:45%; height:100%; background:#3B82F6; transition:width 0.3s;"></div>
+    <div style="font-size:12px; color:#94A3B8; font-family:'IBM Plex Mono',monospace;" id="runStage">Running Boltz-2.1 structural inference...</div>
+    <div style="width:240px; height:4px; background:rgba(255,255,255,0.1); border-radius:2px; overflow:hidden;">
+      <div id="runProgressBar" style="width:15%; height:100%; background:linear-gradient(90deg, #3B82F6, #00E5FF); transition:width 0.3s ease;"></div>
     </div>
   </div>
 

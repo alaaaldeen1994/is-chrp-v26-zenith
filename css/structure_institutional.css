@@ -1,3 +1,65 @@
+/* ── Custom Dark Scrollbars ── */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #1E293B #070A11;
+}
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-track {
+  background: #070A11;
+}
+::-webkit-scrollbar-thumb {
+  background: #1E293B;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #334155;
+}
+
+html, body {
+  max-width: 100vw !important;
+  overflow-x: hidden !important;
+}
+
+.run-overlay.active {
+  display: flex !important;
+}
+
+.inst-chip-btn {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--inst-border);
+  border-radius: 4px;
+  padding: 1px 6px;
+  font-size: 10px;
+  font-family: var(--inst-font-mono);
+  color: var(--inst-blue-bright);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.inst-chip-btn:hover {
+  background: rgba(59, 130, 246, 0.2);
+  color: #FFFFFF;
+  border-color: var(--inst-blue-bright);
+}
+
+.inst-input-text {
+  width: 100%;
+  box-sizing: border-box;
+  background: rgba(0, 0, 0, 0.45);
+  border: 1px solid var(--inst-border);
+  border-radius: 7px;
+  color: #FFFFFF;
+  font-size: 11px;
+  padding: 6px 10px;
+  outline: none;
+}
+.inst-input-text:focus {
+  border-color: var(--inst-blue-bright);
+}
+
 /* =====================================================================
    NILUS LAB — ENTERPRISE INSTITUTIONAL STRUCTURE PREDICTION STYLESHEET
    Sleek 3-column BioTech dashboard layout & widgets (AlphaFold / Boltz standard)
@@ -172,11 +234,14 @@ body {
 .main {
   flex: 1 !important;
   display: grid !important;
-  grid-template-columns: 310px 1fr 340px !important;
+  grid-template-columns: 310px minmax(0, 1fr) 330px !important;
+  width: 100vw !important;
+  max-width: 100vw !important;
   height: calc(100vh - 52px) !important;
   min-height: 0 !important;
   overflow: hidden !important;
   background: var(--inst-bg) !important;
+  box-sizing: border-box !important;
 }
 
 /* ── Shared Card Styles ── */
