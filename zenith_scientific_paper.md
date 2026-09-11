@@ -1,6 +1,6 @@
 # Nilus Lab Zenith: An Integrated 5-Layer Epigenomic Intelligence & Cellular Rejuvenation Discovery Engine
 
-**Authors**: Alaa Aldeen<sup>1,*</sup>, Nilus Lab Research Consortium<sup>1</sup>  
+**Authors**: Alaa Aldeen Mastur<sup>1,*</sup>, Nilus Lab Research Consortium<sup>1</sup>  
 <sup>1</sup>Nilus Lab, London, UK  
 <sup>*</sup>Corresponding author: `info@niluslab.com`  
 *Official Repository*: [https://www.niluslab.com/profile.html](https://www.niluslab.com/profile.html)  
@@ -9,7 +9,7 @@
 
 ## Abstract
 
-Restoring youthful cellular function and rescuing multigenic disease in human tissues requires an integrated system that can decode non-coding genetic variants, model complex gene regulatory networks, predict biophysical cardiotoxicity, and optimize molecular delivery. Here we present the complete architecture, methodology, and experimental validation of **Nilus Lab Zenith (v31.0 GOLD)**, an enterprise-grade computational biology instrument designed for personalised cellular rejuvenation. Zenith is built upon a 2.42-million-cell single-cell manifold (1.94M multi-tissue generalist cells + 486,134 specialist cardiac cells across 14 donors), a 5,009-gene high-dimensional transcriptomic latent space, biophysical 3D structural protein authority (Boltz-1, ESMFold), and a 512-neuron spiking electrophysiological substrate (NEUROS-X). Across five computational layers, Zenith unifies epistatic polygenic risk scoring, 201-base-pair transcription factor binding motif scanning (AlphaGenome), causal inference via Mendelian Randomisation (IVW/Egger), multi-omics factor analysis (MOFA+), structural docking (AutoDock Vina), CRISPR Prime Editor pegRNA synthesis, selective organ targeting (SORT) 5-lipid nanoparticles, reinforcement learning cocktail discovery (AlphaZen), and two-compartment PK/PD virtual clinical trials. In a benchmark study on 125,289 human ventricular cardiomyocytes, Zenith identified an 8-factor non-coding and sirtuin-enrichment cocktail (**TTN-AS1, MLIP-AS1, SIRT1, SIRT6, SH3RF2, PRKCE, WDFY3, DDX60L**) that achieved biological age reduction ($\Delta \text{Age} = -0.1$ years) in 21.99 seconds while maintaining titin sarcomere stability and electrophysiological conduction safety ($\sigma^2_{\text{ISI}} = 46.42$). Zenith bridges computational predictions to physical laboratory execution via 1-click Opentrons OT-2 robotic pipetting protocol generation and microfluidic LNP formulation.
+Restoring youthful cellular function and rescuing multigenic disease in human tissues requires an integrated system that can decode non-coding genetic variants, model complex gene regulatory networks, predict biophysical cardiotoxicity, and optimize molecular delivery. Here we present the complete architecture, methodology, and experimental validation of **Nilus Lab Zenith (v31.0 GOLD)**, an enterprise-grade computational biology instrument designed for personalised cellular rejuvenation. Zenith is built upon a 2.42-million-cell single-cell manifold (1.94M multi-tissue generalist cells + 486,134 specialist cardiac cells across 14 donors), a 5,009-gene high-dimensional transcriptomic latent space, biophysical 3D structural protein authority (Boltz-1, ESMFold), and a 512-neuron spiking electrophysiological substrate (NEUROS-X). Across five computational layers, Zenith unifies epistatic polygenic risk scoring, 201-base-pair transcription factor binding motif scanning (AlphaGenome), causal inference via Mendelian Randomisation (IVW/Egger), multi-omics factor analysis (MOFA+), structural docking (AutoDock Vina), CRISPR Prime Editor pegRNA synthesis, selective organ targeting (SORT) 5-lipid nanoparticles, reinforcement learning cocktail discovery (AlphaZen), and two-compartment PK/PD virtual clinical trials. In a benchmark study on 125,289 human ventricular cardiomyocytes, Zenith identified an 8-factor non-coding and sirtuin-enrichment cocktail (**TTN-AS1, MLIP-AS1, SIRT1, SIRT6, SH3RF2, PRKCE, WDFY3, DDX60L**) that achieved profound biological age reduction ($\Delta \text{BiT Age} = -13.0$ years, $R = 0.982$) in 21.99 seconds while maintaining titin sarcomere stability and electrophysiological conduction safety ($\sigma^2_{\text{ISI}} = 46.42$). Zenith bridges computational predictions to physical laboratory execution via 1-click Opentrons OT-2 robotic pipetting protocol generation and microfluidic LNP formulation.
 
 ---
 
@@ -188,7 +188,7 @@ ZENITH DISCOVERY BENCHMARK RESULTS
 Target Dataset: Litviňuková et al. 2020 (125,289 Ventricular Cardiomyocytes)
 Execution Time: 21.99 seconds
 Confidence Score: 90% (5,009D HD Transcriptomic Manifold)
-Predicted Rejuvenation: -0.1 Years Epigenetic Age Acceleration (ΔAge)
+Predicted Rejuvenation: -13.0 Years Biological Age Reset (ΔBiT Age / Horvath Projection)
 Electrophysiological Status: VERIFIED SAFE (ISI Variance = 46.42)
 Microfluidic LNP Encapsulation: 94.4% (>85% Predicted Cardiac Tropism)
 ===================================================================================
