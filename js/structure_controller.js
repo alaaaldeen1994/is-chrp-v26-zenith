@@ -1383,7 +1383,11 @@ async function runPrediction() {
   btn.disabled = true;
 
   if (STATE.mode === 'esm') {
-    const rawVal = $('#seqInput').value.trim();
+    let rawVal = $('#seqInput').value.trim();
+    if (!rawVal) {
+      $('#loadExampleBtn')?.click();
+      rawVal = $('#seqInput').value.trim();
+    }
     let header = '';
     let seq = rawVal;
     if (rawVal.startsWith('>')) {

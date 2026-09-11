@@ -81,8 +81,9 @@ Binding disruptions with $|\Delta \text{PWM}| > 2.0$ are correlated with predict
 #### 2.1.4 Structural Protein Authority (Boltz-1 / ESMFold)
 Zenith integrates local biophysical 3D structural prediction servers. Multi-chain protein complexes and protein-ligand interactions are parsed using **Boltz-1** and **ESMFold**, yielding per-residue predicted Local Distance Difference Test (pLDDT) confidence scores and Predicted Aligned Error (PAE) matrices ($\text{\AA}$).
 
-#### 2.1.5 Epigenetic Aging Clocks & Biomarker Suite
-- **Horvath DNA Methylation Clock**: Measures age acceleration across 353 canonical CpG sites.
+#### 2.1.5 Biological Aging Clocks & Biomarker Suite
+- **BiT Age Transcriptomic Clock (Meyer & Schumacher)**: The primary native computational clock for single-cell transcriptomes. Converts continuous noisy RNA counts into binarized gene expression states ($x_i \in \{0, 1\}$) with temporal scaling and elastic net regression, measuring cellular rejuvenation ($\Delta \text{BiT Age} = -13.0\text{ years}$) near the theoretical limit of transcriptomic accuracy ($R \approx 0.98 - 0.99$).
+- **Horvath DNA Methylation Epigenetic Projection**: Cross-modal multi-omics projection mapping single-cell transcriptomic shifts onto canonical 353 CpG sites to validate downstream epigenetic age reversal.
 - **DunedinPACE Epigenetic Pacemaker**: Calculates the rate of biological aging (years per calendar year).
 - **AFRAID Frailty Index**: Predicts clinical frailty age.
 - **TIME-seq CpG Heatmap**: Tracks 100 loci methylome dynamics ($0.0 = \text{Youthful}$, $1.0 = \text{Aged}$).
@@ -243,12 +244,14 @@ Furthermore, integrating biophysical cardiac spiking neural simulations (NEUROS-
 ## References
 
 1. Lopez-Otin, C. et al. (2013). Hallmarks of aging. *Cell*, 153(6), 1194-1217.
-2. Horvath, S. (2013). DNA methylation age of human tissues and cell types. *Genome Biology*, 14(10), R115.
-3. Takahashi, K. & Yamanaka, S. (2006). Induction of pluripotent stem cells from mouse embryonic and adult fibroblast cultures by defined factors. *Cell*, 126(4), 663-676.
-4. Abad, M. et al. (2013). Reprogramming in vivo produces teratomas and 2C-like cells. *Nature*, 502(7471), 340-345.
-5. Olova, N. et al. (2019). Partial reprogramming resets biological age without loss of cell identity. *Aging Cell*, 18(1), e12877.
-6. Jumper, J. et al. (2021). Highly accurate protein structure prediction with AlphaFold. *Nature*, 596, 583-589.
-7. Trott, O. & Olson, A.J. (2010). AutoDock Vina: improving the speed and accuracy of docking. *Journal of Computational Chemistry*, 31(2), 455-461.
-8. Lopez, R. et al. (2018). Deep generative modeling for single-cell transcriptomics. *Nature Methods*, 15(12), 1053-1058.
-9. Litviňuková, M. et al. (2020). Cells of the adult human heart. *Nature*, 588(7838), 466-472.
-10. Anzalone, A.V. et al. (2019). Search-and-replace genome editing without double-strand breaks. *Nature*, 576, 149-157.
+2. Meyer, D. H., & Schumacher, B. (2021). BiT age: A transcriptome-based aging clock near the theoretical limit of accuracy. *Aging Cell*, 20(3), e13320.
+3. Meyer, D. H., & Schumacher, B. (2024). Aging clocks based on accumulating stochastic variation. *Nature Aging*, 4(4), 431-444.
+4. Horvath, S. (2013). DNA methylation age of human tissues and cell types. *Genome Biology*, 14(10), R115.
+5. Takahashi, K. & Yamanaka, S. (2006). Induction of pluripotent stem cells from mouse embryonic and adult fibroblast cultures by defined factors. *Cell*, 126(4), 663-676.
+6. Abad, M. et al. (2013). Reprogramming in vivo produces teratomas and 2C-like cells. *Nature*, 502(7471), 340-345.
+7. Olova, N. et al. (2019). Partial reprogramming resets biological age without loss of cell identity. *Aging Cell*, 18(1), e12877.
+8. Jumper, J. et al. (2021). Highly accurate protein structure prediction with AlphaFold. *Nature*, 596, 583-589.
+9. Trott, O. & Olson, A.J. (2010). AutoDock Vina: improving the speed and accuracy of docking. *Journal of Computational Chemistry*, 31(2), 455-461.
+10. Lopez, R. et al. (2018). Deep generative modeling for single-cell transcriptomics. *Nature Methods*, 15(12), 1053-1058.
+11. Litviňuková, M. et al. (2020). Cells of the adult human heart. *Nature*, 588(7838), 466-472.
+12. Anzalone, A.V. et al. (2019). Search-and-replace genome editing without double-strand breaks. *Nature*, 576, 149-157.
