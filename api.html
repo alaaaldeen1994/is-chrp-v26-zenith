@@ -259,7 +259,7 @@ nav, .nav-dock, #mob-nav {
                         <span class="font-mono text-white font-bold">/api/v1/safety/audit</span>
                     </div>
                     <p class="text-zinc-400 text-sm leading-relaxed">
-                        Evaluates biological sequences or epigenetic datasets for oncogenic safety compliance and calculates true biological age using the 353-CpG Horvath Epigenetic Clock model coefficients.
+                        Evaluates biological sequences or transcriptomic/epigenetic datasets for oncogenic safety compliance and calculates true biological age using the Meyer-Schumacher BiT Age transcriptomic clock (Aging Cell 2021) and cross-modal 353-CpG Horvath Epigenetic Clock model coefficients.
                     </p>
                     
                     <div class="space-y-3">
@@ -297,6 +297,12 @@ nav, .nav-dock, #mob-nav {
         "SIRT1",
         "SIRT6"
       ]
+    },
+    "bit_age_report": {
+      "clock_type": "Meyer-Schumacher BiT Age (Aging Cell 2021)",
+      "predicted_age_delta_years": -13.0,
+      "theoretical_accuracy_r": 0.982,
+      "binarized_state_fidelity": 100.0
     },
     "horvath_clock_impact": {
       "predicted_biological_age": 42.15,

@@ -1187,10 +1187,10 @@ nav, .nav-dock, #mob-nav {
                             <div class="w-10 h-10 rounded-lg bg-purple-500/10 border border-purple-500/30 flex items-center justify-center text-purple-400 font-bold">⏳</div>
                             <span class="text-[10px] font-bold text-purple-400 bg-purple-500/10 px-2 py-0.5 rounded uppercase">GeroSci 2026</span>
                         </div>
-                        <h4 class="text-lg font-bold text-white mb-2">Cardiac EnsembleAge Clock</h4>
-                        <p class="text-xs text-slate-400 leading-relaxed mb-4">Blends Horvath 353-CpG pan-tissue core with human ventricular heart failure methylation markers (Krolevets 2026) and Hannum vascular weights to compute consensus ΔAge with 95% CI.</p>
+                        <h4 class="text-lg font-bold text-white mb-2">Cardiac EnsembleAge & BiT Age Clock</h4>
+                        <p class="text-xs text-slate-400 leading-relaxed mb-4">Integrates the Meyer-Schumacher BiT Age binarized transcriptomic clock (Aging Cell 2021) with Horvath 353-CpG pan-tissue core, ventricular HF markers (Krolevets 2026), and Hannum vascular weights to compute consensus ΔAge with 95% CI near theoretical accuracy limits.</p>
                         <div class="code-block text-[11px] text-purple-300 bg-black/80 p-3 rounded-lg border border-slate-800">
-                            Age_cardiac = 0.45·Horvath + 0.35·Krolevets_HF + 0.20·Hannum
+                            Age_cardiac = w_bit·BiT_Age + w_h·Horvath + w_k·Krolevets_HF + w_hn·Hannum
                         </div>
                     </div>
                 </div>
@@ -7323,9 +7323,9 @@ Response:
                         <div class="flex items-center gap-3 mb-3">
                             <span class="text-[10px] bg-slate-500/20 text-slate-300 px-3 py-1 rounded font-bold">POST</span>
                             <span class="font-mono text-white text-lg">/api/v1/safety/audit</span>
-                            <span class="text-[9px] bg-purple-500/20 text-purple-300 px-2 py-0.5 rounded-full font-bold uppercase tracking-wider">Horvath 353-CpG</span>
+                            <span class="text-[9px] bg-purple-500/20 text-purple-300 px-2 py-0.5 rounded-full font-bold uppercase tracking-wider">BiT Age & Horvath</span>
                         </div>
-                        <p class="text-sm text-slate-300 mb-4">Full-stack safety audit: oncogene blacklist screening, dedifferentiation ceiling enforcement, Sirtuin/NAD+ pathway scoring, and <strong class="text-white">Horvath 353-CpG epigenetic clock</strong> biological age prediction from methylation beta-values. Returns predicted biological age delta and risk classification.</p>
+                        <p class="text-sm text-slate-300 mb-4">Full-stack safety audit: oncogene blacklist screening, dedifferentiation ceiling enforcement, Sirtuin/NAD+ pathway scoring, <strong class="text-white">Meyer-Schumacher BiT Age binarized transcriptomic clock</strong> (Aging Cell 2021) and <strong class="text-white">Horvath 353-CpG epigenetic projection</strong>. Returns predicted biological age delta and risk classification.</p>
                         <div class="code-block text-xs">Request Body:
 {
   "factors": ["GATA4", "TBX5", "SIRT1"],
@@ -7342,6 +7342,12 @@ Response:
 {
   "approved": [{"gene": "GATA4", "safety": "SAFE", ...}],
   "blocked": [],
+  "bit_age_report": {
+    "clock_type": "Meyer-Schumacher BiT Age (Aging Cell 2021)",
+    "predicted_age_delta_years": -13.0,
+    "theoretical_accuracy_r": 0.982,
+    "binarized_state_fidelity": 100.0
+  },
   "horvath_clock": {
     "predicted_bio_age_years": 42.3,
     "chronological_age_years": 55.0,

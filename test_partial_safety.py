@@ -1,4 +1,4 @@
-﻿"""
+"""
 test_partial_safety.py
 ~~~~~~~~~~~~~~~~~~~~~~
 ZENITH PARTIAL REPROGRAMMING â€” INSTITUTIONAL TEST SUITE v2.0
@@ -38,11 +38,13 @@ from partial_safety import (
     filter_for_partial_reprogramming,
     score_sirtuin_pathway,
     score_horvath_impact,
+    score_bit_age_impact,
     _score_factor,
     ONCOGENE_BLACKLIST,
     FULL_DEDIFF_RISK,
     PARTIAL_SAFE_FACTORS,
     HORVATH_CLOCK_GENES,
+    BIT_AGE_CLOCK_GENES,
     CLOCK_GENE_REGULATORS,
     SIRTUIN_PATHWAY,
 )
@@ -343,6 +345,30 @@ class TestHorvathClock(unittest.TestCase):
         self.assertIsInstance(report["regulators_matched"], dict)
         for gene, regs in report["regulators_matched"].items():
             self.assertIn("SIRT1", regs)
+
+
+# ============================================================
+# 6B. MEYER-SCHUMACHER BiT AGE CLOCK SCORER TESTS
+# ============================================================
+
+class TestBiTAgeClock(unittest.TestCase):
+    """Tests Meyer-Schumacher BiT Age binarized transcriptomic clock scoring."""
+
+    def test_nl101_payload_bit_age_impact(self):
+        """NL-101 (SIRT1 + SIRT6 + GATA4 + ZBTB16) must demonstrate strong rejuvenation delta."""
+        report = score_bit_age_impact(["SIRT1", "SIRT6", "GATA4", "ZBTB16"])
+        self.assertGreaterEqual(report["loci_affected"], 4)
+        self.assertIn("SIRT1", report["genes_hit"])
+        self.assertIn("GATA4", report["genes_hit"])
+        self.assertEqual(report["clock_type"], "Meyer-Schumacher BiT Age (Aging Cell 2021)")
+        self.assertEqual(report["theoretical_accuracy_r"], 0.982)
+
+    def test_filter_includes_bit_age_report(self):
+        """filter_for_partial_reprogramming must output bit_age_report alongside horvath_report."""
+        res = filter_for_partial_reprogramming(["SIRT1", "FOXO3", "GATA4"], mode="balanced")
+        self.assertIn("bit_age_report", res)
+        self.assertIn("horvath_report", res)
+        self.assertEqual(res["bit_age_report"]["theoretical_accuracy_r"], 0.982)
 
 
 # ============================================================

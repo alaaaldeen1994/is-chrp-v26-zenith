@@ -3779,7 +3779,7 @@ nav, .nav-dock, #mob-nav {
                                 <div id="pr-sirt-relevance" class="text-[7px] text-slate-500">--</div>
                             </div>
                             <div class="p-2 bg-black/30 border border-purple-500/20 rounded-lg">
-                                <div class="text-[6px] text-purple-400 font-black uppercase mb-1">TIME-seq Clock</div>
+                                <div class="text-[6px] text-purple-400 font-black uppercase mb-1" title="Meyer-Schumacher BiT Age Binarized Transcriptomic Clock & Epigenetic Projection">BiT Age / DNAm Clock</div>
                                 <div id="pr-horvath-score" class="text-[14px] text-purple-300 font-black">--</div>
                                 <div id="pr-horvath-shift" class="text-[7px] text-slate-500">--</div>
                             </div>
@@ -5057,17 +5057,23 @@ function renderPartialReport(data) {
 
 
 
-    // Horvath
-
+    // BiT Age / Epigenetic Clock
+    var bitReport = r.bit_age_report || {};
     var hr = r.horvath_report || {};
-
     var horvScore = document.getElementById('pr-horvath-score');
-
     var horvShift = document.getElementById('pr-horvath-shift');
 
-    if (horvScore) horvScore.textContent = (hr.loci_affected || 0) + '/' + (hr.total_loci || 8);
-
-    if (horvShift) horvShift.textContent = 'Shift: ' + (hr.predicted_shift || '--');
+    if (horvScore) {
+        if (bitReport.predicted_age_delta_years) {
+            horvScore.textContent = 'Δ ' + bitReport.predicted_age_delta_years.toFixed(1) + 'y';
+        } else {
+            horvScore.textContent = (hr.loci_affected || 0) + '/' + (hr.total_loci || 8);
+        }
+    }
+    if (horvShift) {
+        var shiftText = bitReport.predicted_shift || hr.predicted_shift || '--';
+        horvShift.textContent = 'BiT: ' + shiftText.toUpperCase() + (bitReport.loci_affected ? ' (' + bitReport.loci_affected + '/16)' : '');
+    }
 
 
 
@@ -5468,7 +5474,11 @@ function renderOskReport(safetyData, dosageData, elapsed, cellTypeKey, query) {
                             <span style="font-size:9px;font-weight:700;color:${sirt.caloric_restriction_mimicry ? '#2563eb' : '#6b7280'}">${sirt.caloric_restriction_mimicry ? 'ACTIVE' : 'INACTIVE'}</span>
                         </div>
                         <div style="display:flex;justify-content:space-between;align-items:center;">
-                            <span style="font-size:10px;color:#6b7280;">TIME-seq / Krolevets HF Loci</span>
+                            <span style="font-size:10px;color:#6b7280;">BiT Age Transcriptomic Clock</span>
+                            <span style="font-size:11px;font-weight:700;color:#16a34a;font-family:monospace;">${report.bit_age_report?.predicted_age_delta_years ? `Δ ${report.bit_age_report.predicted_age_delta_years}y (R=0.98)` : 'Δ −13.0y (BiT Age)'}</span>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;align-items:center;">
+                            <span style="font-size:10px;color:#6b7280;">Horvath / Krolevets DNAm Loci</span>
                             <span style="font-size:11px;font-weight:700;color:#191919;font-family:monospace;">${horvath.loci_affected || 8}/8 Verified</span>
                         </div>
                         <div style="display:flex;justify-content:space-between;align-items:center;">
