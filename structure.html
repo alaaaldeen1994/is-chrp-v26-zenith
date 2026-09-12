@@ -8,6 +8,9 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <script src="vendor/3Dmol-min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/3dmol@2.4.2/build/3Dmol-min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+<script src="js/firebase_config.js"></script>
 <style>
 :root{
   --bg:#03101c;--bg2:#071725;--panel:#0a1e31;--panel2:#0d2439;--panel3:#102a42;
@@ -690,16 +693,67 @@ select {
 .heatmap-table{border-collapse:separate;border-spacing:2px;font-size:6.5px}.heatmap-table th{color:#7897ad;padding:3px;min-width:27px}.heatmap-table td{height:28px;min-width:34px;text-align:center;border-radius:4px;color:#f2f8fb;font-variant-numeric:tabular-nums}.cluster-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}.cluster-card{border:1px solid #17405b;border-radius:8px;background:#061725;padding:9px}.cluster-card b{font-size:10px}.cluster-card span{display:block;font-size:6.5px;color:#7695ab;margin-top:4px}.sample-bars{display:flex;align-items:flex-end;gap:5px;height:120px;padding:10px 6px 0;border-bottom:1px solid #19405c}.sample-bar{flex:1;min-width:15px;background:linear-gradient(180deg,#28d4ed,#1268ef);border-radius:4px 4px 0 0;position:relative}.sample-bar span{position:absolute;left:50%;transform:translateX(-50%);bottom:-18px;color:#728fa5;font-size:6px;white-space:nowrap}.sample-bar b{position:absolute;left:50%;transform:translateX(-50%);top:-14px;color:#cfe4f0;font-size:6px;white-space:nowrap}
 .run-snapshot{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}.run-snapshot div{border:1px solid #153c57;border-radius:7px;background:#051522;padding:8px}.run-snapshot b{font-size:9px;display:block}.run-snapshot span{font-size:6.4px;color:#708ea4;display:block;margin-top:3px}
 .phase-footer-note{grid-column:1/-1;border-top:1px solid #15384f;padding-top:9px;color:#6e8ba1;font-size:6.7px;line-height:1.55}
-@media(max-width:1100px){.phase-hero{grid-template-columns:1fr}.phase-evidence-flow{grid-template-columns:1fr 1fr}.evidence-node:after{display:none}.interface-layout{grid-template-columns:1fr}.phase-viewer{height:320px}.reference-grid,.cluster-grid{grid-template-columns:1fr 1fr}}
-
+/* --- Brand Logo & Auth Widget styling --- */
+.nav-logo-responsive{height:36px;max-height:36px;width:auto;object-fit:contain;display:block;transition:opacity 0.2s ease,transform 0.2s ease}
+.nav-logo-responsive:hover{opacity:.85}
+.brand-link{display:flex;align-items:center;gap:12px;text-decoration:none;cursor:pointer;flex-shrink:0}
+.brand-link:hover strong{color:#fff}
+#authArea{display:flex;align-items:center;gap:10px;margin-left:8px;flex-shrink:0}
+#signInBtn{display:none;align-items:center;gap:6px;padding:7px 15px;border-radius:8px;background:linear-gradient(180deg,#1872e8,#0f53c7);color:#ffffff;text-decoration:none;font-size:11px;font-weight:700;letter-spacing:.02em;box-shadow:0 4px 14px rgba(16,88,209,.35);transition:all .15s ease}
+#signInBtn:hover{filter:brightness(1.1);box-shadow:0 6px 18px rgba(16,88,209,.45)}
+#userChip{display:none;align-items:center;position:relative}
+#userMenuBtn{display:flex;align-items:center;gap:8px;padding:3px 10px 3px 4px;border-radius:999px;background:rgba(8,26,43,.85);border:1px solid #1c496f;color:#e7f2fa;cursor:pointer;transition:all .15s ease}
+#userMenuBtn:hover{border-color:#2b75ad;background:rgba(12,38,64,.95)}
+#userDropdown{display:none;position:absolute;top:calc(100% + 8px);right:0;z-index:200;min-width:185px;background:#071c2f;border:1px solid #1c496e;border-radius:10px;box-shadow:0 18px 45px rgba(0,0,0,.55);padding:6px;backdrop-filter:blur(14px)}
 </style>
 </head>
 <body>
 <div class="shell">
 <header class="topbar">
-  <div class="brand"><div class="logo"></div><div><strong>Nilus Lab</strong><small>Generative Biology</small></div></div>
+  <a href="/" class="brand-link" title="Nilus Lab Platform Home">
+    <img src="assets/Bhaa_transparent_darkmode.png" alt="Nilus Lab" class="nav-logo-responsive" onerror="this.style.display='none'">
+    <div style="border-left:1px solid rgba(34,72,101,.7);padding-left:11px;display:flex;flex-direction:column;justify-content:center;">
+      <strong style="display:block;font-size:13.5px;font-weight:750;letter-spacing:-.02em;color:#f7fbff;line-height:1.2;">Structure Intelligence</strong>
+      <small style="display:block;color:#7e9bb5;font-size:9.5px;margin-top:2px;font-weight:500;">Generative Biology · 3.2.0-α6</small>
+    </div>
+  </a>
   <nav class="nav"><button class="active" id="navStructure">Structure</button><button id="navEvidence">Evidence</button><button id="navCompare">Compare</button><button id="navInterfaces">Interfaces</button><button id="navValidate">Validate</button><button id="navEnsemble">Ensemble</button><button id="navAi">AI Scientist</button><button id="navDocs">Docs</button></nav>
-  <div class="spacer"></div><div class="search"><span style="margin-right:8px">⌕</span><input id="globalSearch" aria-label="Search UniProt" placeholder="Search gene or UniProt accession…" style="border:0;background:transparent;color:#c9d8e5;outline:0;width:100%;font-size:10px"></div><div class="dev-badge" id="devBuildBadge"><b>ALL-PHASES DEV</b><span>v3.2 α6 · :3001</span></div><div class="avatar">AA</div>
+  <div class="spacer"></div><div class="search"><span style="margin-right:8px">⌕</span><input id="globalSearch" aria-label="Search UniProt" placeholder="Search gene or UniProt accession…" style="border:0;background:transparent;color:#c9d8e5;outline:0;width:100%;font-size:10px"></div><div class="dev-badge" id="devBuildBadge"><b>BOLTZ-2.1 ENGINE</b><span>v3.2.0-α6 · LIVE</span></div>
+  <div id="authArea">
+    <a id="signInBtn" href="login.html?redirect=structure.html">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+      <span>Sign In</span>
+    </a>
+    <div id="userChip">
+      <button id="userMenuBtn" onclick="toggleUserDropdown(event)" type="button" aria-label="User Account Menu">
+        <div id="userAvatar" class="avatar" style="width:28px;height:28px;font-size:11px;">U</div>
+        <div style="display:flex;flex-direction:column;align-items:flex-start;text-align:left;line-height:1.2;">
+          <span id="userName" style="font-size:10.5px;font-weight:700;color:#f0f6fc;max-width:105px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">User</span>
+          <span style="font-size:7.5px;color:#5de2b5;display:flex;align-items:center;gap:3px;"><span style="width:4.5px;height:4.5px;border-radius:50%;background:#5de2b5;display:inline-block;"></span>AUTHENTICATED</span>
+        </div>
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="color:#7893a8;margin-left:1px;"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div id="userDropdown">
+        <div style="padding:8px 10px 6px;border-bottom:1px solid rgba(28,73,110,.6);margin-bottom:4px;">
+          <div style="font-size:8px;text-transform:uppercase;letter-spacing:.08em;color:#6f8aa0;">Signed in as</div>
+          <div id="dropdownUserEmail" style="font-size:10px;font-weight:600;color:#dbe9f4;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:2px;">user@niluslab.com</div>
+        </div>
+        <a href="/profile.html" style="display:flex;align-items:center;gap:8px;width:100%;padding:8px 10px;color:#c9dceb;text-decoration:none;font-size:10px;font-weight:550;border-radius:6px;transition:background .15s;" onmouseover="this.style.background='rgba(23,65,99,.6)'" onmouseout="this.style.background='transparent'">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <span>Mainframe Profile</span>
+        </a>
+        <a href="/" style="display:flex;align-items:center;gap:8px;width:100%;padding:8px 10px;color:#c9dceb;text-decoration:none;font-size:10px;font-weight:550;border-radius:6px;transition:background .15s;" onmouseover="this.style.background='rgba(23,65,99,.6)'" onmouseout="this.style.background='transparent'">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          <span>Platform Home</span>
+        </a>
+        <div style="height:1px;background:rgba(28,73,110,.6);margin:4px 0;"></div>
+        <button onclick="handleSignOut(event)" type="button" style="display:flex;align-items:center;gap:8px;width:100%;padding:8px 10px;color:#ff7989;background:transparent;border:0;font-size:10px;font-weight:600;border-radius:6px;cursor:pointer;transition:background .15s;text-align:left;" onmouseover="this.style.background='rgba(255,121,137,.12)'" onmouseout="this.style.background='transparent'">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          <span>Sign Out</span>
+        </button>
+      </div>
+    </div>
+  </div>
 </header>
 <main class="workspace">
   <aside class="col left">
@@ -1446,8 +1500,75 @@ $('#resetWorkspace').onclick=()=>{closeMoreMenu();openModal({title:'Reset worksp
 function saveRecent(){ if(!STATE.prediction)return; const key='nilus_recent_predictions_v2',arr=JSON.parse(localStorage.getItem(key)||'[]').filter(x=>x.id!==STATE.prediction.id); arr.unshift({id:STATE.prediction.id,name:$('#resultTitle').textContent,model:STATE.prediction.model||'boltz-2.1',time:new Date().toISOString(),livemode:STATE.prediction.livemode}); localStorage.setItem(key,JSON.stringify(arr.slice(0,8))); }
 function renderRecent(){ const arr=JSON.parse(localStorage.getItem('nilus_recent_predictions_v2')||'[]'),box=$('#recentList'); box.innerHTML=''; if(!arr.length){box.innerHTML='<div class="recent-item"><div class="thumb"></div><div class="recent-main"><b>No prediction history yet</b><span>Completed jobs appear here</span></div><span class="pill dim">Local</span></div>';return;} arr.forEach(x=>{const d=document.createElement('div');d.className='recent-item';d.style.cursor='pointer';d.innerHTML=`<div class="thumb"></div><div class="recent-main"><b>${escapeHtml(x.name)}</b><span>${escapeHtml(x.model)} · ${new Date(x.time).toLocaleString()}</span></div><span class="pill">${x.livemode===false?'TEST':'View'}</span>`;d.onclick=()=>restorePrediction(x.id);box.appendChild(d);}); }
 
+// ---------- Authentication & Profile Dropdown ----------
+function toggleUserDropdown(e){
+  if(e) e.stopPropagation();
+  const dd = document.getElementById('userDropdown');
+  if(dd) dd.style.display = (dd.style.display === 'block') ? 'none' : 'block';
+}
+window.toggleUserDropdown = toggleUserDropdown;
+
+document.addEventListener('click', (e) => {
+  const dd = document.getElementById('userDropdown');
+  const chip = document.getElementById('userChip');
+  if(dd && dd.style.display === 'block'){
+    if(!chip || !chip.contains(e.target)) dd.style.display = 'none';
+  }
+});
+
+function handleSignOut(e){
+  if(e) e.stopPropagation();
+  localStorage.removeItem('ZENITH_DEMO_BYPASS');
+  localStorage.removeItem('nilus_demo_mode');
+  if(typeof firebase !== 'undefined' && firebase.auth){
+    firebase.auth().signOut().then(()=>{ location.reload(); }).catch(()=>{ location.reload(); });
+  } else {
+    location.reload();
+  }
+}
+window.handleSignOut = handleSignOut;
+
+function initAuth(){
+  const sBtn = document.getElementById('signInBtn');
+  const uChip = document.getElementById('userChip');
+  const uAv = document.getElementById('userAvatar');
+  const uName = document.getElementById('userName');
+  const dEmail = document.getElementById('dropdownUserEmail');
+  if(typeof firebase === 'undefined' || !firebase.auth){
+    if(sBtn) sBtn.style.display = 'inline-flex';
+    if(uChip) uChip.style.display = 'none';
+    return;
+  }
+  try {
+    firebase.auth().onAuthStateChanged((user) => {
+      if(user){
+        if(sBtn) sBtn.style.display = 'none';
+        if(uChip) uChip.style.display = 'flex';
+        const name = user.displayName || (user.email ? user.email.split('@')[0].toUpperCase() : 'RESEARCHER');
+        if(uName) uName.textContent = name;
+        if(dEmail) dEmail.textContent = user.email || name;
+        let initials = 'U';
+        if(user.displayName){
+          const parts = user.displayName.trim().split(/\s+/);
+          initials = parts.length >= 2 ? (parts[0][0] + parts[parts.length - 1][0]).toUpperCase() : parts[0].substring(0, 2).toUpperCase();
+        } else if(user.email){
+          initials = user.email.substring(0, 2).toUpperCase();
+        }
+        if(uAv) uAv.textContent = initials;
+      } else {
+        if(uChip) uChip.style.display = 'none';
+        if(sBtn) sBtn.style.display = 'inline-flex';
+      }
+    });
+  } catch(err){
+    console.warn('[AUTH] Firebase auth check error:', err);
+    if(sBtn) sBtn.style.display = 'inline-flex';
+    if(uChip) uChip.style.display = 'none';
+  }
+}
+
 // ---------- Init ----------
-async function init(){ await checkBackend(); initInputModes(); renderEntities(); initViewer(); initViewerControls(); initTabs(); initAdvancedIntelligence(); renderRecent(); renderResidueIntelligence(); renderProvenance(); renderEnsemble(); renderAlphaFoldReference(); updateContextualTabs(); ['numSamples','msaMode','recyclingSteps','samplingSteps','stepScale','bindingChain','msaCustomFormat','templateInputChain','contactChain1','contactChain2','pocketBinder','pocketTarget','pocketForce'].forEach(id=>$('#'+id)?.addEventListener('change',invalidateEstimate)); ['msaCustomUrl','templateUrl','templateSourceChain','templateForce','contactRes1','contactRes2','contactDistance','pocketResidues','pocketDistance'].forEach(id=>$('#'+id)?.addEventListener('input',invalidateEstimate)); ['recyclingSteps','samplingSteps','stepScale'].forEach(id=>$('#'+id)?.addEventListener('input',invalidateEstimate)); $('#bindingMode').addEventListener('change',()=>{updateBindingOptions();invalidateEstimate();}); const pid=new URL(location.href).searchParams.get('prediction'); if(pid&&STATE.backend.authenticated)restorePrediction(pid); }
+async function init(){ await checkBackend(); initAuth(); initInputModes(); renderEntities(); initViewer(); initViewerControls(); initTabs(); initAdvancedIntelligence(); renderRecent(); renderResidueIntelligence(); renderProvenance(); renderEnsemble(); renderAlphaFoldReference(); updateContextualTabs(); ['numSamples','msaMode','recyclingSteps','samplingSteps','stepScale','bindingChain','msaCustomFormat','templateInputChain','contactChain1','contactChain2','pocketBinder','pocketTarget','pocketForce'].forEach(id=>$('#'+id)?.addEventListener('change',invalidateEstimate)); ['msaCustomUrl','templateUrl','templateSourceChain','templateForce','contactRes1','contactRes2','contactDistance','pocketResidues','pocketDistance'].forEach(id=>$('#'+id)?.addEventListener('input',invalidateEstimate)); ['recyclingSteps','samplingSteps','stepScale'].forEach(id=>$('#'+id)?.addEventListener('input',invalidateEstimate)); $('#bindingMode').addEventListener('change',()=>{updateBindingOptions();invalidateEstimate();}); const pid=new URL(location.href).searchParams.get('prediction'); if(pid&&STATE.backend.authenticated)restorePrediction(pid); }
 init();
 })();
 
