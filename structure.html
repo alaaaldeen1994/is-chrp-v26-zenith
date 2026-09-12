@@ -693,64 +693,336 @@ select {
 .heatmap-table{border-collapse:separate;border-spacing:2px;font-size:6.5px}.heatmap-table th{color:#7897ad;padding:3px;min-width:27px}.heatmap-table td{height:28px;min-width:34px;text-align:center;border-radius:4px;color:#f2f8fb;font-variant-numeric:tabular-nums}.cluster-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}.cluster-card{border:1px solid #17405b;border-radius:8px;background:#061725;padding:9px}.cluster-card b{font-size:10px}.cluster-card span{display:block;font-size:6.5px;color:#7695ab;margin-top:4px}.sample-bars{display:flex;align-items:flex-end;gap:5px;height:120px;padding:10px 6px 0;border-bottom:1px solid #19405c}.sample-bar{flex:1;min-width:15px;background:linear-gradient(180deg,#28d4ed,#1268ef);border-radius:4px 4px 0 0;position:relative}.sample-bar span{position:absolute;left:50%;transform:translateX(-50%);bottom:-18px;color:#728fa5;font-size:6px;white-space:nowrap}.sample-bar b{position:absolute;left:50%;transform:translateX(-50%);top:-14px;color:#cfe4f0;font-size:6px;white-space:nowrap}
 .run-snapshot{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}.run-snapshot div{border:1px solid #153c57;border-radius:7px;background:#051522;padding:8px}.run-snapshot b{font-size:9px;display:block}.run-snapshot span{font-size:6.4px;color:#708ea4;display:block;margin-top:3px}
 .phase-footer-note{grid-column:1/-1;border-top:1px solid #15384f;padding-top:9px;color:#6e8ba1;font-size:6.7px;line-height:1.55}
-/* --- Brand Logo & Auth Widget styling --- */
-.nav-logo-responsive{height:36px;max-height:36px;width:auto;object-fit:contain;display:block;transition:opacity 0.2s ease,transform 0.2s ease}
-.nav-logo-responsive:hover{opacity:.85}
-.brand-link{display:flex;align-items:center;gap:12px;text-decoration:none;cursor:pointer;flex-shrink:0}
-.brand-link:hover strong{color:#fff}
-#authArea{display:flex;align-items:center;gap:10px;margin-left:8px;flex-shrink:0}
-#signInBtn{display:none;align-items:center;gap:6px;padding:7px 15px;border-radius:8px;background:linear-gradient(180deg,#1872e8,#0f53c7);color:#ffffff;text-decoration:none;font-size:11px;font-weight:700;letter-spacing:.02em;box-shadow:0 4px 14px rgba(16,88,209,.35);transition:all .15s ease}
-#signInBtn:hover{filter:brightness(1.1);box-shadow:0 6px 18px rgba(16,88,209,.45)}
-#userChip{display:none;align-items:center;position:relative}
-#userMenuBtn{display:flex;align-items:center;gap:8px;padding:3px 10px 3px 4px;border-radius:999px;background:rgba(8,26,43,.85);border:1px solid #1c496f;color:#e7f2fa;cursor:pointer;transition:all .15s ease}
-#userMenuBtn:hover{border-color:#2b75ad;background:rgba(12,38,64,.95)}
-#userDropdown{display:none;position:absolute;top:calc(100% + 8px);right:0;z-index:200;min-width:185px;background:#071c2f;border:1px solid #1c496e;border-radius:10px;box-shadow:0 18px 45px rgba(0,0,0,.55);padding:6px;backdrop-filter:blur(14px)}
+/* --- Executive 3-Zone Premium Navigation Dock (Nilus Lab Zenith) --- */
+.topbar {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  padding: 0 24px !important;
+  height: 64px !important;
+  background: rgba(3, 14, 25, 0.94) !important;
+  backdrop-filter: blur(24px) !important;
+  -webkit-backdrop-filter: blur(24px) !important;
+  border-bottom: 1px solid rgba(27, 65, 96, 0.65) !important;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.35) !important;
+  position: relative !important;
+  z-index: 100 !important;
+}
+
+/* Zone 1: Left Brand Anchor */
+.topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex: 0 0 auto;
+}
+.brand-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: opacity 0.15s ease;
+}
+.brand-link:hover {
+  opacity: 0.92;
+}
+.nav-logo-responsive {
+  height: 35px !important;
+  max-height: 35px !important;
+  width: auto !important;
+  object-fit: contain;
+  display: block;
+}
+.brand-title-wrap {
+  border-left: 1px solid rgba(34, 80, 117, 0.75);
+  padding-left: 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.brand-title-wrap strong {
+  font-size: 13.5px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: #f7fbff;
+  line-height: 1.2;
+}
+.brand-title-wrap small {
+  color: #7997b0;
+  font-size: 9.5px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  margin-top: 1px;
+}
+
+/* Zone 2: Center Floating Pill Dock */
+.topbar-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1 1 auto;
+  margin: 0 20px;
+}
+.nav-pill-dock {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 4px 5px;
+  background: rgba(5, 18, 30, 0.85);
+  border: 1px solid rgba(28, 70, 104, 0.75);
+  border-radius: 999px;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.4), 0 6px 20px rgba(0, 0, 0, 0.25);
+}
+.nav-pill-dock button {
+  border: 0;
+  background: transparent;
+  color: #8fa8bd;
+  font-size: 11.5px;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+  white-space: nowrap;
+  letter-spacing: -0.01em;
+  outline: 0;
+}
+.nav-pill-dock button:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.08);
+}
+.nav-pill-dock button.active {
+  color: #ffffff !important;
+  background: linear-gradient(180deg, #1872e8 0%, #0d55cd 100%) !important;
+  box-shadow: 0 2px 10px rgba(16, 88, 209, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.25) !important;
+  font-weight: 650;
+}
+
+/* Zone 3: Right Utilities & Authentication */
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 0 0 auto;
+}
+.nav-search-pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 34px;
+  width: 195px;
+  padding: 0 12px;
+  background: rgba(5, 17, 28, 0.85);
+  border: 1px solid rgba(27, 65, 96, 0.7);
+  border-radius: 999px;
+  transition: all 0.2s ease;
+}
+.nav-search-pill:focus-within {
+  border-color: #2689d8;
+  box-shadow: 0 0 0 3px rgba(38, 137, 216, 0.18);
+  background: rgba(6, 21, 35, 0.95);
+  width: 220px;
+}
+.nav-search-pill input {
+  border: 0;
+  background: transparent;
+  color: #e6f0f7;
+  font-size: 11px;
+  outline: 0;
+  width: 100%;
+}
+.nav-search-pill input::placeholder {
+  color: #6d889e;
+}
+.nav-return-link {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 32px;
+  padding: 0 12px;
+  border-radius: 999px;
+  background: rgba(7, 24, 40, 0.7);
+  border: 1px solid rgba(28, 73, 110, 0.65);
+  color: #9bb5c9;
+  text-decoration: none;
+  font-size: 11px;
+  font-weight: 600;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+.nav-return-link:hover {
+  color: #ffffff;
+  border-color: #2b78b0;
+  background: rgba(11, 36, 59, 0.85);
+}
+#authArea {
+  display: flex;
+  align-items: center;
+  margin-left: 2px;
+}
+#signInBtn {
+  display: none;
+  align-items: center;
+  gap: 6px;
+  height: 34px;
+  padding: 0 16px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #1872e8, #0f53c7);
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 11px;
+  font-weight: 700;
+  box-shadow: 0 4px 14px rgba(16, 88, 209, 0.35);
+  transition: all 0.15s ease;
+}
+#signInBtn:hover {
+  filter: brightness(1.1);
+  box-shadow: 0 6px 18px rgba(16, 88, 209, 0.45);
+}
+#userChip {
+  display: none;
+  align-items: center;
+  position: relative;
+}
+#userMenuBtn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 36px;
+  padding: 0 12px 0 4px;
+  border-radius: 999px;
+  background: rgba(7, 24, 40, 0.85);
+  border: 1px solid rgba(28, 73, 110, 0.75);
+  color: #e7f2fa;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+#userMenuBtn:hover {
+  border-color: #2b78b0;
+  background: rgba(11, 36, 59, 0.95);
+}
+.user-avatar-circle {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: linear-gradient(145deg, #2688ff, #105de0);
+  display: grid;
+  place-items: center;
+  font-size: 11px;
+  font-weight: 750;
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(16, 93, 224, 0.4);
+}
+#userDropdown {
+  display: none;
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 200;
+  min-width: 195px;
+  background: #071c2f;
+  border: 1px solid #1c496e;
+  border-radius: 12px;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.6);
+  padding: 6px;
+  backdrop-filter: blur(16px);
+}
+@media (max-width: 1380px) {
+  .nav-pill-dock button {
+    padding: 6px 10px;
+    font-size: 10.5px;
+  }
+  .nav-search-pill {
+    width: 155px;
+  }
+  .brand-title-wrap strong {
+    font-size: 12.5px;
+  }
+}
+@media (max-width: 1220px) {
+  .nav-return-link {
+    display: none;
+  }
+}
 </style>
 </head>
 <body>
 <div class="shell">
 <header class="topbar">
-  <a href="/" class="brand-link" title="Nilus Lab Platform Home">
-    <img src="assets/Bhaa_transparent_darkmode.png" alt="Nilus Lab" class="nav-logo-responsive" onerror="this.style.display='none'">
-    <div style="border-left:1px solid rgba(34,72,101,.7);padding-left:11px;display:flex;flex-direction:column;justify-content:center;">
-      <strong style="display:block;font-size:13.5px;font-weight:750;letter-spacing:-.02em;color:#f7fbff;line-height:1.2;">Structure Intelligence</strong>
-      <small style="display:block;color:#7e9bb5;font-size:9.5px;margin-top:2px;font-weight:500;">Generative Biology · 3.2.0-α6</small>
-    </div>
-  </a>
-  <nav class="nav"><button class="active" id="navStructure">Structure</button><button id="navEvidence">Evidence</button><button id="navCompare">Compare</button><button id="navInterfaces">Interfaces</button><button id="navValidate">Validate</button><button id="navEnsemble">Ensemble</button><button id="navAi">AI Scientist</button><button id="navDocs">Docs</button></nav>
-  <div class="spacer"></div><div class="search"><span style="margin-right:8px">⌕</span><input id="globalSearch" aria-label="Search UniProt" placeholder="Search gene or UniProt accession…" style="border:0;background:transparent;color:#c9d8e5;outline:0;width:100%;font-size:10px"></div><div class="dev-badge" id="devBuildBadge"><b>BOLTZ-2.1 ENGINE</b><span>v3.2.0-α6 · LIVE</span></div>
-  <div id="authArea">
-    <a id="signInBtn" href="login.html?redirect=structure.html">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
-      <span>Sign In</span>
+  <!-- Zone 1: Left Brand Anchor -->
+  <div class="topbar-left">
+    <a href="/" class="brand-link" title="Nilus Lab Platform Home">
+      <img src="assets/Bhaa_transparent_darkmode.png" alt="Nilus Lab" class="nav-logo-responsive" onerror="this.style.display='none'">
+      <div class="brand-title-wrap">
+        <strong>Structure Intelligence</strong>
+        <small>Generative Biology · 3.2.0-α6</small>
+      </div>
     </a>
-    <div id="userChip">
-      <button id="userMenuBtn" onclick="toggleUserDropdown(event)" type="button" aria-label="User Account Menu">
-        <div id="userAvatar" class="avatar" style="width:28px;height:28px;font-size:11px;">U</div>
-        <div style="display:flex;flex-direction:column;align-items:flex-start;text-align:left;line-height:1.2;">
-          <span id="userName" style="font-size:10.5px;font-weight:700;color:#f0f6fc;max-width:105px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">User</span>
-          <span style="font-size:7.5px;color:#5de2b5;display:flex;align-items:center;gap:3px;"><span style="width:4.5px;height:4.5px;border-radius:50%;background:#5de2b5;display:inline-block;"></span>AUTHENTICATED</span>
-        </div>
-        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="color:#7893a8;margin-left:1px;"><polyline points="6 9 12 15 18 9"/></svg>
-      </button>
-      <div id="userDropdown">
-        <div style="padding:8px 10px 6px;border-bottom:1px solid rgba(28,73,110,.6);margin-bottom:4px;">
-          <div style="font-size:8px;text-transform:uppercase;letter-spacing:.08em;color:#6f8aa0;">Signed in as</div>
-          <div id="dropdownUserEmail" style="font-size:10px;font-weight:600;color:#dbe9f4;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:2px;">user@niluslab.com</div>
-        </div>
-        <a href="/profile.html" style="display:flex;align-items:center;gap:8px;width:100%;padding:8px 10px;color:#c9dceb;text-decoration:none;font-size:10px;font-weight:550;border-radius:6px;transition:background .15s;" onmouseover="this.style.background='rgba(23,65,99,.6)'" onmouseout="this.style.background='transparent'">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-          <span>Mainframe Profile</span>
-        </a>
-        <a href="/" style="display:flex;align-items:center;gap:8px;width:100%;padding:8px 10px;color:#c9dceb;text-decoration:none;font-size:10px;font-weight:550;border-radius:6px;transition:background .15s;" onmouseover="this.style.background='rgba(23,65,99,.6)'" onmouseout="this.style.background='transparent'">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-          <span>Platform Home</span>
-        </a>
-        <div style="height:1px;background:rgba(28,73,110,.6);margin:4px 0;"></div>
-        <button onclick="handleSignOut(event)" type="button" style="display:flex;align-items:center;gap:8px;width:100%;padding:8px 10px;color:#ff7989;background:transparent;border:0;font-size:10px;font-weight:600;border-radius:6px;cursor:pointer;transition:background .15s;text-align:left;" onmouseover="this.style.background='rgba(255,121,137,.12)'" onmouseout="this.style.background='transparent'">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-          <span>Sign Out</span>
+  </div>
+
+  <!-- Zone 2: Center Floating Navigation Dock -->
+  <div class="topbar-center">
+    <nav class="nav nav-pill-dock" role="navigation" aria-label="Workspaces">
+      <button class="active" id="navStructure">Structure</button>
+      <button id="navEvidence">Evidence</button>
+      <button id="navCompare">Compare</button>
+      <button id="navInterfaces">Interfaces</button>
+      <button id="navValidate">Validate</button>
+      <button id="navEnsemble">Ensemble</button>
+      <button id="navAi">AI Scientist</button>
+      <button id="navDocs">Docs</button>
+    </nav>
+  </div>
+
+  <!-- Zone 3: Right Utilities & Authentication -->
+  <div class="topbar-right">
+    <div class="nav-search-pill search">
+      <span style="color:#6d889e;font-size:12px;line-height:1;">⌕</span>
+      <input id="globalSearch" aria-label="Search UniProt" placeholder="Search gene or UniProt…">
+    </div>
+
+    <a href="/profile.html" class="nav-return-link" title="Return to Mainframe">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      <span>Mainframe</span>
+    </a>
+
+    <div id="devBuildBadge" style="display:none;"></div>
+
+    <div id="authArea">
+      <a id="signInBtn" href="login.html?redirect=structure.html">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+        <span>Sign In</span>
+      </a>
+      <div id="userChip">
+        <button id="userMenuBtn" onclick="toggleUserDropdown(event)" type="button" aria-label="User Account Menu">
+          <div id="userAvatar" class="avatar user-avatar-circle">U</div>
+          <div style="display:flex;flex-direction:column;align-items:flex-start;text-align:left;line-height:1.2;">
+            <span id="userName" style="font-size:10.5px;font-weight:700;color:#f0f6fc;max-width:105px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">User</span>
+            <span style="font-size:7.5px;color:#5de2b5;display:flex;align-items:center;gap:3px;"><span style="width:4.5px;height:4.5px;border-radius:50%;background:#5de2b5;display:inline-block;"></span>AUTHENTICATED</span>
+          </div>
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="color:#7893a8;margin-left:1px;"><polyline points="6 9 12 15 18 9"/></svg>
         </button>
+        <div id="userDropdown">
+          <div style="padding:8px 10px 6px;border-bottom:1px solid rgba(28,73,110,.6);margin-bottom:4px;">
+            <div style="font-size:8px;text-transform:uppercase;letter-spacing:.08em;color:#6f8aa0;">Signed in as</div>
+            <div id="dropdownUserEmail" style="font-size:10px;font-weight:600;color:#dbe9f4;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:2px;">user@niluslab.com</div>
+          </div>
+          <a href="/profile.html" style="display:flex;align-items:center;gap:8px;width:100%;padding:8px 10px;color:#c9dceb;text-decoration:none;font-size:10px;font-weight:550;border-radius:6px;transition:background .15s;" onmouseover="this.style.background='rgba(23,65,99,.6)'" onmouseout="this.style.background='transparent'">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <span>Mainframe Profile</span>
+          </a>
+          <a href="/" style="display:flex;align-items:center;gap:8px;width:100%;padding:8px 10px;color:#c9dceb;text-decoration:none;font-size:10px;font-weight:550;border-radius:6px;transition:background .15s;" onmouseover="this.style.background='rgba(23,65,99,.6)'" onmouseout="this.style.background='transparent'">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            <span>Platform Home</span>
+          </a>
+          <div style="height:1px;background:rgba(28,73,110,.6);margin:4px 0;"></div>
+          <button onclick="handleSignOut(event)" type="button" style="display:flex;align-items:center;gap:8px;width:100%;padding:8px 10px;color:#ff7989;background:transparent;border:0;font-size:10px;font-weight:600;border-radius:6px;cursor:pointer;transition:background .15s;text-align:left;" onmouseover="this.style.background='rgba(255,121,137,.12)'" onmouseout="this.style.background='transparent'">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+            <span>Sign Out</span>
+          </button>
+        </div>
       </div>
     </div>
   </div>
