@@ -152,6 +152,15 @@ nav, .nav-dock, #mob-nav {
     }
 }
 </style>
+<style>
+/* ── Mobile overflow fix ── */
+@media (max-width: 767px) {
+    html, body { overflow-x: hidden !important; max-width: 100vw !important; }
+    body { padding: 1.5rem !important; }
+    .text-right { display: none !important; }
+    h1.text-7xl { font-size: 2.5rem !important; line-height: 1.1 !important; }
+}
+</style>
 </head>
 
 <body class="p-8 md:p-20 max-w-6xl mx-auto">

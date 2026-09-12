@@ -1340,6 +1340,16 @@ nav, .nav-dock, #mob-nav {
   background: #1E293B;
   margin: 3px 0;
 }
+/* ── Mobile overflow fix ── */
+@media (max-width: 767px) {
+  html, body { overflow-x: hidden !important; max-width: 100vw !important; }
+  .subbar { overflow-x: hidden !important; }
+  .stat-chip { display: none !important; }
+  #authArea { display: none !important; }
+  .subbar-spacer { flex: 0 !important; }
+  .tabs { overflow-x: auto !important; overflow-y: hidden !important; -webkit-overflow-scrolling: touch; }
+  .tab-tools { flex-shrink: 0; }
+}
 </style>
 </head>
 <body>

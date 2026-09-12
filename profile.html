@@ -123,15 +123,10 @@
 
 
         html {
-
-            height: 100%;
-
+            min-height: 100%;
             width: 100%;
-
             margin: 0;
-
             padding: 0;
-
         }
 
         /* Precise Zenith Scrollbar Styling */
@@ -191,17 +186,12 @@
 
 
         body {
-
             margin: 0;
-
             padding: 0;
-
             width: 100%;
-
-            height: 100%;
-
+            min-height: 100%;
             overflow-x: hidden;
-
+            -webkit-font-smoothing: antialiased;
         }
 
 
@@ -3350,23 +3340,85 @@
     </style>
     <!-- Global Mobile Responsiveness Patch -->
     <style>
+        .reprogramming-metrics-grid {
+            display: grid !important;
+            grid-template-columns: repeat(4, 1fr) !important;
+            gap: 1rem !important;
+        }
+
+        @media (max-width: 1024px) {
+            .reprogramming-metrics-grid {
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 0.85rem !important;
+            }
+        }
+
         @media (max-width: 768px) {
-            html, body { overflow-x: hidden !important; width: 100vw !important; }
-            .px-12, .px-24, .px-8, .px-6 { padding-left: 1.5rem !important; padding-right: 1.5rem !important; }
-            .py-24, .py-16 { padding-top: 4rem !important; padding-bottom: 4rem !important; }
-            .text-5xl { font-size: 2.25rem !important; line-height: 1.1 !important; }
-            .text-6xl { font-size: 2.5rem !important; line-height: 1.1 !important; }
-            .text-7xl { font-size: 2.75rem !important; line-height: 1.1 !important; }
-            .grid { gap: 1.5rem !important; }
+            html, body {
+                overflow-x: hidden !important;
+                width: 100% !important;
+                max-width: 100vw !important;
+            }
+            .px-12, .px-24, .px-8, .px-6 { padding-left: 1.25rem !important; padding-right: 1.25rem !important; }
+            .py-24, .py-16 { padding-top: 3rem !important; padding-bottom: 3rem !important; }
+            .text-5xl { font-size: 2rem !important; line-height: 1.15 !important; }
+            .text-6xl { font-size: 2.25rem !important; line-height: 1.15 !important; }
+            .text-7xl { font-size: 2.5rem !important; line-height: 1.15 !important; }
+            .grid { gap: 1.25rem !important; }
             .lg\:grid-cols-2, .lg\:grid-cols-3, .lg\:grid-cols-4 { grid-template-columns: 1fr !important; }
             .nav-links { display: none !important; }
-            .hero { padding: 4rem 1.5rem !important; min-height: auto !important; }
+            .hero { padding: 3.5rem 1.25rem !important; min-height: auto !important; }
             .cap-bento { display: flex !important; flex-direction: column !important; }
-            .cap-card { padding: 2rem !important; }
+            .cap-card { padding: 1.5rem 1.25rem !important; }
             
+            /* Responsive Metric Cards in Rejuvenation Without Risk */
+            .reprogramming-metrics-grid {
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 0.75rem !important;
+            }
+            .reprogramming-metrics-grid > div {
+                padding: 1.15rem 1rem !important;
+            }
+
+            /* Responsive Audit & Trials Cards */
+            .audit-card-body {
+                padding: 1.25rem 1rem !important;
+                gap: 1rem !important;
+            }
+            .audit-card-body h3 {
+                font-size: 17px !important;
+            }
+            .audit-card-body p {
+                font-size: 13px !important;
+            }
+            .audit-card-icon {
+                width: 44px !important;
+                height: 44px !important;
+                border-radius: 14px !important;
+            }
+            .audit-card-icon i, .audit-card-icon svg {
+                width: 20px !important;
+                height: 20px !important;
+            }
+
+            /* Section Padding Reductions for Phones */
+            #proprietary-engines-section {
+                padding: 2rem 1.25rem !important;
+                border-radius: 24px !important;
+            }
+
+            /* Stat Tiles Strip */
+            .stats-grid {
+                gap: 0.75rem !important;
+            }
+            .stats-card-tile {
+                padding: 1.25rem 1rem !important;
+                min-width: 100% !important;
+            }
+
             /* Fix for Sign In Modal Centering */
             .modal-content {
-                padding: 2rem 1.5rem !important;
+                padding: 2rem 1.25rem !important;
                 max-height: 90vh !important;
                 overflow-y: auto !important;
                 margin: auto !important;
@@ -3376,6 +3428,23 @@
                 align-items: center !important;
                 justify-content: center !important;
                 padding: 1rem !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .reprogramming-metrics-grid {
+                grid-template-columns: 1fr !important;
+            }
+            #cookie-consent-banner {
+                padding: 0.85rem 1.25rem !important;
+            }
+            #cookie-consent-banner p {
+                font-size: 11px !important;
+                line-height: 1.5 !important;
+            }
+            #cookie-consent-banner button {
+                padding: 0.45rem 0.85rem !important;
+                font-size: 10px !important;
             }
         }
     </style>
@@ -3723,30 +3792,106 @@ nav, .nav-dock, #mob-nav {
         </nav>
     </div>
 
-    <!-- Premium Mobile Drawer Menu -->
-    <div id="mobile-menu-drawer" class="fixed inset-y-0 right-0 w-[280px] bg-white/95 backdrop-blur-xl border-l border-slate-100 shadow-2xl z-[999] transform translate-x-full transition-transform duration-300 ease-in-out flex flex-col p-8 justify-between nilus-card">
-        <div class="flex flex-col gap-6 pt-16">
-            <a href="#" onclick="toggleMobileMenu(); checkAuthAndRedirect('index.html'); return false;" class="text-[14px] font-black text-slate-900 uppercase tracking-widest hover:text-blue-600 transition-colors">Mainframe</a>
+    <!-- Premium Institutional Mobile Drawer Menu -->
+    <div id="mobile-menu-drawer" class="fixed inset-y-0 right-0 w-[320px] max-w-[88vw] bg-white/98 backdrop-blur-2xl border-l border-slate-200/90 shadow-2xl z-[999] transform translate-x-full transition-transform duration-300 ease-in-out flex flex-col justify-between nilus-card overflow-hidden">
+        
+        <!-- Drawer Top Bar with Brand & Close -->
+        <div class="flex items-center justify-between px-6 py-5 border-b border-slate-100 bg-slate-50/50">
+            <div class="flex items-center gap-2">
+                <img src="assets/nilus_logo.png" alt="Nilus Lab" style="height: 24px; width: auto; display: block;">
+                <span style="font-size: 8px; font-weight: 900; background: #eff6ff; color: #2563eb; border: 1px solid #bfdbfe; padding: 2px 8px; border-radius: 999px; letter-spacing: 0.15em;">V31.1 GOLD</span>
+            </div>
+            <button onclick="toggleMobileMenu()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-600 transition-colors" aria-label="Close Menu">
+                <i data-lucide="x" style="width: 16px; height: 16px;"></i>
+            </button>
+        </div>
+
+        <!-- Scrollable Navigation Area -->
+        <div class="flex-1 overflow-y-auto px-6 py-5 space-y-6" style="-webkit-overflow-scrolling: touch;">
             
-            <div class="flex flex-col gap-3">
-                <span class="text-[11px] font-black text-slate-400 uppercase tracking-widest">Diligence</span>
-                <div class="flex flex-col gap-2 pl-4 border-l border-slate-100">
-                    <a href="zenith_scientific_paper.html" target="_blank" class="text-[12px] font-bold text-slate-600 uppercase tracking-wider hover:text-blue-600">Journal Paper</a>
-                    <a href="evidence.html" class="text-[12px] font-bold text-slate-600 uppercase tracking-wider hover:text-blue-600">Evidence Registry</a>
-                    <a href="scientific_qna.html" class="text-[12px] font-bold text-slate-600 uppercase tracking-wider hover:text-blue-600">Scientific Q&A</a>
-                    <a href="whitepaper.html" class="text-[12px] font-bold text-slate-600 uppercase tracking-wider hover:text-blue-600">Research Whitepaper</a>
-                    <a href="regulatory.html" class="text-[12px] font-bold text-slate-600 uppercase tracking-wider hover:text-blue-600">Regulatory Statement</a>
-                    <a href="v31_clinical_report.html" class="text-[12px] font-bold text-slate-600 uppercase tracking-wider hover:text-blue-600">Clinical Report v31.0</a>
-                    <a href="how_it_works.html" class="text-[12px] font-extrabold text-slate-900 uppercase tracking-wider">How Zenith Works</a>
+            <!-- Quick Action Buttons -->
+            <div class="flex flex-col gap-2.5">
+                <a href="javascript:void(0)" onclick="toggleMobileMenu(); checkAuthAndRedirect('index.html'); return false;" style="display: flex; align-items: center; justify-content: space-between; width: 100%; padding: 0.75rem 1.15rem; border-radius: 12px; background: #0f172a; color: white; font-size: 11px; font-weight: 900; letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none; box-shadow: 0 4px 14px rgba(15,23,42,0.15);">
+                    <span class="flex items-center gap-2">
+                        <i data-lucide="terminal" style="width: 15px; height: 15px; color: #38bdf8;"></i>
+                        Simulation Lab
+                    </span>
+                    <i data-lucide="arrow-right" style="width: 14px; height: 14px; color: #94a3b8;"></i>
+                </a>
+                
+                <a href="login.html" onclick="toggleMobileMenu()" style="display: flex; align-items: center; justify-content: space-between; width: 100%; padding: 0.75rem 1.15rem; border-radius: 12px; background: #f8fafc; color: #2563eb; border: 1px solid #e2e8f0; font-size: 11px; font-weight: 900; letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none;">
+                    <span class="flex items-center gap-2">
+                        <i data-lucide="log-in" style="width: 15px; height: 15px;"></i>
+                        Sign In / Platform Access
+                    </span>
+                    <i data-lucide="shield-check" style="width: 14px; height: 14px; color: #2563eb;"></i>
+                </a>
+            </div>
+
+            <!-- Category: Platform Engines -->
+            <div>
+                <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2.5">Core Engines</span>
+                <div class="flex flex-col space-y-1">
+                    <a href="#" onclick="toggleMobileMenu(); checkAuthAndRedirect('index.html'); return false;" class="flex items-center justify-between py-2 text-[13px] font-bold text-slate-800 hover:text-blue-600 transition-colors">
+                        <span>Zenith Mainframe</span>
+                        <span class="text-[9px] font-black text-blue-600 bg-blue-50 px-2 py-0.5 rounded">v31</span>
+                    </a>
+                    <a href="structure.html" onclick="toggleMobileMenu()" class="flex items-center justify-between py-2 text-[13px] font-bold text-slate-800 hover:text-blue-600 transition-colors">
+                        <span>3D Structure Lab</span>
+                        <span class="text-[9px] font-black text-purple-600 bg-purple-50 px-2 py-0.5 rounded">Mol*</span>
+                    </a>
+                    <a href="trials.html" onclick="toggleMobileMenu()" class="flex items-center justify-between py-2 text-[13px] font-bold text-slate-800 hover:text-blue-600 transition-colors">
+                        <span>Virtual Trials</span>
+                        <span class="text-[9px] font-black text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded">In Silico</span>
+                    </a>
+                    <a href="technical_catalog.html" onclick="toggleMobileMenu()" class="flex items-center justify-between py-2 text-[13px] font-bold text-slate-800 hover:text-blue-600 transition-colors">
+                        <span>Factor Catalog</span>
+                        <span class="text-[9px] font-black text-slate-400">2.42M Cells</span>
+                    </a>
                 </div>
             </div>
-            
-            <a href="technical_catalog.html" onclick="toggleMobileMenu()" class="text-[14px] font-black text-slate-900 uppercase tracking-widest hover:text-blue-600 transition-colors">Catalog</a>
-            
-            <a href="trials.html" onclick="toggleMobileMenu()" class="text-[14px] font-black text-slate-900 uppercase tracking-widest hover:text-blue-600 transition-colors">Trials</a>
 
-            <a href="api.html" onclick="toggleMobileMenu()" class="text-[14px] font-black text-slate-900 uppercase tracking-widest hover:text-blue-600 transition-colors">API</a>
+            <!-- Category: Research Diligence -->
+            <div>
+                <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2.5">Scientific Diligence</span>
+                <div class="flex flex-col space-y-1 pl-3 border-l-2 border-slate-100">
+                    <a href="zenith_scientific_paper.html" target="_blank" class="py-1.5 text-[12px] font-semibold text-slate-600 hover:text-blue-600 transition-colors">Journal Paper</a>
+                    <a href="evidence.html" class="py-1.5 text-[12px] font-semibold text-slate-600 hover:text-blue-600 transition-colors">Evidence Registry</a>
+                    <a href="scientific_qna.html" class="py-1.5 text-[12px] font-semibold text-slate-600 hover:text-blue-600 transition-colors">Scientific Q&A</a>
+                    <a href="whitepaper.html" class="py-1.5 text-[12px] font-semibold text-slate-600 hover:text-blue-600 transition-colors">Research Whitepaper</a>
+                    <a href="v31_clinical_report.html" class="py-1.5 text-[12px] font-semibold text-slate-600 hover:text-blue-600 transition-colors">Clinical Report v31.0</a>
+                    <a href="how_it_works.html" class="py-1.5 text-[12px] font-bold text-slate-900 hover:text-blue-600 transition-colors">How Zenith Works</a>
+                </div>
+            </div>
+
+            <!-- Category: Compliance & Integrations -->
+            <div>
+                <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2.5">Institutional</span>
+                <div class="flex flex-col space-y-1">
+                    <a href="api.html" onclick="toggleMobileMenu()" class="flex items-center justify-between py-2 text-[13px] font-bold text-slate-800 hover:text-blue-600 transition-colors">
+                        <span>Developer API</span>
+                        <span class="text-[9px] font-mono text-slate-400">REST</span>
+                    </a>
+                    <a href="regulatory.html" onclick="toggleMobileMenu()" class="flex items-center justify-between py-2 text-[13px] font-bold text-slate-800 hover:text-blue-600 transition-colors">
+                        <span>Regulatory Roadmap</span>
+                        <span class="text-[9px] font-mono text-slate-400">FDA/EMA</span>
+                    </a>
+                </div>
+            </div>
+
         </div>
+
+        <!-- Institutional Drawer Footer -->
+        <div class="px-6 py-4 border-t border-slate-100 bg-slate-50/70">
+            <div class="flex items-center gap-2 mb-1.5">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span style="font-size: 10px; font-weight: 800; color: #475569; text-transform: uppercase; letter-spacing: 0.1em;">256-bit Encrypted · London Node</span>
+            </div>
+            <div style="font-size: 9px; font-weight: 700; color: #94a3b8;">
+                &copy; 2026 Nilus Lab · Institute of Computation
+            </div>
+        </div>
+
     </div>
     
     <!-- Backdrop Overlay -->
@@ -3803,7 +3948,7 @@ nav, .nav-dock, #mob-nav {
                     How Zenith Outperforms Legacy Methods
                 </h2>
                 <p style="color: #64748b; font-size: 16px; max-width: 800px; margin: 0 auto; line-height: 1.6;">
-                    Compare traditional direct reprogramming with Zenith's precision gene control for cardiac reverse biological aging. Zenith v31 translates high-throughput chromatin profiles into precise multivalent reprogramming cocktails â€” reversing biological age in 2.42M real human cardiac cells while eliminating oncogenic risk.
+                    Compare traditional direct reprogramming with Zenith's precision gene control for cardiac reverse biological aging. Zenith v31 translates high-throughput chromatin profiles into precise multivalent reprogramming cocktails — reversing biological age in 2.42M real human cardiac cells while eliminating oncogenic risk.
                 </p>
             </div>
 
@@ -4059,19 +4204,19 @@ nav, .nav-dock, #mob-nav {
                 <div class="stats-card-tile reactive-tilt flex-1 min-w-[220px] text-center cursor-default">
                     <div style="position: absolute; top: -20px; right: -20px; width: 80px; height: 80px; background: radial-gradient(circle, rgba(37, 99, 235, 0.04) 0%, transparent 70%); border-radius: 50%;"></div>
                     <p style="font-family: 'Outfit', sans-serif; font-size: 36px; font-weight: 900; color: #0f172a; letter-spacing: -0.03em; margin-bottom: 0.5rem; line-height: 1;">2.42M</p>
-                    <p style="font-size: 10px; font-weight: 800; color: #64748b; text-transform: uppercase; letter-spacing: 0.25em;">Cells Analyzed Â· Dual-Model Ensemble</p>
+                    <p style="font-size: 10px; font-weight: 800; color: #64748b; text-transform: uppercase; letter-spacing: 0.25em;">Cells Analyzed · Dual-Model Ensemble</p>
                 </div>
 
                 <div class="stats-card-tile reactive-tilt flex-1 min-w-[220px] text-center cursor-default">
                     <div style="position: absolute; top: -20px; right: -20px; width: 80px; height: 80px; background: radial-gradient(circle, rgba(37, 99, 235, 0.04) 0%, transparent 70%); border-radius: 50%;"></div>
                     <p style="font-family: 'Outfit', sans-serif; font-size: 36px; font-weight: 900; color: #0f172a; letter-spacing: -0.03em; margin-bottom: 0.5rem; line-height: 1;">99.8%</p>
-                    <p style="font-size: 10px; font-weight: 800; color: #64748b; text-transform: uppercase; letter-spacing: 0.25em;">Stability Â· Zero Oncogenic Risk</p>
+                    <p style="font-size: 10px; font-weight: 800; color: #64748b; text-transform: uppercase; letter-spacing: 0.25em;">Stability · Zero Oncogenic Risk</p>
                 </div>
 
                 <div class="stats-card-tile reactive-tilt flex-1 min-w-[220px] text-center cursor-default">
                     <div style="position: absolute; top: -20px; right: -20px; width: 80px; height: 80px; background: radial-gradient(circle, rgba(37, 99, 235, 0.04) 0%, transparent 70%); border-radius: 50%;"></div>
                     <p style="font-family: 'Outfit', sans-serif; font-size: 36px; font-weight: 900; color: #0f172a; letter-spacing: -0.03em; margin-bottom: 0.5rem; line-height: 1;">T4 GPU</p>
-                    <p style="font-size: 10px; font-weight: 800; color: #64748b; text-transform: uppercase; letter-spacing: 0.25em;">Live Training Â· 400 Epochs</p>
+                    <p style="font-size: 10px; font-weight: 800; color: #64748b; text-transform: uppercase; letter-spacing: 0.25em;">Live Training · 400 Epochs</p>
                 </div>
             </div>
         </div>
@@ -4603,7 +4748,7 @@ nav, .nav-dock, #mob-nav {
 
                         </div>
 
-                        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem;">
+                        <div class="reprogramming-metrics-grid">
 
                             <!-- Metric 1 -->
 
@@ -4817,9 +4962,9 @@ nav, .nav-dock, #mob-nav {
 
                         <div style="width: 5px; background: linear-gradient(180deg, #3b82f6, #1d4ed8); flex-shrink: 0; border-radius: 24px 0 0 24px;"></div>
 
-                        <div style="padding: 2rem 2.5rem; flex: 1; display: flex; align-items: center; gap: 2rem;">
+                        <div class="audit-card-body" style="padding: 2rem 2.5rem; flex: 1; display: flex; align-items: center; gap: 2rem;">
 
-                            <div style="width: 56px; height: 56px; background: linear-gradient(135deg, #eff6ff, #dbeafe); border-radius: 18px; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(191,219,254,0.5); flex-shrink: 0;">
+                            <div class="audit-card-icon" style="width: 56px; height: 56px; background: linear-gradient(135deg, #eff6ff, #dbeafe); border-radius: 18px; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(191,219,254,0.5); flex-shrink: 0;">
 
                                 <i data-lucide="activity" style="width: 24px; height: 24px; color: #2563eb;"></i>
 
@@ -4859,9 +5004,9 @@ nav, .nav-dock, #mob-nav {
 
                         <div style="width: 5px; background: linear-gradient(180deg, #3b82f6, #1d4ed8); flex-shrink: 0; border-radius: 24px 0 0 24px;"></div>
 
-                        <div style="padding: 2rem 2.5rem; flex: 1; display: flex; align-items: center; gap: 2rem;">
+                        <div class="audit-card-body" style="padding: 2rem 2.5rem; flex: 1; display: flex; align-items: center; gap: 2rem;">
 
-                            <div style="width: 56px; height: 56px; background: linear-gradient(135deg, #eff6ff, #dbeafe); border-radius: 18px; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(191,219,254,0.5); flex-shrink: 0;">
+                            <div class="audit-card-icon" style="width: 56px; height: 56px; background: linear-gradient(135deg, #eff6ff, #dbeafe); border-radius: 18px; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(191,219,254,0.5); flex-shrink: 0;">
 
                                 <i data-lucide="scale" style="width: 24px; height: 24px; color: #2563eb;"></i>
 
@@ -5164,22 +5309,22 @@ nav, .nav-dock, #mob-nav {
                 </div>
 
                 <!-- Module 4: Nextflow QC -->
-                <div class="p-10 rounded-[32px] border border-slate-100 bg-white shadow-xl relative overflow-hidden transition-all duration-500 hover:-translate-y-2 hover:border-purple-500/30 group md:col-span-2">
+                <div class="p-6 sm:p-10 rounded-[32px] border border-slate-100 bg-white shadow-xl relative overflow-hidden transition-all duration-500 hover:-translate-y-2 hover:border-purple-500/30 group md:col-span-2">
                     <div class="absolute top-0 right-0 w-64 h-64 bg-purple-500/5 rounded-full blur-3xl group-hover:bg-purple-500/10 transition-all"></div>
-                    <div style="display: flex; gap: 2rem; align-items: center; position: relative; z-index: 2;">
+                    <div style="display: flex; gap: 2rem; align-items: center; position: relative; z-index: 2;" class="flex-col sm:flex-row">
                         <div style="flex: 1;">
                             <div class="w-14 h-14 rounded-2xl bg-purple-500/10 flex items-center justify-center mb-6 border border-purple-500/20 group-hover:scale-110 transition-transform">
                                 <i data-lucide="activity-square" class="w-7 h-7 text-purple-600"></i>
                             </div>
                             <h3 class="text-2xl font-black text-slate-900 mb-4" style="font-family: 'Outfit', sans-serif;">Nextflow QC Monitor</h3>
-                            <p class="text-sm text-slate-500 leading-relaxed font-medium mb-6 max-w-xl">Slide-over drawer monitoring live sequencing runs, demultiplexing, and enforcing $\le 15\%$ mitochondrial read leakage filters.</p>
+                            <p class="text-sm text-slate-500 leading-relaxed font-medium mb-6 max-w-xl">Slide-over drawer monitoring live sequencing runs, demultiplexing, and enforcing ≤ 15% mitochondrial read leakage filters.</p>
                             <span class="px-4 py-1.5 bg-purple-50 border border-purple-100 rounded-full text-[10px] font-black text-purple-700 uppercase tracking-widest">Pipeline Telemetry</span>
                         </div>
                     </div>
                 </div>
 
                 <!-- Module 5: Robotic Echo Protocol -->
-                <div class="p-10 rounded-[32px] border border-slate-100 bg-white shadow-xl relative overflow-hidden transition-all duration-500 hover:-translate-y-2 hover:border-orange-500/30 group">
+                <div class="p-6 sm:p-10 rounded-[32px] border border-slate-100 bg-white shadow-xl relative overflow-hidden transition-all duration-500 hover:-translate-y-2 hover:border-orange-500/30 group">
                     <div class="absolute top-0 right-0 w-32 h-32 bg-orange-500/5 rounded-full blur-3xl group-hover:bg-orange-500/10 transition-all"></div>
                     <div class="w-14 h-14 rounded-2xl bg-orange-500/10 flex items-center justify-center mb-8 border border-orange-500/20 group-hover:scale-110 transition-transform">
                         <i data-lucide="cpu" class="w-7 h-7 text-orange-600"></i>
@@ -5434,7 +5579,7 @@ nav, .nav-dock, #mob-nav {
                         <span class="api-badge" style="background: #eff6ff; border: 1px solid #bfdbfe; color: #2563eb;">Nilus Atomix</span>
                     </div>
                     <h3 class="text-lg font-black text-white mb-3" style="font-family: 'Outfit', sans-serif;">Protein Structure Prediction</h3>
-                    <p class="text-sm text-slate-400 leading-relaxed font-medium mb-5">Submit amino acid sequences and receive predicted 3D coordinates in PDB format via Nilus Atomix â€” with synthetic fallback for high availability.</p>
+                    <p class="text-sm text-slate-400 leading-relaxed font-medium mb-5">Submit amino acid sequences and receive predicted 3D coordinates in PDB format via Nilus Atomix — with synthetic fallback for high availability.</p>
                     <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
                         <span class="api-method api-method-post">POST</span>
                         <span class="api-endpoint">/api/v1/structure/fold</span>
@@ -6103,29 +6248,25 @@ nav, .nav-dock, #mob-nav {
 
     </style>
 
-    <div style="max-width: 80rem; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 2rem; flex-wrap: wrap;">
+    <div class="cookie-banner-inner" style="max-width: 80rem; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 1.25rem; flex-wrap: wrap;">
 
-        <div style="flex: 1; min-width: 280px;">
+        <div style="flex: 1; min-width: 240px;">
 
-            <p style="font-size: 13px; color: #e2e8f0; font-weight: 500; line-height: 1.6; margin: 0;">
+            <p class="cookie-text" style="font-size: 12px; color: #e2e8f0; font-weight: 500; line-height: 1.5; margin: 0;">
 
-                <strong style="color: white;">     Cookie Compliance</strong>   
-
-                We use essential cookies for authentication and anonymous telemetry to maintain platform stability. 
-
-                No personal data is used for model training. 
-
-                <a href="legal.html#privacy" style="color: #2563eb; text-decoration: underline; font-weight: 700;">Privacy Policy</a>
+                <strong style="color: white;">Cookie Compliance:</strong>   
+                We use essential cookies for authentication and telemetry to ensure platform stability. 
+                <a href="legal.html#privacy" style="color: #60a5fa; text-decoration: underline; font-weight: 700;">Privacy Policy</a>
 
             </p>
 
         </div>
 
-        <div style="display: flex; gap: 12px; flex-shrink: 0;">
+        <div class="cookie-btn-row" style="display: flex; gap: 8px; flex-shrink: 0;">
 
-            <button onclick="declineCookies()" style="background: transparent; color: #94a3b8; border: 1px solid #334155; padding: 0.6rem 1.5rem; border-radius: 999px; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; cursor: pointer; transition: all 0.3s ease;" onmouseover="this.style.borderColor='#64748b'; this.style.color='#e2e8f0';" onmouseout="this.style.borderColor='#334155'; this.style.color='#94a3b8';">Decline Optional</button>
+            <button onclick="declineCookies()" style="background: transparent; color: #94a3b8; border: 1px solid #334155; padding: 0.45rem 1.15rem; border-radius: 999px; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; cursor: pointer; transition: all 0.3s ease;" onmouseover="this.style.borderColor='#64748b'; this.style.color='#e2e8f0';" onmouseout="this.style.borderColor='#334155'; this.style.color='#94a3b8';">Decline</button>
 
-            <button onclick="acceptCookies()" style="background: linear-gradient(135deg, #2563eb, #3b82f6); color: white; border: none; padding: 0.6rem 1.5rem; border-radius: 999px; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 16px rgba(37,99,235,0.3);" onmouseover="this.style.transform='translateY(-1px)'; this.style.boxShadow='0 6px 20px rgba(37,99,235,0.4)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 16px rgba(37,99,235,0.3)';">Accept All</button>
+            <button onclick="acceptCookies()" style="background: linear-gradient(135deg, #2563eb, #3b82f6); color: white; border: none; padding: 0.45rem 1.25rem; border-radius: 999px; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 16px rgba(37,99,235,0.3);" onmouseover="this.style.transform='translateY(-1px)'; this.style.boxShadow='0 6px 20px rgba(37,99,235,0.4)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 16px rgba(37,99,235,0.3)';">Accept All</button>
 
         </div>
 
