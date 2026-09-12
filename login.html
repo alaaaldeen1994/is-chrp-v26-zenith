@@ -135,21 +135,47 @@
     @media (max-width: 1023px) {
       html, body {
         height: auto;
+        min-height: 100%;
+        background: #f4f4f2;
       }
       
       .page-shell {
-        padding: 0;
+        padding: 20px 14px;
         height: auto;
         min-height: 100vh;
-        display: block;
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
 
       .main-card {
         height: auto;
-        min-height: 100vh;
+        min-height: auto;
         max-height: none;
-        border-radius: 0;
-        border: none;
+        max-width: 520px;
+        border-radius: 28px;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 12px 36px rgba(15, 23, 42, 0.08);
+        background: #ffffff;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .page-shell {
+        padding: 12px 10px;
+      }
+
+      .main-card {
+        border-radius: 22px;
+      }
+    }
+
+    /* Prevent iOS Safari Auto-Zoom on Form Focus */
+    @media screen and (max-width: 768px) {
+      input[type="email"],
+      input[type="password"],
+      input[type="text"] {
+        font-size: 16px !important;
       }
     }
   </style>
@@ -202,47 +228,49 @@ nav, .nav-dock, #mob-nav {
       <div class="grid h-full min-h-[calc(100vh-32px)] grid-cols-1 lg:grid-cols-[43%_57%] lg:max-h-screen lg:overflow-hidden">
 
         <!-- LEFT PANEL -->
-        <div class="bg-[#fbfbfa] border-r border-[#e5e7eb] px-6 sm:px-10 xl:px-14 py-6 flex flex-col justify-between h-full overflow-y-auto">
+        <div class="bg-[#ffffff] lg:bg-[#fbfbfa] border-r border-transparent lg:border-[#e5e7eb] px-5 sm:px-10 xl:px-14 py-6 sm:py-8 flex flex-col justify-between h-full overflow-y-auto">
 
           <!-- Header -->
-          <header class="flex-shrink-0 mb-4 lg:mb-0">
-            <a href="profile.html" class="inline-flex items-center gap-3">
-              <div class="w-8 h-8 flex items-center justify-center">
-                <svg class="w-7 h-7 text-[#2563eb]" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                  <path d="M32 10L51 20L32 30L13 20L32 10Z" />
-                  <path d="M51 30L32 40L13 30" />
-                  <path d="M51 40L32 50L13 40" />
-                </svg>
-              </div>
+          <header class="flex-shrink-0 mb-4 flex items-center justify-between">
+            <a href="https://www.niluslab.com/" id="main-site-logo-link" class="inline-flex items-center gap-2.5 group" title="Nilus Lab Zenith Platform">
+              <img src="assets/nilus_logo.png" alt="Nilus Lab" class="h-8 sm:h-9 w-auto object-contain transition group-hover:opacity-85" />
+              <span class="text-[#c7cbd1]">|</span>
+              <span class="font-outfit text-[15px] sm:text-[17px] tracking-[0.18em] font-bold uppercase text-[#0f172a]">
+                Zenith
+              </span>
+            </a>
 
-              <div class="flex items-center gap-3">
-                <span class="font-outfit text-[16px] md:text-[18px] tracking-[0.18em] font-bold uppercase text-[#111827]">
-                  Nilus Lab
-                </span>
-                <span class="text-[#c7cbd1]">|</span>
-                <span class="font-outfit text-[16px] md:text-[18px] tracking-[0.18em] font-medium uppercase text-[#1f2937]">
-                  Zenith
-                </span>
-              </div>
+            <a href="https://www.niluslab.com/" id="back-to-site-link" class="inline-flex items-center gap-1.5 text-[12px] font-semibold text-slate-500 hover:text-blue-600 transition" title="Return to Main Page">
+              <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i>
+              <span class="hidden sm:inline">Main Page</span>
             </a>
           </header>
 
           <!-- Form area -->
-          <div class="my-auto py-4 w-full max-w-[460px] mx-auto flex-shrink-0">
-            <h1 id="auth-title" class="font-outfit text-[26px] sm:text-[30px] xl:text-[34px] leading-tight tracking-[-0.035em] font-semibold text-[#0f172a]">
+          <div class="my-auto py-2 sm:py-4 w-full max-w-[460px] mx-auto flex-shrink-0">
+            <!-- Node Badge -->
+            <div class="inline-flex items-center gap-2 px-3 py-1 bg-blue-50/80 border border-blue-100 rounded-full text-[10px] sm:text-[11px] font-bold tracking-wider uppercase text-blue-700 mb-3">
+              <span class="w-1.5 h-1.5 rounded-full bg-blue-600 animate-pulse"></span>
+              v31.0 GOLD · Enterprise Node
+            </div>
+
+            <h1 id="auth-title" class="font-outfit text-[24px] sm:text-[28px] xl:text-[32px] leading-tight tracking-[-0.035em] font-bold text-[#0f172a]">
               Access Zenith Platform
             </h1>
+            <p id="auth-subtitle" class="text-[13px] sm:text-[14px] text-slate-500 mt-1 mb-4 font-normal">
+              Sign in to access your cellular rejuvenation models & dashboard.
+            </p>
 
             <!-- Error -->
-            <div id="error-alert" class="hidden mt-4 p-3 bg-red-50 border border-red-200 rounded-xl text-red-700 text-sm font-medium flex gap-3 items-start">
+            <div id="error-alert" class="hidden mt-3 p-3 bg-red-50 border border-red-200 rounded-xl text-red-700 text-sm font-medium flex gap-3 items-start">
               <i data-lucide="alert-circle" class="w-4 h-4 mt-0.5 flex-shrink-0"></i>
               <span id="error-message"></span>
             </div>
 
             <!-- Google -->
-            <div class="mt-3.5">
-              <button onclick="signInWithGoogle()" type="button" class="w-full h-[45px] rounded-xl border border-[#d9dde2] bg-white hover:bg-[#fcfcfc] hover:border-[#c4cad1] flex items-center justify-center gap-3 text-[14px] font-semibold text-[#111827] transition">
-                <svg class="w-4 h-4" viewBox="0 0 24 24" aria-hidden="true">
+            <div class="mt-2">
+              <button onclick="signInWithGoogle()" type="button" class="w-full h-[48px] rounded-xl border border-[#d9dde2] bg-white hover:bg-[#fcfcfc] hover:border-[#c4cad1] active:scale-[0.99] flex items-center justify-center gap-3 text-[14px] font-semibold text-[#111827] shadow-sm transition">
+                <svg class="w-4 h-4 flex-shrink-0" viewBox="0 0 24 24" aria-hidden="true">
                   <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
                   <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
                   <path fill="#FBBC05" d="M5.84 14.1c-.22-.66-.35-1.36-.35-2.1s.13-1.44.35-2.1V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l3.66-2.84z"/>
@@ -253,7 +281,7 @@ nav, .nav-dock, #mob-nav {
             </div>
 
             <!-- Divider -->
-            <div class="relative my-3 flex items-center">
+            <div class="relative my-4 flex items-center">
               <div class="flex-1 divider-line"></div>
               <span class="mx-4 text-[10px] font-bold uppercase tracking-[0.2em] text-[#8a9099]">OR</span>
               <div class="flex-1 divider-line"></div>
@@ -270,7 +298,7 @@ nav, .nav-dock, #mob-nav {
                   <input
                     type="email"
                     id="email"
-                    class="auth-input w-full h-[46px] rounded-xl border border-[#d7dbe0] bg-white pl-11 pr-4 text-[14px] text-[#111827] placeholder:text-[#8b919a]"
+                    class="auth-input w-full h-[48px] rounded-xl border border-[#d7dbe0] bg-white pl-11 pr-4 text-[16px] sm:text-[14px] text-[#111827] placeholder:text-[#8b919a]"
                     placeholder="name@organization.com"
                     required
                   />
@@ -282,7 +310,7 @@ nav, .nav-dock, #mob-nav {
                   <label for="password" class="block text-[10px] font-bold uppercase tracking-[0.12em] text-[#111827]">
                     Password
                   </label>
-                  <a href="javascript:void(0)" onclick="handlePasswordReset()" class="text-[11px] font-medium text-[#5d6470] hover:text-[#111827] transition">
+                  <a href="javascript:void(0)" onclick="handlePasswordReset()" class="text-[11px] font-semibold text-[#5d6470] hover:text-[#111827] transition">
                     Forgot?
                   </a>
                 </div>
@@ -292,17 +320,17 @@ nav, .nav-dock, #mob-nav {
                   <input
                     type="password"
                     id="password"
-                    class="auth-input w-full h-[46px] rounded-xl border border-[#d7dbe0] bg-white pl-11 pr-11 text-[14px] text-[#111827] placeholder:text-[#8b919a]"
+                    class="auth-input w-full h-[48px] rounded-xl border border-[#d7dbe0] bg-white pl-11 pr-12 text-[16px] sm:text-[14px] text-[#111827] placeholder:text-[#8b919a]"
                     placeholder="••••••••"
                     required
                   />
-                  <button type="button" onclick="togglePassword()" class="absolute right-4 top-1/2 -translate-y-1/2 text-[#8a9099] hover:text-[#111827]">
+                  <button type="button" onclick="togglePassword()" class="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 flex items-center justify-center text-[#8a9099] hover:text-[#111827]" aria-label="Toggle password visibility">
                     <i id="toggle-eye" data-lucide="eye" class="w-4 h-4"></i>
                   </button>
                 </div>
               </div>
 
-              <button type="submit" id="submit-btn" class="primary-btn w-full h-[48px] rounded-xl font-semibold text-[15px] flex items-center justify-center gap-3">
+              <button type="submit" id="submit-btn" class="primary-btn w-full h-[48px] rounded-xl font-semibold text-[15px] flex items-center justify-center gap-3 active:scale-[0.99] transition shadow-md">
                 <span id="btn-text">Sign in to Zenith</span>
                 <i data-lucide="arrow-right" class="w-4 h-4"></i>
               </button>
@@ -317,9 +345,20 @@ nav, .nav-dock, #mob-nav {
                 </a>
               </p>
             </div>
+
+            <!-- Trust / Compliance footer on mobile & desktop -->
+            <div class="mt-6 pt-4 border-t border-slate-200/60 flex flex-col sm:flex-row items-center justify-between gap-2 text-[11px] text-slate-500">
+              <div class="flex items-center gap-1.5">
+                <i data-lucide="shield-check" class="w-3.5 h-3.5 text-emerald-600 flex-shrink-0"></i>
+                <span>256-bit Encrypted Session</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <a href="regulatory.html" class="hover:text-slate-800 transition">Regulatory</a>
+                <span>•</span>
+                <a href="legal.html" class="hover:text-slate-800 transition">Security & Privacy</a>
+              </div>
+            </div>
           </div>
-
-
         </div>
 
         <!-- RIGHT PANEL -->
@@ -384,8 +423,36 @@ nav, .nav-dock, #mob-nav {
   <script>
     let isSignUp = false;
 
-    const urlParams = new URLSearchParams(window.location.search);
-    const redirectUrl = urlParams.get('redirect') || 'index.html';
+    // Helper: Determine canonical main page URL
+    function getMainPageUrl() {
+      if (window.location.hostname.includes('niluslab.com')) {
+        return 'https://www.niluslab.com/';
+      }
+      return window.location.origin ? (window.location.origin + '/') : '/';
+    }
+
+    // Helper: Resolve post-login destination (sanitizing index.html or profile.html to main page)
+    function getRedirectDestination() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const redirectParam = urlParams.get('redirect');
+      if (!redirectParam || 
+          redirectParam === 'index.html' || 
+          redirectParam === '/index.html' || 
+          redirectParam === 'login.html' || 
+          redirectParam === 'profile.html') {
+        return getMainPageUrl();
+      }
+      return redirectParam;
+    }
+
+    // Initialize links dynamically
+    document.addEventListener('DOMContentLoaded', () => {
+      const targetMain = getMainPageUrl();
+      const logoLink = document.getElementById('main-site-logo-link');
+      const backLink = document.getElementById('back-to-site-link');
+      if (logoLink) logoLink.href = targetMain;
+      if (backLink) backLink.href = targetMain;
+    });
 
     function toggleAuthMode() {
       isSignUp = !isSignUp;
@@ -431,7 +498,7 @@ nav, .nav-dock, #mob-nav {
       try {
         alertBox.classList.add('hidden');
         await firebase.auth().signInWithPopup(provider);
-        window.location.href = redirectUrl;
+        window.location.href = getRedirectDestination();
       } catch (error) {
         alertBox.classList.remove('hidden');
         alertText.innerText = error.message;
@@ -459,7 +526,7 @@ nav, .nav-dock, #mob-nav {
           await firebase.auth().signInWithEmailAndPassword(email, password);
         }
 
-        window.location.href = redirectUrl;
+        window.location.href = getRedirectDestination();
       } catch (error) {
         submitBtn.disabled = false;
         submitBtn.innerHTML = `<span>${isSignUp ? 'Create account' : 'Sign in to Zenith'}</span><i data-lucide="arrow-right" class="w-5 h-5"></i>`;
@@ -502,13 +569,13 @@ nav, .nav-dock, #mob-nav {
       if (userKey) {
         localStorage.setItem('zenith_session_token', userKey);
         alert('Hardware Token authenticated. Session token saved to localStorage.');
-        window.location.href = redirectUrl;
+        window.location.href = getRedirectDestination();
       }
     }
 
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
-        window.location.href = redirectUrl;
+        window.location.href = getRedirectDestination();
       }
     });
 

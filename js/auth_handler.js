@@ -83,10 +83,16 @@ async function handleAuth(e) {
         lucide.createIcons();
 
         setTimeout(() => {
-            // Check if there's a redirect URL in the query params
+            // Resolve redirect destination (defaulting to https://www.niluslab.com/ main page)
             const urlParams = new URLSearchParams(window.location.search);
-            const redirectUrl = urlParams.get('redirect');
-            window.location.href = redirectUrl || "index.html"; // Default to simulation
+            const redirectParam = urlParams.get('redirect');
+            const mainPageUrl = window.location.hostname.includes('niluslab.com')
+                ? 'https://www.niluslab.com/'
+                : (window.location.origin ? window.location.origin + '/' : '/');
+            const target = (!redirectParam || redirectParam === 'index.html' || redirectParam === '/index.html' || redirectParam === 'profile.html')
+                ? mainPageUrl
+                : redirectParam;
+            window.location.href = target;
         }, 1000);
 
     } catch (error) {
