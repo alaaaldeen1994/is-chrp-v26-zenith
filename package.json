@@ -1,0 +1,17 @@
+{
+  "name": "nilus-lab-structure-intelligence",
+  "version": "3.2.0-alpha.6",
+  "private": true,
+  "description": "Nilus Lab stabilized all-phases dev build with native local server, diagnostics, refined preliminary protein QC, and real scientific validation.",
+  "scripts": {
+    "dev": "node tools/local-dev-server.js",
+    "check": "node --check api/boltz.js && node --check api/pae.js && node --check api/alphafold.js && node --check api/references.js && node --check api/compare.js && node --check api/interfaces.js && node --check api/qc.js && node --check api/ensemble.js && node --check lib/boltz-client.js && node --check lib/pae-parser.js && node --check lib/prediction-source.js && node --check lib/structure-analysis.js && node tools/test-analysis.js && node tools/check-frontend.js && node --check tools/local-dev-server.js && node --check tools/diagnose.js && node -e \"const p=require('./package.json');if(p.scripts.dev!=='node tools/local-dev-server.js'){console.error('Local dev startup configuration invalid');process.exit(1)}\"",
+    "dev:vercel": "npx vercel@latest dev --listen 3001",
+    "test:scientific:real": "node tools/test-scientific-real.js",
+    "test:scientific:real:live": "node tools/test-scientific-real.js --base-url=http://localhost:3001",
+    "diagnose": "node tools/diagnose.js"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

@@ -1646,7 +1646,21 @@ async def lifespan(app: FastAPI):
 
     
 
+    # Start structure analysis background engine if Node is available
+    try:
+        from structure_api_bridge import init_structure_node_worker
+        await init_structure_node_worker()
+    except Exception as e:
+        print(f"[STRUCTURE-BRIDGE] Startup warning: {e}")
+
     yield
+
+    # Cleanly stop structure background engine on shutdown
+    try:
+        from structure_api_bridge import shutdown_structure_node_worker
+        await shutdown_structure_node_worker()
+    except Exception as e:
+        print(f"[STRUCTURE-BRIDGE] Shutdown warning: {e}")
 
     zenith_foundation_v1 = None
 
@@ -2036,6 +2050,8 @@ app.mount("/af3_jobs", StaticFiles(directory="af3_jobs"), name="af3_jobs")
 if not os.path.exists("vendor"):
     os.makedirs("vendor")
 app.mount("/vendor", StaticFiles(directory="vendor"), name="vendor")
+from structure_api_bridge import structure_router
+app.include_router(structure_router)
 
 
 

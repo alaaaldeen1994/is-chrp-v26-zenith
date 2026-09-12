@@ -9,11 +9,13 @@ ENV PORT 8080
 # Set the working directory in the container
 WORKDIR /app
 
-# Install system dependencies (libgomp1 is critical for torch/scvi on Linux)
+# Install system dependencies (libgomp1 is critical for torch/scvi on Linux, nodejs for 3D structure engine)
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     libgomp1 \
     curl \
+    && curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
+    && apt-get install -y --no-install-recommends nodejs \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy the requirements file into the container at /app

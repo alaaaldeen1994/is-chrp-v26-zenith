@@ -52,3 +52,7 @@ node_modules/
 dist/
 build/
 .env
+.env.local
+.env.*.local
+tools/.validation-cache/
+validation-results/
