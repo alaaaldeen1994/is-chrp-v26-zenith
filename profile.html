@@ -2588,7 +2588,7 @@
 
             [class*="w-full md:w-[450px]"],
 
-            .aspect-video img, img {
+            .aspect-video img {
 
                 width: 100% !important;
 
@@ -3358,67 +3358,194 @@
                 overflow-x: hidden !important;
                 width: 100% !important;
                 max-width: 100vw !important;
+                box-sizing: border-box !important;
             }
-            .px-12, .px-24, .px-8, .px-6 { padding-left: 1.25rem !important; padding-right: 1.25rem !important; }
-            .py-24, .py-16 { padding-top: 3rem !important; padding-bottom: 3rem !important; }
-            .text-5xl { font-size: 2rem !important; line-height: 1.15 !important; }
-            .text-6xl { font-size: 2.25rem !important; line-height: 1.15 !important; }
-            .text-7xl { font-size: 2.5rem !important; line-height: 1.15 !important; }
-            .grid { gap: 1.25rem !important; }
-            .lg\:grid-cols-2, .lg\:grid-cols-3, .lg\:grid-cols-4 { grid-template-columns: 1fr !important; }
-            .nav-links { display: none !important; }
-            .hero { padding: 3.5rem 1.25rem !important; min-height: auto !important; }
-            .cap-bento { display: flex !important; flex-direction: column !important; }
-            .cap-card { padding: 1.5rem 1.25rem !important; }
-            
-            /* Responsive Metric Cards in Rejuvenation Without Risk */
-            .reprogramming-metrics-grid {
-                grid-template-columns: repeat(2, 1fr) !important;
-                gap: 0.75rem !important;
+            .global-dna-bg {
+                width: 100% !important;
+                max-width: 100vw !important;
+                overflow: hidden !important;
             }
-            .reprogramming-metrics-grid > div {
-                padding: 1.15rem 1rem !important;
+            .hero-video {
+                max-width: 100% !important;
+                transform: scale(1.1) translate(0, 0) !important;
+                opacity: 0.35 !important;
             }
 
-            /* Responsive Audit & Trials Cards */
-            .audit-card-body {
-                padding: 1.25rem 1rem !important;
-                gap: 1rem !important;
-            }
-            .audit-card-body h3 {
-                font-size: 17px !important;
-            }
-            .audit-card-body p {
-                font-size: 13px !important;
-            }
-            .audit-card-icon {
-                width: 44px !important;
+            .px-12, .px-24, .px-8, .px-6 { padding-left: 1rem !important; padding-right: 1rem !important; }
+            .py-24, .py-16 { padding-top: 2.5rem !important; padding-bottom: 2.5rem !important; }
+            .text-4xl { font-size: 1.75rem !important; line-height: 1.15 !important; }
+            .text-5xl { font-size: 1.9rem !important; line-height: 1.15 !important; }
+            .text-6xl { font-size: 2.1rem !important; line-height: 1.15 !important; }
+            .text-7xl { font-size: 2.25rem !important; line-height: 1.15 !important; }
+            .grid { gap: 1rem !important; }
+            .lg\:grid-cols-2, .lg\:grid-cols-3, .lg\:grid-cols-4 { grid-template-columns: 1fr !important; }
+            .nav-links { display: none !important; }
+            .hero { padding: 3rem 1rem !important; min-height: auto !important; }
+            .hero-section { padding: 5.5rem 1rem 2rem !important; }
+            .hero-btn-primary, .hero-btn-secondary {
+                width: 100% !important;
+                max-width: 100% !important;
                 height: 44px !important;
-                border-radius: 14px !important;
+                padding: 0.65rem 1.25rem !important;
+                font-size: 10.5px !important;
+                justify-content: center !important;
             }
-            .audit-card-icon i, .audit-card-icon svg {
+
+            /* --- Discovery / Cocktail Comparison Section (Fixes Right-Edge Truncation) --- */
+            #discovery-section {
+                padding: 2rem 0 !important;
+            }
+            #discovery-section .max-w-7xl {
+                padding-left: 0.75rem !important;
+                padding-right: 0.75rem !important;
+            }
+            .discovery-card {
+                padding: 1.25rem 0.85rem !important;
+                border-radius: 20px !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                box-sizing: border-box !important;
+                overflow: hidden !important;
+            }
+            #panel-gmt > div, #panel-zenith > div {
+                flex-direction: column !important;
+                gap: 1.25rem !important;
+                width: 100% !important;
+            }
+            #panel-gmt > div > div, #panel-zenith > div > div {
+                min-width: 0 !important;
+                max-width: 100% !important;
+                width: 100% !important;
+                flex: 1 1 auto !important;
+                box-sizing: border-box !important;
+            }
+            #panel-gmt h3, #panel-zenith h3 {
+                font-size: 21px !important;
+                line-height: 1.2 !important;
+            }
+            #panel-gmt p, #panel-zenith p {
+                font-size: 13.5px !important;
+                line-height: 1.6 !important;
+            }
+            #panel-gmt div[style*="min-width: 300px"],
+            #panel-zenith div[style*="min-width: 300px"] {
+                padding: 1.25rem 1rem !important;
+                border-radius: 18px !important;
+            }
+
+            /* --- Workflow Bento Section (Fixes 104px Right Offset & Card Clipping) --- */
+            .cm-grid-wrap,
+            #workflow-section div[style*="display: flex; gap: 3rem"] {
+                gap: 0 !important;
+                flex-direction: column !important;
+            }
+            /* Hide the vertical timeline column on mobile */
+            .cm-timeline-col,
+            #workflow-section div[style*="width: 16px"] {
+                display: none !important;
+            }
+            .cm-card {
+                padding: 1.25rem 1rem !important;
+                border-radius: 18px !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                box-sizing: border-box !important;
+                overflow: hidden !important;
+            }
+            .cm-card > div[style*="display: flex"] {
+                gap: 0.85rem !important;
+            }
+            .cm-step-num {
+                font-size: 40px !important;
+                top: 0.5rem !important;
+                right: 0.75rem !important;
+                opacity: 0.05 !important;
+            }
+            .cm-icon-wrap {
+                width: 42px !important;
+                height: 42px !important;
+                border-radius: 12px !important;
+            }
+            .cm-icon-wrap svg, .cm-icon-wrap i {
                 width: 20px !important;
                 height: 20px !important;
             }
+            .cm-card h3 {
+                font-size: 18px !important;
+                margin-bottom: 4px !important;
+            }
+            .cm-card p {
+                font-size: 13px !important;
+                line-height: 1.55 !important;
+            }
 
-            /* Section Padding Reductions for Phones */
+            /* --- Responsive Metric Cards in Rejuvenation Without Risk --- */
+            .reprogramming-metrics-grid {
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 0.65rem !important;
+            }
+            .reprogramming-metrics-grid > div {
+                padding: 1rem 0.85rem !important;
+                border-radius: 16px !important;
+            }
+
+            /* --- Responsive Platform Module Cards --- */
+            .audit-card-body {
+                padding: 1rem 0.85rem !important;
+                gap: 0.85rem !important;
+                flex-wrap: wrap !important;
+            }
+            .audit-card-body h3 {
+                font-size: 16px !important;
+            }
+            .audit-card-body p {
+                font-size: 12.5px !important;
+                line-height: 1.5 !important;
+            }
+            .audit-card-icon {
+                width: 40px !important;
+                height: 40px !important;
+                border-radius: 12px !important;
+            }
+            .audit-card-icon i, .audit-card-icon svg {
+                width: 18px !important;
+                height: 18px !important;
+            }
+
+            /* --- Section Padding Reductions for Phones --- */
             #proprietary-engines-section {
-                padding: 2rem 1.25rem !important;
-                border-radius: 24px !important;
+                padding: 1.75rem 0.85rem !important;
+                border-radius: 20px !important;
+            }
+            #capabilities-section {
+                padding: 1.75rem 0.85rem !important;
+                border-radius: 20px !important;
+            }
+            .cap-bento { display: flex !important; flex-direction: column !important; gap: 1rem !important; }
+            .cap-card { padding: 1.25rem 1rem !important; border-radius: 18px !important; }
+
+            #empirical-validation-section {
+                padding: 1.75rem 0.85rem !important;
+                border-radius: 20px !important;
+            }
+            #empirical-validation-section .p-8 {
+                padding: 1.25rem 1rem !important;
+                border-radius: 18px !important;
             }
 
             /* Stat Tiles Strip */
             .stats-grid {
-                gap: 0.75rem !important;
+                gap: 0.65rem !important;
             }
             .stats-card-tile {
-                padding: 1.25rem 1rem !important;
+                padding: 1.15rem 0.85rem !important;
                 min-width: 100% !important;
+                border-radius: 16px !important;
             }
 
             /* Fix for Sign In Modal Centering */
             .modal-content {
-                padding: 2rem 1.25rem !important;
+                padding: 1.75rem 1rem !important;
                 max-height: 90vh !important;
                 overflow-y: auto !important;
                 margin: auto !important;
@@ -3429,22 +3556,38 @@
                 justify-content: center !important;
                 padding: 1rem !important;
             }
+
+            /* --- Ultra-Clean, Non-Intrusive Mobile Cookie Banner --- */
+            #cookie-consent-banner {
+                padding: 0.65rem 1rem !important;
+                border-top: 1px solid rgba(255,255,255,0.12) !important;
+            }
+            .cookie-banner-inner {
+                gap: 0.5rem !important;
+                flex-direction: column !important;
+                align-items: stretch !important;
+            }
+            .cookie-text {
+                font-size: 10px !important;
+                line-height: 1.35 !important;
+            }
+            .cookie-btn-row {
+                width: 100% !important;
+                display: flex !important;
+                gap: 8px !important;
+            }
+            .cookie-btn-row button {
+                flex: 1 !important;
+                padding: 0.35rem 0.5rem !important;
+                font-size: 9.5px !important;
+                text-align: center !important;
+                border-radius: 8px !important;
+            }
         }
 
         @media (max-width: 480px) {
             .reprogramming-metrics-grid {
                 grid-template-columns: 1fr !important;
-            }
-            #cookie-consent-banner {
-                padding: 0.85rem 1.25rem !important;
-            }
-            #cookie-consent-banner p {
-                font-size: 11px !important;
-                line-height: 1.5 !important;
-            }
-            #cookie-consent-banner button {
-                padding: 0.45rem 0.85rem !important;
-                font-size: 10px !important;
             }
         }
     </style>
@@ -3781,7 +3924,7 @@ nav, .nav-dock, #mob-nav {
                     </div>
 
                     <!-- Hamburger Button for Mobile Menu Drawer -->
-                    <button id="mobile-menu-toggle" onclick="toggleMobileMenu()" class="flex md:hidden text-slate-900 hover:text-blue-600 p-2 focus:outline-none transition-colors z-[1001]" aria-label="Toggle Menu">
+                    <button id="mobile-menu-toggle" onclick="toggleMobileMenu()" class="flex md:hidden text-slate-900 hover:text-blue-600 p-2 focus:outline-none transition-colors" aria-label="Toggle Menu">
                         <i data-lucide="menu" class="w-6 h-6" id="menu-icon-hamburger"></i>
                         <i data-lucide="x" class="w-6 h-6 hidden" id="menu-icon-close"></i>
                     </button>
@@ -3793,15 +3936,15 @@ nav, .nav-dock, #mob-nav {
     </div>
 
     <!-- Premium Institutional Mobile Drawer Menu -->
-    <div id="mobile-menu-drawer" class="fixed inset-y-0 right-0 w-[320px] max-w-[88vw] bg-white/98 backdrop-blur-2xl border-l border-slate-200/90 shadow-2xl z-[999] transform translate-x-full transition-transform duration-300 ease-in-out flex flex-col justify-between nilus-card overflow-hidden">
+    <div id="mobile-menu-drawer" class="fixed inset-y-0 right-0 w-[300px] max-w-[85vw] bg-white backdrop-blur-2xl border-l border-slate-200 shadow-2xl z-[1050] transform translate-x-full transition-transform duration-300 ease-in-out flex flex-col justify-between nilus-card overflow-hidden">
         
         <!-- Drawer Top Bar with Brand & Close -->
-        <div class="flex items-center justify-between px-6 py-5 border-b border-slate-100 bg-slate-50/50">
+        <div class="flex items-center justify-between px-5 py-4 border-b border-slate-100 bg-slate-50/70">
             <div class="flex items-center gap-2">
-                <img src="assets/nilus_logo.png" alt="Nilus Lab" style="height: 24px; width: auto; display: block;">
-                <span style="font-size: 8px; font-weight: 900; background: #eff6ff; color: #2563eb; border: 1px solid #bfdbfe; padding: 2px 8px; border-radius: 999px; letter-spacing: 0.15em;">V31.1 GOLD</span>
+                <img src="assets/nilus_logo.png" alt="Nilus Lab" class="drawer-nav-logo" style="height: 22px !important; width: auto !important; max-width: 110px !important; object-fit: contain !important; display: block;">
+                <span style="font-size: 8px; font-weight: 800; background: #eff6ff; color: #2563eb; border: 1px solid #bfdbfe; padding: 2px 7px; border-radius: 999px; letter-spacing: 0.1em; white-space: nowrap;">V31.1 GOLD</span>
             </div>
-            <button onclick="toggleMobileMenu()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-600 transition-colors" aria-label="Close Menu">
+            <button onclick="toggleMobileMenu()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-700 transition-colors" aria-label="Close Menu">
                 <i data-lucide="x" style="width: 16px; height: 16px;"></i>
             </button>
         </div>
@@ -3895,7 +4038,7 @@ nav, .nav-dock, #mob-nav {
     </div>
     
     <!-- Backdrop Overlay -->
-    <div id="mobile-menu-backdrop" onclick="toggleMobileMenu()" class="fixed inset-0 bg-slate-900/10 backdrop-blur-sm z-[998] hidden opacity-0 transition-opacity duration-300 nilus-card"></div>
+    <div id="mobile-menu-backdrop" onclick="toggleMobileMenu()" class="fixed inset-0 bg-slate-900/20 backdrop-blur-sm z-[1040] hidden opacity-0 transition-opacity duration-300"></div>
     <!-- Hero Section -->
     <section class="hero-section">
         <div class="hero-container animate-fade-in-up">
@@ -3930,7 +4073,7 @@ nav, .nav-dock, #mob-nav {
                         </svg>
                     </a>
                 </div>
-
+            </div>
         </div>
     </section>
 
@@ -4536,11 +4679,11 @@ nav, .nav-dock, #mob-nav {
 
             <!-- Creative Bento Grid with Timeline -->
 
-            <div style="display: flex; gap: 3rem;">
+            <div class="cm-grid-wrap" style="display: flex; gap: 3rem;">
 
                 <!-- Left: Animated Vertical Timeline -->
 
-                <div style="display: flex; flex-direction: column; align-items: center; padding-top: 2.5rem; flex-shrink: 0; width: 16px;">
+                <div class="cm-timeline-col" style="display: flex; flex-direction: column; align-items: center; padding-top: 2.5rem; flex-shrink: 0; width: 16px;">
 
                     <div class="cm-timeline-dot"></div>
 
@@ -4920,9 +5063,9 @@ nav, .nav-dock, #mob-nav {
 
                         <div style="width: 5px; background: linear-gradient(180deg, #3b82f6, #1d4ed8); flex-shrink: 0; border-radius: 24px 0 0 24px;"></div>
 
-                        <div style="padding: 2rem 2.5rem; flex: 1; display: flex; align-items: center; gap: 2rem;">
+                        <div class="audit-card-body" style="padding: 2rem 2.5rem; flex: 1; display: flex; align-items: center; gap: 2rem;">
 
-                            <div style="width: 56px; height: 56px; background: linear-gradient(135deg, #eff6ff, #dbeafe); border-radius: 18px; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(191,219,254,0.5); flex-shrink: 0;">
+                            <div class="audit-card-icon" style="width: 56px; height: 56px; background: linear-gradient(135deg, #eff6ff, #dbeafe); border-radius: 18px; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(191,219,254,0.5); flex-shrink: 0;">
 
                                 <i data-lucide="layout-dashboard" style="width: 24px; height: 24px; color: #2563eb;"></i>
 
@@ -5140,7 +5283,7 @@ nav, .nav-dock, #mob-nav {
                 <span class="text-[10px] font-black text-blue-500 uppercase tracking-[0.5em] mb-4 block">Empirical Validation</span>
                 <h2 class="text-5xl font-black text-slate-900 mb-6 tracking-tight" style="font-family: 'Outfit', sans-serif;">Three Experiments.<br>Three Breakthroughs.</h2>
                 <p class="text-xl text-slate-500 max-w-3xl leading-relaxed font-medium">
-                    Each result is generated autonomously by Zenith â€” no manual protein-picking, no cherry-picked outcomes.
+                    Each result is generated autonomously by Zenith &mdash; no manual protein-picking, no cherry-picked outcomes.
                 </p>
             </div>
             
@@ -5547,7 +5690,7 @@ nav, .nav-dock, #mob-nav {
                 </div>
                 <h2 class="text-6xl font-black text-slate-900 leading-[1.05] tracking-tight" style="font-family: 'Outfit', sans-serif;">Programmatic Access.</h2>
                 <p class="text-xl text-slate-500 leading-relaxed font-medium max-w-3xl mt-6">
-                    Production-grade REST API with authenticated endpoints, HMAC-signed webhook callbacks, and industry-standard AnnData serialization â€” built for computational biology pipelines.
+                    Production-grade REST API with authenticated endpoints, HMAC-signed webhook callbacks, and industry-standard AnnData serialization &mdash; built for computational biology pipelines.
                 </p>
             </div>
 
