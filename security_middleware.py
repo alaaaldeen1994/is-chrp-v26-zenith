@@ -55,6 +55,10 @@ class CSRFMiddleware(BaseHTTPMiddleware):
         if request.method in ["GET", "HEAD", "OPTIONS"] or request.url.path == "/health":
             return await call_next(request)
         
+        # Skip CSRF for requests authenticating with an API key
+        if request.headers.get("X-API-Key") or request.headers.get("x-api-key"):
+            return await call_next(request)
+        
         # Skip CSRF for paths that use API Key authentication
         api_key_paths = [
             "/simulate_step", "/discover_protocol", "/discover_hybrid", "/impute", 
@@ -64,7 +68,11 @@ class CSRFMiddleware(BaseHTTPMiddleware):
             return await call_next(request)
         
         # Validate CSRF token for all other POST/PUT/DELETE requests
-        csrf_token = request.headers.get("X-CSRF-Token") or request.cookies.get("csrf_token")
+        csrf_token = (
+            request.headers.get("X-CSRF-Token")
+            or request.headers.get("x-csrf-token")
+            or request.cookies.get("csrf_token")
+        )
         
         if not csrf_token or not csrf_protection.validate_token(csrf_token):
             return JSONResponse(
@@ -208,7 +216,7 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
         # Production CSP: Restrict to known trusted domains
         response.headers["Content-Security-Policy"] = (
             "default-src 'self'; "
-            "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.tailwindcss.com https://cdn.jsdelivr.net https://apis.google.com https://www.gstatic.com https://unpkg.com https://cdnjs.cloudflare.com; "
+            "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://3Dmol.org https://cdn.tailwindcss.com https://cdn.jsdelivr.net https://apis.google.com https://www.gstatic.com https://unpkg.com https://cdnjs.cloudflare.com; "
             "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net https://unpkg.com https://cdnjs.cloudflare.com; "
             "img-src 'self' data: blob: https:; "
             "font-src 'self' data: https://fonts.gstatic.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; "

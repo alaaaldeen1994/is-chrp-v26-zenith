@@ -55,6 +55,9 @@ const server=http.createServer(async(req,res)=>{
     const pkg=require('../package.json');
     return json(res,200,{ok:true,service:'Nilus Lab local dev server',version:pkg.version,port:PORT,boltz_key_configured:!!process.env.BOLTZ_API_KEY,env_file_loaded:envInfo.loaded,api_routes:Object.keys(apiRoutes)});
   }
+  if(u.pathname==='/api/csrf-token'){
+    return json(res,200,{csrf_token:'local-dev-csrf-token'});
+  }
   const handler=apiRoutes[u.pathname];
   if(handler){
     try{return await handler(req,res);}catch(e){if(!res.headersSent)return json(res,500,{error:e?.message||'Unhandled local API error.'});try{res.end();}catch{}}
