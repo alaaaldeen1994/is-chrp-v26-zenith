@@ -1505,16 +1505,11 @@ function applyViewerStyle(){
   }
   else if(STATE.style==='surface'){
     v.setStyle({},{});
-    const surfStyle = {};
+    const surfStyle = { opacity: 0.94 };
     if(STATE.chainColor){
       surfStyle.colorscheme = 'chain';
-      surfStyle.opacity = 0.94;
-    } else if(predicted && STATE.surfaceMode === 'plddt'){
-      surfStyle.colorfunc = plddtColor;
-      surfStyle.opacity = 0.94;
     } else {
-      surfStyle.color = '#6B9685';
-      surfStyle.opacity = 0.94;
+      surfStyle.colorfunc = plddtColor;
     }
     try{
       v.addSurface($3Dmol.SurfaceType.MS, surfStyle, {}, {}, {}, ()=>{ v.render(); });
@@ -1534,18 +1529,7 @@ function applyViewerStyle(){
   v.render();
 }
 function initViewerControls(){
-  $$('[data-style]').forEach(b=>b.onclick=()=>{
-    if(b.dataset.style==='surface' && STATE.style==='surface' && !!STATE.prediction){
-      STATE.surfaceMode = STATE.surfaceMode === 'plddt' ? 'boltz' : 'plddt';
-      toast(STATE.surfaceMode === 'plddt' ? 'Surface: Scientific pLDDT Confidence' : 'Surface: Boltz Sculptural Alabaster');
-    } else {
-      $$('[data-style]').forEach(x=>x.classList.toggle('active',x===b));
-      STATE.style=b.dataset.style;
-      STATE.chainColor=false;
-      $('#chainColor').classList.remove('active');
-    }
-    applyViewerStyle();
-  });
+  $$('[data-style]').forEach(b=>b.onclick=()=>{ $$('[data-style]').forEach(x=>x.classList.toggle('active',x===b)); STATE.style=b.dataset.style; STATE.chainColor=false; $('#chainColor').classList.remove('active'); applyViewerStyle(); });
   $('#chainColor').onclick=()=>{ STATE.chainColor=!STATE.chainColor; $('#chainColor').classList.toggle('active',STATE.chainColor); applyViewerStyle(); };
   $('#resetBtn').onclick=()=>{ STATE.viewer?.zoomTo(); STATE.viewer?.render(); };
   $('#spinBtn').onclick=()=>{ if(!STATE.viewer)return; STATE.spin=!STATE.spin; STATE.viewer.spin(STATE.spin?'y':false); $('#spinBtn').classList.toggle('active',STATE.spin); };
