@@ -25,7 +25,7 @@ body{overflow:hidden;background:
   radial-gradient(1000px 600px at 50% -180px,rgba(10,116,255,.05),transparent 65%),
   #01060D}
 button,input,textarea,select{font:inherit}button{cursor:pointer}
-.shell{height:100vh;display:grid;grid-template-rows:var(--top) auto 1fr;min-width:1100px;overflow:hidden}
+.shell{height:100vh;display:grid;grid-template-rows:var(--top) 1fr;min-width:1100px}
 .topbar{display:flex;align-items:center;gap:26px;padding:0 17px;border-bottom:1px solid rgba(34,72,101,.8);background:rgba(4,17,29,.96);backdrop-filter:blur(18px);z-index:50;box-shadow:0 8px 30px rgba(0,0,0,.12)}
 .brand{display:flex;align-items:center;gap:11px;min-width:250px}.logo{width:40px;height:40px;border-radius:13px;background:linear-gradient(145deg,#2da3ff,#1258e8 72%);display:grid;place-items:center;font-weight:800;font-size:16px;box-shadow:0 0 0 1px rgba(255,255,255,.18) inset,0 10px 24px rgba(18,101,232,.28);position:relative}.logo:after{content:'◇';font-size:21px;color:#d7f3ff;transform:rotate(45deg)}
 .brand strong{display:block;font-size:18px;letter-spacing:-.02em}.brand small{display:block;color:#8da6bb;font-size:11px;margin-top:2px}
@@ -1048,84 +1048,6 @@ select:focus {
     </div>
   </div>
 </header>
-
-<!-- ── Platform Hero Banner ─────────────────────────────────────────── -->
-<div id="platformHeroBanner" style="
-  position:relative;
-  width:100%;
-  overflow:hidden;
-  max-height:340px;
-  background:#010810;
-  border-bottom:1px solid rgba(14,44,69,.7);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  flex-shrink:0;
-">
-  <img
-    src="assets/structure_hero.png"
-    alt="Nilus Lab Structure Intelligence Platform · Scientific Analysis for Protein 3D Structures"
-    style="
-      width:100%;
-      max-height:340px;
-      object-fit:cover;
-      object-position:center 20%;
-      display:block;
-      opacity:.92;
-      filter:brightness(.88) saturate(1.08);
-    "
-  />
-  <!-- gradient overlay — bottom fade into the dark app background -->
-  <div style="
-    position:absolute;inset:0;
-    background:linear-gradient(
-      to bottom,
-      rgba(1,6,13,0) 0%,
-      rgba(1,6,13,0) 55%,
-      rgba(1,6,13,.55) 78%,
-      rgba(1,6,13,.92) 93%,
-      rgba(1,6,13,1) 100%
-    );
-    pointer-events:none;
-  "></div>
-  <!-- text overlay -->
-  <div style="
-    position:absolute;
-    bottom:24px;left:32px;
-    z-index:2;
-    pointer-events:none;
-  ">
-    <div style="font-size:11px;font-weight:700;letter-spacing:.18em;color:#5eb8ff;text-transform:uppercase;margin-bottom:4px;">
-      Nilus Lab · Structure Intelligence 3.2.0-alpha.6
-    </div>
-    <div style="font-size:22px;font-weight:800;letter-spacing:-.03em;color:#eaf5ff;line-height:1.1;">
-      Scientific Platform for Protein Structure Analysis
-    </div>
-    <div style="font-size:11px;color:#7dacc4;margin-top:5px;">
-      Evidence-aware prediction · 3D visualisation · Biophysical validation · Ensemble intelligence
-    </div>
-  </div>
-  <!-- dismiss button -->
-  <button
-    id="heroDismissBtn"
-    onclick="document.getElementById('platformHeroBanner').style.display='none';sessionStorage.setItem('heroDismissed','1');"
-    title="Hide banner"
-    style="
-      position:absolute;top:12px;right:14px;z-index:3;
-      background:rgba(4,18,30,.8);border:1px solid rgba(30,80,120,.6);
-      color:#7dacc4;border-radius:6px;padding:5px 9px;font-size:10px;cursor:pointer;
-      backdrop-filter:blur(8px);
-    "
-  >✕ Hide</button>
-</div>
-<script>
-  // Auto-hide if dismissed this session
-  if(sessionStorage.getItem('heroDismissed')==='1'){
-    var hb=document.getElementById('platformHeroBanner');
-    if(hb)hb.style.display='none';
-  }
-</script>
-
 <main class="workspace">
   <aside class="col left">
     <section class="card prediction-card">
