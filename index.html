@@ -1210,6 +1210,7 @@ const STATE = {
   currentSampleIndex:null, bestSampleIndex:null, paeMeta:null,
   pdbReferences:[], lastComparison:null, advancedInterfaces:null, advancedQc:null, advancedEnsemble:null, compareViewer:null, interfaceViewer:null
 };
+window.STATE = STATE;
 
 function toast(msg, err=false){ const el=$('#toast'); if(!el)return; el.textContent=msg; el.className='toast show'+(err?' err':''); clearTimeout(toast._t); toast._t=setTimeout(()=>el.className='toast',4200); }
 function log(msg, cls=''){ const box=$('#runLog'); if(!box)return; const d=document.createElement('div'); d.className=cls; d.textContent=new Date().toLocaleTimeString()+'  '+msg; box.appendChild(d); box.scrollTop=box.scrollHeight; }
