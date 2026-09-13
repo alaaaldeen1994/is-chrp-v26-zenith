@@ -2337,9 +2337,9 @@ function handleSignOut(e){
   localStorage.removeItem('ZENITH_DEMO_BYPASS');
   localStorage.removeItem('nilus_demo_mode');
   if(typeof firebase !== 'undefined' && firebase.auth){
-    firebase.auth().signOut().then(()=>{ location.reload(); }).catch(()=>{ location.reload(); });
+    firebase.auth().signOut().then(()=>{ window.location.href = 'login.html?redirect=structure.html'; }).catch(()=>{ window.location.href = 'login.html?redirect=structure.html'; });
   } else {
-    location.reload();
+    window.location.href = 'login.html?redirect=structure.html';
   }
 }
 window.handleSignOut = handleSignOut;
@@ -2350,9 +2350,12 @@ function initAuth(){
   const uAv = document.getElementById('userAvatar');
   const uName = document.getElementById('userName');
   const dEmail = document.getElementById('dropdownUserEmail');
+  const isDemo = localStorage.getItem('ZENITH_DEMO_BYPASS') === 'true' || localStorage.getItem('nilus_demo_mode') === 'true';
+
   if(typeof firebase === 'undefined' || !firebase.auth){
-    if(sBtn) sBtn.style.display = 'inline-flex';
-    if(uChip) uChip.style.display = 'none';
+    if(!isDemo){
+      window.location.href = 'login.html?redirect=structure.html';
+    }
     return;
   }
   try {
@@ -2371,15 +2374,23 @@ function initAuth(){
           initials = user.email.substring(0, 2).toUpperCase();
         }
         if(uAv) uAv.textContent = initials;
+      } else if(isDemo){
+        if(sBtn) sBtn.style.display = 'none';
+        if(uChip) uChip.style.display = 'flex';
+        if(uName) uName.textContent = 'DEMO RESEARCHER';
+        if(dEmail) dEmail.textContent = 'demo@niluslab.com';
+        if(uAv) uAv.textContent = 'DM';
       } else {
-        if(uChip) uChip.style.display = 'none';
-        if(sBtn) sBtn.style.display = 'inline-flex';
+        // Enforce Authentication Guard: redirect unauthenticated visitors to login
+        console.warn('[AUTH] Unauthorized access to structure.html. Redirecting to login...');
+        window.location.href = 'login.html?redirect=structure.html';
       }
     });
   } catch(err){
     console.warn('[AUTH] Firebase auth check error:', err);
-    if(sBtn) sBtn.style.display = 'inline-flex';
-    if(uChip) uChip.style.display = 'none';
+    if(!isDemo){
+      window.location.href = 'login.html?redirect=structure.html';
+    }
   }
 }
 
