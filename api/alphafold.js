@@ -14,7 +14,7 @@ module.exports = async function handler(req, res) {
 
   try {
     const url = `https://alphafold.ebi.ac.uk/api/prediction/${encodeURIComponent(accession)}`;
-    const response = await fetch(url, { headers: { accept: 'application/json' }, signal: AbortSignal.timeout(15_000) });
+    const response = await fetch(url, { headers: { accept: 'application/json', 'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36 NilusLab/3.2' }, signal: AbortSignal.timeout(15_000) });
     if (response.status === 404) return json(res, 404, { error: 'No AlphaFold DB prediction was found for this accession.' });
     if (!response.ok) return json(res, 502, { error: `AlphaFold DB API returned ${response.status}.` });
     const entries = await response.json();

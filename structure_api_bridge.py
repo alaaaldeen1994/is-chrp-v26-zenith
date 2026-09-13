@@ -241,7 +241,7 @@ async def api_alphafold(request: Request):
     url = f"https://alphafold.ebi.ac.uk/api/prediction/{accession}"
     try:
         async with httpx.AsyncClient(timeout=15.0) as client:
-            r = await client.get(url, headers={"accept": "application/json"})
+            r = await client.get(url, headers={"accept": "application/json", "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36 NilusLab/3.2"})
             if r.status_code == 404:
                 return Response(content='{"error":"No AlphaFold DB prediction found"}', status_code=404, media_type="application/json")
             if r.status_code != 200:
