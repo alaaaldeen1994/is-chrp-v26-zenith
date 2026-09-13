@@ -1135,7 +1135,7 @@ select:focus {
 
     <section class="card viewer" id="viewerCard">
       <div class="viewer-title">Interactive 3D Structure</div><div class="viewer-sub">Drag to rotate · Scroll to zoom · click residues to inspect</div>
-      <div class="viewer-tools"><button class="active" data-style="cartoon">Ribbon</button><button data-style="surface">Surface</button><button data-style="stick">Stick</button><button id="chainColor">Chains</button><button id="fullBtn">⛶</button></div>
+      <div class="viewer-tools"><button class="active" data-style="cartoon">Ribbon</button><button data-style="surface">Surface</button><button data-style="stick">Stick</button><button id="chainColor">Chains</button><button id="hbondBtn" title="Toggle Hydrogen Bonds & Non-Covalent Contacts">⚡ H-Bonds</button><button id="fullBtn">⛶</button></div>
       <div class="legend"><b>pLDDT confidence</b><div class="leg"><i class="sw" style="background:#0053D6"></i>Very high (90–100)</div><div class="leg"><i class="sw" style="background:#65CBF3"></i>High (70–90)</div><div class="leg"><i class="sw" style="background:#FFDB13"></i>Low (50–70)</div><div class="leg"><i class="sw" style="background:#FF7D45"></i>Very low (&lt;50)</div></div>
       <div class="axis">Y ↑<br>Z ↙ &nbsp; X →</div><div class="viewer-source" id="viewerSource">Experimental reference preview · PDB 4I5I</div>
       <div class="viewer-actions"><button id="resetBtn">↻ Reset</button><button id="spinBtn">▷ Auto-rotate</button><button id="screenBtn">▣ Screenshot</button></div>
@@ -1209,7 +1209,7 @@ const STATE = {
   residueNeighbors:[], geometryAudit:null, provenanceHash:null, afdb:null,
   currentSampleIndex:null, bestSampleIndex:null, paeMeta:null,
   pdbReferences:[], lastComparison:null, advancedInterfaces:null, advancedQc:null, advancedEnsemble:null, compareViewer:null, interfaceViewer:null,
-  surfaceMode:'boltz'
+  surfaceMode:'boltz', showHbonds:false, hbondShapes:[], hbondLabels:[]
 };
 window.STATE = STATE;
 
@@ -1526,17 +1526,297 @@ function applyViewerStyle(){
     v.setStyle({},{cartoon:{colorfunc:polymerColor,colorscheme:polymerScheme,thickness:.30}});
     addMolecularAccents();
   }
+  if(STATE.showHbonds){
+    renderInteractions3D(STATE.selectedResidue||null);
+  } else {
+    clearInteractions3D();
+  }
   v.render();
 }
 function initViewerControls(){
   $$('[data-style]').forEach(b=>b.onclick=()=>{ $$('[data-style]').forEach(x=>x.classList.toggle('active',x===b)); STATE.style=b.dataset.style; STATE.chainColor=false; $('#chainColor').classList.remove('active'); applyViewerStyle(); });
   $('#chainColor').onclick=()=>{ STATE.chainColor=!STATE.chainColor; $('#chainColor').classList.toggle('active',STATE.chainColor); applyViewerStyle(); };
+  $('#hbondBtn').onclick=()=>{
+    STATE.showHbonds=!STATE.showHbonds;
+    $('#hbondBtn').classList.toggle('active',STATE.showHbonds);
+    if(STATE.showHbonds){
+      renderInteractions3D(STATE.selectedResidue||null);
+    }else{
+      clearInteractions3D();
+      applyViewerStyle();
+    }
+  };
   $('#resetBtn').onclick=()=>{ STATE.viewer?.zoomTo(); STATE.viewer?.render(); };
   $('#spinBtn').onclick=()=>{ if(!STATE.viewer)return; STATE.spin=!STATE.spin; STATE.viewer.spin(STATE.spin?'y':false); $('#spinBtn').classList.toggle('active',STATE.spin); };
   $('#screenBtn').onclick=()=>{ try{ const a=document.createElement('a'); a.href=STATE.viewer.pngURI(); a.download='nilus-structure.png'; a.click(); }catch{toast('Screenshot export is not supported in this browser.',true);} };
   $('#fullBtn').onclick=()=>$('#viewerCard').requestFullscreen?.();
   $('#downloadBtn').onclick=downloadStructure; $('#shareBtn').onclick=sharePrediction;
 }
+
+// ---------- Scientific Hydrogen Bond & Non-Covalent Contact Engine ----------
+const HBOND_DONORS = {
+  ALL: new Set(['N']),
+  ARG: new Set(['NE','NH1','NH2']),
+  ASN: new Set(['ND2']),
+  GLN: new Set(['NE2']),
+  HIS: new Set(['ND1','NE2']),
+  LYS: new Set(['NZ']),
+  SER: new Set(['OG']),
+  THR: new Set(['OG1']),
+  TRP: new Set(['NE1']),
+  TYR: new Set(['OH'])
+};
+const HBOND_ACCEPTORS = {
+  ALL: new Set(['O']),
+  ASP: new Set(['OD1','OD2']),
+  GLU: new Set(['OE1','OE2']),
+  ASN: new Set(['OD1']),
+  GLN: new Set(['OE1']),
+  HIS: new Set(['ND1','NE2']),
+  SER: new Set(['OG']),
+  THR: new Set(['OG1']),
+  TYR: new Set(['OH'])
+};
+const BASIC_ATOMS = {
+  ARG: new Set(['NE','NH1','NH2']),
+  LYS: new Set(['NZ']),
+  HIS: new Set(['ND1','NE2'])
+};
+const ACIDIC_ATOMS = {
+  ASP: new Set(['OD1','OD2']),
+  GLU: new Set(['OE1','OE2'])
+};
+
+function detectInteractions(targetResidue=null){
+  if(!STATE.viewer||!STATE.model)return[];
+  const atoms=STATE.viewer.selectedAtoms({}).filter(a=>Number.isFinite(a.x)&&Number.isFinite(a.y)&&Number.isFinite(a.z)&&a.resi!=null);
+  if(!atoms.length)return[];
+
+  let candidateAtoms=atoms;
+  let focusAtoms=atoms;
+  if(targetResidue){
+    focusAtoms=atoms.filter(a=>(a.chain||'')===(targetResidue.chain||'')&&Number(a.resi)===Number(targetResidue.resi));
+    if(!focusAtoms.length)return[];
+    const focusCoords=focusAtoms.map(a=>({x:a.x,y:a.y,z:a.z}));
+    candidateAtoms=atoms.filter(a=>{
+      return focusCoords.some(fc=>{
+        const d2=(a.x-fc.x)**2+(a.y-fc.y)**2+(a.z-fc.z)**2;
+        return d2<=36.0; // within 6.0 A
+      });
+    });
+  }
+
+  const interactions=[];
+  const seen=new Set();
+
+  const isDonor=(a)=>{
+    const resn=String(a.resn||'').trim().toUpperCase(),atom=String(a.atom||'').trim().toUpperCase();
+    if(HBOND_DONORS.ALL.has(atom))return true;
+    return HBOND_DONORS[resn]?.has(atom)||false;
+  };
+  const isAcceptor=(a)=>{
+    const resn=String(a.resn||'').trim().toUpperCase(),atom=String(a.atom||'').trim().toUpperCase();
+    if(HBOND_ACCEPTORS.ALL.has(atom))return true;
+    return HBOND_ACCEPTORS[resn]?.has(atom)||false;
+  };
+  const isBasic=(a)=>{
+    const resn=String(a.resn||'').trim().toUpperCase(),atom=String(a.atom||'').trim().toUpperCase();
+    return BASIC_ATOMS[resn]?.has(atom)||false;
+  };
+  const isAcidic=(a)=>{
+    const resn=String(a.resn||'').trim().toUpperCase(),atom=String(a.atom||'').trim().toUpperCase();
+    return ACIDIC_ATOMS[resn]?.has(atom)||false;
+  };
+
+  const pool=targetResidue?focusAtoms:atoms;
+  const others=candidateAtoms;
+
+  const cell=4.2;
+  const grid=new Map();
+  const cellKey=(x,y,z)=>`${Math.floor(x/cell)},${Math.floor(y/cell)},${Math.floor(z/cell)}`;
+  others.forEach(a=>{
+    const k=cellKey(a.x,a.y,a.z);
+    if(!grid.has(k))grid.set(k,[]);
+    grid.get(k).push(a);
+  });
+
+  for(const a of pool){
+    const gx=Math.floor(a.x/cell),gy=Math.floor(a.y/cell),gz=Math.floor(a.z/cell);
+    for(let dx=-1;dx<=1;dx++){
+      for(let dy=-1;dy<=1;dy++){
+        for(let dz=-1;dz<=1;dz++){
+          const neighbors=grid.get(`${gx+dx},${gy+dy},${gz+dz}`)||[];
+          for(const b of neighbors){
+            if(a===b)continue;
+            const sameChain=(a.chain||'')===(b.chain||'');
+            const resiDiff=Math.abs(Number(a.resi)-Number(b.resi));
+            if(sameChain&&resiDiff===0)continue;
+
+            const dd=(a.x-b.x)**2+(a.y-b.y)**2+(a.z-b.z)**2;
+            const pairKey=[a.serial||`${a.chain}_${a.resi}_${a.atom}`,b.serial||`${b.chain}_${b.resi}_${b.atom}`].sort().join('|');
+            if(seen.has(pairKey))continue;
+
+            // 1. Salt Bridge check (Basic <-> Acidic within 4.0 A)
+            if(dd<=16.0&&((isBasic(a)&&isAcidic(b))||(isAcidic(a)&&isBasic(b)))){
+              seen.add(pairKey);
+              interactions.push({
+                type:'salt_bridge',
+                label:'Salt Bridge',
+                atomA:a,
+                atomB:b,
+                distance:Math.sqrt(dd),
+                color:'#FFDB13'
+              });
+              continue;
+            }
+
+            // 2. Disulfide Bridge (Cys SG <-> Cys SG, 1.85 to 2.30 A)
+            if(String(a.resn).toUpperCase()==='CYS'&&String(b.resn).toUpperCase()==='CYS'&&
+               String(a.atom).toUpperCase()==='SG'&&String(b.atom).toUpperCase()==='SG'){
+              if(dd>=3.42&&dd<=5.29){
+                seen.add(pairKey);
+                interactions.push({
+                  type:'disulfide',
+                  label:'Disulfide Bridge',
+                  atomA:a,
+                  atomB:b,
+                  distance:Math.sqrt(dd),
+                  color:'#19D6A2'
+                });
+                continue;
+              }
+            }
+
+            // 3. Hydrogen Bond (Donor <-> Acceptor, 2.5 to 3.5 A)
+            if(dd>=6.25&&dd<=12.25){
+              const aDon=isDonor(a),bAcc=isAcceptor(b);
+              const bDon=isDonor(b),aAcc=isAcceptor(a);
+              if((aDon&&bAcc)||(bDon&&aAcc)){
+                const isBackboneA=a.atom==='N'||a.atom==='O';
+                const isBackboneB=b.atom==='N'||b.atom==='O';
+                if(sameChain&&isBackboneA&&isBackboneB&&resiDiff<2)continue;
+
+                let subType='H-Bond';
+                if(isBackboneA&&isBackboneB){
+                  if(sameChain&&resiDiff===4)subType='α-Helix H-Bond (i→i+4)';
+                  else if(sameChain&&resiDiff===3)subType='3₁₀-Helix H-Bond (i→i+3)';
+                  else subType=sameChain?'Backbone H-Bond':'Inter-chain Backbone H-Bond';
+                }else if(!isBackboneA&&!isBackboneB){
+                  subType='Sidechain H-Bond';
+                }else{
+                  subType='Sidechain–Backbone H-Bond';
+                }
+
+                seen.add(pairKey);
+                interactions.push({
+                  type:'hbond',
+                  subType,
+                  label:subType,
+                  atomA:a,
+                  atomB:b,
+                  distance:Math.sqrt(dd),
+                  color:'#38B6FF'
+                });
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  return interactions.sort((x,y)=>x.distance-y.distance);
+}
+
+function clearInteractions3D(){
+  if(!STATE.viewer)return;
+  if(STATE.hbondShapes&&STATE.hbondShapes.length){
+    for(const s of STATE.hbondShapes){
+      try{ STATE.viewer.removeShape(s); }catch{}
+    }
+    STATE.hbondShapes=[];
+  }
+  if(STATE.hbondLabels&&STATE.hbondLabels.length){
+    try{ STATE.viewer.removeAllLabels(); }catch{}
+    STATE.hbondLabels=[];
+  }
+}
+
+function renderInteractions3D(targetResidue=null){
+  clearInteractions3D();
+  if(!STATE.viewer||!STATE.model)return;
+  const interactions=detectInteractions(targetResidue);
+  if(!interactions.length){
+    if(targetResidue)toast(`No non-covalent contacts found within 3.5 Å of ${targetResidue.resn||'RES'} ${targetResidue.resi}.`);
+    return;
+  }
+
+  const limit=targetResidue?25:60;
+  const toRender=interactions.slice(0,limit);
+  const interactingResidues=new Set();
+
+  for(const item of toRender){
+    const a=item.atomA,b=item.atomB;
+    interactingResidues.add(`${a.chain||''}:${a.resi}`);
+    interactingResidues.add(`${b.chain||''}:${b.resi}`);
+
+    const cyl=STATE.viewer.addCylinder({
+      start:{x:a.x,y:a.y,z:a.z},
+      end:{x:b.x,y:b.y,z:b.z},
+      radius:0.07,
+      dashed:true,
+      dashLength:0.28,
+      gapLength:0.22,
+      color:item.color,
+      fromCap:1,
+      toCap:1
+    });
+    if(cyl)STATE.hbondShapes.push(cyl);
+
+    if(targetResidue){
+      const mid={x:(a.x+b.x)/2,y:(a.y+b.y)/2,z:(a.z+b.z)/2};
+      try{
+        const lbl=STATE.viewer.addLabel(`${item.distance.toFixed(2)} Å`,{
+          position:mid,
+          backgroundColor:'#04121E',
+          fontColor:item.color,
+          borderColor:'#0E2C45',
+          borderThickness:1,
+          fontSize:9
+        });
+        if(lbl)STATE.hbondLabels.push(lbl);
+      }catch{}
+    }
+  }
+
+  // Atomistic sticks on participating residues
+  for(const rKey of interactingResidues){
+    const [chain,resi]=rKey.split(':');
+    STATE.viewer.addStyle({chain,resi:Number(resi)},{
+      stick:{radius:0.12,colorscheme:'Jmol'}
+    });
+  }
+
+  STATE.viewer.render();
+  if(targetResidue){
+    toast(`Rendered ${toRender.length} contacts for ${targetResidue.resn||'RES'} ${targetResidue.resi} (${toRender.filter(x=>x.type==='hbond').length} H-bonds, ${toRender.filter(x=>x.type==='salt_bridge').length} salt bridges).`);
+  }else{
+    toast(`Rendered ${toRender.length} stabilizing H-bonds & salt bridges across structure.`);
+  }
+}
+
+function trigger3DContactsFromModal(){
+  closeModal();
+  STATE.showHbonds=true;
+  $('#hbondBtn')?.classList.add('active');
+  focusSelectedResidue();
+  renderInteractions3D(STATE.selectedResidue);
+}
+window.detectInteractions = detectInteractions;
+window.clearInteractions3D = clearInteractions3D;
+window.renderInteractions3D = renderInteractions3D;
+window.trigger3DContactsFromModal = trigger3DContactsFromModal;
+window.selectResidue = selectResidue;
+window.showResidueContactsModal = showResidueContactsModal;
 function downloadStructure(){ if(!STATE.structureText)return toast('No structure loaded.',true); const blob=new Blob([STATE.structureText],{type:'text/plain'}),a=document.createElement('a'),url=URL.createObjectURL(blob); a.href=url; a.download=STATE.prediction?`nilus_${STATE.prediction.id}${STATE.currentSampleIndex!=null?`_sample_${STATE.currentSampleIndex+1}`:''}.${STATE.structureFormat==='pdb'?'pdb':'cif'}`:'4I5I_reference.pdb'; a.click(); setTimeout(()=>URL.revokeObjectURL(url),1000); }
 async function sharePrediction(){ const u=new URL(location.href); if(STATE.prediction?.id)u.searchParams.set('prediction',STATE.prediction.id); try{await navigator.clipboard.writeText(u.toString());toast('Prediction link copied.');}catch{toast(u.toString());} }
 function loadPredictionStructure(){
@@ -1666,13 +1946,16 @@ function curatedFeaturesAt(chain,resi){
 function selectResidue(chain,resi,resn=''){
   const r=residueById(chain,resi); if(!r)return; const neighbors=computeResidueNeighbors(chain,resi,4); STATE.selectedResidue={...r,resn:r.resn||resn}; STATE.residueNeighbors=neighbors; renderResidueIntelligence();
   try{ const a=(r.atoms||[])[0]; STATE.viewer.removeAllLabels?.(); if(a)STATE.viewer.addLabel?.(`${r.resn||''} ${r.resi}`,{position:{x:a.x,y:a.y,z:a.z},backgroundColor:'#071725',fontColor:'#eaf6ff',borderColor:'#2c84c8',borderThickness:1,fontSize:11}); STATE.viewer.render(); }catch{}
+  if(STATE.showHbonds){
+    renderInteractions3D(STATE.selectedResidue);
+  }
 }
 function renderResidueIntelligence(){
   const r=STATE.selectedResidue; if(!r){$('#residueEmpty').style.display='block';$('#residueContent').style.display='none';$('#selectedResidueStatus').textContent='Click a residue';return;} $('#residueEmpty').style.display='none';$('#residueContent').style.display='block'; $('#selectedResidueStatus').textContent=`${r.chain||'—'}:${r.resi}`; $('#residueBadge').textContent=r.chain||'—'; $('#residueName').textContent=`${r.resn||'RES'} ${r.resi}`; $('#residueSub').textContent=`Chain ${r.chain||'—'} · ${STATE.prediction?'predicted model':'reference preview'}`; $('#residuePlddt').textContent=Number.isFinite(r.plddt)?r.plddt.toFixed(1):'—'; $('#residueSS').textContent=ssLabel(r); $('#residueNeighbors').textContent=STATE.residueNeighbors.length; $('#residueAtoms').textContent=r.atoms?.length||0;
   const inter=STATE.residueNeighbors.filter(x=>x.interChain).length,mapped=uniprotChainMatches(r.chain),feats=curatedFeaturesAt(r.chain,Number(r.resi)),notes=[]; if(inter)notes.push(`${inter} neighboring residue${inter===1?'':'s'} belong to another chain.`); if(feats.length)notes.push(`UniProt overlap: ${feats.map(f=>f.description||f.type).join(' · ')}.`); else if(STATE.uniprot&&STATE.prediction&&mapped)notes.push('No loaded UniProt feature overlaps this residue number.'); else if(STATE.uniprot&&STATE.prediction&&!mapped)notes.push('UniProt annotations are not mapped to this chain because its prediction input sequence is not an exact match to the loaded UniProt sequence.'); if(!Number.isFinite(r.plddt))notes.push('Per-residue confidence is not available for this coordinate set.'); $('#residueAnnotation').textContent=notes.join(' ')||'Local geometry computed from the currently loaded coordinates.';
 }
 function focusSelectedResidue(){ const r=STATE.selectedResidue;if(!r)return toast('Select a residue first.',true); STATE.viewer?.zoomTo({chain:r.chain,resi:r.resi},650); STATE.viewer?.render(); }
-function showResidueContactsModal(){ const r=STATE.selectedResidue;if(!r)return toast('Select a residue first.',true); const rows=STATE.residueNeighbors.slice(0,80); openModal({title:`Local contacts · ${r.resn||''} ${r.resi}`,subtitle:'Residue neighbors with at least one atom pair within 4 Å.',html:rows.length?`<div class="table-wrap"><table class="data-table"><thead><tr><th>Chain</th><th>Residue</th><th>Distance</th><th>Relation</th></tr></thead><tbody>${rows.map(x=>`<tr><td>${escapeHtml(x.chain||'—')}</td><td>${escapeHtml(x.resn)} ${x.resi}</td><td>${x.distance.toFixed(2)} Å</td><td>${x.interChain?'Inter-chain':'Same chain'}</td></tr>`).join('')}</tbody></table></div><p>Distances are coordinate-derived geometry, not energetic interactions.</p>`:'<div class="empty-state">No residue neighbor was found within 4 Å.</div>'}); }
+function showResidueContactsModal(){ const r=STATE.selectedResidue;if(!r)return toast('Select a residue first.',true); const rows=STATE.residueNeighbors.slice(0,80); openModal({title:`Local contacts · ${r.resn||''} ${r.resi}`,subtitle:'Residue neighbors with at least one atom pair within 4 Å.',html:`<div style="display:flex;justify-content:flex-end;margin-bottom:10px;"><button class="minor-btn" onclick="trigger3DContactsFromModal()" style="font-size:11px;padding:5px 12px;font-weight:600;display:inline-flex;align-items:center;gap:6px;cursor:pointer;">⚡ View in 3D</button></div>`+(rows.length?`<div class="table-wrap"><table class="data-table"><thead><tr><th>Chain</th><th>Residue</th><th>Distance</th><th>Relation</th></tr></thead><tbody>${rows.map(x=>`<tr><td>${escapeHtml(x.chain||'—')}</td><td>${escapeHtml(x.resn)} ${x.resi}</td><td>${x.distance.toFixed(2)} Å</td><td>${x.interChain?'Inter-chain':'Same chain'}</td></tr>`).join('')}</tbody></table></div><p>Distances are coordinate-derived geometry, not energetic interactions.</p>`:'<div class="empty-state">No residue neighbor was found within 4 Å.</div>')}); }
 function showMutationPicker(){
   const r=STATE.selectedResidue;if(!r)return toast('Select a protein residue first.',true); const wt=AA3_TO_1[String(r.resn||'').toUpperCase()]; if(!wt)return toast('The selected residue is not recognized as a standard amino acid.',true); const ent=(STATE.prediction?.input?.entities||[]).find(e=>e.type==='protein'&&(e.chain_ids||[]).includes(r.chain)); if(!ent?.value)return toast('A source protein sequence is required to prepare a mutation.',true);
   openModal({title:`Prepare mutation · ${r.resn} ${r.resi}`,subtitle:'Choose a substitution. Nilus will prepare the sequence input but will not run or claim an effect until you submit a new prediction.',html:`<p>Wild type: <strong>${wt}${r.resi}</strong></p><div class="mut-grid">${AA1.map(a=>`<button class="mut-choice${a===wt?' disabled':''}" data-mut-aa="${a}">${a}</button>`).join('')}</div><p>No ΔΔG, pathogenicity or functional effect is inferred by this selector.</p>`});
