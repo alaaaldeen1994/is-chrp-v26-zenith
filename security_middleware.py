@@ -59,12 +59,19 @@ class CSRFMiddleware(BaseHTTPMiddleware):
         if request.headers.get("X-API-Key") or request.headers.get("x-api-key"):
             return await call_next(request)
         
-        # Skip CSRF for paths that use API Key authentication
+        # Skip CSRF for paths that use API Key authentication or computational endpoints
         api_key_paths = [
             "/simulate_step", "/discover_protocol", "/discover_hybrid", "/impute", 
-            "/get_expert_reasoning", "/send_email", "/api/simulation/config", "/run_virtual_trial"
+            "/get_expert_reasoning", "/send_email", "/api/simulation/config", "/run_virtual_trial",
+            "/api/boltz", "/api/pae", "/api/compare", "/api/interfaces", "/api/qc", "/api/ensemble"
         ]
-        if request.url.path in api_key_paths or request.url.path.startswith("/api/v1/") or request.url.path.startswith("/api/v2/") or request.url.path.startswith("/oauth/"):
+        if (
+            request.url.path in api_key_paths 
+            or request.url.path.startswith("/api/v1/") 
+            or request.url.path.startswith("/api/v2/") 
+            or request.url.path.startswith("/oauth/")
+            or request.url.path.startswith("/api/boltz")
+        ):
             return await call_next(request)
         
         # Validate CSRF token for all other POST/PUT/DELETE requests

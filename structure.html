@@ -1267,15 +1267,17 @@ document.addEventListener('click',e=>{ if(!$('#moreMenu').contains(e.target)&&e.
 
 // ---------- Backend ----------
 let _csrfToken = null;
-async function getCsrfToken(){
-  if(_csrfToken) return _csrfToken;
-  const match = document.cookie.match(/(?:^|;\s*)csrf_token=([^;]+)/);
-  if(match && match[1]){
-    _csrfToken = decodeURIComponent(match[1]);
-    return _csrfToken;
+async function getCsrfToken(force = false){
+  if(!force && _csrfToken) return _csrfToken;
+  if(!force){
+    const match = document.cookie.match(/(?:^|;\s*)csrf_token=([^;]+)/);
+    if(match && match[1]){
+      _csrfToken = decodeURIComponent(match[1]);
+      return _csrfToken;
+    }
   }
   try{
-    const res = await fetch('/api/csrf-token');
+    const res = await fetch('/api/csrf-token?t=' + Date.now(), { cache: 'no-store' });
     if(res.ok){
       const data = await res.json();
       _csrfToken = data?.csrf_token || null;
@@ -1287,10 +1289,19 @@ async function getCsrfToken(){
 async function api(action,payload={}){
   if(location.protocol==='file:') throw new Error('Boltz requires the server build. Run `vercel dev` locally or deploy this project to Vercel.');
   const headers = {'Content-Type':'application/json'};
-  const token = await getCsrfToken();
+  let token = await getCsrfToken();
   if(token) headers['X-CSRF-Token'] = token;
-  const r=await fetch('/api/boltz',{method:'POST',headers,body:JSON.stringify({action,...payload})});
-  let data={}; try{ data=await r.json(); }catch{}
+  let r = await fetch('/api/boltz',{method:'POST',headers,body:JSON.stringify({action,...payload})});
+  let data = {}; try{ data = await r.json(); }catch{}
+
+  // Auto-recovery on CSRF failure: refresh token and retry once
+  if(!r.ok && (r.status === 403 || String(data?.detail||'').toLowerCase().includes('csrf'))){
+    token = await getCsrfToken(true);
+    if(token) headers['X-CSRF-Token'] = token;
+    r = await fetch('/api/boltz',{method:'POST',headers,body:JSON.stringify({action,...payload})});
+    try{ data = await r.json(); }catch{}
+  }
+
   if(!r.ok) throw new Error(data?.error || data?.detail || data?.message || `Backend error ${r.status}`);
   return data;
 }
@@ -1304,7 +1315,16 @@ async function scienceApi(path,payload=null,method='POST'){
   }
   const opts={method,headers};
   if(payload&&method!=='GET')opts.body=JSON.stringify(payload);
-  const r=await fetch(path,opts); let data={};try{data=await r.json();}catch{}
+  let r = await fetch(path,opts); let data={};try{data=await r.json();}catch{}
+
+  // Auto-recovery on CSRF failure
+  if(!r.ok && (r.status === 403 || String(data?.detail||'').toLowerCase().includes('csrf'))){
+    const token = await getCsrfToken(true);
+    if(token) headers['X-CSRF-Token'] = token;
+    r = await fetch(path,opts);
+    try{data=await r.json();}catch{}
+  }
+
   if(!r.ok)throw new Error(data?.error || data?.detail || data?.message || `Scientific service error ${r.status}`);
   return data;
 }
