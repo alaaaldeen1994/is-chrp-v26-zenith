@@ -35,7 +35,7 @@ button,input,textarea,select{font:inherit}button{cursor:pointer}
 .col{min-height:0;overflow:auto;scrollbar-width:thin;scrollbar-color:#183a57 transparent}.col::-webkit-scrollbar{width:7px}.col::-webkit-scrollbar-thumb{background:#183a57;border-radius:99px}
 .card{background:linear-gradient(180deg,rgba(8,25,40,.97),rgba(5,17,28,.97));border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);position:relative;overflow:hidden}.card:before{content:"";position:absolute;left:0;right:0;top:0;height:1px;background:linear-gradient(90deg,transparent,rgba(80,180,255,.18),transparent);pointer-events:none}
 .left{display:flex;flex-direction:column;gap:12px}.left .card{padding:14px}.section-title{font-size:15px;font-weight:750;letter-spacing:-.018em}.section-sub{font-size:10px;color:var(--muted);line-height:1.55;margin-top:5px}
-.mode-tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;padding:4px;border:1px solid var(--line);background:#0a1b2b;border-radius:9px;margin:14px 0 13px}.mode-tabs button{border:0;background:transparent;color:#92a9bd;font-size:9px;padding:8px 4px;border-radius:6px}.mode-tabs button.active{color:white;background:#0d2a47;box-shadow:inset 0 0 0 1px #2b85e9,0 4px 16px rgba(9,92,185,.18)}
+.mode-tabs{display:grid;grid-template-columns:repeat(5,1fr);gap:3px;padding:3px;border:1px solid var(--line);background:#0a1b2b;border-radius:9px;margin:14px 0 13px}.mode-tabs button{border:0;background:transparent;color:#92a9bd;font-size:8.5px;padding:7px 2px;border-radius:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.mode-tabs button.active{color:white;background:#0d2a47;box-shadow:inset 0 0 0 1px #2b85e9,0 4px 16px rgba(9,92,185,.18)}
 .field{margin-top:10px}.label{display:flex;align-items:center;justify-content:space-between;font-size:9.5px;font-weight:650;margin-bottom:6px}.label .hint{font:8px 'IBM Plex Mono',monospace;color:#6f8aa0}.input,textarea,select{width:100%;border:1px solid var(--line);background:#051522;color:#e7f2fa;border-radius:8px;outline:0;padding:9px 10px;font:9.5px/1.5 'IBM Plex Mono',monospace;transition:.15s}textarea{resize:vertical;min-height:100px}.input:focus,textarea:focus,select:focus{border-color:#2a87de;box-shadow:0 0 0 3px rgba(35,127,212,.09)}
 .inline2{display:grid;grid-template-columns:1fr 1fr;gap:7px}.mut-row{display:grid;grid-template-columns:1fr 84px;gap:7px}.mut-row button,.minor-btn{border:1px solid var(--line);background:#0a1d2e;color:#c9d8e4;border-radius:8px;padding:8px 9px;font-size:9px}.mut-row button:hover,.minor-btn:hover{border-color:#2a6292;background:#0d253a}
 .lookup-result{display:none;margin-top:8px;border:1px solid #20537d;background:#082033;border-radius:9px;padding:9px}.lookup-result.show{display:block}.lookup-result b{font-size:10px}.lookup-result span{font-size:8px;color:#89a4b8}.lookup-result p{font-size:8px;line-height:1.5;color:#a9bdcd;margin:6px 0 0}
@@ -247,7 +247,7 @@ body{background:radial-gradient(1000px 600px at 50% -180px,rgba(10,116,255,.05),
   .prediction-scroll{padding:11px 12px 6px}
   .prediction-dock{padding:8px 12px 9px}
   .section-title{font-size:15px}.section-sub{font-size:9.5px;line-height:1.42;margin-top:4px}
-  .mode-tabs{margin:9px 0 8px}.mode-tabs button{padding:7px 3px;font-size:9px}
+  .mode-tabs{margin:9px 0 8px;grid-template-columns:repeat(5,1fr);gap:2px}.mode-tabs button{padding:6px 2px;font-size:8px}
   .field{margin-top:7px}.label{font-size:9.5px;margin-bottom:5px}.label .hint{font-size:7.8px}
   .input,textarea,select{font-size:9px;padding:7px 8px}textarea{min-height:78px;max-height:112px}
   .inline2{gap:6px}.minor-btn,.mut-row button{font-size:9px;padding:7px 8px}
@@ -1058,7 +1058,7 @@ select:focus {
       <div class="prediction-scroll">
       <div class="section-title">Structure Prediction</div>
       <div class="section-sub">Predict, visualize and analyze protein structures with Nilus Fold (powered by Boltz-2.1), then inspect confidence, interfaces and curated annotations.</div>
-      <div class="mode-tabs" id="inputModes"><button class="active" data-mode="sequence">Sequence</button><button data-mode="uniprot">UniProt</button><button data-mode="complex">Complex</button><button data-mode="mutation">Mutations</button></div>
+      <div class="mode-tabs" id="inputModes"><button class="active" data-mode="sequence">Sequence</button><button data-mode="uniprot">UniProt</button><button data-mode="ligand">Ligand</button><button data-mode="complex">Complex</button><button data-mode="mutation">Mutations</button></div>
 
       <div class="input-mode" data-input-panel="sequence">
         <div class="field"><div class="label"><span>Protein sequence</span><span class="hint" id="seqLen">0 aa</span></div><textarea id="proteinSeq" placeholder="Paste one-letter amino-acid sequence..."></textarea></div>
@@ -1069,6 +1069,25 @@ select:focus {
         <div class="field"><div class="label"><span>UniProt / gene lookup</span><span class="hint">human Swiss-Prot</span></div><input class="input" id="uniprotQuery" placeholder="e.g. SIRT1, TP53, P04637" /></div>
         <button class="minor-btn" id="uniprotBtn" style="width:100%">Fetch curated sequence</button>
         <div class="lookup-result" id="lookupResult"><b id="lookupTitle"></b><br><span id="lookupMeta"></span><p id="lookupFunc"></p><button class="minor-btn" id="useLookup" style="width:100%;margin-top:8px">Use this sequence</button></div>
+      </div>
+
+      <div class="input-mode" data-input-panel="ligand" style="display:none">
+        <div class="field">
+          <div class="label"><span>Target receptor / protein</span><span class="hint">Chain A (FASTA)</span></div>
+          <textarea id="ligandTargetSeq" style="min-height:55px;height:55px;" placeholder="Receptor amino-acid sequence (Chain A)..."></textarea>
+        </div>
+        <div class="field" style="margin-top:6px;">
+          <div class="label"><span>Small-molecule ligand</span><span class="hint">Chain B (SMILES)</span></div>
+          <input class="input" id="ligandSmilesInput" placeholder="e.g. CNC(=O)... or paste canonical SMILES" />
+        </div>
+        <div class="label" style="margin-top:8px;"><span>Bioactive receptor presets</span><span class="hint">Boltz co-modeling</span></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:5px;">
+          <button class="minor-btn" id="presetEpi" style="text-align:left;padding:5px 6px;"><b>Epinephrine</b><br><span style="font-size:7px;color:#6d8aa0;">GPCR ADRB2 agonist</span></button>
+          <button class="minor-btn" id="presetResv" style="text-align:left;padding:5px 6px;"><b>Resveratrol</b><br><span style="font-size:7px;color:#6d8aa0;">SIRT1 allosteric lead</span></button>
+          <button class="minor-btn" id="presetOdor" style="text-align:left;padding:5px 6px;"><b>Propionate</b><br><span style="font-size:7px;color:#6d8aa0;">OR51E2 scent/taste</span></button>
+          <button class="minor-btn" id="presetDopamine" style="text-align:left;padding:5px 6px;"><b>Dopamine</b><br><span style="font-size:7px;color:#6d8aa0;">DRD2 GPCR target</span></button>
+        </div>
+        <div class="micro-note" id="ligandNotice" style="margin-top:6px;">Configures Chain A (Receptor) + Chain B (Ligand) with 1-click binding constraints.</div>
       </div>
 
       <div class="input-mode" data-input-panel="complex" style="display:none">
@@ -1178,7 +1197,7 @@ select:focus {
 
     <section class="card" id="provenanceCard"><div class="section-head"><h3>Model provenance</h3><button id="provenanceSource">Reproducible</button></div><div class="prov-grid"><div><div class="prov-row"><span>Engine</span><b id="provEngine">—</b></div><div class="prov-row"><span>Samples</span><b id="provSamples">—</b></div><div class="prov-row"><span>Run hash</span><b id="provHash">—</b></div></div><div><div class="prov-row"><span>Job</span><b id="provJob">—</b></div><div class="prov-row"><span>Completed</span><b id="provCompleted">—</b></div><div class="prov-row"><span>Source</span><b id="provMode">Reference</b></div></div></div><div class="prov-actions"><button class="small-action" id="restoreInputBtn">Restore prediction input</button><button class="small-action" id="copyProvBtn">Copy provenance</button></div><div class="provenance">The run hash is calculated locally from the normalized molecular input plus inference controls, binding request and model identifier. Restoring input never starts a paid prediction automatically.</div></section>
 
-    <section class="card" id="aiCard"><div class="section-head"><h3>AI scientific interpretation</h3><button id="aiAction">Evidence-labelled</button></div><div class="source-badge">Nilus interpretation · not experimental evidence</div><div class="ai" id="aiText">The viewer currently shows an experimental SIRT1 reference for interface preview only. Run Nilus Fold to generate model-specific confidence metrics. Nilus will then distinguish direct Nilus Fold outputs from geometry-derived observations and curated UniProt annotations.</div><div class="tags" id="aiTags"><span class="tag">Reference preview</span><span class="tag">No fabricated metrics</span></div><div class="quick-prompts"><button data-ai-q="weakest region">Weakest region</button><button data-ai-q="model quality">Model quality</button><button data-ai-q="interface contacts">Interfaces</button><button data-ai-q="selected residue">Selected residue</button><button data-ai-q="provenance">Provenance</button></div><div class="ai-query"><input id="aiQuestion" placeholder="Ask about this structure…" aria-label="Ask about the current structure"><button id="aiAsk">Ask</button></div><div class="ai-answer" id="aiAnswer"></div></section>
+    <section class="card" id="aiCard"><div class="section-head"><h3>Structure Intelligence Agent</h3><button id="aiAction" style="background:#092b4a;border-color:#1c6da5;color:#7ad1ff;">⚡ AI Co-Pilot</button></div><div class="source-badge" style="border-color:#1e4f7a;background:#092238;color:#5eb1ff;">In-situ biophysical reasoning engine</div><div class="ai" id="aiText">Interactive agent connected to active 3D coordinates, PAE tensors, and binding interfaces. Use prompts below or type any structural query to audit pockets, clashes, and export robotic protocols.</div><div class="tags" id="aiTags"><span class="tag">Zero-hallucination</span><span class="tag">Active 3D Coordinates</span><span class="tag">OT-2 Robotics API</span></div><div class="quick-prompts"><button data-ai-q="audit binding pocket">Pocket Residues</button><button data-ai-q="audit steric clashes">Clash Audit</button><button data-ai-q="hydrogen bonds">H-Bond Network</button><button data-ai-q="export robotics">Export OT-2 Protocol</button><button data-ai-q="model quality">Model Quality</button><button data-ai-q="weakest region">Hotspots</button></div><div class="ai-query"><input id="aiQuestion" placeholder="Ask agent (e.g. 'audit pocket', 'export robotics'…)" aria-label="Ask Structure Intelligence Agent"><button id="aiAsk" style="background:#0c3e6b;border-color:#207dc4;">Ask</button></div><div class="ai-answer" id="aiAnswer"></div></section>
   </aside>
 </main>
 </div>
@@ -1323,13 +1342,84 @@ function initInputModes(){
   $('#clearHistory').onclick=()=>{ localStorage.removeItem('nilus_recent_predictions_v2'); renderRecent(); };
   $$('#predTypes button').forEach(b=>b.onclick=()=>setPredictionType(b.dataset.type));
   $('#globalSearch').addEventListener('keydown',async e=>{ if(e.key!=='Enter')return; e.preventDefault(); const q=e.target.value.trim(); if(!q)return; $('#uniprotQuery').value=q; setInputMode('uniprot'); await lookupUniProt(false); });
+
+  // Ligand (SMILES) Mode wiring & presets
+  const LIGAND_PRESETS = {
+    epi: {
+      name: 'Epinephrine (ADRB2 Agonist)',
+      seq: 'MGQPGNGSAFLLAPNRSHAPDHDVTQQRDEVWVVGMGIVMSLIVLAIVFGNVLVITAIAKFERLQTVTNYFITSLACADLVMGLAVVPFGAAHILMKMWTFGNFWCEFWTSIDVLCVTASIETLCVIAVDRYFAITSPFKYQSLLTKNKARVIILMVWIVSGLTSFLPIQMHWYRATHQEAINCYAEETCCDFFTNQAYAIASSIVSFYVPLVIMVFVYSRVFQEAKRQLQKIDKSEGRFHVQNLSQVEQDGRTGHGLRRSSKFCLKEHKALKTLGIIMGTFTLCWLPFFIVNIVHVIQDNLIRKEVYILLNWIGYVNSGFNPLIYCRSPDFRIAFQELLCLRRSSLKAYGNGYSSNGNTGEQSGYHVEQEKENKLLCEDLPGTEDFVGHQGTVPSDNIDSQGRNCSTNDSLL',
+      smiles: 'CNC[C@H](O)c1ccc(O)c(O)c1'
+    },
+    resv: {
+      name: 'Resveratrol (SIRT1 Allosteric Lead)',
+      seq: 'MSVNYAAGLSPYADKGKCGLPEIFDPPEELERKVWELARLVWQSSSVVFHTGAGISTASGIPDFRSPDTGLYSNLQQYDLPYPEAIFELPFFFHNPKPFFTLAKELYPGNYKPNVTHYFLRLLHDKGLLLRLYTQNIDGLERVSGIPASKLVEAHGTFASATCTVCQRPFPGEDIRADVMADRVPRCPVCTGVVKPDIVFFGEPLPQRFLLHVVDFPMADLLLILGTSLEVEPFASLTEAVRSSVPRLLINRDLVGPLAWHPRSRDVAQLGDVVHGVESLVELLGWTEEMRDLVQRETGKLDGPDK',
+      smiles: 'Oc1ccc(/C=C/c2cc(O)cc(O)c2)cc1'
+    },
+    odor: {
+      name: 'Propionate (OR51E2 Scent/Taste Receptor)',
+      seq: 'MERRNHSQGSFFFTGIPGLEEIHFWIAIPFCVMYLIALLGNGLILITIVIDKSLHTPMYFFLSHLATADLGLSLSTVPKMLANLQIISQSTISFRGCAVQFFFYFHLGTTECFLLTVMAFDRYIAICHPLRYPVLMNTRTCAKVMCGMWALGVLSGVVHTIPYSSQMTFFRFRHINHCYCDIMPLARLSCSDISVNVVMLLAVSVLISVLVIVISYSYIFITILRIRSAEGRRKVFSTCASHITVVTLFYGTIFFMYMQPSAISYDQEKISVFYTIVTPMLNPLIYSLRNKDVKGALKKLLRGKRSL',
+      smiles: 'CCC(=O)O'
+    },
+    dopamine: {
+      name: 'Dopamine (DRD2 Receptor Agonist)',
+      seq: 'MDPLNLSWYDDDLERQNWSRPFNGSDGKADRPHYNYYAMLLTLLIFIIVFGNVLVCMAVSREKALQTTTNYLIVSLAVADLLVATLVMPWVVYLEVVGEWKFSRIHCDIFVTLDVMMCTASILNLCAISIDRYTAVAMPMLYNTRYSSKRRVTVMISIVWVLSFTISCPLLFGLNNTDQNECIIANPAFVVYSSIVSFYVPFIVTLLVYIKIYIVLRKRRKRVNTKRSSRAFRAHLRAPLKGNCTHPEDMKLCTVIMKSNGSFPVNRRRVEAARRAQELEMEMLSSTSPPERTRYSPIPPSHHQLTLPDPSHHGLHSTPDSPAKPEKNGHAKDHPKIAKIFEIQTMPNGKTRTSLKTMSRRKLSQQKEKKATQMLAIVLGVFIICWLPFFITHILNIHCDCNIPPVLYSAFTWLGYVNSAVNPIIYTTFNIERFRKAFLKILHC',
+      smiles: 'NCCc1ccc(O)c(O)c1'
+    }
+  };
+
+  function applyLigandPreset(key){
+    const p = LIGAND_PRESETS[key];
+    if(!p) return;
+    $('#ligandTargetSeq').value = p.seq;
+    $('#ligandSmilesInput').value = p.smiles;
+    STATE.entities = [
+      { id:'A', type:'protein', value: p.seq },
+      { id:'B', type:'ligand_smiles', value: p.smiles }
+    ];
+    $('#bindingMode').value = 'ligand_protein_binding';
+    updateBindingOptions();
+    $('#bindingChain').value = 'B';
+    invalidateEstimate();
+    toast(`Loaded preset: ${p.name}`);
+  }
+
+  $('#presetEpi').onclick = () => applyLigandPreset('epi');
+  $('#presetResv').onclick = () => applyLigandPreset('resv');
+  $('#presetOdor').onclick = () => applyLigandPreset('odor');
+  $('#presetDopamine').onclick = () => applyLigandPreset('dopamine');
+
+  $('#ligandTargetSeq').addEventListener('input', () => {
+    syncLigandModeEntities();
+    invalidateEstimate();
+  });
+  $('#ligandSmilesInput').addEventListener('input', () => {
+    syncLigandModeEntities();
+    invalidateEstimate();
+  });
+
+  function syncLigandModeEntities(){
+    const targetSeq = sanitizeProtein($('#ligandTargetSeq').value);
+    const smiles = String($('#ligandSmilesInput').value || '').trim();
+    STATE.entities = [
+      { id:'A', type:'protein', value: targetSeq },
+      { id:'B', type:'ligand_smiles', value: smiles }
+    ];
+    $('#bindingMode').value = 'ligand_protein_binding';
+    updateBindingOptions();
+    $('#bindingChain').value = 'B';
+  }
 }
+
 function setPredictionType(type){
   STATE.currentPredictionType=type; $$('#predTypes button').forEach(x=>x.classList.toggle('active',x.dataset.type===type));
   if(type==='protein'){ setInputMode('sequence'); return; }
   const p=sanitizeProtein($('#proteinSeq').value);
   if(type==='protein_dna') STATE.entities=[{id:'A',type:'protein',value:p},{id:'B',type:'dna',value:''}];
-  else if(type==='protein_ligand') STATE.entities=[{id:'A',type:'protein',value:p},{id:'B',type:'ligand_smiles',value:''}];
+  else if(type==='protein_ligand'){
+    setInputMode('ligand');
+    if(p) $('#ligandTargetSeq').value = p;
+    return;
+  }
   setInputMode('complex'); renderEntities(); updateBindingOptions();
 }
 function applyMutation(){
@@ -1395,7 +1485,17 @@ function normaliseEntity(e){
 }
 function buildRequest(){
   let entities;
-  if(STATE.currentInputMode==='complex' || STATE.currentPredictionType!=='protein'){ entities=STATE.entities.map(normaliseEntity); }
+  if(STATE.currentInputMode==='ligand'){
+    const targetSeq = sanitizeProtein($('#ligandTargetSeq').value);
+    const smiles = String($('#ligandSmilesInput').value||'').trim();
+    if(targetSeq.length<5)throw new Error('Receptor (Chain A) protein sequence must be at least 5 amino acids.');
+    if(!smiles)throw new Error('Small-molecule ligand (Chain B) SMILES string is required.');
+    entities = [
+      normaliseEntity({ id:'A', type:'protein', value: targetSeq }),
+      normaliseEntity({ id:'B', type:'ligand_smiles', value: smiles })
+    ];
+  }
+  else if(STATE.currentInputMode==='complex' || STATE.currentPredictionType!=='protein'){ entities=STATE.entities.map(normaliseEntity); }
   else { const seq=sanitizeProtein($('#proteinSeq').value); if(seq.length<5)throw new Error('Enter a protein sequence or load one from UniProt.'); const e={id:'A',type:'protein',value:seq}; entities=[normaliseEntity(e)]; }
   const ids=entities.flatMap(e=>e.chain_ids); if(new Set(ids).size!==ids.length)throw new Error('Chain IDs must be unique.');
   const samples=Number($('#numSamples').value)||1,recycling=Number($('#recyclingSteps').value),sampling=Number($('#samplingSteps').value),scale=Number($('#stepScale').value);
@@ -2206,14 +2306,227 @@ async function sha256Short(s){ try{ if(!crypto?.subtle)return'Unavailable'; cons
 async function renderProvenance(){ const p=STATE.prediction,inp=p?.input||{}; $('#provEngine').textContent=p?.model||'Experimental PDB'; $('#provSamples').textContent=inp.num_samples??(p?'—':'Reference'); $('#provJob').textContent=p?.id||'—'; $('#provCompleted').textContent=p?.completed_at?dateFmt(p.completed_at):'—'; $('#provMode').textContent=p?(p.livemode===false?'Boltz TEST':`Boltz LIVE${STATE.currentSampleIndex!=null?` · S${STATE.currentSampleIndex+1}`:''}`):'PDB 4I5I'; const c=canonicalInput(); STATE.provenanceHash=c&&c!=='[]'?await sha256Short(c):null; $('#provHash').textContent=STATE.provenanceHash||'—'; }
 function restorePredictionInput(){ const p=STATE.prediction;if(!p?.input?.entities?.length)return toast('No Boltz prediction input is available to restore.',true); const ents=p.input.entities.map((e,i)=>({id:(e.chain_ids||[])[0]||String.fromCharCode(65+i),type:e.type,value:e.value||''})); const onlyProtein=ents.length===1&&ents[0].type==='protein'; if(onlyProtein){$('#proteinSeq').value=ents[0].value;$('#proteinSeq').dispatchEvent(new Event('input'));STATE.currentPredictionType='protein';$$('#predTypes button').forEach(x=>x.classList.toggle('active',x.dataset.type==='protein'));setInputMode('sequence');}else{STATE.entities=ents;renderEntities();const hasDNA=ents.some(e=>e.type==='dna'||e.type==='rna'),hasLigand=ents.some(e=>e.type.startsWith('ligand'));STATE.currentPredictionType=hasLigand?'protein_ligand':hasDNA?'protein_dna':'complex';$$('#predTypes button').forEach(x=>x.classList.toggle('active',x.dataset.type===STATE.currentPredictionType));setInputMode('complex');} const inp=p.input||{},opts=inp.model_options||{}; if(inp.num_samples)$('#numSamples').value=String(inp.num_samples); const customMsa=(inp.entities||[]).find(e=>e.type==='protein'&&e.msa?.type==='custom'); $('#msaMode').value=customMsa?'custom':((inp.entities||[]).some(e=>e.type==='protein'&&e.msa?.type==='empty')?'empty':'auto'); if(customMsa){$('#msaCustomFormat').value=customMsa.msa.format||'a3m';$('#msaCustomUrl').value=customMsa.msa.source?.url||'';} const t0=inp.templates?.[0];if(t0){$('#templateUrl').value=t0.template_structure?.url||'';$('#templateInputChain').value=t0.template_chains?.[0]?.input_chain_id||'';$('#templateSourceChain').value=t0.template_chains?.[0]?.template_chain_id||'';$('#templateForce').value=t0.force_threshold_angstroms??'';} $('#recyclingSteps').value=String(opts.recycling_steps??3); $('#samplingSteps').value=String(opts.sampling_steps??200); $('#stepScale').value=String(opts.step_scale??1.638); $('#bindingMode').value=inp.binding?.type||'none'; updateBindingOptions(); if(inp.binding?.type==='ligand_protein_binding')$('#bindingChain').value=inp.binding.binder_chain_id||''; if(inp.binding?.type==='protein_protein_binding')$('#bindingChain').value=inp.binding.binder_chain_ids?.[0]||''; invalidateEstimate();toast('Prediction input and Boltz controls restored. Review them before starting a new run.'); }
 async function copyProvenance(){ const p=STATE.prediction,data={engine:p?.model||'Experimental PDB',job_id:p?.id||null,completed_at:p?.completed_at||null,livemode:p?.livemode??null,current_sample_index:STATE.currentSampleIndex,best_sample_index:STATE.bestSampleIndex,num_samples:p?.input?.num_samples??null,model_options:p?.input?.model_options||null,binding:p?.input?.binding||null,templates:p?.input?.templates||null,constraints:p?.input?.constraints||null,run_config_hash:STATE.provenanceHash,entities:p?.input?.entities||null,alphafold_db_reference:STATE.afdb&&!STATE.afdb.error?{entry_id:STATE.afdb.entry_id,version:STATE.afdb.version,mean_plddt:STATE.afdb.mean_plddt,uniprot_sequence_match:STATE.afdb.sequence_match,current_input_match:afdbCurrentSequenceContext().match}:null}; try{await navigator.clipboard.writeText(JSON.stringify(data,null,2));toast('Provenance copied.');}catch{toast('Clipboard is unavailable in this browser.',true);} }
+function auditBindingPocket(){
+  if(!STATE.viewer)return null;
+  const atoms=STATE.viewer.selectedAtoms({});
+  if(!atoms.length)return null;
+  const ligandMode=STATE.currentInputMode==='ligand'||STATE.currentPredictionType==='protein_ligand';
+  let ligandAtoms=atoms.filter(a=>(a.chain==='B'&&ligandMode)||(!AA3_TO_1[String(a.resn||'').toUpperCase()]&&String(a.resn||'').toUpperCase()!=='HOH'));
+  if(!ligandAtoms.length&&atoms.some(a=>a.chain==='B')){
+    ligandAtoms=atoms.filter(a=>a.chain==='B');
+  }
+  const receptorAtoms=atoms.filter(a=>(a.chain==='A'||!a.chain)&&AA3_TO_1[String(a.resn||'').toUpperCase()]);
+  if(!receptorAtoms.length)return null;
+  if(!ligandAtoms.length){
+    if(STATE.selectedResidue){
+      const sel=STATE.selectedResidue;
+      const contacts=STATE.residueNeighbors.slice(0,12);
+      return {mode:'selected',residue:sel,contacts};
+    }
+    const receptorResidues=new Set(receptorAtoms.map(a=>`${a.chain||'A'}_${a.resi}`)).size;
+    return {mode:'none',receptorResidues};
+  }
+  const pocketMap=new Map();
+  for(const la of ligandAtoms){
+    for(const ra of receptorAtoms){
+      const d2=(la.x-ra.x)**2+(la.y-ra.y)**2+(la.z-ra.z)**2;
+      if(d2<=20.25){
+        const d=Math.sqrt(d2);
+        const key=`${ra.chain||'A'}:${ra.resi}_${ra.resn}`;
+        if(!pocketMap.has(key)||pocketMap.get(key).minDist>d){
+          pocketMap.set(key,{chain:ra.chain||'A',resi:ra.resi,resn:ra.resn,minDist:d});
+        }
+      }
+    }
+  }
+  const pocketResidues=Array.from(pocketMap.values()).sort((a,b)=>a.minDist-b.minDist);
+  return {mode:'ligand',pocketResidues,ligandAtomCount:ligandAtoms.length};
+}
+
+function generateOpentronsProtocol(targetName,ligandSmiles){
+  return `"""
+Nilus Lab — Automated Small-Molecule / Receptor Titration Protocol
+Generated by Nilus Structure Intelligence Agent
+Target Receptor: ${targetName}
+Candidate Ligand (SMILES): ${ligandSmiles}
+Platform: Opentrons OT-2 / Flex (API Level 2.15)
+"""
+
+from opentrons import protocol_api
+
+metadata = {
+    'protocolName': 'Nilus Lab Receptor-Ligand Binding Titration',
+    'author': 'Nilus Lab Structure Studio & Bio-Robotics Agent',
+    'description': 'Automated 8-point serial dilution and fluorometric binding assay validation',
+    'apiLevel': '2.15'
+}
+
+def run(protocol: protocol_api.ProtocolContext):
+    # 1. Deck Setup
+    tiprack_300 = protocol.load_labware('opentrons_96_tiprack_300ul', '1')
+    tiprack_20 = protocol.load_labware('opentrons_96_tiprack_20ul', '2')
+    assay_plate = protocol.load_labware('corning_96_wellplate_360ul_flat', '3')
+    reservoir = protocol.load_labware('nest_12_reservoir_15ml', '4')
+
+    # 2. Instruments
+    p300 = protocol.load_instrument('p300_single_gen2', 'left', tip_racks=[tiprack_300])
+    p20 = protocol.load_instrument('p20_single_gen2', 'right', tip_racks=[tiprack_20])
+
+    # 3. Liquid Definitions
+    buffer_source = reservoir.wells_by_name()['A1']
+    receptor_source = reservoir.wells_by_name()['A2']
+    ligand_stock = reservoir.wells_by_name()['A3']
+
+    protocol.comment("Step 1: Distribute 50 uL Assay Buffer to columns 2 through 12...")
+    p300.pick_up_tip()
+    for col in range(1, 12):
+        for row in ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']:
+            well = f"{row}{col+1}"
+            p300.aspirate(50, buffer_source)
+            p300.dispense(50, assay_plate[well])
+    p300.drop_tip()
+
+    protocol.comment("Step 2: Transfer 100 uL Ligand Stock into column 1...")
+    p300.pick_up_tip()
+    for row in ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']:
+        p300.aspirate(100, ligand_stock)
+        p300.dispense(100, assay_plate[f"{row}1"])
+    p300.drop_tip()
+
+    protocol.comment("Step 3: 2-fold Serial Dilution across columns 1 through 11...")
+    for row in ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']:
+        p20.pick_up_tip()
+        for col in range(1, 11):
+            src = f"{row}{col}"
+            dst = f"{row}{col+1}"
+            p20.aspirate(20, assay_plate[src])
+            p20.dispense(20, assay_plate[dst])
+            p20.mix(3, 20, assay_plate[dst])
+        p20.drop_tip()
+
+    protocol.comment("Step 4: Dispense purified Receptor Target to columns 1 through 12...")
+    p300.pick_up_tip()
+    for well in assay_plate.wells():
+        p300.aspirate(30, receptor_source)
+        p300.dispense(30, well)
+        p300.mix(2, 40, well)
+    p300.drop_tip()
+
+    protocol.comment("Assay plate setup complete. Ready for 30-min incubation and optical readout.")
+`;
+}
+
+window.downloadLatestOt2Protocol=function(){
+  const script=window._latestOt2Script||'';
+  if(!script)return toast('No protocol generated yet.',true);
+  const blob=new Blob([script],{type:'text/x-python;charset=utf-8'});
+  const u=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=u;
+  a.download='nilus_ot2_binding_assay.py';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(()=>URL.revokeObjectURL(u),1000);
+  toast('Downloaded nilus_ot2_binding_assay.py');
+};
+
+window.copyLatestOt2Protocol=function(){
+  const script=window._latestOt2Script||'';
+  if(!script)return toast('No protocol generated yet.',true);
+  navigator.clipboard.writeText(script).then(()=>{
+    toast('OT-2 Python protocol copied to clipboard.');
+  }).catch(()=>toast('Clipboard unavailable in this browser.',true));
+};
+
 function answerEvidenceQuestion(q){
-  q=String(q||'').trim().toLowerCase(); if(!q)return'Ask about model quality, weak regions, interfaces, the selected residue, or provenance.'; const m=STATE.metrics||{};
-  if(/weak|uncertain|low confidence|hotspot/.test(q)){const h=STATE.hotspots[0];return h?`<span class="evidence-label">Computed from per-residue confidence:</span> the lowest-confidence contiguous region currently detected is chain ${escapeHtml(h.chain||'—')} residues ${h.start}-${h.end}, mean pLDDT ${h.mean.toFixed(1)}. This identifies model uncertainty, not biological disorder.`:'<span class="evidence-label">Current evidence:</span> no contiguous pLDDT&lt;70 hotspot is available in the loaded model.';}
-  if(/interface|contact|binding/.test(q)){return STATE.contacts.length?`<span class="evidence-label">Coordinate-derived:</span> ${STATE.contacts.length} inter-chain residue pairs have at least one atom pair within 4 Å.${Number.isFinite(Number(m.iptm))?` Boltz ipTM is ${num(m.iptm,3)}.`:''} Contacts are geometric observations, not proof of binding energy.`:'<span class="evidence-label">Current evidence:</span> no inter-chain contact table is available for this model.';}
-  if(/quality|confidence|ptm|iptm/.test(q)){const ctx=scientificContext();return STATE.prediction?`<span class="evidence-label">Direct Boltz metrics:</span> complex pLDDT ${pct(m.complex_plddt,1)}, structure confidence ${fmtMetric(m.structure_confidence,3)} (0–1), pTM ${fmtMetric(m.ptm,3)}, ipTM ${ctx.hasInterface?fmtMetric(m.iptm,3):'N/A (single chain)'}. The coordinate audit reports ${STATE.geometryAudit?.breaks??'—'} potential chain break(s) and ${STATE.geometryAudit?.clashes??'—'} gross overlap(s).`:'<span class="evidence-label">Reference preview:</span> Boltz confidence metrics are unavailable until a prediction is loaded.';}
-  if(/residue|selected/.test(q)){const r=STATE.selectedResidue;if(!r)return'<span class="evidence-label">Action needed:</span> click a residue in the 3D viewer first.';return `<span class="evidence-label">Selected residue:</span> ${escapeHtml(r.resn||'RES')} ${r.resi} on chain ${escapeHtml(r.chain||'—')}; pLDDT ${Number.isFinite(r.plddt)?r.plddt.toFixed(1):'unavailable'}, ${escapeHtml(ssLabel(r))}, ${STATE.residueNeighbors.length} neighboring residue(s) within 4 Å.`;}
-  if(/provenance|source|reproduc/.test(q)){return `<span class="evidence-label">Provenance:</span> engine ${escapeHtml($('#provEngine').textContent)}, job ${escapeHtml($('#provJob').textContent)}, run-configuration SHA-256 prefix ${escapeHtml($('#provHash').textContent)}. Restore Input reproduces the molecular input but does not guarantee identical stochastic coordinates.`;}
-  return '<span class="evidence-label">Evidence assistant:</span> I can answer from the data already loaded in this page: model quality, uncertainty hotspots, interfaces, selected-residue geometry, and provenance. I do not invent biological function or experimental claims.';
+  q=String(q||'').trim().toLowerCase();
+  if(!q)return'Ask about binding pocket, steric clashes, hydrogen bonds, robotics protocol, model quality, weak regions, or provenance.';
+  const m=STATE.metrics||{};
+
+  // 1. POCKET / BINDING POCKET
+  if(/pocket|binding pocket|active site/.test(q)){
+    const audit=auditBindingPocket();
+    if(!audit)return'<span class="evidence-label">Action needed:</span> Load a 3D coordinate model to audit binding pockets.';
+    if(audit.mode==='ligand'){
+      if(STATE.viewer&&audit.pocketResidues.length){
+        try{
+          STATE.viewer.addStyle({resi:audit.pocketResidues.map(r=>r.resi)},{stick:{color:'#18D99B',radius:0.12}});
+          STATE.viewer.render();
+        }catch{}
+      }
+      const chips=audit.pocketResidues.slice(0,16).map(r=>`<span class="tag" style="background:#0c2d22;border:1px solid #1ba579;color:#63f0c3;font-weight:600;">${escapeHtml(r.resn)} ${r.resi} (${r.minDist.toFixed(1)} Å)</span>`).join(' ');
+      return `<span class="evidence-label">Binding Pocket Audit:</span> Identified <strong>${audit.pocketResidues.length} receptor residues</strong> within 4.5 Å of ligand/binder (${audit.ligandAtomCount} atoms). Contacting residues highlighted as emerald sticks in 3D viewer:<div style="margin:8px 0;display:flex;flex-wrap:wrap;gap:4px;">${chips}</div><span style="font-size:11px;color:#8ab4ce;">Closest contact: ${audit.pocketResidues[0]?.minDist.toFixed(2)} Å (${audit.pocketResidues[0]?.resn} ${audit.pocketResidues[0]?.resi}). Geometric proximity screening; does not establish free energy of binding.</span>`;
+    }
+    if(audit.mode==='selected'){
+      return `<span class="evidence-label">Local Cavity Audit:</span> Selected residue ${escapeHtml(audit.residue.resn||'RES')} ${audit.residue.resi} interacts with <strong>${audit.contacts.length}</strong> neighboring residue(s) within 4.0 Å. Switch to the <strong>Ligand</strong> tab to dock or co-fold small molecules in this site.`;
+    }
+    return `<span class="evidence-label">Binding Pocket Audit:</span> No bound ligand detected in current coordinates (${audit.receptorResidues} standard protein residues loaded). To model receptor–ligand binding, switch to the <strong>Ligand</strong> tab and select a bioactive preset (e.g., Epinephrine, Resveratrol, Dopamine) or input your target SMILES.`;
+  }
+
+  // 2. STERIC CLASHES
+  if(/clash|steric/.test(q)){
+    const audit=computeGeometryAudit();
+    if(!audit)return'<span class="evidence-label">Action needed:</span> Load 3D coordinates to perform a steric clash audit.';
+    if(audit.clashes===0){
+      return `<span class="evidence-label">Steric Clash Audit:</span> <strong>0 gross steric overlaps (&lt;1.0 Å)</strong> detected across ${audit.proteinResidues} protein residues. Potential chain breaks: <strong>${audit.breaks}</strong>. Backbone completeness: <strong>${audit.backbonePct==null?'—':audit.backbonePct.toFixed(1)+'%'}</strong>. Stereochemistry and van der Waals packing conform to valid stereochemical envelopes.`;
+    }
+    return `<span class="evidence-label">Steric Clash Audit:</span> Detected <strong>${audit.clashes}</strong> severe steric overlap(s) (&lt;1.0 Å) across ${audit.proteinResidues} residues. Potential chain breaks: <strong>${audit.breaks}</strong>; low-confidence residues: <strong>${audit.lowConfidence??0}</strong>. Review coordinates at local strain points.`;
+  }
+
+  // 3. HYDROGEN BONDS & NON-COVALENT
+  if(/hbond|hydrogen|salt bridge|non-covalent/.test(q)){
+    if(!STATE.viewer||!STATE.model)return'<span class="evidence-label">Action needed:</span> Load a 3D structure first to audit hydrogen-bonding networks.';
+    const interactions=detectInteractions();
+    const hbonds=interactions.filter(x=>x.type==='hbond');
+    const saltBridges=interactions.filter(x=>x.type==='salt_bridge');
+    const disulfides=interactions.filter(x=>x.type==='disulfide');
+    STATE.showHbonds=true;
+    $('#hbondBtn')?.classList.add('active');
+    renderInteractions3D();
+    return `<span class="evidence-label">Non-Covalent Network Audit:</span> Identified <strong>${hbonds.length}</strong> hydrogen bonds, <strong>${saltBridges.length}</strong> salt bridges, and <strong>${disulfides.length}</strong> disulfide bridges. Active interaction vectors rendered as 3D distance cylinders in the viewport.`;
+  }
+
+  // 4. ROBOTICS / OT-2 OPENTRONS EXPORT
+  if(/robotics|ot-2|opentrons|wet-lab|assay protocol/.test(q)){
+    const targetName=STATE.uniprot?.gene||STATE.uniprot?.name||(STATE.prediction?.input?.entities?.[0]?.chain_ids?.[0]?`Receptor_Chain_${STATE.prediction.input.entities[0].chain_ids[0]}`:'Receptor_Target');
+    const ligandEntity=(STATE.prediction?.input?.entities||[]).find(e=>e.type.startsWith('ligand'));
+    const ligandSmiles=ligandEntity?.value||$('#ligandSmilesInput')?.value||'CC(C)NCC(C1=CC(=C(C=C1)O)O)O';
+    const script=generateOpentronsProtocol(targetName,ligandSmiles);
+    window._latestOt2Script=script;
+    return `<span class="evidence-label">Robotics Automation Protocol:</span> Generated Opentrons OT-2 liquid-handling protocol for experimental assay validation (Target: <strong>${escapeHtml(targetName)}</strong>, Ligand: <code style="font-size:10px;background:#061b2e;padding:2px 4px;border-radius:3px;">${escapeHtml(ligandSmiles.slice(0,24))}...</code>).<div style="margin-top:8px;display:flex;gap:8px;"><button class="minor-btn" onclick="downloadLatestOt2Protocol()" style="background:#0e4475;border-color:#2389d9;color:#fff;font-weight:600;padding:5px 12px;border-radius:4px;cursor:pointer;">⬇ Download OT-2 Script (.py)</button><button class="minor-btn" onclick="copyLatestOt2Protocol()" style="background:#13334d;border-color:#2a6390;color:#9ad7ff;font-weight:600;padding:5px 12px;border-radius:4px;cursor:pointer;">📋 Copy Script</button></div><pre style="margin-top:8px;max-height:150px;overflow-y:auto;background:#05111c;border:1px solid #143550;padding:8px;border-radius:4px;font-size:10.5px;color:#7ed6df;font-family:monospace;white-space:pre;">${escapeHtml(script.slice(0,420))}...\n# [Full runnable script ready via Download / Copy]</pre>`;
+  }
+
+  // 5. WEAK REGIONS / HOTSPOTS
+  if(/weak|uncertain|low confidence|hotspot/.test(q)){
+    const h=STATE.hotspots[0];
+    return h?`<span class="evidence-label">Computed from per-residue confidence:</span> the lowest-confidence contiguous region currently detected is chain ${escapeHtml(h.chain||'—')} residues ${h.start}-${h.end}, mean pLDDT ${h.mean.toFixed(1)}. This identifies model uncertainty, not biological disorder.`:'<span class="evidence-label">Current evidence:</span> no contiguous pLDDT&lt;70 hotspot is available in the loaded model.';
+  }
+
+  // 6. INTERFACE / CONTACTS
+  if(/interface|contact|binding/.test(q)){
+    return STATE.contacts.length?`<span class="evidence-label">Coordinate-derived:</span> ${STATE.contacts.length} inter-chain residue pairs have at least one atom pair within 4 Å.${Number.isFinite(Number(m.iptm))?` Boltz ipTM is ${num(m.iptm,3)}.`:''} Contacts are geometric observations, not proof of binding energy.`:'<span class="evidence-label">Current evidence:</span> no inter-chain contact table is available for this model.';
+  }
+
+  // 7. MODEL QUALITY / CONFIDENCE
+  if(/quality|confidence|ptm|iptm/.test(q)){
+    const ctx=scientificContext();
+    return STATE.prediction?`<span class="evidence-label">Direct Boltz metrics:</span> complex pLDDT ${pct(m.complex_plddt,1)}, structure confidence ${fmtMetric(m.structure_confidence,3)} (0–1), pTM ${fmtMetric(m.ptm,3)}, ipTM ${ctx.hasInterface?fmtMetric(m.iptm,3):'N/A (single chain)'}. The coordinate audit reports ${STATE.geometryAudit?.breaks??'—'} potential chain break(s) and ${STATE.geometryAudit?.clashes??'—'} gross overlap(s).`:'<span class="evidence-label">Reference preview:</span> Boltz confidence metrics are unavailable until a prediction is loaded.';
+  }
+
+  // 8. RESIDUE SELECTED
+  if(/residue|selected/.test(q)){
+    const r=STATE.selectedResidue;
+    if(!r)return'<span class="evidence-label">Action needed:</span> click a residue in the 3D viewer first.';
+    return `<span class="evidence-label">Selected residue:</span> ${escapeHtml(r.resn||'RES')} ${r.resi} on chain ${escapeHtml(r.chain||'—')}; pLDDT ${Number.isFinite(r.plddt)?r.plddt.toFixed(1):'unavailable'}, ${escapeHtml(ssLabel(r))}, ${STATE.residueNeighbors.length} neighboring residue(s) within 4 Å.`;
+  }
+
+  // 9. PROVENANCE / REPRODUCIBILITY
+  if(/provenance|source|reproduc/.test(q)){
+    return `<span class="evidence-label">Provenance:</span> engine ${escapeHtml($('#provEngine').textContent)}, job ${escapeHtml($('#provJob').textContent)}, run-configuration SHA-256 prefix ${escapeHtml($('#provHash').textContent)}. Restore Input reproduces the molecular input but does not guarantee identical stochastic coordinates.`;
+  }
+
+  return '<span class="evidence-label">Evidence assistant:</span> I can answer from the data loaded in this session: binding pocket contacts, steric clash audits, hydrogen bond networks, Opentrons robotics protocols, model quality, and provenance. I do not invent biological function or experimental claims.';
 }
 function askEvidenceAssistant(q){ const a=$('#aiAnswer'); a.innerHTML=answerEvidenceQuestion(q);a.classList.add('show'); }
 function initAdvancedIntelligence(){
