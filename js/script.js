@@ -2667,7 +2667,7 @@ const BiosimBridge = {
         }
     },
 
-    async exportAlphaFoldManifest() { return this.exportStructureManifest(); },
+    async exportBiomolecularManifest() { return this.exportStructureManifest(); },
     async exportStructureManifest() {
         try {
             if (!this.lastDiscovery) {
