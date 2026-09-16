@@ -41,7 +41,7 @@ const criticalStartupFunctions = [
   'renderResidueIntelligence',
   'renderProvenance',
   'renderEnsemble',
-  'renderAlphaFoldReference',
+  'renderExperimentalReference',
   'updateContextualTabs',
   'checkBackend',
   'openPhaseWorkspace',
