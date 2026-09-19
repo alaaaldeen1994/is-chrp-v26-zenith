@@ -2121,6 +2121,32 @@ async def serve_dna_video():
     return Response(content=b"", status_code=200, media_type="video/mp4")
 
 
+@app.get("/deck.pdf")
+async def serve_deck_pdf():
+    for candidate in ["deck.pdf", "assets/deck.pdf", "reports/Nilus_Lab_Pitch_Deck.pdf", "assets/Nilus_Lab_Pitch_Deck_2026.pdf"]:
+        if os.path.exists(candidate):
+            return FileResponse(candidate, media_type="application/pdf", filename="Nilus_Lab_Pitch_Deck.pdf")
+    raise HTTPException(status_code=404, detail="Pitch deck not found")
+
+
+@app.get("/cv.pdf")
+async def serve_cv_pdf():
+    for candidate in ["cv.pdf", "assets/cv.pdf"]:
+        if os.path.exists(candidate):
+            return FileResponse(candidate, media_type="application/pdf", filename="Alaa_Aldeen_CV.pdf")
+    raise HTTPException(status_code=404, detail="CV not found")
+
+
+@app.get("/Nilus_Lab_Pitch_Deck.pdf")
+async def serve_deck_pdf_alias():
+    return await serve_deck_pdf()
+
+
+@app.get("/Alaa_Aldeen_CV.pdf")
+async def serve_cv_pdf_alias():
+    return await serve_cv_pdf()
+
+
 
 
 # ==================== UNIPROT LIVE LOOKUP ====================
