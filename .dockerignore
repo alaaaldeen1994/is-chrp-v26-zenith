@@ -144,6 +144,13 @@ last_conversation_transcript.txt
 # ── Large binary assets NOT needed at runtime ────────────────────────────────
 *.mp4
 *.pdf
+!deck.pdf
+!cv.pdf
+!assets/deck.pdf
+!assets/cv.pdf
+!assets/Nilus_Lab_Pitch_Deck_2026.pdf
+!Nilus_Lab_Pitch_Deck..pdf
+!Alaa aldeen cv.pdf
 *.lnk
 *.zip
 Experiment_*.png
