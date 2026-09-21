@@ -3150,6 +3150,114 @@ const UNIVERSAL_CHEMICAL_CATALOG = [
     "mw": "307.32 Da",
     "cat": "cofactors",
     "desc": "Endogenous tripeptide antioxidant protecting cells against reactive oxygen species and maintaining protein thiols."
+  },
+  {
+    "code3": "TTX",
+    "code1": "TTX",
+    "name": "Tetrodotoxin",
+    "formula": "C11H17N3O8",
+    "mw": "319.27 Da",
+    "cat": "bioactive",
+    "desc": "Deadly marine neurotoxin from pufferfish; selectively occludes the outer pore vestibule of voltage-gated sodium channels (NaV1.4) with sub-nanomolar affinity."
+  },
+  {
+    "code3": "CPS",
+    "code1": "CAP",
+    "name": "Capsaicin",
+    "formula": "C18H27NO3",
+    "mw": "305.41 Da",
+    "cat": "bioactive",
+    "desc": "Fiery vanilloid alkaloid in chili peppers; selectively activates TRPV1 heat/pain nociceptors, producing perceived burning sensation at room temperature."
+  },
+  {
+    "code3": "RAP",
+    "code1": "RAP",
+    "name": "Rapamycin (Sirolimus)",
+    "formula": "C51H79NO13",
+    "mw": "914.17 Da",
+    "cat": "bioactive",
+    "desc": "Master biogerontological 31-membered macrolide; binds intracellular FKBP12 to inhibit mTOR kinase complex and extend model organism lifespan."
+  },
+  {
+    "code3": "TAX",
+    "code1": "TAX",
+    "name": "Paclitaxel (Taxol)",
+    "formula": "C47H51NO14",
+    "mw": "853.91 Da",
+    "cat": "bioactive",
+    "desc": "Complex diterpenoid from Pacific Yew tree; binds beta-tubulin interior to freeze microtubule disassembly, arresting cancer cells in mitosis."
+  },
+  {
+    "code3": "PSB",
+    "code1": "PSB",
+    "name": "Psilocybin",
+    "formula": "C12H17N2O4P",
+    "mw": "284.25 Da",
+    "cat": "bioactive",
+    "desc": "Tryptamine prodrug alkaloid; rapidly dephosphorylated in vivo to psilocin, acting as a potent 5-HT2A serotonin receptor agonist."
+  },
+  {
+    "code3": "CFF",
+    "code1": "CAF",
+    "name": "Caffeine",
+    "formula": "C8H10N4O2",
+    "mw": "194.19 Da",
+    "cat": "bioactive",
+    "desc": "Purine xanthine alkaloid stimulant; non-selectively antagonizes A1 and A2A adenosine receptors in the central nervous system."
+  },
+  {
+    "code3": "MLT",
+    "code1": "MLT",
+    "name": "Melatonin",
+    "formula": "C13H16N2O2",
+    "mw": "232.28 Da",
+    "cat": "bioactive",
+    "desc": "Pineal indoleamine neurohormone regulating mammalian circadian sleep-wake cycles and serving as an endogenous free radical scavenger."
+  },
+  {
+    "code3": "MTF",
+    "code1": "MET",
+    "name": "Metformin",
+    "formula": "C4H11N5",
+    "mw": "129.16 Da",
+    "cat": "bioactive",
+    "desc": "First-line antidiabetic biguanide; inhibits mitochondrial respiratory complex I and activates AMPK longevity pathways."
+  },
+  {
+    "code3": "PN1",
+    "code1": "PEN",
+    "name": "Penicillin G",
+    "formula": "C16H18N2O4S",
+    "mw": "334.39 Da",
+    "cat": "bioactive",
+    "desc": "Pioneering beta-lactam antibiotic; acylates bacterial transpeptidase enzymes to permanently disrupt cell wall peptidoglycan crosslinking."
+  },
+  {
+    "code3": "MOR",
+    "code1": "MOR",
+    "name": "Morphine",
+    "formula": "C17H19NO3",
+    "mw": "285.34 Da",
+    "cat": "bioactive",
+    "desc": "Prototypical rigid pentacyclic benzylisoquinoline alkaloid from opium poppy; high-affinity agonist at mu-opioid receptors for profound analgesia."
+  },
+  {
+    "code3": "CHL",
+    "code1": "CLA",
+    "name": "Chlorophyll a",
+    "formula": "C55H72MgN4O5",
+    "mw": "893.49 Da",
+    "cat": "bioactive",
+    "desc": "Photosynthetic pigment coordinating magnesium (Mg2+) in a chlorin macrocycle, anchored into thylakoid membranes by a C20 phytol tail."
+  },
+  {
+    "code3": "THC",
+    "code1": "THC",
+    "name": "Delta-9-THC",
+    "formula": "C21H30O2",
+    "mw": "314.46 Da",
+    "cat": "bioactive",
+    "desc": "Principal psychoactive phytocannabinoid from Cannabis sativa; partial agonist at cannabinoid CB1 and CB2 receptors."
   }
 ];
 
@@ -3158,7 +3266,12 @@ async function fetchAndLoadUniversalMolecule(query){
   if(!query) return toast('Please enter a chemical name or 3-letter code.', true);
 
   const cleanQuery = query.toUpperCase();
-  const matched = UNIVERSAL_CHEMICAL_CATALOG.find(x => x.code3 === cleanQuery || x.name.toLowerCase() === query.toLowerCase());
+  const matched = UNIVERSAL_CHEMICAL_CATALOG.find(x => 
+    x.code3 === cleanQuery || 
+    x.name.toLowerCase() === query.toLowerCase() || 
+    (x.code1 && x.code1.toUpperCase() === cleanQuery) ||
+    x.name.toLowerCase().includes(query.toLowerCase())
+  );
 
   // Special fast-path for L-Arginine offline fallback
   if(cleanQuery === 'ARG' || query.toLowerCase() === 'arginine'){
@@ -3174,15 +3287,26 @@ async function fetchAndLoadUniversalMolecule(query){
   let formula = matched ? matched.formula : '—';
   let mw = matched ? matched.mw : '—';
 
-  // Step 1: If 1-4 alphanumeric characters, check RCSB PDB Chemical Component Dictionary (CCD)
-  if(/^[A-Z0-9]{1,4}$/i.test(query)){
+  // Step 1: Check RCSB PDB Chemical Component Dictionary (CCD) via code or matched code3
+  const candidateCodes = [];
+  if(/^[A-Z0-9]{1,4}$/i.test(query)) candidateCodes.push(cleanQuery);
+  if(matched && matched.code3 && !candidateCodes.includes(matched.code3)) candidateCodes.push(matched.code3.toUpperCase());
+
+  for(const cCode of candidateCodes){
+    if(sdfText) break;
     try {
-      const r = await fetch(`https://files.rcsb.org/ligands/download/${cleanQuery}_ideal.sdf`);
+      const r = await fetch(`https://files.rcsb.org/ligands/download/${cCode}_ideal.sdf`);
       if(r.ok){
         const txt = await r.text();
         if(txt && txt.includes('M  END')){
           sdfText = txt;
-          codeName = cleanQuery;
+          codeName = cCode;
+          if(matched) {
+            displayName = matched.name;
+            formula = matched.formula;
+            mw = matched.mw;
+          }
+          break;
         }
       }
     } catch{}
@@ -3297,23 +3421,27 @@ function showUniversalMolecularLibrary(){
       </div>
       <div style="margin-top:8px;display:flex;gap:5px;align-items:center;flex-wrap:wrap;font-size:8px;color:#718aa0;">
         <span style="font-weight:600;color:#A7BED2;">Quick shortcuts:</span>
+        <button class="minor-btn" style="padding:2px 7px;font-size:8px;background:#0d2e4a;color:#65cbf3;border-color:#1c5885;font-weight:600;" onclick="window.fetchAndLoadUniversalMolecule('Tetrodotoxin')">⚡ Tetrodotoxin</button>
+        <button class="minor-btn" style="padding:2px 7px;font-size:8px;background:#0d2e4a;color:#65cbf3;border-color:#1c5885;font-weight:600;" onclick="window.fetchAndLoadUniversalMolecule('Capsaicin')">⚡ Capsaicin</button>
+        <button class="minor-btn" style="padding:2px 7px;font-size:8px;background:#0d2e4a;color:#65cbf3;border-color:#1c5885;font-weight:600;" onclick="window.fetchAndLoadUniversalMolecule('RAP')">RAP · Rapamycin</button>
         <button class="minor-btn" style="padding:2px 7px;font-size:8px;" onclick="window.fetchAndLoadUniversalMolecule('SEC')">SEC · Selenocysteine</button>
         <button class="minor-btn" style="padding:2px 7px;font-size:8px;" onclick="window.fetchAndLoadUniversalMolecule('ORN')">ORN · Ornithine</button>
         <button class="minor-btn" style="padding:2px 7px;font-size:8px;" onclick="window.fetchAndLoadUniversalMolecule('HYP')">HYP · Hydroxyproline</button>
         <button class="minor-btn" style="padding:2px 7px;font-size:8px;" onclick="window.fetchAndLoadUniversalMolecule('SEP')">SEP · Phosphoserine</button>
         <button class="minor-btn" style="padding:2px 7px;font-size:8px;" onclick="window.fetchAndLoadUniversalMolecule('ATP')">ATP</button>
         <button class="minor-btn" style="padding:2px 7px;font-size:8px;" onclick="window.fetchAndLoadUniversalMolecule('HEM')">HEM · Heme</button>
-        <button class="minor-btn" style="padding:2px 7px;font-size:8px;" onclick="window.fetchAndLoadUniversalMolecule('GABA')">GABA</button>
-        <button class="minor-btn" style="padding:2px 7px;font-size:8px;" onclick="window.fetchAndLoadUniversalMolecule('Caffeine')">Caffeine</button>
+        <button class="minor-btn" style="padding:2px 7px;font-size:8px;" onclick="window.fetchAndLoadUniversalMolecule('CFF')">Caffeine</button>
+        <button class="minor-btn" style="padding:2px 7px;font-size:8px;" onclick="window.fetchAndLoadUniversalMolecule('PSB')">Psilocybin</button>
       </div>
     </div>
 
     <div style="font-size:9.5px;color:#38B6FF;background:rgba(21,151,255,0.08);border:1px solid #16466B;border-radius:7px;padding:7px 12px;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;">
-      <span><b>Open Chemical Universe:</b> 134+ curated reference building blocks built-in &middot; <b>35,000+ RCSB CCD</b> components &middot; <b>115,000,000+ PubChem</b> structures live via search.</span>
-      <span id="catalogCount" style="color:#A7BED2;font-size:8.5px;font-weight:600;">Showing 134 monomers</span>
+      <span><b>Open Chemical Universe:</b> 146+ curated reference building blocks built-in &middot; <b>35,000+ RCSB CCD</b> components &middot; <b>115,000,000+ PubChem</b> structures live via search.</span>
+      <span id="catalogCount" style="color:#A7BED2;font-size:8.5px;font-weight:600;">Showing 146 molecules</span>
     </div>
     <div style="margin-bottom:10px;display:flex;gap:5px;flex-wrap:wrap;" id="molFilterBar">
-      <button class="minor-btn active" style="padding:4px 9px;font-size:8.5px;" data-cat="all">All Monomers (134)</button>
+      <button class="minor-btn active" style="padding:4px 9px;font-size:8.5px;" data-cat="all">All Library (146)</button>
+      <button class="minor-btn" style="padding:4px 9px;font-size:8.5px;color:#65CBF3;border-color:#1c5885;font-weight:600;" data-cat="bioactive">Bioactive Alkaloids &amp; Toxins (14)</button>
       <button class="minor-btn" style="padding:4px 9px;font-size:8.5px;" data-cat="canonical">Canonical (20)</button>
       <button class="minor-btn" style="padding:4px 9px;font-size:8.5px;" data-cat="d_amino">D-Stereoisomers (19)</button>
       <button class="minor-btn" style="padding:4px 9px;font-size:8.5px;" data-cat="natural_nonprot">Non-Proteinogenic (26)</button>
@@ -3357,11 +3485,47 @@ function showUniversalMolecularLibrary(){
   const searchInput = $('#libSearchInput');
   const searchBtn = $('#libSearchBtn');
   const countBadge = $('#catalogCount');
+  const molGrid = $('#molGrid');
 
   const updateVisibleCount = () => {
-    if(!countBadge) return;
-    const visible = $$('#molGrid .mol-card').filter(c => c.style.display !== 'none').length;
-    countBadge.textContent = `Showing ${visible} of ${UNIVERSAL_CHEMICAL_CATALOG.length} monomers`;
+    if(!countBadge || !molGrid) return;
+    const q = searchInput ? searchInput.value.trim() : '';
+    const visibleCards = $$('#molGrid .mol-card').filter(c => c.style.display !== 'none');
+
+    // Remove any previous dynamic search card
+    const prevBanner = $('#dynamicSearchBanner');
+    if(prevBanner) prevBanner.remove();
+
+    if(q.length >= 2){
+      // Prepend dynamic live database search card
+      const banner = document.createElement('div');
+      banner.id = 'dynamicSearchBanner';
+      banner.style.cssText = 'grid-column:1 / -1; background:linear-gradient(135deg, rgba(8,34,56,0.95), rgba(12,48,77,0.95)); border:1.5px solid #38B6FF; border-radius:10px; padding:12px 14px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; margin-bottom:6px; box-shadow:0 0 16px rgba(56,182,255,0.18);';
+      banner.innerHTML = `
+        <div>
+          <div style="font-size:12px; font-weight:700; color:#38B6FF; display:flex; align-items:center; gap:6px;">
+            <span style="font-size:14px;">⚛</span> <span>Live Open Database Query: "<b>${escapeHtml(q)}</b>"</span>
+          </div>
+          <div style="font-size:8.5px; color:#A7BED2; margin-top:3px;">
+            Search directly across <b>35,000+ RCSB CCD</b> components and <b>115,000,000+ PubChem 3D</b> structures.
+          </div>
+        </div>
+        <button class="minor-btn" id="dynamicLoadBtn" style="background:#005fb8; border-color:#38B6FF; color:#fff; font-weight:700; padding:7px 16px; font-size:9.5px; border-radius:6px; cursor:pointer;">
+          ⚡ Fetch &amp; Load "${escapeHtml(q)}" in 3D
+        </button>
+      `;
+      molGrid.prepend(banner);
+      const dynBtn = $('#dynamicLoadBtn');
+      if(dynBtn) dynBtn.onclick = () => fetchAndLoadUniversalMolecule(q);
+
+      if(visibleCards.length > 0){
+        countBadge.textContent = `Found ${visibleCards.length} curated matches + Open Database (RCSB & PubChem)`;
+      } else {
+        countBadge.textContent = `Querying Open Database for "${q}" (35,000+ RCSB & 115M+ PubChem)...`;
+      }
+    } else {
+      countBadge.textContent = `Showing ${visibleCards.length} of ${UNIVERSAL_CHEMICAL_CATALOG.length} molecules`;
+    }
   };
 
   if(searchBtn && searchInput){
