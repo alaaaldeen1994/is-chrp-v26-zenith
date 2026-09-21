@@ -62,19 +62,20 @@ button,input,textarea,select{font:inherit}button{cursor:pointer}
 .focus-flash{animation:focusFlash 1.25s ease}@keyframes focusFlash{0%,100%{box-shadow:var(--shadow)}35%{box-shadow:0 0 0 2px rgba(39,149,255,.75),0 0 35px rgba(39,149,255,.24)}}
 .context-menu{position:fixed;z-index:120;min-width:190px;padding:6px;border:1px solid var(--line2);border-radius:10px;background:#071725;box-shadow:0 20px 55px rgba(0,0,0,.48);display:none}.context-menu.show{display:block}.context-menu button{width:100%;border:0;background:transparent;color:#cfe0ec;padding:9px 10px;text-align:left;border-radius:7px;font-size:9px}.context-menu button:hover{background:#0e2b45}.context-menu .danger{color:#ff929f}
 .modal-backdrop{position:fixed;inset:0;z-index:130;background:rgba(1,6,11,.74);backdrop-filter:blur(8px);display:none;place-items:center;padding:20px}.modal-backdrop.show{display:grid}.modal{width:min(680px,92vw);max-height:82vh;overflow:auto;border:1px solid var(--line2);border-radius:14px;background:linear-gradient(180deg,#0b2135,#071522);box-shadow:0 28px 90px rgba(0,0,0,.55);padding:18px}
-.modal.modal-wide{width:min(1200px,96vw);max-height:92vh;height:92vh;display:flex;flex-direction:column;overflow:hidden!important;padding:20px 24px 16px 24px;background:linear-gradient(180deg,#071626 0%,#030d17 100%);border:1px solid #1a4971;box-shadow:0 35px 100px rgba(0,0,0,.7),0 0 40px rgba(16,77,126,.2)}
+.modal.modal-wide{width:min(1180px,95vw);max-height:90vh;height:90vh;display:flex;flex-direction:column;overflow:hidden!important;padding:20px 24px 16px 24px;background:#030f1a;border:1px solid #143d60;box-shadow:0 35px 100px rgba(0,0,0,.8)}
 .modal.modal-wide #modalBody{display:flex;flex-direction:column;flex:1;min-height:0;overflow:hidden}
-.modal.modal-wide .modal-actions{margin-top:12px;padding-top:10px;border-top:1px solid rgba(26,73,113,.5)}
+.modal.modal-wide .modal-actions{margin-top:12px;padding-top:10px;border-top:1px solid rgba(20,61,96,.5)}
+#molGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));grid-auto-rows:minmax(165px,auto);gap:12px;flex:1;min-height:0;overflow-y:auto!important;padding-right:6px}
 #molGrid::-webkit-scrollbar{width:7px}
-#molGrid::-webkit-scrollbar-track{background:rgba(3,13,23,.6);border-radius:4px}
-#molGrid::-webkit-scrollbar-thumb{background:#1a4971;border-radius:4px}
+#molGrid::-webkit-scrollbar-track{background:rgba(3,15,26,.6);border-radius:4px}
+#molGrid::-webkit-scrollbar-thumb{background:#16466b;border-radius:4px}
 #molGrid::-webkit-scrollbar-thumb:hover{background:#38B6FF}
 #molFilterBar{scrollbar-width:none!important;-ms-overflow-style:none!important}
 #molFilterBar::-webkit-scrollbar{display:none!important;width:0!important;height:0!important}
 .lib-hotlist::-webkit-scrollbar{display:none!important;width:0!important;height:0!important}
 .lib-hotlist{scrollbar-width:none!important;-ms-overflow-style:none!important}
-.mol-card{transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease}
-.mol-card:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.45)}.modal h2{font-size:16px;margin:0}.modal p{color:#9db2c5;font-size:9px;line-height:1.6}.modal-head{display:flex;justify-content:space-between;gap:14px;align-items:center}.modal-close{border:1px solid var(--line);background:#0a1d2d;color:#bdd0df;border-radius:8px;padding:7px 9px}.modal-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin:12px 0}.modal-kpi{padding:11px;border:1px solid var(--line);border-radius:9px;background:#081a29}.modal-kpi span{display:block;color:#7792a8;font-size:8px}.modal-kpi b{display:block;font-size:15px;margin-top:4px}.modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:14px}.modal-actions button{border-radius:8px;padding:9px 12px;font-size:9px}.modal-actions .confirm{border:0;background:linear-gradient(180deg,#258fff,#1168ee);color:white;font-weight:700}.modal-actions .cancel{border:1px solid var(--line);background:#0b1d2c;color:#bfd1df}
+.mol-card{min-height:165px!important;background:#061826!important;border:1px solid #0e2c45!important;border-radius:10px;padding:14px;display:flex;flex-direction:column;justify-content:space-between;transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease}
+.mol-card:hover{transform:translateY(-2px);border-color:#1c5885!important;box-shadow:0 8px 25px rgba(0,0,0,.45),0 0 15px rgba(56,182,255,.1)}.modal h2{font-size:16px;margin:0}.modal p{color:#9db2c5;font-size:9px;line-height:1.6}.modal-head{display:flex;justify-content:space-between;gap:14px;align-items:center}.modal-close{border:1px solid var(--line);background:#0a1d2d;color:#bdd0df;border-radius:8px;padding:7px 9px}.modal-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin:12px 0}.modal-kpi{padding:11px;border:1px solid var(--line);border-radius:9px;background:#081a29}.modal-kpi span{display:block;color:#7792a8;font-size:8px}.modal-kpi b{display:block;font-size:15px;margin-top:4px}.modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:14px}.modal-actions button{border-radius:8px;padding:9px 12px;font-size:9px}.modal-actions .confirm{border:0;background:linear-gradient(180deg,#258fff,#1168ee);color:white;font-weight:700}.modal-actions .cancel{border:1px solid var(--line);background:#0b1d2c;color:#bfd1df}
 .table-wrap{overflow:auto;border:1px solid var(--line);border-radius:9px}.data-table{width:100%;border-collapse:collapse;font-size:8.5px}.data-table th,.data-table td{padding:8px 9px;border-bottom:1px solid rgba(29,65,96,.7);text-align:left}.data-table th{color:#7994aa;background:#071624;position:sticky;top:0}.data-table td{color:#bed0dd}.data-table tr:last-child td{border-bottom:0}.mono{font-family:'IBM Plex Mono',monospace}.empty-state{padding:24px;text-align:center;color:#7892a7;font-size:9px}.loading-dot{width:7px;height:7px;border-radius:50%;display:inline-block;background:#f4c84d;box-shadow:0 0 9px rgba(244,200,77,.4);margin-right:6px}.api-off{color:#ff9b9b!important}.api-on{color:#5be5b5!important}
 @media(max-width:1180px){.run-actions{grid-template-columns:1fr 1.5fr}}
 .advanced-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.advanced-grid .field{margin-top:0}.advanced-grid .wide{grid-column:1/-1}.advanced-note{grid-column:1/-1;border:1px solid #1b4667;background:#071c2d;border-radius:8px;padding:8px 9px;color:#7895aa;font-size:7.2px;line-height:1.5}.advanced-note b{color:#a9cee9}.binder-row{display:none}.binder-row.show{display:block}.entity-actions{display:grid;grid-template-columns:1fr 1fr;gap:6px}.science-chip{display:inline-flex;align-items:center;gap:5px;padding:4px 7px;border:1px solid #1c506f;border-radius:999px;background:#072135;color:#78c6ff;font-size:6.7px}.ensemble-grid,.ref-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.ensemble-kpi,.ref-kpi{padding:8px;border:1px solid var(--line);border-radius:8px;background:#081d2d}.ensemble-kpi b,.ref-kpi b{display:block;font-size:11px}.ensemble-kpi span,.ref-kpi span{display:block;color:#7892a7;font-size:6.5px;margin-top:3px}.ensemble-note,.ref-note{font-size:7px;line-height:1.5;color:#7e99ad;margin-top:8px}.sample-active{color:#63e4b8!important}.sample-button{border:1px solid #23577c;background:#0a2438;color:#c8deec;border-radius:6px;padding:5px 7px;font-size:7px}.sample-button:hover{border-color:#2d83bd}.ref-actions{display:flex;gap:6px;margin-top:9px}.ref-actions button{flex:1;border:1px solid var(--line);background:#0a2032;color:#cfe0ec;border-radius:8px;padding:7px;font-size:7.5px}.metric-help{cursor:help;text-decoration:underline dotted rgba(150,190,220,.55);text-underline-offset:2px}
@@ -3488,127 +3489,108 @@ function appendAminoToSeq(c){
 }
 window.appendAminoToSeq = appendAminoToSeq;
 
-// ---------- Vibrant Chemical Category Themes & Styling ----------
-const CATEGORY_THEMES = {
-  all: { label: 'All Library', color: '#38B6FF', border: '#1c5885', bg: 'rgba(56,182,255,0.12)', badge: 'All Chemical Monomers', dot: '#38B6FF' },
-  bioactive: { label: 'Bioactive Alkaloids & Toxins', color: '#10B981', border: '#059669', bg: 'rgba(16,185,129,0.14)', badge: '🧪 Toxin / Bioactive', dot: '#10B981' },
-  canonical: { label: 'Canonical', color: '#3B82F6', border: '#2563EB', bg: 'rgba(59,130,246,0.14)', badge: '🧬 Standard 20', dot: '#3B82F6' },
-  d_amino: { label: 'D-Stereoisomers', color: '#A855F7', border: '#9333EA', bg: 'rgba(168,85,247,0.14)', badge: '🔄 D-Chiral Mirror', dot: '#A855F7' },
-  natural_nonprot: { label: 'Non-Proteinogenic', color: '#F59E0B', border: '#D97706', bg: 'rgba(245,158,11,0.14)', badge: '⚡ Rare Physiological', dot: '#F59E0B' },
-  expanded_code: { label: 'Genetic Code & Click ncAAs', color: '#06B6D4', border: '#0891B2', bg: 'rgba(6,182,212,0.14)', badge: '🔬 Click / ncAA', dot: '#06B6D4' },
-  halogenated: { label: 'Halogenated', color: '#F97316', border: '#EA580C', bg: 'rgba(249,115,22,0.14)', badge: '⚛ Halogenated (F/Cl/Br/I)', dot: '#F97316' },
-  aromatic_bulky: { label: 'Aromatic & Bulky', color: '#6366F1', border: '#4F46E5', bg: 'rgba(99,102,241,0.14)', badge: '⬡ Bulky Aromatic Ring', dot: '#6366F1' },
-  ptm: { label: 'PTMs & Epigenetics', color: '#EC4899', border: '#DB2777', bg: 'rgba(236,72,153,0.14)', badge: '✨ Post-Translational', dot: '#EC4899' },
-  cofactors: { label: 'Cofactors & Bio-Ligands', color: '#38BDF8', border: '#0284C7', bg: 'rgba(56,189,248,0.14)', badge: '🔋 Essential Co-Factor', dot: '#38BDF8' }
-};
+
 
 function showUniversalMolecularLibrary(){
   const html = `
-    <!-- Top Command & Control Header (Zero Box Clutter) -->
-    <div style="flex-shrink:0; margin-bottom:14px;">
+    <!-- Top Command Header (Single Clean Box) -->
+    <div style="flex-shrink:0; margin-bottom:12px;">
       
-      <!-- Unified Search Bar -->
-      <div style="display:flex; gap:10px; align-items:center; background:#04111d; border:1px solid #1a4971; border-radius:10px; padding:6px 8px 6px 12px; box-shadow:0 4px 20px rgba(0,0,0,0.35);">
-        <span style="font-size:14px; color:#38B6FF; display:flex; align-items:center;">🔍</span>
-        <input id="libSearchInput" placeholder="Search 146+ curated monomers or query 35,000+ RCSB CCD & 115M+ PubChem structures (e.g. Tetrodotoxin, Capsaicin, Rapamycin, ORN, HEM, ATP)..." style="flex:1; font-size:10.5px; background:transparent; border:0; color:#FFFFFF; outline:none; font-weight:500;">
+      <!-- Search Bar -->
+      <div style="display:flex; gap:10px; align-items:center; background:#051422; border:1px solid #16466B; border-radius:9px; padding:6px 8px 6px 12px;">
+        <span style="font-size:13px; color:#38B6FF; display:flex; align-items:center;">🔍</span>
+        <input id="libSearchInput" placeholder="Search 146+ curated monomers or query 35,000+ RCSB CCD & 115M+ PubChem structures (e.g. Tetrodotoxin, Capsaicin, Rapamycin, ORN, HEM, ATP)..." style="flex:1; font-size:10.5px; background:transparent; border:0; color:#F4F8FC; outline:none; font-weight:500;">
         <div style="display:flex; align-items:center; gap:8px;">
-          <span id="catalogCount" style="font-size:9px; font-weight:600; color:#64748B; background:#061826; border:1px solid #16364f; padding:4px 9px; border-radius:6px; white-space:nowrap;">146 Curated &middot; 35K+ RCSB &middot; 115M+ PubChem</span>
-          <button class="minor-btn" id="libSearchBtn" style="background:linear-gradient(135deg, #0284C7 0%, #2563EB 100%); border:0; color:#FFFFFF; font-weight:700; padding:8px 18px; font-size:10px; white-space:nowrap; border-radius:7px; cursor:pointer; box-shadow:0 0 16px rgba(37,99,235,0.35); transition:all .15s ease;">
+          <span id="catalogCount" style="font-size:9px; font-weight:600; color:#8CA3B8; background:#082035; border:1px solid #153e5e; padding:4px 9px; border-radius:6px; white-space:nowrap;">146 Curated &middot; 35K+ RCSB &middot; 115M+ PubChem</span>
+          <button class="minor-btn" id="libSearchBtn" style="background:#0a3254; border:1px solid #1f6498; color:#38B6FF; font-weight:700; padding:8px 18px; font-size:10px; white-space:nowrap; border-radius:7px; cursor:pointer;">
             ⚛ Fetch &amp; Load in 3D
           </button>
         </div>
       </div>
 
-      <!-- Quick Hotlist Pill Marquee with Vibrant Category Colors -->
-      <div class="lib-hotlist" style="margin-top:9px; display:flex; gap:6px; align-items:center; overflow-x:auto; padding-bottom:2px; white-space:nowrap;">
-        <span style="font-weight:700; color:#94A3B8; font-size:8.5px; text-transform:uppercase; letter-spacing:0.5px; flex-shrink:0;">⚡ Hotlist:</span>
-        <button class="minor-btn" style="padding:3px 9px; font-size:8.5px; background:rgba(16,185,129,0.12); color:#34D399; border:1px solid #059669; font-weight:700; flex-shrink:0; border-radius:6px;" onclick="window.fetchAndLoadUniversalMolecule('Tetrodotoxin')">⚡ Tetrodotoxin</button>
-        <button class="minor-btn" style="padding:3px 9px; font-size:8.5px; background:rgba(16,185,129,0.12); color:#34D399; border:1px solid #059669; font-weight:700; flex-shrink:0; border-radius:6px;" onclick="window.fetchAndLoadUniversalMolecule('Capsaicin')">⚡ Capsaicin</button>
-        <button class="minor-btn" style="padding:3px 9px; font-size:8.5px; background:rgba(16,185,129,0.12); color:#34D399; border:1px solid #059669; font-weight:700; flex-shrink:0; border-radius:6px;" onclick="window.fetchAndLoadUniversalMolecule('RAP')">RAP &middot; Rapamycin</button>
-        <button class="minor-btn" style="padding:3px 9px; font-size:8.5px; background:rgba(168,85,247,0.12); color:#C084FC; border:1px solid #9333EA; font-weight:700; flex-shrink:0; border-radius:6px;" onclick="window.fetchAndLoadUniversalMolecule('PSB')">PSB &middot; Psilocybin</button>
-        <button class="minor-btn" style="padding:3px 9px; font-size:8.5px; background:rgba(245,158,11,0.12); color:#FBBF24; border:1px solid #D97706; font-weight:700; flex-shrink:0; border-radius:6px;" onclick="window.fetchAndLoadUniversalMolecule('CFF')">CFF &middot; Caffeine</button>
-        <span style="color:#334155; margin:0 3px; flex-shrink:0;">|</span>
-        <button class="minor-btn" style="padding:3px 9px; font-size:8.5px; background:rgba(245,158,11,0.1); color:#FBBF24; border:1px solid #B45309; flex-shrink:0; border-radius:6px;" onclick="window.fetchAndLoadUniversalMolecule('SEC')">SEC &middot; Selenocysteine (21st)</button>
-        <button class="minor-btn" style="padding:3px 9px; font-size:8.5px; background:rgba(6,182,212,0.1); color:#22D3EE; border:1px solid #0E7490; flex-shrink:0; border-radius:6px;" onclick="window.fetchAndLoadUniversalMolecule('ORN')">ORN &middot; Ornithine</button>
-        <button class="minor-btn" style="padding:3px 9px; font-size:8.5px; background:rgba(236,72,153,0.1); color:#F472B6; border:1px solid #BE185D; flex-shrink:0; border-radius:6px;" onclick="window.fetchAndLoadUniversalMolecule('HYP')">HYP &middot; Hydroxyproline</button>
-        <button class="minor-btn" style="padding:3px 9px; font-size:8.5px; background:rgba(56,189,248,0.1); color:#38BDF8; border:1px solid #0369A1; flex-shrink:0; border-radius:6px;" onclick="window.fetchAndLoadUniversalMolecule('ATP')">ATP &middot; Energy</button>
-        <button class="minor-btn" style="padding:3px 9px; font-size:8.5px; background:rgba(239,68,68,0.1); color:#F87171; border:1px solid #B91C1C; flex-shrink:0; border-radius:6px;" onclick="window.fetchAndLoadUniversalMolecule('HEM')">HEM &middot; Heme B</button>
+      <!-- Quick Shortcuts (Unified Institutional Styling, No Rainbow) -->
+      <div class="lib-hotlist" style="margin-top:8px; display:flex; gap:5px; align-items:center; overflow-x:auto; padding-bottom:2px; white-space:nowrap;">
+        <span style="font-weight:700; color:#66859E; font-size:8.5px; text-transform:uppercase; letter-spacing:0.5px; flex-shrink:0;">Quick Shortcuts:</span>
+        <button class="minor-btn" style="padding:3px 9px; font-size:8.5px; background:#082035; color:#38B6FF; border:1px solid #16466B; font-weight:700; flex-shrink:0; border-radius:6px;" onclick="window.fetchAndLoadUniversalMolecule('Tetrodotoxin')">⚡ Tetrodotoxin</button>
+        <button class="minor-btn" style="padding:3px 9px; font-size:8.5px; background:#082035; color:#38B6FF; border:1px solid #16466B; font-weight:700; flex-shrink:0; border-radius:6px;" onclick="window.fetchAndLoadUniversalMolecule('Capsaicin')">⚡ Capsaicin</button>
+        <button class="minor-btn" style="padding:3px 9px; font-size:8.5px; background:#082035; color:#8CD4FF; border:1px solid #16466B; font-weight:600; flex-shrink:0; border-radius:6px;" onclick="window.fetchAndLoadUniversalMolecule('RAP')">RAP · Rapamycin</button>
+        <button class="minor-btn" style="padding:3px 9px; font-size:8.5px; background:#082035; color:#8CD4FF; border:1px solid #16466B; font-weight:600; flex-shrink:0; border-radius:6px;" onclick="window.fetchAndLoadUniversalMolecule('PSB')">PSB · Psilocybin</button>
+        <button class="minor-btn" style="padding:3px 9px; font-size:8.5px; background:#082035; color:#8CD4FF; border:1px solid #16466B; font-weight:600; flex-shrink:0; border-radius:6px;" onclick="window.fetchAndLoadUniversalMolecule('CFF')">CFF · Caffeine</button>
+        <span style="color:#20486b; margin:0 3px; flex-shrink:0;">|</span>
+        <button class="minor-btn" style="padding:3px 9px; font-size:8.5px; background:#082035; color:#8CD4FF; border:1px solid #16466B; flex-shrink:0; border-radius:6px;" onclick="window.fetchAndLoadUniversalMolecule('SEC')">SEC · Selenocysteine</button>
+        <button class="minor-btn" style="padding:3px 9px; font-size:8.5px; background:#082035; color:#8CD4FF; border:1px solid #16466B; flex-shrink:0; border-radius:6px;" onclick="window.fetchAndLoadUniversalMolecule('ORN')">ORN · Ornithine</button>
+        <button class="minor-btn" style="padding:3px 9px; font-size:8.5px; background:#082035; color:#8CD4FF; border:1px solid #16466B; flex-shrink:0; border-radius:6px;" onclick="window.fetchAndLoadUniversalMolecule('HYP')">HYP · Hydroxyproline</button>
+        <button class="minor-btn" style="padding:3px 9px; font-size:8.5px; background:#082035; color:#8CD4FF; border:1px solid #16466B; flex-shrink:0; border-radius:6px;" onclick="window.fetchAndLoadUniversalMolecule('ATP')">ATP</button>
+        <button class="minor-btn" style="padding:3px 9px; font-size:8.5px; background:#082035; color:#8CD4FF; border:1px solid #16466B; flex-shrink:0; border-radius:6px;" onclick="window.fetchAndLoadUniversalMolecule('HEM')">HEM · Heme B</button>
       </div>
 
-      <!-- Vibrant Segmented Category Tabs (Zero Scrollbar) -->
-      <div id="molFilterBar" style="margin-top:10px; display:flex; gap:6px; overflow-x:auto; padding:2px 0; white-space:nowrap;">
-        <button class="minor-btn active" style="padding:5px 12px; font-size:8.5px; font-weight:700; border-radius:7px; flex-shrink:0; background:rgba(56,182,255,0.18); border-color:#38B6FF; color:#FFFFFF; box-shadow:0 0 10px rgba(56,182,255,0.25);" data-cat="all">
-          <span style="color:#38B6FF; margin-right:4px;">●</span> All Monomers (146)
+      <!-- Segmented Category Tabs (Clean Institutional Styling, Zero Scrollbar) -->
+      <div id="molFilterBar" style="margin-top:9px; display:flex; gap:5px; overflow-x:auto; padding:2px 0; white-space:nowrap;">
+        <button class="minor-btn active" style="padding:5px 11px; font-size:8.5px; font-weight:700; border-radius:7px; flex-shrink:0; background:#0A3254; border-color:#38B6FF; color:#FFFFFF;" data-cat="all">
+          All Monomers (146)
         </button>
-        <button class="minor-btn" style="padding:5px 12px; font-size:8.5px; font-weight:700; border-radius:7px; flex-shrink:0; background:rgba(16,185,129,0.08); border-color:#059669; color:#6EE7B7;" data-cat="bioactive">
-          <span style="color:#10B981; margin-right:4px;">●</span> Bioactive &amp; Toxins (14)
+        <button class="minor-btn" style="padding:5px 11px; font-size:8.5px; font-weight:600; border-radius:7px; flex-shrink:0; background:#061826; border-color:#0E2C45; color:#A7BED2;" data-cat="bioactive">
+          Bioactive &amp; Toxins (14)
         </button>
-        <button class="minor-btn" style="padding:5px 12px; font-size:8.5px; font-weight:600; border-radius:7px; flex-shrink:0; background:rgba(59,130,246,0.08); border-color:#2563EB; color:#93C5FD;" data-cat="canonical">
-          <span style="color:#3B82F6; margin-right:4px;">●</span> Canonical 20
+        <button class="minor-btn" style="padding:5px 11px; font-size:8.5px; font-weight:600; border-radius:7px; flex-shrink:0; background:#061826; border-color:#0E2C45; color:#A7BED2;" data-cat="canonical">
+          Canonical (20)
         </button>
-        <button class="minor-btn" style="padding:5px 12px; font-size:8.5px; font-weight:600; border-radius:7px; flex-shrink:0; background:rgba(168,85,247,0.08); border-color:#9333EA; color:#D8B4FE;" data-cat="d_amino">
-          <span style="color:#A855F7; margin-right:4px;">●</span> D-Stereoisomers (19)
+        <button class="minor-btn" style="padding:5px 11px; font-size:8.5px; font-weight:600; border-radius:7px; flex-shrink:0; background:#061826; border-color:#0E2C45; color:#A7BED2;" data-cat="d_amino">
+          D-Stereoisomers (19)
         </button>
-        <button class="minor-btn" style="padding:5px 12px; font-size:8.5px; font-weight:600; border-radius:7px; flex-shrink:0; background:rgba(245,158,11,0.08); border-color:#D97706; color:#FCD34D;" data-cat="natural_nonprot">
-          <span style="color:#F59E0B; margin-right:4px;">●</span> Non-Proteinogenic (26)
+        <button class="minor-btn" style="padding:5px 11px; font-size:8.5px; font-weight:600; border-radius:7px; flex-shrink:0; background:#061826; border-color:#0E2C45; color:#A7BED2;" data-cat="natural_nonprot">
+          Non-Proteinogenic (26)
         </button>
-        <button class="minor-btn" style="padding:5px 12px; font-size:8.5px; font-weight:600; border-radius:7px; flex-shrink:0; background:rgba(6,182,212,0.08); border-color:#0891B2; color:#67E8F9;" data-cat="expanded_code">
-          <span style="color:#06B6D4; margin-right:4px;">●</span> Click &amp; ncAAs (17)
+        <button class="minor-btn" style="padding:5px 11px; font-size:8.5px; font-weight:600; border-radius:7px; flex-shrink:0; background:#061826; border-color:#0E2C45; color:#A7BED2;" data-cat="expanded_code">
+          Click &amp; ncAAs (17)
         </button>
-        <button class="minor-btn" style="padding:5px 12px; font-size:8.5px; font-weight:600; border-radius:7px; flex-shrink:0; background:rgba(249,115,22,0.08); border-color:#EA580C; color:#FDBA74;" data-cat="halogenated">
-          <span style="color:#F97316; margin-right:4px;">●</span> Halogenated (11)
+        <button class="minor-btn" style="padding:5px 11px; font-size:8.5px; font-weight:600; border-radius:7px; flex-shrink:0; background:#061826; border-color:#0E2C45; color:#A7BED2;" data-cat="halogenated">
+          Halogenated (11)
         </button>
-        <button class="minor-btn" style="padding:5px 12px; font-size:8.5px; font-weight:600; border-radius:7px; flex-shrink:0; background:rgba(99,102,241,0.08); border-color:#4F46E5; color:#A5B4FC;" data-cat="aromatic_bulky">
-          <span style="color:#6366F1; margin-right:4px;">●</span> Aromatic &amp; Bulky (11)
+        <button class="minor-btn" style="padding:5px 11px; font-size:8.5px; font-weight:600; border-radius:7px; flex-shrink:0; background:#061826; border-color:#0E2C45; color:#A7BED2;" data-cat="aromatic_bulky">
+          Aromatic &amp; Bulky (11)
         </button>
-        <button class="minor-btn" style="padding:5px 12px; font-size:8.5px; font-weight:600; border-radius:7px; flex-shrink:0; background:rgba(236,72,153,0.08); border-color:#DB2777; color:#F9A8D4;" data-cat="ptm">
-          <span style="color:#EC4899; margin-right:4px;">●</span> PTMs &amp; Epigenetics (15)
+        <button class="minor-btn" style="padding:5px 11px; font-size:8.5px; font-weight:600; border-radius:7px; flex-shrink:0; background:#061826; border-color:#0E2C45; color:#A7BED2;" data-cat="ptm">
+          PTMs &amp; Epigenetics (15)
         </button>
-        <button class="minor-btn" style="padding:5px 12px; font-size:8.5px; font-weight:600; border-radius:7px; flex-shrink:0; background:rgba(56,189,248,0.08); border-color:#0284C7; color:#7DD3FC;" data-cat="cofactors">
-          <span style="color:#38BDF8; margin-right:4px;">●</span> Cofactors &amp; Ligands (15)
+        <button class="minor-btn" style="padding:5px 11px; font-size:8.5px; font-weight:600; border-radius:7px; flex-shrink:0; background:#061826; border-color:#0E2C45; color:#A7BED2;" data-cat="cofactors">
+          Cofactors &amp; Ligands (15)
         </button>
       </div>
     </div>
 
-    <!-- Responsive High-Density Molecular Cards Grid -->
-    <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(310px, 1fr)); gap:12px; flex:1; min-height:0; overflow-y:auto; padding-right:6px;" id="molGrid">
-      ${UNIVERSAL_CHEMICAL_CATALOG.map(aa => {
-        const theme = CATEGORY_THEMES[aa.cat] || CATEGORY_THEMES.all;
-        return `
-        <div class="mol-card" data-cat="${aa.cat}" data-query="${escapeHtml(aa.name.toLowerCase())} ${escapeHtml(aa.code3.toLowerCase())}" style="background:linear-gradient(180deg,#071a2b 0%,#03101c 100%); border:1px solid ${theme.border}55; border-radius:10px; padding:13px 14px; display:flex; flex-direction:column; justify-content:space-between; position:relative; overflow:hidden;">
-          <!-- 3px Vibrant Category Color Bar -->
-          <div style="position:absolute; top:0; left:0; right:0; height:3px; background:${theme.color}; opacity:0.9;"></div>
-          
+    <!-- Full-Height Molecular Cards Grid (No Squashing!) -->
+    <div id="molGrid">
+      ${UNIVERSAL_CHEMICAL_CATALOG.map(aa => `
+        <div class="mol-card" data-cat="${aa.cat}" data-query="${escapeHtml(aa.name.toLowerCase())} ${escapeHtml(aa.code3.toLowerCase())}">
           <div>
-            <!-- Top Header: Name & 3-Letter Code Pill -->
-            <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:8px; margin-bottom:7px; margin-top:3px;">
-              <span style="font-size:13.5px; font-weight:700; color:#FFFFFF; letter-spacing:-0.2px;">${escapeHtml(aa.name)}</span>
-              <span style="font-size:10px; font-weight:700; padding:2px 8px; border-radius:5px; background:${theme.bg}; color:${theme.color}; border:1px solid ${theme.border}; font-family:'IBM Plex Mono',monospace; flex-shrink:0;">${escapeHtml(aa.code3)}${aa.code1 ? ` &middot; ${escapeHtml(aa.code1)}` : ''}</span>
+            <!-- Header: Name & Code -->
+            <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:8px; margin-bottom:8px;">
+              <span style="font-size:13px; font-weight:700; color:#F4F8FC; line-height:1.25;">${escapeHtml(aa.name)}</span>
+              <span style="font-size:9.5px; font-weight:700; padding:2px 7px; border-radius:5px; background:#082238; color:#38B6FF; border:1px solid #16466B; font-family:'IBM Plex Mono',monospace; flex-shrink:0;">${escapeHtml(aa.code3)}${aa.code1 ? ` &middot; ${escapeHtml(aa.code1)}` : ''}</span>
             </div>
 
-            <!-- Category Badge + Formula + MW Tags -->
-            <div style="display:flex; gap:5px; flex-wrap:wrap; margin-bottom:8px; align-items:center;">
-              <span style="font-size:8px; font-weight:700; padding:2px 6px; border-radius:4px; background:${theme.bg}; color:${theme.color}; border:1px solid ${theme.border}66;">${theme.badge}</span>
-              <span style="font-size:8px; color:#94A3B8; background:#030d17; padding:2px 6px; border-radius:4px; border:1px solid #16364f; font-family:monospace;">${escapeHtml(aa.formula)}</span>
-              <span style="font-size:8px; color:#38BDF8; background:#030d17; padding:2px 6px; border-radius:4px; border:1px solid #16364f; font-family:monospace;">${escapeHtml(aa.mw)}</span>
+            <!-- Formula & MW Tags -->
+            <div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:8px; align-items:center;">
+              <span style="font-size:8.5px; color:#A7BED2; background:#03101B; padding:2px 6px; border-radius:4px; border:1px solid #0E2C45; font-family:monospace;"><b>Formula:</b> ${escapeHtml(aa.formula)}</span>
+              <span style="font-size:8.5px; color:#65CBF3; background:#03101B; padding:2px 6px; border-radius:4px; border:1px solid #0E2C45; font-family:monospace;"><b>MW:</b> ${escapeHtml(aa.mw)}</span>
             </div>
 
-            <!-- Chemical / Biological Mechanism Description -->
-            <div style="font-size:8.5px; color:#94A3B8; line-height:1.5; margin-bottom:12px;">${escapeHtml(aa.desc)}</div>
+            <!-- Description -->
+            <div style="font-size:8.5px; color:#7E99AD; line-height:1.48; margin-bottom:12px;">${escapeHtml(aa.desc)}</div>
           </div>
 
-          <!-- Action Buttons -->
-          <div style="display:grid; grid-template-columns:1.35fr 1fr; gap:7px; margin-top:4px;">
-            <button class="minor-btn" onclick="window.fetchAndLoadUniversalMolecule('${escapeHtml(aa.code3)}')" style="background:linear-gradient(135deg, #0284C7 0%, #1D4ED8 100%); border:0; color:#FFFFFF; padding:7px 10px; font-size:9.5px; font-weight:700; border-radius:6px; cursor:pointer; box-shadow:0 2px 10px rgba(2,132,199,0.28); transition:all .15s ease;">
-              ⚛ 3D View
+          <!-- Bottom Action Buttons -->
+          <div style="display:grid; grid-template-columns:1.3fr 1fr; gap:6px; margin-top:auto;">
+            <button class="minor-btn" onclick="window.fetchAndLoadUniversalMolecule('${escapeHtml(aa.code3)}')" style="background:#082238; border:1px solid #1c5885; color:#8cd4ff; padding:7px 9px; font-size:9px; font-weight:700; border-radius:6px; cursor:pointer;">
+              ⚛ 3D Monomer
             </button>
-            <button class="minor-btn" onclick="window.appendAminoToSeq('${escapeHtml(aa.code1 || aa.code3)}')" style="background:#061826; border:1px solid #1E3A5F; color:#CBD5E1; padding:7px 8px; font-size:9px; font-weight:600; border-radius:6px; cursor:pointer; transition:all .15s ease;">
+            <button class="minor-btn" onclick="window.appendAminoToSeq('${escapeHtml(aa.code1 || aa.code3)}')" style="background:#041422; border:1px solid #0e2c45; color:#8ba4b8; padding:7px 8px; font-size:9px; font-weight:600; border-radius:6px; cursor:pointer;">
               + Sequence
             </button>
           </div>
         </div>
-      `;
-      }).join('')}
+      `).join('')}
     </div>
   `;
 
@@ -3638,20 +3620,20 @@ function showUniversalMolecularLibrary(){
     if(prevBanner) prevBanner.remove();
 
     if(q.length >= 2){
-      // Prepend dynamic live database search card with vibrant styling
+      // Prepend dynamic live database search card with clean institutional styling
       const banner = document.createElement('div');
       banner.id = 'dynamicSearchBanner';
-      banner.style.cssText = 'grid-column:1 / -1; background:linear-gradient(135deg, rgba(2,132,199,0.2), rgba(15,23,42,0.9)); border:1.5px solid #38BDF8; border-radius:10px; padding:14px 16px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; margin-bottom:8px; box-shadow:0 0 24px rgba(56,189,248,0.22);';
+      banner.style.cssText = 'grid-column:1 / -1; background:#082238; border:1.5px solid #1c5885; border-radius:10px; padding:14px 16px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; margin-bottom:6px;';
       banner.innerHTML = `
         <div>
-          <div style="font-size:13px; font-weight:700; color:#38BDF8; display:flex; align-items:center; gap:6px;">
-            <span style="font-size:15px;">⚛</span> <span>Live Open Database Resolver: "<b>${escapeHtml(q)}</b>"</span>
+          <div style="font-size:12.5px; font-weight:700; color:#8cd4ff; display:flex; align-items:center; gap:6px;">
+            <span>⚛</span> <span>Live Open Database Query: "<b>${escapeHtml(q)}</b>"</span>
           </div>
-          <div style="font-size:9px; color:#CBD5E1; margin-top:3px;">
-            Streaming all-atom conformer live from <b>35,000+ RCSB CCD</b> ligands &amp; <b>115,000,000+ PubChem 3D</b> compounds.
+          <div style="font-size:8.5px; color:#A7BED2; margin-top:3px;">
+            Fetch all-atom 3D coordinates from <b>35,000+ RCSB CCD</b> components and <b>115,000,000+ PubChem 3D</b> structures.
           </div>
         </div>
-        <button class="minor-btn" id="dynamicLoadBtn" style="background:linear-gradient(135deg, #0284C7, #2563EB); border:0; color:#fff; font-weight:700; padding:8px 18px; font-size:10px; border-radius:7px; cursor:pointer; box-shadow:0 0 14px rgba(37,99,235,0.4);">
+        <button class="minor-btn" id="dynamicLoadBtn" style="background:#0a3254; border:1px solid #38B6FF; color:#fff; font-weight:700; padding:8px 16px; font-size:9.5px; border-radius:6px; cursor:pointer;">
           ⚡ Fetch &amp; Load "${escapeHtml(q)}" in 3D
         </button>
       `;
@@ -3662,7 +3644,7 @@ function showUniversalMolecularLibrary(){
       if(visibleCards.length > 0){
         countBadge.textContent = `${visibleCards.length} Curated Matches + Open Database (RCSB & PubChem)`;
       } else {
-        countBadge.textContent = `Open Database Ready: "${q}" (35K+ RCSB & 115M+ PubChem)`;
+        countBadge.textContent = `Querying Open Database for "${q}" (35K+ RCSB & 115M+ PubChem)...`;
       }
     } else {
       countBadge.textContent = `Showing ${visibleCards.length} of ${UNIVERSAL_CHEMICAL_CATALOG.length} Curated Molecules`;
@@ -3689,12 +3671,12 @@ function showUniversalMolecularLibrary(){
   filterBtns.forEach(btn => {
     btn.onclick = () => {
       filterBtns.forEach(b => {
-        b.classList.toggle('active', b === btn);
-        if(b === btn){
-          b.style.boxShadow = '0 0 12px rgba(56,182,255,0.3)';
-        } else {
-          b.style.boxShadow = 'none';
-        }
+        const isActive = (b === btn);
+        b.classList.toggle('active', isActive);
+        b.style.background = isActive ? '#0A3254' : '#061826';
+        b.style.borderColor = isActive ? '#38B6FF' : '#0E2C45';
+        b.style.color = isActive ? '#FFFFFF' : '#A7BED2';
+        b.style.fontWeight = isActive ? '700' : '600';
       });
       const targetCat = btn.dataset.cat;
       if(searchInput) searchInput.value = '';
