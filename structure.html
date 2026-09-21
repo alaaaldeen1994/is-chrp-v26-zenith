@@ -1945,59 +1945,1212 @@ $$$$`;
 
 // Universal Chemical & Amino Acid Library: 46 curated references + open access to 35,000+ RCSB CCD entries & 115M+ PubChem compounds
 const UNIVERSAL_CHEMICAL_CATALOG = [
-  // Canonical 20 Amino Acids
-  { code3: 'ALA', code1: 'A', name: 'Alanine', formula: 'C3H7NO2', mw: '89.09 Da', cat: 'canonical', desc: 'Smallest chiral residue; high α-helix propensity; baseline in alanine scanning mutagenesis.' },
-  { code3: 'ARG', code1: 'R', name: 'Arginine', formula: 'C6H14N4O2', mw: '174.20 Da', cat: 'canonical', desc: 'Planar resonance-stabilized guanidinium side chain (pKa 12.48); critical in salt bridges & nucleic acid clamps.' },
-  { code3: 'ASN', code1: 'N', name: 'Asparagine', formula: 'C4H8N2O3', mw: '132.12 Da', cat: 'canonical', desc: 'Amide side chain; canonical consensus site for N-linked glycosylation (Asn-X-Ser/Thr).' },
-  { code3: 'ASP', code1: 'D', name: 'Aspartate', formula: 'C4H7NO4', mw: '133.10 Da', cat: 'canonical', desc: 'Carboxylate side chain; coordinates divalent catalytic cations (Mg²⁺, Ca²⁺) in enzyme active sites.' },
-  { code3: 'CYS', code1: 'C', name: 'Cysteine', formula: 'C3H7NO2S', mw: '121.16 Da', cat: 'canonical', desc: 'Reactive thiol (-SH); forms covalent disulfide bonds (cystine) stabilizing extracellular protein architectures.' },
-  { code3: 'GLN', code1: 'Q', name: 'Glutamine', formula: 'C5H10N2O3', mw: '146.14 Da', cat: 'canonical', desc: 'Amide nitrogen donor/acceptor; major circulating cellular nitrogen shuttle and metabolic fuel.' },
-  { code3: 'GLU', code1: 'E', name: 'Glutamate', formula: 'C5H9NO4', mw: '147.13 Da', cat: 'canonical', desc: 'Extended flexible acidic side chain; dominant in enzyme catalytic triads and excitatory neurotransmission.' },
-  { code3: 'GLY', code1: 'G', name: 'Glycine', formula: 'C2H5NO2', mw: '75.07 Da', cat: 'canonical', desc: 'Only achiral amino acid (no β-carbon); maximum Ramachandran conformational flexibility; enables tight turns.' },
-  { code3: 'HIS', code1: 'H', name: 'Histidine', formula: 'C6H9N3O2', mw: '155.15 Da', cat: 'canonical', desc: 'Near-neutral imidazole pKa (~6.0); general acid-base catalysis switch and Zn²⁺/Fe²⁺ coordination.' },
-  { code3: 'ILE', code1: 'I', name: 'Isoleucine', formula: 'C6H13NO2', mw: '131.17 Da', cat: 'canonical', desc: 'Two chiral stereocenters; bulky hydrophobic aliphatic side chain optimizing interior core packing.' },
-  { code3: 'LEU', code1: 'L', name: 'Leucine', formula: 'C6H13NO2', mw: '131.17 Da', cat: 'canonical', desc: 'Most abundant amino acid (~9.1%); drives hydrophobic collapse and leucine-zipper coiled coils.' },
-  { code3: 'LYS', code1: 'K', name: 'Lysine', formula: 'C6H14N2O2', mw: '146.19 Da', cat: 'canonical', desc: 'Flexible positively charged butylammonium; primary target of regulatory ubiquitination & acetylation.' },
-  { code3: 'MET', code1: 'M', name: 'Methionine', formula: 'C5H11NO2S', mw: '149.21 Da', cat: 'canonical', desc: 'Universal eukaryotic translation initiation codon (AUG); thioether vulnerable to reversible ROS oxidation.' },
-  { code3: 'PHE', code1: 'F', name: 'Phenylalanine', formula: 'C9H11NO2', mw: '165.19 Da', cat: 'canonical', desc: 'Aromatic hydrophobic benzyl group; stabilizes structural cores via π-π aromatic stacking.' },
-  { code3: 'PRO', code1: 'P', name: 'Proline', formula: 'C5H9NO2', mw: '115.13 Da', cat: 'canonical', desc: 'Rigid cyclic pyrrolidine ring; locks backbone phi dihedral angle; classic helix-breaker and turn initiator.' },
-  { code3: 'SER', code1: 'S', name: 'Serine', formula: 'C3H7NO3', mw: '105.09 Da', cat: 'canonical', desc: 'Primary target of regulatory serine/threonine kinases; catalytic nucleophile in serine proteases.' },
-  { code3: 'THR', code1: 'T', name: 'Threonine', formula: 'C4H9NO3', mw: '119.12 Da', cat: 'canonical', desc: 'Chiral secondary alcohol; major site of regulatory O-phosphorylation and O-linked glycosylation.' },
-  { code3: 'TRP', code1: 'W', name: 'Tryptophan', formula: 'C11H12N2O2', mw: '204.23 Da', cat: 'canonical', desc: 'Largest amino acid; bicyclic indole ring provides characteristic 280 nm UV absorbance and fluorescence.' },
-  { code3: 'TYR', code1: 'Y', name: 'Tyrosine', formula: 'C9H11NO3', mw: '181.19 Da', cat: 'canonical', desc: 'Amphipathic phenol group; receptor tyrosine kinase (RTK) phosphorylation target and electron transfer relay.' },
-  { code3: 'VAL', code1: 'V', name: 'Valine', formula: 'C5H11NO2', mw: '117.15 Da', cat: 'canonical', desc: 'Branched-chain hydrophobic residue; crucial in protein interior hydrophobic core packing.' },
-
-  // Non-Canonical, Rare & Non-Proteinogenic
-  { code3: 'SEC', code1: 'U', name: 'Selenocysteine', formula: 'C3H7NO2Se', mw: '168.05 Da', cat: 'non_canonical', desc: 'The 21st genetically encoded amino acid (UGA codon via SECIS element); selenol (-SeH) nucleophile in glutathione peroxidase.' },
-  { code3: 'PYL', code1: 'O', name: 'Pyrrolysine', formula: 'C12H21N3O3', mw: '255.31 Da', cat: 'non_canonical', desc: 'The 22nd genetically encoded amino acid (UAG codon via PYLIS element); essential in methanogenic archaeal methyltransferases.' },
-  { code3: 'ORN', code1: 'Orn', name: 'L-Ornithine', formula: 'C5H12N2O2', mw: '132.16 Da', cat: 'non_canonical', desc: 'Non-proteinogenic amino acid central to the urea cycle and precursor for cellular polyamines (putrescine, spermidine).' },
-  { code3: 'CIR', code1: 'Cit', name: 'L-Citrulline', formula: 'C6H13N3O3', mw: '175.19 Da', cat: 'non_canonical', desc: 'Key urea cycle intermediate synthesized by nitric oxide synthases (NOS) alongside cellular nitric oxide (NO).' },
-  { code3: 'HYP', code1: 'Hyp', name: '4-Hydroxyproline', formula: 'C5H9NO3', mw: '131.13 Da', cat: 'non_canonical', desc: 'Post-translationally hydroxylated proline; essential for collagen triple-helix thermodynamic stability.' },
-  { code3: 'HYL', code1: 'Hyl', name: '5-Hydroxylysine', formula: 'C6H14N2O3', mw: '162.19 Da', cat: 'non_canonical', desc: 'Hydroxylated lysine providing covalent intermolecular cross-links and O-glycosylation in collagen fibrils.' },
-  { code3: 'AIB', code1: 'Aib', name: '2-Aminoisobutyric acid', formula: 'C4H9NO2', mw: '103.12 Da', cat: 'non_canonical', desc: 'Dialkylated non-proteinogenic amino acid that strongly induces 3_10 and α-helical folds in synthetic peptaibols.' },
-  { code3: 'GABA', code1: 'γ-Abu', name: 'Gamma-Aminobutyric acid', formula: 'C4H9NO2', mw: '103.12 Da', cat: 'non_canonical', desc: 'Chief inhibitory neurotransmitter in the mammalian central nervous system; synthesized via glutamate decarboxylase.' },
-  { code3: 'B3A', code1: 'β-Ala', name: 'Beta-Alanine', formula: 'C3H7NO2', mw: '89.09 Da', cat: 'non_canonical', desc: 'Naturally occurring β-amino acid; rate-limiting precursor of dipeptide carnosine and constituent of coenzyme A.' },
-  { code3: 'NLE', code1: 'Nle', name: 'L-Norleucine', formula: 'C6H13NO2', mw: '131.17 Da', cat: 'non_canonical', desc: 'Linear unbranched isomer of leucine used in synthetic peptide chemistry and peptide drug design.' },
-  { code3: 'NVA', code1: 'Nva', name: 'L-Norvaline', formula: 'C5H11NO2', mw: '117.15 Da', cat: 'non_canonical', desc: 'Unbranched isomer of valine; potent arginase inhibitor and tool in non-canonical ribosomal incorporation.' },
-  { code3: 'DAL', code1: 'D-Ala', name: 'D-Alanine', formula: 'C3H7NO2', mw: '89.09 Da', cat: 'non_canonical', desc: 'D-enantiomer amino acid; essential cross-linking component in bacterial peptidoglycan cell walls.' },
-  { code3: 'DPR', code1: 'D-Pro', name: 'D-Proline', formula: 'C5H9NO2', mw: '115.13 Da', cat: 'non_canonical', desc: 'D-enantiomer cyclic amino acid; used to nucleate stable hairpin β-turns in macrocyclic peptide therapeutics.' },
-
-  // Post-Translational Modifications (PTMs)
-  { code3: 'SEP', code1: 'pSer', name: 'O-Phosphoserine', formula: 'C3H8NO6P', mw: '185.07 Da', cat: 'ptm', desc: 'Phosphorylated serine carrying formal -2 charge at physiological pH; universal regulatory molecular switch.' },
-  { code3: 'TPO', code1: 'pThr', name: 'O-Phosphothreonine', formula: 'C4H10NO6P', mw: '199.10 Da', cat: 'ptm', desc: 'Phosphorylated threonine; mediates cell-cycle checkpoints recognized by FHA and 14-3-3 signaling domains.' },
-  { code3: 'PTR', code1: 'pTyr', name: 'O-Phosphotyrosine', formula: 'C9H12NO6P', mw: '261.17 Da', cat: 'ptm', desc: 'Phosphorylated tyrosine; high-affinity docking site for SH2 and PTB oncogenic signaling cascades.' },
-  { code3: 'ALY', code1: 'AcLys', name: 'N6-Acetyllysine', formula: 'C8H16N2O3', mw: '188.22 Da', cat: 'ptm', desc: 'Neutralized lysine side chain generated by histone acetyltransferases (HATs); activates gene transcription.' },
-  { code3: 'MLY', code1: 'DiMetLys', name: 'N-Dimethyllysine', formula: 'C8H18N2O2', mw: '174.24 Da', cat: 'ptm', desc: 'Epigenetic methylation state recognized by chromodomains and Tudor domains in gene expression regulation.' },
-  { code3: 'NMM', code1: 'MMA', name: 'Monomethylarginine', formula: 'C7H16N4O2', mw: '188.23 Da', cat: 'ptm', desc: 'Methylated guanidinium group generated by PRMT enzymes; controls RNA splicing and liquid-liquid phase separation.' },
-  { code3: 'CGU', code1: 'Gla', name: 'Gamma-Carboxyglutamate', formula: 'C6H9NO6', mw: '191.14 Da', cat: 'ptm', desc: 'Vitamin K-dependent modification introducing bidentate Ca²⁺-chelating carboxylates in blood clotting factors.' },
-
-  // Essential Cofactors & Ligands
-  { code3: 'ATP', code1: 'ATP', name: 'Adenosine Triphosphate', formula: 'C10H16N5O13P3', mw: '507.18 Da', cat: 'ligand', desc: 'Universal biochemical energy currency; phosphoanhydride bonds drive cellular work, motility, and active transport.' },
-  { code3: 'NAD', code1: 'NAD+', name: 'Nicotinamide Adenine Dinucleotide', formula: 'C21H27N7O14P2', mw: '663.43 Da', cat: 'ligand', desc: 'Primary cellular electron carrier; substrate for sirtuins (SIRT1-7), PARPs, and CD38 NADases in aging biology.' },
-  { code3: 'SAM', code1: 'SAM', name: 'S-Adenosylmethionine', formula: 'C15H22N6O5S', mw: '398.44 Da', cat: 'ligand', desc: 'Principal methyl group donor in transmethylation reactions for DNA, RNA, histone, and lipid maintenance.' },
-  { code3: 'HEM', code1: 'Heme', name: 'Protoporphyrin IX (Heme B)', formula: 'C34H32FeN4O4', mw: '616.49 Da', cat: 'ligand', desc: 'Iron-coordinated porphyrin ring prosthetic group; oxygen transport in hemoglobin & electron transfer in cytochromes.' },
-  { code3: 'FAD', code1: 'FAD', name: 'Flavin Adenine Dinucleotide', formula: 'C27H33N9O15P2', mw: '785.55 Da', cat: 'ligand', desc: 'Redox cofactor for succinate dehydrogenase (Complex II) and fatty acid β-oxidation enzymes.' },
-  { code3: 'COA', code1: 'CoA', name: 'Coenzyme A', formula: 'C21H36N7O16P3S', mw: '767.53 Da', cat: 'ligand', desc: 'Acyl-group carrier synthesized from pantothenate (vitamin B5); forms high-energy thioester bonds in acetyl-CoA.' }
+  {
+    "code3": "ALA",
+    "code1": "A",
+    "name": "L-Alanine",
+    "formula": "C3H7NO2",
+    "mw": "89.09 Da",
+    "cat": "canonical",
+    "desc": "Smallest chiral residue; high alpha-helix propensity; baseline in alanine scanning mutagenesis."
+  },
+  {
+    "code3": "ARG",
+    "code1": "R",
+    "name": "L-Arginine",
+    "formula": "C6H14N4O2",
+    "mw": "174.20 Da",
+    "cat": "canonical",
+    "desc": "Planar resonance guanidinium; pKa 12.48; critical in salt bridges & ATP/phosphate clamps."
+  },
+  {
+    "code3": "ASN",
+    "code1": "N",
+    "name": "L-Asparagine",
+    "formula": "C4H8N2O3",
+    "mw": "132.12 Da",
+    "cat": "canonical",
+    "desc": "Amide side chain; canonical consensus site for N-linked glycosylation (Asn-X-Ser/Thr)."
+  },
+  {
+    "code3": "ASP",
+    "code1": "D",
+    "name": "L-Aspartate",
+    "formula": "C4H7NO4",
+    "mw": "133.10 Da",
+    "cat": "canonical",
+    "desc": "Carboxylate side chain; coordinates divalent catalytic cations (Mg2+, Ca2+) in enzyme active sites."
+  },
+  {
+    "code3": "CYS",
+    "code1": "C",
+    "name": "L-Cysteine",
+    "formula": "C3H7NO2S",
+    "mw": "121.16 Da",
+    "cat": "canonical",
+    "desc": "Reactive thiol (-SH); forms covalent disulfide bonds (cystine) stabilizing tertiary folds."
+  },
+  {
+    "code3": "GLN",
+    "code1": "Q",
+    "name": "L-Glutamine",
+    "formula": "C5H10N2O3",
+    "mw": "146.14 Da",
+    "cat": "canonical",
+    "desc": "Amide nitrogen donor/acceptor; major circulating cellular nitrogen shuttle and fuel."
+  },
+  {
+    "code3": "GLU",
+    "code1": "E",
+    "name": "L-Glutamate",
+    "formula": "C5H9NO4",
+    "mw": "147.13 Da",
+    "cat": "canonical",
+    "desc": "Extended acidic side chain; dominant in enzyme catalytic triads and neurotransmission."
+  },
+  {
+    "code3": "GLY",
+    "code1": "G",
+    "name": "Glycine",
+    "formula": "C2H5NO2",
+    "mw": "75.07 Da",
+    "cat": "canonical",
+    "desc": "Only achiral amino acid (no beta-carbon); maximum conformational flexibility; tight turns."
+  },
+  {
+    "code3": "HIS",
+    "code1": "H",
+    "name": "L-Histidine",
+    "formula": "C6H9N3O2",
+    "mw": "155.15 Da",
+    "cat": "canonical",
+    "desc": "Near-neutral imidazole pKa (~6.0); general acid-base catalysis switch and metal coordination."
+  },
+  {
+    "code3": "ILE",
+    "code1": "I",
+    "name": "L-Isoleucine",
+    "formula": "C6H13NO2",
+    "mw": "131.17 Da",
+    "cat": "canonical",
+    "desc": "Two chiral stereocenters; bulky hydrophobic aliphatic side chain in interior core packing."
+  },
+  {
+    "code3": "LEU",
+    "code1": "L",
+    "name": "L-Leucine",
+    "formula": "C6H13NO2",
+    "mw": "131.17 Da",
+    "cat": "canonical",
+    "desc": "Most abundant amino acid (~9.1%); drives hydrophobic collapse and leucine-zipper coiled coils."
+  },
+  {
+    "code3": "LYS",
+    "code1": "K",
+    "name": "L-Lysine",
+    "formula": "C6H14N2O2",
+    "mw": "146.19 Da",
+    "cat": "canonical",
+    "desc": "Flexible positively charged butylammonium; primary target of ubiquitination & acetylation."
+  },
+  {
+    "code3": "MET",
+    "code1": "M",
+    "name": "L-Methionine",
+    "formula": "C5H11NO2S",
+    "mw": "149.21 Da",
+    "cat": "canonical",
+    "desc": "Universal eukaryotic translation initiation codon (AUG); vulnerable to reversible ROS oxidation."
+  },
+  {
+    "code3": "PHE",
+    "code1": "F",
+    "name": "L-Phenylalanine",
+    "formula": "C9H11NO2",
+    "mw": "165.19 Da",
+    "cat": "canonical",
+    "desc": "Aromatic hydrophobic benzyl group; stabilizes structural cores via pi-pi aromatic stacking."
+  },
+  {
+    "code3": "PRO",
+    "code1": "P",
+    "name": "L-Proline",
+    "formula": "C5H9NO2",
+    "mw": "115.13 Da",
+    "cat": "canonical",
+    "desc": "Rigid cyclic pyrrolidine ring; locks backbone phi dihedral angle; classic helix-breaker."
+  },
+  {
+    "code3": "SER",
+    "code1": "S",
+    "name": "L-Serine",
+    "formula": "C3H7NO3",
+    "mw": "105.09 Da",
+    "cat": "canonical",
+    "desc": "Hydroxyl side chain; universal regulatory phosphorylation target and catalytic nucleophile."
+  },
+  {
+    "code3": "THR",
+    "code1": "T",
+    "name": "L-Threonine",
+    "formula": "C4H9NO3",
+    "mw": "119.12 Da",
+    "cat": "canonical",
+    "desc": "Chiral secondary alcohol; major site of regulatory O-phosphorylation and O-glycosylation."
+  },
+  {
+    "code3": "TRP",
+    "code1": "W",
+    "name": "L-Tryptophan",
+    "formula": "C11H12N2O2",
+    "mw": "204.23 Da",
+    "cat": "canonical",
+    "desc": "Largest amino acid; bicyclic indole ring gives characteristic 280 nm UV absorbance and fluorescence."
+  },
+  {
+    "code3": "TYR",
+    "code1": "Y",
+    "name": "L-Tyrosine",
+    "formula": "C9H11NO3",
+    "mw": "181.19 Da",
+    "cat": "canonical",
+    "desc": "Amphipathic phenol group; receptor tyrosine kinase (RTK) phosphorylation target and electron transfer relay."
+  },
+  {
+    "code3": "VAL",
+    "code1": "V",
+    "name": "L-Valine",
+    "formula": "C5H11NO2",
+    "mw": "117.15 Da",
+    "cat": "canonical",
+    "desc": "Branched-chain hydrophobic residue; crucial in protein interior hydrophobic core packing."
+  },
+  {
+    "code3": "DAL",
+    "code1": "D-Ala",
+    "name": "D-Alanine",
+    "formula": "C3H7NO2",
+    "mw": "89.09 Da",
+    "cat": "d_amino",
+    "desc": "D-enantiomer; fundamental cross-linking unit in bacterial peptidoglycan cell walls (vancomycin target)."
+  },
+  {
+    "code3": "DAR",
+    "code1": "D-Arg",
+    "name": "D-Arginine",
+    "formula": "C6H14N4O2",
+    "mw": "174.20 Da",
+    "cat": "d_amino",
+    "desc": "D-enantiomer basic residue; confers high proteolytic resistance against trypsin and serum proteases."
+  },
+  {
+    "code3": "DSN",
+    "code1": "D-Asn",
+    "name": "D-Asparagine",
+    "formula": "C4H8N2O3",
+    "mw": "132.12 Da",
+    "cat": "d_amino",
+    "desc": "D-enantiomer amide; prevents enzymatic deamidation in therapeutic peptide design."
+  },
+  {
+    "code3": "DAS",
+    "code1": "D-Asp",
+    "name": "D-Aspartate",
+    "formula": "C4H7NO4",
+    "mw": "133.10 Da",
+    "cat": "d_amino",
+    "desc": "Endogenous D-amino acid in human brain, endocrine organs, and neurogenesis; acts as NMDA receptor agonist."
+  },
+  {
+    "code3": "DCY",
+    "code1": "D-Cys",
+    "name": "D-Cysteine",
+    "formula": "C3H7NO2S",
+    "mw": "121.16 Da",
+    "cat": "d_amino",
+    "desc": "D-enantiomer thiol; incorporated into protease-resistant macrocyclic peptide drugs and stapled peptides."
+  },
+  {
+    "code3": "DGN",
+    "code1": "D-Gln",
+    "name": "D-Glutamine",
+    "formula": "C5H10N2O3",
+    "mw": "146.14 Da",
+    "cat": "d_amino",
+    "desc": "D-enantiomer glutamine; probe for investigating stereospecific amino acid transporters."
+  },
+  {
+    "code3": "DGL",
+    "code1": "D-Glu",
+    "name": "D-Glutamate",
+    "formula": "C5H9NO4",
+    "mw": "147.13 Da",
+    "cat": "d_amino",
+    "desc": "Constituent of bacterial peptidoglycan and poly-gamma-glutamate bacterial capsular envelopes."
+  },
+  {
+    "code3": "DHI",
+    "code1": "D-His",
+    "name": "D-Histidine",
+    "formula": "C6H9N3O2",
+    "mw": "155.15 Da",
+    "cat": "d_amino",
+    "desc": "D-enantiomer imidazole; metal chelator resistant to histidine decarboxylase degradation."
+  },
+  {
+    "code3": "DIL",
+    "code1": "D-Ile",
+    "name": "D-Isoleucine",
+    "formula": "C6H13NO2",
+    "mw": "131.17 Da",
+    "cat": "d_amino",
+    "desc": "D-stereoisomer hydrophobic residue used in designing peptide receptor antagonists."
+  },
+  {
+    "code3": "DLE",
+    "code1": "D-Leu",
+    "name": "D-Leucine",
+    "formula": "C6H13NO2",
+    "mw": "131.17 Da",
+    "cat": "d_amino",
+    "desc": "Hydrophobic D-amino acid widespread in antimicrobial peptides (e.g. gramicidin, polymyxin)."
+  },
+  {
+    "code3": "DLY",
+    "code1": "D-Lys",
+    "name": "D-Lysine",
+    "formula": "C6H14N2O2",
+    "mw": "146.19 Da",
+    "cat": "d_amino",
+    "desc": "D-enantiomer diamine; used in synthetic retro-inverso peptides to prevent trypsin cleavage."
+  },
+  {
+    "code3": "MED",
+    "code1": "D-Met",
+    "name": "D-Methionine",
+    "formula": "C5H11NO2S",
+    "mw": "149.21 Da",
+    "cat": "d_amino",
+    "desc": "D-thioether amino acid with protective antioxidant activity against cisplatin-induced ototoxicity."
+  },
+  {
+    "code3": "DPN",
+    "code1": "D-Phe",
+    "name": "D-Phenylalanine",
+    "formula": "C9H11NO2",
+    "mw": "165.19 Da",
+    "cat": "d_amino",
+    "desc": "Aromatic D-residue present in opioid peptide analogues and endorphin-degrading enzyme inhibitors."
+  },
+  {
+    "code3": "DPR",
+    "code1": "D-Pro",
+    "name": "D-Proline",
+    "formula": "C5H9NO2",
+    "mw": "115.13 Da",
+    "cat": "d_amino",
+    "desc": "Rigid D-pyrrolidine; famously nucleates stable type II' beta-hairpin turns in macrocyclic therapeutics."
+  },
+  {
+    "code3": "DSN",
+    "code1": "D-Ser",
+    "name": "D-Serine",
+    "formula": "C3H7NO3",
+    "mw": "105.09 Da",
+    "cat": "d_amino",
+    "desc": "Major physiological co-agonist of NMDA receptors in mammalian forebrain; regulates synaptic plasticity."
+  },
+  {
+    "code3": "DTH",
+    "code1": "D-Thr",
+    "name": "D-Threonine",
+    "formula": "C4H9NO3",
+    "mw": "119.12 Da",
+    "cat": "d_amino",
+    "desc": "D-stereoisomer alcohol used to construct protease-stable peptidomimetics."
+  },
+  {
+    "code3": "DTR",
+    "code1": "D-Trp",
+    "name": "D-Tryptophan",
+    "formula": "C11H12N2O2",
+    "mw": "204.23 Da",
+    "cat": "d_amino",
+    "desc": "Potent D-aromatic pharmacophore present in somatostatin analogue octreotide and GnRH antagonists."
+  },
+  {
+    "code3": "DTY",
+    "code1": "D-Tyr",
+    "name": "D-Tyrosine",
+    "formula": "C9H11NO3",
+    "mw": "181.19 Da",
+    "cat": "d_amino",
+    "desc": "D-phenolic residue capable of inhibiting bacterial biofilm formation and cell wall synthesis."
+  },
+  {
+    "code3": "DVA",
+    "code1": "D-Val",
+    "name": "D-Valine",
+    "formula": "C5H11NO2",
+    "mw": "117.15 Da",
+    "cat": "d_amino",
+    "desc": "Essential building block in actinomycin D and valinomycin ionophore depsipeptides."
+  },
+  {
+    "code3": "DOP",
+    "code1": "L-DOPA",
+    "name": "Levodopa (L-DOPA)",
+    "formula": "C9H11NO4",
+    "mw": "197.19 Da",
+    "cat": "natural_nonprot",
+    "desc": "Catechol amino acid precursor to dopamine, norepinephrine, and epinephrine; primary therapy for Parkinson's."
+  },
+  {
+    "code3": "HTP",
+    "code1": "5-HTP",
+    "name": "5-Hydroxytryptophan",
+    "formula": "C11H12N2O3",
+    "mw": "220.23 Da",
+    "cat": "natural_nonprot",
+    "desc": "Direct metabolic intermediate in the biosynthesis of serotonin (5-HT) and melatonin from tryptophan."
+  },
+  {
+    "code3": "ORN",
+    "code1": "Orn",
+    "name": "L-Ornithine",
+    "formula": "C5H12N2O2",
+    "mw": "132.16 Da",
+    "cat": "natural_nonprot",
+    "desc": "Urea cycle non-proteinogenic amino acid and mandatory precursor for polyamines (spermidine, spermine)."
+  },
+  {
+    "code3": "CIR",
+    "code1": "Cit",
+    "name": "L-Citrulline",
+    "formula": "C6H13N3O3",
+    "mw": "175.19 Da",
+    "cat": "natural_nonprot",
+    "desc": "Synthesized alongside nitric oxide by NOS; recycles into L-arginine in endothelial and renal tissues."
+  },
+  {
+    "code3": "GABA",
+    "code1": "GABA",
+    "name": "Gamma-Aminobutyric acid",
+    "formula": "C4H9NO2",
+    "mw": "103.12 Da",
+    "cat": "natural_nonprot",
+    "desc": "Primary inhibitory neurotransmitter of the vertebrate CNS; acts on ionotropic GABA_A and metabotropic GABA_B receptors."
+  },
+  {
+    "code3": "TAU",
+    "code1": "Tau",
+    "name": "Taurine",
+    "formula": "C2H7NO3S",
+    "mw": "125.15 Da",
+    "cat": "natural_nonprot",
+    "desc": "Sulfonic amino acid vital in bile acid conjugation, membrane stabilization, osmoregulation, and cardiac longevity."
+  },
+  {
+    "code3": "THE",
+    "code1": "Thea",
+    "name": "L-Theanine",
+    "formula": "C7H14N2O3",
+    "mw": "174.20 Da",
+    "cat": "natural_nonprot",
+    "desc": "Glutamic acid analogue in Camellia sinensis; crosses the blood-brain barrier to modulate NMDA and GABA receptors."
+  },
+  {
+    "code3": "CRN",
+    "code1": "Carn",
+    "name": "L-Carnitine",
+    "formula": "C7H15NO3",
+    "mw": "161.20 Da",
+    "cat": "natural_nonprot",
+    "desc": "Quaternary ammonium amino acid facilitating beta-oxidation by shuttling long-chain fatty acids across mitochondrial membranes."
+  },
+  {
+    "code3": "HCY",
+    "code1": "Hcy",
+    "name": "L-Homocysteine",
+    "formula": "C4H9NO2S",
+    "mw": "135.19 Da",
+    "cat": "natural_nonprot",
+    "desc": "Sulfur-containing intermediate in one-carbon metabolism and methionine transmethylation; clinical vascular biomarker."
+  },
+  {
+    "code3": "B3A",
+    "code1": "bAla",
+    "name": "Beta-Alanine",
+    "formula": "C3H7NO2",
+    "mw": "89.09 Da",
+    "cat": "natural_nonprot",
+    "desc": "Naturally occurring beta-amino acid; rate-limiting substrate for muscle dipeptide carnosine and coenzyme A synthesis."
+  },
+  {
+    "code3": "AIB",
+    "code1": "Aib",
+    "name": "2-Aminoisobutyric acid",
+    "formula": "C4H9NO2",
+    "mw": "103.12 Da",
+    "cat": "natural_nonprot",
+    "desc": "Alpha,alpha-disubstituted amino acid that induces rigid 3_10 and alpha-helices in peptaibol natural products."
+  },
+  {
+    "code3": "SAR",
+    "code1": "Sar",
+    "name": "Sarcosine (N-Methylglycine)",
+    "formula": "C3H7NO2",
+    "mw": "89.09 Da",
+    "cat": "natural_nonprot",
+    "desc": "Natural intermediate in choline metabolism and glycine methylation; glycine transporter inhibitor."
+  },
+  {
+    "code3": "BET",
+    "code1": "Bet",
+    "name": "Betaine (Trimethylglycine)",
+    "formula": "C5H11NO2",
+    "mw": "117.15 Da",
+    "cat": "natural_nonprot",
+    "desc": "Organic osmoprotectant and methyl donor for homocysteine methyltransferase in hepatic methylation."
+  },
+  {
+    "code3": "CAN",
+    "code1": "Can",
+    "name": "L-Canavanine",
+    "formula": "C5H12N4O3",
+    "mw": "176.17 Da",
+    "cat": "natural_nonprot",
+    "desc": "Potent arginine antimetabolite found in legumes; disrupts protein translation when misincorporated by Arg-tRNA synthetase."
+  },
+  {
+    "code3": "CAI",
+    "code1": "Cnl",
+    "name": "L-Canaline",
+    "formula": "C4H10N2O3",
+    "mw": "134.13 Da",
+    "cat": "natural_nonprot",
+    "desc": "Oxygenated ornithine analogue formed by arginase cleavage of canavanine; forms irreversible oximes with pyridoxal phosphate."
+  },
+  {
+    "code3": "PIP",
+    "code1": "Pip",
+    "name": "L-Pipecolic acid",
+    "formula": "C6H11NO2",
+    "mw": "129.16 Da",
+    "cat": "natural_nonprot",
+    "desc": "Cyclic amino acid derived from lysine metabolism; common structural element in immunosuppressants (rapamycin, tacrolimus)."
+  },
+  {
+    "code3": "CYT",
+    "code1": "Cys-Ath",
+    "name": "L-Cystathionine",
+    "formula": "C7H14N2O4S",
+    "mw": "222.26 Da",
+    "cat": "natural_nonprot",
+    "desc": "Key intermediate in the transsulfuration pathway linking homocysteine to cysteine biosynthesis."
+  },
+  {
+    "code3": "DAP",
+    "code1": "Dap",
+    "name": "Diaminopimelic acid",
+    "formula": "C7H14N2O4",
+    "mw": "190.20 Da",
+    "cat": "natural_nonprot",
+    "desc": "Dicarboxylic diamino acid forming cross-links in Gram-negative bacterial peptidoglycan and lysine biosynthesis pathway."
+  },
+  {
+    "code3": "HSE",
+    "code1": "Hse",
+    "name": "L-Homoserine",
+    "formula": "C4H9NO3",
+    "mw": "119.12 Da",
+    "cat": "natural_nonprot",
+    "desc": "Hydroxyl-bearing amino acid generated during cyanogen bromide cleavage of methionine residues in proteins."
+  },
+  {
+    "code3": "PEN",
+    "code1": "Pen",
+    "name": "L-Penicillamine",
+    "formula": "C5H11NO2S",
+    "mw": "149.21 Da",
+    "cat": "natural_nonprot",
+    "desc": "Beta,beta-dimethylcysteine; clinical copper chelator for Wilson's disease and disulfide-cleaving therapeutic."
+  },
+  {
+    "code3": "CYC",
+    "code1": "DCS",
+    "name": "D-Cycloserine",
+    "formula": "C3H6N2O2",
+    "mw": "102.09 Da",
+    "cat": "natural_nonprot",
+    "desc": "Conformationally locked isoxazolidinone amino acid; inhibits bacterial D-Ala-D-Ala ligase and acts as NMDA cognitive enhancer."
+  },
+  {
+    "code3": "ERG",
+    "code1": "EGT",
+    "name": "L-Ergothioneine",
+    "formula": "C9H15N3O2S",
+    "mw": "229.30 Da",
+    "cat": "natural_nonprot",
+    "desc": "Dietary longevity betaine-thiol antioxidant concentrated in tissues via dedicated transporter OCTN1."
+  },
+  {
+    "code3": "SAC",
+    "code1": "SAC",
+    "name": "S-Allyl-L-cysteine",
+    "formula": "C6H11NO2S",
+    "mw": "161.22 Da",
+    "cat": "natural_nonprot",
+    "desc": "Organosulfur bioactive derivative in aged garlic with potent neuroprotective and cardioprotective efficacy."
+  },
+  {
+    "code3": "NLE",
+    "code1": "Nle",
+    "name": "L-Norleucine",
+    "formula": "C6H13NO2",
+    "mw": "131.17 Da",
+    "cat": "natural_nonprot",
+    "desc": "Linear unbranched leucine isomer used to evaluate spatial hydrophobic core requirements in folded peptides."
+  },
+  {
+    "code3": "NVA",
+    "code1": "Nva",
+    "name": "L-Norvaline",
+    "formula": "C5H11NO2",
+    "mw": "117.15 Da",
+    "cat": "natural_nonprot",
+    "desc": "Unbranched valine homologue; functions as a competitive arginase inhibitor to enhance cellular nitric oxide levels."
+  },
+  {
+    "code3": "AZE",
+    "code1": "Aze",
+    "name": "Azetidine-2-carboxylic acid",
+    "formula": "C4H7NO2",
+    "mw": "101.10 Da",
+    "cat": "natural_nonprot",
+    "desc": "Four-membered cyclic proline homologue; toxic plant secondary metabolite causing misfolded protein aggregates."
+  },
+  {
+    "code3": "SEC",
+    "code1": "U",
+    "name": "L-Selenocysteine",
+    "formula": "C3H7NO2Se",
+    "mw": "168.05 Da",
+    "cat": "expanded_code",
+    "desc": "The 21st genetically encoded amino acid (UGA codon via SECIS element); essential selenol (-SeH) nucleophile in human selenoproteins."
+  },
+  {
+    "code3": "PYL",
+    "code1": "O",
+    "name": "L-Pyrrolysine",
+    "formula": "C12H21N3O3",
+    "mw": "255.31 Da",
+    "cat": "expanded_code",
+    "desc": "The 22nd genetically encoded amino acid (UAG codon via PYLIS element); pyrroline ring binds active site nickel in methanogen enzymes."
+  },
+  {
+    "code3": "4AZ",
+    "code1": "pAzF",
+    "name": "p-Azido-L-phenylalanine",
+    "formula": "C9H10N4O2",
+    "mw": "206.20 Da",
+    "cat": "expanded_code",
+    "desc": "Bioorthogonal azide handle; reacts via Staudinger ligation or strain-promoted alkyne-azide cycloaddition (SPAAC) click chemistry."
+  },
+  {
+    "code3": "PRA",
+    "code1": "Pra",
+    "name": "L-Propargylglycine",
+    "formula": "C5H7NO2",
+    "mw": "113.11 Da",
+    "cat": "expanded_code",
+    "desc": "Terminal alkyne functional group for copper-catalyzed click chemistry (CuAAC) and cystathionine gamma-lyase inhibitor."
+  },
+  {
+    "code3": "PBF",
+    "code1": "pAcF",
+    "name": "p-Acetyl-L-phenylalanine",
+    "formula": "C11H13NO3",
+    "mw": "207.23 Da",
+    "cat": "expanded_code",
+    "desc": "Ketone handle genetically incorporated into proteins for site-specific bioconjugation via stable oxime/hydrazone linkages."
+  },
+  {
+    "code3": "BPA",
+    "code1": "Bpa",
+    "name": "p-Benzoyl-L-phenylalanine",
+    "formula": "C16H15NO3",
+    "mw": "269.30 Da",
+    "cat": "expanded_code",
+    "desc": "UV-activated photocrosslinker (360 nm) that forms covalent diradical intermediates with nearby C-H bonds to map protein interfaces."
+  },
+  {
+    "code3": "4IN",
+    "code1": "pIF",
+    "name": "p-Iodo-L-phenylalanine",
+    "formula": "C9H10INO2",
+    "mw": "291.09 Da",
+    "cat": "expanded_code",
+    "desc": "Heavy-atom anomalous dispersion phasing tool for X-ray crystallography and palladium-catalyzed Suzuki cross-coupling."
+  },
+  {
+    "code3": "CNP",
+    "code1": "pCNF",
+    "name": "p-Cyano-L-phenylalanine",
+    "formula": "C10H10N2O2",
+    "mw": "190.20 Da",
+    "cat": "expanded_code",
+    "desc": "Vibrational infrared probe (C#N stretch ~2235 cm^-1) and sensitive fluorophore for measuring local protein electric fields and hydration."
+  },
+  {
+    "code3": "AHA",
+    "code1": "Aha",
+    "name": "L-Azidohomoalanine",
+    "formula": "C4H8N4O2",
+    "mw": "144.13 Da",
+    "cat": "expanded_code",
+    "desc": "Methionine surrogate incorporated during active translation for non-radioactive proteome-wide metabolic labeling (BONCAT)."
+  },
+  {
+    "code3": "HPG",
+    "code1": "Hpg",
+    "name": "L-Homopropargylglycine",
+    "formula": "C6H9NO2",
+    "mw": "127.14 Da",
+    "cat": "expanded_code",
+    "desc": "Alkyne methionine surrogate for spatial mapping of freshly synthesized proteins via fluorescent azide ligation."
+  },
+  {
+    "code3": "OMT",
+    "code1": "OMeY",
+    "name": "O-Methyl-L-tyrosine",
+    "formula": "C10H13NO3",
+    "mw": "195.22 Da",
+    "cat": "expanded_code",
+    "desc": "Methylated tyrosine analogue genetically incorporated by orthogonal M. jannaschii aminoacyl-tRNA synthetase pairs."
+  },
+  {
+    "code3": "N2F",
+    "code1": "pNO2F",
+    "name": "p-Nitro-L-phenylalanine",
+    "formula": "C9H10N2O4",
+    "mw": "210.19 Da",
+    "cat": "expanded_code",
+    "desc": "Strong electron-withdrawing aromatic residue functioning as an intrinsic spectroscopic probe and FRET fluorescence quencher."
+  },
+  {
+    "code3": "BCN",
+    "code1": "BCN-K",
+    "name": "BCN-L-Lysine",
+    "formula": "C17H26N2O4",
+    "mw": "322.40 Da",
+    "cat": "expanded_code",
+    "desc": "Bicyclo[6.1.0]nonyne handle genetically incorporated into live mammalian cells for catalyst-free tetrazine bioorthogonal click reactions."
+  },
+  {
+    "code3": "TCO",
+    "code1": "TCO-K",
+    "name": "trans-Cyclooctene-L-lysine",
+    "formula": "C16H28N2O4",
+    "mw": "312.41 Da",
+    "cat": "expanded_code",
+    "desc": "Unmatched kinetic speed in tetrazine ligation (>10^5 M^-1 s^-1) for sub-second live cell receptor tagging and super-resolution microscopy."
+  },
+  {
+    "code3": "DAZ",
+    "code1": "DiAz-K",
+    "name": "Diazirine-L-lysine",
+    "formula": "C11H20N4O3",
+    "mw": "256.30 Da",
+    "cat": "expanded_code",
+    "desc": "Smallest photolabile photocrosslinker; generates ultra-reactive carbene upon 365 nm irradiation within 1-2 nanoseconds."
+  },
+  {
+    "code3": "FPK",
+    "code1": "pAzZ",
+    "name": "N6-Azidoethyloxycarbonyl-lysine",
+    "formula": "C10H19N5O4",
+    "mw": "273.29 Da",
+    "cat": "expanded_code",
+    "desc": "Azide-functionalized lysine derivative for site-specific antibody-drug conjugate (ADC) chemical synthesis."
+  },
+  {
+    "code3": "BOR",
+    "code1": "Bpa",
+    "name": "p-Borono-L-phenylalanine",
+    "formula": "C9H12BNO4",
+    "mw": "209.01 Da",
+    "cat": "expanded_code",
+    "desc": "Clinically approved boron-carrying amino acid targeting tumor cells in Boron Neutron Capture Therapy (BNCT)."
+  },
+  {
+    "code3": "4FW",
+    "code1": "4FPhe",
+    "name": "4-Fluoro-L-phenylalanine",
+    "formula": "C9H10FNO2",
+    "mw": "183.18 Da",
+    "cat": "halogenated",
+    "desc": "Fluorine substitution creates a robust single-resonance 19F NMR reporter for conformational transitions and ligand binding."
+  },
+  {
+    "code3": "4CL",
+    "code1": "4ClPhe",
+    "name": "4-Chloro-L-phenylalanine",
+    "formula": "C9H10ClNO2",
+    "mw": "199.63 Da",
+    "cat": "halogenated",
+    "desc": "Classical selective tryptophan hydroxylase inhibitor; blocks peripheral serotonin synthesis; enhances hydrophobic packing."
+  },
+  {
+    "code3": "4BR",
+    "code1": "4BrPhe",
+    "name": "4-Bromo-L-phenylalanine",
+    "formula": "C9H10BrNO2",
+    "mw": "244.09 Da",
+    "cat": "halogenated",
+    "desc": "Bulky halogenated aromatic residue useful for heavy-atom multi-wavelength anomalous diffraction (MAD) phasing."
+  },
+  {
+    "code3": "3FT",
+    "code1": "3FTyr",
+    "name": "3-Fluoro-L-tyrosine",
+    "formula": "C9H10FNO3",
+    "mw": "199.18 Da",
+    "cat": "halogenated",
+    "desc": "Lower phenolic pKa (~8.4 vs 10.1); alters radical redox potential in ribonucleotide reductases and electron transport enzymes."
+  },
+  {
+    "code3": "DFT",
+    "code1": "35DFTyr",
+    "name": "3,5-Difluoro-L-tyrosine",
+    "formula": "C9H9F2NO3",
+    "mw": "217.17 Da",
+    "cat": "halogenated",
+    "desc": "Severely lowered phenolic pKa (~7.2); acts as an unprotonated phenolate at physiological pH."
+  },
+  {
+    "code3": "5FW",
+    "code1": "5FTrp",
+    "name": "5-Fluoro-L-tryptophan",
+    "formula": "C11H11FN2O2",
+    "mw": "222.22 Da",
+    "cat": "halogenated",
+    "desc": "Highly sensitive 19F NMR probe preserving wild-type native folding in integral membrane proteins."
+  },
+  {
+    "code3": "6FW",
+    "code1": "6FTrp",
+    "name": "6-Fluoro-L-tryptophan",
+    "formula": "C11H11FN2O2",
+    "mw": "222.22 Da",
+    "cat": "halogenated",
+    "desc": "Alternative fluorotryptophan positional isomer for investigating local electrostatic environments."
+  },
+  {
+    "code3": "TFL",
+    "code1": "TFLeu",
+    "name": "5,5,5-Trifluoro-L-leucine",
+    "formula": "C6H10F3NO2",
+    "mw": "185.15 Da",
+    "cat": "halogenated",
+    "desc": "Fluorinated hydrophobic core building block; increases coiled-coil thermal denaturation melting temperatures by >15 deg C."
+  },
+  {
+    "code3": "HFL",
+    "code1": "HFLeu",
+    "name": "Hexafluoro-L-leucine",
+    "formula": "C6H7F6NO2",
+    "mw": "239.12 Da",
+    "cat": "halogenated",
+    "desc": "Fully fluorinated methyls; extreme chemical inertness and orthogonal fluorous-phase interaction drive."
+  },
+  {
+    "code3": "TFV",
+    "code1": "TFVal",
+    "name": "4,4,4-Trifluoro-L-valine",
+    "formula": "C5H8F3NO2",
+    "mw": "171.12 Da",
+    "cat": "halogenated",
+    "desc": "Fluorinated branched-chain residue boosting resistance to metabolic oxidation and protease cleavage."
+  },
+  {
+    "code3": "CFP",
+    "code1": "CF3Phe",
+    "name": "4-(Trifluoromethyl)-L-phenylalanine",
+    "formula": "C10H10F3NO2",
+    "mw": "233.19 Da",
+    "cat": "halogenated",
+    "desc": "Strongly electron-withdrawing and bulky hydrophobic residue in GPCR peptide drug optimization."
+  },
+  {
+    "code3": "NAL",
+    "code1": "1Nal",
+    "name": "1-Naphthyl-L-alanine",
+    "formula": "C13H13NO2",
+    "mw": "215.25 Da",
+    "cat": "aromatic_bulky",
+    "desc": "Bulky fused bicyclic aromatic ring; enhances sub-nanomolar hydrophobic interactions with GPCR hydrophobic binding pockets."
+  },
+  {
+    "code3": "2NA",
+    "code1": "2Nal",
+    "name": "2-Naphthyl-L-alanine",
+    "formula": "C13H13NO2",
+    "mw": "215.25 Da",
+    "cat": "aromatic_bulky",
+    "desc": "Linear extended naphthyl isomer; standard building block in GLP-1 and somatostatin peptidomimetics."
+  },
+  {
+    "code3": "BIP",
+    "code1": "Bip",
+    "name": "4,4'-Biphenyl-L-alanine",
+    "formula": "C15H15NO2",
+    "mw": "241.29 Da",
+    "cat": "aromatic_bulky",
+    "desc": "Extended hydrophobic wedge spanning large flat protein-protein interaction (PPI) interfaces."
+  },
+  {
+    "code3": "CHA",
+    "code1": "Cha",
+    "name": "L-Cyclohexylalanine",
+    "formula": "C9H17NO2",
+    "mw": "171.24 Da",
+    "cat": "aromatic_bulky",
+    "desc": "Saturated aliphatic chair-conformation analogue of phenylalanine; non-aromatic hydrophobic packing enhancer."
+  },
+  {
+    "code3": "CHG",
+    "code1": "Chg",
+    "name": "L-Cyclohexylglycine",
+    "formula": "C8H15NO2",
+    "mw": "157.21 Da",
+    "cat": "aromatic_bulky",
+    "desc": "Sterically restricted alpha-amino acid frequent in serine protease inhibitor drugs and antivirals."
+  },
+  {
+    "code3": "HFE",
+    "code1": "Hph",
+    "name": "L-Homophenylalanine",
+    "formula": "C10H13NO2",
+    "mw": "179.22 Da",
+    "cat": "aromatic_bulky",
+    "desc": "Chain-extended phenylalanine homologue; critical pharmacophoric core of ACE inhibitors (enalapril, lisinopril)."
+  },
+  {
+    "code3": "2TA",
+    "code1": "Thi",
+    "name": "2-Thienyl-L-alanine",
+    "formula": "C7H9NO2S",
+    "mw": "171.22 Da",
+    "cat": "aromatic_bulky",
+    "desc": "Bioisosteric replacement for phenylalanine replacing benzene with a smaller electron-rich thiophene heterocycle."
+  },
+  {
+    "code3": "3PA",
+    "code1": "3Pal",
+    "name": "3-Pyridyl-L-alanine",
+    "formula": "C8H10N2O2",
+    "mw": "166.18 Da",
+    "cat": "aromatic_bulky",
+    "desc": "Nitrogen-containing aromatic residue providing a hydrogen bond acceptor and transition-metal coordination center."
+  },
+  {
+    "code3": "TIC",
+    "code1": "Tic",
+    "name": "1,2,3,4-Tetrahydroisoquinoline-3-carboxylic acid",
+    "formula": "C10H11NO2",
+    "mw": "177.20 Da",
+    "cat": "aromatic_bulky",
+    "desc": "Conformationally constrained aromatic amino acid restricting both phi and psi peptide dihedral angles."
+  },
+  {
+    "code3": "OIC",
+    "code1": "Oic",
+    "name": "Octahydroindole-2-carboxylic acid",
+    "formula": "C9H15NO2",
+    "mw": "169.22 Da",
+    "cat": "aromatic_bulky",
+    "desc": "Bicyclic saturated proline mimic used in cardiovascular therapeutics (perindopril)."
+  },
+  {
+    "code3": "PGY",
+    "code1": "Phg",
+    "name": "L-Phenylglycine",
+    "formula": "C8H9NO2",
+    "mw": "151.16 Da",
+    "cat": "aromatic_bulky",
+    "desc": "Aromatic amino acid with no methylene spacer; essential side chain of beta-lactam antibiotics (ampicillin, cephalexin)."
+  },
+  {
+    "code3": "SEP",
+    "code1": "pSer",
+    "name": "O-Phosphoserine",
+    "formula": "C3H8NO6P",
+    "mw": "185.07 Da",
+    "cat": "ptm",
+    "desc": "Universal eukaryotic regulatory phosphorylation switch; carries net formal -2 charge at physiological pH."
+  },
+  {
+    "code3": "TPO",
+    "code1": "pThr",
+    "name": "O-Phosphothreonine",
+    "formula": "C4H10NO6P",
+    "mw": "199.10 Da",
+    "cat": "ptm",
+    "desc": "Phosphorylated threonine; mediates cell-cycle checkpoints and recognized by FHA and 14-3-3 signaling domains."
+  },
+  {
+    "code3": "PTR",
+    "code1": "pTyr",
+    "name": "O-Phosphotyrosine",
+    "formula": "C9H12NO6P",
+    "mw": "261.17 Da",
+    "cat": "ptm",
+    "desc": "Phosphorylated tyrosine; high-affinity docking site for SH2 and PTB oncogenic signaling cascades."
+  },
+  {
+    "code3": "ALY",
+    "code1": "AcLys",
+    "name": "N6-Acetyl-L-lysine",
+    "formula": "C8H16N2O3",
+    "mw": "188.22 Da",
+    "cat": "ptm",
+    "desc": "Neutralized lysine side chain generated by histone acetyltransferases (HATs); substrate of sirtuin deacetylation."
+  },
+  {
+    "code3": "MLZ",
+    "code1": "MeLys",
+    "name": "N6-Monomethyl-L-lysine",
+    "formula": "C7H16N2O2",
+    "mw": "160.21 Da",
+    "cat": "ptm",
+    "desc": "Monodeuterated/monomethylated lysine recognized by MBT epigenetic reader domains."
+  },
+  {
+    "code3": "MLY",
+    "code1": "DiMeLys",
+    "name": "N6-Dimethyl-L-lysine",
+    "formula": "C8H18N2O2",
+    "mw": "174.24 Da",
+    "cat": "ptm",
+    "desc": "Epigenetic methylation state recognized by chromodomains and Tudor domains in gene expression regulation."
+  },
+  {
+    "code3": "M3L",
+    "code1": "TriMeLys",
+    "name": "N6-Trimethyl-L-lysine",
+    "formula": "C9H20N2O2",
+    "mw": "188.27 Da",
+    "cat": "ptm",
+    "desc": "Constitutive quaternary positive charge; hallmark epigenetic silencer (H3K9me3, H3K27me3) or activator (H3K4me3)."
+  },
+  {
+    "code3": "NMM",
+    "code1": "MMA",
+    "name": "Monomethylarginine",
+    "formula": "C7H16N4O2",
+    "mw": "188.23 Da",
+    "cat": "ptm",
+    "desc": "Methylated guanidinium group generated by PRMT enzymes; controls RNA splicing and liquid-liquid phase separation."
+  },
+  {
+    "code3": "ADMA",
+    "code1": "ADMA",
+    "name": "Asymmetric Dimethylarginine",
+    "formula": "C8H18N4O2",
+    "mw": "202.25 Da",
+    "cat": "ptm",
+    "desc": "Endogenous competitive inhibitor of endothelial nitric oxide synthase (eNOS); key cardiovascular risk indicator."
+  },
+  {
+    "code3": "HYP",
+    "code1": "Hyp",
+    "name": "4-Hydroxy-L-proline",
+    "formula": "C5H9NO3",
+    "mw": "131.13 Da",
+    "cat": "ptm",
+    "desc": "Generated by prolyl 4-hydroxylase; essential for collagen triple-helix thermodynamic stability (defective in scurvy)."
+  },
+  {
+    "code3": "HYL",
+    "code1": "Hyl",
+    "name": "5-Hydroxy-L-lysine",
+    "formula": "C6H14N2O3",
+    "mw": "162.19 Da",
+    "cat": "ptm",
+    "desc": "Hydroxylated lysine providing covalent intermolecular cross-links and O-glycosylation in collagen fibrils."
+  },
+  {
+    "code3": "CGU",
+    "code1": "Gla",
+    "name": "Gamma-Carboxy-L-glutamate",
+    "formula": "C6H9NO6",
+    "mw": "191.14 Da",
+    "cat": "ptm",
+    "desc": "Vitamin K-dependent modification introducing bidentate Ca2+-chelating carboxylates in blood clotting factors."
+  },
+  {
+    "code3": "TYS",
+    "code1": "sTyr",
+    "name": "O-Sulfotyrosine",
+    "formula": "C9H11NO6S",
+    "mw": "261.25 Da",
+    "cat": "ptm",
+    "desc": "Enzymatically sulfated tyrosine; critical in chemokine receptor CCR5 binding by HIV-1 gp120 and thrombin inhibition."
+  },
+  {
+    "code3": "PCA",
+    "code1": "pGlu",
+    "name": "Pyroglutamate",
+    "formula": "C5H7NO3",
+    "mw": "129.11 Da",
+    "cat": "ptm",
+    "desc": "Cyclized N-terminal glutamate or glutamine; renders therapeutic peptides (TRH, GnRH) resistant to aminopeptidases."
+  },
+  {
+    "code3": "FME",
+    "code1": "fMet",
+    "name": "N-Formylmethionine",
+    "formula": "C6H11NO3S",
+    "mw": "177.22 Da",
+    "cat": "ptm",
+    "desc": "Initiator amino acid in bacterial and mitochondrial translation; potent neutrophil chemotactic danger signal."
+  },
+  {
+    "code3": "ATP",
+    "code1": "ATP",
+    "name": "Adenosine Triphosphate",
+    "formula": "C10H16N5O13P3",
+    "mw": "507.18 Da",
+    "cat": "cofactors",
+    "desc": "Universal biochemical energy currency; phosphoanhydride bonds drive cellular work, motility, and active transport."
+  },
+  {
+    "code3": "ADP",
+    "code1": "ADP",
+    "name": "Adenosine Diphosphate",
+    "formula": "C10H15N5O10P2",
+    "mw": "427.20 Da",
+    "cat": "cofactors",
+    "desc": "Substrate for mitochondrial ATP synthase; vital intracellular allosteric metabolic sensor."
+  },
+  {
+    "code3": "AMP",
+    "code1": "AMP",
+    "name": "Adenosine Monophosphate",
+    "formula": "C10H14N5O7P",
+    "mw": "347.22 Da",
+    "cat": "cofactors",
+    "desc": "Activates 5'-AMP-activated protein kinase (AMPK) to trigger mitochondrial biogenesis and longevity pathways."
+  },
+  {
+    "code3": "GTP",
+    "code1": "GTP",
+    "name": "Guanosine Triphosphate",
+    "formula": "C10H16N5O14P3",
+    "mw": "523.18 Da",
+    "cat": "cofactors",
+    "desc": "Energy source for ribosomal peptide translation and G-protein coupled receptor (GPCR) signal transduction."
+  },
+  {
+    "code3": "NAD",
+    "code1": "NAD+",
+    "name": "Nicotinamide Adenine Dinucleotide",
+    "formula": "C21H27N7O14P2",
+    "mw": "663.43 Da",
+    "cat": "cofactors",
+    "desc": "Primary cellular electron carrier; mandatory substrate for sirtuins (SIRT1-7), PARP1, and CD38 NADase."
+  },
+  {
+    "code3": "NDH",
+    "code1": "NADH",
+    "name": "Reduced Nicotinamide Adenine Dinucleotide",
+    "formula": "C21H29N7O14P2",
+    "mw": "665.44 Da",
+    "cat": "cofactors",
+    "desc": "Major electron donor driving the mitochondrial electron transport chain proton gradient via Complex I."
+  },
+  {
+    "code3": "NAP",
+    "code1": "NADP+",
+    "name": "Nicotinamide Adenine Dinucleotide Phosphate",
+    "formula": "C21H28N7O17P3",
+    "mw": "743.41 Da",
+    "cat": "cofactors",
+    "desc": "Essential cellular cofactor for anabolic biosynthesis, lipid generation, and NADPH-dependent antioxidant defense."
+  },
+  {
+    "code3": "SAM",
+    "code1": "SAM",
+    "name": "S-Adenosylmethionine",
+    "formula": "C15H22N6O5S",
+    "mw": "398.44 Da",
+    "cat": "cofactors",
+    "desc": "Principal methyl donor in enzymatic transmethylation reactions for DNA, RNA, histone, and phospholipid methylation."
+  },
+  {
+    "code3": "SAH",
+    "code1": "SAH",
+    "name": "S-Adenosylhomocysteine",
+    "formula": "C14H20N6O5S",
+    "mw": "384.41 Da",
+    "cat": "cofactors",
+    "desc": "Potent competitive product inhibitor of SAM-dependent methyltransferases; critical SAM/SAH methylation ratio metric."
+  },
+  {
+    "code3": "HEM",
+    "code1": "Heme",
+    "name": "Protoporphyrin IX (Heme B)",
+    "formula": "C34H32FeN4O4",
+    "mw": "616.49 Da",
+    "cat": "cofactors",
+    "desc": "Iron-coordinated porphyrin ring; oxygen carrier in hemoglobin/myoglobin and electron carrier in cytochromes."
+  },
+  {
+    "code3": "FAD",
+    "code1": "FAD",
+    "name": "Flavin Adenine Dinucleotide",
+    "formula": "C27H33N9O15P2",
+    "mw": "785.55 Da",
+    "cat": "cofactors",
+    "desc": "Redox cofactor for succinate dehydrogenase (Complex II) and mitochondrial fatty acid beta-oxidation enzymes."
+  },
+  {
+    "code3": "FMN",
+    "code1": "FMN",
+    "name": "Flavin Mononucleotide",
+    "formula": "C17H21N4O9P",
+    "mw": "456.34 Da",
+    "cat": "cofactors",
+    "desc": "Riboflavin derivative functioning as the primary electron acceptor prosthetic group in respiratory Complex I."
+  },
+  {
+    "code3": "COA",
+    "code1": "CoA",
+    "name": "Coenzyme A",
+    "formula": "C21H36N7O16P3S",
+    "mw": "767.53 Da",
+    "cat": "cofactors",
+    "desc": "Universal acyl group carrier synthesizing high-energy thioester intermediates in the Krebs cycle and fatty acid metabolism."
+  },
+  {
+    "code3": "ACO",
+    "code1": "AcCoA",
+    "name": "Acetyl-Coenzyme A",
+    "formula": "C23H38N7O17P3S",
+    "mw": "809.57 Da",
+    "cat": "cofactors",
+    "desc": "Central metabolic intersection connecting glycolysis, lipid breakdown, and the tricarboxylic acid (TCA) cycle."
+  },
+  {
+    "code3": "GSH",
+    "code1": "GSH",
+    "name": "Reduced Glutathione",
+    "formula": "C10H17N3O6S",
+    "mw": "307.32 Da",
+    "cat": "cofactors",
+    "desc": "Endogenous tripeptide antioxidant protecting cells against reactive oxygen species and maintaining protein thiols."
+  }
 ];
 
 async function fetchAndLoadUniversalMolecule(query){
@@ -2155,12 +3308,20 @@ function showUniversalMolecularLibrary(){
       </div>
     </div>
 
-    <div style="margin-bottom:10px;display:flex;gap:6px;flex-wrap:wrap;" id="molFilterBar">
-      <button class="minor-btn active" style="padding:4px 9px;font-size:9px;" data-cat="all">All Curated (46)</button>
-      <button class="minor-btn" style="padding:4px 9px;font-size:9px;" data-cat="canonical">Canonical (20)</button>
-      <button class="minor-btn" style="padding:4px 9px;font-size:9px;" data-cat="non_canonical">Non-Canonical & Rare (13)</button>
-      <button class="minor-btn" style="padding:4px 9px;font-size:9px;" data-cat="ptm">PTMs & Modified (7)</button>
-      <button class="minor-btn" style="padding:4px 9px;font-size:9px;" data-cat="ligand">Cofactors & Ligands (6)</button>
+    <div style="font-size:9.5px;color:#38B6FF;background:rgba(21,151,255,0.08);border:1px solid #16466B;border-radius:7px;padding:7px 12px;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;">
+      <span><b>Open Chemical Universe:</b> 134+ curated reference building blocks built-in &middot; <b>35,000+ RCSB CCD</b> components &middot; <b>115,000,000+ PubChem</b> structures live via search.</span>
+      <span id="catalogCount" style="color:#A7BED2;font-size:8.5px;font-weight:600;">Showing 134 monomers</span>
+    </div>
+    <div style="margin-bottom:10px;display:flex;gap:5px;flex-wrap:wrap;" id="molFilterBar">
+      <button class="minor-btn active" style="padding:4px 9px;font-size:8.5px;" data-cat="all">All Monomers (134)</button>
+      <button class="minor-btn" style="padding:4px 9px;font-size:8.5px;" data-cat="canonical">Canonical (20)</button>
+      <button class="minor-btn" style="padding:4px 9px;font-size:8.5px;" data-cat="d_amino">D-Stereoisomers (19)</button>
+      <button class="minor-btn" style="padding:4px 9px;font-size:8.5px;" data-cat="natural_nonprot">Non-Proteinogenic (26)</button>
+      <button class="minor-btn" style="padding:4px 9px;font-size:8.5px;" data-cat="expanded_code">Genetic Code &amp; Click ncAAs (17)</button>
+      <button class="minor-btn" style="padding:4px 9px;font-size:8.5px;" data-cat="halogenated">Halogenated (11)</button>
+      <button class="minor-btn" style="padding:4px 9px;font-size:8.5px;" data-cat="aromatic_bulky">Aromatic &amp; Bulky (11)</button>
+      <button class="minor-btn" style="padding:4px 9px;font-size:8.5px;" data-cat="ptm">PTMs &amp; Epigenetics (15)</button>
+      <button class="minor-btn" style="padding:4px 9px;font-size:8.5px;" data-cat="cofactors">Cofactors &amp; Bio-Ligands (15)</button>
     </div>
 
     <div style="display:grid;grid-template-columns:repeat(auto-fill, minmax(280px, 1fr));gap:10px;max-height:50vh;overflow-y:auto;padding-right:4px;" id="molGrid">
@@ -2195,6 +3356,14 @@ function showUniversalMolecularLibrary(){
   // Wire search input & enter key
   const searchInput = $('#libSearchInput');
   const searchBtn = $('#libSearchBtn');
+  const countBadge = $('#catalogCount');
+
+  const updateVisibleCount = () => {
+    if(!countBadge) return;
+    const visible = $$('#molGrid .mol-card').filter(c => c.style.display !== 'none').length;
+    countBadge.textContent = `Showing ${visible} of ${UNIVERSAL_CHEMICAL_CATALOG.length} monomers`;
+  };
+
   if(searchBtn && searchInput){
     searchBtn.onclick = () => fetchAndLoadUniversalMolecule(searchInput.value);
     searchInput.onkeydown = e => { if(e.key === 'Enter') fetchAndLoadUniversalMolecule(searchInput.value); };
@@ -2206,6 +3375,7 @@ function showUniversalMolecularLibrary(){
         const text = card.dataset.query || '';
         card.style.display = (!q || text.includes(q)) ? 'flex' : 'none';
       });
+      updateVisibleCount();
     };
   }
 
@@ -2219,6 +3389,7 @@ function showUniversalMolecularLibrary(){
       $$('#molGrid .mol-card').forEach(card => {
         card.style.display = (targetCat === 'all' || card.dataset.cat === targetCat) ? 'flex' : 'none';
       });
+      updateVisibleCount();
     };
   });
 }
