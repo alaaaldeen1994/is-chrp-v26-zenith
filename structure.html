@@ -61,7 +61,17 @@ button,input,textarea,select{font:inherit}button{cursor:pointer}
 .search input::placeholder{color:#708ba3}.search:focus-within{border-color:#2c84cf;box-shadow:0 0 0 3px rgba(44,132,207,.09)}
 .focus-flash{animation:focusFlash 1.25s ease}@keyframes focusFlash{0%,100%{box-shadow:var(--shadow)}35%{box-shadow:0 0 0 2px rgba(39,149,255,.75),0 0 35px rgba(39,149,255,.24)}}
 .context-menu{position:fixed;z-index:120;min-width:190px;padding:6px;border:1px solid var(--line2);border-radius:10px;background:#071725;box-shadow:0 20px 55px rgba(0,0,0,.48);display:none}.context-menu.show{display:block}.context-menu button{width:100%;border:0;background:transparent;color:#cfe0ec;padding:9px 10px;text-align:left;border-radius:7px;font-size:9px}.context-menu button:hover{background:#0e2b45}.context-menu .danger{color:#ff929f}
-.modal-backdrop{position:fixed;inset:0;z-index:130;background:rgba(1,6,11,.74);backdrop-filter:blur(8px);display:none;place-items:center;padding:20px}.modal-backdrop.show{display:grid}.modal{width:min(680px,92vw);max-height:82vh;overflow:auto;border:1px solid var(--line2);border-radius:14px;background:linear-gradient(180deg,#0b2135,#071522);box-shadow:0 28px 90px rgba(0,0,0,.55);padding:18px}.modal h2{font-size:16px;margin:0}.modal p{color:#9db2c5;font-size:9px;line-height:1.6}.modal-head{display:flex;justify-content:space-between;gap:14px;align-items:center}.modal-close{border:1px solid var(--line);background:#0a1d2d;color:#bdd0df;border-radius:8px;padding:7px 9px}.modal-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin:12px 0}.modal-kpi{padding:11px;border:1px solid var(--line);border-radius:9px;background:#081a29}.modal-kpi span{display:block;color:#7792a8;font-size:8px}.modal-kpi b{display:block;font-size:15px;margin-top:4px}.modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:14px}.modal-actions button{border-radius:8px;padding:9px 12px;font-size:9px}.modal-actions .confirm{border:0;background:linear-gradient(180deg,#258fff,#1168ee);color:white;font-weight:700}.modal-actions .cancel{border:1px solid var(--line);background:#0b1d2c;color:#bfd1df}
+.modal-backdrop{position:fixed;inset:0;z-index:130;background:rgba(1,6,11,.74);backdrop-filter:blur(8px);display:none;place-items:center;padding:20px}.modal-backdrop.show{display:grid}.modal{width:min(680px,92vw);max-height:82vh;overflow:auto;border:1px solid var(--line2);border-radius:14px;background:linear-gradient(180deg,#0b2135,#071522);box-shadow:0 28px 90px rgba(0,0,0,.55);padding:18px}
+.modal.modal-wide{width:min(1160px,95vw);max-height:90vh;height:90vh;display:flex;flex-direction:column;overflow:hidden!important;padding:18px 22px 14px 22px}
+.modal.modal-wide #modalBody{display:flex;flex-direction:column;flex:1;min-height:0;overflow:hidden}
+.modal.modal-wide .modal-actions{margin-top:10px;padding-top:8px;border-top:1px solid rgba(14,44,69,.6)}
+#molGrid::-webkit-scrollbar{width:6px}
+#molGrid::-webkit-scrollbar-track{background:rgba(3,16,27,.5);border-radius:4px}
+#molGrid::-webkit-scrollbar-thumb{background:#143e63;border-radius:4px}
+#molGrid::-webkit-scrollbar-thumb:hover{background:#38B6FF}
+#molFilterBar::-webkit-scrollbar{height:4px}
+#molFilterBar::-webkit-scrollbar-track{background:transparent}
+#molFilterBar::-webkit-scrollbar-thumb{background:#143e63;border-radius:2px}.modal h2{font-size:16px;margin:0}.modal p{color:#9db2c5;font-size:9px;line-height:1.6}.modal-head{display:flex;justify-content:space-between;gap:14px;align-items:center}.modal-close{border:1px solid var(--line);background:#0a1d2d;color:#bdd0df;border-radius:8px;padding:7px 9px}.modal-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin:12px 0}.modal-kpi{padding:11px;border:1px solid var(--line);border-radius:9px;background:#081a29}.modal-kpi span{display:block;color:#7792a8;font-size:8px}.modal-kpi b{display:block;font-size:15px;margin-top:4px}.modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:14px}.modal-actions button{border-radius:8px;padding:9px 12px;font-size:9px}.modal-actions .confirm{border:0;background:linear-gradient(180deg,#258fff,#1168ee);color:white;font-weight:700}.modal-actions .cancel{border:1px solid var(--line);background:#0b1d2c;color:#bfd1df}
 .table-wrap{overflow:auto;border:1px solid var(--line);border-radius:9px}.data-table{width:100%;border-collapse:collapse;font-size:8.5px}.data-table th,.data-table td{padding:8px 9px;border-bottom:1px solid rgba(29,65,96,.7);text-align:left}.data-table th{color:#7994aa;background:#071624;position:sticky;top:0}.data-table td{color:#bed0dd}.data-table tr:last-child td{border-bottom:0}.mono{font-family:'IBM Plex Mono',monospace}.empty-state{padding:24px;text-align:center;color:#7892a7;font-size:9px}.loading-dot{width:7px;height:7px;border-radius:50%;display:inline-block;background:#f4c84d;box-shadow:0 0 9px rgba(244,200,77,.4);margin-right:6px}.api-off{color:#ff9b9b!important}.api-on{color:#5be5b5!important}
 @media(max-width:1180px){.run-actions{grid-template-columns:1fr 1.5fr}}
 .advanced-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.advanced-grid .field{margin-top:0}.advanced-grid .wide{grid-column:1/-1}.advanced-note{grid-column:1/-1;border:1px solid #1b4667;background:#071c2d;border-radius:8px;padding:8px 9px;color:#7895aa;font-size:7.2px;line-height:1.5}.advanced-note b{color:#a9cee9}.binder-row{display:none}.binder-row.show{display:block}.entity-actions{display:grid;grid-template-columns:1fr 1fr;gap:6px}.science-chip{display:inline-flex;align-items:center;gap:5px;padding:4px 7px;border:1px solid #1c506f;border-radius:999px;background:#072135;color:#78c6ff;font-size:6.7px}.ensemble-grid,.ref-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.ensemble-kpi,.ref-kpi{padding:8px;border:1px solid var(--line);border-radius:8px;background:#081d2d}.ensemble-kpi b,.ref-kpi b{display:block;font-size:11px}.ensemble-kpi span,.ref-kpi span{display:block;color:#7892a7;font-size:6.5px;margin-top:3px}.ensemble-note,.ref-note{font-size:7px;line-height:1.5;color:#7e99ad;margin-top:8px}.sample-active{color:#63e4b8!important}.sample-button{border:1px solid #23577c;background:#0a2438;color:#c8deec;border-radius:6px;padding:5px 7px;font-size:7px}.sample-button:hover{border-color:#2d83bd}.ref-actions{display:flex;gap:6px;margin-top:9px}.ref-actions button{flex:1;border:1px solid var(--line);background:#0a2032;color:#cfe0ec;border-radius:8px;padding:7px;font-size:7.5px}.metric-help{cursor:help;text-decoration:underline dotted rgba(150,190,220,.55);text-underline-offset:2px}
@@ -1213,6 +1223,13 @@ select:focus {
       </div>
 
       <div class="input-mode" data-input-panel="complex" style="display:none">
+        <div class="label" style="margin-bottom:6px;"><span>Curated multi-chain complex presets</span><span class="hint">1-click test</span></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:10px;">
+          <button class="minor-btn" id="presetInsulin" type="button" style="text-align:left;padding:6px 8px;"><b>Insulin Dimer (A+B)</b><br><span style="font-size:7px;color:#6d8aa0;">Protein–Protein · Chains A (21aa) + B (30aa)</span></button>
+          <button class="minor-btn" id="presetP53DNA" type="button" style="text-align:left;padding:6px 8px;"><b>p53 – DNA Target</b><br><span style="font-size:7px;color:#6d8aa0;">Protein–DNA · Core DBD + duplex DNA</span></button>
+          <button class="minor-btn" id="presetAntibody" type="button" style="text-align:left;padding:6px 8px;"><b>Antibody Fab (H+L)</b><br><span style="font-size:7px;color:#6d8aa0;">Protein–Protein · Heavy + Light variable chains</span></button>
+          <button class="minor-btn" id="presetCrispr" type="button" style="text-align:left;padding:6px 8px;"><b>Cas9 – sgRNA Target</b><br><span style="font-size:7px;color:#6d8aa0;">Protein–RNA · RNP catalytic endonuclease</span></button>
+        </div>
         <div class="field"><div class="label"><span>Complex entities</span><span class="hint">protein · DNA · RNA · ligand</span></div><div id="complexRows"></div></div>
         <div class="entity-actions"><button class="minor-btn" id="addEntity">+ Add entity</button><button class="minor-btn" id="addReverseComplement">+ DNA reverse complement</button></div>
       </div>
@@ -1369,7 +1386,7 @@ select:focus {
   <button class="danger" id="resetWorkspace">Reset workspace</button>
 </div>
 <div class="modal-backdrop" id="modalBackdrop" aria-hidden="true"><div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-  <div class="modal-head"><div><h2 id="modalTitle">Details</h2><p id="modalSubtitle"></p></div><button class="modal-close" id="modalClose">Close</button></div>
+  <div class="modal-head"><div><h2 id="modalTitle">Details</h2><p id="modalSubtitle"></p></div><button class="modal-close" id="modalClose" title="Close modal" aria-label="Close modal" style="display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;padding:0;border-radius:8px;cursor:pointer;border:1px solid #1c4e75;background:#082238;color:#9bc9eb;transition:all .15s ease;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button></div>
   <div id="modalBody"></div>
   <div class="modal-actions" id="modalActions"></div>
 </div></div>
@@ -1412,8 +1429,14 @@ function idempotency(){ return (crypto?.randomUUID?.() || ('nilus-'+Date.now()+'
 function focusCard(el){ if(!el)return; el.scrollIntoView({behavior:'smooth',block:'center'}); el.classList.remove('focus-flash'); void el.offsetWidth; el.classList.add('focus-flash'); setTimeout(()=>el.classList.remove('focus-flash'),1400); }
 
 // ---------- Modal / menu ----------
-function closeModal(){ $('#modalBackdrop').classList.remove('show'); $('#modalBackdrop').setAttribute('aria-hidden','true'); $('#modalActions').innerHTML=''; }
-function openModal({title='Details',subtitle='',html='',actions=[]}){
+function closeModal(){ 
+  $('#modalBackdrop').classList.remove('show'); 
+  $('#modalBackdrop').setAttribute('aria-hidden','true'); 
+  $('#modalActions').innerHTML=''; 
+  $('#modalBackdrop .modal')?.classList.remove('modal-wide'); 
+}
+function openModal({title='Details',subtitle='',html='',actions=[],wide=false}){
+  const m=$('#modalBackdrop .modal'); if(m) m.classList.toggle('modal-wide',!!wide);
   $('#modalTitle').textContent=title; $('#modalSubtitle').textContent=subtitle; $('#modalBody').innerHTML=html; const a=$('#modalActions'); a.innerHTML='';
   actions.forEach(x=>{ const b=document.createElement('button'); b.className=x.kind==='confirm'?'confirm':'cancel'; b.textContent=x.label; b.onclick=()=>x.onClick?.(b); a.appendChild(b); });
   $('#modalBackdrop').classList.add('show'); $('#modalBackdrop').setAttribute('aria-hidden','false');
@@ -1566,6 +1589,58 @@ function initInputModes(){
   $('#presetResv').onclick = () => applyLigandPreset('resv');
   $('#presetOdor').onclick = () => applyLigandPreset('odor');
   $('#presetDopamine').onclick = () => applyLigandPreset('dopamine');
+
+  // Multi-chain Complex Presets
+  $('#presetInsulin')?.addEventListener('click', () => {
+    STATE.entities = [
+      { id: 'A', type: 'protein', value: 'GIVEQCCTSICSLYQLENYCN' },
+      { id: 'B', type: 'protein', value: 'FVNQHLCGSHLVEALYLVCGERGFFYTPKT' }
+    ];
+    $('#bindingMode').value = 'protein_protein_binding';
+    renderEntities();
+    updateBindingOptions();
+    $('#bindingChain').value = 'B';
+    invalidateEstimate();
+    toast('Loaded Insulin A+B dimer complex preset (Protein–Protein)');
+  });
+
+  $('#presetP53DNA')?.addEventListener('click', () => {
+    STATE.entities = [
+      { id: 'A', type: 'protein', value: 'SSSVPSQKTYQGSYGFRLGFLHSGTAKSVTCTYSPALNKMFCQLAKTCPVQLWVDSTPPPGTRVRAMAIYKQSQHMTEVVRRCPHHERCSDSDGLAPPQHLIRVEGNLRVEYLDDRNTFRHSVVVPYEPPEVGSDCTTIHYNYMCNSSCMGGMNRRPILTIITLEDSSGNLLGRNSFEVRVCACPGRDRRTEEENFR' },
+      { id: 'B', type: 'dna', value: 'GGACATGCCCGGGCATGTCC' },
+      { id: 'C', type: 'dna', value: 'GGACATGCCCGGGCATGTCC' }
+    ];
+    $('#bindingMode').value = 'none';
+    renderEntities();
+    updateBindingOptions();
+    invalidateEstimate();
+    toast('Loaded p53 – DNA consensus target complex preset (Protein–DNA)');
+  });
+
+  $('#presetAntibody')?.addEventListener('click', () => {
+    STATE.entities = [
+      { id: 'A', type: 'protein', value: 'EVQLVESGGGLVQPGGSLRLSCAASGFTFSDHYMDWVRQAPGKGLEWVGRTRNKANSYTTEYAASVKGRFTISRDDSKNSLYLQMNSLKTEDTAVYYCARSSYGYFDYWGQGTLVTVSS' },
+      { id: 'B', type: 'protein', value: 'DIQMTQSPSSLSASVGDRVTITCRASQSISNYLNWYQQKPGKAPKLLIYAASSLQSGVPSRFSGSGSGTDFTLTISSLQPEDFATYYCQQSYSTPLTFGGGTKVEIK' }
+    ];
+    $('#bindingMode').value = 'protein_protein_binding';
+    renderEntities();
+    updateBindingOptions();
+    $('#bindingChain').value = 'B';
+    invalidateEstimate();
+    toast('Loaded Antibody Fab Heavy + Light chain complex preset');
+  });
+
+  $('#presetCrispr')?.addEventListener('click', () => {
+    STATE.entities = [
+      { id: 'A', type: 'protein', value: 'MDKKYSIGLDIGTNSVGWAVITDEYKVPSKKFKVLGNTDRHSIKKNLIGALLFDSGETAEATRLKRTARRRYTRRKNRICYLQEIFSNEMAKVDDSFFHRLEESFLVEEDKKHERHPIFGNIVDEVAYHEKYPTIYHLRKKLVDSTDKADLRLIYLALAHMIKFRGHFLIEGDLNPDNSDVDKLFIQLVQTYNQLFEENPINASGVDAKAILSARLSKSRRLENLIAQLPGEKKNGLFGNLIALSLGLTPNFKSNFDLAEDAKLQLSKDTYDDDLDNLLAQIGDQYADLFLAAKNLSDAILLSDILRVNTEITKAPLSASMIKRYDEHHQDLTLLKALVRQQLPEKYKEIFFDQSKNGYAGYIDGGASQEEFYKFIKPILEKMDGTEELLVKLNREDLLRKQRTFDNGSIPHQIHLGELHAILRRQEDFYPFLKDNREKIEKILTFRIPYYVGPLARGNSRFAWMTRKSEETITPWNFEEVVDKGASAQSFIERMTNFDKNLPNEKVLPKHSLLYEYFTVYNELTKVKYVTEGMRKPAFLSGEQKKAIVDLLFKTNRKVTVKQLKEDYFKKIECFDSVEISGVEDRFNASLGTYHDLLKIIKDKDFLDNEENEDILEDIVLTLTLFEDREMIEERLKTYAHLFDDKVMKQLKRRRYTGWGRLSRKLINGIRDKQSGKTILDFLKSDGFANRNFMQLIHDDSLTFKEDIQKAQVSGQGDSLHEHIANLAGSPAIKKGILQTVKVVDELVKVMGRHKPENIVIEMARENQTTQKGQKNSRERMKRIEEGIKELGSQILKEHPVENTQLQNEKLYLYYLQNGRDMYVDQELDINRLSDYDVDHIVPQSFLKDDSIDNKVLTRSDKNRGKSDNVPSEEVVKKMKNYWRQLLNAKLITQRKFDNLTKAERGGLSELDKAGFIKRQLVETRQITKHVAQILDSRMNTKYDENDKLIREVKVITLKSKLVSDFRKDFQFYKVREINNYHHAHDAYLNAVVGTALIKKYPKLESEFVYGDYKVYDVRKMIAKSEQEIGKATAKYFFYSNIMNFFKTEITLANGEIRKRPLIETNGETGEIVWDKGRDFATVRKVLSMPQVNIVKKTEVQTGGFSKESILPKRNSDKLIARKKDWDPKKYGGFDSPTVAYSVLVVAKVEKGKSKKLKSVKELLGITIMERSSFEKNPIDFLEAKGYKEVKKDLIIKLPKYSLFELENGRKRMLASAGELQKGNELALPSKYVNFLYLASHYEKLKGSPEDNEQKQLFVEQHKHYLDEIIEQISEFSKRVILADANLDKVLSAYNKHRDKPIREQAENIIHLFTLTNLGAPAAFKYFDTTIDRKRYTSTKEVLDATLIHQSITGLYETRIDLSQLGGD' },
+      { id: 'B', type: 'rna', value: 'GGUUUUAGAGCUAGAAAUAGCAAGUUAAAAUAAGGCUAGUCCGUUAUCAACUUGAAAAAGUGGCACCGAGUCGGUGC' }
+    ];
+    $('#bindingMode').value = 'none';
+    renderEntities();
+    updateBindingOptions();
+    invalidateEstimate();
+    toast('Loaded Cas9 – sgRNA complex preset (Protein–RNA)');
+  });
 
   $('#ligandTargetSeq').addEventListener('input', () => {
     syncLigandModeEntities();
@@ -3412,26 +3487,34 @@ window.appendAminoToSeq = appendAminoToSeq;
 
 function showUniversalMolecularLibrary(){
   const html = `
-    <div style="margin-bottom:14px;background:#03101B;border:1px solid #0E2C45;border-radius:10px;padding:12px;">
-      <div style="font-size:11px;font-weight:700;color:#F4F8FC;margin-bottom:4px;">🔍 Live Molecular & Chemical Search (Open Database)</div>
-      <div style="font-size:8.5px;color:#66859E;margin-bottom:8px;">Search across 35,000+ RCSB PDB Chemical Component Dictionary (CCD) entries and 115M+ PubChem 3D structures.</div>
-      <div style="display:flex;gap:6px;">
-        <input id="libSearchInput" placeholder="Enter any amino acid, non-canonical, PDB ligand code, or drug (e.g. Ornithine, Selenocysteine, Hydroxyproline, GABA, ORN, SEC, HYP, SEP, ATP, Caffeine)..." style="flex:1;font-size:9.5px;padding:8px 10px;background:#061826;border:1px solid #16466B;color:#F4F8FC;border-radius:7px;">
-        <button class="minor-btn" id="libSearchBtn" style="background:#082238;border-color:#1c5885;color:#8cd4ff;font-weight:600;padding:8px 12px;font-size:9.5px;white-space:nowrap;">⚛ Fetch & Load in 3D</button>
-      </div>
-      <div style="margin-top:8px;display:flex;gap:5px;align-items:center;flex-wrap:wrap;font-size:8px;color:#718aa0;">
-        <span style="font-weight:600;color:#A7BED2;">Quick shortcuts:</span>
-        <button class="minor-btn" style="padding:2px 7px;font-size:8px;background:#0d2e4a;color:#65cbf3;border-color:#1c5885;font-weight:600;" onclick="window.fetchAndLoadUniversalMolecule('Tetrodotoxin')">⚡ Tetrodotoxin</button>
-        <button class="minor-btn" style="padding:2px 7px;font-size:8px;background:#0d2e4a;color:#65cbf3;border-color:#1c5885;font-weight:600;" onclick="window.fetchAndLoadUniversalMolecule('Capsaicin')">⚡ Capsaicin</button>
-        <button class="minor-btn" style="padding:2px 7px;font-size:8px;background:#0d2e4a;color:#65cbf3;border-color:#1c5885;font-weight:600;" onclick="window.fetchAndLoadUniversalMolecule('RAP')">RAP · Rapamycin</button>
-        <button class="minor-btn" style="padding:2px 7px;font-size:8px;" onclick="window.fetchAndLoadUniversalMolecule('SEC')">SEC · Selenocysteine</button>
-        <button class="minor-btn" style="padding:2px 7px;font-size:8px;" onclick="window.fetchAndLoadUniversalMolecule('ORN')">ORN · Ornithine</button>
-        <button class="minor-btn" style="padding:2px 7px;font-size:8px;" onclick="window.fetchAndLoadUniversalMolecule('HYP')">HYP · Hydroxyproline</button>
-        <button class="minor-btn" style="padding:2px 7px;font-size:8px;" onclick="window.fetchAndLoadUniversalMolecule('SEP')">SEP · Phosphoserine</button>
-        <button class="minor-btn" style="padding:2px 7px;font-size:8px;" onclick="window.fetchAndLoadUniversalMolecule('ATP')">ATP</button>
-        <button class="minor-btn" style="padding:2px 7px;font-size:8px;" onclick="window.fetchAndLoadUniversalMolecule('HEM')">HEM · Heme</button>
-        <button class="minor-btn" style="padding:2px 7px;font-size:8px;" onclick="window.fetchAndLoadUniversalMolecule('CFF')">Caffeine</button>
-        <button class="minor-btn" style="padding:2px 7px;font-size:8px;" onclick="window.fetchAndLoadUniversalMolecule('PSB')">Psilocybin</button>
+    <div style="flex-shrink:0;">
+      <div style="margin-bottom:12px;background:#03101B;border:1px solid #0E2C45;border-radius:10px;padding:12px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+          <div style="font-size:11px;font-weight:700;color:#F4F8FC;">🔍 Live Molecular & Chemical Search (Open Database)</div>
+          <div style="font-size:8px;color:#66859E;">Query 35,000+ RCSB CCD &middot; 115M+ PubChem 3D</div>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <div style="position:relative;flex:1;display:flex;align-items:center;">
+            <span style="position:absolute;left:10px;color:#527794;font-size:11px;pointer-events:none;">⚛</span>
+            <input id="libSearchInput" placeholder="Search 146+ curated monomers or query 35,000+ RCSB CCD & 115M+ PubChem 3D structures (e.g. Tetrodotoxin, Capsaicin, Rapamycin, ORN, HEM, ATP)..." style="width:100%;font-size:9.5px;padding:8px 12px 8px 30px;background:#051422;border:1px solid #16466B;color:#F4F8FC;border-radius:8px;outline:none;transition:border-color .15s ease;">
+          </div>
+          <button class="minor-btn" id="libSearchBtn" style="background:linear-gradient(180deg,#15639d,#0d426d);border:1px solid #38B6FF;color:#ffffff;font-weight:700;padding:8px 16px;font-size:9.5px;white-space:nowrap;border-radius:8px;cursor:pointer;box-shadow:0 0 14px rgba(56,182,255,0.18);">⚛ Fetch &amp; Load in 3D</button>
+        </div>
+      <div style="margin-top:8px;display:flex;gap:6px;align-items:center;overflow-x:auto;padding-bottom:3px;scrollbar-width:none;white-space:nowrap;">
+        <span style="font-weight:700;color:#38B6FF;font-size:8px;display:inline-flex;align-items:center;gap:3px;flex-shrink:0;">⚡ Bioactive Hotlist:</span>
+        <button class="minor-btn" style="padding:2.5px 8px;font-size:8px;background:#0e3352;color:#65cbf3;border-color:#206394;font-weight:700;flex-shrink:0;" onclick="window.fetchAndLoadUniversalMolecule('Tetrodotoxin')">⚡ Tetrodotoxin</button>
+        <button class="minor-btn" style="padding:2.5px 8px;font-size:8px;background:#0e3352;color:#65cbf3;border-color:#206394;font-weight:700;flex-shrink:0;" onclick="window.fetchAndLoadUniversalMolecule('Capsaicin')">⚡ Capsaicin</button>
+        <button class="minor-btn" style="padding:2.5px 8px;font-size:8px;background:#0e3352;color:#65cbf3;border-color:#206394;font-weight:700;flex-shrink:0;" onclick="window.fetchAndLoadUniversalMolecule('RAP')">RAP · Rapamycin</button>
+        <button class="minor-btn" style="padding:2.5px 8px;font-size:8px;background:#0e3352;color:#65cbf3;border-color:#206394;font-weight:700;flex-shrink:0;" onclick="window.fetchAndLoadUniversalMolecule('CFF')">CFF · Caffeine</button>
+        <button class="minor-btn" style="padding:2.5px 8px;font-size:8px;background:#0e3352;color:#65cbf3;border-color:#206394;font-weight:700;flex-shrink:0;" onclick="window.fetchAndLoadUniversalMolecule('PSB')">PSB · Psilocybin</button>
+        <span style="color:#2a5273;margin:0 2px;flex-shrink:0;">|</span>
+        <span style="font-weight:700;color:#A7BED2;font-size:8px;flex-shrink:0;">Key Building Blocks:</span>
+        <button class="minor-btn" style="padding:2.5px 8px;font-size:8px;flex-shrink:0;" onclick="window.fetchAndLoadUniversalMolecule('SEC')">SEC · Selenocysteine</button>
+        <button class="minor-btn" style="padding:2.5px 8px;font-size:8px;flex-shrink:0;" onclick="window.fetchAndLoadUniversalMolecule('ORN')">ORN · Ornithine</button>
+        <button class="minor-btn" style="padding:2.5px 8px;font-size:8px;flex-shrink:0;" onclick="window.fetchAndLoadUniversalMolecule('HYP')">HYP · Hydroxyproline</button>
+        <button class="minor-btn" style="padding:2.5px 8px;font-size:8px;flex-shrink:0;" onclick="window.fetchAndLoadUniversalMolecule('SEP')">SEP · Phosphoserine</button>
+        <button class="minor-btn" style="padding:2.5px 8px;font-size:8px;flex-shrink:0;" onclick="window.fetchAndLoadUniversalMolecule('ATP')">ATP</button>
+        <button class="minor-btn" style="padding:2.5px 8px;font-size:8px;flex-shrink:0;" onclick="window.fetchAndLoadUniversalMolecule('HEM')">HEM · Heme</button>
       </div>
     </div>
 
@@ -3439,20 +3522,21 @@ function showUniversalMolecularLibrary(){
       <span><b>Open Chemical Universe:</b> 146+ curated reference building blocks built-in &middot; <b>35,000+ RCSB CCD</b> components &middot; <b>115,000,000+ PubChem</b> structures live via search.</span>
       <span id="catalogCount" style="color:#A7BED2;font-size:8.5px;font-weight:600;">Showing 146 molecules</span>
     </div>
-    <div style="margin-bottom:10px;display:flex;gap:5px;flex-wrap:wrap;" id="molFilterBar">
-      <button class="minor-btn active" style="padding:4px 9px;font-size:8.5px;" data-cat="all">All Library (146)</button>
-      <button class="minor-btn" style="padding:4px 9px;font-size:8.5px;color:#65CBF3;border-color:#1c5885;font-weight:600;" data-cat="bioactive">Bioactive Alkaloids &amp; Toxins (14)</button>
-      <button class="minor-btn" style="padding:4px 9px;font-size:8.5px;" data-cat="canonical">Canonical (20)</button>
-      <button class="minor-btn" style="padding:4px 9px;font-size:8.5px;" data-cat="d_amino">D-Stereoisomers (19)</button>
-      <button class="minor-btn" style="padding:4px 9px;font-size:8.5px;" data-cat="natural_nonprot">Non-Proteinogenic (26)</button>
-      <button class="minor-btn" style="padding:4px 9px;font-size:8.5px;" data-cat="expanded_code">Genetic Code &amp; Click ncAAs (17)</button>
-      <button class="minor-btn" style="padding:4px 9px;font-size:8.5px;" data-cat="halogenated">Halogenated (11)</button>
-      <button class="minor-btn" style="padding:4px 9px;font-size:8.5px;" data-cat="aromatic_bulky">Aromatic &amp; Bulky (11)</button>
-      <button class="minor-btn" style="padding:4px 9px;font-size:8.5px;" data-cat="ptm">PTMs &amp; Epigenetics (15)</button>
-      <button class="minor-btn" style="padding:4px 9px;font-size:8.5px;" data-cat="cofactors">Cofactors &amp; Bio-Ligands (15)</button>
+    <div style="margin-bottom:10px;display:flex;gap:5px;overflow-x:auto;padding-bottom:5px;white-space:nowrap;scrollbar-width:thin;" id="molFilterBar">
+      <button class="minor-btn active" style="padding:5px 11px;font-size:8.5px;flex-shrink:0;" data-cat="all">All Library (146)</button>
+      <button class="minor-btn" style="padding:5px 11px;font-size:8.5px;color:#65CBF3;border-color:#1c5885;font-weight:700;flex-shrink:0;" data-cat="bioactive">Bioactive Alkaloids &amp; Toxins (14)</button>
+      <button class="minor-btn" style="padding:5px 11px;font-size:8.5px;flex-shrink:0;" data-cat="canonical">Canonical (20)</button>
+      <button class="minor-btn" style="padding:5px 11px;font-size:8.5px;flex-shrink:0;" data-cat="d_amino">D-Stereoisomers (19)</button>
+      <button class="minor-btn" style="padding:5px 11px;font-size:8.5px;flex-shrink:0;" data-cat="natural_nonprot">Non-Proteinogenic (26)</button>
+      <button class="minor-btn" style="padding:5px 11px;font-size:8.5px;flex-shrink:0;" data-cat="expanded_code">Genetic Code &amp; Click ncAAs (17)</button>
+      <button class="minor-btn" style="padding:5px 11px;font-size:8.5px;flex-shrink:0;" data-cat="halogenated">Halogenated (11)</button>
+      <button class="minor-btn" style="padding:5px 11px;font-size:8.5px;flex-shrink:0;" data-cat="aromatic_bulky">Aromatic &amp; Bulky (11)</button>
+      <button class="minor-btn" style="padding:5px 11px;font-size:8.5px;flex-shrink:0;" data-cat="ptm">PTMs &amp; Epigenetics (15)</button>
+      <button class="minor-btn" style="padding:5px 11px;font-size:8.5px;flex-shrink:0;" data-cat="cofactors">Cofactors &amp; Bio-Ligands (15)</button>
     </div>
 
-    <div style="display:grid;grid-template-columns:repeat(auto-fill, minmax(280px, 1fr));gap:10px;max-height:50vh;overflow-y:auto;padding-right:4px;" id="molGrid">
+    </div><!-- end flex-shrink top section -->
+    <div style="display:grid;grid-template-columns:repeat(auto-fill, minmax(300px, 1fr));gap:11px;flex:1;min-height:0;overflow-y:auto;padding-right:6px;" id="molGrid">
       ${UNIVERSAL_CHEMICAL_CATALOG.map(aa => `
         <div class="mol-card" data-cat="${aa.cat}" data-query="${escapeHtml(aa.name.toLowerCase())} ${escapeHtml(aa.code3.toLowerCase())}" style="background:#061826;border:1px solid #0E2C45;border-radius:10px;padding:12px;display:flex;flex-direction:column;justify-content:space-between;transition:border-color .15s ease;">
           <div>
@@ -3476,6 +3560,7 @@ function showUniversalMolecularLibrary(){
     title: 'Universal Chemical & Amino Acid Library',
     subtitle: 'Open access to 35,000+ RCSB PDB Chemical Component Dictionary entries and 115M+ PubChem molecular structures',
     html: html,
+    wide: true,
     actions: [
       { label: 'Close Library', kind: 'cancel', onClick: () => closeModal() }
     ]
