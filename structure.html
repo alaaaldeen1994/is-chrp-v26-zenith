@@ -1063,6 +1063,10 @@ select:focus {
       <div class="input-mode" data-input-panel="sequence">
         <div class="field"><div class="label"><span>Protein sequence</span><span class="hint" id="seqLen">0 aa</span></div><textarea id="proteinSeq" placeholder="Paste one-letter amino-acid sequence..."></textarea></div>
         <div class="inline2"><button class="minor-btn" id="loadSirt1">Load SIRT1 example</button><button class="minor-btn" id="clearSeq">Clear</button></div>
+        <div style="margin-top:6px;display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+          <button class="minor-btn" id="loadArgRef" style="background:#082238;border-color:#1c5885;color:#8cd4ff;font-weight:600;" title="IUPAC Benchmark: Canonical L-Arginine all-atom 3D structure (RCSB PDB CCD)">⚛ Arginine (Arg)</button>
+          <button class="minor-btn" id="loadAllAmino" style="font-weight:600;" title="Canonical 20 Standard Amino Acids Catalog for Students & Research">📚 20 Amino Acids</button>
+        </div>
       </div>
 
       <div class="input-mode" data-input-panel="uniprot" style="display:none">
@@ -1158,8 +1162,34 @@ select:focus {
 
     <section class="card viewer" id="viewerCard">
       <div class="viewer-title">Interactive 3D Structure</div><div class="viewer-sub">Drag to rotate · Scroll to zoom · click residues to inspect</div>
-      <div class="viewer-tools"><button class="active" data-style="cartoon">Ribbon</button><button data-style="surface">Surface</button><button data-style="stick">Stick</button><button id="chainColor">Chains</button><button id="hbondBtn" title="Toggle Hydrogen Bonds & Non-Covalent Contacts">⚡ H-Bonds</button><button id="fullBtn">⛶</button></div>
-      <div class="legend"><b>pLDDT confidence</b><div class="leg"><i class="sw" style="background:#0053D6"></i>Very high (90–100)</div><div class="leg"><i class="sw" style="background:#65CBF3"></i>High (70–90)</div><div class="leg"><i class="sw" style="background:#FFDB13"></i>Low (50–70)</div><div class="leg"><i class="sw" style="background:#FF7D45"></i>Very low (&lt;50)</div></div>
+      <div class="viewer-tools">
+        <button class="active" data-style="cartoon" title="Secondary Structure Cartoon Ribbon (α-Helices, β-Sheets, Loops)">Ribbon</button>
+        <button data-style="surface" title="Solvent-Accessible Molecular Surface">Surface</button>
+        <button data-style="stick" title="Covalent Chemical Bonds (Sticks)">Stick</button>
+        <button data-style="ball_stick" title="Biochemistry Standard: Ball & Stick (CPK Atom Spheres + Bond Cylinders)">Ball & Stick</button>
+        <button data-style="sphere" title="Space-filling Corey-Pauling-Koltun (Van der Waals Spheres)">Spacefill</button>
+        <button id="colorModeBtn" title="Toggle: IUPAC CPK Element Colors vs AI pLDDT Model Confidence">⚛ CPK Colors</button>
+        <button id="chainColor" title="Color by Distinct Polymer Chain">Chains</button>
+        <button id="hbondBtn" title="Toggle Hydrogen Bonds & Non-Covalent Contacts">⚡ H-Bonds</button>
+        <button id="fullBtn" title="Fullscreen">⛶</button>
+      </div>
+      <div class="legend" id="viewerLegend">
+        <div id="plddtLegend">
+          <b>pLDDT confidence</b>
+          <div class="leg"><i class="sw" style="background:#0053D6"></i>Very high (90–100)</div>
+          <div class="leg"><i class="sw" style="background:#65CBF3"></i>High (70–90)</div>
+          <div class="leg"><i class="sw" style="background:#FFDB13"></i>Low (50–70)</div>
+          <div class="leg"><i class="sw" style="background:#FF7D45"></i>Very low (&lt;50)</div>
+        </div>
+        <div id="cpkLegend" style="display:none">
+          <b>IUPAC CPK Elements</b>
+          <div class="leg"><i class="sw" style="background:#909090"></i>Carbon (C) · Grey</div>
+          <div class="leg"><i class="sw" style="background:#3050F8"></i>Nitrogen (N) · Blue</div>
+          <div class="leg"><i class="sw" style="background:#FF0D0D"></i>Oxygen (O) · Red</div>
+          <div class="leg"><i class="sw" style="background:#FFFF30"></i>Sulfur (S) · Yellow</div>
+          <div class="leg"><i class="sw" style="background:#FFFFFF;border:1px solid #555"></i>Hydrogen (H) · White</div>
+        </div>
+      </div>
       <div class="axis">Y ↑<br>Z ↙ &nbsp; X →</div><div class="viewer-source" id="viewerSource">Experimental reference preview · PDB 4I5I</div>
       <div class="viewer-actions"><button id="resetBtn">↻ Reset</button><button id="spinBtn">▷ Auto-rotate</button><button id="screenBtn">▣ Screenshot</button></div>
       <div id="molviewer"></div><div class="empty" id="emptyView"><div><b>Loading scientific reference…</b><span>Nilus Fold output will replace this preview after a prediction.</span></div></div>
@@ -1232,7 +1262,7 @@ const STATE = {
   residueNeighbors:[], geometryAudit:null, provenanceHash:null, afdb:null,
   currentSampleIndex:null, bestSampleIndex:null, paeMeta:null,
   pdbReferences:[], lastComparison:null, advancedInterfaces:null, advancedQc:null, advancedEnsemble:null, compareViewer:null, interfaceViewer:null,
-  surfaceMode:'boltz', showHbonds:false, hbondShapes:[], hbondLabels:[]
+  surfaceMode:'boltz', showHbonds:false, hbondShapes:[], hbondLabels:[], colorMode:'plddt'
 };
 window.STATE = STATE;
 
@@ -1610,13 +1640,23 @@ function applyViewerStyle(){
   v.setStyle({},{});
 
   const predicted=!!STATE.prediction;
-  const polymerColor=predicted?plddtColor:undefined;
-  const polymerScheme=predicted?undefined:'spectrum';
+  const isCpk = STATE.colorMode === 'cpk';
+  const polymerColor = isCpk ? undefined : (predicted ? plddtColor : undefined);
+  const polymerScheme = isCpk ? 'Jmol' : (predicted ? undefined : 'spectrum');
+
+  // Sync dual legend display (AI pLDDT confidence vs IUPAC CPK elements)
+  const plddtLeg = $('#plddtLegend');
+  const cpkLeg = $('#cpkLegend');
+  if(plddtLeg && cpkLeg){
+    plddtLeg.style.display = isCpk ? 'none' : 'block';
+    cpkLeg.style.display = isCpk ? 'block' : 'none';
+  }
+
   const types=chainTypeMap();
   const addMolecularAccents=()=>{
     for(const [chain,type] of Object.entries(types)){
       if(type==='dna'||type==='rna'){
-        v.addStyle({chain},{stick:{colorfunc:predicted?plddtColor:undefined,colorscheme:predicted?undefined:'Jmol',radius:.10}});
+        v.addStyle({chain},{stick:{colorfunc:polymerColor,colorscheme:polymerScheme,radius:.10}});
       } else if(String(type).startsWith('ligand')){
         v.addStyle({chain},{stick:{colorscheme:'Jmol',radius:.15},sphere:{colorscheme:'Jmol',scale:.22}});
       }
@@ -1632,6 +1672,8 @@ function applyViewerStyle(){
     const surfStyle = { opacity: 0.94 };
     if(STATE.chainColor){
       surfStyle.colorscheme = 'chain';
+    } else if(isCpk){
+      surfStyle.colorscheme = 'Jmol';
     } else {
       surfStyle.colorfunc = plddtColor;
     }
@@ -1643,12 +1685,25 @@ function applyViewerStyle(){
     addMolecularAccents();
   }
   else if(STATE.style==='stick'){
-    v.setStyle({},{stick:{colorfunc:polymerColor,colorscheme:predicted?undefined:'Jmol',radius:.13}});
+    v.setStyle({},{stick:{colorfunc:polymerColor,colorscheme:polymerScheme,radius:.14}});
+  }
+  else if(STATE.style==='ball_stick'){
+    // Institutional Ball & Stick: CPK Atom Spheres + Bond Cylinders
+    v.setStyle({},{stick:{colorfunc:polymerColor,colorscheme:polymerScheme,radius:.14},sphere:{colorfunc:polymerColor,colorscheme:polymerScheme,scale:.28}});
+  }
+  else if(STATE.style==='sphere'){
+    // Space-filling Van der Waals spheres
+    v.setStyle({},{sphere:{colorfunc:polymerColor,colorscheme:polymerScheme}});
   }
   else {
-    // Institutional default: clean polymer ribbon, no all-atom wire clutter.
-    v.setStyle({},{cartoon:{colorfunc:polymerColor,colorscheme:polymerScheme,thickness:.30}});
-    addMolecularAccents();
+    // Institutional default: clean polymer ribbon
+    // For small-molecule ligands / single amino acid monomers without peptide backbone, fallback to ball & stick
+    if(STATE.structureFormat === 'sdf'){
+      v.setStyle({},{stick:{colorfunc:polymerColor,colorscheme:polymerScheme,radius:.14},sphere:{colorfunc:polymerColor,colorscheme:polymerScheme,scale:.28}});
+    } else {
+      v.setStyle({},{cartoon:{colorfunc:polymerColor,colorscheme:polymerScheme,thickness:.30}});
+      addMolecularAccents();
+    }
   }
   if(STATE.showHbonds){
     renderInteractions3D(STATE.selectedResidue||null);
@@ -1657,10 +1712,27 @@ function applyViewerStyle(){
   }
   v.render();
 }
+
 function initViewerControls(){
-  $$('[data-style]').forEach(b=>b.onclick=()=>{ $$('[data-style]').forEach(x=>x.classList.toggle('active',x===b)); STATE.style=b.dataset.style; STATE.chainColor=false; $('#chainColor').classList.remove('active'); applyViewerStyle(); });
-  $('#chainColor').onclick=()=>{ STATE.chainColor=!STATE.chainColor; $('#chainColor').classList.toggle('active',STATE.chainColor); applyViewerStyle(); };
-  $('#hbondBtn').onclick=()=>{
+  $$('[data-style]').forEach(b=>b.onclick=()=>{
+    $$('[data-style]').forEach(x=>x.classList.toggle('active',x===b));
+    STATE.style=b.dataset.style;
+    STATE.chainColor=false;
+    $('#chainColor')?.classList.remove('active');
+    applyViewerStyle();
+  });
+  $('#chainColor')?.addEventListener('click', ()=>{
+    STATE.chainColor=!STATE.chainColor;
+    $('#chainColor').classList.toggle('active',STATE.chainColor);
+    applyViewerStyle();
+  });
+  $('#colorModeBtn')?.addEventListener('click', ()=>{
+    STATE.colorMode = (STATE.colorMode === 'cpk') ? 'plddt' : 'cpk';
+    $('#colorModeBtn').classList.toggle('active', STATE.colorMode === 'cpk');
+    $('#colorModeBtn').textContent = STATE.colorMode === 'cpk' ? '★ pLDDT Colors' : '⚛ CPK Colors';
+    applyViewerStyle();
+  });
+  $('#hbondBtn')?.addEventListener('click', ()=>{
     STATE.showHbonds=!STATE.showHbonds;
     $('#hbondBtn').classList.toggle('active',STATE.showHbonds);
     if(STATE.showHbonds){
@@ -1669,13 +1741,289 @@ function initViewerControls(){
       clearInteractions3D();
       applyViewerStyle();
     }
-  };
-  $('#resetBtn').onclick=()=>{ STATE.viewer?.zoomTo(); STATE.viewer?.render(); };
-  $('#spinBtn').onclick=()=>{ if(!STATE.viewer)return; STATE.spin=!STATE.spin; STATE.viewer.spin(STATE.spin?'y':false); $('#spinBtn').classList.toggle('active',STATE.spin); };
-  $('#screenBtn').onclick=()=>{ try{ const a=document.createElement('a'); a.href=STATE.viewer.pngURI(); a.download='nilus-structure.png'; a.click(); }catch{toast('Screenshot export is not supported in this browser.',true);} };
-  $('#fullBtn').onclick=()=>$('#viewerCard').requestFullscreen?.();
-  $('#downloadBtn').onclick=downloadStructure; $('#shareBtn').onclick=sharePrediction;
+  });
+  $('#resetBtn')?.addEventListener('click', ()=>{ STATE.viewer?.zoomTo(); STATE.viewer?.render(); });
+  $('#spinBtn')?.addEventListener('click', ()=>{ if(!STATE.viewer)return; STATE.spin=!STATE.spin; STATE.viewer.spin(STATE.spin?'y':false); $('#spinBtn').classList.toggle('active',STATE.spin); });
+  $('#screenBtn')?.addEventListener('click', ()=>{ try{ const a=document.createElement('a'); a.href=STATE.viewer.pngURI(); a.download='nilus-structure.png'; a.click(); }catch{toast('Screenshot export is not supported in this browser.',true);} });
+  $('#fullBtn')?.addEventListener('click', ()=>$('#viewerCard').requestFullscreen?.());
+  $('#downloadBtn')?.addEventListener('click', downloadStructure);
+  $('#shareBtn')?.addEventListener('click', sharePrediction);
+
+  $('#loadArgRef')?.addEventListener('click', loadArginineReference);
+  $('#loadAllAmino')?.addEventListener('click', showAminoAcidsModal);
 }
+
+// Canonical RCSB PDB Chemical Component Dictionary (CCD) Ideal All-Atom SDF for L-Arginine (ARG)
+const ARGININE_SDF = `ARG
+  CCTOOLS-1004241126
+
+ 27 26  0  0  1  0  0  0  0  0999 V2000
+   -0.4690    1.1100   -0.9930 N   0  0  0  0  0
+    0.0040    2.2940   -1.7080 C   0  0  0  0  0
+   -0.9070    2.5210   -2.9010 C   0  0  0  0  0
+   -1.8270    1.7890   -3.2420 O   0  0  0  0  0
+    1.4750    2.1500   -2.1270 C   0  0  0  0  0
+    1.7450    1.0170   -3.1300 C   0  0  0  0  0
+    3.2100    0.9540   -3.5570 C   0  0  0  0  0
+    4.0710    0.7260   -2.4210 N   0  0  0  0  0
+    5.4690    0.6240   -2.5280 C   0  0  0  0  0
+    6.2590    0.4040   -1.4050 N   0  0  0  0  0
+    6.0780    0.7440   -3.7730 N   0  3  0  0  0
+   -0.5880    3.6590   -3.5740 O   0  0  0  0  0
+   -0.0580    0.9030   -0.1090 H   0  0  0  0  0
+   -1.0240    0.4520   -1.4940 H   0  0  0  0  0
+   -0.1030    3.1520   -1.0340 H   0  0  0  0  0
+    2.0860    1.9880   -1.2300 H   0  0  0  0  0
+    1.8140    3.0990   -2.5630 H   0  0  0  0  0
+    1.1360    1.1700   -4.0290 H   0  0  0  0  0
+    1.4470    0.0540   -2.6980 H   0  0  0  0  0
+    3.3480    0.1330   -4.2690 H   0  0  0  0  0
+    3.5050    1.8800   -4.0620 H   0  0  0  0  0
+    3.6740    0.6270   -1.4790 H   0  0  0  0  0
+    7.2710    0.3310   -1.4840 H   0  0  0  0  0
+    5.8580    0.3070   -0.4760 H   0  0  0  0  0
+    5.5300    0.9060   -4.6140 H   0  0  0  0  0
+    7.0880    0.6750   -3.8740 H   0  0  0  0  0
+   -1.1490    3.8550   -4.3550 H   0  0  0  0  0
+  1  2  1  0  0  0
+  1 13  1  0  0  0
+  1 14  1  0  0  0
+  2  3  1  0  0  0
+  2  5  1  0  0  0
+  2 15  1  0  0  0
+  3  4  2  0  0  0
+  3 12  1  0  0  0
+  5  6  1  0  0  0
+  5 16  1  0  0  0
+  5 17  1  0  0  0
+  6  7  1  0  0  0
+  6 18  1  0  0  0
+  6 19  1  0  0  0
+  7  8  1  0  0  0
+  7 20  1  0  0  0
+  7 21  1  0  0  0
+  8  9  1  0  0  0
+  8 22  1  0  0  0
+  9 10  1  0  0  0
+  9 11  2  0  0  0
+ 10 23  1  0  0  0
+ 10 24  1  0  0  0
+ 11 25  1  0  0  0
+ 11 26  1  0  0  0
+ 12 27  1  0  0  0
+M  CHG  1  11   1
+M  END
+$$$$`;
+
+// Canonical 20 Standard Amino Acids Catalog (IUPAC / RCSB PDB CCD Standards)
+const STANDARD_AMINO_ACIDS = [
+  // Basic / Positively Charged (Physiological pH 7.4)
+  { code3: 'ARG', code1: 'R', name: 'Arginine', formula: 'C6H14N4O2', mw: '174.20 Da', pKa: '12.48 (guanidinium)', class: 'Basic (Positively Charged)', cat: 'basic', desc: 'Resonance-stabilized planar guanidinium side chain. Dominant in salt bridges, RNA/DNA phosphate backbone clamps, and ATP binding sites.' },
+  { code3: 'LYS', code1: 'K', name: 'Lysine', formula: 'C6H14N2O2', mw: '146.19 Da', pKa: '10.53 (ε-amino)', class: 'Basic (Positively Charged)', cat: 'basic', desc: 'Flexible butylammonium chain. Prime site of post-translational modifications (ubiquitination, acetylation, methylation).' },
+  { code3: 'HIS', code1: 'H', name: 'Histidine', formula: 'C6H9N3O2', mw: '155.15 Da', pKa: '6.00 (imidazole)', class: 'Basic / Aromatic switch', cat: 'basic', desc: 'Near-neutral imidazole pKa allows rapid reversible proton transfer in catalytic triads and transition-metal (Zn²⁺/Fe²⁺) chelation.' },
+
+  // Acidic / Negatively Charged
+  { code3: 'ASP', code1: 'D', name: 'Aspartate', formula: 'C4H7NO4', mw: '133.10 Da', pKa: '3.65 (β-carboxyl)', class: 'Acidic (Negatively Charged)', cat: 'acidic', desc: 'Negatively charged carboxylate; coordinates divalent catalytic cations (Mg²⁺, Ca²⁺) and forms electrostatic pairs.' },
+  { code3: 'GLU', code1: 'E', name: 'Glutamate', formula: 'C5H9NO4', mw: '147.13 Da', pKa: '4.25 (γ-carboxyl)', class: 'Acidic (Negatively Charged)', cat: 'acidic', desc: 'Extended flexible acidic side chain; dominant in enzyme active sites, salt bridges, and excitatory neurotransmission.' },
+
+  // Polar Uncharged
+  { code3: 'SER', code1: 'S', name: 'Serine', formula: 'C3H7NO3', mw: '105.09 Da', pKa: '~13 (hydroxyl)', class: 'Polar Uncharged', cat: 'polar', desc: 'Primary target of regulatory serine/threonine kinases; catalytic nucleophile in serine proteases.' },
+  { code3: 'THR', code1: 'T', name: 'Threonine', formula: 'C4H9NO3', mw: '119.12 Da', pKa: '~13 (hydroxyl)', class: 'Polar Uncharged', cat: 'polar', desc: 'Secondary chiral alcohol center; key target for O-phosphorylation and O-linked glycosylation.' },
+  { code3: 'ASN', code1: 'N', name: 'Asparagine', formula: 'C4H8N2O3', mw: '132.12 Da', pKa: '—', class: 'Polar Uncharged', cat: 'polar', desc: 'Universal consensus site for N-linked glycosylation (Asn-X-Ser/Thr); hydrogen bond donor/acceptor.' },
+  { code3: 'GLN', code1: 'Q', name: 'Glutamine', formula: 'C5H10N2O3', mw: '146.14 Da', pKa: '—', class: 'Polar Uncharged', cat: 'polar', desc: 'Amide nitrogen donor/acceptor; principal systemic nitrogen shuttle and metabolic fuel in proliferating cells.' },
+
+  // Hydrophobic Aliphatic
+  { code3: 'ALA', code1: 'A', name: 'Alanine', formula: 'C3H7NO2', mw: '89.09 Da', pKa: '—', class: 'Hydrophobic (Aliphatic)', cat: 'hydrophobic', desc: 'Smallest chiral residue; high α-helical propensity; standard reference in alanine-scanning mutagenesis.' },
+  { code3: 'VAL', code1: 'V', name: 'Valine', formula: 'C5H11NO2', mw: '117.15 Da', pKa: '—', class: 'Hydrophobic (Aliphatic)', cat: 'hydrophobic', desc: 'Branched-chain hydrophobic residue; crucial in packing tightly within internal hydrophobic cores.' },
+  { code3: 'LEU', code1: 'L', name: 'Leucine', formula: 'C6H13NO2', mw: '131.17 Da', pKa: '—', class: 'Hydrophobic (Aliphatic)', cat: 'hydrophobic', desc: 'Most abundant amino acid in proteins (~9.1%); drives hydrophobic collapse and leucine-zipper dimerization.' },
+  { code3: 'ILE', code1: 'I', name: 'Isoleucine', formula: 'C6H13NO2', mw: '131.17 Da', pKa: '—', class: 'Hydrophobic (Aliphatic)', cat: 'hydrophobic', desc: 'Two chiral stereocenters; bulky hydrophobic side chain optimizing interior spatial packing.' },
+  { code3: 'MET', code1: 'M', name: 'Methionine', formula: 'C5H11NO2S', mw: '149.21 Da', pKa: '—', class: 'Hydrophobic (Thioether)', cat: 'hydrophobic', desc: 'Universal eukaryotic translation initiation codon (AUG); vulnerable to reversible ROS oxidation (methionine sulfoxide).' },
+  { code3: 'PRO', code1: 'P', name: 'Proline', formula: 'C5H9NO2', mw: '115.13 Da', pKa: '—', class: 'Cyclic / Pyrrolidine', cat: 'special', desc: 'Rigid pyrrolidine ring constrains backbone phi angle; classic helix-breaker and tight beta-turn initiator.' },
+
+  // Aromatic
+  { code3: 'PHE', code1: 'F', name: 'Phenylalanine', formula: 'C9H11NO2', mw: '165.19 Da', pKa: '—', class: 'Aromatic (Hydrophobic)', cat: 'aromatic', desc: 'Purely hydrophobic phenyl ring; stabilizes cores via aromatic pi-pi stacking and edge-to-face interactions.' },
+  { code3: 'TYR', code1: 'Y', name: 'Tyrosine', formula: 'C9H11NO3', mw: '181.19 Da', pKa: '10.07 (phenol)', class: 'Aromatic / Amphipathic', cat: 'aromatic', desc: 'Amphipathic phenol group; universal receptor tyrosine kinase (RTK) phosphorylation target and electron transfer relay.' },
+  { code3: 'TRP', code1: 'W', name: 'Tryptophan', formula: 'C11H12N2O2', mw: '204.23 Da', pKa: '—', class: 'Aromatic (Indole)', cat: 'aromatic', desc: 'Largest standard amino acid; indole ring gives characteristic 280 nm UV absorbance and intrinsic fluorescence.' },
+
+  // Special / Smallest / Disulfide
+  { code3: 'GLY', code1: 'G', name: 'Glycine', formula: 'C2H5NO2', mw: '75.07 Da', pKa: '—', class: 'Achiral / Flexible', cat: 'special', desc: 'Only achiral amino acid (no beta-carbon); extreme Ramachandran flexibility; allows tight turns and collagen triple helices.' },
+  { code3: 'CYS', code1: 'C', name: 'Cysteine', formula: 'C3H7NO2S', mw: '121.16 Da', pKa: '8.18 (thiol)', class: 'Thiol / Disulfide', cat: 'special', desc: 'Thiol (-SH) group forms covalent disulfide bridges (cystine), locking fold architectures in secreted and extracellular proteins.' }
+];
+
+function loadArginineReference(){
+  const v = STATE.viewer; if(!v) return;
+  STATE.structureText = ARGININE_SDF;
+  STATE.structureFormat = 'sdf';
+  STATE.prediction = null;
+  STATE.referenceLoaded = true;
+  STATE.style = 'ball_stick';
+  STATE.colorMode = 'cpk';
+  STATE.chainColor = false;
+  v.removeAllModels();
+  v.removeAllSurfaces();
+  clearInteractions3D();
+  STATE.model = v.addModel(ARGININE_SDF, 'sdf');
+  $$('[data-style]').forEach(x => x.classList.toggle('active', x.dataset.style === 'ball_stick'));
+  $('#chainColor')?.classList.remove('active');
+  const cmBtn = $('#colorModeBtn');
+  if(cmBtn){ cmBtn.classList.add('active'); cmBtn.textContent = '★ pLDDT Colors'; }
+  applyViewerStyle();
+  v.zoomTo();
+  v.render();
+  $('#emptyView').style.display = 'none';
+  $('#viewerSource').textContent = 'RCSB PDB CCD Benchmark · L-Arginine (ARG) · All-Atom 3D Ball & Stick';
+  $('#modelName').textContent = 'RCSB CCD Reference (ARG)';
+  $('#inputName').textContent = 'L-Arginine (C₆H₁₄N₄O₂)';
+  $('#inputLength').textContent = '1 amino acid · 27 atoms';
+  $('#chainCount').textContent = 'Monomer (Free Amino Acid)';
+  $('#modelStatus').textContent = 'Canonical Reference';
+  $('#statusBadge').textContent = 'Reference Loaded';
+  $('#statusBadge').className = 'status';
+  $('#qualityScore').textContent = '100';
+  $('#qualityTitle').textContent = 'IUPAC / RCSB Ground Truth';
+  $('#qualityCopy').textContent = 'Canonical L-Arginine all-atom coordinates from RCSB PDB Chemical Component Dictionary. Displays complete covalent bonding, formal +1 guanidinium charge, and Corey-Pauling-Koltun (CPK) element colors.';
+  $('#meanPlddt').textContent = '100.0';
+  $('#structConf').textContent = '1.00';
+  $('#ptm').textContent = '1.00';
+  $('#iptm').textContent = 'N/A';
+  $('#featureList').innerHTML = `
+    <div class="feature"><span class="ico green">✓</span><span><b>Canonical L-Arginine (Arg, R):</b> 27 all-atom coordinates loaded (RCSB CCD: ARG)</span></div>
+    <div class="feature"><span class="ico blue">⚛</span><span><b>Ball & Stick CPK:</b> Grey=C, Blue=N, Red=O, White=H (Guanidinium resonance side chain)</span></div>
+    <div class="feature"><span class="ico purple">📚</span><span><b>Biochemical Role:</b> Strongly basic pKa 12.48; critical in salt bridges & ATP/GTP coordination</span></div>
+  `;
+  toast('Loaded canonical L-Arginine (27 atoms) in Ball & Stick CPK view.');
+}
+
+async function loadAminoAcidMonomer(code3){
+  code3 = String(code3||'').toUpperCase();
+  const aa = STANDARD_AMINO_ACIDS.find(x => x.code3 === code3);
+  if(!aa) return toast('Unknown amino acid ' + code3, true);
+
+  if(code3 === 'ARG'){
+    loadArginineReference();
+    closeModal();
+    return;
+  }
+
+  toast(`Fetching ${aa.name} (${code3}) from RCSB CCD...`);
+  try {
+    const res = await fetch(`https://files.rcsb.org/ligands/download/${code3}_ideal.sdf`);
+    if(!res.ok) throw new Error('RCSB fetch status ' + res.status);
+    const sdf = await res.text();
+    const v = STATE.viewer; if(!v) return;
+    STATE.structureText = sdf;
+    STATE.structureFormat = 'sdf';
+    STATE.prediction = null;
+    STATE.referenceLoaded = true;
+    v.removeAllModels();
+    v.removeAllSurfaces();
+    clearInteractions3D();
+    STATE.model = v.addModel(sdf, 'sdf');
+    STATE.style = 'ball_stick';
+    STATE.colorMode = 'cpk';
+    STATE.chainColor = false;
+    $$('[data-style]').forEach(x => x.classList.toggle('active', x.dataset.style === 'ball_stick'));
+    $('#chainColor')?.classList.remove('active');
+    const cmBtn = $('#colorModeBtn');
+    if(cmBtn){
+      cmBtn.classList.add('active');
+      cmBtn.textContent = '★ pLDDT Colors';
+    }
+    applyViewerStyle();
+    v.zoomTo();
+    v.render();
+    $('#emptyView').style.display = 'none';
+    $('#viewerSource').textContent = `RCSB PDB CCD Benchmark · L-${aa.name} (${code3}) · All-Atom 3D Ball & Stick`;
+    $('#modelName').textContent = `RCSB CCD (${code3})`;
+    $('#inputName').textContent = `${aa.name} (${aa.formula})`;
+    $('#inputLength').textContent = `1 amino acid · ${aa.mw}`;
+    $('#chainCount').textContent = 'Monomer (Free Amino Acid)';
+    $('#modelStatus').textContent = 'Canonical Reference';
+    $('#statusBadge').textContent = 'Reference Loaded';
+    $('#statusBadge').className = 'status';
+    $('#qualityScore').textContent = '100';
+    $('#qualityTitle').textContent = 'IUPAC / RCSB Ground Truth';
+    $('#qualityCopy').textContent = `Canonical L-${aa.name} all-atom coordinates from RCSB PDB Chemical Component Dictionary. Displays complete covalent bonding and CPK element coloring.`;
+    $('#meanPlddt').textContent = '100.0';
+    $('#structConf').textContent = '1.00';
+    $('#ptm').textContent = '1.00';
+    $('#iptm').textContent = 'N/A';
+    $('#featureList').innerHTML = `
+      <div class="feature"><span class="ico green">✓</span><span><b>Canonical L-${aa.name} (${aa.code3}, ${aa.code1}):</b> ${aa.formula} · ${aa.mw}</span></div>
+      <div class="feature"><span class="ico blue">⚛</span><span><b>Class:</b> ${aa.class}${aa.pKa !== '—' ? ` · pKa: ${aa.pKa}` : ''}</span></div>
+      <div class="feature"><span class="ico purple">📚</span><span><b>Role:</b> ${aa.desc}</span></div>
+    `;
+    closeModal();
+    toast(`Loaded ${aa.name} (${code3}) in Ball & Stick CPK view.`);
+  } catch(e) {
+    toast(`Could not load ${code3} from RCSB: ${e.message}`, true);
+  }
+}
+window.loadAminoAcidMonomer = loadAminoAcidMonomer;
+
+function appendAminoToSeq(c){
+  const input = $('#proteinSeq');
+  if(!input) return;
+  input.value = (input.value || '') + c;
+  input.dispatchEvent(new Event('input'));
+  toast(`Appended '${c}' to sequence (current length: ${input.value.length} aa)`);
+}
+window.appendAminoToSeq = appendAminoToSeq;
+
+function showAminoAcidsModal(){
+  const html = `
+    <div style="margin-bottom:12px;display:flex;gap:6px;flex-wrap:wrap;" id="aaFilterBar">
+      <button class="minor-btn active" style="padding:4px 9px;font-size:9px;" data-cat="all">All (20)</button>
+      <button class="minor-btn" style="padding:4px 9px;font-size:9px;" data-cat="basic">Basic (+)</button>
+      <button class="minor-btn" style="padding:4px 9px;font-size:9px;" data-cat="acidic">Acidic (-)</button>
+      <button class="minor-btn" style="padding:4px 9px;font-size:9px;" data-cat="polar">Polar</button>
+      <button class="minor-btn" style="padding:4px 9px;font-size:9px;" data-cat="hydrophobic">Hydrophobic</button>
+      <button class="minor-btn" style="padding:4px 9px;font-size:9px;" data-cat="aromatic">Aromatic</button>
+      <button class="minor-btn" style="padding:4px 9px;font-size:9px;" data-cat="special">Special</button>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill, minmax(280px, 1fr));gap:10px;max-height:55vh;overflow-y:auto;padding-right:4px;" id="aaGrid">
+      ${STANDARD_AMINO_ACIDS.map(aa => `
+        <div class="aa-card" data-cat="${aa.cat}" style="background:#061826;border:1px solid #0E2C45;border-radius:10px;padding:12px;display:flex;flex-direction:column;justify-content:space-between;transition:border-color .15s ease;">
+          <div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+              <span style="font-size:13px;font-weight:700;color:#F4F8FC;">${escapeHtml(aa.name)}</span>
+              <span style="font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:6px;background:#082238;color:#38B6FF;border:1px solid #16466B;">${aa.code3} · ${aa.code1}</span>
+            </div>
+            <div style="font-size:9.5px;color:#65CBF3;margin-bottom:4px;font-weight:600;">${escapeHtml(aa.class)}</div>
+            <div style="font-size:9px;color:#A7BED2;margin-bottom:6px;"><b>Formula:</b> ${aa.formula} · <b>MW:</b> ${aa.mw}${aa.pKa !== '—' ? ` · <b>pKa:</b> ${aa.pKa}` : ''}</div>
+            <div style="font-size:8.5px;color:#66859E;line-height:1.45;margin-bottom:10px;">${escapeHtml(aa.desc)}</div>
+          </div>
+          <div style="display:grid;grid-template-columns:1.3fr 1fr;gap:6px;margin-top:4px;">
+            <button class="minor-btn" onclick="window.loadAminoAcidMonomer('${aa.code3}')" style="background:#082238;border-color:#1c5885;color:#8cd4ff;padding:6px 8px;font-size:9px;font-weight:600;">⚛ 3D Monomer</button>
+            <button class="minor-btn" onclick="window.appendAminoToSeq('${aa.code1}')" style="padding:6px 8px;font-size:9px;">+ Sequence</button>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+
+  openModal({
+    title: 'Canonical 20 Standard Amino Acids Catalog',
+    subtitle: 'RCSB PDB Chemical Component Dictionary & IUPAC Biochemistry Standards for Education & Research',
+    html: html,
+    actions: [
+      { label: 'Close Catalog', kind: 'cancel', onClick: () => closeModal() }
+    ]
+  });
+
+  // Wire category filters
+  const filterBtns = $$('#aaFilterBar button');
+  filterBtns.forEach(btn => {
+    btn.onclick = () => {
+      filterBtns.forEach(b => b.classList.toggle('active', b === btn));
+      const targetCat = btn.dataset.cat;
+      $$('#aaGrid .aa-card').forEach(card => {
+        card.style.display = (targetCat === 'all' || card.dataset.cat === targetCat) ? 'flex' : 'none';
+      });
+    };
+  });
+}
+window.showAminoAcidsModal = showAminoAcidsModal;
 
 // ---------- Scientific Hydrogen Bond & Non-Covalent Contact Engine ----------
 const HBOND_DONORS = {
