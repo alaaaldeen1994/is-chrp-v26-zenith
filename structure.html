@@ -516,6 +516,125 @@ select:focus {
   border-top-color: #0E2C45 !important;
 }
 
+/* ================================================================
+   NILUS LAB v3.6 — VIEWPORT SEPARATION & SEGMENTED 3D CONTROLS
+   Purpose: Separate the card title/sub header from the 3D WebGL stage.
+   Eliminates visual collisions between viewer tools and title text.
+   ================================================================ */
+
+.viewer {
+  display: flex !important;
+  flex-direction: column !important;
+  position: relative !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+  background: #000000 !important;
+  border-radius: 10px !important;
+  border: 1px solid #0E2C45 !important;
+}
+
+.viewer-head {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  padding: 8px 14px !important;
+  background: #020B14 !important;
+  border-bottom: 1px solid #0E2C45 !important;
+  flex-shrink: 0 !important;
+  z-index: 10 !important;
+  gap: 12px !important;
+}
+
+.viewer-head-title-wrap {
+  display: flex !important;
+  align-items: baseline !important;
+  gap: 10px !important;
+  min-width: 0 !important;
+  flex-wrap: wrap !important;
+}
+
+.viewer-head .viewer-title {
+  position: static !important;
+  font-size: 11.5px !important;
+  font-weight: 700 !important;
+  color: #F4F8FC !important;
+  letter-spacing: -0.01em !important;
+  margin: 0 !important;
+  white-space: nowrap !important;
+}
+
+.viewer-head .viewer-sub {
+  position: static !important;
+  font-size: 8.5px !important;
+  color: #66859E !important;
+  margin: 0 !important;
+  white-space: nowrap !important;
+}
+
+.viewer-stage {
+  position: relative !important;
+  flex: 1 !important;
+  min-height: 0 !important;
+  width: 100% !important;
+}
+
+.viewer-stage #molviewer {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  background: #000000 !important;
+}
+
+.viewer-tools {
+  position: absolute !important;
+  top: 10px !important;
+  right: 10px !important;
+  z-index: 9 !important;
+  display: flex !important;
+  gap: 8px !important;
+  align-items: center !important;
+  flex-wrap: wrap !important;
+  justify-content: flex-end !important;
+  max-width: calc(100% - 20px) !important;
+}
+
+.tool-group {
+  display: inline-flex !important;
+  align-items: center !important;
+  background: rgba(2, 11, 20, 0.92) !important;
+  backdrop-filter: blur(10px) !important;
+  border: 1px solid #0E2C45 !important;
+  border-radius: 8px !important;
+  padding: 2px !important;
+  gap: 2px !important;
+}
+
+.tool-group button {
+  border: none !important;
+  background: transparent !important;
+  color: #A7BED2 !important;
+  border-radius: 6px !important;
+  padding: 5px 9px !important;
+  font-size: 8.5px !important;
+  font-weight: 500 !important;
+  cursor: pointer !important;
+  white-space: nowrap !important;
+  transition: all 0.15s ease !important;
+}
+
+.tool-group button:hover {
+  color: #F4F8FC !important;
+  background: rgba(21, 151, 255, 0.14) !important;
+}
+
+.tool-group button.active {
+  background: #0A74FF !important;
+  color: #FFFFFF !important;
+  font-weight: 700 !important;
+  box-shadow: 0 1px 4px rgba(10, 116, 255, 0.35) !important;
+}
+
 
 
 /* ================================================================
@@ -1161,38 +1280,49 @@ select:focus {
     </section>
 
     <section class="card viewer" id="viewerCard">
-      <div class="viewer-title">Interactive 3D Structure</div><div class="viewer-sub">Drag to rotate · Scroll to zoom · click residues to inspect</div>
-      <div class="viewer-tools">
-        <button class="active" data-style="cartoon" title="Secondary Structure Cartoon Ribbon (α-Helices, β-Sheets, Loops)">Ribbon</button>
-        <button data-style="surface" title="Solvent-Accessible Molecular Surface">Surface</button>
-        <button data-style="stick" title="Covalent Chemical Bonds (Sticks)">Stick</button>
-        <button data-style="ball_stick" title="Biochemistry Standard: Ball & Stick (CPK Atom Spheres + Bond Cylinders)">Ball & Stick</button>
-        <button data-style="sphere" title="Space-filling Corey-Pauling-Koltun (Van der Waals Spheres)">Spacefill</button>
-        <button id="colorModeBtn" title="Toggle: IUPAC CPK Element Colors vs AI pLDDT Model Confidence">⚛ CPK Colors</button>
-        <button id="chainColor" title="Color by Distinct Polymer Chain">Chains</button>
-        <button id="hbondBtn" title="Toggle Hydrogen Bonds & Non-Covalent Contacts">⚡ H-Bonds</button>
-        <button id="fullBtn" title="Fullscreen">⛶</button>
-      </div>
-      <div class="legend" id="viewerLegend">
-        <div id="plddtLegend">
-          <b>pLDDT confidence</b>
-          <div class="leg"><i class="sw" style="background:#0053D6"></i>Very high (90–100)</div>
-          <div class="leg"><i class="sw" style="background:#65CBF3"></i>High (70–90)</div>
-          <div class="leg"><i class="sw" style="background:#FFDB13"></i>Low (50–70)</div>
-          <div class="leg"><i class="sw" style="background:#FF7D45"></i>Very low (&lt;50)</div>
-        </div>
-        <div id="cpkLegend" style="display:none">
-          <b>IUPAC CPK Elements</b>
-          <div class="leg"><i class="sw" style="background:#909090"></i>Carbon (C) · Grey</div>
-          <div class="leg"><i class="sw" style="background:#3050F8"></i>Nitrogen (N) · Blue</div>
-          <div class="leg"><i class="sw" style="background:#FF0D0D"></i>Oxygen (O) · Red</div>
-          <div class="leg"><i class="sw" style="background:#FFFF30"></i>Sulfur (S) · Yellow</div>
-          <div class="leg"><i class="sw" style="background:#FFFFFF;border:1px solid #555"></i>Hydrogen (H) · White</div>
+      <div class="viewer-head">
+        <div class="viewer-head-title-wrap">
+          <div class="viewer-title">Interactive 3D Structure</div>
+          <div class="viewer-sub">Drag to rotate · Scroll to zoom · click residues to inspect</div>
         </div>
       </div>
-      <div class="axis">Y ↑<br>Z ↙ &nbsp; X →</div><div class="viewer-source" id="viewerSource">Experimental reference preview · PDB 4I5I</div>
-      <div class="viewer-actions"><button id="resetBtn">↻ Reset</button><button id="spinBtn">▷ Auto-rotate</button><button id="screenBtn">▣ Screenshot</button></div>
-      <div id="molviewer"></div><div class="empty" id="emptyView"><div><b>Loading scientific reference…</b><span>Nilus Fold output will replace this preview after a prediction.</span></div></div>
+      <div class="viewer-stage">
+        <div class="viewer-tools">
+          <div class="tool-group">
+            <button class="active" data-style="cartoon" title="Secondary Structure Cartoon Ribbon (α-Helices, β-Sheets, Loops)">Ribbon</button>
+            <button data-style="surface" title="Solvent-Accessible Molecular Surface">Surface</button>
+            <button data-style="stick" title="Covalent Chemical Bonds (Sticks)">Stick</button>
+            <button data-style="ball_stick" title="Biochemistry Standard: Ball & Stick (CPK Atom Spheres + Bond Cylinders)">Ball & Stick</button>
+            <button data-style="sphere" title="Space-filling Corey-Pauling-Koltun (Van der Waals Spheres)">Spacefill</button>
+          </div>
+          <div class="tool-group">
+            <button id="colorModeBtn" title="Toggle: IUPAC CPK Element Colors vs AI pLDDT Model Confidence">⚛ CPK</button>
+            <button id="chainColor" title="Color by Distinct Polymer Chain">Chains</button>
+            <button id="hbondBtn" title="Toggle Hydrogen Bonds & Non-Covalent Contacts">⚡ H-Bonds</button>
+            <button id="fullBtn" title="Fullscreen">⛶</button>
+          </div>
+        </div>
+        <div class="legend" id="viewerLegend">
+          <div id="plddtLegend">
+            <b>pLDDT confidence</b>
+            <div class="leg"><i class="sw" style="background:#0053D6"></i>Very high (90–100)</div>
+            <div class="leg"><i class="sw" style="background:#65CBF3"></i>High (70–90)</div>
+            <div class="leg"><i class="sw" style="background:#FFDB13"></i>Low (50–70)</div>
+            <div class="leg"><i class="sw" style="background:#FF7D45"></i>Very low (&lt;50)</div>
+          </div>
+          <div id="cpkLegend" style="display:none">
+            <b>IUPAC CPK Elements</b>
+            <div class="leg"><i class="sw" style="background:#909090"></i>Carbon (C) · Grey</div>
+            <div class="leg"><i class="sw" style="background:#3050F8"></i>Nitrogen (N) · Blue</div>
+            <div class="leg"><i class="sw" style="background:#FF0D0D"></i>Oxygen (O) · Red</div>
+            <div class="leg"><i class="sw" style="background:#FFFF30"></i>Sulfur (S) · Yellow</div>
+            <div class="leg"><i class="sw" style="background:#FFFFFF;border:1px solid #555"></i>Hydrogen (H) · White</div>
+          </div>
+        </div>
+        <div class="axis">Y ↑<br>Z ↙ &nbsp; X →</div><div class="viewer-source" id="viewerSource">Experimental reference preview · PDB 4I5I</div>
+        <div class="viewer-actions"><button id="resetBtn">↻ Reset</button><button id="spinBtn">▷ Auto-rotate</button><button id="screenBtn">▣ Screenshot</button></div>
+        <div id="molviewer"></div><div class="empty" id="emptyView"><div><b>Loading scientific reference…</b><span>Nilus Fold output will replace this preview after a prediction.</span></div></div>
+      </div>
     </section>
 
     <div class="bottom">
@@ -1729,7 +1859,7 @@ function initViewerControls(){
   $('#colorModeBtn')?.addEventListener('click', ()=>{
     STATE.colorMode = (STATE.colorMode === 'cpk') ? 'plddt' : 'cpk';
     $('#colorModeBtn').classList.toggle('active', STATE.colorMode === 'cpk');
-    $('#colorModeBtn').textContent = STATE.colorMode === 'cpk' ? '★ pLDDT Colors' : '⚛ CPK Colors';
+    $('#colorModeBtn').textContent = STATE.colorMode === 'cpk' ? '★ pLDDT' : '⚛ CPK';
     applyViewerStyle();
   });
   $('#hbondBtn')?.addEventListener('click', ()=>{
@@ -1866,7 +1996,7 @@ function loadArginineReference(){
   $$('[data-style]').forEach(x => x.classList.toggle('active', x.dataset.style === 'ball_stick'));
   $('#chainColor')?.classList.remove('active');
   const cmBtn = $('#colorModeBtn');
-  if(cmBtn){ cmBtn.classList.add('active'); cmBtn.textContent = '★ pLDDT Colors'; }
+  if(cmBtn){ cmBtn.classList.add('active'); cmBtn.textContent = '★ pLDDT'; }
   applyViewerStyle();
   v.zoomTo();
   v.render();
@@ -1927,7 +2057,7 @@ async function loadAminoAcidMonomer(code3){
     const cmBtn = $('#colorModeBtn');
     if(cmBtn){
       cmBtn.classList.add('active');
-      cmBtn.textContent = '★ pLDDT Colors';
+      cmBtn.textContent = '★ pLDDT';
     }
     applyViewerStyle();
     v.zoomTo();
