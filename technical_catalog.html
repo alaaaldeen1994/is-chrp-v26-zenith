@@ -463,7 +463,7 @@ nav, .nav-dock, #mob-nav {
 
                 The definitive technical authority for the <strong class="text-white">Zenith Cellular Reprogramming Platform</strong>. 
 
-                Documenting the v31.0 research architecture, featuring the In Silico Audit Engine, GRN Authority, and 486,134-cell Specialist Model.
+                Documenting the v31.0 research architecture, featuring the In Silico Audit Engine, GRN Authority, and Specialist scVI Model (trained on 99,993 cells subsampled from the 486,134-cell Litviňuková cardiac atlas).
 
             </p>
 
@@ -6986,11 +6986,11 @@ Response:
 
 
 
-                    SUCCESS: Zenith v31.0: 3.27M-Parameter scVI Latent Manifold Initialized
+                    SUCCESS: Zenith v31.0: 3,268,462-Parameter scVI Latent Manifold Initialized (20D Latent Space)
 
 
 
-                    SUCCESS: Research HCA Model Loaded (486,134 Mapped Cells)
+                    SUCCESS: Research HCA Model Loaded (99,993 Trained Cells from 486,134-Cell Atlas)
 
 
 
@@ -9515,7 +9515,7 @@ Response:
 
 
 
-                            successfully mapped the <strong class="text-white">3.27M Parameter</strong> scVI neural
+                            successfully mapped the <strong class="text-white">3,268,462 Trainable Parameter</strong> (3,269,747 total tensor elements) scVI neural
 
 
 
@@ -9599,7 +9599,7 @@ Response:
 
 
 
-                            Zenith v31.0 is trained on 486,134 ground-truth cardiac cells (878,953 across reference cohorts).</p>
+                            Zenith v31.0 Specialist scVI model is trained on 99,993 donor-stratified cardiac cells (89,994 train + 9,999 validation) subsampled from the 486,134-cell Litviňuková et al. reference atlas (878,953 total cells across the 68-donor reference cohorts; 1,962,128 registered cells in the Foundation checkpoint).</p>
 
 
 
@@ -9839,7 +9839,7 @@ Response:
 
 
 
-                            featuring the <strong class="text-white">3.27M Parameter</strong> scVI manifold and 5,009-gene
+                            featuring the <strong class="text-white">3,268,462 Trainable Parameter</strong> (3,269,747 total tensor elements) scVI manifold and 5,009-gene 20-dimensional
 
 
 
@@ -11343,7 +11343,7 @@ Response:
 
 
 
-                <h4 class="text-2xl font-bold text-white mb-5">Single-Cell Variational Autoencoder (3.27M Parameters)</h4>
+                <h4 class="text-2xl font-bold text-white mb-5">Single-Cell Variational Autoencoder (3,268,462 Trainable Parameters)</h4>
 
 
 
@@ -11355,150 +11355,52 @@ Response:
 
 
 
-                    The **Zenith Specialist Model** (scVI Variational Autoencoder - 3,269,747 parameters) represents the active single-cell latent model of
-
-
-
-                    Zenith's generative engine, optimized for single-cell transcriptomic representation.
-
-
-
-                    By scaling the parameters to the ~500 Million threshold, the model moves from simple regression to
-
-
-
-                    **Emergent Pathway Discovery**, capable of predicting non-linear interactions across 5,009 genes
-
-
-
-                    simultaneously with extreme temporal fidelity.
-
-
-
+                    The **Zenith Specialist Model** (scVI Variational Autoencoder — 3,268,462 trainable floating-point parameters; 3,269,747 total tensor elements including 1,285 BatchNorm buffers; 2,626,668 active z-encoder/decoder trainable parameters excluding l_encoder) represents the active single-cell latent model of
+                    Zenith's generative engine, trained on 99,993 donor-stratified cells from the 486,134-cell Litviňuková cardiac atlas.
+                    Using a 2-layer, 128-channel encoder/decoder with a 20-dimensional variational latent space (`ZINB` likelihood), the model projects perturbations across 5,009 cardiac genes alongside a 4-layer, 1,024-channel, 64-dimensional Foundation scVI VAE (`37,234,698` parameters, `1,962,128` registered cells).
                 </p>
 
-
-
-
-
-
-
                 <div class="grid md:grid-cols-3 gap-6 mb-10 text-center">
-
-
-
                     <div class="bg-black/40 p-5 rounded-2xl border border-white/5">
-
-
-
-                        <div class="text-[10px] text-slate-500 font-bold uppercase mb-1">Parameter Count</div>
-
-
-
-                        <div class="text-2xl font-black text-blue-400">~500,000,000</div>
-
-
-
+                        <div class="text-[10px] text-slate-500 font-bold uppercase mb-1">Trainable Float Parameters*</div>
+                        <div class="text-2xl font-black text-blue-400">3,268,462 / 37,234,698</div>
                     </div>
-
-
-
                     <div class="bg-black/40 p-5 rounded-2xl border border-white/5">
-
-
-
-                        <div class="text-[10px] text-slate-500 font-bold uppercase mb-1">Architecture Depth</div>
-
-
-
-                        <div class="text-2xl font-black text-blue-400">45 Layers</div>
-
-
-
+                        <div class="text-[10px] text-slate-500 font-bold uppercase mb-1">Architecture Depth &amp; Width</div>
+                        <div class="text-2xl font-black text-blue-400">2&times;128 / 4&times;1024</div>
                     </div>
-
-
-
                     <div class="bg-black/40 p-5 rounded-2xl border border-white/5">
-
-
-
-                        <div class="text-[10px] text-slate-500 font-bold uppercase mb-1">Latent Width</div>
-
-
-
-                        <div class="text-2xl font-black text-purple-400">4096-Dim</div>
-
-
-
+                        <div class="text-[10px] text-slate-500 font-bold uppercase mb-1">Latent Dimensions</div>
+                        <div class="text-2xl font-black text-purple-400">20-Dim / 64-Dim</div>
                     </div>
-
-
-
                 </div>
 
-
-
-
-
-
-
                 <div class="mb-10">
-
-
-
                     <h5 class="text-xl font-bold text-white mb-4">Technical Verification Evidence</h5>
-
-
-
                     <div class="code-block" style="font-size:11px;">
+                        --- ZENITH v31.0 Research PARAMETER SPECIFICATION ---
 
+                        Total State-Dict Tensor Elements: 3,269,747 (Specialist, 50 tensors) / 37,234,698 (Foundation, 33 tensors)
 
+                        Trainable Float Parameters*: 3,268,462 (Specialist) / 37,234,698 (Foundation)
 
-                        --- ZENITH v31.0 Research PARAMETER VERIFICATION ---
+                        Active Inference Trainable Params (excl. l_encoder): 2,626,668 (Specialist) / 30,993,416 (Foundation)
 
-
-
-                        Total Parameters: 3,269,747 (Specialist) / 37,234,698 (Foundation)
-
-
-
-                        Trainable Parameters: 3,269,747 (Specialist)
-
-
-
-                        Scale: 3.27M Specialist / 37.23M Foundation
-
-
-
-
-
-
+                        Registered Training Cells (n_obs): 99,993 (Specialist: 89,994 train + 9,999 val from 486,134-cell atlas) / 1,962,128 (Foundation)
 
                         # Mathematical Specification:
 
+                        Depth: 2 Hidden Layers (Specialist) / 4 Hidden Layers (Foundation)
 
+                        Width: 128 Channels (Specialist) / 1,024 Channels (Foundation)
 
-                        Depth: 2 Hidden Layers (Specialist) / 3 Hidden Layers (Foundation)
+                        Latent Dimensions: 20 (Specialist, ZINB likelihood, 5,009 genes) / 64 (Foundation, NB likelihood, 5,858 genes)
 
+                        Input: Gene Expression (5,009D Specialist / 5,858D Foundation)
 
+                        Output: Decoded Normalized Expression &amp; Latent Trajectory Shift
 
-                        Width: 128 Channels (Specialist) / 512 Channels (Foundation)
-
-
-
-                        Latent Dimensions: 10 (Specialist) / 30 (Foundation)
-
-
-
-                        Input: Gene Expression (5,009D) + Paracrine + BioAge
-
-
-
-                        Output: Trajectory Drift ( X)
-
-
-
+                        *Parameter Convention Footnote: All parameter figures cite trainable floating-point parameters in model_state_dict (3,268,462 for models/scvi_model_486k_real/model.pt; 37,234,698 for models/zenith_foundation_v1/model.pt). Total tensor elements for the Specialist checkpoint equal 3,269,747 once 1,280 BatchNorm running_mean/running_var float elements and 5 int64 num_batches_tracked scalars are included.
                     </div>
 
 
@@ -14148,7 +14050,7 @@ RATE_LIMITS = {
                         <div class="code-block p-4 rounded-xl">
                             <div class="text-xs text-slate-400 mb-2 font-mono">MOFA+ Multi-Omics Factor Decomposition</div>
                             <p class="text-sm font-mono text-indigo-300">
-                                $$Y_{igm} = \sum_{k=1}^{K} w_{gkm} z_{ik} + \epsilon_{igm} \quad (K=10 \text{ Latent Factors})$$
+                                $$Y_{igm} = \sum_{k=1}^{K} w_{gkm} z_{ik} + \epsilon_{igm} \quad (K=20 \text{ Latent Factors})$$
                             </p>
                             <p class="text-xs text-slate-400 mt-2">
                                 Integrates scRNA-seq, ATAC-seq, Methylation, Proteomics, and Metabolomics.
