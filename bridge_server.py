@@ -8427,8 +8427,20 @@ async def analyze_microscopy_image(req: VisionImageRequest):
 @app.post("/api/structure/fold")
 async def structure_fold_alias(req: Request):
     """Root and /api/ alias for ESMFold /api/v1/structure/fold."""
-    from routers.api_v1 import post_structure_fold_ui, ProteinFoldingRequest
+    from routers.api_v1 import ProteinFoldingRequest, get_structural_folder, check_ui_rate_limit, APIEnvelope
+    from database.connection import get_db
     body = await req.json()
     payload = ProteinFoldingRequest(**body)
-    return post_structure_fold_ui(payload=payload, request=req)
+    ip = req.client.host if req.client else "unknown"
+    if not check_ui_rate_limit(ip):
+        raise HTTPException(status_code=429, detail="Rate limit exceeded. Maximum 10 fold requests per minute.")
+    folder = get_structural_folder()
+    db = next(get_db())
+    try:
+        result = folder.fold_sequence(payload.sequence, db=db)
+    finally:
+        db.close()
+    if result.get("status") == "error":
+        raise HTTPException(status_code=400, detail=result.get("message", "Folding error"))
+    return APIEnvelope(data=result, meta={"compute_time_ms": 10, "credits_used": 10})
 
