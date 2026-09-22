@@ -167,8 +167,7 @@ nav, .nav-dock, #mob-nav {
                 Our mission is to eliminate the stochastic uncertainty inherent in traditional cellular engineering through massive-scale computational simulation.
             </p>
             <p>
-                Version <strong class="text-blue-600">v31.0 "Zenith Ultra"</strong> marks our most significant leap forward. By integrating a <strong class="text-slate-900">~500 Million parameter</strong> Transformer core, 
-                we have achieved a manifold fidelity rate of <strong class="text-blue-600">99.8%</strong> against real-world HCA Institutional benchmarks.
+                Version <strong class="text-blue-600">v31.0 "Zenith"</strong> integrates a <strong class="text-slate-900">3,268,462-parameter cardiac specialist scVI Variational Autoencoder</strong> (trained on 99,993 cells from the 486,134-cell Litviňuková source atlas) and a <strong class="text-slate-900">37,234,698-parameter foundation scVI VAE</strong>, achieving a leave-one-donor-out age prediction correlation of <strong class="text-blue-600">Pearson r = 0.4606 (MAE = 6.97 yr)</strong> across 54 uniform-chemistry PERIHEART donors.
             </p>
         </div>
     </div>
@@ -177,7 +176,7 @@ nav, .nav-dock, #mob-nav {
         <div class="card-elite !p-12">
             <h3 class="text-xs font-black text-blue-600 uppercase tracking-widest mb-6">Generative Biology</h3>
             <p class="text-base text-slate-500 font-medium leading-relaxed">
-                Unlike legacy deterministic models, Zenith leverages Attention-based manifolds to identify optimal transition paths in 5,009-dimensional gene space.
+                Unlike static models, Zenith leverages scVI conditional variational autoencoder manifolds to model perturbation trajectories in 5,009-dimensional gene space.
             </p>
         </div>
         <div class="card-elite !p-12">
@@ -194,7 +193,7 @@ nav, .nav-dock, #mob-nav {
             <ul class="space-y-6 text-sm text-slate-600 font-medium">
                 <li class="flex gap-4">
                     <span class="text-blue-600 font-black">✓</span>
-                    <span><strong class="text-slate-900">Zenith Ultra Engine:</strong> 24-layer Transformer capturing 5,009 HD regulatory dimensions.</span>
+                    <span><strong class="text-slate-900">Zenith scVI Engine:</strong> 2-layer Cardiac Specialist VAE (128 channels, 20 latent dims, 5,009 genes) &amp; 4-layer Foundation VAE (1,024 channels, 64 latent dims, 5,858 genes).</span>
                 </li>
                 <li class="flex gap-4">
                     <span class="text-blue-600 font-black">✓</span>
@@ -204,7 +203,7 @@ nav, .nav-dock, #mob-nav {
             <ul class="space-y-6 text-sm text-slate-600 font-medium">
                 <li class="flex gap-4">
                     <span class="text-blue-600 font-black">✓</span>
-                    <span><strong class="text-slate-900">Institutional Manifold:</strong> Benchmarked for 99.8% fidelity against real-world observations.</span>
+                    <span><strong class="text-slate-900">Multi-Donor Cardiac Evaluation:</strong> Evaluated via leave-one-donor-out cross-validation (LODO Pearson r = 0.4606, MAE = 6.97 yr on 54 PERIHEART donors).</span>
                 </li>
                 <li class="flex gap-4">
                     <span class="text-blue-600 font-black">✓</span>
@@ -216,7 +215,7 @@ nav, .nav-dock, #mob-nav {
 
     <footer class="mt-32 pt-20 border-t border-slate-100 flex flex-col md:flex-row justify-between items-center gap-10">
         <div class="text-[10px] font-black tracking-[0.5em] text-slate-300 uppercase">Nilus Lab Institutional | © 2026</div>
-        <div class="text-[10px] font-black text-blue-600 uppercase tracking-widest">Phase 4 Integrity Verified</div>
+        <div class="text-[10px] font-black text-blue-600 uppercase tracking-widest">Preclinical Research Release (RUO)</div>
     </footer>
 
 </body>

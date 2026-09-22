@@ -9,7 +9,7 @@
 
 ## Abstract
 
-Restoring youthful cellular function and rescuing multigenic disease in human tissues requires an integrated system that can decode non-coding genetic variants, model complex gene regulatory networks, predict biophysical cardiotoxicity, and optimize molecular delivery. Here we present the complete architecture, methodology, and experimental validation of **Nilus Lab Zenith (v31.0 GOLD)**, an enterprise-grade computational biology instrument designed for personalised cellular rejuvenation. Zenith is built upon a 2.42-million-cell single-cell manifold (1.94M multi-tissue generalist cells + 486,134 specialist cardiac cells across 14 donors), a 5,009-gene high-dimensional transcriptomic latent space, biophysical 3D structural protein authority (Boltz-1, ESMFold), and a 512-neuron spiking electrophysiological substrate (NEUROS-X). Across five computational layers, Zenith unifies epistatic polygenic risk scoring, 201-base-pair transcription factor binding motif scanning (AlphaGenome), causal inference via Mendelian Randomisation (IVW/Egger), multi-omics factor analysis (MOFA+), structural docking (AutoDock Vina), CRISPR Prime Editor pegRNA synthesis, selective organ targeting (SORT) 5-lipid nanoparticles, reinforcement learning cocktail discovery (AlphaZen), and two-compartment PK/PD virtual clinical trials. In a benchmark study on 125,289 human ventricular cardiomyocytes, Zenith identified an 8-factor non-coding and sirtuin-enrichment cocktail (**TTN-AS1, MLIP-AS1, SIRT1, SIRT6, SH3RF2, PRKCE, WDFY3, DDX60L**) that achieved profound biological age reduction ($\Delta \text{BiT Age} = -13.0$ years, $R = 0.982$) in 21.99 seconds while maintaining titin sarcomere stability and electrophysiological conduction safety ($\sigma^2_{\text{ISI}} = 46.42$). Zenith bridges computational predictions to physical laboratory execution via 1-click Opentrons OT-2 robotic pipetting protocol generation and microfluidic LNP formulation.
+Restoring youthful cellular function and rescuing multigenic disease in human tissues requires an integrated system that can decode non-coding genetic variants, model complex gene regulatory networks, predict biophysical cardiotoxicity, and optimize molecular delivery. Here we present the architecture, methodology, and computational evaluation of **Nilus Lab Zenith (v31.0)**, a computational biology platform for in silico cellular trajectory modeling. Zenith comprises a generalist scVI foundation model (1,962,128 registered human single cells, 5,858 HVGs, 4 hidden layers × 1,024 units, 64 latent dimensions; 37,234,698 trainable parameters) and a cardiac specialist scVI model (trained on **99,993 Specialist Cardiac cells from a 486,134-cell source atlas** across 14 donors, 5,009 HVGs, 2 hidden layers × 128 units, 20 latent dimensions; 3,268,462 trainable parameters), coupled with biophysical 3D structural protein prediction (Boltz-1, ESMFold) and a 512-neuron spiking electrophysiological simulation (NEUROS-X). Across five computational layers, Zenith unifies epistatic polygenic risk scoring, 201-base-pair transcription factor binding motif scanning (AlphaGenome), causal inference via Mendelian Randomisation (IVW/Egger), multi-omics factor analysis (MOFA+), structural docking (AutoDock Vina), CRISPR Prime Editor pegRNA synthesis, selective organ targeting (SORT) 5-lipid nanoparticles, reinforcement learning cocktail discovery (AlphaZen), and two-compartment PK/PD virtual clinical trials. In leave-one-donor-out cross-validation across the 54-donor uniform-chemistry PERIHEART human right atrial cohort (392,819 single nuclei), a ridge-regularized pseudobulk aging clock achieved statistically significant out-of-donor age prediction (LODO MAE = 6.97 years, Pearson $r = 0.4606$, $p = 4.57 \times 10^{-4}$; $r = 0.4936$ across all 8,560 active genes), while in silico screening of candidate reprogramming cocktails is gated by a 12-channel cardiomyocyte leaky integrate-and-fire electrophysiological simulation ($\sigma^2_{\text{ISI}} = 46.42$). Zenith bridges computational predictions to physical laboratory execution via 1-click Opentrons OT-2 robotic pipetting protocol generation and microfluidic LNP formulation.
 
 ---
 
@@ -41,7 +41,7 @@ LAYER 2: CAUSAL INFERENCE & MULTI-OMICS INTEGRATION
          Mendelian Randomisation (IVW/Egger) · MOFA+ (K=10) · Causal GRN DAG
 ===================================================================================
 LAYER 1: GENOMIC & EPIGENETIC FOUNDATION ATLAS
-         scVI 2.42M Cell Manifold · Horvath Clock · AlphaGenome 201bp PWM · ADMET
+         scVI Specialist (99,993 Cardiac Cells) & Foundation (1.96M Cells) Manifolds · Aging Clock · AlphaGenome 201bp PWM · ADMET
 ===================================================================================
 ```
 
@@ -56,9 +56,9 @@ $$q_\phi(z | x, s) = \mathcal{N}\left(\mu_\phi(x, s), \text{diag}(\sigma_\phi^2(
 
 $$p_\theta(x | z, s) = \text{NegativeBinomial}\left(\ell \cdot \pi_\theta(z, s), r_\theta\right)$$
 
-The model was trained for 400 epochs on a GPU cluster using **2,425,289 human single cells**:
-- **Generalist Foundation Atlas**: 1,939,155 multi-tissue single cells across blood, brain, liver, kidney, lung, and vasculature.
-- **Specialist Cardiac Atlas**: 486,134 single cardiac cells (14 human donors, Litviňuková et al., *Nature* 2020) encompassing regular ventricular myocytes ($N=125,289$), atrial myocytes ($N=77,856$), fibroblasts ($N=59,341$), endothelial cells ($N=57,759$), pericytes, smooth muscle cells, and macrophages across 5,009 highly variable genes.
+The platform comprises two scVI Variational Autoencoder checkpoints:
+- **Generalist Foundation Atlas**: 1,962,128 registered human single cells (5,858 HVGs, 4 hidden layers × 1,024 units, 64 latent dimensions; 37,234,698 trainable parameters).
+- **Specialist Cardiac Atlas**: **99,993 Specialist Cardiac cells (from a 486,134-cell source atlas** across 14 human donors, Litviňuková et al., *Nature* 2020; 5,009 HVGs, 2 hidden layers × 128 units, 20 latent dimensions; 3,268,462 trainable parameters) encompassing regular ventricular myocytes ($N=125,289$), atrial myocytes ($N=77,856$), fibroblasts ($N=59,341$), endothelial cells ($N=57,759$), pericytes, smooth muscle cells, and macrophages across 5,009 highly variable genes.
 
 #### 2.1.2 Epistatic Polygenic Risk Score (PRS) Engine
 To model multi-genic disease risk beyond linear additive assumptions, Zenith incorporates pairwise epistatic interaction coefficients ($\gamma_{ij}$) derived from single-cell gene regulatory adjacency matrices:
@@ -82,7 +82,7 @@ Binding disruptions with $|\Delta \text{PWM}| > 2.0$ are correlated with predict
 Zenith integrates local biophysical 3D structural prediction servers. Multi-chain protein complexes and protein-ligand interactions are parsed using **Boltz-1** and **ESMFold**, yielding per-residue predicted Local Distance Difference Test (pLDDT) confidence scores and Predicted Aligned Error (PAE) matrices ($\text{\AA}$).
 
 #### 2.1.5 Biological Aging Clocks & Biomarker Suite
-- **BiT Age Transcriptomic Clock (Meyer & Schumacher)**: The primary native computational clock for single-cell transcriptomes. Converts continuous noisy RNA counts into binarized gene expression states ($x_i \in \{0, 1\}$) with temporal scaling and elastic net regression, measuring cellular rejuvenation ($\Delta \text{BiT Age} = -13.0\text{ years}$) near the theoretical limit of transcriptomic accuracy ($R \approx 0.98 - 0.99$).
+- **Pseudobulk Transcriptomic Aging Clock**: Ridge-regularized transcriptomic age regression evaluated via leave-one-donor-out cross-validation across 54 uniform-chemistry PERIHEART donors ($N = 392,819$ nuclei; LODO MAE = $6.97\text{ years}$, Pearson $r = 0.4606$, $p = 4.57 \times 10^{-4}$).
 - **Horvath DNA Methylation Epigenetic Projection**: Cross-modal multi-omics projection mapping single-cell transcriptomic shifts onto canonical 353 CpG sites to validate downstream epigenetic age reversal.
 - **DunedinPACE Epigenetic Pacemaker**: Calculates the rate of biological aging (years per calendar year).
 - **AFRAID Frailty Index**: Predicts clinical frailty age.
@@ -179,18 +179,14 @@ Zenith orchestrates a 10-step autonomous trajectory chaining all 13 FastAPI endp
 ### 3.1 In Silico Rejuvenation Benchmark on 125,289 Human Cardiomyocytes
 We evaluated Zenith on single-cell transcriptomic profiles of 125,289 human ventricular cardiomyocytes (14 donors, Litviňuková et al., *Nature* 2020). Query: *"Identify a minimum-factor transcription cocktail to directly reprogram human cardiac fibroblasts into functional ventricular cardiomyocytes while keeping membrane capacitance stable"*.
 
-Zenith completed the full 10-step autonomous discovery trajectory in **21.99 seconds** at **90% confidence**.
-
 ```
 ===================================================================================
-ZENITH DISCOVERY BENCHMARK RESULTS
+ZENITH MULTI-DONOR EVALUATION & IN SILICO BENCHMARK
 ===================================================================================
-Target Dataset: Litviňuková et al. 2020 (125,289 Ventricular Cardiomyocytes)
-Execution Time: 21.99 seconds
-Confidence Score: 90% (5,009D HD Transcriptomic Manifold)
-Predicted Rejuvenation: -13.0 Years Biological Age Reset (ΔBiT Age / Horvath Projection)
-Electrophysiological Status: VERIFIED SAFE (ISI Variance = 46.42)
-Microfluidic LNP Encapsulation: 94.4% (>85% Predicted Cardiac Tropism)
+Replication Dataset: PERIHEART 54-Donor Right Atrial Cohort (392,819 Nuclei)
+Specialist Training Dataset: 99,993 Cardiac Cells (from 486,134-Cell Litviňuková Atlas)
+Leave-One-Donor-Out Aging Clock: LODO MAE = 6.97 Years | Pearson r = 0.4606 (p = 4.57e-4)
+Electrophysiological Simulation: 512 LIF Spiking Network (ISI Variance = 46.42)
 ===================================================================================
 ```
 
@@ -227,7 +223,7 @@ The 8-factor cocktail was evaluated across the 512 LIF spiking neuron cardiac ne
 
 ## 4. Discussion
 
-The Zenith v31.0 GOLD platform demonstrates that cellular reprogramming can be decoupled from somatic dedifferentiation and tumorigenic teratoma risk. By leveraging non-coding lncRNAs (`TTN-AS1`, `MLIP-AS1`) and sirtuin deacetylases (`SIRT1`, `SIRT6`) alongside proteostasis maintainers (`SH3RF2`, `WDFY3`), Zenith achieves epigenetic age reversal while preserving cell identity and membrane capacitance.
+The Zenith v31.0 platform provides an exploratory in silico framework for modeling cellular reprogramming hypotheses without Yamanaka pluripotency factors. By leveraging non-coding lncRNAs (`TTN-AS1`, `MLIP-AS1`) and sirtuin deacetylases (`SIRT1`, `SIRT6`) alongside proteostasis maintainers (`SH3RF2`, `WDFY3`), Zenith achieves epigenetic age reversal while preserving cell identity and membrane capacitance.
 
 Furthermore, integrating biophysical cardiac spiking neural simulations (NEUROS-X) directly into the discovery loop solves the critical safety bottleneck that has historically plagued cardiac gene therapies. The seamless connection between computational prediction, LNP delivery optimization, and Opentrons OT-2 robotic protocol generation establishes a new paradigm for automated, reproducible longevity medicine.
 
@@ -236,7 +232,7 @@ Furthermore, integrating biophysical cardiac spiking neural simulations (NEUROS-
 ## 5. Data & Code Availability
 
 - **Live Web Platform**: [`https://www.niluslab.com/index.html`](https://www.niluslab.com/index.html)
-- **Gold Technical Catalog**: [`https://www.niluslab.com/technical_catalog.html#grand-architecture`](https://www.niluslab.com/technical_catalog.html#grand-architecture)
+- **Technical Catalog**: [`https://www.niluslab.com/technical_catalog.html#grand-architecture`](https://www.niluslab.com/technical_catalog.html#grand-architecture)
 - **GitHub Repository**: [`https://github.com/alaaaldeen1994/is-chrp-v26-zenith`](https://github.com/alaaaldeen1994/is-chrp-v26-zenith)
 
 ---

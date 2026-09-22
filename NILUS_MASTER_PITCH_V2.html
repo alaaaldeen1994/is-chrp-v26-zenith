@@ -407,7 +407,7 @@ nav, .nav-dock, #mob-nav {
                 <div class="image-caption">Nilus Lab Computational Bridge: Validating in-silico predictions against the
                     Human Cell Atlas.</div>
             </div>
-            <p class="max-w-3xl mx-auto">Zenith is a generative foundation model (285M parameters) that utilizes
+            <p class="max-w-3xl mx-auto">Zenith is a conditional variational autoencoder (scVI) architecture (3,268,462 specialist / 37,234,698 foundation trainable parameters) that utilizes
                 Neural SDEs to model cell trajectories, identifying high-probability therapeutic targets for
                 rejuvenation.</p>
         </div>
@@ -457,7 +457,7 @@ nav, .nav-dock, #mob-nav {
                     </div>
                     <div class="grid grid-cols-2 gap-4">
                         <div class="mono text-[10px] text-blue-400">STATE: OPTIMIZED</div>
-                        <div class="mono text-[10px] text-blue-400">STABILITY: 0.982</div>
+                        <div class="mono text-[10px] text-blue-400">ESI: 0.948 (IN SILICO)</div>
                         <div class="mono text-[10px] text-blue-400">TRAJECTORY: VALIDATED</div>
                         <div class="mono text-[10px] text-blue-400">TARGET: DRP-A12</div>
                     </div>
@@ -479,7 +479,7 @@ nav, .nav-dock, #mob-nav {
                 <div class="card border-blue-500/20">
                     <div class="flex justify-between items-center mb-6 mono text-blue-400">
                         <span>MODEL STATUS: OPTIMIZED PATHWAY IDENTIFIED</span>
-                        <span>ESI: 0.982</span>
+                        <span>ESI: 0.948</span>
                     </div>
                     <p>Our <strong>Manifold Projection</strong> (shown right) identifies high-probability stability
                         regions within complex biological datasets to optimize epigenetic transition pathways.</p>
@@ -612,7 +612,7 @@ nav, .nav-dock, #mob-nav {
                         <div class="space-y-3">
                             <div class="flex items-center gap-3">
                                 <div class="w-1 h-1 rounded-full bg-blue-500"></div>
-                                <span class="text-[10px] text-slate-400 uppercase tracking-widest">Built Zenith 285M
+                                <span class="text-[10px] text-slate-400 uppercase tracking-widest">Built Zenith scVI (3.27M / 37.2M Params)
                                     Neural SDE Engine</span>
                             </div>
                             <div class="flex items-center gap-3">
@@ -715,7 +715,7 @@ nav, .nav-dock, #mob-nav {
                 <!-- ACCURACY CARD -->
                 <div class="card p-10 bg-blue-500/5 border-blue-500/20">
                     <div class="tag mb-4" style="letter-spacing: 0.2em; font-size: 0.7rem;">Predictive Performance</div>
-                    <div class="metric-big text-center mb-4" style="font-size: 3rem; color: #2563eb;">98.2%</div>
+                    <div class="metric-big text-center mb-4" style="font-size: 3rem; color: #2563eb;">r = 0.461</div>
                     <p class="text-[10px] text-center text-slate-500 uppercase tracking-[0.3em] mb-10">Replication
                         Stability Score</p>
 

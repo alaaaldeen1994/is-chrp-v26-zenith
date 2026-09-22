@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zenith v31.0 | Scientific Whitepaper | Nilus Lab GOLD Engine</title>
+    <title>Zenith v31.0 | Scientific Whitepaper | Nilus Lab Research Engine</title>
     <meta name="description" content="Scientific whitepaper for the Zenith v31.0 foundation model. Architecture, training methodology, and validation results for computational cardiac reprogramming.">
     <!-- RESEARCH USE ONLY - NO CLINICAL CLAIMS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -262,7 +262,7 @@ nav, .nav-dock, #mob-nav {
         <div class="flex items-center gap-3">
             <div class="hidden lg:flex bg-slate-900/60 border border-slate-700/50 px-3 py-1.5 rounded-full items-center gap-2 scale-90">
                 <span class="w-1.5 h-1.5 bg-blue-500 rounded-full animate-pulse"></span>
-                <span class="text-[8px] font-black text-slate-400 uppercase tracking-widest">LIVE ENSEMBLE FEED: 2.42M+ CELLS</span>
+                <span class="text-[8px] font-black text-slate-400 uppercase tracking-widest">CARDIAC SPECIALIST ATLAS: 99,993 TRAINED CELLS (486,134 SOURCE)</span>
             </div>
             <button onclick="openLoginModal()" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-full text-[12px] font-black uppercase tracking-widest flex items-center gap-3 transition-all scale-90">Sign In</button>
             <button id="mobile-menu-toggle" onclick="toggleMobileMenu()" class="flex md:hidden text-white hover:text-blue-500 p-2 focus:outline-none transition-colors z-[1001]" aria-label="Toggle Menu">
@@ -291,7 +291,7 @@ nav, .nav-dock, #mob-nav {
         </div>
         <div class="bg-slate-800/50 border border-slate-700/50 px-4 py-3 rounded-2xl flex items-center gap-3">
             <span class="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></span>
-            <span class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">LIVE ENSEMBLE FEED: 2.42M+ CELLS</span>
+            <span class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">CARDIAC SPECIALIST ATLAS: 99,993 TRAINED CELLS (486,134 SOURCE)</span>
         </div>
     </div>
     <div id="mobile-menu-backdrop" onclick="toggleMobileMenu()" class="fixed inset-0 bg-[#04091a]/50 backdrop-blur-sm z-[998] hidden opacity-0 transition-opacity duration-300"></div>
@@ -303,7 +303,7 @@ nav, .nav-dock, #mob-nav {
         <header class="mb-24">
             <div class="flex items-center justify-between mb-16">
                 <div class="flex items-center gap-4">
-                    <span class="tag-version">Zenith Ultra v31.0 GOLD</span>
+                    <span class="tag-version">Zenith Ultra v31.0 (Research Release)</span>
                     <span class="tag-version" style="color:#94a3b8; border-color:rgba(148,163,184,0.2); background:rgba(148,163,184,0.05);">RUO — Research Use Only</span>
                 </div>
                 <div class="text-right">
@@ -316,7 +316,7 @@ nav, .nav-dock, #mob-nav {
                 Zenith Ultra:<br><span class="text-blue-500">Foundation Engine</span><br><span class="text-slate-400">For HD Biology</span>
             </h1>
             <p class="text-xl text-slate-400 max-w-3xl font-light leading-relaxed">
-                A quantitative derivation of the <strong class="text-white">~500M parameter</strong> Transformer architecture governing 5,009-gene HD trajectories across the cardiac aging-to-stemness manifold.
+                A quantitative derivation of the <strong class="text-white">scVI foundation engine (4 hidden layers &times; 1,024 units, 64 latent dimensions; 37,234,698 trainable parameters)</strong> and cardiac specialist VAE (3,268,462 trainable parameters) governing 5,009-gene trajectories.
             </p>
         </header>
 
@@ -324,11 +324,11 @@ nav, .nav-dock, #mob-nav {
         <div class="spec-grid mb-20">
             <div class="spec-item">
                 <div class="spec-label">Institutional Parameters</div>
-                <div class="spec-value">~500M</div>
+                <div class="spec-value">3.27M / 37.2M</div>
             </div>
             <div class="spec-item">
-                <div class="spec-label">Multi-Head Attention</div>
-                <div class="spec-value">16 Heads</div>
+                <div class="spec-label">Latent Dimensions</div>
+                <div class="spec-value">20 / 64</div>
             </div>
             <div class="spec-item">
                 <div class="spec-label">HD Gene Dimensions</div>
@@ -352,10 +352,10 @@ nav, .nav-dock, #mob-nav {
             </h2>
             <div class="text-lg text-slate-400 font-light leading-relaxed space-y-6">
                 <p>
-                    The <strong class="text-white">Zenith Ultra-v31.0</strong> (Multi-Head Attention Transformer) represents the first institutional foundation engine designed to bridge high-definition transcriptomics and real-time cellular trajectory modeling. Utilizing a <strong class="text-blue-400">~500 Million parameter</strong> core, the system models the non-linear dynamics of 5,009 distinct gene dimensions across the aging-to-stemness manifold.
+                    The <strong class="text-white">Zenith Ultra-v31.0</strong> (a conditional variational autoencoder, scVI-based) represents a computational biology engine designed to bridge single-cell transcriptomics and latent-space trajectory modeling. Utilizing a <strong class="text-blue-400">3,268,462-parameter cardiac specialist VAE</strong> and a <strong class="text-blue-400">37,234,698-parameter foundation VAE</strong>, the system models 5,009 distinct gene dimensions across the cardiac manifold.
                 </p>
                 <p>
-                    The engine identifies the <strong class="text-white">Waddington Landscape</strong> not as a static hill, but as an Attention-governed field where attractors correlate with epigenetic stability (ESI &gt; 95%). By leveraging <strong class="text-white">486,134 real single-cell observations</strong> from the HCA Institutional cardiac dataset, Zenith v31.0 achieves a validated <strong class="text-blue-400">99.8% stability alignment</strong>, surpassing all legacy residual MLP baselines.
+                    The engine models the <strong class="text-white">Waddington Landscape</strong> as a continuous 20-to-64-dimensional scVI latent manifold. Trained on <strong class="text-white">99,993 subsampled cardiac single-cell profiles (from a 486,134-cell HCA source atlas)</strong>, the PERIHEART cardiac aging clock achieves a leave-one-donor-out <strong class="text-blue-400">Pearson r = 0.4606 (p = 4.57&times;10<sup>&minus;4</sup>, MAE = 6.97 yr across 54 uniform-chemistry donors)</strong>.
                 </p>
                 <p>
                     The platform operates exclusively as a <strong class="text-white">Research Use Only (RUO)</strong> computational tool. All outputs are simulated trajectories intended for hypothesis generation and institutional research pipelines — no clinical, diagnostic, or therapeutic claims are made.
@@ -373,12 +373,12 @@ nav, .nav-dock, #mob-nav {
             <div class="mb-12">
                 <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-4">Manifold Learning Logic</h3>
                 <p class="text-lg text-slate-400 leading-relaxed mb-8">
-                    At its core, Zenith uses a Neural Stochastic Differential Equation (SDE) solver to navigate the transcriptomic landscape. The ~500M parameter engine tracks epigenetic gating at 5,009 individual gene dimensions, ensuring that lineage-defining markers are preserved throughout the 12-cycle reprogramming pulse.
+                    At its core, Zenith uses a Neural Stochastic Differential Equation (SDE) solver to navigate the transcriptomic landscape. The scVI foundation engine (4 hidden layers &times; 1,024 units, 64 latent dimensions; 37,234,698 trainable parameters) and cardiac specialist VAE (2 hidden layers &times; 128 units, 20 latent dimensions; 3,268,462 trainable parameters) model transcriptomic trajectories across 5,009 individual gene dimensions.
                 </p>
                 <div class="grid md:grid-cols-2 gap-12 border-t border-white/5 pt-10">
                     <div>
                         <h4 class="text-sm font-black text-white uppercase tracking-widest mb-3">Parameter Scale</h4>
-                        <p class="text-slate-400 leading-relaxed text-sm">Zenith Ultra operates at institutional scale, processing HD-GENOME vocabularies with 99.85% fidelity across 24 transformer layers with hidden dimension 4,096.</p>
+                        <p class="text-slate-400 leading-relaxed text-sm">Zenith operates on single-cell count matrices across 5,009 (specialist) to 5,858 (foundation) highly variable genes via scVI conditional variational autoencoder layers (4 hidden layers &times; 1,024 units in the generalist foundation model; 2 hidden layers &times; 128 units in the cardiac specialist model).</p>
                     </div>
                     <div>
                         <h4 class="text-sm font-black text-white uppercase tracking-widest mb-3">Data Provenance</h4>
@@ -391,21 +391,19 @@ nav, .nav-dock, #mob-nav {
                 <div>
                     <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-5">ZenithBlock Foundation (Pseudocode)</h3>
                     <div class="math-box !p-6 !m-0 font-mono text-xs leading-relaxed">
-                        <span class="text-blue-400 font-bold"># Residual Expansion</span><br>
-                        x = x + self.Attention(LayerNorm(x))<br>
-                        x = x + self.FFN(LayerNorm(x))<br><br>
-                        <span class="text-blue-400 font-bold"># Institutional Depth</span><br>
-                        Hidden_Dim: 4096<br>
-                        Attention_Heads: 16<br>
-                        Layers: 24 (Institutional Build)<br>
-                        Parameters: ~500M
+                        <span class="text-blue-400 font-bold"># scVI Variational Encoder / Decoder</span><br>
+                        z_mean, z_var = self.z_encoder(x, batch)<br>
+                        px_scale, px_r, px_dropout = self.decoder(z, batch)<br><br>
+                        <span class="text-blue-400 font-bold"># Verified Architecture Specs</span><br>
+                        Foundation_VAE: 4 layers &times; 1024 hidden, 64 latent (37,234,698 params)<br>
+                        Specialist_VAE: 2 layers &times; 128 hidden, 20 latent (3,268,462 params)
                     </div>
                 </div>
                 <div class="space-y-4">
                     <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-5">Operational Continuity</h3>
                     <div class="metric-row">
                         <span class="text-sm text-slate-400">Architecture</span>
-                        <span class="text-sm font-black text-blue-400">Multi-Head Attention Transformer</span>
+                        <span class="text-sm font-black text-blue-400">Conditional Variational Autoencoder (scVI)</span>
                     </div>
                     <div class="metric-row">
                         <span class="text-sm text-slate-400">Gene Manifold</span>
@@ -413,7 +411,7 @@ nav, .nav-dock, #mob-nav {
                     </div>
                     <div class="metric-row">
                         <span class="text-sm text-slate-400">Training Data</span>
-                        <span class="text-sm font-black text-white">486,134 HCA Cardiac Cells</span>
+                        <span class="text-sm font-black text-white">99,993 Trained Cardiac Cells (486,134 Source Atlas)</span>
                     </div>
                     <div class="metric-row">
                         <span class="text-sm text-slate-400">Inference Benchmark</span>
@@ -421,7 +419,7 @@ nav, .nav-dock, #mob-nav {
                     </div>
                     <div class="metric-row">
                         <span class="text-sm text-slate-400">Prediction Fidelity</span>
-                        <span class="text-sm font-black text-blue-400">R² = 0.998</span>
+                        <span class="text-sm font-black text-blue-400">LODO r = 0.4606 (MAE = 6.97 yr, n = 54)</span>
                     </div>
                 </div>
             </div>
@@ -524,7 +522,7 @@ nav, .nav-dock, #mob-nav {
                 <div class="spec-item">
                     <div class="spec-label">ESI Stability Requirement</div>
                     <div class="text-3xl font-black text-white mb-2">&ge; 95%</div>
-                    <p class="text-sm text-slate-500 leading-relaxed">Epigenetic Stability Index must remain above 95% throughout all 12 reprogramming cycles to achieve GOLD validation status.</p>
+                    <p class="text-sm text-slate-500 leading-relaxed">Epigenetic Stability Index is monitored throughout all 12 simulated reprogramming cycles to evaluate lineage identity retention.</p>
                 </div>
                 <div class="spec-item">
                     <div class="spec-label">Training Cohort</div>
@@ -550,7 +548,7 @@ nav, .nav-dock, #mob-nav {
                 </div>
                 <div>
                     <h3 class="text-sm font-black text-white uppercase tracking-widest mb-3">II. Zero-Shot Tabular Multi-Omics Predictor</h3>
-                    <p class="text-sm text-slate-400 leading-relaxed mb-4">Transformer self-attention mechanism computing downstream expression profiles:</p>
+                    <p class="text-sm text-slate-400 leading-relaxed mb-4">Conditional VAE latent-space encoding and generative decoding of downstream expression profiles:</p>
                     <div class="math-box text-center text-xl font-black">
                         $$\text{Attention}(Q,K,V) = \text{Softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V$$
                     </div>
@@ -589,14 +587,14 @@ nav, .nav-dock, #mob-nav {
                     <tr class="text-[10px] font-black text-slate-500 uppercase tracking-widest border-b border-white/5">
                         <th class="pb-6">Parameter</th>
                         <th class="pb-6">Legacy v25 (Residual MLP)</th>
-                        <th class="pb-6 text-blue-400">Institutional v31.0 GOLD</th>
+                        <th class="pb-6 text-blue-400">Zenith v31.0 (scVI VAE)</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-white/[0.04]">
                     <tr>
                         <td class="py-5 text-sm font-black text-white">Neural Nodes</td>
                         <td class="py-5 text-sm text-slate-500">102.4M</td>
-                        <td class="py-5 text-sm font-black text-blue-400">~500M</td>
+                        <td class="py-5 text-sm font-black text-blue-400">3,268,462 (Specialist) / 37,234,698 (Foundation)</td>
                     </tr>
                     <tr>
                         <td class="py-5 text-sm font-black text-white">Gene Manifold</td>
@@ -606,17 +604,17 @@ nav, .nav-dock, #mob-nav {
                     <tr>
                         <td class="py-5 text-sm font-black text-white">Architecture</td>
                         <td class="py-5 text-sm text-slate-500">Residual MLP</td>
-                        <td class="py-5 text-sm font-black text-blue-400">Multi-Head Attention Transformer</td>
+                        <td class="py-5 text-sm font-black text-blue-400">scVI Conditional Variational Autoencoder</td>
                     </tr>
                     <tr>
                         <td class="py-5 text-sm font-black text-white">Data Foundation</td>
                         <td class="py-5 text-sm text-slate-500">18k Cells</td>
-                        <td class="py-5 text-sm font-black text-blue-400">486,134+ HCA Observations</td>
+                        <td class="py-5 text-sm font-black text-blue-400">99,993 Trained Cardiac Cells (486,134 Source Atlas)</td>
                     </tr>
                     <tr>
                         <td class="py-5 text-sm font-black text-white">Prediction Fidelity</td>
                         <td class="py-5 text-sm text-slate-500">92.4% (R²)</td>
-                        <td class="py-5 text-sm font-black text-blue-400">99.8% Validated (R²)</td>
+                        <td class="py-5 text-sm font-black text-blue-400">R² not established at this level; LODO Pearson r = 0.4606 (MAE = 6.97 yr)</td>
                     </tr>
                     <tr>
                         <td class="py-5 text-sm font-black text-white">Oncogenic Safety</td>

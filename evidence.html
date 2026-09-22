@@ -200,7 +200,7 @@ nav, .nav-dock, #mob-nav {
         <div class="flex items-center gap-3">
             <div class="hidden lg:flex bg-slate-50 border border-slate-100 px-3 py-1.5 rounded-full items-center gap-2 scale-90">
                 <span class="w-1.5 h-1.5 bg-slate-400 rounded-full animate-pulse"></span>
-                <span class="text-[8px] font-black text-slate-400 uppercase tracking-widest text-center">LIVE ENSEMBLE FEED: 2.42M+ CELLS</span>
+                <span class="text-[8px] font-black text-slate-400 uppercase tracking-widest text-center">CARDIAC SPECIALIST ATLAS: 99,993 TRAINED CELLS (486,134 SOURCE)</span>
             </div>
             <button onclick="openLoginModal()" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-full text-[12px] font-black uppercase tracking-widest flex items-center gap-3 transition-all scale-90">Sign In</button>
             
@@ -238,7 +238,7 @@ nav, .nav-dock, #mob-nav {
         <!-- HCA live feed badge inside mobile drawer -->
         <div class="bg-slate-50 border border-slate-100 px-4 py-3 rounded-2xl flex items-center gap-3">
             <span class="w-2 h-2 bg-slate-400 rounded-full animate-pulse"></span>
-            <span class="text-[9px] font-bold text-slate-500 uppercase tracking-wider">LIVE ENSEMBLE FEED: 2.42M+ CELLS</span>
+            <span class="text-[9px] font-bold text-slate-500 uppercase tracking-wider">CARDIAC SPECIALIST ATLAS: 99,993 TRAINED CELLS (486,134 SOURCE)</span>
         </div>
     </div>
     
@@ -254,7 +254,7 @@ nav, .nav-dock, #mob-nav {
                 </div>
                 <div class="text-right">
                     <div class="text-[10px] font-black tracking-[0.4em] uppercase text-slate-400 mb-1">Nilus Lab Registry</div>
-                    <div class="text-xs font-black text-blue-600 font-semibold uppercase tracking-widest">v31.0 | Zenith v31.0 GOLD</div>
+                    <div class="text-xs font-black text-blue-600 font-semibold uppercase tracking-widest">v31.0 | Zenith v31.0 Research Release</div>
                 </div>
             </div>
             
@@ -263,7 +263,7 @@ nav, .nav-dock, #mob-nav {
             </h1>
             <p class="text-slate-500 max-w-3xl text-2xl leading-relaxed font-light">
                 Institutional-grade performance validation of the <strong class="text-slate-900">Zenith v31.0</strong> engine. 
-                Audited against the Human Cell Atlas (HCA) dataset (486k cells) and the Zenith Generalist dataset (1.94M cells), benchmarked for <strong class="text-blue-600 font-semibold">99.8% Fidelity</strong>.
+                Evaluated across the Litviňuková et al. cardiac source atlas (99,993 trained cells from 486,134 cells) and the 54-donor PERIHEART replication cohort (<strong class="text-blue-600 font-semibold">LODO Pearson r = 0.4606, MAE = 6.97 yr</strong>).
             </p>
         </header>
 
@@ -273,7 +273,7 @@ nav, .nav-dock, #mob-nav {
             <div class="text-blue-600 text-[10px] font-black uppercase tracking-[0.3em] mb-8">Manifold Fidelity (R²)</div>
             <div class="text-6xl font-black text-slate-900 mb-6">0.998</div> <!-- Manifold reconstruction fidelity R² (different metric from 0.942 cross-validated prediction accuracy) -->
             <div class="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden mb-8">
-                <div class="bg-blue-500 h-full w-[99.8%] shadow-[0_0_20px_rgba(13,148,136,0.3)]"></div>
+                <div class="bg-blue-500 h-full w-[46.1%] shadow-[0_0_20px_rgba(13,148,136,0.3)]" title="LODO Pearson r = 0.4606"></div>
             </div>
             <p class="text-[11px] text-slate-400 leading-relaxed font-medium uppercase tracking-wider">Verified against Institutional Ensemble Core (2,420,000+ Cells)</p>
         </div>
@@ -283,7 +283,7 @@ nav, .nav-dock, #mob-nav {
             <div class="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden mb-8">
                 <div class="bg-blue-600 h-full w-[99.2%] shadow-[0_0_20px_rgba(37,99,235,0.3)]"></div>
             </div>
-            <p class="text-[11px] text-slate-400 leading-relaxed font-medium uppercase tracking-wider">Deterministic CRC identification across v31.0 GOLD training cycles</p>
+            <p class="text-[11px] text-slate-400 leading-relaxed font-medium uppercase tracking-wider">Deterministic CRC identification across v31.0 training cycles</p>
         </div>
         <div class="card-elite">
             <div class="text-slate-400 text-[10px] font-black uppercase tracking-[0.3em] mb-8">Institutional Latency</div>
@@ -329,7 +329,7 @@ nav, .nav-dock, #mob-nav {
                         <td class="font-black text-slate-900 py-6 px-10">Identity Maintenance</td>
                         <td class="font-mono text-slate-400">88.4%</td>
                         <td class="font-mono text-slate-400">91.2%</td>
-                        <td class="font-mono text-blue-600 font-black">99.8%</td>
+                        <td class="font-mono text-blue-600 font-black">r = 0.4606 (LODO)</td>
                         <td class="text-blue-600 font-black">+8.6%</td>
                     </tr>
                     <tr class="row-hover">
@@ -508,8 +508,8 @@ nav, .nav-dock, #mob-nav {
             
             <div class="card-elite">
                 <span class="text-[9px] font-black text-blue-600 uppercase tracking-widest block mb-2">Module II / Multi-Omics</span>
-                <h3 class="text-xl font-black text-slate-900 mb-4">Zero-Shot Transformer Self-Attention</h3>
-                <p class="text-sm text-slate-500 mb-6 leading-relaxed">Tabular biological transformer query projection for zero-shot expression states:</p>
+                <h3 class="text-xl font-black text-slate-900 mb-4">scVI Conditional VAE Latent-Space Perturbation</h3>
+                <p class="text-sm text-slate-500 mb-6 leading-relaxed">Conditional variational autoencoder (scVI) latent-space vector projection for perturbed expression states:</p>
                 <div class="bg-slate-50 border border-slate-100 p-4 rounded-xl font-mono text-[9px] text-slate-600">
                     Attention(Q,K,V) = Softmax( (QK^T) / √d_k )V
                 </div>
