@@ -1,17 +1,17 @@
-# Zenith Ultra-V4: Generative High-Definition Foundation Model
+# Zenith v31.0: Single-Cell Variational Autoencoder & Transcriptomic Perturbation Platform
 
-Professional-grade biological foundation engine for cellular reprogramming and rejuvenation, utilizing Multi-Head Attention Transformers (Zenith Ultra) and 5,000-gene HD transcriptomic manifold visualization.
+Preclinical computational biology platform (Research Use Only) for modeling cellular reprogramming and transcriptomic trajectories using `scvi-tools` conditional variational autoencoders (scVI) across a 5,009-gene cardiac specialist manifold.
 
 ## 🚀 Overview
-Zenith Ultra-V4 is a Phase 4 high-fidelity foundation model for clinical digital twins. It integrates:
-- **Transformer Core**: ~285M parameter "Zenith Ultra" model for 5,000-gene HD regulatory dynamics.
-- **Biological Engine**: Real-time HD manifold projection benchmarked against 150,000 HCD observations.
-- **High-Fidelity Microscopy**: GPU-accelerated canvas rendering with sub-cellular detail.
-- **Autonomous Discovery**: Differentiable perturbation engine with Epigenetic Stability (ESI) benchmarking.
+Zenith v31.0 is an in silico hypothesis-generation and transcriptomic analysis workbench. It integrates:
+- **scVI Variational Autoencoder Core**: A **3,268,462-parameter** cardiac specialist scVI VAE (`2` hidden layers &times; `128` channels, `20` latent dimensions, `5,009` HVGs) and a **37,234,698-parameter** generalist foundation scVI VAE (`4` hidden layers &times; `1,024` channels, `64` latent dimensions, `5,858` HVGs).
+- **Single-Cell Training Atlases**: Cardiac specialist checkpoint trained on **99,993 cardiac cells** stratified from the **486,134-cell** Litviňuková et al. (2020) Human Cell Atlas cohort; generalist checkpoint registered on **1,962,128 single cells**.
+- **Multi-Donor Aging Clock Evaluation**: Ridge-regularized pseudobulk aging clock achieving **LODO Pearson $r = 0.4606$ ($p = 4.57 \times 10^{-4}$, MAE = $6.97\text{ yr}$)** across 54 uniform-chemistry PERIHEART human right atrial donors (`392,819` nuclei).
+- **In Silico Screening & Safety Gate**: Latent perturbation screening coupled with a 12-channel cardiomyocyte leaky integrate-and-fire electrophysiological simulation (`0 / 516` candidate cocktails passing the dual rejuvenation + safety gate; `NL-101` eliminated).
 
 ## 🛠️ Technology Stack
 - **Frontend**: HTML5, Vanilla JavaScript, CSS3 (Tailwind + Custom Effects), Three.js, Chart.js.
-- **Backend**: FastAPI (Python), PyTorch (Neural SDE), scvi-tools (HCA Integration).
+- **Backend**: FastAPI (Python), PyTorch, `scvi-tools` (Single-Cell Variational Inference).
 
 ## 🏃 Getting Started
 
