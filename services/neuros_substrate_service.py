@@ -94,30 +94,27 @@ class CardiacNeuralSubstrate(nn.Module):
     # Ion-channel genes that drive cardiac electrical activity.
     # These MUST be a subset of the 4000 HVG in the scVI model.
     ION_CHANNEL_GENES = [
-        "SCN5A",   # Na+ channel (Nav1.5) — depolarization
-        "KCNH2",   # K+ channel (hERG) — repolarization (LQT2)
-        "KCNQ1",   # K+ channel (Kv7.1) — LQT1
-        "KCNJ2",   # K+ channel (Kir2.1) — LQT7 (Andersen-Tawil)
-        "KCNJ11",  # K+ channel (Kir6.2) — SUR1 partner
-        "CACNA1C", # Ca2+ channel (Cav1.2) — LQT8 (Timothy)
-        "CACNB2",  # Ca2+ channel beta subunit
-        "HCN4",    # Funny current (If) — SA node pacemaker
-        "RYR2",    # Sarcoplasmic reticulum Ca2+ release — CPVT
-        "CASQ2",   # Calsequestrin — CPVT
-        "GJA5",    # Connexin 40 — atrial conduction
+        "SCN5A",   # Na+ channel (Nav1.5) — depolarization (ENSG00000183873)
+        "KCNH2",   # K+ channel (hERG) — repolarization (LQT2, ENSG00000055118)
+        "KCNQ1",   # K+ channel (Kv7.1) — LQT1 (ENSG00000053918)
+        "KCNJ2",   # K+ channel (Kir2.1) — LQT7 (ENSG00000123700)
+        "CACNA1C", # Ca2+ channel (Cav1.2) — LQT8 (ENSG00000151067)
+        "HCN4",    # Funny current (If) — SA node pacemaker (ENSG00000138622)
+        "RYR2",    # Sarcoplasmic reticulum Ca2+ release — CPVT (ENSG00000198626)
+        "KCNA5",   # Atrial Kv1.5 K+ channel (ENSG00000130037)
+        "KCND3",   # Ito Kv4.3 K+ channel (ENSG00000171385)
+        "KCNIP2",  # KChIP2 Ito accessory subunit (ENSG00000120049)
+        "SLC8A1",  # NCX1 Na+/Ca2+ exchanger (ENSG00000183023)
+        "GJA5",    # Connexin 40 — atrial conduction (ENSG00000265107)
         "GJA1",    # Connexin 43 — ventricular conduction
+        "KCNJ11",  # K+ channel (Kir6.2)
+        "CACNB2",  # Ca2+ channel beta subunit
+        "CASQ2",   # Calsequestrin
         "SCN1B",   # Na+ channel beta subunit
         "SCN3B",   # Na+ channel beta subunit
-        "ANK2",    # Ankyrin-B — LQT4
-        "AKAP9",   # Yotiao — LQT11
+        "ANK2",    # Ankyrin-B
+        "AKAP9",   # Yotiao
     ]
-
-    HEALTHY_BASELINES = {
-        "SCN5A": 3.0, "KCNH2": 3.5, "KCNQ1": 3.0, "KCNJ2": 2.5,
-        "KCNJ11": 2.5, "CACNA1C": 2.5, "CACNB2": 2.5, "HCN4": 3.5,
-        "RYR2": 3.0, "CASQ2": 3.0, "GJA5": 2.5, "GJA1": 3.0,
-        "SCN1B": 2.5, "SCN3B": 2.5, "ANK2": 2.5, "AKAP9": 2.5
-    }
 
     # Neural marker genes for the intrinsic cardiac nervous system.
     NEURAL_MARKER_GENES = [
@@ -204,24 +201,29 @@ class CardiacNeuralSubstrate(nn.Module):
         expression_vector: {gene_symbol: expression_level}
         intensity: scaling factor for the current injection
 
-        Genes not in ION_CHANNEL_GENES are ignored. Each gene maps to a
-        sub-population of neurons in the relevant cluster.
+        Raises ValueError if expression_vector is empty or contains zero resolved
+        ion-channel genes (silent fallback to HEALTHY_BASELINES removed).
         """
+        if not expression_vector or not any(float(expression_vector.get(g, 0.0)) > 0.0 for g in self.ION_CHANNEL_GENES):
+            raise ValueError(
+                "CardiacNeuralSubstrate.encode_ion_profile requires resolved ion-channel expression values; "
+                "hardcoded HEALTHY_BASELINES fallback has been removed."
+            )
         I = torch.zeros(self.n_total)
         # distribute genes across neurons evenly
         genes = self.ION_CHANNEL_GENES
         neurons_per_gene = max(1, self.n_total // len(genes))
         for i, gene in enumerate(genes):
-            level = expression_vector.get(gene, 0.0)
-            # If gene is missing from scVI vocab, use healthy baseline to prevent false LoF warnings
-            if level == 0.0 and gene in self.HEALTHY_BASELINES:
-                level = self.HEALTHY_BASELINES[gene]
-            current = float(level) * intensity / 10.0
+            level = float(expression_vector.get(gene, 0.0))
+            current = level * intensity / 10.0
             start = i * neurons_per_gene
             end = min(start + neurons_per_gene, self.n_total)
             I[start:end] = current
-        # add small baseline drive
-        I += torch.randn(self.n_total) * 0.2
+        # add deterministic baseline drive seeded from expression profile
+        profile_sig = ";".join(f"{k}:{float(expression_vector.get(k, 0.0)):.5f}" for k in sorted(genes))
+        det_seed = int(hashlib.sha256(profile_sig.encode()).hexdigest()[:8], 16)
+        g_noise = torch.Generator(device="cpu").manual_seed(det_seed)
+        I += torch.randn((self.n_total,), generator=g_noise) * 0.2
         return I
 
     # ------------------------------------------------------------------
@@ -239,6 +241,12 @@ class CardiacNeuralSubstrate(nn.Module):
           synchrony: population spike synchrony
           mean_v: mean membrane potential
         """
+        # Reset LIF state before each simulation so results depend solely on input I
+        self.lif.v.zero_()
+        self.lif.s.zero_()
+        self.lif.adapt.zero_()
+        self.lif.v_thresh.fill_(self.lif.v_thresh_base)
+        self.fire_rate.zero_()
         spikes_log = []
         for _ in range(steps):
             # synaptic input via scatter-add
@@ -311,11 +319,11 @@ class CardiacNeuralSubstrate(nn.Module):
 
     def audit_arrhythmia_risk(self, expression_vector: Dict[str, float]) -> Dict[str, Any]:
         """
-        Audits a reprogramming cocktail for arrhythmia risk.
-        Maps ion-channel gene expression to cardiac electrical stability.
+        Audits a reprogramming cocktail for ion-channel expression shifts.
+        Maps ion-channel gene expression to LIF spiking population dynamics.
         
         Returns:
-            - safety_classification: SAFE | WARNING | BLOCKED
+            - safety_classification: EXPLORATORY_NOMINAL | WARNING | BLOCKED
             - reason: Human-readable explanation
             - phi_hat: Integration score (higher = more stable)
             - synchrony: Population spike synchrony (extreme = dangerous)
@@ -341,8 +349,6 @@ class CardiacNeuralSubstrate(nn.Module):
                 is_risk = level > info["threshold"]
             else:
                 # K+ channels and HCN4 are risk when underexpressed (loss of function).
-                # We only trigger this if the gene is partially expressed (level > 0.0) but below threshold,
-                # preventing default zero-expression fibroblast states from blocking the audit.
                 is_risk = 0.0 < level < info["threshold"]
                 
             if is_risk:
@@ -362,22 +368,22 @@ class CardiacNeuralSubstrate(nn.Module):
         synchrony = result["synchrony"]
         active_fraction = result["active_fraction"]
         
-        # 3. Classify safety
+        # 3. Classify exploratory LIF dynamics (never claim clinical or wet-lab safety validation)
         if blacklist_flags:
             safety_class = "BLOCKED"
-            reason = f"Conduction Collapse: {len(blacklist_flags)} critical ion-channel gene(s) exceed safety threshold. Risk of {', '.join(f['risk'] for f in blacklist_flags)}."
+            reason = f"Ion-Channel Threshold Exceeded: {len(blacklist_flags)} critical ion-channel gene(s) exceed threshold ({', '.join(f['risk'] for f in blacklist_flags)})."
         elif synchrony > 0.6 or phi_hat < 0.001:
             safety_class = "BLOCKED"
-            reason = "Conduction Collapse: Action potential failure or severe reentry detected in substrate simulation."
+            reason = "Simulated LIF Instability: High population synchrony or low cluster integration in exploratory LIF substrate."
         elif synchrony > 0.4 or phi_hat < 0.003:
             safety_class = "WARNING"
-            reason = "Arrhythmia Risk: Partial conduction block detected. Dosage optimization recommended."
+            reason = "Elevated LIF Synchrony: Moderate synchrony shift detected in exploratory LIF substrate."
         elif active_fraction < 0.1:
             safety_class = "WARNING"
-            reason = "Low Substrate Activity: Insufficient neural engagement. Cocktail may be ineffective."
+            reason = "Low LIF Activity: Minimal neural population engagement in exploratory LIF substrate."
         else:
-            safety_class = "SAFE"
-            reason = "Stable Conduction: Normal ECG synchrony and integration. Cocktail approved for wet-lab validation."
+            safety_class = "EXPLORATORY_NOMINAL"
+            reason = "Exploratory LIF substrate dynamics within nominal bounds (uncalibrated research proxy; not a clinical ECG or wet-lab safety assay)."
         
         return {
             "safety_classification": safety_class,
