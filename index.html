@@ -4,18 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Zenith v31 | Cardiac Rejuvenation | Nilus Lab</title>
-    <meta name="description" content="Discover genes that reverse biological ageing. Zenith v31 uses a dual-model ensemble of 2.42M cells (1.94M Generalist + 486k Specialist) to identify pro-rejuvenation gene targets.">
+    <meta name="description" content="Discover genes associated with cellular reprogramming and rejuvenation. Zenith v31 uses a 486,134-cell cardiac single-cell atlas to screen exploratory gene targets in silico.">
     <meta name="keywords" content="ageing, gene discovery, single-cell genomics, scVI, rejuvenation, bioinformatics, Nilus Lab, Zenith, computational biology">
     <link rel="canonical" href="https://www.niluslab.com/">
     <meta property="og:title" content="Zenith v31 — Discover Genes That Reverse Cardiac Ageing">
-    <meta property="og:description" content="AI-powered gene discovery platform trained on a dual-model ensemble of 2.42M cells. Identify pro-rejuvenation targets backed by single-cell transcriptomic evidence.">
+    <meta property="og:description" content="In silico gene discovery platform utilizing single-cell transcriptomic reference atlases. Explore computational reprogramming targets for research use.">
     <meta property="og:image" content="https://www.niluslab.com/assets/og-preview.jpg">
     <meta property="og:url" content="https://www.niluslab.com/">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="Nilus Lab">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Zenith v31 — Cardiac Ageing Gene Discovery">
-    <meta name="twitter:description" content="Discover genes that reverse biological ageing using single-cell transcriptomics from a dual-model ensemble of 2.42M cells.">
+    <meta name="twitter:description" content="Explore in silico cellular reprogramming targets using single-cell transcriptomics from human cardiac reference atlases.">
 
     <!-- Inter font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1677,8 +1677,8 @@ nav, .nav-dock, #mob-nav {
             <div id="multiomics-predictor-panel" class="p-6 bg-white border border-slate-200 rounded-[24px] shadow-sm relative overflow-hidden animation-fade-in">
                 <div class="text-[11px] text-slate-800 font-bold uppercase tracking-wider mb-4 flex items-center gap-1.5">
                     <i data-lucide="sliders" class="w-3.5 h-3.5 text-slate-800"></i>
-                    Multi-Omics Perturbation Predictor (scGPT)
-                    <span class="ml-auto text-[9px] px-2.5 py-0.5 bg-slate-100 text-slate-800 border border-slate-200 rounded-full font-bold tracking-normal">Zero-Shot Mode</span>
+                    Transcriptomic Factor Weight Explorer (Heuristic)
+                    <span class="ml-auto text-[9px] px-2.5 py-0.5 bg-slate-100 text-slate-800 border border-slate-200 rounded-full font-bold tracking-normal">Illustrative Mode</span>
                 </div>
                 <!-- Dosages Sliders -->
                 <div class="grid grid-cols-2 gap-4 mb-4 bg-slate-50 p-4 rounded-2xl border border-slate-100">
@@ -2001,25 +2001,25 @@ nav, .nav-dock, #mob-nav {
                 <div id="clinical-metrics-card" class="mb-4 p-3.5 bg-slate-100/60 border border-slate-200/80 rounded-2xl animation-fade-in">
                     <div class="text-[7px] text-slate-800 font-black uppercase mb-2 tracking-widest flex items-center gap-1">
                         <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" class="text-slate-700"><circle cx="12" cy="8" r="7"/><path d="M8.21 13.89L7 23l5-3 5 3-1.21-9.12"/></svg>
-                        Clinical Trial Outcomes & Provenance (Harvard Genetic Studies)
+                        Illustrative Clock Shift Lookup (Heuristic Reference Only)
                     </div>
                     <div class="grid grid-cols-3 gap-2 text-center mb-2">
                         <div class="bg-white border border-slate-200/40 p-2 rounded-xl">
-                            <div class="text-[6px] text-slate-500 font-bold uppercase mb-0.5">DunedinPACE Rate</div>
+                            <div class="text-[6px] text-slate-500 font-bold uppercase mb-0.5">DunedinPACE Proxy</div>
                             <div id="pred-dunedin-pace" class="text-[10px] text-slate-800 font-mono font-black">1.000</div>
                         </div>
                         <div class="bg-white border border-slate-200/40 p-2 rounded-xl">
-                            <div class="text-[6px] text-slate-500 font-bold uppercase mb-0.5">Causal DamAge</div>
+                            <div class="text-[6px] text-slate-500 font-bold uppercase mb-0.5">DamAge Proxy</div>
                             <div id="pred-damage-shift" class="text-[10px] text-slate-800 font-mono font-black">0.00 Yrs</div>
                         </div>
                         <div class="bg-white border border-slate-200/40 p-2 rounded-xl">
-                            <div class="text-[6px] text-slate-500 font-bold uppercase mb-0.5">Causal AdaptAge</div>
+                            <div class="text-[6px] text-slate-500 font-bold uppercase mb-0.5">AdaptAge Proxy</div>
                             <div id="pred-adaptive-shift" class="text-[10px] text-slate-800 font-mono font-black">0.00 Yrs</div>
                         </div>
                     </div>
                     <div class="text-[7px] text-slate-800/70 font-medium italic leading-relaxed flex gap-1.5 items-start bg-white/50 p-1.5 rounded-lg border border-slate-100/30">
                         <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="text-slate-600 shrink-0 mt-0.5"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-                        <span id="pred-clinical-citation">Source: Adiv A. Johnson & Harvard Genetic Studies, Frontiers in Genetics, 2026. Systematic review of 41 human trials.</span>
+                        <span id="pred-clinical-citation">Note: Values above are illustrative UI slider/checkbox lookup heuristics and are not computed from or endorsed by external clinical trial authors.</span>
                     </div>
                 </div>
                 
@@ -2027,8 +2027,8 @@ nav, .nav-dock, #mob-nav {
                 <div class="space-y-2 mb-4 animation-fade-in">
                     <div class="text-[9px] text-slate-500 font-bold uppercase tracking-wider flex items-center gap-1.5">
                         <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="text-slate-700"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
-                        TIME-seq Epigenetic CpG Methylome Heatmap (100 Loci)
-                        <span class="ml-auto text-[8px] text-slate-800 bg-slate-100 px-1.5 py-0.5 rounded border border-slate-200 font-mono font-bold">Zenith v31 Engine</span>
+                        Illustrative Epigenetic Proxy Grid (100 Simulated Loci)
+                        <span class="ml-auto text-[8px] text-slate-800 bg-slate-100 px-1.5 py-0.5 rounded border border-slate-200 font-mono font-bold">Transcriptomic Proxy</span>
                     </div>
                     <div class="bg-slate-900 border border-slate-800 p-3 rounded-2xl">
                         <div id="cpg-heatmap-grid" class="grid grid-cols-10 gap-[2px] w-full aspect-video bg-slate-950 p-1.5 rounded-lg border border-slate-800/60 overflow-hidden">
@@ -2044,15 +2044,15 @@ nav, .nav-dock, #mob-nav {
                                 const hue = 142 + (271 - 142) * val;
                                 const sat = 70 + (80 - 70) * val;
                                 const light = 45;
-                                html += `<div class="w-full h-full rounded-[2px] border border-slate-950/20" style="background-color: hsl(${hue}, ${sat}%, ${light}%);" title="CpG Locus #${k+1}: ${val.toFixed(2)} methylation"></div>`;
+                                html += `<div class="w-full h-full rounded-[2px] border border-slate-950/20" style="background-color: hsl(${hue}, ${sat}%, ${light}%);" title="Simulated Locus #${k+1}: ${val.toFixed(2)}"></div>`;
                             }
                             grid.innerHTML = html;
                         })();
                         </script>
                         <div class="flex items-center justify-between text-[7px] text-slate-400 mt-2 font-mono uppercase tracking-widest px-0.5">
-                            <span>Youthful (0.0 Methylation)</span>
+                            <span>Youthful (0.0 Proxy)</span>
                             <div class="h-1.5 w-24 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 border border-slate-800"></div>
-                            <span>Aged (1.0 Methylation)</span>
+                            <span>Aged (1.0 Proxy)</span>
                         </div>
                     </div>
                 </div>
@@ -2067,12 +2067,12 @@ nav, .nav-dock, #mob-nav {
 
             </div>
 
-            <!-- LNP DELIVERY OPTIMIZER -->
+            <!-- LNP DELIVERY PARAMETER EXPLORER -->
             <div id="lnp-optimizer-panel" class="p-6 bg-white border border-slate-200 rounded-[24px] shadow-sm relative overflow-hidden animation-fade-in">
                 <div class="text-[11px] text-slate-800 font-bold uppercase tracking-wider mb-4 flex items-center gap-1.5">
                     <i data-lucide="package" class="w-3.5 h-3.5 text-slate-800"></i>
-                    mRNA-LNP Formulation Delivery Optimizer
-                    <span class="ml-auto text-[9px] px-2.5 py-0.5 bg-slate-100 text-slate-800 border border-slate-200 rounded-full font-bold tracking-normal font-sans">Encapsulation</span>
+                    Illustrative LNP Formulation Parameter Explorer
+                    <span class="ml-auto text-[9px] px-2.5 py-0.5 bg-slate-100 text-slate-800 border border-slate-200 rounded-full font-bold tracking-normal font-sans">Slider-Driven Heuristic</span>
                 </div>
                 <!-- LNP Parameter Sliders -->
                 <div class="grid grid-cols-2 gap-4 mb-4 bg-slate-50 p-4 rounded-2xl border border-slate-100">
@@ -2098,7 +2098,7 @@ nav, .nav-dock, #mob-nav {
                     </div>
                     <div class="col-span-2 flex items-center gap-2 mt-2 pt-2 border-t border-slate-200/60">
                         <input id="chk-lnp-active" type="checkbox" class="rounded text-slate-800 focus:ring-slate-500 h-3.5 w-3.5 cursor-pointer">
-                        <label for="chk-lnp-active" class="text-[9px] text-slate-500 font-bold uppercase tracking-wider cursor-pointer">Active Ligand Conjugation (Bypasses liver barrier)</label>
+                        <label for="chk-lnp-active" class="text-[9px] text-slate-500 font-bold uppercase tracking-wider cursor-pointer">Active Ligand Conjugation (Illustrative toggle)</label>
                     </div>
                     <div id="lnp-ligand-density-container" class="col-span-2 hidden transition-all duration-300">
                         <label class="text-[9px] text-slate-600 font-bold block mb-1.5 uppercase tracking-wider">Ligand Conjugation Density (%): <span id="val-lnp-ligand" class="text-slate-800 font-mono font-bold">2.5%</span></label>
@@ -2112,15 +2112,15 @@ nav, .nav-dock, #mob-nav {
                 <!-- LNP Target Tropism Metrics -->
                 <div class="grid grid-cols-3 gap-3 mb-4">
                     <div class="bg-slate-50 border border-slate-100 p-2.5 rounded-2xl text-center">
-                        <div class="text-[8px] text-slate-500 font-bold uppercase mb-1">Encapsulation %</div>
+                        <div class="text-[8px] text-slate-500 font-bold uppercase mb-1">Est. Encapsulation</div>
                         <div id="lnp-ee" class="text-xs text-slate-900 font-bold font-mono">--</div>
                     </div>
                     <div class="bg-slate-50 border border-slate-100 p-2.5 rounded-2xl text-center">
-                        <div class="text-[8px] text-slate-500 font-bold uppercase mb-1">Cardiac Tropism</div>
+                        <div class="text-[8px] text-slate-500 font-bold uppercase mb-1">Slider Partition</div>
                         <div id="lnp-tropism" class="text-xs text-slate-900 font-bold font-mono">--</div>
                     </div>
                     <div class="bg-slate-50 border border-slate-100 p-2.5 rounded-2xl text-center">
-                        <div class="text-[8px] text-slate-500 font-bold uppercase mb-1">Liver Seq.</div>
+                        <div class="text-[8px] text-slate-500 font-bold uppercase mb-1">Hepatic Clearance</div>
                         <div id="lnp-liver-seq" class="text-xs text-slate-900 font-bold font-mono">--</div>
                     </div>
                     <div class="bg-slate-50 border border-slate-100 p-2.5 rounded-2xl text-center">
@@ -2132,38 +2132,38 @@ nav, .nav-dock, #mob-nav {
                         <div id="lnp-half-life" class="text-xs text-slate-900 font-bold font-mono">--</div>
                     </div>
                     <div class="bg-slate-50 border border-slate-100 p-2.5 rounded-2xl text-center">
-                        <div class="text-[8px] text-slate-500 font-bold uppercase mb-1">Cytotoxicity</div>
+                        <div class="text-[8px] text-slate-500 font-bold uppercase mb-1">Cytotoxicity Est.</div>
                         <div id="lnp-toxicity" class="text-xs text-slate-900 font-bold font-mono">--</div>
                     </div>
                 </div>
                 <div class="flex items-center justify-between text-xs text-slate-500 font-sans mb-3">
-                    <span>Status: <span id="lnp-status-val" class="text-slate-800 font-bold uppercase">--</span></span>
-                    <span>Target: Heart (Cardiomyocytes)</span>
+                    <span>Mode: <span id="lnp-status-val" class="text-slate-800 font-bold uppercase">ILLUSTRATIVE_EXPLORER</span></span>
+                    <span>Note: Outputs depend on slider positions only, independent of gene cocktail.</span>
                 </div>
                 <!-- Biophysical Mechanism Banner -->
                 <div id="lnp-mechanism-banner" class="p-3 bg-slate-50 border border-slate-100 rounded-2xl text-[9px] text-slate-500 font-sans leading-relaxed mb-6">
-                    Adjust parameters or toggle active targeting to resolve the continuous endothelial barrier.
+                    Illustrative molar ratio calculator based on published lipid composition heuristics.
                 </div>
 
-                <!-- NEUROS-X 512-NODE CARDIAC SYNCYTIUM SAFETY AUDIT -->
+                <!-- NEUROS-X 512-NODE LIF NETWORK HEURISTIC -->
                 <div class="mt-6 p-6 bg-white rounded-3xl border border-slate-200/80 shadow-sm" style="font-family:'Inter', sans-serif;">
                     <div class="flex items-center gap-2 mb-3 text-xs font-bold text-slate-800">
                         <i data-lucide="activity" class="w-4 h-4 text-blue-600"></i>
-                        NEUROS-X Arrhythmia Safety Engine
-                        <span class="ml-auto text-[9px] px-2.5 py-0.5 bg-blue-50 text-blue-700 border border-blue-200 rounded-full font-bold">512-Node Cardiac Syncytium (ESI Conduction Substrate)</span>
+                        512-Node Leaky Integrate-and-Fire (LIF) Oscillator Heuristic
+                        <span class="ml-auto text-[9px] px-2.5 py-0.5 bg-slate-100 text-slate-700 border border-slate-200 rounded-full font-bold">Illustrative Network Toy Model</span>
                     </div>
                     <p class="text-[10px] text-slate-500 font-medium leading-relaxed mb-4">
-                        Audits candidate cocktails for in silico arrhythmia risks (Long QT, conduction block) across a 512-node cardiac syncytium substrate.
+                        <strong>Stated Limitation:</strong> Simulates a 512-node leaky integrate-and-fire (LIF) oscillator network with no action-potential morphology and no spatial cardiac tissue domain. Cannot assess clinical arrhythmia risk, Long QT, conduction block, or rotor formation.
                     </p>
                     <div class="text-center mb-3">
-                        <div id="safety-badge" class="inline-block text-[11px] font-extrabold font-mono px-3.5 py-1.5 rounded-lg bg-emerald-50 text-emerald-700 border border-emerald-200">
-                            VERIFIED SAFE — STABLE CONDUCTION (512-NODE CARDIAC SYNCYTIUM)
+                        <div id="safety-badge" class="inline-block text-[11px] font-extrabold font-mono px-3.5 py-1.5 rounded-lg bg-slate-100 text-slate-700 border border-slate-300">
+                            LIF OSCILLATOR STATE: SYNCHRONOUS (ILLUSTRATIVE HEURISTIC ONLY)
                         </div>
                     </div>
                     <canvas id="ecg-canvas" width="680" height="150" class="w-full h-[140px] bg-slate-950 rounded-xl block mx-auto border border-slate-800 mb-4"></canvas>
                     <div class="flex justify-center gap-3">
-                        <button onclick="runSafetyTest('SAFE')" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl shadow-sm transition-all">Simulate SAFE Cocktail</button>
-                        <button onclick="runSafetyTest('BLOCKED')" class="px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs rounded-xl shadow-sm transition-all">Simulate BLOCKED Cocktail</button>
+                        <button onclick="runSafetyTest('SAFE')" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl shadow-sm transition-all">Simulate Synchronous State</button>
+                        <button onclick="runSafetyTest('BLOCKED')" class="px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs rounded-xl shadow-sm transition-all">Simulate Desynchronized State</button>
                     </div>
                 </div>
 
@@ -2172,7 +2172,7 @@ nav, .nav-dock, #mob-nav {
 
         <!-- Footer -->
         <div style="margin-top:40px;text-align:center;font-size:8px;color:#bdc1c6;width:100%;max-width:720px;">
-            Zenith v31.0 &nbsp;·&nbsp; ~2.42M Cells (1.94M Generalist + 486k Specialist) &nbsp;·&nbsp; Research Use Only
+            Zenith v31.0 &nbsp;·&nbsp; 486,134-Cell Specialist Model (878,953 Cells in Reference Atlases) &nbsp;·&nbsp; Research Use Only
         </div>
     </div>
 </div>
@@ -3210,7 +3210,7 @@ nav, .nav-dock, #mob-nav {
                 <div id="main-viewport-2d" class="relative w-full h-full overflow-hidden">
                     <canvas id="canvas" class="w-full h-full block"></canvas>
 
-                    <!-- COMPUTE MODE CONTROLS (Problem 9 & Phase 4 Fix) -->
+                    <!-- COMPUTE MODE CONTROLS -->
                     <div class="absolute bottom-6 left-6 flex items-center gap-2 z-50">
                         <button id="compute-mode-status" onclick="BiosimBridge.toggleComputeMode()"
                             class="px-3 py-1.5 bg-black/80 border border-blue-500/30 rounded backdrop-blur-md flex items-center gap-2 group hover:bg-blue-500/10 transition-all"
@@ -3633,7 +3633,7 @@ nav, .nav-dock, #mob-nav {
                             ✦ GPT
                         </button>
                     </div>
-                    <span id="mode-badge" style="flex:1;font-size:7px;color:#4f46e5;font-weight:700;opacity:0.7;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">83 donors · 2.42M cells · 5,009 genes</span>
+                    <span id="mode-badge" style="flex:1;font-size:7px;color:#4f46e5;font-weight:700;opacity:0.7;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">14 donors · 486k cells · 5,009 genes</span>
                     <button id="btn-discover"
                         onclick="window._discoveryMode=(document.getElementById('chip-real').getAttribute('data-active')?'real':'gpt');BiosimBridge.discoverHybridProtocol(this);"
                         style="background:linear-gradient(135deg,#4f46e5,#2563eb);color:#fff;border:none;padding:6px 12px;border-radius:7px;font-size:9px;font-weight:900;cursor:pointer;display:flex;align-items:center;gap:4px;box-shadow:0 2px 10px rgba(79,70,229,0.4);flex-shrink:0;white-space:nowrap;">
@@ -4138,7 +4138,7 @@ nav, .nav-dock, #mob-nav {
     </div>
     <script src="js/script.js?v=30.0.3"></script>
 
-    <!-- v31.0 GOLD VISION BRIDGE OVERLAY -->
+    <!-- v31.0 VISION BRIDGE OVERLAY -->
     <div id="vision-overlay"
         class="fixed inset-0 bg-black/80 backdrop-blur-md z-[2000] hidden flex items-center justify-center">
         <div
@@ -4166,9 +4166,9 @@ nav, .nav-dock, #mob-nav {
 
                         class="text-blue-600">Zenith v31.1</span></h1>
 
-                <div class="text-[10px] text-slate-400 font-black tracking-[0.2em] uppercase">Virtual Clinical Trial
+                <div class="text-[10px] text-slate-400 font-black tracking-[0.2em] uppercase">In Silico Discovery
 
-                    Platform | 2.42M-Cell Ensemble Manifold</div>
+                    Platform | 486k-Cell Latent Manifold</div>
 
 
 
@@ -4400,7 +4400,7 @@ nav, .nav-dock, #mob-nav {
 
             <div class="text-xs text-slate-500 font-mono">
 
-                *Delta Analysis computed via 2.42M-Cell Ensemble Manifold Divergence
+                *Delta Analysis computed via 486k-Cell Latent Manifold Divergence
 
             </div>
 
@@ -6139,8 +6139,8 @@ async function runDiscovery() {
                         <div style="display:flex;gap:12px;flex-wrap:wrap;">
                             <button onclick="window.open('zenith_scientific_paper.html', '_blank')" style="background:#0284c7;border:1px solid #0284c7;color:#ffffff;font-size:14px;font-weight:600;padding:10px 20px;border-radius:10px;cursor:pointer;transition:all 0.2s;box-shadow:0 4px 6px -1px rgba(2,132,199,0.15);" onmouseover="this.style.background='#0369a1';this.style.transform='translateY(-2px)';" onmouseout="this.style.background='#0284c7';this.style.transform='translateY(0)';">Read Paper</button>
                             <button onclick="downloadResultCSV()" style="background:#ffffff;border:1px solid #cbd5e1;color:#1e293b;font-size:14px;font-weight:600;padding:10px 18px;border-radius:10px;cursor:pointer;transition:all 0.2s;box-shadow:0 1px 2px rgba(0,0,0,0.05);" onmouseover="this.style.background='#f8fafc';this.style.borderColor='#94a3b8';" onmouseout="this.style.background='#ffffff';this.style.borderColor='#cbd5e1';">Export CSV</button>
-                            <button onclick="downloadOpentronsScript()" style="background:#ffffff;border:1px solid #d97706;color:#d97706;font-size:14px;font-weight:600;padding:10px 18px;border-radius:10px;cursor:pointer;transition:all 0.2s;box-shadow:0 1px 2px rgba(0,0,0,0.05);" onmouseover="this.style.background='#fffbeb';" onmouseout="this.style.background='#ffffff';">Export OT-2 Script</button>
-                            <button onclick="printClinicalDossier()" style="background:#ffffff;border:1px solid #0284c7;color:#0284c7;font-size:14px;font-weight:600;padding:10px 18px;border-radius:10px;cursor:pointer;transition:all 0.2s;box-shadow:0 1px 2px rgba(0,0,0,0.05);" onmouseover="this.style.background='#f0f9ff';" onmouseout="this.style.background='#ffffff';">Print Wet-Lab Dossier</button>
+                            <button disabled title="Disabled pending wet-lab validation" style="background:#f1f5f9;border:1px solid #cbd5e1;color:#94a3b8;font-size:14px;font-weight:600;padding:10px 18px;border-radius:10px;cursor:not-allowed;">Export OT-2 Script (Disabled)</button>
+                            <button disabled title="Disabled pending wet-lab validation" style="background:#f1f5f9;border:1px solid #cbd5e1;color:#94a3b8;font-size:14px;font-weight:600;padding:10px 18px;border-radius:10px;cursor:not-allowed;">Print Wet-Lab Dossier (Disabled)</button>
                             <button onclick="showLnpCalculatorModal()" style="background:#ffffff;border:1px solid #16a34a;color:#15803d;font-size:14px;font-weight:600;padding:10px 18px;border-radius:10px;cursor:pointer;transition:all 0.2s;box-shadow:0 1px 2px rgba(0,0,0,0.05);" onmouseover="this.style.background='#f0fdf4';" onmouseout="this.style.background='#ffffff';">LNP Formulation</button>
                             <button onclick="downloadResultJSON()" style="background:#ffffff;border:1px solid #cbd5e1;color:#334155;font-size:14px;font-weight:600;padding:10px 18px;border-radius:10px;cursor:pointer;transition:all 0.2s;box-shadow:0 1px 2px rgba(0,0,0,0.05);" onmouseover="this.style.background='#f8fafc';this.style.borderColor='#94a3b8';" onmouseout="this.style.background='#ffffff';this.style.borderColor='#cbd5e1';">Export JSON</button>
                             <button onclick="BiosimBridge.sendToBoltzComplex()" style="background:#7c3aed;border:1px solid #7c3aed;color:#ffffff;font-size:14px;font-weight:600;padding:10px 22px;border-radius:10px;cursor:pointer;transition:all 0.2s;box-shadow:0 4px 6px -1px rgba(124,58,237,0.15);" onmouseover="this.style.background='#6d28d9';this.style.transform='translateY(-2px)';" onmouseout="this.style.background='#7c3aed';this.style.transform='translateY(0)';">Fold Complex (Boltz)</button>
@@ -6549,149 +6549,11 @@ window.switchMainView = function(mode) {
 };
 
 window.printClinicalDossier = function() {
-    if (!window._lastResult) {
-        alert('Please run a discovery first.');
-        return;
-    }
-    const res = window._lastResult;
-    const printWin = window.open('', '_blank');
-    const proList = (res.pro || []).map(g => `<li><strong>${g.gene}</strong> (r = ${g.correlation_with_youth ? g.correlation_with_youth.toFixed(3) : '0.99'})</li>`).join('');
-    const safetyAudit = res.arrhythmia_safety ? res.arrhythmia_safety.classification : 'SAFE';
-    
-    printWin.document.write(`
-        <!DOCTYPE html>
-        <html>
-        <head>
-            <title>Zenith Wet-Lab Validation Dossier</title>
-            <style>
-                body { font-family: 'Helvetica Neue', Arial, sans-serif; padding: 40px; color: #0f172a; line-height: 1.6; }
-                h1 { font-size: 24px; color: #1e3a8a; border-bottom: 2px solid #3b82f6; padding-bottom: 8px; }
-                .badge { display: inline-block; padding: 4px 12px; background: #22c55e; color: white; border-radius: 4px; font-weight: bold; }
-                .section { margin-bottom: 24px; background: #f8fafc; padding: 20px; border-radius: 8px; border: 1px solid #e2e8f0; }
-                table { width: 100%; border-collapse: collapse; margin-top: 12px; }
-                th, td { border: 1px solid #cbd5e1; padding: 8px 12px; text-align: left; }
-                th { background: #f1f5f9; }
-            </style>
-        <style>
-/* Guarantee Horizontal Navbar Layout on Mobile & Desktop */
-nav, .nav-dock, #mob-nav {
-    flex-direction: row !important;
-    justify-content: space-between !important;
-    align-items: center !important;
-}
-
-@media (max-width: 1024px) {
-    nav, .nav-dock {
-        flex-direction: row !important;
-        justify-content: space-between !important;
-        align-items: center !important;
-        padding: 0.75rem 1.25rem !important;
-    }
-}
-</style>
-<style>
-/* Executive Navbar Logo Alignment & Responsive Sizing */
-.nav-logo-responsive {
-    height: 38px !important;
-    width: auto !important;
-    max-height: 38px !important;
-    object-fit: contain;
-    display: block;
-    transform: translateY(-3px);
-    transition: opacity 0.2s ease, transform 0.2s ease;
-}
-
-.nav-logo-responsive:hover {
-    opacity: 0.85;
-}
-
-@media (max-width: 768px) {
-    .nav-logo-responsive {
-        height: 32px !important;
-        max-height: 32px !important;
-        transform: translateY(-2px);
-    }
-}
-</style>
-
-
-
-</head>
-        <body>
-            <h1>Nilus Lab Zenith — Wet-Lab Biosafety & Clinical Validation Dossier</h1>
-            <p><strong>Query:</strong> ${res.query || 'Epigenetic Rejuvenation'}</p>
-            <p><strong>Cell Lineage Cohort:</strong> ${res.cell_type_label || 'All Cardiac Cells'}</p>
-            
-            <div class="section">
-                <h2>1. Biological Age Rejuvenation Target</h2>
-                <p><strong>Transcriptomic Age Reversal (BiT Age Clock Δ):</strong> −${res.age_delta_years ? Math.abs(res.age_delta_years).toFixed(1) : '13.0'} Years</p>
-                <p><strong>Inferred Epigenetic Potential (DNAm Horvath Proxy):</strong> −${res.age_delta_years ? Math.abs(res.age_delta_years).toFixed(1) : '13.0'} Years <span style="font-size:11px;color:#64748b;">(Target for orthogonal TIME-seq bisulfite validation)</span></p>
-                <p><strong>scVI Manifold Dimensions:</strong> 5,009 Genes across 20-dimensional Latent Space</p>
-                <p><strong>Single-Cell Corpus:</strong> 2.42M Cardiac Cells (Human Cell Atlas & CELLxGENE)</p>
-            </div>
-
-            <div class="section">
-                <h2>2. In Silico Arrhythmia Risk Audit</h2>
-                <p><strong>Classification Verdict:</strong> <span class="badge">${safetyAudit}</span></p>
-                <p><strong>Substrate Model:</strong> 512-Node Cardiac Syncytium (ESI Conduction Substrate) across 16 Small-World Network Clusters</p>
-                <p><strong>Conduction Status:</strong> Normal ECG synchrony and action potential integration.</p>
-            </div>
-
-            <div class="section">
-                <h2>3. Recommended LNP Delivery Formulation</h2>
-                <table>
-                    <tr><th>Lipid Component</th><th>Target Molar %</th><th>Function</th></tr>
-                    <tr><td>Ionizable Lipid (DLin-MC3-DMA / SM-102)</td><td>50.0%</td><td>Endosomal Escape & Payload Release</td></tr>
-                    <tr><td>Helper Lipid (DSPC)</td><td>10.0%</td><td>Bilayer Structure & Stability</td></tr>
-                    <tr><td>Sterol (Cholesterol)</td><td>38.5%</td><td>Structural Rigidity</td></tr>
-                    <tr><td>PEG Lipid (DMG-PEG2000)</td><td>1.5%</td><td>Steric Stabilization & Anti-Aggregation</td></tr>
-                </table>
-            </div>
-
-            <div class="section">
-                <h2>4. Pro-Rejuvenation Candidate Gene Targets</h2>
-                <ul>${proList}</ul>
-            </div>
-            
-            \x3Cscript\x3Ewindow.onload = function() { window.print(); };\x3C/script\x3E
-        
-
-
-</body>
-        </html>
-    `);
-    printWin.document.close();
+    alert('Wet-Lab Validation Dossier export is disabled until underlying predictions are wet-lab validated.');
 };
 
 window.downloadOpentronsScript = async function() {
-    if (!window._lastResult) {
-        alert('Please run a discovery first.');
-        return;
-    }
-    const genes = (window._lastResult.pro || []).map(g => g.gene);
-    try {
-        const res = await fetch('/api/v2/robotics/opentrons', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({ genes: genes.length ? genes : ["SIRT1", "SIRT6", "PRKN", "PINK1"] })
-        });
-        const data = await res.json();
-        const blob = new Blob([data.script], { type: 'text/x-python;charset=utf-8' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = data.filename || `zenith_opentrons_${Date.now()}.py`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-        if (window.BiosimUI && typeof window.BiosimUI.notify === 'function') {
-            window.BiosimUI.notify('OT-2 SCRIPT EXPORTED', 'Opentrons Python script downloaded!', 'suc');
-        }
-    } catch (e) {
-        console.error("Opentrons script generation failed", e);
-        alert('Failed to generate Opentrons script.');
-    }
+    alert('Opentrons OT-2 script export is disabled until underlying predictions are wet-lab validated.');
 };
 
 window.showLnpCalculatorModal = async function() {
@@ -6881,7 +6743,7 @@ function plotResultECG(ecgData) {
 
         <div class="flex items-center gap-4">
 
-            <span class="validator-badge">V30.1 GOLD VALIDATED</span>
+            <span class="validator-badge">V30.1 IN SILICO RESEARCH</span>
 
             <span class="sde-formula">dX_t = f(X_t, t)dt + g(X_t, t)dW_t | PDB Structural Authority v1.0 | GRN Inference active</span>
 
@@ -6889,7 +6751,7 @@ function plotResultECG(ecgData) {
 
         <div>
 
-            &copy; 2026 NILUS LAB | PROPRIETARY RESEARCH INFRASTRUCTURE | CLINICAL SAFETY AUDIT v33.4 | <a href="legal.html#boltz-terms" style="text-decoration:underline;color:#a5b4fc;">ZenithFold Output Terms</a>
+            &copy; 2026 NILUS LAB | PROPRIETARY RESEARCH INFRASTRUCTURE | IN SILICO DISCOVERY v33.4 | <a href="legal.html#boltz-terms" style="text-decoration:underline;color:#a5b4fc;">ZenithFold Output Terms</a>
 
         </div>
 
