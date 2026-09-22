@@ -7,12 +7,10 @@ class DummyModel:
         import numpy as _np
         if hasattr(self, 'coef_') and X.shape[1] == len(self.coef_):
             return _np.dot(X, self.coef_) + self.intercept_
-        # Deterministically return young age 45.6 or aged 57.5 based on centroid mean
-        # to yield exactly a 11.9 years age delta
-        if _np.mean(X) < -0.02:
-            return _np.array([45.6])
-        else:
-            return _np.array([57.5])
+        raise ValueError(
+            f"Age clock dimension mismatch (model coef_ len={len(getattr(self, 'coef_', []))}, "
+            f"input shape={getattr(X, 'shape', None)}): not yet validated for 20-D latent centroids."
+        )
 
 import __main__
 __main__.DummyModel = DummyModel
@@ -7241,13 +7239,11 @@ async def run_real_discovery(request: Request):
         pro_genes = ip_data.get("pro_rejuvenation_genes", [])
         aging_genes = ip_data.get("aging_marker_genes", [])
 
-    # Real age delta: difference in age clock score between young and aged centroid
-    age_delta = None
+    # Age delta across centroids: models/age_clock.pkl has 4,908 gene features vs 20-D scVI centroid
+    age_delta = "not yet validated"
     clock_path = os.path.join(os.path.dirname(__file__), "models", "age_clock.pkl")
     centroids_path = os.path.join(os.path.dirname(__file__), "models", "real_centroids.json")
-    if ct_data and ct_data.get("age_delta_years") is not None:
-        age_delta = ct_data.get("age_delta_years")
-    elif os.path.exists(clock_path) and os.path.exists(centroids_path):
+    if os.path.exists(clock_path) and os.path.exists(centroids_path):
         try:
             import pickle, numpy as _np
             with open(clock_path, "rb") as f:
@@ -7257,10 +7253,10 @@ async def run_real_discovery(request: Request):
                 c = json.load(f)
             young_v = _np.array(c["young"]["centroid"]).reshape(1, -1)
             aged_v  = _np.array(c["aged"]["centroid"]).reshape(1, -1)
-            age_young = float(clock.predict(young_v)[0])
-            age_aged  = float(clock.predict(aged_v)[0])
-            age_delta = round(age_aged - age_young, 2)  # how many years separate them
-            print(f"[RealDiscovery] Clock: aged={age_aged:.1f}y, young={age_young:.1f}y, delta={age_delta:.2f}y")
+            if hasattr(clock, "coef_") and young_v.shape[1] == len(clock.coef_):
+                age_young = float(clock.predict(young_v)[0])
+                age_aged  = float(clock.predict(aged_v)[0])
+                age_delta = round(age_aged - age_young, 2)
         except Exception as e:
             print(f"[RealDiscovery] Clock error: {e}")
 
@@ -7270,7 +7266,7 @@ async def run_real_discovery(request: Request):
         "source": "Litvinukova et al., Nature 2020",
         "gpt_used": False,
         "real_age_delta_years": age_delta,
-        "age_delta_note": "Computed from scVI latent centroids via real ElasticNet age clock",
+        "age_delta_note": "not yet validated (models/age_clock.pkl has 4,908 features vs 20-D scVI centroid)",
         "top_rejuvenation_genes": [
             {
                 "gene": g.get("gene_symbol", g["gene"]),
@@ -7579,9 +7575,8 @@ async def run_gpt_discovery(request: Request):
         gene_name = g.get("gene", "")
         g["pubmed_url"] = f"https://pubmed.ncbi.nlm.nih.gov/?term={gene_name}+cardiac+aging+rejuvenation"
 
-    # â”€â”€ Step 6: Compute real age delta from trained clock â”€â”€â”€â”€â”€â”€â”€â”€
-    import random
-    age_delta = 11.9  # validated cohort mean fallback
+    # ── Step 6: Age clock evaluation (models/age_clock.pkl has 4,908 features vs 20-D centroid) ──
+    age_delta = "not yet validated"
     try:
         centroids_path = os.path.join(os.path.dirname(__file__), "models", "real_centroids.json")
         clock_path_ad = os.path.join(os.path.dirname(__file__), "models", "age_clock.pkl")
@@ -7594,21 +7589,19 @@ async def run_gpt_discovery(request: Request):
             clock = pkg["model"]
             young_v = _np.array(ct["young"]["centroid"]).reshape(1, -1)
             aged_v = _np.array(ct["aged"]["centroid"]).reshape(1, -1)
-            age_delta = round(float(clock.predict(aged_v)[0]) - float(clock.predict(young_v)[0]), 1)
+            if hasattr(clock, "coef_") and young_v.shape[1] == len(clock.coef_):
+                age_delta = round(float(clock.predict(aged_v)[0]) - float(clock.predict(young_v)[0]), 1)
     except Exception as e:
         print(f"[GPT-Discovery] Age clock error: {e}")
 
-    # â”€â”€ Build final response â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-    # Use cell-type-specific age delta if available
-    if cell_type_age_delta is not None:
-        age_delta = cell_type_age_delta
-
+    # ── Build final response ─────────────────────────────────────
     result = {
         "genes": refined.get("genes", []),
         "summary": refined.get("summary", ""),
         "query_interpretation": refined.get("query_interpretation", ""),
         "refinement_notes": refinement_notes,
         "real_age_delta_years": age_delta,
+        "age_delta_status": "not yet validated",
         "tournament_confidence": tournament_confidence,
         "judge_reasoning": judge_reasoning,
         "rounds_completed": rounds_completed,
