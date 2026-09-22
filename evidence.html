@@ -270,20 +270,20 @@ nav, .nav-dock, #mob-nav {
     <!-- Top Key Metrics -->
     <div class="grid md:grid-cols-3 gap-10 mb-32">
         <div class="card-elite">
-            <div class="text-blue-600 text-[10px] font-black uppercase tracking-[0.3em] mb-8">Manifold Fidelity (R²)</div>
-            <div class="text-6xl font-black text-slate-900 mb-6">0.998</div> <!-- Manifold reconstruction fidelity R² (different metric from 0.942 cross-validated prediction accuracy) -->
+            <div class="text-blue-600 text-[10px] font-black uppercase tracking-[0.3em] mb-8">LODO Age-Clock Pearson r</div>
+            <div class="text-6xl font-black text-slate-900 mb-6">0.46</div>
             <div class="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden mb-8">
                 <div class="bg-blue-500 h-full w-[46.1%] shadow-[0_0_20px_rgba(13,148,136,0.3)]" title="LODO Pearson r = 0.4606"></div>
             </div>
-            <p class="text-[11px] text-slate-400 leading-relaxed font-medium uppercase tracking-wider">Verified against Institutional Ensemble Core (2,420,000+ Cells)</p>
+            <p class="text-[11px] text-slate-400 leading-relaxed font-medium uppercase tracking-wider">Leave-One-Donor-Out cross-validation across 54 PERIHEART donors (MAE = 6.97 yr, p = 4.57×10⁻⁴)</p>
         </div>
         <div class="card-elite">
-            <div class="text-blue-600 font-semibold text-[10px] font-black uppercase tracking-[0.3em] mb-8">Replication Stability</div>
-            <div class="text-6xl font-black text-slate-900 mb-6">99.2%</div>
+            <div class="text-blue-600 font-semibold text-[10px] font-black uppercase tracking-[0.3em] mb-8">Cross-Cohort Replication</div>
+            <div class="text-4xl font-black text-slate-900 mb-6">At / Below Chance</div>
             <div class="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden mb-8">
-                <div class="bg-blue-600 h-full w-[99.2%] shadow-[0_0_20px_rgba(37,99,235,0.3)]"></div>
+                <div class="bg-amber-500 h-full w-[15%] shadow-[0_0_20px_rgba(245,158,11,0.3)]"></div>
             </div>
-            <p class="text-[11px] text-slate-400 leading-relaxed font-medium uppercase tracking-wider">Deterministic CRC identification across v31.0 training cycles</p>
+            <p class="text-[11px] text-slate-400 leading-relaxed font-medium uppercase tracking-wider">Lit→PERI top-100 gene overlap: r = −0.42 (vCM), −0.19 (atrial CM), −0.23 (fibroblast) — not yet replicated</p>
         </div>
         <div class="card-elite">
             <div class="text-slate-400 text-[10px] font-black uppercase tracking-[0.3em] mb-8">Institutional Latency</div>
@@ -293,56 +293,9 @@ nav, .nav-dock, #mob-nav {
         </div>
     </div>
 
-    <!-- Comparative Benchmarks -->
-    <section class="mb-32">
-        <div class="flex items-center justify-between mb-12 border-b-2 border-slate-100 pb-8">
-            <h2 class="text-4xl font-black tracking-tight text-slate-900">Technical Performance Benchmarks</h2>
-            <span class="text-[10px] text-slate-400 uppercase font-black tracking-[0.4em]">Audit Date: Q1 2026</span>
-        </div>
-        <div class="card-elite overflow-hidden !p-0">
-            <table class="benchmark-table">
-                <thead class="bg-slate-800/20/50">
-                    <tr>
-                        <th>Metric Dimension</th>
-                        <th>scVI (Baseline)</th>
-                        <th>CellOracle</th>
-                        <th>Zenith v31.0</th>
-                        <th>Performance Gain</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-slate-100">
-                    <tr class="row-hover">
-                        <td class="font-black text-slate-900 py-6 px-10">Trajectory RMSE</td>
-                        <td class="font-mono text-slate-400">0.142</td>
-                        <td class="font-mono text-slate-400">0.118</td>
-                        <td class="font-mono text-blue-600 font-black">0.051</td>
-                        <td class="text-blue-600 font-black">−64.1%</td>
-                    </tr>
-                    <tr class="row-hover">
-                        <td class="font-black text-slate-900 py-6 px-10">Latent Entropy Loss</td>
-                        <td class="font-mono text-slate-400">0.312</td>
-                        <td class="font-mono text-slate-400">0.500</td>
-                        <td class="font-mono text-blue-600 font-black">0.084</td>
-                        <td class="text-blue-600 font-black">−70.5%</td>
-                    </tr>
-                    <tr class="row-hover">
-                        <td class="font-black text-slate-900 py-6 px-10">Identity Maintenance</td>
-                        <td class="font-mono text-slate-400">88.4%</td>
-                        <td class="font-mono text-slate-400">91.2%</td>
-                        <td class="font-mono text-blue-600 font-black">r = 0.4606 (LODO)</td>
-                        <td class="text-blue-600 font-black">+8.6%</td>
-                    </tr>
-                    <tr class="row-hover">
-                        <td class="font-black text-slate-900 py-6 px-10">State Prediction Accuracy</td>
-                        <td class="font-mono text-slate-400">79.2%</td>
-                        <td class="font-mono text-slate-400">84.5%</td>
-                        <td class="font-mono text-blue-600 font-black">99.1%</td>
-                        <td class="text-blue-600 font-black">+14.6%</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </section>
+
+    <!-- Comparative Benchmarks section removed: no head-to-head scVI vs CellOracle vs Zenith study was conducted -->
+
 
     <!-- Dataset Provenance -->
     <div class="grid md:grid-cols-2 gap-12 mb-32">
@@ -444,12 +397,12 @@ nav, .nav-dock, #mob-nav {
                     <h4 class="text-xl font-bold text-white mb-6 uppercase tracking-wider">Metrics</h4>
                     <ul class="space-y-6">
                         <li class="flex justify-between border-b border-white/5 pb-4">
-                            <span class="text-slate-500 font-bold uppercase text-[10px] tracking-widest">R² Accuracy</span>
-                            <span class="text-slate-800 font-mono">0.942</span> <!-- Cross-validated prediction accuracy (different metric from 0.998 manifold reconstruction fidelity) -->
+                            <span class="text-slate-500 font-bold uppercase text-[10px] tracking-widest">LODO Pearson r</span>
+                            <span class="text-slate-800 font-mono">0.4606</span>
                         </li>
                         <li class="flex justify-between border-b border-white/5 pb-4">
                             <span class="text-slate-500 font-bold uppercase text-[10px] tracking-widest">Lineage Retention</span>
-                            <span class="text-slate-800 font-mono">99.85%</span>
+                            <span class="text-slate-400 font-mono text-sm">Not yet measured</span>
                         </li>
                     </ul>
                 </div>
@@ -458,11 +411,11 @@ nav, .nav-dock, #mob-nav {
                     <ul class="space-y-6">
                         <li class="flex justify-between border-b border-white/5 pb-4">
                             <span class="text-slate-500 font-bold uppercase text-[10px] tracking-widest">Mutational Risk</span>
-                            <span class="text-slate-800 font-mono">< 0.04%</span>
+                            <span class="text-slate-400 font-mono text-sm">Not yet measured</span>
                         </li>
                         <li class="flex justify-between border-b border-white/5 pb-4">
                             <span class="text-slate-500 font-bold uppercase text-[10px] tracking-widest">Stability (δ)</span>
-                            <span class="text-slate-800 font-mono">PASSED</span>
+                            <span class="text-slate-400 font-mono text-sm">Not yet measured</span>
                         </li>
                     </ul>
                 </div>
