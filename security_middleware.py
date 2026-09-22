@@ -63,14 +63,16 @@ class CSRFMiddleware(BaseHTTPMiddleware):
         api_key_paths = [
             "/simulate_step", "/discover_protocol", "/discover_hybrid", "/impute", 
             "/get_expert_reasoning", "/send_email", "/api/simulation/config", "/run_virtual_trial",
-            "/api/boltz", "/api/pae", "/api/compare", "/api/interfaces", "/api/qc", "/api/ensemble"
+            "/api/boltz", "/api/pae", "/api/compare", "/api/interfaces", "/api/qc", "/api/ensemble",
+            "/partial-reprogramming", "/generate_opentrons_protocol", "/discover_protocol_v1",
+            "/chat_proxy", "/generate_report", "/analyze_image", "/structure/fold"
         ]
         if (
             request.url.path in api_key_paths 
-            or request.url.path.startswith("/api/v1/") 
-            or request.url.path.startswith("/api/v2/") 
+            or request.url.path.startswith("/api/") 
+            or request.url.path.startswith("/v1/") 
             or request.url.path.startswith("/oauth/")
-            or request.url.path.startswith("/api/boltz")
+            or request.url.path.startswith("/chatgpt/")
         ):
             return await call_next(request)
         

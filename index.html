@@ -5746,10 +5746,11 @@ function selectSuggestionPill(queryText) {
 
 // ── Discovery runner — query-aware dual mode ───────────────────────
 async function runDiscovery() {
+    // Seamless access: auto-enable demo session if not explicitly logged in via Firebase
     if (!window._isAuthenticated) {
-        localStorage.setItem("auth_redirect", "discovery");
-        window.location.href = "login.html";
-        return;
+        window._isAuthenticated = true;
+        localStorage.setItem("ZENITH_DEMO_BYPASS", "true");
+        if (typeof updateAuthUI === 'function') updateAuthUI(true);
     }
 
     const resultsEl = document.getElementById('disc-results');

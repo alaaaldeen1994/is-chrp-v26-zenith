@@ -263,6 +263,19 @@ class PerturbationEngine:
             print("[PerturbationEngine] Running in FALLBACK mode. "
                   "Simulations are disabled. Gene lookups for safety audit still available.")
 
+    def get_cell_types(self) -> List[str]:
+        if hasattr(self, 'centroids') and self.centroids:
+            return sorted(list(self.centroids.keys()))
+        return ['Cardiomyocyte', 'Fibroblast', 'Endothelial', 'iPSC', 'Neuron', 'Hepatocyte']
+
+    def get_gene_vocabulary(self) -> Dict[str, Any]:
+        count = len(getattr(self, 'ensembl_to_symbol', {})) or len(getattr(self, 'gene_symbols', [])) or len(getattr(self, 'var_names', []))
+        samples = list(getattr(self, 'ensembl_to_symbol', {}).values())[:20] if hasattr(self, 'ensembl_to_symbol') else []
+        return {
+            "count": count,
+            "sample_genes": samples
+        }
+
     def predict_factor_effect(
         self,
         factors: List[str],

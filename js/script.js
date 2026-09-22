@@ -6523,7 +6523,7 @@ const VisionBridge = {
         const b64 = canvas.toDataURL('image/jpeg', 0.8);
 
         try {
-            const res = await fetch('http://127.0.0.1:9998/analyze_image', {
+            const res = await fetch('/api/analyze_image', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ image_b64: b64 })
@@ -6555,7 +6555,7 @@ const VisionBridge = {
         const reader = new FileReader();
         reader.onload = async (e) => {
             try {
-                const res = await fetch('http://127.0.0.1:9998/analyze_image', {
+                const res = await fetch('/api/analyze_image', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ image_b64: e.target.result })
@@ -6570,7 +6570,7 @@ const VisionBridge = {
                     `${data.top_genes[0].name} (${data.top_genes[0].value.toFixed(1)}%)`;
 
             } catch (err) {
-                alert("Vision Engine Offline. Ensure 'vision_server.py' is running on Port 9998.");
+                alert("Vision Engine analysis temporarily unavailable.");
                 console.error(err);
                 document.getElementById('vision-drop').classList.remove('hidden');
                 document.getElementById('vision-status').classList.add('hidden');
