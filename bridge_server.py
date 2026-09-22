@@ -7352,7 +7352,7 @@ async def run_gpt_discovery(request: Request):
             ip_data = json.load(f)
         pro_genes = ip_data.get("pro_rejuvenation_genes", [])[:200]
         aging_genes = ip_data.get("aging_marker_genes", [])[:200]
-        gene_source_label = "All cardiac cells (~2.42M integrated ensemble | Litviňuková et al. 2020 ~486k cohort, 14 donors)"
+        gene_source_label = "All cardiac cells (99,993 trained cells | Litviňuková et al. 2020 486,134-cell source atlas, 14 donors)"
         cell_type_age_delta = None
 
     source_table_lookup = {}
@@ -7663,9 +7663,14 @@ async def run_gpt_discovery(request: Request):
             
             # 3. Extract the safety audit from the perturbation result (cardiomyocyte-gated)
             safety_audit = perturbation_result.get("arrhythmia_safety", {})
-            is_cm_query = any(
-                tok in str(cell_type).lower()
-                for tok in ("myocyte", "cardiac_muscle", "vcm", "acm")
+            q_lower = str(query).lower()
+            explicit_non_cm_in_query = any(
+                tok in q_lower
+                for tok in ("hmvec", "endothelial", "fibroblast", "pericyte", "macrophage", "adipocyte", "smooth muscle")
+            ) and not any(tok in q_lower for tok in ("cardiomyocyte", "myocyte"))
+            is_cm_query = (
+                any(tok in str(cell_type).lower() for tok in ("myocyte", "cardiac_muscle", "vcm", "acm"))
+                or (str(cell_type).lower() == "all" and not explicit_non_cm_in_query)
             )
             import traceback
             try:
@@ -7676,14 +7681,16 @@ async def run_gpt_discovery(request: Request):
                         "classification": "NOT_APPLICABLE_NON_CM",
                         "reason": (
                             f"Cardiac ion-channel conduction panel is restricted to excitable "
-                            f"cardiomyocyte lineages; declined for non-cardiomyocyte cell_type='{cell_type}'."
+                            f"cardiomyocyte lineages; declined for non-cardiomyocyte lineage ({cell_type if cell_type != 'all' else 'query-specified non-CM'})."
                         ),
                         "phi_hat": None,
                         "synchrony": None,
+                        "isi_variance": None,
                         "ecg_proxy": [],
                         "blacklist_flags": [],
                         "fibrillation_check": {
                             "fibrillation_detected": False,
+                            "isi_variance": None,
                             "status": "NOT_APPLICABLE_NON_CM"
                         },
                         "ion_expression_resolved": {}

@@ -6054,7 +6054,7 @@ async function runDiscovery() {
                         <div style="flex:1;height:6px;background:#ffe4e6;border-radius:3px;overflow:hidden;">
                             <div style="height:100%;width:${Math.round((g.correlation_with_aging/maxAge)*100)}%;background:#e11d48;border-radius:3px;"></div>
                         </div>
-                        <span style="font-size:12px;color:#e11d48;font-weight:700;font-family:monospace;">r=${g.correlation_with_aging.toFixed(3)}</span>
+                        <span style="font-size:12px;color:#e11d48;font-weight:700;font-family:monospace;">r=${Number(g.correlation_with_aging || 0).toFixed(3)}</span>
                     </div>
                 </div>`).join('');
 
@@ -6159,11 +6159,15 @@ async function runDiscovery() {
                     const reasonDisplay = document.getElementById('safety-reason');
                     const fibDisplay = document.getElementById('fib-check-display');
                     
-                    if (classDisplay) classDisplay.innerText = safetyClass;
+                    if (classDisplay) classDisplay.innerText = safetyClass === 'NOT_APPLICABLE_NON_CM' ? 'N/A (NON-CM)' : safetyClass;
                     if (reasonDisplay) reasonDisplay.innerText = safetyReason;
                     
                     if (fibCheck && fibDisplay) {
-                        fibDisplay.innerText = `Anti-Fibrillation Check: ${fibCheck.fibrillation_detected ? 'CHAOS DETECTED' : 'STABLE'} (ISI Var: ${fibCheck.isi_variance.toFixed(2)})`;
+                        if (fibCheck.status === 'NOT_APPLICABLE_NON_CM' || typeof fibCheck.isi_variance !== 'number') {
+                            fibDisplay.innerText = 'Anti-Fibrillation Check: N/A (Restricted to excitable cardiomyocyte lineages)';
+                        } else {
+                            fibDisplay.innerText = `Anti-Fibrillation Check: ${fibCheck.fibrillation_detected ? 'CHAOS DETECTED' : 'STABLE'} (ISI Var: ${Number(fibCheck.isi_variance).toFixed(2)})`;
+                        }
                     }
                     
                     if (classDisplay) {
@@ -6171,6 +6175,8 @@ async function runDiscovery() {
                             classDisplay.style.background = '#ecfdf5'; classDisplay.style.color = '#10b981';
                         } else if (safetyClass === 'WARNING') {
                             classDisplay.style.background = '#fffbeb'; classDisplay.style.color = '#f59e0b';
+                        } else if (safetyClass === 'NOT_APPLICABLE_NON_CM' || safetyClass === 'NOT_APPLICABLE') {
+                            classDisplay.style.background = '#f1f5f9'; classDisplay.style.color = '#64748b';
                         } else {
                             classDisplay.style.background = '#fef2f2'; classDisplay.style.color = '#ef4444';
                         }
@@ -6355,11 +6361,15 @@ async function runDiscovery() {
                     const reasonDisplay = document.getElementById('safety-reason');
                     const fibDisplay = document.getElementById('fib-check-display');
                     
-                    if (classDisplay) classDisplay.innerText = safetyClass;
+                    if (classDisplay) classDisplay.innerText = safetyClass === 'NOT_APPLICABLE_NON_CM' ? 'N/A (NON-CM)' : safetyClass;
                     if (reasonDisplay) reasonDisplay.innerText = safetyReason;
                     
                     if (fibCheck && fibDisplay) {
-                        fibDisplay.innerText = `Anti-Fibrillation Check: ${fibCheck.fibrillation_detected ? 'CHAOS DETECTED' : 'STABLE'} (ISI Var: ${fibCheck.isi_variance.toFixed(2)})`;
+                        if (fibCheck.status === 'NOT_APPLICABLE_NON_CM' || typeof fibCheck.isi_variance !== 'number') {
+                            fibDisplay.innerText = 'Anti-Fibrillation Check: N/A (Restricted to excitable cardiomyocyte lineages)';
+                        } else {
+                            fibDisplay.innerText = `Anti-Fibrillation Check: ${fibCheck.fibrillation_detected ? 'CHAOS DETECTED' : 'STABLE'} (ISI Var: ${Number(fibCheck.isi_variance).toFixed(2)})`;
+                        }
                     }
                     
                     if (classDisplay) {
@@ -6367,6 +6377,8 @@ async function runDiscovery() {
                             classDisplay.style.background = '#ecfdf5'; classDisplay.style.color = '#10b981';
                         } else if (safetyClass === 'WARNING') {
                             classDisplay.style.background = '#fffbeb'; classDisplay.style.color = '#f59e0b';
+                        } else if (safetyClass === 'NOT_APPLICABLE_NON_CM' || safetyClass === 'NOT_APPLICABLE') {
+                            classDisplay.style.background = '#f1f5f9'; classDisplay.style.color = '#64748b';
                         } else {
                             classDisplay.style.background = '#fef2f2'; classDisplay.style.color = '#ef4444';
                         }
