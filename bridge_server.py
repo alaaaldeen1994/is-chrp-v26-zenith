@@ -5319,32 +5319,12 @@ class OpentronsRequest(BaseModel):
 
 
 @app.post("/generate_opentrons_protocol")
-
 async def generate_opentrons_protocol(req: OpentronsRequest):
-
-    """
-
-    Orchestrates the 'Digital-to-Biological' bridge.
-
-    Generates a Python script for Opentrons Flex robots.
-
-    """
-
-    try:
-
-        bridge = get_robotic_bridge()
-
-        script = bridge.generate_protocol(req.discovery_data, req.dosage_audit)
-
-        return {"script": script}
-
-    except Exception as e:
-
-        import traceback
-
-        traceback.print_exc()
-
-        raise HTTPException(status_code=500, detail=str(e))
+    """Disabled per Phase 2.2 remediation gate until predictions are wet-lab validated."""
+    raise HTTPException(
+        status_code=403,
+        detail="Opentrons OT-2/Flex script export is disabled until underlying predictions are wet-lab validated."
+    )
 
 
 
@@ -7375,12 +7355,18 @@ async def run_gpt_discovery(request: Request):
         gene_source_label = "All cardiac cells (~2.42M integrated ensemble | Litviňuková et al. 2020 ~486k cohort, 14 donors)"
         cell_type_age_delta = None
 
+    source_table_lookup = {}
+    for _g in (pro_genes + aging_genes):
+        _sym = str(_g.get("gene_symbol") or _g.get("gene") or "").strip().upper()
+        if _sym:
+            source_table_lookup[_sym] = float(_g["correlation"])
+
     pro_str = ", ".join([
-        f"{g.get('gene_symbol', g.get('gene','?'))} (r={g['correlation']:.3f})"
+        f"{g.get('gene_symbol', g.get('gene','?'))} (r={g['correlation']:.4f})"
         for g in pro_genes
     ])
     aging_str = ", ".join([
-        f"{g.get('gene_symbol', g.get('gene','?'))} (r={g['correlation']:.3f})"
+        f"{g.get('gene_symbol', g.get('gene','?'))} (r={g['correlation']:.4f})"
         for g in aging_genes
     ])
     gene_context = (
@@ -7391,7 +7377,7 @@ async def run_gpt_discovery(request: Request):
     from openai import AsyncOpenAI
     client = AsyncOpenAI(api_key=openai_key)
 
-    # â”€â”€ Step 2: TOURNAMENT â€” 3 parallel GPT calls â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── Step 2: TOURNAMENT — 3 parallel GPT calls ────────────────
     mode = body.get("mode", "real").strip()
     cell_labels = {
         "all": "cardiac cells",
@@ -7414,28 +7400,44 @@ async def run_gpt_discovery(request: Request):
         f"You are an elite computational biologist and bioinformatician specializing in epigenetic rejuvenation and cell state modeling. "
         f"The target cell type is: {ct_label}. "
         f"The reprogramming mode is: {mode_label}. "
-        f"You have access to 400 genes ranked by Pearson correlation from the Specialist Cardiac Atlas (Litvinukova et al., Nature 2020). "
-        f"Under the Information Theory of Aging (Yang et al., Cell 2023), cell state rejuvenation is the recovery of epigenetic information and silencing of transcriptional noise. "
-        f"You MUST strictly follow all negative constraints in the user's research query (e.g. if the user says 'Do not use pioneer factors or oncogenes', you must NOT propose OCT4, SOX2, KLF4, or MYC). "
-        f"For pure epigenetic rejuvenation/sirtuin stabilization queries, you must NOT propose downstream structural genes (like DMD, PDE4DIP, or cytoskeletal markers) or direct cardiac ion channels (like SCN5A, CACNA1C, RYR2, KCNH2) unless they are explicitly requested, as they cause calcium dysregulation and false cardiotoxicity alerts. "
-        f"Otherwise, if no constraints are given, prioritize upstream pioneer transcription factors (such as OCT4, SOX2, KLF4) and epigenetic silencers/modifiers (such as SIRT1, SIRT5, SIRT6) over downstream structural genes. "
-        f"Always exclude oncogenic factors like c-Myc (MYC) to eliminate tumor risks. "
-        f"If you include an external gene target (such as OCT4, SOX2, KLF4, SIRT1, SIRT5, SIRT6, NMN), set its correlation to 0.999 and explicitly state '[External Pioneer Target]', '[External Sirtuin Target]', or '[External Metabolic Target]' in the role to maintain absolute scientific transparency."
+        f"Select only genes present in the provided correlation table and report their exact r from that table. "
+        f"Never output a gene absent from the table. Never invent a correlation value. "
+        f"Even if the user's research question explicitly names external genes (such as ZBTB16, FOXO3, MEF2C, PPARGC1A, OCT4, SOX2, KLF4, SIRT1, SIRT6, ATP2A2, RYR2, SCN5A, GJA1, MYH7), "
+        f"you MUST NOT include any gene in the output 'genes' array unless that exact gene symbol appears in the provided PRO-REJUVENATION GENES or AGING MARKER GENES list below, and you MUST copy its exact numeric correlation r from that list."
     )
 
     candidate_prompt = (
         f"Research question: {query}\n\n"
         f"{gene_context}\n\n"
-        f"Select the 8 most relevant genes for this specific research question. "
+        f"Select the 8 most relevant genes strictly from the provided correlation table above for this specific research question. "
+        f"Select only genes present in the provided correlation table and report their exact r from that table. Never output a gene absent from the table. Never invent a correlation value.\n"
         f"Return ONLY valid JSON:\n"
         f"{{"
-        f"  \"genes\": [{{\"gene\": \"SYMBOL\", \"correlation\": 0.XXX, \"direction\": \"UP_IN_YOUNG|UP_IN_AGED\", "
+        f"  \"genes\": [{{\"gene\": \"SYMBOL\", \"correlation\": 0.XXXX, \"direction\": \"UP_IN_YOUNG|UP_IN_AGED\", "
         f"\"role\": \"1-sentence explanation of relevance to the query\", "
         f"\"mechanism\": \"gene -> protein -> pathway -> phenotype chain\"}}], "
         f"  \"summary\": \"2-3 sentence protocol recommendation\", "
         f"  \"query_interpretation\": \"biological objective identified\""
         f"}}"
     )
+
+    def _validate_panel_against_table(panel_obj: dict, label: str):
+        genes_arr = panel_obj.get("genes", [])
+        if not genes_arr:
+            raise ValueError(f"{label}: empty genes list")
+        for g_item in genes_arr:
+            sym = str(g_item.get("gene", "")).strip().upper()
+            if sym not in source_table_lookup:
+                raise ValueError(f"{label}: off-table gene '{sym}' rejected by server-side guard")
+            try:
+                r_val = float(g_item.get("correlation"))
+            except Exception:
+                raise ValueError(f"{label}: non-numeric correlation for '{sym}' rejected")
+            expected_r = source_table_lookup[sym]
+            if abs(r_val - expected_r) > 0.0015:
+                raise ValueError(
+                    f"{label}: correlation mismatch for '{sym}' (emitted r={r_val}, source table r={expected_r}) rejected by server-side guard"
+                )
 
     temperatures = [0.0, 0.0, 0.0]
 
@@ -7452,11 +7454,12 @@ async def run_gpt_discovery(request: Request):
                 response_format={"type": "json_object"}
             )
             panel = json.loads(resp.choices[0].message.content)
+            _validate_panel_against_table(panel, f"Panel {panel_id}")
             panel["_panel_id"] = panel_id
             panel["_temperature"] = temp
             return panel
         except Exception as e:
-            print(f"[Tournament] Panel {panel_id} failed: {e}")
+            print(f"[Tournament] Panel {panel_id} failed/rejected: {e}")
             return None
 
     # Run all 3 in parallel at temperature 0.0 for absolute determinism
@@ -7468,9 +7471,9 @@ async def run_gpt_discovery(request: Request):
     valid_panels = [p for p in panels if p is not None]
 
     if not valid_panels:
-        raise HTTPException(status_code=500, detail="All tournament panels failed")
+        raise HTTPException(status_code=422, detail="All tournament panels were rejected by the strict source-table validation guard.")
 
-    # â”€â”€ Step 3: JUDGE â€” Select the best panel â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # ── Step 3: JUDGE — Select the best panel ────────────────────
     if len(valid_panels) >= 2:
         panels_summary = ""
         for p in valid_panels:
@@ -7522,7 +7525,7 @@ async def run_gpt_discovery(request: Request):
         tournament_confidence = 0.6
         judge_reasoning = "Single panel available"
 
-    # â”€â”€ Step 4: REFINEMENT â€” Robin-style iterative improvement â”€â”€â”€
+    # ── Step 4: REFINEMENT — Robin-style iterative improvement ───
     winner_genes = [g.get("gene", "?") for g in winner.get("genes", [])]
     try:
         refine_prompt = (
@@ -7530,12 +7533,12 @@ async def run_gpt_discovery(request: Request):
             f"A tournament selected these 8 genes from Specialist cardiac data:\n"
             f"{', '.join(winner_genes)}\n\n"
             f"Review this selection against the full Specialist gene list below. "
-            f"Are there better candidates that were missed? If so, swap them in. "
-            f"Keep the best genes from the original panel.\n\n"
+            f"Select only genes present in the provided correlation table and report their exact r from that table. "
+            f"Never output a gene absent from the table. Never invent a correlation value.\n\n"
             f"{gene_context}\n\n"
             f"Return ONLY valid JSON with the refined panel:\n"
             f"{{"
-            f"  \"genes\": [{{\"gene\": \"SYMBOL\", \"correlation\": 0.XXX, \"direction\": \"UP_IN_YOUNG|UP_IN_AGED\", "
+            f"  \"genes\": [{{\"gene\": \"SYMBOL\", \"correlation\": 0.XXXX, \"direction\": \"UP_IN_YOUNG|UP_IN_AGED\", "
             f"\"role\": \"1-sentence explanation\", "
             f"\"mechanism\": \"gene -> protein -> pathway -> phenotype\"}}], "
             f"  \"summary\": \"2-3 sentence refined protocol\", "
@@ -7554,16 +7557,24 @@ async def run_gpt_discovery(request: Request):
             temperature=0.0,
             response_format={"type": "json_object"}
         )
-        refined = json.loads(refine_resp.choices[0].message.content)
+        refined_candidate = json.loads(refine_resp.choices[0].message.content)
+        _validate_panel_against_table(refined_candidate, "Refined Panel")
+        refined = refined_candidate
         rounds_completed = 2
         refinement_notes = refined.get("refinement_notes", "")
     except Exception as e:
-        print(f"[Tournament] Refinement failed: {e}, using tournament winner")
+        print(f"[Tournament] Refinement failed or rejected by guard ({e}), retaining validated tournament winner")
         refined = winner
         rounds_completed = 1
-        refinement_notes = "Refinement skipped"
+        refinement_notes = f"Refinement skipped/rejected by guard: {e}"
 
-    # â”€â”€ Step 5: Add PubMed links â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    # Final hard server-side gate before returning response:
+    try:
+        _validate_panel_against_table(refined, "Final Response Gate")
+    except ValueError as gate_err:
+        raise HTTPException(status_code=422, detail=str(gate_err))
+
+    # ── Step 5: Add PubMed links ────────────────────────────────
     for g in refined.get("genes", []):
         gene_name = g.get("gene", "")
         g["pubmed_url"] = f"https://pubmed.ncbi.nlm.nih.gov/?term={gene_name}+cardiac+aging+rejuvenation"
@@ -7650,60 +7661,66 @@ async def run_gpt_discovery(request: Request):
             for gene in svc.substrate.ION_CHANNEL_GENES:
                 print(f"[DEBUG] {gene} in gene_to_idx: {gene in perts.gene_to_idx}")
             
-            # 3. Extract the safety audit from the perturbation result (fallback to substrate audit if empty)
+            # 3. Extract the safety audit from the perturbation result (cardiomyocyte-gated)
             safety_audit = perturbation_result.get("arrhythmia_safety", {})
-            if not safety_audit or "classification" not in safety_audit or safety_audit.get("classification") == "ERROR":
-                safety_audit = svc.audit_arrhythmia_risk({})
-            
-            # 4. Run the Anti-Fibrillation Double-Check
-            # Extract the ion channel expression from the perturbation result
+            is_cm_query = any(
+                tok in str(cell_type).lower()
+                for tok in ("myocyte", "cardiac_muscle", "vcm", "acm")
+            )
             import traceback
             try:
-                ion_expr = {}
-                for gene in svc.substrate.ION_CHANNEL_GENES:
-                    if gene in perts.gene_to_idx:
-                        idx = perts.gene_to_idx[gene]
-                        # Safely extract the expression value
-                        expr_array = perturbation_result.get("predicted_expression")
-                        if expr_array is not None and idx < len(expr_array):
-                             ion_expr[gene] = float(expr_array[idx])
-                        else:
-                             ion_expr[gene] = 0.0
-                    else:
-                        ion_expr[gene] = 0.0
-
-                fib_check = svc.substrate.check_fibrillation_risk(ion_expr)
-                safety_audit["fibrillation_check"] = fib_check
-                
-                # ---------------------------------------------------------------
-                # SMART CLASSIFICATION FIX:
-                # The substrate simulation can produce false-positive chaotic
-                # reentry when ion channel genes are missing from the specialist
-                # model vocabulary (defaulting to 0.0). This is a substrate
-                # artifact, NOT a real biological risk.
-                #
-                # Rule: If the discovered gene panel contains NO ion channel
-                # modulators (e.g. pure SIRT1/SIRT6 epigenetic cocktails), the
-                # chaotic reentry signal is a false positive. Override to SAFE.
-                # ---------------------------------------------------------------
-                ION_CHANNEL_GENES = set(svc.substrate.ION_CHANNEL_GENES)
-                
-                # Get the genes the discovery engine actually recommended
                 discovered_genes = set(g["gene"] if isinstance(g, dict) else g 
                                        for g in result.get("genes", []))
-                
-                # Check if any discovered gene is a direct ion channel modulator
-                panel_has_ion_channel_genes = bool(discovered_genes & ION_CHANNEL_GENES)
-                
-                # Override classification if fibrillation is detected
-                if fib_check["fibrillation_detected"] and safety_audit.get("classification") == "SAFE":
-                    if panel_has_ion_channel_genes:
-                        # Real risk — panel contains ion channel genes
-                        safety_audit["classification"] = "WARNING"
-                        safety_audit["reason"] = "Anti-Fibrillation Check: Chaotic reentry detected. Ventricular fibrillation risk."
-                # Ensure fib_check subtext aligns cleanly when classification is SAFE
-                if safety_audit.get("classification") == "SAFE":
-                    fib_check["fibrillation_detected"] = False
+                if not is_cm_query or safety_audit.get("classification") == "NOT_APPLICABLE_NON_CM":
+                    safety_audit = {
+                        "classification": "NOT_APPLICABLE_NON_CM",
+                        "reason": (
+                            f"Cardiac ion-channel conduction panel is restricted to excitable "
+                            f"cardiomyocyte lineages; declined for non-cardiomyocyte cell_type='{cell_type}'."
+                        ),
+                        "phi_hat": None,
+                        "synchrony": None,
+                        "ecg_proxy": [],
+                        "blacklist_flags": [],
+                        "fibrillation_check": {
+                            "fibrillation_detected": False,
+                            "status": "NOT_APPLICABLE_NON_CM"
+                        },
+                        "ion_expression_resolved": {}
+                    }
+                else:
+                    # 4. Run the Anti-Fibrillation Double-Check for Cardiomyocytes
+                    ion_expr = {}
+                    for gene in svc.substrate.ION_CHANNEL_GENES:
+                        lookup_key = gene.upper()
+                        ens_key = getattr(perts, "symbol_to_ensembl", {}).get(lookup_key, lookup_key)
+                        idx = perts.gene_to_idx.get(lookup_key, perts.gene_to_idx.get(ens_key))
+                        if idx is not None:
+                            expr_array = perturbation_result.get("predicted_expression")
+                            if expr_array is not None and idx < len(expr_array):
+                                ion_expr[gene] = float(expr_array[idx])
+                            else:
+                                ion_expr[gene] = 0.0
+                        else:
+                            ion_expr[gene] = 0.0
+
+                    fib_check = svc.substrate.check_fibrillation_risk(ion_expr)
+                    safety_audit["fibrillation_check"] = fib_check
+                    safety_audit["ion_expression_resolved"] = {k: v for k, v in ion_expr.items() if v > 0.0}
+                    
+                    ION_CHANNEL_GENES = set(svc.substrate.ION_CHANNEL_GENES)
+                    
+                    # Check if any discovered gene is a direct ion channel modulator
+                    panel_has_ion_channel_genes = bool(discovered_genes & ION_CHANNEL_GENES)
+                    
+                    # Override classification if fibrillation is detected
+                    if fib_check["fibrillation_detected"] and safety_audit.get("classification") in ("SAFE", "EXPLORATORY_NOMINAL"):
+                        if panel_has_ion_channel_genes:
+                            safety_audit["classification"] = "WARNING"
+                            safety_audit["reason"] = "Exploratory LIF Check: Elevated ISI variance detected under direct ion-channel perturbation."
+                    if safety_audit.get("classification") in ("SAFE", "EXPLORATORY_NOMINAL"):
+                        safety_audit["classification"] = "EXPLORATORY_NOMINAL"
+                        fib_check["fibrillation_detected"] = False
                     
                 # ---------------------------------------------------------------
                 # ONCOGENE & PLURIPOTENCY SAFETY AUDIT CHECK:
@@ -7751,14 +7768,13 @@ async def list_cell_types():
     """Returns available cell types for cell-type-specific discovery."""
     ct_path = os.path.join(os.path.dirname(__file__), "models", "cell_type_genes.json")
     if not os.path.exists(ct_path):
-        return {"cell_types": [{"key": "all", "label": "All cardiac cells (Ensemble)", "n_cells": 2440000}]}
+        return {"cell_types": [{"key": "all", "label": "All cardiac cells (Specialist)", "n_cells": 99993}]}
 
     with open(ct_path) as f:
         ct_all = json.load(f)
 
-    # Total Ensemble size is ~2.44M. 
-    # Individual cell counts are derived from the 486k Human Cell Atlas (HCA) dataset.
-    types = [{"key": "all", "label": "All cardiac cells (Ensemble)", "n_cells": 2426000, "age_delta": 11.9}]
+    # Specialist trained on 99,993 cells from the 486,134-cell Litvinukova et al. HCA dataset.
+    types = [{"key": "all", "label": "All cardiac cells (Specialist)", "n_cells": 99993, "source_atlas_cells": 486134}]
     for key, data in ct_all.get("cell_types", {}).items():
         types.append({
             "key": key,
@@ -8049,68 +8065,20 @@ async def calculate_lnp_formulation(payload: Dict[str, Any]):
 
 @app.post("/api/v2/robotics/opentrons")
 async def generate_opentrons_script(payload: Dict[str, Any]):
-    """Generates an executable Opentrons OT-2 Python automation script for candidate gene pipetting."""
-    genes = payload.get("genes", ["SIRT1", "SIRT6", "PRKN", "PINK1"])
-    plate_type = payload.get("plate_type", "corning_96_wellplate_360ul_flat")
-    
-    script_content = f'''# Opentrons OT-2 Protocol Auto-Generated by Zenith AI Engine
-# Target Genes: {", ".join(genes)}
-# Protocol Version: 2.14
-
-from opentrons import protocol_api
-
-metadata = {{
-    'protocolName': 'Zenith Cardiac Rejuvenation mRNA Transfection',
-    'author': 'Zenith Automated Pipeline <ai@niluslab.com>',
-    'description': 'Automated 96-well dilution and transfection of pro-rejuvenation mRNA LNP formulation',
-    'apiLevel': '2.14'
-}}
-
-def run(protocol: protocol_api.ProtocolContext):
-    # Labware setup
-    tips = protocol.load_labware('opentrons_96_filtertiprack_20ul', '1')
-    plate = protocol.load_labware('{plate_type}', '2')
-    reservoir = protocol.load_labware('nest_12_reservoir_15ml', '3')
-    
-    pipette = protocol.load_instrument('p20_single_gen2', 'left', tip_racks=[tips])
-    
-    # Target Genes mRNA LNP Transfection
-    genes = {genes}
-    print(f"Transfecting {{len(genes)}} candidate mRNA factors into target cardiomyocytes...")
-    
-    for idx, gene in enumerate(genes):
-        dest_well = plate.wells()[idx]
-        protocol.comment(f"Pipetting {{gene}} mRNA-LNP formulation to well {{dest_well.well_name}}")
-        pipette.pick_up_tip()
-        pipette.aspirate(10, reservoir.wells()[0])
-        pipette.dispense(10, dest_well)
-        pipette.mix(3, 10, dest_well)
-        pipette.drop_tip()
-'''
-    return {
-        "filename": "zenith_opentrons_ot2_protocol.py",
-        "script": script_content,
-        "target_genes": genes
-    }
+    """Disabled per Phase 2.2 remediation gate until predictions are wet-lab validated."""
+    raise HTTPException(
+        status_code=403,
+        detail="Opentrons OT-2 script export is disabled until underlying predictions are wet-lab validated."
+    )
 
 
 @app.post("/api/v2/dossier/generate")
 async def generate_regulatory_dossier(payload: Dict[str, Any]):
-    """Generates an ISO 13485 & FDA 21 CFR Part 11 compliant regulatory audit dossier with SHA-256 hash."""
-    import hashlib, json, time
-    
-    data_str = json.dumps(payload, sort_keys=True)
-    sha256_hash = hashlib.sha256(data_str.encode('utf-8')).hexdigest()
-    
-    return {
-        "sha256_provenance_hash": sha256_hash,
-        "timestamp_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
-        "certification_standard": "ISO 13485:2016 Medical Devices / FDA 21 CFR Part 11 Electronic Records",
-        "arrhythmia_safety_verdict": payload.get("arrhythmia_safety", {}).get("classification", "SAFE"),
-        "horvath_age_reduction_years": -11.9,
-        "manifold_dimension": 5009,
-        "auditor_signature_placeholder": "DIGITALLY_SIGNED_ZENITH_KERNEL"
-    }
+    """Disabled per Phase 2.2 remediation gate until predictions are wet-lab validated."""
+    raise HTTPException(
+        status_code=403,
+        detail="Wet-Lab Dossier export is disabled until underlying predictions are wet-lab validated."
+    )
 
 
 if __name__ == "__main__":
