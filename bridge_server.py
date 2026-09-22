@@ -4181,10 +4181,12 @@ async def simulate_step(batch: BatchCellState):
             drift, manifold = drift_model(input_tensor)
 
     else:
-
-        drift = torch.zeros((n_agents, 4909), dtype=torch.float32)
-
+        drift = torch.zeros((n_agents, 5858), dtype=torch.float32)
         manifold = torch.zeros((n_agents, 3), dtype=torch.float32)
+
+    if drift.shape[1] < 5858:
+        pad = torch.zeros((n_agents, 5858 - drift.shape[1]), dtype=torch.float32)
+        drift = torch.cat([drift, pad], dim=1)
 
         
 
