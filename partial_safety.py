@@ -825,7 +825,7 @@ def score_bit_age_impact(factors: List[str]) -> Dict:
 
             "predicted_age_delta_years": float,
 
-            "theoretical_accuracy_r": 0.982,
+            "theoretical_accuracy_r": None,   # uncalibrated clock — see note in return value
 
             "binarized_state_fidelity": float
 
@@ -899,7 +899,15 @@ def score_bit_age_impact(factors: List[str]) -> Dict:
 
         "predicted_age_delta_years": delta_years,
 
-        "theoretical_accuracy_r": 0.982,
+        # The BiT Age clock in this codebase is uncalibrated — see
+        # services/bit_age_clock.py, which raises rather than returning a figure.
+        # A hardcoded 0.982 "theoretical accuracy" was previously returned here as
+        # though computed; it was never measured, and it contradicts the only real
+        # age-clock result available (LODO Pearson r = 0.4606, MAE = 6.97 yr).
+        # Reported as None until a trained cardiac binarized clock checkpoint exists.
+        "theoretical_accuracy_r": None,
+
+        "accuracy_note": "not yet validated — BiT Age clock is uncalibrated in this build",
 
         "binarized_state_fidelity": round(min(1.0, loci_affected / 8.0) * 100, 1)
 

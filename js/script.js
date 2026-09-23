@@ -1829,7 +1829,7 @@ const BiosimBridge = {
                             loci_affected: 8,
                             total_loci: 16,
                             predicted_age_delta_years: -13.0,
-                            theoretical_accuracy_r: 0.982
+                            theoretical_accuracy_r: null
                         },
                         horvath_report: {
                             loci_affected: 6,
@@ -1873,7 +1873,7 @@ const BiosimBridge = {
                     epigenetic_age_reduction: partialData.age_reduction,
                     dna_motif_target: partialData.dna_motif,
                     recommended_protocol: `OSK PARTIAL REPROGRAMMING (LOCAL FALLBACK)`,
-                    scientific_rationale: `[ZENITH INTUITION ENGINE] Offline partial reprogramming pipeline activated. 3 factors approved, 1 blocked (MYC). Sirtuin pathway engagement: 85%. BiT Age transcriptomic shift: -13.0 Years (R=0.982). Horvath epigenetic projection: -8.5 Years. Oncogene filter: ACTIVE.`,
+                    scientific_rationale: `[ZENITH INTUITION ENGINE — OFFLINE FALLBACK] Backend unavailable; the figures below are illustrative placeholders, NOT computed results. 3 factors approved, 1 blocked (MYC). Sirtuin pathway engagement: 85%. BiT Age transcriptomic shift: -13.0 Years (clock uncalibrated — accuracy not established). Horvath epigenetic projection: -8.5 Years. Oncogene filter: ACTIVE.`,
                     synergy_score: 0.85,
                     target_profile: targetProfile,
                     oncogenic_risk: 0.0,
