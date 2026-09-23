@@ -2172,7 +2172,7 @@ nav, .nav-dock, #mob-nav {
 
         <!-- Footer -->
         <div style="margin-top:40px;text-align:center;font-size:8px;color:#bdc1c6;width:100%;max-width:720px;">
-            Zenith v31.0 &nbsp;·&nbsp; Specialist scVI Model Trained on 99,993 Cells (486,134-Cell Litviňuková Source Atlas · 878,953 Total Reference Cells · 3,268,462 Trainable Parameters / 3,269,747 Total Tensor Elements) &nbsp;·&nbsp; Research Use Only
+            Zenith v31.0 &nbsp;·&nbsp; 1,962,128-Cell Foundation Checkpoint (37,234,698 Params · 14 CELLxGENE Cohorts) &nbsp;·&nbsp; 99,993-Cell Specialist scVI (3,269,747 Params · 486,134-Cell Litviňuková Adult Heart Atlas · 424,436 Evaluated Across 12 Major Cell Types · 878,953 Local Raw Cardiac Cells) &nbsp;·&nbsp; Research Use Only
         </div>
     </div>
 </div>
@@ -5625,10 +5625,12 @@ async function loadCellTypes() {
                     btn.style.color = currentActive ? '#191919' : '#6b6b6b';
                 };
                 
-                let cellsLabel = ct.n_cells ? `${ct.n_cells.toLocaleString()} cells` : '';
+                let cellsLabel = ct.subtitle ? ct.subtitle : (ct.n_cells ? `${ct.n_cells.toLocaleString()} atlas cells` : '');
                 let extraInfo = '';
-                if (ct.age_delta) extraInfo += ` · Rejuvenation Δ: ${ct.age_delta}y`;
-                if (ct.magnitude) extraInfo += ` · Vector Mag: ${ct.magnitude.toFixed(2)}`;
+                if (!ct.subtitle) {
+                    if (ct.age_delta) extraInfo += ` · Rejuvenation Δ: ${ct.age_delta}y`;
+                    if (ct.magnitude) extraInfo += ` · Vector Mag: ${ct.magnitude.toFixed(2)}`;
+                }
                 
                 btn.innerHTML = `
                     <span style="font-size: 11px; font-weight: 600;">${ct.label}</span>
@@ -5642,24 +5644,24 @@ async function loadCellTypes() {
         // Fallback to static list
         list.innerHTML = `
             <button onclick="selectCellTypeOption('all', 'All cardiac cells')" style="background:#f5f3ef;color:#191919;border:none;text-align:left;padding:8px 12px;border-radius:8px;cursor:pointer;width:100%;font-family:'Inter',sans-serif;display:flex;flex-direction:column;gap:2px;">
-                <span style="font-size:11px;font-weight:600;">All cardiac cells</span>
-                <span style="font-size:8px;color:#8b8b8b;">~2.5M cells (Dual Model) · Rejuvenation Δ: 11.9y</span>
+                <span style="font-size:11px;font-weight:600;">All cardiac cells (HCA 486k Atlas · 12 Major Cell Types)</span>
+                <span style="font-size:8px;color:#8b8b8b;">424,436 evaluated across 12 cell types (486,134 HCA Atlas · 99,993 scVI-trained · 1.96M Foundation)</span>
             </button>
             <button onclick="selectCellTypeOption('regular_ventricular_cardiac_myocyte', 'regular ventricular cardiac myocyte')" style="background:transparent;color:#6b6b6b;border:none;text-align:left;padding:8px 12px;border-radius:8px;cursor:pointer;width:100%;font-family:'Inter',sans-serif;display:flex;flex-direction:column;gap:2px;">
-                <span style="font-size:11px;font-weight:600;">regular ventricular cardiac myocyte</span>
-                <span style="font-size:8px;color:#8b8b8b;">125,289 cells</span>
+                <span style="font-size:11px;font-weight:600;">regular ventricular cardiac myocyte (HCA Atlas · scVI Projected)</span>
+                <span style="font-size:8px;color:#8b8b8b;">125,289 atlas cells</span>
             </button>
             <button onclick="selectCellTypeOption('pericyte', 'pericyte')" style="background:transparent;color:#6b6b6b;border:none;text-align:left;padding:8px 12px;border-radius:8px;cursor:pointer;width:100%;font-family:'Inter',sans-serif;display:flex;flex-direction:column;gap:2px;">
-                <span style="font-size:11px;font-weight:600;">pericyte</span>
-                <span style="font-size:8px;color:#8b8b8b;">77,856 cells</span>
+                <span style="font-size:11px;font-weight:600;">pericyte (HCA Atlas · scVI Projected)</span>
+                <span style="font-size:8px;color:#8b8b8b;">77,856 atlas cells</span>
             </button>
             <button onclick="selectCellTypeOption('fibroblast', 'fibroblast')" style="background:transparent;color:#6b6b6b;border:none;text-align:left;padding:8px 12px;border-radius:8px;cursor:pointer;width:100%;font-family:'Inter',sans-serif;display:flex;flex-direction:column;gap:2px;">
-                <span style="font-size:11px;font-weight:600;">fibroblast</span>
-                <span style="font-size:8px;color:#8b8b8b;">59,341 cells</span>
+                <span style="font-size:11px;font-weight:600;">fibroblast (HCA Atlas · scVI Projected)</span>
+                <span style="font-size:8px;color:#8b8b8b;">59,341 atlas cells</span>
             </button>
             <button onclick="selectCellTypeOption('capillary_endothelial_cell', 'capillary endothelial cell')" style="background:transparent;color:#6b6b6b;border:none;text-align:left;padding:8px 12px;border-radius:8px;cursor:pointer;width:100%;font-family:'Inter',sans-serif;display:flex;flex-direction:column;gap:2px;">
-                <span style="font-size:11px;font-weight:600;">capillary endothelial cell</span>
-                <span style="font-size:8px;color:#8b8b8b;">57,759 cells</span>
+                <span style="font-size:11px;font-weight:600;">capillary endothelial cell (HCA Atlas · scVI Projected)</span>
+                <span style="font-size:8px;color:#8b8b8b;">57,759 atlas cells</span>
             </button>
         `;
     }

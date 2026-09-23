@@ -1,0 +1,112 @@
+{
+  "generated_from_checkpoints_utc": "2026-09-23T21:07:00Z",
+  "foundation_checkpoint": {
+    "path": "models/zenith_foundation_v1/model.pt",
+    "size_bytes": 166773810,
+    "total_parameters": 37234698,
+    "n_obs_registered": 1962128,
+    "n_cells_train_split": 1939497,
+    "n_vars": 5858,
+    "n_latent": 64,
+    "n_hidden": 1024,
+    "n_layers": 4,
+    "n_batches": 14,
+    "n_donors": 210,
+    "suspension_types": ["cell", "nucleus"],
+    "disease_categories": [
+      "arrhythmogenic right ventricular cardiomyopathy",
+      "atherosclerosis",
+      "dilated cardiomyopathy",
+      "hypertrophic cardiomyopathy",
+      "myocardial infarction",
+      "myocarditis",
+      "non-compaction cardiomyopathy",
+      "normal"
+    ],
+    "dataset_ids_in_batch_registry": [
+      "1c739a3e-c3f5-49d5-98e0-73975e751201",
+      "2adb1f8a-a6b1-4909-8ee8-484814e2d4bf",
+      "2e9d2f32-4cfb-49b5-b990-cbf4c241214e",
+      "364bd0c7-f7fd-48ed-99c1-ae26872b1042",
+      "43245158-5ae1-4e71-a9a6-67eef49c26bc",
+      "53d208b0-2cfd-4366-9866-c3c6114081bc",
+      "65badd7a-9262-4fd1-9ce2-eb5dc0ca8039",
+      "72955cdb-bd92-4135-aa52-21f33f9640db",
+      "d4e69e01-3ba2-4d6b-a15d-e7048f78f22e",
+      "d567b692-c374-4628-a508-8008f6778f22",
+      "f15e263b-6544-46cb-a46e-e33ab7ce8347",
+      "f3ee7613-b27f-4deb-a5aa-1d4f9a2db963",
+      "f7c1c579-2dc0-47e2-ba19-8165c5a0e353",
+      "fe7aae33-6f7c-41a5-8d29-9996a9ddf1ab"
+    ],
+    "umap_latent_50k_subsample_counts": {
+      "65badd7a-9262-4fd1-9ce2-eb5dc0ca8039": 16903,
+      "d4e69e01-3ba2-4d6b-a15d-e7048f78f22e": 9965,
+      "364bd0c7-f7fd-48ed-99c1-ae26872b1042": 9694,
+      "1c739a3e-c3f5-49d5-98e0-73975e751201": 4765,
+      "d567b692-c374-4628-a508-8008f6778f22": 2334,
+      "fe7aae33-6f7c-41a5-8d29-9996a9ddf1ab": 1687,
+      "53d208b0-2cfd-4366-9866-c3c6114081bc": 1338,
+      "72955cdb-bd92-4135-aa52-21f33f9640db": 871,
+      "2e9d2f32-4cfb-49b5-b990-cbf4c241214e": 868,
+      "f7c1c579-2dc0-47e2-ba19-8165c5a0e353": 789,
+      "f15e263b-6544-46cb-a46e-e33ab7ce8347": 520,
+      "2adb1f8a-a6b1-4909-8ee8-484814e2d4bf": 160,
+      "43245158-5ae1-4e71-a9a6-67eef49c26bc": 60,
+      "f3ee7613-b27f-4deb-a5aa-1d4f9a2db963": 46
+    }
+  },
+  "specialist_checkpoint": {
+    "path": "models/scvi_model_486k_real/model.pt",
+    "size_bytes": 14242341,
+    "total_parameters": 3269747,
+    "trainable_parameters": 3268462,
+    "n_obs_trained": 99993,
+    "source_atlas_path": "data/foundation/raw_datasets/d4e69e01-3ba2-4d6b-a15d-e7048f78f22e.h5ad",
+    "source_atlas_shape": [486134, 32383],
+    "n_vars": 5009,
+    "n_hvg_base": 5000,
+    "protected_ion_channels_11": [
+      "SCN5A", "KCNH2", "KCNQ1", "KCNJ2", "CACNA1C", "HCN4",
+      "KCNA5", "KCND3", "KCNIP2", "RYR2", "SLC8A1"
+    ],
+    "protected_ion_channels_added_to_5000": 9
+  },
+  "cell_type_genes_reconciliation": {
+    "path": "models/cell_type_genes.json",
+    "source_atlas_total_cells": 486134,
+    "included_12_major_cell_types_sum": 424436,
+    "excluded_15_minor_or_unknown_cell_types_sum": 61698,
+    "included_12_cell_types": {
+      "regular_ventricular_cardiac_myocyte": 125289,
+      "pericyte": 77856,
+      "fibroblast": 59341,
+      "capillary_endothelial_cell": 57759,
+      "regular_atrial_cardiac_myocyte": 23483,
+      "endothelial_cell_of_artery": 20317,
+      "smooth_muscle_cell": 16242,
+      "macrophage": 14640,
+      "endothelial_cell": 13263,
+      "vein_endothelial_cell": 8486,
+      "neural_cell": 3961,
+      "epicardial_adipocyte": 3799
+    },
+    "excluded_15_categories": {
+      "unknown": 34621,
+      "natural killer cell": 3628,
+      "CD14-positive, CD16-positive monocyte": 3278,
+      "CD4-positive, alpha-beta cytotoxic T cell": 3113,
+      "activated CD8-positive, alpha-beta T cell": 3001,
+      "CD8-positive, alpha-beta cytotoxic T cell": 2956,
+      "CD14-positive monocyte": 1883,
+      "monocyte": 1684,
+      "mast cell": 1543,
+      "mature NK T cell": 1463,
+      "B cell": 1195,
+      "activated CD4-positive, alpha-beta T cell": 1047,
+      "dendritic cell": 814,
+      "endothelial cell of lymphatic vessel": 754,
+      "mesothelial cell": 718
+    }
+  }
+}

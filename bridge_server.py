@@ -7336,7 +7336,7 @@ async def run_gpt_discovery(request: Request):
         pro_genes = ct_data.get("pro_rejuvenation_genes", [])[:50]
         aging_genes = ct_data.get("aging_marker_genes", [])[:50]
         ct_display_name = ct_data['cell_type'].replace('_', ' ').title()
-        gene_source_label = f"{ct_display_name} ({ct_data['n_cells']:,} cells | Litviňuková et al. 2020, 14 donors)"
+        gene_source_label = f"{ct_display_name} ({ct_data['n_cells']:,} HCA atlas cells · scVI 20-D latent projection | Litviňuková et al. 2020, 14 donors)"
         cell_type_age_delta = ct_data.get("age_delta_years")
     else:
         ip_path = os.path.join(os.path.dirname(__file__), "models", "real_ip_genes_full.json")
@@ -7346,7 +7346,7 @@ async def run_gpt_discovery(request: Request):
             ip_data = json.load(f)
         pro_genes = ip_data.get("pro_rejuvenation_genes", [])[:200]
         aging_genes = ip_data.get("aging_marker_genes", [])[:200]
-        gene_source_label = "All cardiac cells (99,993 trained cells | Litviňuková et al. 2020 486,134-cell source atlas, 14 donors)"
+        gene_source_label = "All cardiac cells (424,436 evaluated across 12 major cell types | 486,134-cell HCA Adult Heart Atlas · 99,993 scVI-trained subsample · 1,962,128 Foundation checkpoint)"
         cell_type_age_delta = None
 
     source_table_lookup = {}
@@ -7766,17 +7766,26 @@ async def list_cell_types():
     """Returns available cell types for cell-type-specific discovery."""
     ct_path = os.path.join(os.path.dirname(__file__), "models", "cell_type_genes.json")
     if not os.path.exists(ct_path):
-        return {"cell_types": [{"key": "all", "label": "All cardiac cells (Specialist)", "n_cells": 99993}]}
+        return {"cell_types": [{"key": "all", "label": "All cardiac cells (HCA 486k Atlas · 12 Major Cell Types)", "n_cells": 424436, "source_atlas_cells": 486134, "trained_cells": 99993, "foundation_cells": 1962128, "subtitle": "424,436 evaluated across 12 cell types (486,134 HCA Atlas · 99,993 scVI-trained · 1.96M Foundation)"}]}
 
     with open(ct_path) as f:
         ct_all = json.load(f)
 
-    # Specialist trained on 99,993 cells from the 486,134-cell Litvinukova et al. HCA dataset.
-    types = [{"key": "all", "label": "All cardiac cells (Specialist)", "n_cells": 99993, "source_atlas_cells": 486134}]
+    # 12 major cell types in cell_type_genes.json sum to 424,436 cells (from the 486,134-cell Litvinukova et al. HCA dataset; 61,698 in 'unknown'/minor immune <500 excluded; 99,993 scVI-trained subsample; 1,962,128 Foundation checkpoint).
+    types = [{
+        "key": "all",
+        "label": "All cardiac cells (HCA 486k Atlas · 12 Major Cell Types)",
+        "n_cells": 424436,
+        "source_atlas_cells": 486134,
+        "excluded_minor_unknown_cells": 61698,
+        "trained_cells": 99993,
+        "foundation_cells": 1962128,
+        "subtitle": "424,436 evaluated across 12 cell types (486,134 HCA Atlas · 99,993 scVI-trained · 1.96M Foundation)"
+    }]
     for key, data in ct_all.get("cell_types", {}).items():
         types.append({
             "key": key,
-            "label": data["cell_type"] + " (Specialist)",
+            "label": data["cell_type"] + " (HCA Atlas · scVI Projected)",
             "n_cells": data["n_cells"],
             "n_young": data.get("n_young", 0),
             "n_aged": data.get("n_aged", 0),
@@ -7785,7 +7794,7 @@ async def list_cell_types():
             "top_gene": data["pro_rejuvenation_genes"][0]["gene"] if data.get("pro_rejuvenation_genes") else None
         })
 
-    return {"cell_types": types, "source": "Specialist (486k) + Global Generalist (1.94M)"}
+    return {"cell_types": types, "source": "HCA 486,134-cell Atlas (424,436 across 12 major cell types; 99,993 scVI-trained) + 1,962,128-cell Foundation Checkpoint"}
 
 
 # ============================================================
