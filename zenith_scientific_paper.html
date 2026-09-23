@@ -377,60 +377,61 @@ Microfluidic LNP Encapsulation: 94.4% (>85% Predicted Cardiac Tropism)
           <td><strong>1</strong></td>
           <td><strong>SIRT1</strong></td>
           <td>External Sirtuin Target</td>
-          <td>0.999</td>
+          <td>Prior (N/A)*</td>
           <td>Histone deacetylation → Chromatin remodeling → Epigenetic age reset</td>
         </tr>
         <tr>
           <td><strong>2</strong></td>
           <td><strong>SIRT6</strong></td>
           <td>External Sirtuin Target</td>
-          <td>0.999</td>
+          <td>Prior (N/A)*</td>
           <td>Histone deacetylation → Double-strand DNA repair → Telomere maintenance</td>
         </tr>
         <tr>
           <td><strong>3</strong></td>
           <td><strong>TTN-AS1</strong></td>
           <td>Long Non-Coding RNA</td>
-          <td>0.300</td>
+          <td>+0.300</td>
           <td>Titin mRNA regulation → Sarcomere Z-disc organization → Capacitance stability</td>
         </tr>
         <tr>
           <td><strong>4</strong></td>
           <td><strong>MLIP-AS1</strong></td>
           <td>Long Non-Coding RNA</td>
-          <td>0.245</td>
+          <td>+0.245</td>
           <td>Lipid metabolism modulation → Mitochondrial ATP yield → Functional contraction</td>
         </tr>
         <tr>
           <td><strong>5</strong></td>
           <td><strong>SH3RF2</strong></td>
           <td>E3 Ubiquitin Ligase</td>
-          <td>0.214</td>
+          <td>+0.214</td>
           <td>Selective ubiquitination → Fibroblast protein clearance → Proteostasis reset</td>
         </tr>
         <tr>
           <td><strong>6</strong></td>
           <td><strong>PRKCE</strong></td>
           <td>Protein Kinase C ε</td>
-          <td>0.191</td>
+          <td>+0.191</td>
           <td>Ion channel phosphorylation → Membrane stabilization → Survival signaling</td>
         </tr>
         <tr>
           <td><strong>7</strong></td>
           <td><strong>WDFY3</strong></td>
           <td>Autophagy Adaptor</td>
-          <td>0.185</td>
+          <td>+0.185</td>
           <td>Autophagosome formation → Organelle clearance → Senescence clearance</td>
         </tr>
         <tr>
           <td><strong>8</strong></td>
           <td><strong>DDX60L</strong></td>
           <td>RNA Helicase</td>
-          <td>0.200</td>
+          <td>−0.184</td>
           <td>RNA unwinding → Transcriptomic stability → Innate defense modulation</td>
         </tr>
       </tbody>
     </table>
+    <p style="font-size: 7.5pt; color: #475569; margin-top: 4px;">*<em>Note: SIRT1 and SIRT6 are curated literature priors outside the 5,009-HVG count matrix. Single-cohort correlations (Litviňuková et al., n=14 donors) did not replicate in the independent 54-donor PERIHEART cohort (top-100 gene overlap r = −0.42 vCM, −0.19 atrial CM, −0.23 fibroblast); only the multi-gene pseudobulk aging clock achieved statistically significant out-of-donor validation (LODO Pearson r = 0.4606, MAE = 6.97 yr).</em></p>
   </div>
 
   <p class="no-indent"><strong>Safety & Robotics</strong>: NEUROS-X verified ISI variance $\sigma^2_{\text{ISI}} = 46.42$ (stable conduction). Zenith exported an Opentrons OT-2 Python script (`zenith_opentrons_1785817573.py`) for automated 96-well pipetting.</p>

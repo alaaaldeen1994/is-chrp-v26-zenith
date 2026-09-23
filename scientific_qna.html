@@ -304,8 +304,8 @@ nav, .nav-dock, #mob-nav {
                     </p>
                     <p class="mb-4 font-semibold">The Variational Autoencoder (VAE) architecture features the following hyperparameter configuration:</p>
                     <ul class="list-disc pl-6 space-y-2 mb-4">
-                        <li><strong>Latent Dimensions ($z$)</strong>: $30$ components encoding global biological cell states.</li>
-                        <li><strong>Hidden Layers ($h$)</strong>: $2$ dense layers with $256$ units per layer, utilizing Layer Normalization and Mish activation functions.</li>
+                        <li><strong>Latent Dimensions ($z$)</strong>: $20$ components (cardiac specialist VAE) and $64$ components (generalist foundation VAE) encoding biological cell states.</li>
+                        <li><strong>Hidden Layers ($h$)</strong>: $2$ dense layers with $128$ units per layer (specialist) and $4$ dense layers with $1,024$ units per layer (foundation), utilizing Layer Normalization and ReLU/Softplus activations.</li>
                         <li><strong>Categorical Covariates</strong>: Explicit batch correction integrated for <code>dataset_id</code> (HCA vs. CELLxGENE Census) and <code>suspension_type</code> (single-cell vs. single-nucleus) to prevent non-biological batch bias.</li>
                         <li><strong>Training Epochs</strong>: $400$ epochs with early stopping regularization based on validation reconstruction loss convergence. The training was completed in under 25 minutes on cloud accelerated infrastructure (NVIDIA T4 / A100 GPUs) executing minibatch gradient descent (Adam optimizer, batch size $B=512$, learning rate $\eta = 10^{-3}$, weight decay $10^{-6}$).</li>
                     </ul>
@@ -357,7 +357,7 @@ nav, .nav-dock, #mob-nav {
                         <li><strong>Private/Compute Layer</strong>: The neural network weights, PyTorch layer structures, and the raw <strong>Gene Regulatory Network (GRN)</strong> containing exactly <strong>133,310 transcription-factor-to-target links</strong> run entirely in secure, isolated Docker containers behind a hardened backend.</li>
                     </ul>
                     <p class="mb-4">
-                        This ensures researchers receive validated, clinically significant reprogramming predictions and automated Opentrons Flex robotic protocol instructions without risking raw exposure of proprietary biological algorithms or model parameters.
+                        This ensures researchers receive reproducible in silico reprogramming hypothesis predictions (RUO) and automated Opentrons Flex robotic protocol instructions without risking raw exposure of proprietary biological algorithms or model parameters.
                     </p>
                 </div>
             </div>
@@ -370,11 +370,11 @@ nav, .nav-dock, #mob-nav {
                 </button>
                 <div class="qna-content">
                     <p class="mb-4">
-                        To guarantee high confidence in predictions prior to wet-lab execution, Zenith integrates three independent in-silico validation layers:
+                        To evaluate candidate predictions prior to wet-lab execution, Zenith integrates three in-silico evaluation layers:
                     </p>
                     <ul class="list-disc pl-6 space-y-2 mb-4">
-                        <li><strong>Concordance Mapping</strong>: Computes Spearman rank correlation coefficients between VAE-decoded target state vectors and the healthy cardiomyocyte baseline profiles from the physical HCA cohort. A threshold of $\rho \ge 0.85$ is required for validation approval.</li>
-                        <li><strong>Epigenetic Aging Clock</strong>: Feeds the predicted transcriptomic profiles into an ElasticNet regression age-prediction clock trained on healthy donors. Reprogramming success is confirmed by a statistically significant age-reduction score compared to starting fibroblast controls.</li>
+                        <li><strong>Concordance Mapping</strong>: Computes Spearman rank correlation coefficients between VAE-decoded target state vectors and the healthy cardiomyocyte baseline profiles from the physical HCA cohort.</li>
+                        <li><strong>Epigenetic Aging Clock</strong>: Evaluates donor-level pseudobulk transcriptomic profiles via ridge-regularized age-prediction modeling (achieving LODO Pearson $r = 0.4606$, $\text{MAE} = 6.97\text{ yr}$ across 54 uniform-chemistry PERIHEART donors; cross-cohort single-gene replication remains under active investigation).</li>
                         <li><strong>Marker Gene Auditing</strong>: Automatically audits the predicted activation of cardiomyocyte lineage-specific genes (e.g., <code>TNNT2</code>, <code>MYH7</code>, <code>ACTC1</code>) alongside the concurrent silencing of fibroblast-specific markers (e.g., <code>COL1A1</code>, <code>FN1</code>).</li>
                     </ul>
                 </div>
@@ -409,7 +409,7 @@ nav, .nav-dock, #mob-nav {
                     </p>
                     <ul class="list-disc pl-6 space-y-2 mb-4">
                         <li><strong>Categorical Covariate Conditioning</strong>: During variational autoencoder training, the encoder and decoder neural networks are explicitly conditioned on metadata variables, specifically <code>dataset_id</code> (Litviňuková vs. PERIHEART) and <code>suspension_type</code> (single-cell vs. single-nucleus).</li>
-                        <li><strong>Latent Space Projection</strong>: The model maps high-dimensional transcriptomes into a shared 30-dimensional latent space ($z$) where technical batch differences are actively minimized. Cell reprogramming trajectory vectors ($\delta$) are calculated exclusively on this corrected space, representing pure biological transformations.</li>
+                        <li><strong>Latent Space Projection</strong>: The model maps high-dimensional transcriptomes into a shared 20-dimensional (cardiac specialist) or 64-dimensional (foundation) latent space ($z$) where technical batch differences are mitigated. Cell reprogramming trajectory vectors ($\delta$) are calculated on this corrected space.</li>
                     </ul>
                 </div>
             </div>
@@ -422,7 +422,7 @@ nav, .nav-dock, #mob-nav {
                 </button>
                 <div class="qna-content">
                     <p class="mb-4">
-                        Once the platform calculates the optimal reprogramming trajectory and identifies the precise dose ratios of transcription factors (e.g., OSK vs. OSKM) and small molecules, the **Clinical Audit Engine** translates these parameters into a structured, executable JSON format.
+                        Once the platform calculates the candidate reprogramming trajectory and identifies dose ratios of transcription factors (e.g., OSK vs. OSKM) and small molecules, the **Protocol Export Engine** translates these parameters into a structured, executable JSON/Python format.
                     </p>
                     <p class="mb-4">
                         This payload conforms to the **Opentrons APIv2/v3 protocol structure**. Researchers can download these automated liquid-handling protocols directly to execute high-throughput transfection and cell culture protocols on automated robotic systems (such as the Opentrons Flex), bridging the gap between digital generative modeling and physical laboratory validation.
@@ -438,7 +438,7 @@ nav, .nav-dock, #mob-nav {
                 </button>
                 <div class="qna-content">
                     <p class="mb-4">
-                        To prevent non-biological hallucinations and ensure absolute clinical-grade safety, the Zenith platform enforces three systematic verification guardrails on all API and LLM-returned outputs:
+                        To prevent non-biological hallucinations and enforce computational research guardrails (RUO), the Zenith platform applies three systematic verification checks on all API and LLM-returned outputs:
                     </p>
                     <ul class="list-disc pl-6 space-y-2 mb-4">
                         <li><strong>Homo sapiens Species Lock (Ontology Guardrail)</strong>: The system validates all returned gene symbols against a strict human whitelist. Any non-human gene (e.g., mouse-specific markers) or hallucinated gene names are immediately blocked. All symbols must map to canonical <em>Homo sapiens</em> entries (UniProt Swiss-Prot organism ID 9606).</li>
