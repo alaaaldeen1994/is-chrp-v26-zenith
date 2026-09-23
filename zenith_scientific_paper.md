@@ -132,9 +132,9 @@ To bypass liver trapping ($84.0\%$ passive hepatic uptake), Zenith formulates 5-
 - Structural Lipid (DSPC): $10.0\text{ mol}\%$
 - Sterol (Cholesterol): $38.5\text{ mol}\%$
 - PEG-Lipid (DMG-PEG2000): $1.5\text{ mol}\%$
-- 5th SORT Lipid (DOTAP / 18:1 PA): $10.0\text{--}20.0\text{ mol}\%$ for cardiac capillary tropism ($> 85\%$).
+- 5th SORT Lipid (DOTAP / 18:1 PA): $10.0\text{--}20.0\text{ mol}\%$ with a predicted $> 85\%$ cardiac capillary tropism (model output; not measured experimentally).
 
-Microfluidic synthesis parameters are set to an Aqueous-to-Ethanol flow rate ratio of $3:1$ at $12\text{ mL/min}$ total flow rate ($N/P = 6.0$, encapsulation efficiency $> 94\%$).
+Calculated synthesis parameters use an Aqueous-to-Ethanol flow rate ratio of $3:1$ at $12\text{ mL/min}$ total flow rate ($N/P = 6.0$, predicted encapsulation efficiency $94.4\%$, model output).
 
 ---
 
@@ -167,7 +167,7 @@ Inter-Spike Interval (ISI) variance is computed across the network:
 
 $$\sigma^2_{\text{ISI}} = \frac{1}{N_{\text{spikes}} - 1} \sum_{k=1}^{N_{\text{spikes}}} (t_{k+1} - t_k - \bar{t}_{\text{ISI}})^2$$
 
-Cocktails yielding $\sigma^2_{\text{ISI}} < 60.0$ and normal ECG synchrony are classified as **`VERIFIED SAFE — STABLE CONDUCTION`**.
+Cocktails yielding $\sigma^2_{\text{ISI}} < 60.0$ and normal ECG synchrony are reported in silico as **`STABLE CONDUCTION — simulated ISI Variance = 46.42 (threshold < 60.0)`**.
 
 #### 2.5.2 Autonomous AI Agent & Relational Data Lake
 Zenith orchestrates a 10-step autonomous trajectory chaining all 13 FastAPI endpoints (`/api/v2/`). Results, clinical dossiers, variants, and LNP formulations are persisted in a relational SQLite data lake (`database/zenith_master.db`) across 13 schema tables.
@@ -186,7 +186,8 @@ ZENITH MULTI-DONOR EVALUATION & IN SILICO BENCHMARK
 Replication Dataset: PERIHEART 54-Donor Right Atrial Cohort (392,819 Nuclei)
 Specialist Training Dataset: 99,993 Cardiac Cells (from 486,134-Cell Litviňuková Atlas)
 Leave-One-Donor-Out Aging Clock: LODO MAE = 6.97 Years | Pearson r = 0.4606 (p = 4.57e-4)
-Electrophysiological Simulation: 512 LIF Spiking Network (ISI Variance = 46.42)
+Electrophysiological Status (in silico): STABLE CONDUCTION — simulated ISI Variance = 46.42 (threshold < 60.0)
+Predicted LNP Encapsulation Efficiency: 94.4% (model output) | >85% Predicted Cardiac Tropism
 ===================================================================================
 ```
 
@@ -199,31 +200,33 @@ Zenith evaluated 3 competing hypothesis panels and 100 differential candidate ge
 
 | Priority | Gene Symbol | Functional Category | Correlation ($r$) | Primary Cascade & Biological Mechanism |
 | :---: | :--- | :--- | :---: | :--- |
-| **1** | **`SIRT1`** | External Sirtuin Target | $0.999$ | Histone deacetylation $\rightarrow$ Chromatin remodeling $\rightarrow$ Epigenetic age reset |
-| **2** | **`SIRT6`** | External Sirtuin Target | $0.999$ | Histone deacetylation $\rightarrow$ Double-strand DNA repair $\rightarrow$ Telomere maintenance |
-| **3** | **`TTN-AS1`** | Long Non-Coding RNA | $0.300$ | Titin mRNA regulation $\rightarrow$ Sarcomere Z-disc organization $\rightarrow$ Capacitance stability |
-| **4** | **`MLIP-AS1`** | Long Non-Coding RNA | $0.245$ | Lipid metabolism modulation $\rightarrow$ Mitochondrial ATP yield $\rightarrow$ Functional contraction |
-| **5** | **`SH3RF2`** | E3 Ubiquitin Ligase | $0.214$ | Selective ubiquitination $\rightarrow$ Fibroblast protein clearance $\rightarrow$ Proteostasis reset |
-| **6** | **`PRKCE`** | Protein Kinase C $\epsilon$ | $0.191$ | Ion channel phosphorylation $\rightarrow$ Membrane stabilization $\rightarrow$ Survival signaling |
-| **7** | **`WDFY3`** | Autophagy Adaptor | $0.185$ | Autophagosome formation $\rightarrow$ Organelle clearance $\rightarrow$ Senescence clearance |
-| **8** | **`DDX60L`** | RNA Helicase | $0.200$ | RNA unwinding $\rightarrow$ Transcriptomic stability $\rightarrow$ Innate defense modulation |
+| **1** | **`SIRT1`** | External Sirtuin Target | Prior (N/A)* | Histone deacetylation $\rightarrow$ Chromatin remodeling $\rightarrow$ Epigenetic age reset |
+| **2** | **`SIRT6`** | External Sirtuin Target | Prior (N/A)* | Histone deacetylation $\rightarrow$ Double-strand DNA repair $\rightarrow$ Telomere maintenance |
+| **3** | **`TTN-AS1`** | Long Non-Coding RNA | $+0.300$ | Titin mRNA regulation $\rightarrow$ Sarcomere Z-disc organization $\rightarrow$ Capacitance stability |
+| **4** | **`MLIP-AS1`** | Long Non-Coding RNA | $+0.245$ | Lipid metabolism modulation $\rightarrow$ Mitochondrial ATP yield $\rightarrow$ Functional contraction |
+| **5** | **`SH3RF2`** | E3 Ubiquitin Ligase | $+0.214$ | Selective ubiquitination $\rightarrow$ Fibroblast protein clearance $\rightarrow$ Proteostasis reset |
+| **6** | **`PRKCE`** | Protein Kinase C $\epsilon$ | $+0.191$ | Ion channel phosphorylation $\rightarrow$ Membrane stabilization $\rightarrow$ Survival signaling |
+| **7** | **`WDFY3`** | Autophagy Adaptor | $+0.185$ | Autophagosome formation $\rightarrow$ Organelle clearance $\rightarrow$ Senescence clearance |
+| **8** | **`DDX60L`** | RNA Helicase | $-0.184$ | RNA unwinding $\rightarrow$ Transcriptomic stability $\rightarrow$ Innate defense modulation |
+
+*\*Note: SIRT1 and SIRT6 are curated literature priors outside the 5,009-HVG count matrix. Single-cohort correlations (Litviňuková et al., n=14 donors) did not replicate in the independent 54-donor PERIHEART cohort (top-100 gene overlap r = −0.42 vCM, −0.19 atrial CM, −0.23 fibroblast); only the multi-gene pseudobulk aging clock achieved statistically significant out-of-donor validation (LODO Pearson r = 0.4606, MAE = 6.97 yr).*
 
 ---
 
 ### 3.3 Electrophysiological Safety Audit (NEUROS-X)
-The 8-factor cocktail was evaluated across the 512 LIF spiking neuron cardiac network. The simulation yielded an Inter-Spike Interval variance of $\sigma^2_{\text{ISI}} = 46.42$ (well below the $\le 60.0$ threshold), confirming normal ECG synchrony, stable action potential duration ($APD_{90}$), and zero pro-arrhythmic risk.
+The 8-factor cocktail was evaluated across the 512 LIF spiking neuron cardiac network. The NEUROS-X simulation reported an Inter-Spike Interval variance of $\sigma^2_{\text{ISI}} = 46.42$ (below the $\le 60.0$ threshold), indicating simulated conduction stability across the model network.
 
 ---
 
 ### 3.4 Delivery Vehicle Optimization & Opentrons Robotic Export
-- **LNP Formulation**: The Layer 3 LNP optimizer derived a 5-component formulation ($2,195.25\text{ }\mu\text{g}$ total lipid mass: $1,201.54\text{ }\mu\text{g}$ DLin-MC3-DMA, $295.72\text{ }\mu\text{g}$ DSPC, $557.12\text{ }\mu\text{g}$ Cholesterol, $140.86\text{ }\mu\text{g}$ DMG-PEG2000, $N/P = 6.0$). Adding $15\text{ mol}\%$ DOTAP 5th SORT lipid elevated predicted cardiac capillary endothelial tropism from $0.000$ (liver-trapped) to $> 85\%$.
+- **LNP Formulation**: The Layer 3 LNP optimizer derived a 5-component formulation ($2,195.25\text{ }\mu\text{g}$ total lipid mass: $1,201.54\text{ }\mu\text{g}$ DLin-MC3-DMA, $295.72\text{ }\mu\text{g}$ DSPC, $557.12\text{ }\mu\text{g}$ Cholesterol, $140.86\text{ }\mu\text{g}$ DMG-PEG2000, $N/P = 6.0$). Adding $15\text{ mol}\%$ DOTAP 5th SORT lipid elevated predicted cardiac capillary endothelial tropism from $0.000$ (liver-trapped) to a predicted $> 85\%$ (model output; not measured experimentally).
 - **Opentrons OT-2 Export**: Zenith automatically exported a valid Python protocol (`zenith_opentrons_1785817573.py`) utilizing Opentrons API v2.14, loading a P20 GEN2 single-channel pipette, filter tip racks, NEST reservoir, and Corning 96-well plate to execute automated 10 $\mu\text{L}$ transfections across all 8 target gene payloads.
 
 ---
 
 ## 4. Discussion
 
-The Zenith v31.0 platform provides an exploratory in silico framework for modeling cellular reprogramming hypotheses without Yamanaka pluripotency factors. By leveraging non-coding lncRNAs (`TTN-AS1`, `MLIP-AS1`) and sirtuin deacetylases (`SIRT1`, `SIRT6`) alongside proteostasis maintainers (`SH3RF2`, `WDFY3`), Zenith achieves epigenetic age reversal while preserving cell identity and membrane capacitance.
+The Zenith v31.0 platform provides an exploratory in silico framework for modeling cellular reprogramming hypotheses without Yamanaka pluripotency factors. Leveraging lncRNAs (TTN-AS1, MLIP-AS1) and sirtuins (SIRT1, SIRT6) is proposed as a candidate route to epigenetic age reversal with preserved membrane capacitance and titin structural integrity. This is an untested computational hypothesis: none of these factors has been evaluated in vitro or in vivo, and the single-cohort correlations supporting them did not replicate in the independent PERIHEART cohort (see Table 1 note).
 
 Furthermore, integrating biophysical cardiac spiking neural simulations (NEUROS-X) directly into the discovery loop solves the critical safety bottleneck that has historically plagued cardiac gene therapies. The seamless connection between computational prediction, LNP delivery optimization, and Opentrons OT-2 robotic protocol generation establishes a new paradigm for automated, reproducible longevity medicine.
 

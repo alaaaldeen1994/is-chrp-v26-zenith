@@ -310,7 +310,7 @@
 
   <p class="no-indent"><strong>AlphaGenome 201bp PWM Scanner</strong>: Evaluates 19 JASPAR 2024 pioneer TFs (GATA4, MEF2C, NKX2-5, POU5F1, SOX2, MYC). $|\Delta\text{PWM}| &gt; 2.0$ flags disrupted binding sites.</p>
 
-  <p class="no-indent"><strong>Structural Authority & Clocks</strong>: Incorporates Boltz-1 and ESMFold 3D structure predictions, the Meyer-Schumacher BiT age transcriptomic clock (binarized scRNA regression reaching theoretical accuracy limit), cross-modal Horvath DNA methylation projection (353 CpGs), DunedinPACE rate, and ADMET cardiotoxicity filters.</p>
+  <p class="no-indent"><strong>Structural Authority & Clocks</strong>: Incorporates Boltz-1 and ESMFold 3D structure predictions, the Meyer-Schumacher BiT age transcriptomic clock (binarized scRNA regression; the Zenith implementation is uncalibrated and reports no accuracy figure), cross-modal Horvath DNA methylation projection (353 CpGs), DunedinPACE rate, and ADMET cardiotoxicity filters.</p>
 
   <h3>2.2 Layer 2: Causal Inference & Multi-Omics</h3>
   <p class="no-indent"><strong>Mendelian Randomisation (MR)</strong>:</p>
@@ -322,7 +322,7 @@
 
   <h3>2.3 Layer 3: Interventions & Delivery</h3>
   <p class="no-indent"><strong>AutoDock Vina & Prime Editing</strong>: Computes $\Delta G_{\text{bind}}$ docking free energy and synthesizes pegRNAs ($\text{Spacer}_{20} + \text{Scaffold}_{80} + \text{PBS} + \text{RTT}$).</p>
-  <p class="no-indent"><strong>LNP SORT Optimizer v2</strong>: Formulates 5-component SORT lipid nanoparticles (DLin-MC3-DMA 50%, DSPC 10%, Cholesterol 38.5%, DMG-PEG2000 1.5%, DOTAP 10-20%) achieving &gt; 85% cardiac capillary tropism.</p>
+  <p class="no-indent"><strong>LNP SORT Optimizer v2</strong>: Formulates 5-component SORT lipid nanoparticles (DLin-MC3-DMA 50%, DSPC 10%, Cholesterol 38.5%, DMG-PEG2000 1.5%, DOTAP 10-20%) with a predicted &gt; 85% cardiac capillary tropism (model output; not measured experimentally).</p>
 
   <h3>2.4 Layer 4: AlphaZen RL & Virtual Trials</h3>
   <div class="equation-box">
@@ -349,8 +349,8 @@ ZENITH DISCOVERY BENCHMARK RESULTS (Litviňuková et al. 2020)
 Target Dataset: PERIHEART 54-Donor Replication Cohort (392,819 Nuclei) & Litviňuková Atlas (99,993 Trained / 486,134 Source Cells)
 Leave-One-Donor-Out Aging Clock: LODO MAE = 6.97 Years | Pearson r = 0.4606 (p = 4.57e-4)
 In Silico Screening: Exploratory 8-Factor Hypothesis Panel (Unvalidated Historical Benchmark Removed)
-Electrophysiological Status: VERIFIED SAFE (ISI Variance = 46.42)
-Microfluidic LNP Encapsulation: 94.4% (>85% Predicted Cardiac Tropism)
+Electrophysiological Status (in silico): STABLE CONDUCTION — simulated ISI Variance = 46.42 (threshold < 60.0)
+Predicted LNP Encapsulation Efficiency: 94.4% (model output) | >85% Predicted Cardiac Tropism
 ===================================================================================
   </div>
 </div>
@@ -377,66 +377,67 @@ Microfluidic LNP Encapsulation: 94.4% (>85% Predicted Cardiac Tropism)
           <td><strong>1</strong></td>
           <td><strong>SIRT1</strong></td>
           <td>External Sirtuin Target</td>
-          <td>0.999</td>
+          <td>Prior (N/A)*</td>
           <td>Histone deacetylation → Chromatin remodeling → Epigenetic age reset</td>
         </tr>
         <tr>
           <td><strong>2</strong></td>
           <td><strong>SIRT6</strong></td>
           <td>External Sirtuin Target</td>
-          <td>0.999</td>
+          <td>Prior (N/A)*</td>
           <td>Histone deacetylation → Double-strand DNA repair → Telomere maintenance</td>
         </tr>
         <tr>
           <td><strong>3</strong></td>
           <td><strong>TTN-AS1</strong></td>
           <td>Long Non-Coding RNA</td>
-          <td>0.300</td>
+          <td>+0.300</td>
           <td>Titin mRNA regulation → Sarcomere Z-disc organization → Capacitance stability</td>
         </tr>
         <tr>
           <td><strong>4</strong></td>
           <td><strong>MLIP-AS1</strong></td>
           <td>Long Non-Coding RNA</td>
-          <td>0.245</td>
+          <td>+0.245</td>
           <td>Lipid metabolism modulation → Mitochondrial ATP yield → Functional contraction</td>
         </tr>
         <tr>
           <td><strong>5</strong></td>
           <td><strong>SH3RF2</strong></td>
           <td>E3 Ubiquitin Ligase</td>
-          <td>0.214</td>
+          <td>+0.214</td>
           <td>Selective ubiquitination → Fibroblast protein clearance → Proteostasis reset</td>
         </tr>
         <tr>
           <td><strong>6</strong></td>
           <td><strong>PRKCE</strong></td>
           <td>Protein Kinase C ε</td>
-          <td>0.191</td>
+          <td>+0.191</td>
           <td>Ion channel phosphorylation → Membrane stabilization → Survival signaling</td>
         </tr>
         <tr>
           <td><strong>7</strong></td>
           <td><strong>WDFY3</strong></td>
           <td>Autophagy Adaptor</td>
-          <td>0.185</td>
+          <td>+0.185</td>
           <td>Autophagosome formation → Organelle clearance → Senescence clearance</td>
         </tr>
         <tr>
           <td><strong>8</strong></td>
           <td><strong>DDX60L</strong></td>
           <td>RNA Helicase</td>
-          <td>0.200</td>
+          <td>−0.184</td>
           <td>RNA unwinding → Transcriptomic stability → Innate defense modulation</td>
         </tr>
       </tbody>
     </table>
+    <p style="font-size: 7.5pt; color: #475569; margin-top: 4px;">*<em>Note: SIRT1 and SIRT6 are curated literature priors outside the 5,009-HVG count matrix. Single-cohort correlations (Litviňuková et al., n=14 donors) did not replicate in the independent 54-donor PERIHEART cohort (top-100 gene overlap r = −0.42 vCM, −0.19 atrial CM, −0.23 fibroblast); only the multi-gene pseudobulk aging clock achieved statistically significant out-of-donor validation (LODO Pearson r = 0.4606, MAE = 6.97 yr).</em></p>
   </div>
 
-  <p class="no-indent"><strong>Safety & Robotics</strong>: NEUROS-X verified ISI variance $\sigma^2_{\text{ISI}} = 46.42$ (stable conduction). Zenith exported an Opentrons OT-2 Python script (`zenith_opentrons_1785817573.py`) for automated 96-well pipetting.</p>
+  <p class="no-indent"><strong>Safety & Robotics</strong>: NEUROS-X simulation reported ISI variance $\sigma^2_{\text{ISI}} = 46.42$ (stable conduction). Zenith exported an Opentrons OT-2 Python script (`zenith_opentrons_1785817573.py`) for automated 96-well pipetting.</p>
 
   <h2>4.0 Discussion</h2>
-  <p class="no-indent">Zenith v31.0 provides an exploratory in silico hypothesis-generation framework for modeling cellular reprogramming trajectories without pluripotency factors. Leveraging lncRNAs (TTN-AS1, MLIP-AS1) and sirtuins (SIRT1, SIRT6) achieves epigenetic age reversal while preserving membrane capacitance and titin structural integrity.</p>
+  <p class="no-indent">Zenith v31.0 provides an exploratory in silico hypothesis-generation framework for modeling cellular reprogramming trajectories without pluripotency factors. Leveraging lncRNAs (TTN-AS1, MLIP-AS1) and sirtuins (SIRT1, SIRT6) is proposed as a candidate route to epigenetic age reversal with preserved membrane capacitance and titin structural integrity. This is an untested computational hypothesis: none of these factors has been evaluated in vitro or in vivo, and the single-cohort correlations supporting them did not replicate in the independent PERIHEART cohort (see Table 1 note).</p>
 
   <h2>5.0 Data & Code Availability</h2>
   <ul class="no-indent" style="font-size: 8pt; padding-left: 12px;">
