@@ -1676,8 +1676,8 @@ async def lifespan(app: FastAPI):
 import os
 env_mode = os.getenv("ENV", "production")
 app = FastAPI(
-    title="Nilus Lab | IS-CHRP v29.0 GOLD Clinical AI Bridge", 
-    description="Professional-grade AI bridge for Clinical Digital Twins by Nilus Lab (Zenith Edition).",
+    title="Nilus Lab | Zenith v31.0 Research API Bridge", 
+    description="AI bridge for Zenith computational research tooling by Nilus Lab. Research Use Only (RUO) — not a medical device, no clinical claims.",
     servers=[
         {"url": "https://www.niluslab.com", "description": "Zenith Production API Server"}
     ],
@@ -6064,8 +6064,7 @@ async def discover_protocol_v1(req: DiscoveryRequest):
 
 
 
-    # 3. Real Age Clock Computation (Phase 5 â€” Litvinukova et al. 2020)
-    # Uses real ElasticNet clock trained on 14 donors with real ages from Supplementary Table 1
+    _predicted_age = None
     try:
         import pickle, numpy as _np
         _clock_path = os.path.join(os.path.dirname(__file__), "models", "age_clock.pkl")
@@ -6073,18 +6072,17 @@ async def discover_protocol_v1(req: DiscoveryRequest):
             with open(_clock_path, "rb") as _f:
                 _pkg = pickle.load(_f)
             _clock = _pkg["model"]
-            # Use current_genes as a proxy latent vector (first 20 dims)
             _input = _np.array(current_genes[:20], dtype=float).reshape(1, -1)
-            # Pad to 20 dims if shorter
             if _input.shape[1] < 20:
                 _input = _np.pad(_input, ((0,0),(0, 20-_input.shape[1])))
-            _predicted_age = float(_clock.predict(_input)[0])
-            print(f"       Real age clock prediction: {_predicted_age:.1f} years")
+            if hasattr(_clock, "coef_") and _input.shape[1] == len(_clock.coef_):
+                _predicted_age = float(_clock.predict(_input)[0])
+                print(f"       Age clock prediction: {_predicted_age:.1f} years")
+            else:
+                print(f"       Age clock dimension mismatch (coef_ len={len(getattr(_clock, 'coef_', []))}, input={_input.shape[1]}): not yet validated for 20-D latent vectors, skipping.")
         else:
-            _predicted_age = 57.5  # population mean of the 14 donors
-            print(f"       Age clock not found, using cohort mean: {_predicted_age}y")
+            print("       Age clock model file not found, skipping.")
     except Exception as _e:
-        _predicted_age = 57.5
         print(f"       Age clock error: {_e}")
 
     
