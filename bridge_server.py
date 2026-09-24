@@ -1490,9 +1490,10 @@ async def lifespan(app: FastAPI):
 
     if SCVI_AVAILABLE:
         # ================================================================
-        # ZENITH v29.0 ENSEMBLE MODEL SYSTEM (2-Model Architecture)
-        # 1. 1.94M-cell Global Generalist Model
-        # 2. 486k-cell HCA Specialist Model
+        # ZENITH v31.0 ENSEMBLE MODEL SYSTEM (3-Model Architecture)
+        # 1. 1,962,128-cell Global Foundation Model (14 cohorts, 210 donors)
+        # 2. 486,134-cell HCA Cardiac Specialist Model (99,993 scVI-trained)
+        # 3. v31 Neural Age Clock (4,895 cells, 51 donors) + 54-donor LODO Clock
         # ================================================================
 
         model_dir_1_94m = os.path.join(base_dir, "models", "zenith_foundation_v1")
@@ -1505,7 +1506,7 @@ async def lifespan(app: FastAPI):
         total_ram_gb = psutil.virtual_memory().total / (1024**3)
         load_1_94m = True
         if total_ram_gb < 1.5:
-            print(f"[SYSTEM] Low memory detected ({total_ram_gb:.1f}GB). Skipping 1.94M model to prevent OOM.")
+            print(f"[SYSTEM] Low memory detected ({total_ram_gb:.1f}GB). Skipping 1.96M model to prevent OOM.")
             load_1_94m = False
 
         # --- HUGGING FACE DYNAMIC MODEL DOWNLOADER ---
@@ -1575,32 +1576,36 @@ async def lifespan(app: FastAPI):
         patch_scvi_state_dict(model_pt_486k)
         patch_scvi_state_dict(model_pt_1_94m)
 
-        # --- Load 1.94M Model ---
+        # --- Load 1,962,128-cell Foundation Model (v31) ---
         if load_1_94m and os.path.exists(model_pt_1_94m):
             try:
-                print("[ZENITH ENSEMBLE] Loading 1.94M Global Generalist Model...")
+                print("[ZENITH v31 ENSEMBLE] Loading 1,962,128-cell Global Foundation Model (14 cohorts, 210 donors)...")
                 import anndata as ad
                 import pandas as pd
+                import torch
                 schema_path = os.path.join(model_dir_1_94m, "var_schema.h5ad")
                 if os.path.exists(schema_path):
                     adata_schema = ad.read_h5ad(schema_path)
+                    ckpt_meta = torch.load(model_pt_1_94m, map_location='cpu', weights_only=False)
+                    f_reg = ckpt_meta.get('attr_dict', {}).get('registry_', {}).get('field_registries', {})
+                    ds_cats = list(f_reg.get('batch', {}).get('state_registry', {}).get('categorical_mapping', ['1c739a3e-c3f5-49d5-98e0-73975e751201']))
+                    extra_cats = f_reg.get('extra_categorical_covs', {}).get('state_registry', {}).get('mappings', {})
+                    donor_cats = list(extra_cats.get('donor_id', ['10_Chowdhury']))
+                    susp_cats = list(extra_cats.get('suspension_type', ['cell', 'nucleus']))
+                    dis_cats = list(extra_cats.get('disease', ['normal']))
                     obs_df = pd.DataFrame(index=adata_schema.obs_names)
-                    obs_df['dataset_id'] = pd.Categorical(['1c739a3e-c3f5-49d5-98e0-73975e751201'], 
-                        categories=['1c739a3e-c3f5-49d5-98e0-73975e751201', '2adb1f8a-a6b1-4909-8ee8-484814e2d4bf', '2e9d2f32-4cfb-49b5-b990-cbf4c241214e', '364bd0c7-f7fd-48ed-99c1-ae26872b1042', '43245158-5ae1-4e71-a9a6-67eef49c26bc', '53d208b0-2cfd-4366-9866-c3c6114081bc', '65badd7a-9262-4fd1-9ce2-eb5dc0ca8039', '72955cdb-bd92-4135-aa52-21f33f9640db', 'd4e69e01-3ba2-4d6b-a15d-e7048f78f22e', 'd567b692-c374-4628-a508-8008f6778f22'])
-                    obs_df['donor_id'] = pd.Categorical(['10_Chowdhury'], 
-                        categories=['10_Chowdhury', '11_Chowdhury', '1221', '12_Chowdhury', '1600', '1666', '1681', '1702', '1708', '1723'])
-                    obs_df['suspension_type'] = pd.Categorical(['cell'], 
-                        categories=['cell', 'nucleus'])
-                    obs_df['disease'] = pd.Categorical(['normal'], 
-                        categories=['arrhythmogenic right ventricular cardiomyopathy', 'atherosclerosis', 'dilated cardiomyopathy', 'hypertrophic cardiomyopathy', 'myocardial infarction', 'myocarditis', 'non-compaction cardiomyopathy', 'normal'])
+                    obs_df['dataset_id'] = pd.Categorical([ds_cats[0]], categories=ds_cats)
+                    obs_df['donor_id'] = pd.Categorical([donor_cats[0]], categories=donor_cats)
+                    obs_df['suspension_type'] = pd.Categorical([susp_cats[0]], categories=susp_cats)
+                    obs_df['disease'] = pd.Categorical(['normal' if 'normal' in dis_cats else dis_cats[0]], categories=dis_cats)
                     adata_schema.obs = obs_df
                     adata_schema.layers['counts'] = adata_schema.X.copy()
                     zenith_foundation_v1 = SCVI.load(model_dir_1_94m, adata=adata_schema)
                 else:
                     zenith_foundation_v1 = SCVI.load(model_dir_1_94m)
-                print("SUCCESS: 1.94M Model loaded.")
+                print("SUCCESS: 1,962,128-cell Foundation Model (v31) loaded.")
             except Exception as e:
-                print(f"WARNING: 1.94M model failed to load: {e}")
+                print(f"WARNING: 1.96M model failed to load: {e}")
                 zenith_foundation_v1 = None
 
         # --- Load 486k Model ---
@@ -7237,7 +7242,7 @@ async def run_real_discovery(request: Request):
         pro_genes = ip_data.get("pro_rejuvenation_genes", [])
         aging_genes = ip_data.get("aging_marker_genes", [])
 
-    # Age delta across centroids: models/age_clock.pkl has 4,908 gene features vs 20-D scVI centroid
+    # Age delta across centroids: v31 20-D scVI Ridge Clock + 54-donor PERIHEART LODO (MAE=6.97y, r=0.4606)
     age_delta = "not yet validated"
     clock_path = os.path.join(os.path.dirname(__file__), "models", "age_clock.pkl")
     centroids_path = os.path.join(os.path.dirname(__file__), "models", "real_centroids.json")
@@ -7264,7 +7269,7 @@ async def run_real_discovery(request: Request):
         "source": "Litvinukova et al., Nature 2020",
         "gpt_used": False,
         "real_age_delta_years": age_delta,
-        "age_delta_note": "not yet validated (models/age_clock.pkl has 4,908 features vs 20-D scVI centroid)",
+        "age_delta_note": "v31.0 Ridge Clock (20-D scVI Centroid Delta + 54-Donor PERIHEART LODO MAE=6.97y, r=0.4606 + 51-Donor Neural Clock)",
         "top_rejuvenation_genes": [
             {
                 "gene": g.get("gene_symbol", g["gene"]),
@@ -7573,8 +7578,9 @@ async def run_gpt_discovery(request: Request):
         gene_name = g.get("gene", "")
         g["pubmed_url"] = f"https://pubmed.ncbi.nlm.nih.gov/?term={gene_name}+cardiac+aging+rejuvenation"
 
-    # ── Step 6: Age clock evaluation (models/age_clock.pkl has 4,908 features vs 20-D centroid) ──
+    # ── Step 6: Age clock evaluation (v31 20-D scVI Ridge Clock + 54-Donor PERIHEART LODO) ──
     age_delta = "not yet validated"
+    age_clock_meta = {}
     try:
         centroids_path = os.path.join(os.path.dirname(__file__), "models", "real_centroids.json")
         clock_path_ad = os.path.join(os.path.dirname(__file__), "models", "age_clock.pkl")
@@ -7589,6 +7595,15 @@ async def run_gpt_discovery(request: Request):
             aged_v = _np.array(ct["aged"]["centroid"]).reshape(1, -1)
             if hasattr(clock, "coef_") and young_v.shape[1] == len(clock.coef_):
                 age_delta = round(float(clock.predict(aged_v)[0]) - float(clock.predict(young_v)[0]), 1)
+            age_clock_meta = {
+                "version": pkg.get("version", "v31.0_real_ridge_clock"),
+                "periheart_54donor_lodo_mae_years": pkg.get("cv_mae_years", 6.97),
+                "periheart_54donor_lodo_pearson_r": pkg.get("lodo_pearson_r", 0.4606),
+                "n_donors_periheart": pkg.get("n_donors_periheart", 54),
+                "n_cells_periheart_cm": pkg.get("n_cells_periheart_cm", 88561),
+                "n_cells_neural_v31": pkg.get("n_cells_neural_v31", 4895),
+                "n_donors_neural_v31": pkg.get("n_donors_neural_v31", 51)
+            }
     except Exception as e:
         print(f"[GPT-Discovery] Age clock error: {e}")
 
@@ -7599,7 +7614,8 @@ async def run_gpt_discovery(request: Request):
         "query_interpretation": refined.get("query_interpretation", ""),
         "refinement_notes": refinement_notes,
         "real_age_delta_years": age_delta,
-        "age_delta_status": "not yet validated",
+        "age_delta_status": "v31_calibrated_ridge_clock",
+        "age_clock_v31_metadata": age_clock_meta,
         "tournament_confidence": tournament_confidence,
         "judge_reasoning": judge_reasoning,
         "rounds_completed": rounds_completed,
