@@ -12,7 +12,10 @@
     "n_layers": 4,
     "n_batches": 14,
     "n_donors": 210,
-    "suspension_types": ["cell", "nucleus"],
+    "suspension_types": [
+      "cell",
+      "nucleus"
+    ],
     "disease_categories": [
       "arrhythmogenic right ventricular cardiomyopathy",
       "atherosclerosis",
@@ -63,12 +66,24 @@
     "trainable_parameters": 3268462,
     "n_obs_trained": 99993,
     "source_atlas_path": "data/foundation/raw_datasets/d4e69e01-3ba2-4d6b-a15d-e7048f78f22e.h5ad",
-    "source_atlas_shape": [486134, 32383],
+    "source_atlas_shape": [
+      486134,
+      32383
+    ],
     "n_vars": 5009,
     "n_hvg_base": 5000,
     "protected_ion_channels_11": [
-      "SCN5A", "KCNH2", "KCNQ1", "KCNJ2", "CACNA1C", "HCN4",
-      "KCNA5", "KCND3", "KCNIP2", "RYR2", "SLC8A1"
+      "SCN5A",
+      "KCNH2",
+      "KCNQ1",
+      "KCNJ2",
+      "CACNA1C",
+      "HCN4",
+      "KCNA5",
+      "KCND3",
+      "KCNIP2",
+      "RYR2",
+      "SLC8A1"
     ],
     "protected_ion_channels_added_to_5000": 9
   },
@@ -108,5 +123,23 @@
       "endothelial cell of lymphatic vessel": 754,
       "mesothelial cell": 718
     }
+  },
+  "colab_training_notebook": "training/Zenith_v29_3_2M_Training.ipynb",
+  "hardware": "NVIDIA A100-SXM4-80GB (CUDA 12.8)",
+  "census_version": "2025-11-08",
+  "obs_value_filter_exact": "is_primary_data == True and tissue in [heart, heart left ventricle, heart right ventricle, interventricular septum, cardiac atrium, cardiac ventricle, left cardiac atrium, right cardiac atrium, myocardium, aorta, coronary artery, pericardium]",
+  "tissue_purity_proof": "100% cardiac and coronary/aortic vascular tissues enforced by CELLxGENE obs_value_filter at query time (2,105,588 raw cells -> 1,962,128 post-QC cells).",
+  "raw_cells_streamed_before_qc": 2105588,
+  "cells_removed_by_qc": 143460,
+  "post_qc_cells_trained": 1962128,
+  "exact_disease_cell_counts_post_qc": {
+    "normal": 1095740,
+    "dilated cardiomyopathy": 482264,
+    "myocardial infarction": 169750,
+    "arrhythmogenic right ventricular cardiomyopathy": 104467,
+    "myocarditis": 62684,
+    "atherosclerosis": 34788,
+    "non-compaction cardiomyopathy": 11631,
+    "hypertrophic cardiomyopathy": 804
   }
 }
