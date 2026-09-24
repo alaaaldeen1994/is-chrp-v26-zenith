@@ -34,7 +34,7 @@ Repo: C:\Users\alaaa\.gemini\antigravity\scratch\is-chrp-v26-generative\
 - neural_models.py (NEW)
 
 ## Models (/models)
-- zenith_foundation_v1 (1.94M cells)
+- zenith_foundation_v1 (1,962,128 (post-QC from 2,105,588 raw across 14 cohorts / 210 donors) cells)
 - scvi_model_486k_real (486k cells)
 
 ## NEW NEUROS-X Endpoints

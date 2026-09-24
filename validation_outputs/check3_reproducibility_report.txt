@@ -1,0 +1,104 @@
+================================================================================
+ZENITH / NL-101 — CHECK 3: REPRODUCIBILITY AND GATE STABILITY
+================================================================================
+
+SECTION 3.2 — Determinism Test (3 runs, seed=42)
+------------------------------------------------------------
+
+CRITICAL PRELIMINARY FINDING:
+  The production pipeline in run_zenith_screening_pipeline.py has HARDCODED
+  delta_age and ESI values for 9 named candidates (lines 279-329), including
+  NL-101 (delta=13.00, ESI=0.928). These values NEVER change across seeds.
+  The stability test below applies only to the 500 GENERATED combinatorial
+  candidates. NL-101's reported metrics are invariant by construction.
+
+  Run 1/3  seed=42  SHA-256: 0cef14b714781165bf3b43bd36e608061c6042aa493ffdf3bed1044a6b56a7bb
+  Run 2/3  seed=42  SHA-256: 0cef14b714781165bf3b43bd36e608061c6042aa493ffdf3bed1044a6b56a7bb
+  Run 3/3  seed=42  SHA-256: 0cef14b714781165bf3b43bd36e608061c6042aa493ffdf3bed1044a6b56a7bb
+
+  Bitwise identical (3/3): PASS ✓
+
+SECTION 3.3 — Seed Stability (20 seeds)
+------------------------------------------------------------
+
+Per-seed summary (rank of NL-101, survivor count, rank-1 candidate):
+    Seed   NL-101 Rank   NL-101 ΔAge  NL-101 ESI   Survivors  Rank-1 Name                   
+------------------------------------------------------------------------------------------
+      42             1          13.0       0.928           1  NL-101 (Zenith Lead)          
+     123             1          13.0       0.928           1  NL-101 (Zenith Lead)          
+     456             1          13.0       0.928           1  NL-101 (Zenith Lead)          
+     789             1          13.0       0.928           1  NL-101 (Zenith Lead)          
+    1001             1          13.0       0.928           1  NL-101 (Zenith Lead)          
+    1337             1          13.0       0.928           1  NL-101 (Zenith Lead)          
+    2024             1          13.0       0.928           1  NL-101 (Zenith Lead)          
+    2025             1          13.0       0.928           1  NL-101 (Zenith Lead)          
+    2026             1          13.0       0.928           1  NL-101 (Zenith Lead)          
+    3141             1          13.0       0.928           1  NL-101 (Zenith Lead)          
+    9999             1          13.0       0.928           1  NL-101 (Zenith Lead)          
+      11             1          13.0       0.928           1  NL-101 (Zenith Lead)          
+      22             1          13.0       0.928           1  NL-101 (Zenith Lead)          
+      33             1          13.0       0.928           1  NL-101 (Zenith Lead)          
+      55             1          13.0       0.928           1  NL-101 (Zenith Lead)          
+      77             1          13.0       0.928           1  NL-101 (Zenith Lead)          
+      88             1          13.0       0.928           1  NL-101 (Zenith Lead)          
+      99             1          13.0       0.928           1  NL-101 (Zenith Lead)          
+     100             1          13.0       0.928           1  NL-101 (Zenith Lead)          
+     200             1          13.0       0.928           1  NL-101 (Zenith Lead)          
+
+NL-101 rank across 20 seeds:   mean=1.00  sd=0.00  min=1  max=1
+NL-101 ΔAge across 20 seeds:   mean=13.0000  sd=0.0000
+NL-101 ESI across 20 seeds:    mean=0.9280  sd=0.0000
+Dual-gate survivor count dist: {1: 20}
+
+NL-101 rank 1 in 20/20 runs
+No other candidate reached rank 1 in any run.
+
+SECTION 3.4 — Gate-Margin Analysis (ESI 0.928 ± SD vs gate 0.90)
+------------------------------------------------------------
+
+CRITICAL NOTE: NL-101's delta_age (13.00) and ESI (0.928) are HARDCODED
+in the production pipeline. Across all 20 seeds, NL-101's reported values
+NEVER change. The 'ESI 0.928 ± 0.029' figure from prior documentation
+refers to cross-cell variance WITHIN a single run (200 cells), not
+cross-seed variance. These are different quantities.
+
+Within-run ESI distribution (seed=42):
+  NL-101 ESI (hardcoded): 0.928
+  ESI gate: 0.90
+  Margin above gate: 0.028
+
+SIMULATED (not hardcoded) NL-101 ESI statistics across 200 cells:
+  Simulated ESI composite mean: 0.9483
+  ESI confidence interval (±1.96σ): ±0.0245
+
+  Gate threshold: 0.90
+  Simulated ESI margin above gate: 0.0483
+  Lower bound (mean - 1.96σ): 0.9238
+  FINDING: Full 95% CI (0.9238 to 0.9728) is above the 0.90 gate.
+
+Cross-seed gate failure rates (hardcoded values — by construction always 0):
+  NL-101 ESI < 0.90 in 0/20 runs = 0.0%
+  NL-101 ΔAge < 10.0 in 0/20 runs = 0.0%
+  NL-101 fails either gate in 0/20 runs = 0.0%
+
+Because NL-101 values are hardcoded, cross-seed failure rate = 0% by construction.
+The REAL gate-stability question is whether the SIMULATED (un-hardcoded) NL-101
+reliably passes. Simulated ESI statistics above answer this for a single seed.
+
+================================================================================
+SECTION 3.6 — ACCEPTANCE CRITERIA VERDICT
+------------------------------------------------------------
+
+  [PASS ✓] Same-seed bitwise reproducibility (3/3 identical)
+  [PASS ✓] NL-101 rank 1 across seeds (20/20 ≥ 19)
+  [PASS ✓] Dual-gate survivor count = 1 (20/20 ≥ 18)
+  [PASS ✓] NL-101 ESI gate failure rate (0.0% < 5%)
+  [PASS ✓] NL-101 ΔAge gate failure rate (0.0% < 5%)
+
+OVERALL: All acceptance criteria passed.
+
+IMPORTANT CAVEAT:
+  Criteria c2–c5 are trivially satisfied because NL-101 delta/ESI are hardcoded.
+  The reproducibility guarantee is therefore a guarantee of code stability,
+  not of biological robustness. A genuine gate-stability test requires
+  removing the hardcoded overrides and using only simulated values.

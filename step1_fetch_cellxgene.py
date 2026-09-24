@@ -3,7 +3,7 @@ step1_fetch_cellxgene.py
 ========================
 Production-grade cardiac data acquisition from CZI CELLxGENE Census.
 
-V29.0 UPGRADE: Uses the cellxgene_census SOMA API to stream ALL 3.2M+
+V29.0 UPGRADE: Uses the cellxgene_census SOMA API to stream ALL 1,962,128 post-QC (from 2,105,588 raw cardiac/vascular across 14 cohorts & 210 donors; originally targeted as 1,962,128 post-QC (from 2,105,588 raw cardiac/vascular across 14 cohorts & 210 donors; originally targeted as 3.2M))+
 human cardiac/vascular cells directly from S3, bypassing manual H5AD
 file downloads entirely.
 
@@ -73,7 +73,7 @@ CARDIAC_TISSUES = [
     "pericardium",
 ]
 
-# No cell cap — we want ALL available cardiac cells (~3.2M)
+# No cell cap — we want ALL available cardiac cells (~1,962,128 post-QC (from 2,105,588 raw cardiac/vascular across 14 cohorts & 210 donors; originally targeted as 1,962,128 post-QC (from 2,105,588 raw cardiac/vascular across 14 cohorts & 210 donors; originally targeted as 3.2M)))
 # QC filtering will reduce this to ~2.5–2.7M high-quality cells in step2.
 
 # Minimum dataset size to include (avoid tiny pilot datasets)
@@ -201,7 +201,7 @@ def harmonise_census_anndata(adata):
         (adata.obs["n_genes_by_counts"] >= 200) &
         (adata.obs["n_genes_by_counts"] <= 7_000) &   # doublet proxy
         (adata.obs["total_counts"]       >= 500) &    # min library size
-        (adata.obs["pct_counts_mt"]      <= 20)       # mitochondrial (stricter for 3.2M)
+        (adata.obs["pct_counts_mt"]      <= 20)       # mitochondrial (stricter for 1,962,128 post-QC (from 2,105,588 raw cardiac/vascular across 14 cohorts & 210 donors; originally targeted as 1,962,128 post-QC (from 2,105,588 raw cardiac/vascular across 14 cohorts & 210 donors; originally targeted as 3.2M)))
     ].copy()
     n_after = adata.n_obs
     print(f"    QC: {n_before:,} → {n_after:,} cells ({n_before - n_after:,} removed)")
@@ -231,7 +231,7 @@ def main():
 
     print("=" * 70)
     print("  Zenith Foundation Model v29.0 — Data Acquisition Pipeline")
-    print(f"  Target: ALL 3.2M+ Human Cardiac/Vascular Cells (CELLxGENE Census)")
+    print(f"  Target: ALL 1,962,128 post-QC (from 2,105,588 raw cardiac/vascular across 14 cohorts & 210 donors; originally targeted as 1,962,128 post-QC (from 2,105,588 raw cardiac/vascular across 14 cohorts & 210 donors; originally targeted as 3.2M))+ Human Cardiac/Vascular Cells (CELLxGENE Census)")
     print(f"  Started: {start_time.strftime('%Y-%m-%d %H:%M UTC')}")
     print("=" * 70)
 

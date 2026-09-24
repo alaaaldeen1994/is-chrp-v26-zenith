@@ -1,0 +1,126 @@
+{
+  "old_constant_baseline": {
+    "phi_hat": 0.008892,
+    "synchrony": 0.033421,
+    "isi_variance": 495.5399,
+    "ion_expr_resolved_count": 0
+  },
+  "cocktails": {
+    "Cocktail_1_NL101": {
+      "factors": [
+        "SIRT1",
+        "SIRT6",
+        "GATA4",
+        "ZBTB16"
+      ],
+      "resolved_channels_count": 12,
+      "resolved_ion_expr": {
+        "SCN5A": 0.92313,
+        "KCNH2": 3.38345,
+        "KCNQ1": 2.6248,
+        "KCNJ2": 1.69451,
+        "CACNA1C": 0.05,
+        "HCN4": 3.66656,
+        "RYR2": 0.05,
+        "KCNA5": 11.91208,
+        "KCND3": 0.05,
+        "KCNIP2": 8.80127,
+        "SLC8A1": 12.80151,
+        "GJA5": 7.92694
+      },
+      "classification": "EXPLORATORY_NOMINAL",
+      "reason": "Exploratory LIF substrate dynamics within nominal bounds (uncalibrated research proxy; not a clinical ECG or wet-lab safety assay).",
+      "phi_hat": 0.04429,
+      "synchrony": 0.021086,
+      "active_fraction": 0.8555,
+      "isi_variance": 299.6322,
+      "blacklist_flags": []
+    },
+    "Cocktail_2_TopGRN": {
+      "factors": [
+        "NFKB1",
+        "MITF",
+        "CTCF",
+        "HIF1A"
+      ],
+      "resolved_channels_count": 12,
+      "resolved_ion_expr": {
+        "SCN5A": 0.05,
+        "KCNH2": 2.63824,
+        "KCNQ1": 0.05,
+        "KCNJ2": 1.87559,
+        "CACNA1C": 0.05,
+        "HCN4": 3.36145,
+        "RYR2": 0.05,
+        "KCNA5": 2.5145,
+        "KCND3": 0.05,
+        "KCNIP2": 1.56983,
+        "SLC8A1": 0.05,
+        "GJA5": 2.34373
+      },
+      "classification": "BLOCKED",
+      "reason": "Ion-Channel Threshold Exceeded: 1 critical ion-channel gene(s) exceed threshold (Long QT Type 1 (Kv7.1 loss)).",
+      "phi_hat": 0.021269,
+      "synchrony": 0.034127,
+      "active_fraction": 0.7031,
+      "isi_variance": 234.0872,
+      "blacklist_flags": [
+        {
+          "gene": "KCNQ1",
+          "level": 0.05,
+          "threshold": 0.5,
+          "risk": "Long QT Type 1 (Kv7.1 loss)"
+        }
+      ]
+    },
+    "Cocktail_3_IonGain": {
+      "factors": [
+        "SCN5A",
+        "KCNH2",
+        "CACNA1C",
+        "RYR2"
+      ],
+      "resolved_channels_count": 12,
+      "resolved_ion_expr": {
+        "SCN5A": 119.67011,
+        "KCNH2": 16.54529,
+        "KCNQ1": 34.67645,
+        "KCNJ2": 1.84737,
+        "CACNA1C": 89.61163,
+        "HCN4": 4.58849,
+        "RYR2": 146.26607,
+        "KCNA5": 2.48637,
+        "KCND3": 23.5958,
+        "KCNIP2": 4.3952,
+        "SLC8A1": 30.5082,
+        "GJA5": 2.39147
+      },
+      "classification": "BLOCKED",
+      "reason": "Ion-Channel Threshold Exceeded: 3 critical ion-channel gene(s) exceed threshold (Long QT Type 3 (Na+ gain-of-function), Timothy Syndrome (LQT8, Ca2+ gain), CPVT (Ca2+ leak)).",
+      "phi_hat": 0.100612,
+      "synchrony": 0.011201,
+      "active_fraction": 0.9824,
+      "isi_variance": 295.5766,
+      "blacklist_flags": [
+        {
+          "gene": "SCN5A",
+          "level": 119.67011,
+          "threshold": 8.0,
+          "risk": "Long QT Type 3 (Na+ gain-of-function)"
+        },
+        {
+          "gene": "CACNA1C",
+          "level": 89.61163,
+          "threshold": 6.0,
+          "risk": "Timothy Syndrome (LQT8, Ca2+ gain)"
+        },
+        {
+          "gene": "RYR2",
+          "level": 146.26607,
+          "threshold": 7.0,
+          "risk": "CPVT (Ca2+ leak)"
+        }
+      ]
+    }
+  }
+}

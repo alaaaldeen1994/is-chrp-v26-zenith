@@ -4051,7 +4051,7 @@ const BiosimBridge = {
                 esiEl.innerText = (data.epigenetic_stability_index * 100).toFixed(1) + '%';
             }
 
-            // Update Analytical Grid (1.94M Generalist)
+            // Update Analytical Grid (1,962,128-Cell Pan-Cardiac Foundation)
             listEl.innerHTML = data.top_genes.slice(0, 10).map(g => `
                 <div class="flex justify-between items-center text-[8px] p-1 bg-black/40 border border-white/5 rounded mb-0.5">
                     <span class="text-slate-400 font-bold">${g.name}</span>

@@ -1,0 +1,664 @@
+﻿================================================================================
+PHASE A READ-ONLY VERIFICATION AUDIT
+================================================================================
+
+--- A.1: NL-101 / NL101 / nl101 OCCURRENCES ---
+Total NL-101 hits across repo: 296
+  index.html:5533 -> a.download = window._oskLastStructureManifest.name ? `${window._oskLastStructureManifest.name}.json` : "NL101_complex_boltz1.json";
+  inventory.md:17 -> | **5** | Degree / connectivity analysis of the GRN | **UNCLEAR** | **Per-candidate active edge counts exist; formal regression of score on $\log(\text{out-degree})$ across all 238 TFs not yet run:**<br>ÔÇó **Exists:** `<a
+  leadership.html:176 -> Multi-award-winning Life Sciences Innovator, AI Engineer, and Biotechnology Founder with a cross-disciplinary background spanning Medicine &amp; Surgery Medical Studies (University of Al Fasher), Medical Sciences (BSc Ho
+  run_zenith_screening_pipeline.py:108 -> rejuv_multiplier += 1.65 # NL-101 full cooperativity
+  run_zenith_screening_pipeline.py:191 -> # Calibrated clock weights ensuring NL-101 registers -13.0 yr delta
+  run_zenith_screening_pipeline.py:213 -> ("NL-101 (Zenith Lead)", ["SIRT1", "SIRT6", "GATA4", "ZBTB16"]),
+  run_zenith_screening_pipeline.py:279 -> if "NL-101" in name:
+  run_zenith_screening_pipeline.py:448 -> benchmarks = ["NL-101 (Zenith Lead)", "Sinclair OSK (Control)", "Yamanaka OSKM (Control)", "Srivastava GMT (Control)", "Dual Sirtuin (Benchmark)"]
+  run_zenith_screening_pipeline.py:465 -> "NL-101 (Zenith Lead)",
+  run_zenith_screening_pipeline.py:474 -> mech = "Complete Synergistic Reversal [OPTIMAL]" if "NL-101" in a_name else \
+  run_zenith_screening_pipeline.py:483 -> log("  NL-101 (SIRT1 + SIRT6 + GATA4 + ZBTB16) is computationally nominated as the")
+  screen_output.csv:676 -> Stage3_Tracked_NL101,SIRT1+SIRT6+GATA4+ZBTB16,4,-0.0572,0.0157,-0.0698,-0.1017,0.0018,0.0018,0.00933,-0.002,-0.0002,0.00289,-0.0056,0.00544,0.04631,-0.00403,0.1388,COMPUTED_HCA_5307_vCM_RIDGE_GRN,211.0
+  stage1_ingest.py:31 -> condition: str              # e.g., "NL-101_Treated", "Vehicle_Control"
+  stage1_ingest.py:210 -> condition="NL-101_Treated_2h_DRP",
+  stage4_eval.py:65 -> # 3. Post-NL-101 Reprogrammed State (SIRT1 + SIRT6 + GATA4 + ZBTB16, 2.0h DRP)
+  stage4_eval.py:66 -> nl101_counts = baseline_counts.clone()
+  stage4_eval.py:67 -> nl101_counts[:, gene_to_idx["SIRT1"]] = 3.80       # Re-established SIRT1
+  stage4_eval.py:68 -> nl101_counts[:, gene_to_idx["SIRT6"]] = 3.60       # Re-established SIRT6
+  stage4_eval.py:69 -> nl101_counts[:, gene_to_idx["GATA4"]] = 3.10       # Pioneer cardiac enhancement
+  stage4_eval.py:70 -> nl101_counts[:, gene_to_idx["ZBTB16"]] = 2.90      # Senescence repressor
+  stage4_eval.py:71 -> nl101_counts[:, gene_to_idx["CDKN2A"]] = 0.70      # Erased p16INK4a
+  stage4_eval.py:72 -> nl101_counts[:, gene_to_idx["CDKN1A"]] = 0.60
+  stage4_eval.py:73 -> nl101_counts[:, gene_to_idx["IL6"]] = 0.40         # Suppressed SASP
+  stage4_eval.py:74 -> nl101_counts[:, gene_to_idx["SERPINE1"]] = 0.50
+  stage4_eval.py:75 -> nl101_counts[:, gene_to_idx["COL1A1"]] = 1.10      # Reduced pro-fibrotic matrix
+  stage4_eval.py:76 -> nl101_counts[:, gene_to_idx["ATP2A2"]] = 2.30      # Restored SERCA2a Ca2+ pump
+  stage4_eval.py:77 -> nl101_counts[:, gene_to_idx["GJA1"]] = 1.98        # 96.6% Cx43 gap junction retention
+  stage4_eval.py:78 -> nl101_counts[:, gene_to_idx["TNNT2"]] = 2.75       # 98.2% Troponin T retention
+  stage4_eval.py:79 -> nl101_counts[:, gene_to_idx["KCNJ2"]] = 1.48       # Stable I_K1 resting potential
+  stage4_eval.py:81 -> nl101_counts[:, gene_to_idx["POU5F1"]] = 0.10      # Well below 0.35 ceiling
+  stage4_eval.py:82 -> nl101_counts[:, gene_to_idx["MYC"]] = 0.12         # Well below 0.30 ceiling
+  stage4_eval.py:83 -> nl101_counts[:, gene_to_idx["LIN28A"]] = 0.04      # Well below 0.40 ceiling
+  stage4_eval.py:88 -> nl101_clock = aging_engine(nl101_counts, chronological_age=65.2)
+  stage4_eval.py:90 -> measured_rejuvenation_delta = baseline_clock["primary_rna_bio_age"] - nl101_clock["primary_rna_bio_age"]
+  stage4_eval.py:92 -> print(f"  ÔÇó Post-NL-101 Rejuvenated Profile: {nl101_clock['primary_rna_bio_age']} years")
+  stage4_eval.py:94 -> print(f"  ÔÇó Inferred Epigenetic Potential Score (DNAm): {nl101_clock['inferred_dnam_potential']} +/- {nl101_clock['dnam_confidence_interval_95']} years (95% CI)")
+  stage4_eval.py:95 -> print(f"  ÔÇó Regulatory Notice: {nl101_clock['regulatory_notice']}")
+  stage4_eval.py:99 -> esi_report = cardiac_esi_engine.calculate_esi(baseline_counts, nl101_counts)
+  stage4_eval.py:110 -> "POU5F1": float(nl101_counts[:, gene_to_idx["POU5F1"]].mean().item()),
+  stage4_eval.py:111 -> "MYC": float(nl101_counts[:, gene_to_idx["MYC"]].mean().item()),
+  stage4_eval.py:112 -> "LIN28A": float(nl101_counts[:, gene_to_idx["LIN28A"]].mean().item())
+  test_partial_safety.py:357 -> def test_nl101_payload_bit_age_impact(self):
+  test_partial_safety.py:358 -> """NL-101 (SIRT1 + SIRT6 + GATA4 + ZBTB16) must demonstrate strong rejuvenation delta."""
+  zenith_complete_honest_founder_report.md:18 -> 2. **The `-13.0y` Hardcoded Override (`run_zenith_screening_pipeline.py:310` & `zenith_engine.py:865`):** Instead of computing epigenetic/transcriptomic age shifts from your `scVI` decoder + donor regression clock, earli
+  zenith_phase0_to_phase4_master_report.md:72 -> | **`-13.0y`** | `zenith_engine.py:865`, `bridge_server.py:570`, `run_zenith_screening_pipeline.py:310` | Hardcoded dict override for `NL-101` (`SIRT6+ZBTB16+GATA4+NKX2-5`): `nl101["age_reversal_delta"] = 13.0` | **FABRI
+  zenith_phase0_to_phase4_master_report.md:83 -> - **What was misattributed in `index.html:2004ÔÇô2022`:** The UI rendered `"Adiv A. Johnson & Harvard Genetic Studies, Frontiers in Genetics, 2026"` (`"Harvard Genetic Studies"` is not an author name) and attributed the ha
+  zenith_proofs.html:56 -> Lead Asset: NL-101 (SIRT1┬ÀSIRT6┬ÀGATA4┬ÀZBTB16)
+  zenith_proofs.html:78 -> <!-- MODULE 1: THE DISCOVERY FUNNEL (20,000 GENES -> NL-101 4 FACTORS)                        -->
+  zenith_proofs.html:86 -> <h2 class="text-xl font-extrabold text-white">Zenith Discovery Funnel: Transcriptome to NL-101</h2>
+  zenith_proofs.html:179 -> <div class="text-xs font-extrabold text-emerald-300 uppercase tracking-wide">LEAD CANDIDATE: NL-101</div>
+  zenith_proofs.html:238 -> <!-- MODULE 2: THE PARETO FRONTIER SCATTER PLOT (NL-101 VS 10,000 COMBINATIONS & YAMANAKA OSK) -->
+  zenith_proofs.html:246 -> <h2 class="text-xl font-extrabold text-white">Mathematical Pareto Frontier: NL-101 vs 10,000 Cocktails</h2>
+  zenith_proofs.html:247 -> <p class="text-xs text-slate-400 mt-0.5">Plotting Electrical Safety Index (ESI) vs Biological Age Reversal (╬öAge). NL-101 is the only combination that passes both gates.</p>
+  zenith_proofs.html:277 -> <!-- NL-101 -->
+  zenith_proofs.html:280 -> <div class="font-bold text-emerald-300">Ôÿà NL-101 (Zenith Lead)</div>
+  zenith_proofs.html:430 -> Myocardial infarction induced via permanent left anterior descending (LAD) coronary artery ligation in mice. NL-101 mRNA-LNP delivered via intramyocardial injection.
+  zenith_proofs.html:467 -> <span>Lead: NL-101 (mRNA-LNP)</span>
+  zenith_proofs.html:494 -> label: 'NL-101 (Zenith Lead Ôÿà)',
+  zenith_proofs.html:597 -> labels: ['Sham Control', 'Post-MI Day 0', 'Vehicle (Day 28)', 'NL-101 (Day 28)'],
+  zenith_screening_audit.csv:2 -> 1,NL-101 (Zenith Lead),SIRT1+SIRT6+GATA4+ZBTB16,4,13.0,0.928,94.2,94.8,0.008,0.038,CONFORMAL_PASS,OPTIMAL_CONDUCTION,True,True,0.8973
+  js/structure_controller.js:1065 -> a.href = url; a.download = 'NL101_complex_boltz1.pdb';
+  scratch/generate_curie_bio_creative_dossier.py:86 -> story.append(Paragraph("<b>Lead Therapeutic Candidate:</b> NL-101 (Transient mRNA-LNP Rejuvenation Cocktail)", h2_style))
+  scratch/generate_curie_bio_creative_dossier.py:87 -> story.append(Paragraph("Adult human ventricular cardiomyocytes exhibit near-zero natural regeneration (&lt;0.5%/yr). Following myocardial infarction (MI), wall stress and epigenetic drift cause progressive heart failure.
+  scratch/generate_curie_bio_creative_dossier.py:113 -> [Paragraph("<b>NL-101</b>", body_style), Paragraph("SIRT1+SIRT6+GATA4+ZBTB16 mRNA-LNP", body_style), Paragraph("Post-MI Heart Failure", body_style), Paragraph("In-Vitro Validated / In-Vivo Ready", body_style)],
+  scratch/generate_curie_bio_diagrams_deck.py:70 -> Paragraph("Nilus Lab is an AI biotechnology practice (HomeLab Accelerator Cohort 5) developing <b>Zenith v31.0 GOLD</b> ÔÇö a single-cell transcriptomic foundation model operating across 2.42M cardiac single cells. Our lea
+  scratch/generate_curie_bio_diagrams_deck.py:88 -> story.append(Paragraph("SLIDE 1: NL-101 MOLECULAR MECHANISM OF ACTION & REPROGRAMMING FLOWCHART", h1_s))
+  scratch/generate_curie_bio_diagrams_deck.py:100 -> d1.add(String(367,92,"NL-101 DRP PULSE (2.0h ON)",textAnchor="middle",fontName="Helvetica-Bold",fontSize=9.5,fillColor=c_blue))
+  scratch/generate_curie_bio_diagrams_deck.py:118 -> Paragraph("NL-101 targets the epigenetic driver of cardiac aging. By expressing non-oncogenic pioneer factors (<i>GATA4</i>, <i>ZBTB16</i>) alongside deacetylases (<i>SIRT1</i>, <i>SIRT6</i>) under Decaying Resonance Pul
+  scratch/generate_curie_bio_diagrams_deck.py:154 -> d2.add(String(110,56,"NL-101 Peptide-Conjugated LNPs",textAnchor="middle",fontName="Helvetica-Bold",fontSize=8,fillColor=c_blue))
+  scratch/generate_curie_bio_diagrams_deck.py:163 -> d2.add(String(372,34,"ACTIVE NL-101: MYOCARDIAL BYPASS",textAnchor="middle",fontName="Helvetica-Bold",fontSize=7.5,fillColor=c_blue))
+  scratch/generate_curie_bio_diagrams_deck.py:180 -> [Paragraph("<b>NL-101</b>",bd_s), Paragraph("SIRT1+6+GATA4+ZBTB16 mRNA-LNP",bd_s), Paragraph("Post-MI Heart Failure",bd_s), Paragraph("In-Vitro Validated / In-Vivo Ready",bd_s)],
+  scratch/generate_curie_bio_dossier.py:119 -> story.append(Paragraph("<b>Asset:</b> NL-101 (Transient mRNA-LNP Rejuvenation Cocktail)", q_title_style))
+  scratch/generate_curie_bio_dossier.py:120 -> story.append(Paragraph("<b>Mechanism & Rationale:</b> Adult human ventricular cardiomyocytes have near-zero natural regenerative capacity (<0.5%/yr). Following myocardial infarction (MI), scarred ventricular tissue cause
+  scratch/generate_curie_bio_dossier.py:121 -> story.append(Paragraph("<b>Advanced Supporting Data:</b> Evaluated across 2.42M human single cells via Zenith v31.0 GOLD. NL-101 achieves a -13.0 year biological age reversal (EnsembleAge Multi-Clock, Haghani 2026 / Horv
+  scratch/generate_curie_bio_dossier_v2.py:144 -> story.append(Paragraph("<b>Asset Identifier:</b> NL-101 (Transient mRNA-LNP Rejuvenation Cocktail)", q_title_style))
+  scratch/generate_curie_bio_dossier_v2.py:145 -> story.append(Paragraph("<b>Mechanism & Clinical Rationale:</b> Adult human ventricular cardiomyocytes exhibit near-zero post-natal regenerative capacity (&lt;0.5%/yr). Post-myocardial infarction (MI), scarring causes pro
+  scratch/generate_curie_bio_dossier_v2.py:146 -> story.append(Paragraph("<b>Advanced Proof Data:</b> Evaluated across 2.42M human single cells via Zenith v31.0 GOLD. NL-101 achieves a -13.0 year biological age reversal (EnsembleAge Multi-Clock, Haghani et al., GeroScie
+  scratch/generate_curie_bio_landscape_deck.py:68 -> Paragraph("<b>Lead Asset:</b> NL-101 (mRNA-LNP)<br/><b>Entity:</b> Nilus Lab Ltd. (UK / UAE)<br/><b>Domain:</b> niluslab.com", ParagraphStyle('CR3', parent=styles['Normal'], fontName='Helvetica', fontSize=8.5, leading=12
+  scratch/generate_curie_bio_landscape_deck.py:101 -> story.append(Paragraph("SLIDE 1: LEAD PROGRAM (NL-101) & GENERATIVE AI PLATFORM", slide_h1_style))
+  scratch/generate_curie_bio_landscape_deck.py:106 -> Paragraph("<b>Asset Identifier:</b> NL-101 (Transient mRNA-LNP Rejuvenation Cocktail)", card_title_style),
+  scratch/generate_curie_bio_landscape_deck.py:173 -> [Paragraph("<b>NL-101</b>", body_style), Paragraph("SIRT1+SIRT6+GATA4+ZBTB16 mRNA-LNP", body_style), Paragraph("Post-MI Heart Failure", body_style), Paragraph("In-Vitro Validated / In-Vivo Ready", body_style)],
+  scratch/generate_curie_bio_winner_deck.py:80 -> story.append(Paragraph("<b>Lead Candidate:</b> NL-101 (Transient mRNA-LNP Rejuvenation Cocktail)", h2_style))
+  scratch/generate_curie_bio_winner_deck.py:81 -> story.append(Paragraph("Adult human ventricular cardiomyocytes exhibit near-zero natural regeneration (&lt;0.5%/yr). Post-myocardial infarction (MI), wall stress and epigenetic drift cause progressive, fatal heart failur
+  scratch/generate_curie_bio_winner_deck.py:108 -> [Paragraph("<b>NL-101</b>", body_style), Paragraph("SIRT1+SIRT6+GATA4+ZBTB16 mRNA-LNP", body_style), Paragraph("Post-MI Heart Failure", body_style), Paragraph("In-Vitro Validated / In-Vivo Ready", body_style)],
+  scratch/generate_homelab_update_presentation.py:77 -> Paragraph("ÔÇó Provisional patent filings covering NL-101 and DRP kinetics.", bu_s),
+  scratch/generate_longevc_deck.py:73 -> Paragraph("Nilus Lab is an AI-native longevity biotechnology company (HomeLab Accelerator Cohort 5) building <b>Zenith v31.0 GOLD</b> -- a generative single-cell foundation model operating across 2.42M human cardiac sing
+  scratch/generate_longevc_deck.py:143 -> story.append(Paragraph("SLIDE 2: NL-101 MOLECULAR MECHANISM & ZENITH AI PLATFORM", h1_s))
+  scratch/generate_longevc_deck.py:155 -> d1.add(String(367,92,"NL-101 DRP PULSE (2.0h ON)",textAnchor="middle",fontName="Helvetica-Bold",fontSize=9.5,fillColor=c_blue))
+  scratch/generate_longevc_deck.py:172 -> Paragraph("NL-101 targets the epigenetic driver of cardiac aging. Non-oncogenic pioneer factors (<i>GATA4</i>, <i>ZBTB16</i>) alongside deacetylases (<i>SIRT1</i>, <i>SIRT6</i>) under Decaying Resonance Pulse (DRP) kinet
+  scratch/generate_longevc_deck.py:210 -> d2.add(String(110,56,"NL-101 Peptide-Conjugated LNPs",textAnchor="middle",fontName="Helvetica-Bold",fontSize=8,fillColor=c_blue))
+  scratch/generate_longevc_deck.py:219 -> d2.add(String(372,34,"ACTIVE NL-101: MYOCARDIAL BYPASS",textAnchor="middle",fontName="Helvetica-Bold",fontSize=7.5,fillColor=c_blue))
+  scratch/generate_longevc_deck.py:234 -> [Paragraph("<b>NL-101</b>",bd_s), Paragraph("SIRT1+6+GATA4+ZBTB16 mRNA-LNP",bd_s), Paragraph("Post-MI Heart Failure",bd_s), Paragraph("In-Vitro Validated / In-Vivo Ready",bd_s)],
+  scratch/generate_longevc_deck.py:327 -> Paragraph("- <b>Healthspan Impact:</b> If successful, NL-101 could extend cardiac healthspan by 13+ years for 64M heart failure patients globally.", bu_s), Spacer(1,6),
+  scratch/generate_longevium_proposal_deck.py:74 -> Paragraph("ÔÇó <b>Regenerative Medicine:</b> Deploy NL-101 mRNA-LNPs for targeted cardiac age reversal (-13.0y reset).", bu_s), Spacer(1,3),
+  scratch/temp_dark.html:5297 -> a.download = window._oskLastStructureManifest.name ? `${window._oskLastStructureManifest.name}.json` : "NL101_complex_boltz1.json";
+  scratch/temp_light.html:5297 -> a.download = window._oskLastStructureManifest.name ? `${window._oskLastStructureManifest.name}.json` : "NL101_complex_boltz1.json";
+  scripts/check1_clock_circularity.py:5 -> Pre-raise validation for Zenith / NL-101
+  scripts/check1_clock_circularity.py:65 -> NL101_FACTORS = ["SIRT1", "SIRT6", "GATA4", "ZBTB16"]
+  scripts/check1_clock_circularity.py:67 -> # The four NL-101 factors that ARE directly in the clock:
+  scripts/check1_clock_circularity.py:68 -> NL101_IN_CLOCK = {g: CLOCK_WEIGHTS[g] for g in NL101_FACTORS if g in CLOCK_WEIGHTS}
+  scripts/check1_clock_circularity.py:76 -> #  (b) use a hardcoded literature-derived target set for the four NL-101 factors
+  scripts/check1_clock_circularity.py:88 -> # TRRUST v2 human direct targets (confidence A+B) for each NL-101 factor
+  scripts/check1_clock_circularity.py:123 -> log("ZENITH / NL-101 ÔÇö CHECK 1: CLOCK CIRCULARITY ANALYSIS")
+  scripts/check1_clock_circularity.py:139 -> log("SECTION 1.1 ÔÇö NL-101 Factors Directly in Clock")
+  scripts/check1_clock_circularity.py:141 -> log(f"NL-101 factors = {NL101_FACTORS}")
+  scripts/check1_clock_circularity.py:142 -> log(f"Factors in G_clock directly: {list(NL101_IN_CLOCK.keys())}")
+  scripts/check1_clock_circularity.py:143 -> for g, w in NL101_IN_CLOCK.items():
+  scripts/check1_clock_circularity.py:145 -> direct_mass = sum(abs(v) for v in NL101_IN_CLOCK.values())
+  scripts/check1_clock_circularity.py:159 -> for factor in NL101_FACTORS:
+  scripts/check1_clock_circularity.py:209 -> log("  Variant A:   Genes in (targets Ôê¬ NL-101 factors) Ôê® G_clock are held at")
+  scripts/check1_clock_circularity.py:215 -> # Masked gene set: direct NL-101 factors in clock + their targets in clock
+  scripts/check1_clock_circularity.py:216 -> MASK_GENES_A = (union_in_clock | set(NL101_IN_CLOCK.keys()))
+  scripts/check1_clock_circularity.py:244 -> ("NL-101 (Full)", ["SIRT1", "SIRT6", "GATA4", "ZBTB16"]),
+  scripts/check1_clock_circularity.py:293 -> # NL-101 specific interpretation
+  scripts/check1_clock_circularity.py:294 -> nl101 = next(r for r in sens_results if "NL-101" in r["arm"])
+  scripts/check1_clock_circularity.py:295 -> ratio_A_nl101 = nl101["ratio_A"]
+  scripts/check1_clock_circularity.py:296 -> log("NL-101 CIRCULARITY VERDICT (Variant A):")
+  scripts/check1_clock_circularity.py:297 -> if isinstance(ratio_A_nl101, float):
+  scripts/check1_clock_circularity.py:298 -> if ratio_A_nl101 >= 0.70:
+  scripts/check1_clock_circularity.py:300 -> elif ratio_A_nl101 >= 0.30:
+  scripts/check1_clock_circularity.py:304 -> log(f"  ratio_A = {ratio_A_nl101:.3f}  ÔåÆ  {verdict}")
+  scripts/check1_clock_circularity.py:306 -> log(f"  ratio_A = {ratio_A_nl101}")
+  scripts/check1_clock_circularity.py:327 -> # NOTE: NL-101 and named curated candidates have HARDCODED values in the pipeline
+  scripts/check1_clock_circularity.py:330 -> "NL-101 (Zenith Lead)", "Yamanaka OSKM (Control)", "Sinclair OSK (Control)",
+  scripts/check1_clock_circularity.py:366 -> # Key finding: NL-101 original delta is HARDCODED to 13.0 in pipeline.
+  scripts/check1_clock_circularity.py:368 -> # We must report the unmasked simulated delta for NL-101, not the hardcoded value.
+  scripts/check1_clock_circularity.py:372 -> log("HARDCODES delta_age and ESI for 9 named candidates including NL-101:")
+  scripts/check1_clock_circularity.py:373 -> log("  NL-101:        delta = 13.00 (hardcoded), ESI = 0.928 (hardcoded)")
+  scripts/check1_clock_circularity.py:377 -> log("NL-101 via simulate_perturbation(), giving a computed baseline prior to masking.")
+  scripts/check1_clock_circularity.py:378 -> log("The masked delta_A for NL-101 therefore reflects what the MODEL actually computes.")
+  scripts/check1_clock_circularity.py:388 -> nl101_masked = next((r for r in masked_results if "NL-101" in r["name"]), None)
+  scripts/check1_clock_circularity.py:404 -> if nl101_masked:
+  scripts/check1_clock_circularity.py:405 -> log(f"NL-101 rank under masked clock: {nl101_masked['rank_masked']} (was: {nl101_masked['rank_original']})")
+  scripts/check1_clock_circularity.py:406 -> log(f"NL-101 delta under masked clock (computed, not hardcoded): {nl101_masked['delta_masked_A']:.2f}y")
+  scripts/check1_clock_circularity.py:407 -> log(f"NL-101 dual-gate pass under masked clock: {nl101_masked['dual_gate_pass_masked']}")
+  scripts/check1_clock_circularity.py:417 -> if isinstance(ratio_A_nl101, float):
+  scripts/check1_clock_circularity.py:418 -> if ratio_A_nl101 >= 0.70 and nl101_masked and nl101_masked["rank_masked"] == 1:
+  scripts/check1_clock_circularity.py:419 -> ac_verdict = "PASS ÔÇö Low circularity; NL-101 still rank 1 under masked clock."
+  scripts/check1_clock_circularity.py:420 -> elif ratio_A_nl101 >= 0.30:
+  scripts/check1_clock_circularity.py:425 -> if nl101_masked and nl101_masked["rank_masked"] != 1:
+  scripts/check1_clock_circularity.py:426 -> ac_verdict += f" [RANKING CHANGE: NL-101 moved to rank {nl101_masked['rank_masked']} under masked clock]"
+  scripts/check2_ood_extrapolation.py:5 -> Pre-raise validation for Zenith / NL-101
+  scripts/check2_ood_extrapolation.py:58 -> log("ZENITH / NL-101 ÔÇö CHECK 2: OUT-OF-DISTRIBUTION EXTRAPOLATION ANALYSIS")
+  scripts/check2_ood_extrapolation.py:122 -> ("NL-101 (all four)", ["SIRT1", "SIRT6", "GATA4", "ZBTB16"]),
+  scripts/check2_ood_extrapolation.py:176 -> nl101_sim = next(r["delta_age_simulated"] for r in arm_results if "all four" in r["arm"])
+  scripts/check2_ood_extrapolation.py:180 -> log(f"  NL-101 simulated delta: {nl101_sim:.3f}y")
+  scripts/check2_ood_extrapolation.py:182 -> synergy_ratio = nl101_sim / additive_pred
+  scripts/check2_ood_extrapolation.py:192 -> log("    rejuv_multiplier += 1.65  # NL-101 full cooperativity (hardcoded bonus)")
+  scripts/check2_ood_extrapolation.py:240 -> log("  The NL-101 four-factor combination is at the top of the n_factors distribution.")
+  scripts/check2_ood_extrapolation.py:249 -> log("SECTION 2.4 ÔÇö Decoder Plausibility Check (NL-101 perturbed expression)")
+  scripts/check2_ood_extrapolation.py:256 -> perturbed_nl101, _ = simulate_perturbation(baseline, ["SIRT1", "SIRT6", "GATA4", "ZBTB16"])
+  scripts/check2_ood_extrapolation.py:257 -> nl101_mean = perturbed_nl101.mean(dim=0).numpy()
+  scripts/check2_ood_extrapolation.py:261 -> log(f"{'Gene':<12} {'Baseline':>10} {'NL-101':>10} {'Fold Change':>12} {'In Range?':>10}")
+  scripts/check2_ood_extrapolation.py:269 -> pert_val = float(nl101_mean[idx])
+  scripts/check2_ood_extrapolation.py:312 -> Whether the NL-101 perturbed latent point z_pert falls inside the region of
+  scripts/check2_ood_extrapolation.py:326 -> log(f"Superadditivity of NL-101 vs additive prediction: {synergy_ratio:.3f}x" if additive_pred != 0 else "")
+  scripts/check2_ood_extrapolation.py:329 -> log("  'NL-101 within 95th percentile of real-cell latent distance, r < 0.3' ÔåÆ PASS")
+  scripts/check3_reproducibility.py:5 -> Pre-raise validation for Zenith / NL-101
+  scripts/check3_reproducibility.py:38 -> NL101_FACTORS = ["SIRT1", "SIRT6", "GATA4", "ZBTB16"]
+  scripts/check3_reproducibility.py:46 -> "NL-101 (Zenith Lead)": {"delta": 13.00, "esi": 0.928},
+  scripts/check3_reproducibility.py:82 -> ("NL-101 (Zenith Lead)", ["SIRT1", "SIRT6", "GATA4", "ZBTB16"]),
+  scripts/check3_reproducibility.py:185 -> log("ZENITH / NL-101 ÔÇö CHECK 3: REPRODUCIBILITY AND GATE STABILITY")
+  scripts/check3_reproducibility.py:198 -> log("  NL-101 (delta=13.00, ESI=0.928). These values NEVER change across seeds.")
+  scripts/check3_reproducibility.py:200 -> log("  candidates. NL-101's reported metrics are invariant by construction.")
+  scripts/check3_reproducibility.py:235 -> log("Per-seed summary (rank of NL-101, survivor count, rank-1 candidate):")
+  scripts/check3_reproducibility.py:236 -> log(f"  {'Seed':>6}  {'NL-101 Rank':>12}  {'NL-101 ╬öAge':>12}  {'NL-101 ESI':>10}  {'Survivors':>10}  {'Rank-1 Name':<30}")
+  scripts/check3_reproducibility.py:239 -> nl101_ranks = []
+  scripts/check3_reproducibility.py:240 -> nl101_deltas = []
+  scripts/check3_reproducibility.py:241 -> nl101_esis = []
+  scripts/check3_reproducibility.py:244 -> nl101_esi_fail = 0
+  scripts/check3_reproducibility.py:245 -> nl101_age_fail = 0
+  scripts/check3_reproducibility.py:246 -> nl101_both_fail = 0
+  scripts/check3_reproducibility.py:251 -> nl101_row = next((r for r in results if r["name"] == "NL-101 (Zenith Lead)"), None)
+  scripts/check3_reproducibility.py:255 -> if nl101_row:
+  scripts/check3_reproducibility.py:256 -> nl101_ranks.append(nl101_row["rank"])
+  scripts/check3_reproducibility.py:257 -> nl101_deltas.append(nl101_row["delta_age"])
+  scripts/check3_reproducibility.py:258 -> nl101_esis.append(nl101_row["ESI"])
+  scripts/check3_reproducibility.py:259 -> esi_fail = nl101_row["ESI"] < 0.90
+  scripts/check3_reproducibility.py:260 -> age_fail = nl101_row["delta_age"] < 10.0
+  scripts/check3_reproducibility.py:261 -> if esi_fail: nl101_esi_fail += 1
+  scripts/check3_reproducibility.py:262 -> if age_fail: nl101_age_fail += 1
+  scripts/check3_reproducibility.py:263 -> if esi_fail or age_fail: nl101_both_fail += 1
+  scripts/check3_reproducibility.py:269 -> nl101_r = nl101_row["rank"] if nl101_row else "?"
+  scripts/check3_reproducibility.py:270 -> nl101_d = nl101_row["delta_age"] if nl101_row else "?"
+  scripts/check3_reproducibility.py:271 -> nl101_e = nl101_row["ESI"] if nl101_row else "?"
+  scripts/check3_reproducibility.py:273 -> log(f"  {seed:>6}  {str(nl101_r):>12}  {str(nl101_d):>12}  {str(nl101_e):>10}  {len(survivors):>10}  {rank1_name:<30}")
+  scripts/check3_reproducibility.py:276 -> log(f"NL-101 rank across 20 seeds:   mean={np.mean(nl101_ranks):.2f}  sd={np.std(nl101_ranks):.2f}  min={min(nl101_ranks)}  max={max(nl101_ranks)}")
+  scripts/check3_reproducibility.py:277 -> log(f"NL-101 ╬öAge across 20 seeds:   mean={np.mean(nl101_deltas):.4f}  sd={np.std(nl101_deltas):.4f}")
+  scripts/check3_reproducibility.py:278 -> log(f"NL-101 ESI across 20 seeds:    mean={np.mean(nl101_esis):.4f}  sd={np.std(nl101_esis):.4f}")
+  scripts/check3_reproducibility.py:282 -> nl101_rank1_freq = sum(1 for r in nl101_ranks if r == 1)
+  scripts/check3_reproducibility.py:283 -> log(f"NL-101 rank 1 in {nl101_rank1_freq}/20 runs")
+  scripts/check3_reproducibility.py:284 -> other_rank1 = [n for n in rank1_names if "NL-101" not in n]
+  scripts/check3_reproducibility.py:298 -> log("CRITICAL NOTE: NL-101's delta_age (13.00) and ESI (0.928) are HARDCODED")
+  scripts/check3_reproducibility.py:299 -> log("in the production pipeline. Across all 20 seeds, NL-101's reported values")
+  scripts/check3_reproducibility.py:306 -> nl101_seed42 = next((r for r in seed42_results if r["name"] == "NL-101 (Zenith Lead)"), None)
+  scripts/check3_reproducibility.py:307 -> log(f"  NL-101 ESI (hardcoded): {nl101_seed42['ESI'] if nl101_seed42 else 'N/A'}")
+  scripts/check3_reproducibility.py:309 -> log(f"  Margin above gate: {(nl101_seed42['ESI'] - 0.90):.3f}" if nl101_seed42 else "  N/A")
+  scripts/check3_reproducibility.py:312 -> # Compute ESI variance across 200 cells for NL-101 (this is what the ┬▒0.029 refers to)
+  scripts/check3_reproducibility.py:317 -> nl101_perturbed, _ = simulate_perturbation(baseline_200, NL101_FACTORS)
+  scripts/check3_reproducibility.py:318 -> esi_out = safety_engine.calculate_esi(baseline_200, nl101_perturbed)
+  scripts/check3_reproducibility.py:320 -> log(f"SIMULATED (not hardcoded) NL-101 ESI statistics across 200 cells:")
+  scripts/check3_reproducibility.py:334 -> log(f"  Under a normal approximation, NL-101 ESI falls below gate in a fraction of draws.")
+  scripts/check3_reproducibility.py:354 -> log(f"  NL-101 ESI < 0.90 in {nl101_esi_fail}/20 runs = {nl101_esi_fail/20*100:.1f}%")
+  scripts/check3_reproducibility.py:355 -> log(f"  NL-101 ╬öAge < 10.0 in {nl101_age_fail}/20 runs = {nl101_age_fail/20*100:.1f}%")
+  scripts/check3_reproducibility.py:356 -> log(f"  NL-101 fails either gate in {nl101_both_fail}/20 runs = {nl101_both_fail/20*100:.1f}%")
+  scripts/check3_reproducibility.py:358 -> log("Because NL-101 values are hardcoded, cross-seed failure rate = 0% by construction.")
+  scripts/check3_reproducibility.py:359 -> log("The REAL gate-stability question is whether the SIMULATED (un-hardcoded) NL-101")
+  scripts/check3_reproducibility.py:377 -> c2 = check_pass(nl101_rank1_freq >= 19, f"NL-101 rank 1 across seeds ({nl101_rank1_freq}/20 ÔëÑ 19)")
+  scripts/check3_reproducibility.py:380 -> c4 = check_pass(nl101_esi_fail / 20 < 0.05, f"NL-101 ESI gate failure rate ({nl101_esi_fail/20*100:.1f}% < 5%)")
+  scripts/check3_reproducibility.py:381 -> c5 = check_pass(nl101_age_fail / 20 < 0.05, f"NL-101 ╬öAge gate failure rate ({nl101_age_fail/20*100:.1f}% < 5%)")
+  scripts/check3_reproducibility.py:391 -> log("  Criteria c2ÔÇôc5 are trivially satisfied because NL-101 delta/ESI are hardcoded.")
+  scripts/check3_reproducibility.py:407 -> nl101_r = next((r for r in run if r["name"] == "NL-101 (Zenith Lead)"), {})
+  scripts/check3_reproducibility.py:412 -> "nl101_rank": nl101_r.get("rank", "N/A"),
+  scripts/check3_reproducibility.py:413 -> "nl101_delta": nl101_r.get("delta_age", "N/A"),
+  scripts/check3_reproducibility.py:414 -> "nl101_ESI": nl101_r.get("ESI", "N/A"),
+  scripts/check3_reproducibility.py:417 -> "nl101_hardcoded": nl101_r.get("is_hardcoded", "N/A"),
+  scripts/run_adversarial_tests.py:37 -> ("NL-101 (Zenith Lead)", ["SIRT1", "SIRT6", "GATA4", "ZBTB16"]),
+  scripts/run_adversarial_tests.py:159 -> # Strictly additive per factor: no 0.85 dual sirtuin bonus, no 1.65 NL-101 bonus
+  scripts/run_adversarial_tests.py:223 -> nl101_std = next(r for r in std_results if "NL-101" in r["name"])
+  scripts/run_adversarial_tests.py:224 -> nl101_no_bonus = next(r for r in no_bonus_results if "NL-101" in r["name"])
+  scripts/run_adversarial_tests.py:226 -> print(f"NL-101 ╬öAge WITH bonus: {nl101_std['d_age']:.2f}, Rank: {nl101_std['rank']}")
+  scripts/run_adversarial_tests.py:227 -> print(f"NL-101 ╬öAge WITHOUT bonus: {nl101_no_bonus['d_age']:.2f}, Rank: {nl101_no_bonus['rank']}")
+  scripts/run_adversarial_tests.py:266 -> pert_nl101, _ = simulate_perturbation(baseline_counts, ["SIRT1", "SIRT6", "GATA4", "ZBTB16"])
+  scripts/run_adversarial_tests.py:268 -> pert_mean = pert_nl101.mean(dim=0).numpy()
+  scripts/run_adversarial_tests.py:319 -> nl101_zeroed = next(r for r in res_zeroed if "NL-101" in r["name"])
+  scripts/run_adversarial_tests.py:322 -> print(f"NL-101 ╬öAge with original clock: {nl101_std['d_age']:.2f}")
+  scripts/run_adversarial_tests.py:323 -> print(f"NL-101 ╬öAge with four factor weights ZEROED: {nl101_zeroed['d_age']:.2f}")
+  scripts/run_adversarial_tests.py:324 -> print(f"NL-101 Rank with zeroed clock: {nl101_zeroed['rank']}")
+  scripts/run_adversarial_tests.py:335 -> nl101_rank1_count = 0
+  scripts/run_adversarial_tests.py:336 -> nl101_survivor_count = 0
+  scripts/run_adversarial_tests.py:348 -> nl101_r = next(r for r in res_perm if "NL-101" in r["name"])
+  scripts/run_adversarial_tests.py:349 -> if nl101_r["rank"] == 1:
+  scripts/run_adversarial_tests.py:350 -> nl101_rank1_count += 1
+  scripts/run_adversarial_tests.py:351 -> if nl101_r["all_pass"]:
+  scripts/run_adversarial_tests.py:352 -> nl101_survivor_count += 1
+  scripts/run_adversarial_tests.py:357 -> print(f"  NL-101 Rank 1 frequency: {nl101_rank1_count}/100")
+  scripts/run_adversarial_tests.py:358 -> print(f"  NL-101 Dual-gate survivor frequency: {nl101_survivor_count}/100")
+  scripts/run_adversarial_tests.py:396 -> nl101_da = nl101_std["d_age"]
+  scripts/run_adversarial_tests.py:397 -> pct_50 = sum(1 for x in null_50_dages if x < nl101_da) / len(null_50_dages) * 100.0
+  scripts/run_adversarial_tests.py:398 -> pct_card = sum(1 for x in card_4_dages if x < nl101_da) / len(card_4_dages) * 100.0
+  scripts/run_adversarial_tests.py:400 -> print(f"Null 50-gene pool: min={min(null_50_dages):.2f}, max={max(null_50_dages):.2f}, mean={np.mean(null_50_dages):.2f}, passes={null_50_passes}/200, NL-101 percentile={pct_50:.1f}%")
+  scripts/run_adversarial_tests.py:401 -> print(f"12-gene card pool ({len(card_4_dages)} combos): min={min(card_4_dages):.2f}, max={max(card_4_dages):.2f}, mean={np.mean(card_4_dages):.2f}, passes={card_4_passes}/{len(card_4_dages)}, NL-101 percentile={pct_card:
+  scripts/run_adversarial_tests.py:419 -> nl_jit = next(r for r in res_jit if "NL-101" in r["name"])
+  scripts/run_adversarial_tests.py:429 -> print(f"  NL-101 ╬öAge mean={np.mean(sens_dages):.2f}, 95% CI: [{ci_lower:.2f}, {ci_upper:.2f}]")
+  scripts/run_part2_real_screen.py:367 -> # Check qualification status of NL-101 factors specifically
+  scripts/run_part2_real_screen.py:372 -> print(f"  NL-101 Factor {f_nl:<8}: GRN_edges={e_cnt:>3}, aged_vCM_expr={a_frac:5.1f}% -> Qualifies: {f_nl in qualifying_tfs}")
+  scripts/run_part2_real_screen.py:428 -> # Report where NL-101 single factors rank in Stage 1
+  scripts/run_part2_real_screen.py:429 -> print("\n--- NL-101 Constituent Factors in Stage 1 ---")
+  scripts/run_part2_real_screen.py:450 -> # Ensure SIRT1, GATA4, ZBTB16, SIRT6 are also tracked in quads so NL-101 is compared directly on the identical scale
+  scripts/run_part2_real_screen.py:454 -> # Explicitly evaluate NL-101 and its 3-factor ablations through the exact same function
+  scripts/run_part2_real_screen.py:455 -> nl101_eval = evaluate_candidate_set(["SIRT1", "SIRT6", "GATA4", "ZBTB16"], "Stage3_Tracked_NL101")
+  scripts/run_part2_real_screen.py:456 -> nl101_no_sirt6 = evaluate_candidate_set(["SIRT1", "GATA4", "ZBTB16"], "Stage3_Tracked_Ablation")
+  scripts/run_part2_real_screen.py:458 -> # Combine all quads + NL-101 to find NL-101's exact position
+  scripts/run_part2_real_screen.py:459 -> all_quads_ranked = stage3_quads + [nl101_eval]
+  scripts/run_part2_real_screen.py:468 -> nl101_quad_rank = next(r for r in all_quads_ranked if r["factors"] == "SIRT1+SIRT6+GATA4+ZBTB16")
+  scripts/run_part2_real_screen.py:469 -> print(f"\nNL-101 Exact Position in Quads: Rank {nl101_quad_rank['stage_rank']}/{len(all_quads_ranked)}")
+  scripts/run_part2_real_screen.py:470 -> print(f"  NL-101 Youth Restoration (Excl): {nl101_quad_rank['youth_restoration_pct_excl']:+.4f}%")
+  scripts/run_part2_real_screen.py:471 -> print(f"  NL-101 Youth Restoration (Incl): {nl101_quad_rank['youth_restoration_pct_incl']:+.4f}%")
+  scripts/run_part2_real_screen.py:472 -> print(f"  NL-101 Empirical Clock Shift (Excl): {nl101_quad_rank['empirical_clock_rev_yr_excl']:+.4f} yr")
+  scripts/run_part2_real_screen.py:473 -> print(f"  NL-101 Empirical Clock Shift (Incl): {nl101_quad_rank['empirical_clock_rev_yr_incl']:+.4f} yr")
+  scripts/run_part2_real_screen.py:550 -> "nl101_eval": nl101_quad_rank,
+  scripts/run_part2_real_screen.py:551 -> "nl101_no_sirt6": nl101_no_sirt6,
+  scripts/run_phaseA_audit.py:24 -> # A.1: Grep all occurrences of NL-101 / NL101 / nl101 across repo
+  scripts/run_phaseA_audit.py:26 -> print("\n--- A.1: NL-101 / NL101 / nl101 OCCURRENCES ---")
+  scripts/run_phaseA_audit.py:29 -> nl101_hits = []
+  scripts/run_phaseA_audit.py:44 -> nl101_hits.append((relpath, idx, snippet))
+  scripts/run_phaseA_audit.py:48 -> print(f"Total NL-101 hits across repo: {len(nl101_hits)}")
+  scripts/run_phaseA_audit.py:49 -> for relpath, idx, snippet in nl101_hits:
+  scripts/verify_assets_part1_complete.py:59 -> # Check canonical cardiac & NL-101 genes in model_var_names
+  validation_outputs/check1_masked_screen_results.csv:2 -> 1,NL-101 (Zenith Lead),SIRT1+SIRT6+GATA4+ZBTB16,13.0,-5.67,0.928,True,False,True,1
+  validation_outputs/check2_arm_ood_metrics.csv:17 -> NL-101 (all four),4,15.45,6.3816,0.7216
+  validation_outputs/check3_seed_stability.csv:1 -> seed,nl101_rank,nl101_delta,nl101_ESI,n_survivors,rank1_name,nl101_hardcoded
+  validation_outputs/check3_seed_stability.csv:2 -> 42,1,13.0,0.928,1,NL-101 (Zenith Lead),True
+  validation_outputs/check3_seed_stability.csv:3 -> 123,1,13.0,0.928,1,NL-101 (Zenith Lead),True
+  validation_outputs/check3_seed_stability.csv:4 -> 456,1,13.0,0.928,1,NL-101 (Zenith Lead),True
+  validation_outputs/check3_seed_stability.csv:5 -> 789,1,13.0,0.928,1,NL-101 (Zenith Lead),True
+  validation_outputs/check3_seed_stability.csv:6 -> 1001,1,13.0,0.928,1,NL-101 (Zenith Lead),True
+  validation_outputs/check3_seed_stability.csv:7 -> 1337,1,13.0,0.928,1,NL-101 (Zenith Lead),True
+  validation_outputs/check3_seed_stability.csv:8 -> 2024,1,13.0,0.928,1,NL-101 (Zenith Lead),True
+  validation_outputs/check3_seed_stability.csv:9 -> 2025,1,13.0,0.928,1,NL-101 (Zenith Lead),True
+  validation_outputs/check3_seed_stability.csv:10 -> 2026,1,13.0,0.928,1,NL-101 (Zenith Lead),True
+  validation_outputs/check3_seed_stability.csv:11 -> 3141,1,13.0,0.928,1,NL-101 (Zenith Lead),True
+  validation_outputs/check3_seed_stability.csv:12 -> 9999,1,13.0,0.928,1,NL-101 (Zenith Lead),True
+  validation_outputs/check3_seed_stability.csv:13 -> 11,1,13.0,0.928,1,NL-101 (Zenith Lead),True
+  validation_outputs/check3_seed_stability.csv:14 -> 22,1,13.0,0.928,1,NL-101 (Zenith Lead),True
+  validation_outputs/check3_seed_stability.csv:15 -> 33,1,13.0,0.928,1,NL-101 (Zenith Lead),True
+  validation_outputs/check3_seed_stability.csv:16 -> 55,1,13.0,0.928,1,NL-101 (Zenith Lead),True
+  validation_outputs/check3_seed_stability.csv:17 -> 77,1,13.0,0.928,1,NL-101 (Zenith Lead),True
+  validation_outputs/check3_seed_stability.csv:18 -> 88,1,13.0,0.928,1,NL-101 (Zenith Lead),True
+  validation_outputs/check3_seed_stability.csv:19 -> 99,1,13.0,0.928,1,NL-101 (Zenith Lead),True
+  validation_outputs/check3_seed_stability.csv:20 -> 100,1,13.0,0.928,1,NL-101 (Zenith Lead),True
+  validation_outputs/check3_seed_stability.csv:21 -> 200,1,13.0,0.928,1,NL-101 (Zenith Lead),True
+  validation_outputs/part2_real_screen/part2_summary.json:1310 -> "nl101_eval": {
+  validation_outputs/part2_real_screen/part2_summary.json:1311 -> "stage": "Stage3_Tracked_NL101",
+  validation_outputs/part2_real_screen/part2_summary.json:1332 -> "nl101_no_sirt6": {
+  validation_outputs/part2_real_screen/screen_output.csv:676 -> Stage3_Tracked_NL101,SIRT1+SIRT6+GATA4+ZBTB16,4,-0.0572,0.0157,-0.0698,-0.1017,0.0018,0.0018,0.00933,-0.002,-0.0002,0.00289,-0.0056,0.00544,0.04631,-0.00403,0.1388,COMPUTED_HCA_5307_vCM_RIDGE_GRN,211.0
+
+--- A.2: CHECKING 16 REMEDIATION ITEMS ---
+  [bridge_server.py:7424] '_validate_panel_against_table': def _validate_panel_against_table(panel_obj: dict, label: str):
+  [bridge_server.py:7457] '_validate_panel_against_table': _validate_panel_against_table(panel, f"Panel {panel_id}")
+  [bridge_server.py:7561] '_validate_panel_against_table': _validate_panel_against_table(refined_candidate, "Refined Panel")
+  [bridge_server.py:7573] '_validate_panel_against_table': _validate_panel_against_table(refined, "Final Response Gate")
+  [index.html:7] '2.42M': <meta name="description" content="Discover genes that reverse biological ageing. Zenith v31 uses a dual-model ensemble of 2.42M cells (1.94M Generalist + 486k S
+  [index.html:11] '2.42M': <meta property="og:description" content="AI-powered gene discovery platform trained on a dual-model ensemble of 2.42M cells. Identify pro-rejuvenation targets b
+  [index.html:18] '2.42M': <meta name="twitter:description" content="Discover genes that reverse biological ageing using single-cell transcriptomics from a dual-model ensemble of 2.42M ce
+  [index.html:2175] '2.42M': Zenith v31.0 &nbsp;┬À&nbsp; ~2.42M Cells (1.94M Generalist + 486k Specialist) &nbsp;┬À&nbsp; Research Use Only
+  [index.html:3213] 'Phase 4': <!-- COMPUTE MODE CONTROLS (Problem 9 & Phase 4 Fix) -->
+  [index.html:3636] '2.42M': <span id="mode-badge" style="flex:1;font-size:7px;color:#4f46e5;font-weight:700;opacity:0.7;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">83 donor
+  [index.html:4171] '2.42M': Platform | 2.42M-Cell Ensemble Manifold</div>
+  [index.html:4403] '2.42M': *Delta Analysis computed via 2.42M-Cell Ensemble Manifold Divergence
+  [index.html:6746] 'GOLD VALIDATED': <span class="validator-badge">V30.1 GOLD VALIDATED</span>
+  [how_it_works.html:239] '2.42M': <p class="step-content">Navigating to the console initializes the 2.42M-cell ensemble manifold and prepares the Neural SDE update rules.</p>
+  [technical_catalog.html:380] '500M': <li><a href="#engine" class="nav-link text-slate-300 hover:text-white flex items-center gap-2"><i data-lucide="cpu" class="w-4 h-4"></i> Zenith-500M Core</a></l
+  [technical_catalog.html:466] '2.42M': Documenting the v31.0 GOLD transition, featuring the Clinical Audit Engine, GRN Authority, and 2.42M-cell Ensemble Model.
+  [technical_catalog.html:486] '500M': <div class="text-2xl font-black text-white italic">~500M</div>
+  [technical_catalog.html:502] 'CLINICAL+': <div class="text-2xl font-black text-white italic">CLINICAL+</div>
+  [technical_catalog.html:907] 'v33.4_GOLD': SAFETY_AUDIT: v33.4_GOLD [PASS]
+  [technical_catalog.html:2409] 'Phase 4': <td class="py-4 px-6 text-blue-600 font-black">PHASE 4 VALIDATED</td>
+  [technical_catalog.html:2429] '500M': <td class="py-4 px-6 text-blue-600 font-black">ULTRA-500M</td>
+  [technical_catalog.html:5697] '500M': goals to gene weights, and Zenith-500M calculates the exact backpropagation
+  [technical_catalog.html:5705] '500M': through the 500M manifold.</p>
+  [technical_catalog.html:5981] '500M': Zenith 500M
+  [technical_catalog.html:6001] '500M': <td class="py-4 text-slate-300">Synergistic alignment between Zenith AI and 500M
+  [technical_catalog.html:6989] '500M': SUCCESS: Zenith v31.0 GOLD: 500M-Parameter Neural SDE Initialized
+  [technical_catalog.html:9126] '500M': Following the validation of the **Zenith Zenith-500M** foundation model, Nilus Lab has defined three
+  [technical_catalog.html:9518] '500M': successfully mapped the <strong class="text-white">~500M Parameter</strong> neural
+  [technical_catalog.html:9602] '2.42M': Zenith v31.0 GOLD is verified against 2.42M ground-truth cardiac cells.</p>
+  [technical_catalog.html:9842] '500M': featuring the <strong class="text-white">~500M Parameter</strong> manifold and 99.8%
+  [technical_catalog.html:10690] '500M': OPTIMAL PROTOCOL</span>. The Zenith-500M AI will calculate the ideal gene
+  [technical_catalog.html:11322] '500M': <!-- Section 27: Zenith-500M Cloud Balance Architecture -->
+  [technical_catalog.html:11326] '500M': <section id="Zenith-500M" class="reveal mb-8 scroll-mt-24">
+  [technical_catalog.html:11334] '500M': <h3 class="text-4xl font-black mb-6 tracking-tight">Zenith-500M Cloud Balance Architecture</h3>
+  [technical_catalog.html:11346] '500M': <h4 class="text-2xl font-bold text-white mb-5">High-Stack Generative Biology (500M Parameters)</h4>
+  [technical_catalog.html:11358] '500M': The **Zenith-500M** (Large Scale State Transformer - ~500 Million) represents the current flagship
+  [technical_catalog.html:11474] '500M': Scale: 0.5 Billion (500M)
+  [technical_catalog.html:11530] '500M': Zenith-500M provides a **280% increase in predictive stability** compared to base models,
+  [technical_catalog.html:11598] '500M': generative discoveries from the <strong class="text-white">Zenith-500M Engine</strong> are
+  [technical_catalog.html:11902] '500M': Professional-grade script architecture for translating Zenith-500M "Decaying Resonance" outputs into
+  [technical_catalog.html:12582] 'Harvard Genetic': <p class="text-[11px] text-slate-100 leading-relaxed">High-resolution TIME-seq CpG methylation loci are monitored across the simulation trajectory. Age predicti
+  [technical_catalog.html:13198] 'Harvard Genetic': clinical_provenance:       Dict   # Dr. Harvard Genetic Studies clinical trial study metadata
+  [technical_catalog.html:13857] '500M': <li class="flex gap-2"><span class="text-amber-400">~</span> Standardized parameter count to 500M throughout</li>
+  [technical_catalog.html:14013] '500M': <li class="flex gap-2"><span class="text-blue-400">+</span> Zenith Ultra 500M-parameter Transformer architecture</li>
+  [technical_catalog.html:14092] 'Phase 4': <div class="text-xs font-mono text-amber-400 font-bold mb-1">PHASE 4</div>
+  [technical_catalog.html:14191] 'Phase 4': <!-- Phase 4 & 5 Math -->
+  [technical_catalog.html:14194] 'Phase 4': <span>Phase 4 & 5</span> ÔÇö AlphaZen RL Reward & Virtual Trial PK/PD Dynamics
+  [technical_catalog.html:14300] 'Phase 4': <td class="p-3 text-amber-400">Phase 4</td>
+  [technical_catalog.html:14307] 'Phase 4': <td class="p-3 text-amber-400">Phase 4</td>
+  [technical_catalog.html:14346] 'Phase 4': <div class="font-mono uppercase">Zenith Ultra v31.1 GOLD Foundation | Phase 4 Validated</div>
+Found services/neuros_substrate_service.py (546 lines)
+
+--- A.3: FILESYSTEM-WIDE SWEEP ---
+Wet-lab files found: []
+Data/model files found:
+  data/foundation/raw_datasets/d4e69e01-3ba2-4d6b-a15d-e7048f78f22e.h5ad |  2816.32 MB | 2026-05-30 14:41
+  data/foundation/raw_datasets/f1606894-59df-4794-a37f-baa7c6fb6de1.h5ad |  2656.27 MB | 2026-05-30 14:56
+  data/foundation/cardiac_combined_raw.h5ad                         |  1657.04 MB | 2026-05-30 15:33
+  data/foundation/cardiac_preprocessed.h5ad                         |   620.05 MB | 2026-05-30 15:39
+  data/real/patient_biopsy_aligned.h5ad                             |   200.91 MB | 2026-05-25 06:35
+  data/real/reprogramming_timecourse.h5ad                           |   184.59 MB | 2026-01-15 03:15
+  models/scvi_model_hca/adata.h5ad                                  |   184.49 MB | 2026-01-07 23:01
+  data/foundation/zenith_foundation_v1/model.pt                     |   159.05 MB | 2026-06-21 12:50
+  models/neural_age_clock_v1/scvi_model.pt                          |   159.05 MB | 2026-07-13 22:04
+  models/zenith_foundation_v1/model.pt                              |   159.05 MB | 2026-07-13 13:00
+  models/zenith_foundation_v29/model.pt                             |   120.94 MB | 2026-07-01 06:11
+  data/real/patient_plaque_aligned.h5ad                             |    65.19 MB | 2026-05-30 10:46
+  data/hca_subsampled_20k.h5ad                                      |    62.67 MB | 2026-01-01 04:52
+  models/zenith_foundation_v1_old/model.pt                          |    52.47 MB | 2026-05-31 19:28
+  data/foundation/raw_datasets/f7c1c579-2dc0-47e2-ba19-8165c5a0e353.h5ad |    42.00 MB | 2026-05-30 14:22
+  models/zenith_foundation_v1-20260530T213626Z-3-001/zenith_foundation_v1_old/model.pt |    29.12 MB | 2026-05-30 22:41
+  models/scvi_model_486k_real/model.pt                              |    13.58 MB | 2026-07-18 05:55
+  models/scvi_model_486k_real_old_backup/model.pt                   |    13.09 MB | 2026-07-13 13:00
+  data/foundation/umap_latent.h5ad                                  |    13.07 MB | 2026-06-21 12:49
+  data/foundation/zenith_foundation_v1/umap_latent.h5ad             |    13.07 MB | 2026-06-21 12:50
+  models/zenith_foundation_v1/umap_latent.h5ad                      |    13.07 MB | 2026-06-21 12:50
+  data/real/patient_plaque_aligned_v2.h5ad                          |    12.46 MB | 2026-06-21 13:10
+  scratch/zenith_sim_04d84065cac4.h5ad                              |     1.38 MB | 2026-07-14 20:34
+  scratch/zenith_sim_19c704478bc0.h5ad                              |     1.38 MB | 2026-07-14 04:03
+  scratch/zenith_sim_1f77b6893186.h5ad                              |     1.38 MB | 2026-07-14 21:04
+  scratch/zenith_sim_468d2c920e7e.h5ad                              |     1.38 MB | 2026-09-22 11:43
+  scratch/zenith_sim_47cd21f63bde.h5ad                              |     1.38 MB | 2026-07-14 04:01
+  scratch/zenith_sim_528caecb1b09.h5ad                              |     1.38 MB | 2026-07-14 04:03
+  scratch/zenith_sim_7afde2f55785.h5ad                              |     1.38 MB | 2026-07-14 20:34
+  scratch/zenith_sim_7c35e7d9954d.h5ad                              |     1.38 MB | 2026-07-14 19:40
+  scratch/zenith_sim_908294e2611d.h5ad                              |     1.38 MB | 2026-07-14 21:03
+  scratch/zenith_sim_c4a275db15d4.h5ad                              |     1.38 MB | 2026-09-22 11:43
+  scratch/zenith_sim_dc84508157c3.h5ad                              |     1.38 MB | 2026-07-14 19:40
+  scratch/zenith_sim_02448f9feb88.h5ad                              |     1.37 MB | 2026-07-18 06:15
+  scratch/zenith_sim_03d7a379bede.h5ad                              |     1.37 MB | 2026-07-27 04:49
+  scratch/zenith_sim_0aae1f016afb.h5ad                              |     1.37 MB | 2026-07-27 04:49
+  scratch/zenith_sim_0bb6b38e7c85.h5ad                              |     1.37 MB | 2026-07-18 04:57
+  scratch/zenith_sim_13e5b2d76f32.h5ad                              |     1.37 MB | 2026-07-02 09:53
+  scratch/zenith_sim_16b0028d9ce7.h5ad                              |     1.37 MB | 2026-07-18 04:57
+  scratch/zenith_sim_1c33ab33f615.h5ad                              |     1.37 MB | 2026-07-18 05:53
+  scratch/zenith_sim_21bac7c4e0dd.h5ad                              |     1.37 MB | 2026-07-03 07:32
+  scratch/zenith_sim_31bd91f8d4e1.h5ad                              |     1.37 MB | 2026-07-03 07:32
+  scratch/zenith_sim_34edd959f9cc.h5ad                              |     1.37 MB | 2026-07-18 06:54
+  scratch/zenith_sim_3909dc4cf6b3.h5ad                              |     1.37 MB | 2026-07-02 07:11
+  scratch/zenith_sim_3e7560c648e9.h5ad                              |     1.37 MB | 2026-07-25 04:42
+  scratch/zenith_sim_487405d9a228.h5ad                              |     1.37 MB | 2026-07-02 10:08
+  scratch/zenith_sim_5812f21e4ab6.h5ad                              |     1.37 MB | 2026-07-18 05:05
+  scratch/zenith_sim_6df59684baf9.h5ad                              |     1.37 MB | 2026-07-18 05:05
+  scratch/zenith_sim_711e760b2b0d.h5ad                              |     1.37 MB | 2026-07-27 05:49
+  scratch/zenith_sim_7852b183d886.h5ad                              |     1.37 MB | 2026-07-02 09:55
+  scratch/zenith_sim_825ac69e0d52.h5ad                              |     1.37 MB | 2026-07-02 07:11
+  scratch/zenith_sim_86bc386b48bb.h5ad                              |     1.37 MB | 2026-07-04 02:27
+  scratch/zenith_sim_8d19c7ea8e1e.h5ad                              |     1.37 MB | 2026-07-18 05:54
+  scratch/zenith_sim_93890ad6cf62.h5ad                              |     1.37 MB | 2026-07-02 09:55
+  scratch/zenith_sim_96f13250a2c4.h5ad                              |     1.37 MB | 2026-07-25 04:42
+  scratch/zenith_sim_a0625c986e73.h5ad                              |     1.37 MB | 2026-07-04 02:27
+  scratch/zenith_sim_af3eff9993a2.h5ad                              |     1.37 MB | 2026-07-18 06:54
+  scratch/zenith_sim_b0894999c127.h5ad                              |     1.37 MB | 2026-07-18 05:54
+  scratch/zenith_sim_b21e951efa8e.h5ad                              |     1.37 MB | 2026-07-27 04:55
+  scratch/zenith_sim_bcc72bc7e953.h5ad                              |     1.37 MB | 2026-07-18 05:53
+  scratch/zenith_sim_c1762091ef62.h5ad                              |     1.37 MB | 2026-07-27 05:49
+  scratch/zenith_sim_d9d2e22eeeb1.h5ad                              |     1.37 MB | 2026-07-02 10:08
+  scratch/zenith_sim_e3bcb6bdcbce.h5ad                              |     1.37 MB | 2026-07-18 06:15
+  scratch/zenith_sim_fbd1b6aa16b0.h5ad                              |     1.37 MB | 2026-07-27 04:55
+  data/foundation/zenith_foundation_v1/var_schema.h5ad              |     0.93 MB | 2026-06-21 12:50
+  models/zenith_foundation_v1/var_schema.h5ad                       |     0.93 MB | 2026-07-13 13:00
+  models/zenith_foundation_v1-20260530T213626Z-3-001/zenith_foundation_v1_old/var_schema.h5ad |     0.55 MB | 2026-05-30 22:41
+  models/zenith_foundation_v1_old/var_schema.h5ad                   |     0.55 MB | 2026-05-30 15:49
+  models/zenith_foundation_v29/var_schema.h5ad                      |     0.55 MB | 2026-07-01 06:11
+  data/wot_maps/tmap_0.0_2.0.h5ad                                   |     0.18 MB | 2026-05-09 05:32
+  data/trajectories/geo/schiebinger_reprogramming.h5ad              |     0.13 MB | 2026-05-09 05:30
+  data/trajectories/PerfLogs/geo/schiebinger_reprogramming.h5ad     |     0.13 MB | 2026-05-09 05:30
+  scratch/zenith_sim_2d974cecde58.h5ad                              |     0.04 MB | 2026-06-29 14:55
+  scratch/zenith_sim_33d8061fd266.h5ad                              |     0.04 MB | 2026-06-29 14:54
+  scratch/zenith_sim_40ba92fdeec2.h5ad                              |     0.04 MB | 2026-06-29 14:55
+  scratch/zenith_sim_4cb6fa555c2d.h5ad                              |     0.04 MB | 2026-06-29 14:53
+  scratch/zenith_sim_4cbc24624066.h5ad                              |     0.04 MB | 2026-07-01 06:52
+  scratch/zenith_sim_516c095b8c2d.h5ad                              |     0.04 MB | 2026-06-29 14:53
+  scratch/zenith_sim_8cf239f9921f.h5ad                              |     0.04 MB | 2026-07-01 11:31
+  scratch/zenith_sim_906bc73f54ad.h5ad                              |     0.04 MB | 2026-06-29 14:52
+  scratch/zenith_sim_c6109656bb05.h5ad                              |     0.04 MB | 2026-07-01 08:48
+  scratch/zenith_sim_e726ce049c7b.h5ad                              |     0.04 MB | 2026-06-29 14:40
+  scratch/zenith_sim_f5af67a6a570.h5ad                              |     0.04 MB | 2026-07-01 06:56
+  scratch/zenith_sim_f9e11073b331.h5ad                              |     0.04 MB | 2026-07-01 11:31
+  models/age_clock.pkl                                              |     0.04 MB | 2026-07-13 13:00
+  models/neural_age_clock_v1/ridge_model.pkl                        |     0.00 MB | 2026-07-14 01:28
+PERIHEART references: [('bridge_server_backup.py', 'PERIHEART'), ('provenance.md', 'f1606894'), ('provenance.md', 'PERIHEART'), ('provenance.md', 'Kanemaru'), ('scientific_qna.html', 'PERIHEART'), ('zenith_complete_honest_founder_report.md', 'f1606894'), ('zenith_complete_honest_founder_report.md', 'PERIHEART'), ('zenith_complete_honest_founder_report.md', 'Kanemaru'), ('ZENITH_FOUNDATION_MODEL_CARD.md', 'PERIHEART'), ('ZENITH_FOUNDATION_MODEL_CARD.md', 'Kanemaru'), ('zenith_phase0_to_phase4_master_report.md', 'f1606894'), ('zenith_phase0_to_phase4_master_report.md', 'PERIHEART'), ('zenith_phase0_to_phase4_master_report.md', 'Kanemaru'), ('Zenith_v28_500k_Training.ipynb', 'PERIHEART'), ('data/foundation/fetch_log.json', 'f1606894'), ('data/foundation/fetch_log.json', 'PERIHEART'), ('models/cell_type_genes.json', 'PERIHEART'), ('scratch/generate_academic_poster.py', 'PERIHEART'), ('scratch/generate_dossier.py', 'PERIHEART'), ('scratch/generate_pitch_slides.py', 'PERIHEART'), ('scratch/gpt_discovery_code.py', 'PERIHEART'), ('scratch/patch_index_stats.py', 'PERIHEART'), ('scripts/run_phaseA_audit.py', 'f1606894'), ('scripts/run_phaseA_audit.py', 'PERIHEART'), ('scripts/run_phaseA_audit.py', 'Kanemaru')]
+Benchmark string references: [('about.html', '99.8%'), ('api.html', '0.982'), ('bridge_server.py', '98.2%'), ('evidence.html', '99.8%'), ('index_9a4de71.html', '99.8%'), ('index_c4a3865.html', '99.8%'), ('inventory.md', '99.8%'), ('inventory.md', '98.2%'), ('inventory.md', '280%'), ('INVESTOR_PITCH_WAED.html', '0.982'), ('legal.html', '99.8%'), ('NILUS_MASTER_PITCH_V2.html', '98.2%'), ('NILUS_MASTER_PITCH_V2.html', '0.982'), ('NILUS_PITCH_DECK.html', '0.982'), ('paper.html', '0.982'), ('partial_safety.py', '0.982'), ('profile.html', '99.8%'), ('regulatory.html', '99.8%'), ('stage4_eval.py', '98.2%'), ('statistics.md', '280%'), ('technical_catalog.html', '99.8%'), ('technical_catalog.html', '98.2%'), ('technical_catalog.html', '280%'), ('technical_catalog.html', '0.982'), ('terms.html', '99.8%'), ('test_partial_safety.py', '0.982'), ('website_claims.md', '99.8%'), ('website_claims.md', '98.2%'), ('website_claims.md', '280%'), ('website_claims.md', '0.982'), ('whitepaper.html', '99.8%'), ('zenith_complete_honest_founder_report.md', '99.8%'), ('zenith_phase0_to_phase4_master_report.md', '99.8%'), ('zenith_phase0_to_phase4_master_report.md', '98.2%'), ('zenith_phase0_to_phase4_master_report.md', '280%'), ('zenith_scientific_paper.html', '0.982'), ('zenith_scientific_paper.md', '0.982'), ('scripts/run_phaseA_audit.py', '99.8%'), ('scripts/run_phaseA_audit.py', '98.2%'), ('scripts/run_phaseA_audit.py', '280%'), ('scripts/run_phaseA_audit.py', '0.982'), ('services/bit_age_clock.py', '0.982')]
+
+--- A.4: FIVE OPEN INCONSISTENCIES ---
+zenith_foundation_v1 model_state_dict tensors: 33
+  All tensors numel sum:   37,234,698
+  Float tensors numel sum: 37,234,698
+  init_params_: {'kwargs': {'kwargs': {'encode_covariates': True, 'deeply_inject_covariates': False, 'use_layer_norm': 'both', 'use_batch_norm': 'none'}}, 'non_kwargs': {'n_hidden': 1024, 'n_latent': 64, 'n_layers': 4, 'dropout_rate': 0.1, 'dispersion': 'gene', 'gene_likelihood': 'nb', 'use_observed_lib_size': True, 'latent_distribution': 'normal'}}
+    z_encoder.encoder.fc_layers.Layer 0.0.weight: (1024, 6092)
+    z_encoder.encoder.fc_layers.Layer 0.0.bias: (1024,)
+    z_encoder.encoder.fc_layers.Layer 1.0.weight: (1024, 1024)
+    z_encoder.encoder.fc_layers.Layer 1.0.bias: (1024,)
+    z_encoder.encoder.fc_layers.Layer 2.0.weight: (1024, 1024)
+    z_encoder.encoder.fc_layers.Layer 2.0.bias: (1024,)
+    z_encoder.encoder.fc_layers.Layer 3.0.weight: (1024, 1024)
+    z_encoder.encoder.fc_layers.Layer 3.0.bias: (1024,)
+    z_encoder.mean_encoder.weight: (64, 1024)
+    z_encoder.mean_encoder.bias: (64,)
+    z_encoder.var_encoder.weight: (64, 1024)
+    z_encoder.var_encoder.bias: (64,)
+    decoder.px_decoder.fc_layers.Layer 0.0.weight: (1024, 298)
+    decoder.px_decoder.fc_layers.Layer 0.0.bias: (1024,)
+    decoder.px_decoder.fc_layers.Layer 1.0.weight: (1024, 1024)
+    decoder.px_decoder.fc_layers.Layer 1.0.bias: (1024,)
+    decoder.px_decoder.fc_layers.Layer 2.0.weight: (1024, 1024)
+    decoder.px_decoder.fc_layers.Layer 2.0.bias: (1024,)
+    decoder.px_decoder.fc_layers.Layer 3.0.weight: (1024, 1024)
+    decoder.px_decoder.fc_layers.Layer 3.0.bias: (1024,)
+    decoder.px_scale_decoder.0.weight: (5858, 1024)
+    decoder.px_scale_decoder.0.bias: (5858,)
+    decoder.px_r_decoder.weight: (5858, 1024)
+    decoder.px_r_decoder.bias: (5858,)
+    decoder.px_dropout_decoder.weight: (5858, 1024)
+    decoder.px_dropout_decoder.bias: (5858,)
+scvi_model_486k_real model_state_dict tensors: 50
+  All tensors numel sum:   3,269,747
+  Float tensors numel sum: 3,269,742
+  init_params_: {'kwargs': {'kwargs': {}}, 'non_kwargs': {'n_hidden': 128, 'n_latent': 20, 'n_layers': 2, 'dropout_rate': 0.1, 'dispersion': 'gene', 'gene_likelihood': 'zinb', 'use_observed_lib_size': True, 'latent_distribution': 'normal'}}
+    px_r: shape=(5009,), dtype=torch.float32, numel=5009
+    z_encoder.encoder.fc_layers.Layer 0.1.num_batches_tracked: shape=(), dtype=torch.int64, numel=1
+    z_encoder.encoder.fc_layers.Layer 1.1.num_batches_tracked: shape=(), dtype=torch.int64, numel=1
+    z_encoder.mean_encoder.weight: shape=(20, 128), dtype=torch.float32, numel=2560
+    z_encoder.mean_encoder.bias: shape=(20,), dtype=torch.float32, numel=20
+    l_encoder.encoder.fc_layers.Layer 0.1.num_batches_tracked: shape=(), dtype=torch.int64, numel=1
+    decoder.px_decoder.fc_layers.Layer 0.1.num_batches_tracked: shape=(), dtype=torch.int64, numel=1
+    decoder.px_decoder.fc_layers.Layer 1.1.num_batches_tracked: shape=(), dtype=torch.int64, numel=1
+    decoder.px_r_decoder.weight: shape=(5009, 128), dtype=torch.float32, numel=641152
+    decoder.px_r_decoder.bias: shape=(5009,), dtype=torch.float32, numel=5009
+  [run_zenith_screening_pipeline.py:101] # Non-linear epistasis: full cocktail achieves maximum synergy
+  [run_zenith_screening_pipeline.py:108] rejuv_multiplier += 1.65 # NL-101 full cooperativity
+  [run_zenith_screening_pipeline.py:158] if "CDKN2A" in GENE_TO_IDX: perturbed[:, GENE_TO_IDX["CDKN2A"]] *= 1.35
+  [run_zenith_screening_pipeline.py:194] "SIRT1": -2.15, "SIRT6": -1.95, "FOXO3": -1.65, "PPARGC1A": -1.45, "GATA4": -1.25,
+  [run_zenith_screening_pipeline.py:195] "ATP2A2": -1.55, "GJA1": -1.35, "TNNT2": -1.10, "ZBTB16": -1.30, "TET2": -0.95
+
+--- A.5: PERIHEART CHARACTERISATION (f1606894-59df-4794-a37f-baa7c6fb6de1.h5ad) ---
+PERIHEART n_obs = 392,819, n_vars = 35,477
+PERIHEART obs columns (43): ['_index', 'alignment_software', 'assay', 'assay_ontology_term_id', 'author_batch_notes', 'cell_enrichment', 'cell_number_loaded', 'cell_type', 'cell_type_ontology_term_id', 'development_stage', 'development_stage_ontology_term_id', 'disease', 'disease_ontology_term_id', 'donor_id', 'gene_annotation_version', 'in_publication', 'institute', 'intron_incluion', 'is_primary_data', 'library_id', 'library_preparation_batch', 'library_sequencing_run', 'manner_of_death', 'observation_joinid', 'protocol_url', 'reference_genome', 'sample_collection_method', 'sample_collection_site', 'sample_collection_year', 'sample_id', 'sample_preservation_method', 'sample_source', 'sampled_site_condition', 'self_reported_ethnicity', 'self_reported_ethnicity_ontology_term_id', 'sequenced_fragment', 'sex', 'sex_ontology_term_id', 'suspension_type', 'tissue', 'tissue_free_text', 'tissue_ontology_term_id', 'tissue_type']
+PERIHEART var columns (9): ['_index', 'feature_biotype', 'feature_is_filtered', 'feature_length', 'feature_name', 'feature_reference', 'feature_type', 'feature_types', 'gene_name']
+
+PERIHEART Cell Types:
+  endocardial cell                                :  114,607 (29.18%)
+  cardiac muscle cell                             :   88,561 (22.54%)
+  fibroblast                                      :   73,050 (18.60%)
+  cardiac blood vessel endothelial cell           :   51,995 (13.24%)
+  mesothelial cell                                :   28,851 ( 7.34%)
+  macrophage                                      :   14,926 ( 3.80%)
+  pericyte                                        :    6,082 ( 1.55%)
+  smooth muscle cell                              :    4,702 ( 1.20%)
+  Schwann cell                                    :    4,302 ( 1.10%)
+  lymphocyte                                      :    3,084 ( 0.79%)
+  adipocyte                                       :    2,659 ( 0.68%)
+
+Computing PERIHEART per-donor sequencing depth & confound structure across all 54 donors...
+
+Saved 54 PERIHEART donors to scratch/phaseA5_periheart_54_donors.csv:
+donor_id    development_stage  age_midpoint  n_cells  n_vcm  n_reg_vcm  n_cm_generic  n_fibroblast  median_genes    sex     assay suspension_type                        tissue cell_enrichment author_batch_notes
+  PH-G23   fifth decade stage          45.0     6905   1386          0          1386          1516        1570.0   male 10x 3' v3         nucleus right atrium auricular region              na      Valve disease
+  PH-M56   fifth decade stage          45.0     7525   2977          0          2977           941        1989.0   male 10x 3' v3         nucleus right atrium auricular region              na      Valve disease
+  PH-B54   sixth decade stage          55.0    10370   1396          0          1396          2611        1362.0   male 10x 3' v3         nucleus right atrium auricular region              na             CAD+MI
+  PH-D67   sixth decade stage          55.0     9447   1423          0          1423          2382        1527.0   male 10x 3' v3         nucleus right atrium auricular region              na      Valve disease
+  PH-E78   sixth decade stage          55.0     8291    970          0           970          1487        1744.0   male 10x 3' v3         nucleus right atrium auricular region              na      Valve disease
+  PH-F24   sixth decade stage          55.0     5835   1611          0          1611           873        1238.0   male 10x 3' v3         nucleus right atrium auricular region              na      Valve disease
+  PH-K47   sixth decade stage          55.0     5863   2029          0          2029           495         986.0   male 10x 3' v3         nucleus right atrium auricular region              na      Valve disease
+  PH-N82   sixth decade stage          55.0     3561    752          0           752           754        1814.0   male 10x 3' v3         nucleus right atrium auricular region              na      Valve disease
+  PH-P12   sixth decade stage          55.0     8157   1658          0          1658          1604        1396.0   male 10x 3' v3         nucleus right atrium auricular region              na      Valve disease
+  PH-P96   sixth decade stage          55.0     7686   1821          0          1821          1440        1545.0   male 10x 3' v3         nucleus right atrium auricular region              na      Valve disease
+  PH-R16   sixth decade stage          55.0     6209   1994          0          1994          1024         930.0   male 10x 3' v3         nucleus right atrium auricular region              na      Valve disease
+  PH-U41   sixth decade stage          55.0     3683   1478          0          1478           138         880.0   male 10x 3' v3         nucleus right atrium auricular region              na      Valve disease
+  PH-A45 seventh decade stage          65.0     6918   1830          0          1830           804        1123.0   male 10x 3' v3         nucleus right atrium auricular region              na                CAD
+  PH-A75 seventh decade stage          65.0     8891   1918          0          1918          1799        1161.0   male 10x 3' v3         nucleus right atrium auricular region              na      Valve disease
+  PH-D97 seventh decade stage          65.0     9609   1460          0          1460          3077        1537.0   male 10x 3' v3         nucleus right atrium auricular region              na      Valve disease
+  PH-E59 seventh decade stage          65.0     8848    917          0           917          2198        1541.5   male 10x 3' v3         nucleus right atrium auricular region              na      Valve disease
+  PH-H39 seventh decade stage          65.0     7337   1665          0          1665          1532        1266.0   male 10x 3' v3         nucleus right atrium auricular region              na             CAD+MI
+  PH-H91 seventh decade stage          65.0     6037   1574          0          1574          1064        1662.0   male 10x 3' v3         nucleus right atrium auricular region              na             CAD+MI
+  PH-I28 seventh decade stage          65.0     7966   1351          0          1351          2435        1482.0   male 10x 3' v3         nucleus right atrium auricular region              na      Valve disease
+  PH-I32 seventh decade stage          65.0     7437   1612          0          1612          1985        1342.0   male 10x 3' v3         nucleus right atrium auricular region              na      Valve disease
+  PH-M14 seventh decade stage          65.0    10427   1658          0          1658          2132        1513.0 female 10x 3' v3         nucleus right atrium auricular region              na      Valve disease
+  PH-M57 seventh decade stage          65.0    18234   3538          0          3538          1792        1661.0   male 10x 3' v3         nucleus right atrium auricular region              na             CAD+MI
+  PH-N33 seventh decade stage          65.0     6298   1838          0          1838           579        1446.0   male 10x 3' v3         nucleus right atrium auricular region              na             CAD+MI
+  PH-N57 seventh decade stage          65.0     7655   1970          0          1970          1671        1490.0   male 10x 3' v3         nucleus right atrium auricular region              na      Valve disease
+  PH-O28 seventh decade stage          65.0     6660   1328          0          1328          1053        1758.0   male 10x 3' v3         nucleus right atrium auricular region              na      Valve disease
+  PH-P86 seventh decade stage          65.0     8506   1349          0          1349          1560        1469.0   male 10x 3' v3         nucleus right atrium auricular region              na      Valve disease
+  PH-Q52 seventh decade stage          65.0     8038   2529          0          2529          1639        1222.0   male 10x 3' v3         nucleus right atrium auricular region              na                CAD
+  PH-S79 seventh decade stage          65.0     5280   1331          0          1331           472        1757.5   male 10x 3' v3         nucleus right atrium auricular region              na      Valve disease
+  PH-U45 seventh decade stage          65.0     5956   1601          0          1601           898        1099.5   male 10x 3' v3         nucleus right atrium auricular region              na                CAD
+  PH-V63 seventh decade stage          65.0     8439   1700          0          1700          1370         957.0   male 10x 3' v3         nucleus right atrium auricular region              na      Valve disease
+  PH-V77 seventh decade stage          65.0     6420   1266          0          1266          1044        1289.0   male 10x 3' v3         nucleus right atrium auricular region              na      Valve disease
+  PH-W93 seventh decade stage          65.0     1808   1030          0          1030            69         802.5   male 10x 3' v3         nucleus right atrium auricular region              na      Valve disease
+  PH-A77  eighth decade stage          75.0     8584   1965          0          1965          1144        1406.0   male 10x 3' v3         nucleus right atrium auricular region              na             CAD+MI
+  PH-G50  eighth decade stage          75.0     7679   1967          0          1967           905        1277.0   male 10x 3' v3         nucleus right atrium auricular region              na             CAD+MI
+  PH-G54  eighth decade stage          75.0     7161   1706          0          1706          1985         917.0   male 10x 3' v3         nucleus right atrium auricular region              na      Valve disease
+  PH-I18  eighth decade stage          75.0     9146   2223          0          2223          2060        1082.0   male 10x 3' v3         nucleus right atrium auricular region              na      Valve disease
+  PH-I52  eighth decade stage          75.0     6424   1655          0          1655          1298        1908.0   male 10x 3' v3         nucleus right atrium auricular region              na      Valve disease
+  PH-J80  eighth decade stage          75.0     6519   1033          0          1033          1418        1433.0 female 10x 3' v3         nucleus right atrium auricular region              na      Valve disease
+  PH-K48  eighth decade stage          75.0     6158   1706          0          1706           820        1255.0   male 10x 3' v3         nucleus right atrium auricular region              na      Valve disease
+  PH-L16  eighth decade stage          75.0     4556    843          0           843           791        1482.0   male 10x 3' v3         nucleus right atrium auricular region              na      Valve disease
+  PH-L22  eighth decade stage          75.0     3815   1354          0          1354           305         841.0 female 10x 3' v3         nucleus right atrium auricular region              na      Valve disease
+  PH-O14  eighth decade stage          75.0     7118   1301          0          1301          1658        1026.0   male 10x 3' v3         nucleus right atrium auricular region              na                CAD
+  PH-Q25  eighth decade stage          75.0     2811    864          0           864           870         829.0   male 10x 3' v3         nucleus right atrium auricular region              na      Valve disease
+  PH-T38  eighth decade stage          75.0    10001   1201          0          1201          1981        1113.0   male 10x 3' v3         nucleus right atrium auricular region              na             CAD+MI
+  PH-V28  eighth decade stage          75.0     4941    877          0           877          1057        1248.0   male 10x 3' v3         nucleus right atrium auricular region              na      Valve disease
+  PH-V60  eighth decade stage          75.0     6021   2434          0          2434           793        2099.0   male 10x 3' v3         nucleus right atrium auricular region              na      Valve disease
+  PH-X61  eighth decade stage          75.0     9921   1218          0          1218          2772        1919.0   male 10x 3' v3         nucleus right atrium auricular region              na      Valve disease
+  PH-Y87  eighth decade stage          75.0     9787   2724          0          2724          1290        1631.0   male 10x 3' v3         nucleus right atrium auricular region              na      Valve disease
+  PH-Z51  eighth decade stage          75.0     7909   1096          0          1096          1515        1219.0   male 10x 3' v3         nucleus right atrium auricular region              na                CAD
+  PH-A44   ninth decade stage          85.0     5149   1905          0          1905           535        1886.0   male 10x 3' v3         nucleus right atrium auricular region              na      Valve disease
+  PH-A91   ninth decade stage          85.0    10093   3541          0          3541          1651        1035.0   male 10x 3' v3         nucleus right atrium auricular region              na             CAD+MI
+  PH-M22   ninth decade stage          85.0    10672   1630          0          1630          3075        1502.0 female 10x 3' v3         nucleus right atrium auricular region              na      Valve disease
+  PH-P77   ninth decade stage          85.0     5571   1734          0          1734           651        1134.0   male 10x 3' v3         nucleus right atrium auricular region              na      Valve disease
+  PH-Y03   ninth decade stage          85.0     2487    624          0           624            38         713.0   male 10x 3' v3         nucleus right atrium auricular region              na      Valve disease
+
+--- PERIHEART CONFOUND CROSS-TABULATION ---
+
+Cross-tab development_stage vs sex (donor-level n=54):
+sex                   female  male
+development_stage                 
+eighth decade stage        2    15
+fifth decade stage         0     2
+ninth decade stage         1     4
+seventh decade stage       1    19
+sixth decade stage         0    10
+  Chi2 = 2.7556, p = 5.9952e-01
+
+Cross-tab development_stage vs assay (donor-level n=54):
+assay                 10x 3' v3
+development_stage              
+eighth decade stage          17
+fifth decade stage            2
+ninth decade stage            5
+seventh decade stage         20
+sixth decade stage           10
+
+Cross-tab development_stage vs suspension_type (donor-level n=54):
+suspension_type       nucleus
+development_stage            
+eighth decade stage        17
+fifth decade stage          2
+ninth decade stage          5
+seventh decade stage       20
+sixth decade stage         10
+
+Cross-tab development_stage vs tissue (donor-level n=54):
+tissue                right atrium auricular region
+development_stage                                  
+eighth decade stage                              17
+fifth decade stage                                2
+ninth decade stage                                5
+seventh decade stage                             20
+sixth decade stage                               10
+
+Cross-tab development_stage vs cell_enrichment (donor-level n=54):
+cell_enrichment       na
+development_stage       
+eighth decade stage   17
+fifth decade stage     2
+ninth decade stage     5
+seventh decade stage  20
+sixth decade stage    10
+
+Cross-tab development_stage vs author_batch_notes (donor-level n=54):
+author_batch_notes    CAD  CAD+MI  Valve disease
+development_stage                               
+eighth decade stage     2       3             12
+fifth decade stage      0       0              2
+ninth decade stage      0       1              4
+seventh decade stage    3       4             13
+sixth decade stage      0       1              9
+  Chi2 = 3.9754, p = 8.5933e-01
+
+Donor age_midpoint vs median_genes (n=54): Pearson r = -0.1721 (p = 0.2133)
+python : Traceback (most recent call last):
+At line:1 char:1
++ python scripts/run_phaseA_audit.py > scratch/phaseA_audit_output.txt  ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Traceback (most recent call last)::String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  File "C:\Users\alaaa\.gemini\antigravity\scratch\is-chrp-v26-generative\scripts\run_phaseA_audit.py", line 287, in 
+<module>
+    main()
+    ~~~~^^
+  File "C:\Users\alaaa\.gemini\antigravity\scratch\is-chrp-v26-generative\scripts\run_phaseA_audit.py", line 276, in 
+main
+    ph_feat_names = [x.decode() if isinstance(x, bytes) else str(x) for x in 
+f_ph["var/feature_name/categories"][f_ph["var/feature_name/codes"][:]]] if "feature_name" in f_ph["var"] else []
+                                                                             
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "h5py/_objects.pyx", line 54, in h5py._objects.with_phil.wrapper
+  File "h5py/_objects.pyx", line 55, in h5py._objects.with_phil.wrapper
+  File "C:\Users\alaaa\AppData\Roaming\Python\Python314\site-packages\h5py\_hl\dataset.py", line 945, in __getitem__
+    selection = sel.select(self.shape, args, dataset=self)
+  File "C:\Users\alaaa\AppData\Roaming\Python\Python314\site-packages\h5py\_hl\selections.py", line 85, in select
+    return selector.make_selection(args)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "h5py/_objects.pyx", line 54, in h5py._objects.with_phil.wrapper
+  File "h5py/_objects.pyx", line 55, in h5py._objects.with_phil.wrapper
+  File "h5py/_selector.pyx", line 297, in h5py._selector.Selector.make_selection
+  File "h5py/_selector.pyx", line 216, in h5py._selector.Selector.apply_args
+TypeError: Indexing elements must be in increasing order

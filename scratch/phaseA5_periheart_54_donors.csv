@@ -1,0 +1,55 @@
+donor_id,development_stage,age_midpoint,n_cells,n_vcm,n_reg_vcm,n_cm_generic,n_fibroblast,median_genes,sex,assay,suspension_type,tissue,cell_enrichment,author_batch_notes
+PH-G23,fifth decade stage,45.0,6905,1386,0,1386,1516,1570.0,male,10x 3' v3,nucleus,right atrium auricular region,na,Valve disease
+PH-M56,fifth decade stage,45.0,7525,2977,0,2977,941,1989.0,male,10x 3' v3,nucleus,right atrium auricular region,na,Valve disease
+PH-B54,sixth decade stage,55.0,10370,1396,0,1396,2611,1362.0,male,10x 3' v3,nucleus,right atrium auricular region,na,CAD+MI
+PH-D67,sixth decade stage,55.0,9447,1423,0,1423,2382,1527.0,male,10x 3' v3,nucleus,right atrium auricular region,na,Valve disease
+PH-E78,sixth decade stage,55.0,8291,970,0,970,1487,1744.0,male,10x 3' v3,nucleus,right atrium auricular region,na,Valve disease
+PH-F24,sixth decade stage,55.0,5835,1611,0,1611,873,1238.0,male,10x 3' v3,nucleus,right atrium auricular region,na,Valve disease
+PH-K47,sixth decade stage,55.0,5863,2029,0,2029,495,986.0,male,10x 3' v3,nucleus,right atrium auricular region,na,Valve disease
+PH-N82,sixth decade stage,55.0,3561,752,0,752,754,1814.0,male,10x 3' v3,nucleus,right atrium auricular region,na,Valve disease
+PH-P12,sixth decade stage,55.0,8157,1658,0,1658,1604,1396.0,male,10x 3' v3,nucleus,right atrium auricular region,na,Valve disease
+PH-P96,sixth decade stage,55.0,7686,1821,0,1821,1440,1545.0,male,10x 3' v3,nucleus,right atrium auricular region,na,Valve disease
+PH-R16,sixth decade stage,55.0,6209,1994,0,1994,1024,930.0,male,10x 3' v3,nucleus,right atrium auricular region,na,Valve disease
+PH-U41,sixth decade stage,55.0,3683,1478,0,1478,138,880.0,male,10x 3' v3,nucleus,right atrium auricular region,na,Valve disease
+PH-A45,seventh decade stage,65.0,6918,1830,0,1830,804,1123.0,male,10x 3' v3,nucleus,right atrium auricular region,na,CAD
+PH-A75,seventh decade stage,65.0,8891,1918,0,1918,1799,1161.0,male,10x 3' v3,nucleus,right atrium auricular region,na,Valve disease
+PH-D97,seventh decade stage,65.0,9609,1460,0,1460,3077,1537.0,male,10x 3' v3,nucleus,right atrium auricular region,na,Valve disease
+PH-E59,seventh decade stage,65.0,8848,917,0,917,2198,1541.5,male,10x 3' v3,nucleus,right atrium auricular region,na,Valve disease
+PH-H39,seventh decade stage,65.0,7337,1665,0,1665,1532,1266.0,male,10x 3' v3,nucleus,right atrium auricular region,na,CAD+MI
+PH-H91,seventh decade stage,65.0,6037,1574,0,1574,1064,1662.0,male,10x 3' v3,nucleus,right atrium auricular region,na,CAD+MI
+PH-I28,seventh decade stage,65.0,7966,1351,0,1351,2435,1482.0,male,10x 3' v3,nucleus,right atrium auricular region,na,Valve disease
+PH-I32,seventh decade stage,65.0,7437,1612,0,1612,1985,1342.0,male,10x 3' v3,nucleus,right atrium auricular region,na,Valve disease
+PH-M14,seventh decade stage,65.0,10427,1658,0,1658,2132,1513.0,female,10x 3' v3,nucleus,right atrium auricular region,na,Valve disease
+PH-M57,seventh decade stage,65.0,18234,3538,0,3538,1792,1661.0,male,10x 3' v3,nucleus,right atrium auricular region,na,CAD+MI
+PH-N33,seventh decade stage,65.0,6298,1838,0,1838,579,1446.0,male,10x 3' v3,nucleus,right atrium auricular region,na,CAD+MI
+PH-N57,seventh decade stage,65.0,7655,1970,0,1970,1671,1490.0,male,10x 3' v3,nucleus,right atrium auricular region,na,Valve disease
+PH-O28,seventh decade stage,65.0,6660,1328,0,1328,1053,1758.0,male,10x 3' v3,nucleus,right atrium auricular region,na,Valve disease
+PH-P86,seventh decade stage,65.0,8506,1349,0,1349,1560,1469.0,male,10x 3' v3,nucleus,right atrium auricular region,na,Valve disease
+PH-Q52,seventh decade stage,65.0,8038,2529,0,2529,1639,1222.0,male,10x 3' v3,nucleus,right atrium auricular region,na,CAD
+PH-S79,seventh decade stage,65.0,5280,1331,0,1331,472,1757.5,male,10x 3' v3,nucleus,right atrium auricular region,na,Valve disease
+PH-U45,seventh decade stage,65.0,5956,1601,0,1601,898,1099.5,male,10x 3' v3,nucleus,right atrium auricular region,na,CAD
+PH-V63,seventh decade stage,65.0,8439,1700,0,1700,1370,957.0,male,10x 3' v3,nucleus,right atrium auricular region,na,Valve disease
+PH-V77,seventh decade stage,65.0,6420,1266,0,1266,1044,1289.0,male,10x 3' v3,nucleus,right atrium auricular region,na,Valve disease
+PH-W93,seventh decade stage,65.0,1808,1030,0,1030,69,802.5,male,10x 3' v3,nucleus,right atrium auricular region,na,Valve disease
+PH-A77,eighth decade stage,75.0,8584,1965,0,1965,1144,1406.0,male,10x 3' v3,nucleus,right atrium auricular region,na,CAD+MI
+PH-G50,eighth decade stage,75.0,7679,1967,0,1967,905,1277.0,male,10x 3' v3,nucleus,right atrium auricular region,na,CAD+MI
+PH-G54,eighth decade stage,75.0,7161,1706,0,1706,1985,917.0,male,10x 3' v3,nucleus,right atrium auricular region,na,Valve disease
+PH-I18,eighth decade stage,75.0,9146,2223,0,2223,2060,1082.0,male,10x 3' v3,nucleus,right atrium auricular region,na,Valve disease
+PH-I52,eighth decade stage,75.0,6424,1655,0,1655,1298,1908.0,male,10x 3' v3,nucleus,right atrium auricular region,na,Valve disease
+PH-J80,eighth decade stage,75.0,6519,1033,0,1033,1418,1433.0,female,10x 3' v3,nucleus,right atrium auricular region,na,Valve disease
+PH-K48,eighth decade stage,75.0,6158,1706,0,1706,820,1255.0,male,10x 3' v3,nucleus,right atrium auricular region,na,Valve disease
+PH-L16,eighth decade stage,75.0,4556,843,0,843,791,1482.0,male,10x 3' v3,nucleus,right atrium auricular region,na,Valve disease
+PH-L22,eighth decade stage,75.0,3815,1354,0,1354,305,841.0,female,10x 3' v3,nucleus,right atrium auricular region,na,Valve disease
+PH-O14,eighth decade stage,75.0,7118,1301,0,1301,1658,1026.0,male,10x 3' v3,nucleus,right atrium auricular region,na,CAD
+PH-Q25,eighth decade stage,75.0,2811,864,0,864,870,829.0,male,10x 3' v3,nucleus,right atrium auricular region,na,Valve disease
+PH-T38,eighth decade stage,75.0,10001,1201,0,1201,1981,1113.0,male,10x 3' v3,nucleus,right atrium auricular region,na,CAD+MI
+PH-V28,eighth decade stage,75.0,4941,877,0,877,1057,1248.0,male,10x 3' v3,nucleus,right atrium auricular region,na,Valve disease
+PH-V60,eighth decade stage,75.0,6021,2434,0,2434,793,2099.0,male,10x 3' v3,nucleus,right atrium auricular region,na,Valve disease
+PH-X61,eighth decade stage,75.0,9921,1218,0,1218,2772,1919.0,male,10x 3' v3,nucleus,right atrium auricular region,na,Valve disease
+PH-Y87,eighth decade stage,75.0,9787,2724,0,2724,1290,1631.0,male,10x 3' v3,nucleus,right atrium auricular region,na,Valve disease
+PH-Z51,eighth decade stage,75.0,7909,1096,0,1096,1515,1219.0,male,10x 3' v3,nucleus,right atrium auricular region,na,CAD
+PH-A44,ninth decade stage,85.0,5149,1905,0,1905,535,1886.0,male,10x 3' v3,nucleus,right atrium auricular region,na,Valve disease
+PH-A91,ninth decade stage,85.0,10093,3541,0,3541,1651,1035.0,male,10x 3' v3,nucleus,right atrium auricular region,na,CAD+MI
+PH-M22,ninth decade stage,85.0,10672,1630,0,1630,3075,1502.0,female,10x 3' v3,nucleus,right atrium auricular region,na,Valve disease
+PH-P77,ninth decade stage,85.0,5571,1734,0,1734,651,1134.0,male,10x 3' v3,nucleus,right atrium auricular region,na,Valve disease
+PH-Y03,ninth decade stage,85.0,2487,624,0,624,38,713.0,male,10x 3' v3,nucleus,right atrium auricular region,na,Valve disease

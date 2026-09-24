@@ -3,7 +3,7 @@ step3_train_scvi.py
 ===================
 Production-grade scVI foundation model training.
 
-V29.0 UPGRADE: Scaled for 3.2M+ cardiac cells.
+V29.0 UPGRADE: Scaled for 1,962,128 post-QC (from 2,105,588 raw cardiac/vascular across 14 cohorts & 210 donors; originally targeted as 1,962,128 post-QC (from 2,105,588 raw cardiac/vascular across 14 cohorts & 210 donors; originally targeted as 3.2M))+ cardiac cells.
   - n_latent increased from 45 to 64.
   - n_hidden increased from 512 to 1024.
   - n_layers increased from 3 to 4.
@@ -14,13 +14,13 @@ V29.0 UPGRADE: Scaled for 3.2M+ cardiac cells.
 Architecture decisions (scientifically justified):
   - n_latent = 64:
       Scaled up from 45 to capture the finer transcriptional states
-      present across 3.2M cells from multiple cardiac atlases.
+      present across 1,962,128 post-QC (from 2,105,588 raw cardiac/vascular across 14 cohorts & 210 donors; originally targeted as 1,962,128 post-QC (from 2,105,588 raw cardiac/vascular across 14 cohorts & 210 donors; originally targeted as 3.2M)) cells from multiple cardiac atlases.
       64 dimensions provide sufficient capacity for rare cell
       subtypes (e.g., Purkinje fibers, pericytes) without
       over-compressing.
 
   - n_hidden = 1024:
-      Doubled from 512 to prevent underfitting on 3.2M cells.
+      Doubled from 512 to prevent underfitting on 1,962,128 post-QC (from 2,105,588 raw cardiac/vascular across 14 cohorts & 210 donors; originally targeted as 1,962,128 post-QC (from 2,105,588 raw cardiac/vascular across 14 cohorts & 210 donors; originally targeted as 3.2M)) cells.
       At this dataset scale, a narrow encoder bottleneck would
       lose critical non-linear gene-gene relationships.
 
@@ -50,7 +50,7 @@ Architecture decisions (scientifically justified):
       VRAM; it significantly slows CPU training.
 
 Training configuration (GPU-optimised for A100 80GB):
-  - max_epochs = 150: Sufficient for convergence at 3.2M cells.
+  - max_epochs = 150: Sufficient for convergence at 1,962,128 post-QC (from 2,105,588 raw cardiac/vascular across 14 cohorts & 210 donors; originally targeted as 1,962,128 post-QC (from 2,105,588 raw cardiac/vascular across 14 cohorts & 210 donors; originally targeted as 3.2M)) cells.
     Early stopping prevents overfitting.
   - batch_size = 2048: Large batch to maximise A100 throughput.
   - plan_kwargs:
@@ -86,7 +86,7 @@ IN_FILE       = "data/foundation/cardiac_preprocessed.h5ad"
 MODEL_OUT_DIR = "models/zenith_foundation_v29"
 METRICS_FILE  = "data/foundation/training_metrics.json"
 
-# Architecture (v29.0 — scaled for 3.2M cells)
+# Architecture (v29.0 — scaled for 1,962,128 post-QC (from 2,105,588 raw cardiac/vascular across 14 cohorts & 210 donors; originally targeted as 1,962,128 post-QC (from 2,105,588 raw cardiac/vascular across 14 cohorts & 210 donors; originally targeted as 3.2M)) cells)
 N_LATENT      = 64
 N_HIDDEN      = 1024
 N_LAYERS      = 4
@@ -134,7 +134,7 @@ def main():
 
     print("=" * 70)
     print("  Zenith Foundation Model v29.0 — scVI Training")
-    print(f"  Target: 3.2M+ Cardiac Cells | Architecture: {N_HIDDEN}h × {N_LAYERS}L × {N_LATENT}z")
+    print(f"  Target: 1,962,128 post-QC (from 2,105,588 raw cardiac/vascular across 14 cohorts & 210 donors; originally targeted as 1,962,128 post-QC (from 2,105,588 raw cardiac/vascular across 14 cohorts & 210 donors; originally targeted as 3.2M))+ Cardiac Cells | Architecture: {N_HIDDEN}h × {N_LAYERS}L × {N_LATENT}z")
     print(f"  Started: {start_time.strftime('%Y-%m-%d %H:%M UTC')}")
     print("=" * 70)
 
@@ -226,9 +226,9 @@ def main():
           f"early stopping patience={PATIENCE})...")
 
     if device == "cuda":
-        print(f"  GPU training — estimated time: 18–22 hours for 3.2M cells")
+        print(f"  GPU training — estimated time: 18–22 hours for 1,962,128 post-QC (from 2,105,588 raw cardiac/vascular across 14 cohorts & 210 donors; originally targeted as 1,962,128 post-QC (from 2,105,588 raw cardiac/vascular across 14 cohorts & 210 donors; originally targeted as 3.2M)) cells")
     else:
-        print(f"  ⚠ CPU training — this will be VERY slow for 3.2M cells.")
+        print(f"  ⚠ CPU training — this will be VERY slow for 1,962,128 post-QC (from 2,105,588 raw cardiac/vascular across 14 cohorts & 210 donors; originally targeted as 1,962,128 post-QC (from 2,105,588 raw cardiac/vascular across 14 cohorts & 210 donors; originally targeted as 3.2M)) cells.")
         print(f"    Recommendation: Use Google Colab Pro (A100) or RunPod.")
 
     t_train_start = time.time()
@@ -317,7 +317,7 @@ def main():
     metrics = {
         "timestamp_utc":         end_time.strftime("%Y-%m-%d %H:%M UTC"),
         "model_version":         "zenith_foundation_v29",
-        "pipeline_version":      "v29.0 (3.2M Census)",
+        "pipeline_version":      "v29.0 (1,962,128 post-QC (from 2,105,588 raw cardiac/vascular across 14 cohorts & 210 donors; originally targeted as 1,962,128 post-QC (from 2,105,588 raw cardiac/vascular across 14 cohorts & 210 donors; originally targeted as 3.2M)) Census)",
         "n_cells_trained":       int(adata.n_obs),
         "n_genes":               int(adata.n_vars),
         "n_batches":             int(n_batches),

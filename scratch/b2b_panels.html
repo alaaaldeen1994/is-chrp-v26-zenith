@@ -1,0 +1,568 @@
+<div id="discovery-b2b-panels" class="w-full max-w-[720px] mt-6 flex flex-col gap-6" style="display:none;">
+            <!-- CARDIAC GRN VISUALIZER (GraphRAG) -->
+            <div id="grn-visualizer-panel" class="p-6 bg-white border border-slate-200 rounded-[24px] shadow-sm relative overflow-hidden animation-fade-in">
+                <div class="text-[11px] text-slate-800 font-bold uppercase tracking-wider mb-4 flex items-center gap-1.5">
+                    <i data-lucide="network" class="w-3.5 h-3.5 text-slate-800"></i>
+                    GraphRAG Network Visualizer
+                    <span class="ml-auto text-[9px] px-2.5 py-0.5 bg-slate-100 text-slate-800 border border-slate-200 rounded-full font-bold tracking-normal">Cardiac GRN</span>
+                </div>
+                <div class="relative w-full h-[240px] bg-[#090d16] border border-slate-800 rounded-2xl overflow-hidden flex items-center justify-center">
+                    <svg id="grn-canvas-viewport" class="w-full h-full cursor-grab active:cursor-grabbing"></svg>
+                    <div id="grn-tooltip" class="absolute hidden bg-slate-900 border border-slate-800 px-3 py-2 rounded-lg text-xs text-white font-sans pointer-events-none z-10 shadow-lg"></div>
+                </div>
+                <script>
+                (function initGraphRAGCanvas() {
+                    const svg = document.getElementById('grn-canvas-viewport');
+                    if (!svg) return;
+                    const width = 670;
+                    const height = 240;
+                    svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
+
+                    const nodes = [
+                        { id: 'GATA4', x: 140, y: 80, color: '#3b82f6' },
+                        { id: 'MEF2C', x: 140, y: 160, color: '#3b82f6' },
+                        { id: 'TBX5', x: 280, y: 60, color: '#10b981' },
+                        { id: 'NKX2-5', x: 280, y: 180, color: '#10b981' },
+                        { id: 'TNNT2', x: 430, y: 80, color: '#8b5cf6' },
+                        { id: 'MYH6', x: 430, y: 160, color: '#8b5cf6' },
+                        { id: 'ACTC1', x: 570, y: 120, color: '#ec4899' }
+                    ];
+
+                    const links = [
+                        { s: nodes[0], t: nodes[2] },
+                        { s: nodes[0], t: nodes[4] },
+                        { s: nodes[1], t: nodes[3] },
+                        { s: nodes[1], t: nodes[5] },
+                        { s: nodes[2], t: nodes[4] },
+                        { s: nodes[3], t: nodes[5] },
+                        { s: nodes[4], t: nodes[6] },
+                        { s: nodes[5], t: nodes[6] }
+                    ];
+
+                    let content = '';
+                    links.forEach(l => {
+                        content += `<line x1="${l.s.x}" y1="${l.s.y}" x2="${l.t.x}" y2="${l.t.y}" stroke="#334155" stroke-width="1.5" stroke-dasharray="3 3"/>`;
+                    });
+                    nodes.forEach(n => {
+                        content += `<g transform="translate(${n.x},${n.y})">
+                            <circle r="16" fill="${n.color}" fill-opacity="0.2" stroke="${n.color}" stroke-width="2"/>
+                            <text text-anchor="middle" dy="4" fill="#f8fafc" font-size="9" font-weight="bold" font-family="sans-serif">${n.id}</text>
+                        </g>`;
+                    });
+                    svg.innerHTML = content;
+                })();
+                </script>
+                <div id="grn-pathway-summary" class="mt-3.5 p-3.5 bg-slate-50 border border-slate-100 rounded-xl text-xs text-slate-600 font-sans leading-relaxed">
+                    Topological Cardiac GRN: Core transcription factors (GATA4, MEF2C, TBX5, NKX2-5) co-regulate structural sarcomere targets (TNNT2, MYH6, ACTC1) for cardiac rejuvenation.
+                </div>
+            </div>
+
+            <!-- MULTI-OMICS PERTURBATION PREDICTOR -->
+            <div id="multiomics-predictor-panel" class="p-6 bg-white border border-slate-200 rounded-[24px] shadow-sm relative overflow-hidden animation-fade-in">
+                <div class="text-[11px] text-slate-800 font-bold uppercase tracking-wider mb-4 flex items-center gap-1.5">
+                    <i data-lucide="sliders" class="w-3.5 h-3.5 text-slate-800"></i>
+                    Multi-Omics Perturbation Predictor (scGPT)
+                    <span class="ml-auto text-[9px] px-2.5 py-0.5 bg-slate-100 text-slate-800 border border-slate-200 rounded-full font-bold tracking-normal">Zero-Shot Mode</span>
+                </div>
+                <!-- Dosages Sliders -->
+                <div class="grid grid-cols-2 gap-4 mb-4 bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                    <div>
+                        <label class="text-[9px] text-slate-600 font-bold block mb-1.5 uppercase tracking-wider">GATA4 Dosage: <span id="val-gata4" class="text-slate-800 font-mono font-bold">1.0</span></label>
+                        <input id="slider-gata4" type="range" min="0" max="3" step="0.1" value="1.0" class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer" style="accent-color:#1e293b;">
+                    </div>
+                    <div>
+                        <label class="text-[9px] text-slate-600 font-bold block mb-1.5 uppercase tracking-wider">MEF2C Dosage: <span id="val-mef2c" class="text-slate-800 font-mono font-bold">1.0</span></label>
+                        <input id="slider-mef2c" type="range" min="0" max="3" step="0.1" value="1.0" class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer" style="accent-color:#1e293b;">
+                    </div>
+                    <div>
+                        <label class="text-[9px] text-slate-600 font-bold block mb-1.5 uppercase tracking-wider">TBX5 Dosage: <span id="val-tbx5" class="text-slate-800 font-mono font-bold">1.0</span></label>
+                        <input id="slider-tbx5" type="range" min="0" max="3" step="0.1" value="1.0" class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer" style="accent-color:#1e293b;">
+                    </div>
+                    <div>
+                        <label class="text-[9px] text-slate-600 font-bold block mb-1.5 uppercase tracking-wider">NKX2-5 Dosage: <span id="val-nkx25" class="text-slate-800 font-mono font-bold">1.0</span></label>
+                        <input id="slider-nkx25" type="range" min="0" max="3" step="0.1" value="1.0" class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer" style="accent-color:#1e293b;">
+                    </div>
+                    <div>
+                        <label class="text-[9px] text-slate-600 font-bold block mb-1.5 uppercase tracking-wider">OCT4 (Pioneer): <span id="val-oct4" class="text-slate-800 font-mono font-bold">0.0</span></label>
+                        <input id="slider-oct4" type="range" min="0" max="3" step="0.1" value="0.0" class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer" style="accent-color:#1e293b;">
+                    </div>
+                    <div>
+                        <label class="text-[9px] text-slate-600 font-bold block mb-1.5 uppercase tracking-wider">SOX2 (Pioneer): <span id="val-sox2" class="text-slate-800 font-mono font-bold">0.0</span></label>
+                        <input id="slider-sox2" type="range" min="0" max="3" step="0.1" value="0.0" class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer" style="accent-color:#1e293b;">
+                    </div>
+                    <div>
+                        <label class="text-[9px] text-slate-600 font-bold block mb-1.5 uppercase tracking-wider">KLF4 (Pioneer): <span id="val-klf4" class="text-slate-800 font-mono font-bold">0.0</span></label>
+                        <input id="slider-klf4" type="range" min="0" max="3" step="0.1" value="0.0" class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer" style="accent-color:#1e293b;">
+                    </div>
+                    <div>
+                        <label class="text-[9px] text-slate-600 font-bold block mb-1.5 uppercase tracking-wider">NMN Booster: <span id="val-nmn" class="text-slate-800 font-mono font-bold">0.0</span></label>
+                        <input id="slider-nmn" type="range" min="0" max="3" step="0.1" value="0.0" class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer" style="accent-color:#1e293b;">
+                    </div>
+                    <div>
+                        <label class="text-[9px] text-slate-600 font-bold block mb-1.5 uppercase tracking-wider">MYC (Oncogene): <span id="val-myc" class="text-slate-800 font-mono font-bold">0.0</span></label>
+                        <input id="slider-myc" type="range" min="0" max="3" step="0.1" value="0.0" class="w-full h-1 bg-slate-800 rounded-lg appearance-none cursor-pointer" style="accent-color:#1e293b;">
+                    </div>
+                    <div>
+                        <label class="text-[9px] text-slate-600 font-bold block mb-1.5 uppercase tracking-wider">SNAI1 (EMT): <span id="val-snai1" class="text-slate-800 font-mono font-bold">0.0</span></label>
+                        <input id="slider-snai1" type="range" min="0" max="3" step="0.1" value="0.0" class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer" style="accent-color:#ca8a04;">
+                    </div>
+                    <div class="col-span-2 grid grid-cols-1 md:grid-cols-2 gap-3 mt-2 pt-2 border-t border-slate-200/60">
+                        <!-- Oral Route -->
+                        <div class="col-span-2 flex items-center gap-2 p-2.5 bg-slate-50 border border-slate-100 rounded-xl">
+                            <input id="chk-oral-admin" type="checkbox" class="rounded text-slate-800 focus:ring-slate-500 h-3.5 w-3.5 cursor-pointer">
+                            <label for="chk-oral-admin" class="text-[9px] text-slate-500 font-bold uppercase tracking-wider cursor-pointer">Oral Route (NMN gut microbiome deamidation penalty)</label>
+                        </div>
+                        
+                        <!-- Card 1: Semaglutide -->
+                        <div class="flex flex-col p-2.5 bg-slate-50 border border-slate-100 rounded-xl">
+                            <div class="flex items-center gap-2">
+                                <input id="chk-semaglutide" type="checkbox" class="rounded text-slate-800 focus:ring-slate-500 h-3.5 w-3.5 cursor-pointer">
+                                <label for="chk-semaglutide" class="text-[9px] text-slate-800 font-black uppercase tracking-wider cursor-pointer" title="Clinical Target: -4.9 years PhenoAge, -2.2 years OMICmAge, -9% DunedinPACE">Semaglutide (GLP-1)</label>
+                                <button type="button" onclick="document.getElementById('dose-panel-semaglutide').classList.toggle('hidden')" class="ml-auto text-slate-400 hover:text-slate-600 cursor-pointer" title="Adjust Pharmacokinetics">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.1a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+                                </button>
+                            </div>
+                            <div id="dose-panel-semaglutide" class="hidden flex flex-col gap-2 mt-2 pt-2 border-t border-slate-200/60">
+                                <div class="flex items-center justify-between text-[8px] text-slate-500 font-bold font-mono">
+                                    <span>DOSE: <span id="val-dose-semaglutide" class="text-slate-800 font-bold">1.0 mg</span></span>
+                                    <span>FREQ: <span id="val-freq-semaglutide" class="text-slate-800 font-bold">168 hrs</span></span>
+                                </div>
+                                <div>
+                                    <label class="text-[7px] text-slate-400 font-bold uppercase block mb-0.5">Dose (mg)</label>
+                                    <input id="slider-dose-semaglutide" type="range" min="0.1" max="5.0" step="0.1" value="1.0" class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer" style="accent-color:#1e293b;">
+                                </div>
+                                <div>
+                                    <label class="text-[7px] text-slate-400 font-bold uppercase block mb-0.5">Frequency (hours)</label>
+                                    <input id="slider-freq-semaglutide" type="range" min="24" max="336" step="24" value="168" class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer" style="accent-color:#1e293b;">
+                                </div>
+                                <div class="flex items-center gap-1.5 mt-0.5">
+                                    <span class="text-[7px] text-slate-400 uppercase font-bold shrink-0">PK/PD Wave:</span>
+                                    <svg id="sparkline-semaglutide" class="w-full h-5 bg-slate-100 rounded border border-slate-200 overflow-hidden" preserveAspectRatio="none"></svg>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card 2: Omega-3 -->
+                        <div class="flex flex-col p-2.5 bg-slate-50 border border-slate-100 rounded-xl">
+                            <div class="flex items-center gap-2">
+                                <input id="chk-omega3" type="checkbox" class="rounded text-slate-800 focus:ring-slate-500 h-3.5 w-3.5 cursor-pointer">
+                                <label for="chk-omega3" class="text-[9px] text-slate-800 font-black uppercase tracking-wider cursor-pointer" title="Causal Target: -6.1 years DamAge, +6.2 years AdaptAge">Omega-3 Fatty Acids</label>
+                                <button type="button" onclick="document.getElementById('dose-panel-omega3').classList.toggle('hidden')" class="ml-auto text-slate-400 hover:text-slate-600 cursor-pointer" title="Adjust Pharmacokinetics">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.1a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+                                </button>
+                            </div>
+                            <div id="dose-panel-omega3" class="hidden flex flex-col gap-2 mt-2 pt-2 border-t border-slate-200/60">
+                                <div class="flex items-center justify-between text-[8px] text-slate-500 font-bold font-mono">
+                                    <span>DOSE: <span id="val-dose-omega3" class="text-slate-800 font-bold">1000 mg</span></span>
+                                    <span>FREQ: <span id="val-freq-omega3" class="text-slate-800 font-bold">24 hrs</span></span>
+                                </div>
+                                <div>
+                                    <label class="text-[7px] text-slate-400 font-bold uppercase block mb-0.5">Dose (mg)</label>
+                                    <input id="slider-dose-omega3" type="range" min="100" max="3000" step="100" value="1000" class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer" style="accent-color:#1e293b;">
+                                </div>
+                                <div>
+                                    <label class="text-[7px] text-slate-400 font-bold uppercase block mb-0.5">Frequency (hours)</label>
+                                    <input id="slider-freq-omega3" type="range" min="12" max="168" step="12" value="24" class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer" style="accent-color:#1e293b;">
+                                </div>
+                                <div class="flex items-center gap-1.5 mt-0.5">
+                                    <span class="text-[7px] text-slate-400 uppercase font-bold shrink-0">PK/PD Wave:</span>
+                                    <svg id="sparkline-omega3" class="w-full h-5 bg-slate-100 rounded border border-slate-200 overflow-hidden" preserveAspectRatio="none"></svg>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card 3: Plasmapheresis -->
+                        <div class="flex flex-col p-2.5 bg-slate-50 border border-slate-100 rounded-xl">
+                            <div class="flex items-center gap-2">
+                                <input id="chk-plasmapheresis" type="checkbox" class="rounded text-slate-800 focus:ring-slate-500 h-3.5 w-3.5 cursor-pointer">
+                                <label for="chk-plasmapheresis" class="text-[9px] text-slate-800 font-black uppercase tracking-wider cursor-pointer" title="Toxicity Risk: +0.26 years GrimAge, +0.003 DunedinPACE">Plasmapheresis (Stress)</label>
+                                <button type="button" onclick="document.getElementById('dose-panel-plasmapheresis').classList.toggle('hidden')" class="ml-auto text-slate-400 hover:text-slate-600 cursor-pointer" title="Adjust Pharmacokinetics">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.1a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+                                </button>
+                            </div>
+                            <div id="dose-panel-plasmapheresis" class="hidden flex flex-col gap-2 mt-2 pt-2 border-t border-slate-200/60">
+                                <div class="flex items-center justify-between text-[8px] text-slate-500 font-bold font-mono">
+                                    <span>DOSES: <span id="val-dose-plasmapheresis" class="text-slate-800 font-bold">1 unit</span></span>
+                                    <span>FREQ: <span id="val-freq-plasmapheresis" class="text-slate-800 font-bold">720 hrs</span></span>
+                                </div>
+                                <div>
+                                    <label class="text-[7px] text-slate-400 font-bold uppercase block mb-0.5">Volume (units)</label>
+                                    <input id="slider-dose-plasmapheresis" type="range" min="1" max="5" step="1" value="1" class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer" style="accent-color:#1e293b;">
+                                </div>
+                                <div>
+                                    <label class="text-[7px] text-slate-400 font-bold uppercase block mb-0.5">Frequency (hours)</label>
+                                    <input id="slider-freq-plasmapheresis" type="range" min="168" max="720" step="168" value="720" class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer" style="accent-color:#1e293b;">
+                                </div>
+                                <div class="flex items-center gap-1.5 mt-0.5">
+                                    <span class="text-[7px] text-slate-400 uppercase font-bold shrink-0">PK/PD Wave:</span>
+                                    <svg id="sparkline-plasmapheresis" class="w-full h-5 bg-slate-100 rounded border border-slate-200 overflow-hidden" preserveAspectRatio="none"></svg>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card 4: Decitabine -->
+                        <div class="flex flex-col p-2.5 bg-slate-50 border border-slate-100 rounded-xl">
+                            <div class="flex items-center gap-2">
+                                <input id="chk-decitabine" type="checkbox" class="rounded text-slate-800 focus:ring-slate-500 h-3.5 w-3.5 cursor-pointer">
+                                <label for="chk-decitabine" class="text-[9px] text-slate-800 font-black uppercase tracking-wider cursor-pointer" title="Chemotherapy: -5.92 years AdaptAge, +2.4 years DamAge">Decitabine (AML)</label>
+                                <button type="button" onclick="document.getElementById('dose-panel-decitabine').classList.toggle('hidden')" class="ml-auto text-slate-400 hover:text-slate-600 cursor-pointer" title="Adjust Pharmacokinetics">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.1a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+                                </button>
+                            </div>
+                            <div id="dose-panel-decitabine" class="hidden flex flex-col gap-2 mt-2 pt-2 border-t border-slate-200/60">
+                                <div class="flex items-center justify-between text-[8px] text-slate-500 font-bold font-mono">
+                                    <span>DOSE: <span id="val-dose-decitabine" class="text-slate-800 font-bold">20 mg</span></span>
+                                    <span>FREQ: <span id="val-freq-decitabine" class="text-slate-800 font-bold">24 hrs</span></span>
+                                </div>
+                                <div>
+                                    <label class="text-[7px] text-slate-400 font-bold uppercase block mb-0.5">Dose (mg)</label>
+                                    <input id="slider-dose-decitabine" type="range" min="5" max="100" step="5" value="20" class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer" style="accent-color:#1e293b;">
+                                </div>
+                                <div>
+                                    <label class="text-[7px] text-slate-400 font-bold uppercase block mb-0.5">Frequency (hours)</label>
+                                    <input id="slider-freq-decitabine" type="range" min="12" max="168" step="12" value="24" class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer" style="accent-color:#1e293b;">
+                                </div>
+                                <div class="flex items-center gap-1.5 mt-0.5">
+                                    <span class="text-[7px] text-slate-400 uppercase font-bold shrink-0">PK/PD Wave:</span>
+                                    <svg id="sparkline-decitabine" class="w-full h-5 bg-slate-100 rounded border border-slate-200 overflow-hidden" preserveAspectRatio="none"></svg>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card 5: Ketamine -->
+                        <div class="flex flex-col p-2.5 bg-slate-50 border border-slate-100 rounded-xl">
+                            <div class="flex items-center gap-2">
+                                <input id="chk-ketamine" type="checkbox" class="rounded text-slate-800 focus:ring-slate-500 h-3.5 w-3.5 cursor-pointer">
+                                <label for="chk-ketamine" class="text-[9px] text-slate-800 font-black uppercase tracking-wider cursor-pointer" title="Clinical Target: -1.81 years OMICmAge">Ketamine Infusion</label>
+                                <button type="button" onclick="document.getElementById('dose-panel-ketamine').classList.toggle('hidden')" class="ml-auto text-slate-400 hover:text-slate-600 cursor-pointer" title="Adjust Pharmacokinetics">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.1a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+                                </button>
+                            </div>
+                            <div id="dose-panel-ketamine" class="hidden flex flex-col gap-2 mt-2 pt-2 border-t border-slate-200/60">
+                                <div class="flex items-center justify-between text-[8px] text-slate-500 font-bold font-mono">
+                                    <span>DOSE: <span id="val-dose-ketamine" class="text-slate-800 font-bold">50 mg</span></span>
+                                    <span>FREQ: <span id="val-freq-ketamine" class="text-slate-800 font-bold">168 hrs</span></span>
+                                </div>
+                                <div>
+                                    <label class="text-[7px] text-slate-400 font-bold uppercase block mb-0.5">Dose (mg)</label>
+                                    <input id="slider-dose-ketamine" type="range" min="10" max="200" step="10" value="50" class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer" style="accent-color:#1e293b;">
+                                </div>
+                                <div>
+                                    <label class="text-[7px] text-slate-400 font-bold uppercase block mb-0.5">Frequency (hours)</label>
+                                    <input id="slider-freq-ketamine" type="range" min="24" max="336" step="24" value="168" class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer" style="accent-color:#1e293b;">
+                                </div>
+                                <div class="flex items-center gap-1.5 mt-0.5">
+                                    <span class="text-[7px] text-slate-400 uppercase font-bold shrink-0">PK/PD Wave:</span>
+                                    <svg id="sparkline-ketamine" class="w-full h-5 bg-slate-100 rounded border border-slate-200 overflow-hidden" preserveAspectRatio="none"></svg>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card 6: Bezisterim -->
+                        <div class="flex flex-col p-2.5 bg-slate-50 border border-slate-100 rounded-xl">
+                            <div class="flex items-center gap-2">
+                                <input id="chk-bezisterim" type="checkbox" class="rounded text-slate-800 focus:ring-slate-500 h-3.5 w-3.5 cursor-pointer">
+                                <label for="chk-bezisterim" class="text-[9px] text-slate-800 font-black uppercase tracking-wider cursor-pointer" title="Clinical Target: -4.77 years InflammAge">Bezisterim</label>
+                                <button type="button" onclick="document.getElementById('dose-panel-bezisterim').classList.toggle('hidden')" class="ml-auto text-slate-400 hover:text-slate-600 cursor-pointer" title="Adjust Pharmacokinetics">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.1a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+                                </button>
+                            </div>
+                            <div id="dose-panel-bezisterim" class="hidden flex flex-col gap-2 mt-2 pt-2 border-t border-slate-200/60">
+                                <div class="flex items-center justify-between text-[8px] text-slate-500 font-bold font-mono">
+                                    <span>DOSE: <span id="val-dose-bezisterim" class="text-slate-800 font-bold">5.0 mg</span></span>
+                                    <span>FREQ: <span id="val-freq-bezisterim" class="text-slate-800 font-bold">24 hrs</span></span>
+                                </div>
+                                <div>
+                                    <label class="text-[7px] text-slate-400 font-bold uppercase block mb-0.5">Dose (mg)</label>
+                                    <input id="slider-dose-bezisterim" type="range" min="1" max="50" step="1" value="5" class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer" style="accent-color:#1e293b;">
+                                </div>
+                                <div>
+                                    <label class="text-[7px] text-slate-400 font-bold uppercase block mb-0.5">Frequency (hours)</label>
+                                    <input id="slider-freq-bezisterim" type="range" min="12" max="168" step="12" value="24" class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer" style="accent-color:#1e293b;">
+                                </div>
+                                <div class="flex items-center gap-1.5 mt-0.5">
+                                    <span class="text-[7px] text-slate-400 uppercase font-bold shrink-0">PK/PD Wave:</span>
+                                    <svg id="sparkline-bezisterim" class="w-full h-5 bg-slate-100 rounded border border-slate-200 overflow-hidden" preserveAspectRatio="none"></svg>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card 7: Pitavastatin -->
+                        <div class="flex flex-col p-2.5 bg-slate-50 border border-slate-100 rounded-xl">
+                            <div class="flex items-center gap-2">
+                                <input id="chk-pitavastatin" type="checkbox" class="rounded text-slate-800 focus:ring-slate-500 h-3.5 w-3.5 cursor-pointer">
+                                <label for="chk-pitavastatin" class="text-[9px] text-slate-800 font-black uppercase tracking-wider cursor-pointer" title="Statin Target: -0.035 DunedinPACE">Pitavastatin</label>
+                                <button type="button" onclick="document.getElementById('dose-panel-pitavastatin').classList.toggle('hidden')" class="ml-auto text-slate-400 hover:text-slate-600 cursor-pointer" title="Adjust Pharmacokinetics">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.1a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+                                </button>
+                            </div>
+                            <div id="dose-panel-pitavastatin" class="hidden flex flex-col gap-2 mt-2 pt-2 border-t border-slate-200/60">
+                                <div class="flex items-center justify-between text-[8px] text-slate-500 font-bold font-mono">
+                                    <span>DOSE: <span id="val-dose-pitavastatin" class="text-slate-800 font-bold">2.0 mg</span></span>
+                                    <span>FREQ: <span id="val-freq-pitavastatin" class="text-slate-800 font-bold">24 hrs</span></span>
+                                </div>
+                                <div>
+                                    <label class="text-[7px] text-slate-400 font-bold uppercase block mb-0.5">Dose (mg)</label>
+                                    <input id="slider-dose-pitavastatin" type="range" min="0.5" max="8.0" step="0.5" value="2.0" class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer" style="accent-color:#1e293b;">
+                                </div>
+                                <div>
+                                    <label class="text-[7px] text-slate-400 font-bold uppercase block mb-0.5">Frequency (hours)</label>
+                                    <input id="slider-freq-pitavastatin" type="range" min="12" max="168" step="12" value="24" class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer" style="accent-color:#1e293b;">
+                                </div>
+                                <div class="flex items-center gap-1.5 mt-0.5">
+                                    <span class="text-[7px] text-slate-400 uppercase font-bold shrink-0">PK/PD Wave:</span>
+                                    <svg id="sparkline-pitavastatin" class="w-full h-5 bg-slate-100 rounded border border-slate-200 overflow-hidden" preserveAspectRatio="none"></svg>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card 8: Multivitamin -->
+                        <div class="flex flex-col p-2.5 bg-slate-50 border border-slate-100 rounded-xl">
+                            <div class="flex items-center gap-2">
+                                <input id="chk-multivitamin" type="checkbox" class="rounded text-slate-800 focus:ring-slate-500 h-3.5 w-3.5 cursor-pointer">
+                                <label for="chk-multivitamin" class="text-[9px] text-slate-800 font-black uppercase tracking-wider cursor-pointer" title="Clinical Target: -0.44 years PhenoAge, -0.21 years GrimAge">Multivitamin</label>
+                                <button type="button" onclick="document.getElementById('dose-panel-multivitamin').classList.toggle('hidden')" class="ml-auto text-slate-400 hover:text-slate-600 cursor-pointer" title="Adjust Pharmacokinetics">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.1a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+                                </button>
+                            </div>
+                            <div id="dose-panel-multivitamin" class="hidden flex flex-col gap-2 mt-2 pt-2 border-t border-slate-200/60">
+                                <div class="flex items-center justify-between text-[8px] text-slate-500 font-bold font-mono">
+                                    <span>DOSE: <span id="val-dose-multivitamin" class="text-slate-800 font-bold">1.0 tab</span></span>
+                                    <span>FREQ: <span id="val-freq-multivitamin" class="text-slate-800 font-bold">24 hrs</span></span>
+                                </div>
+                                <div>
+                                    <label class="text-[7px] text-slate-400 font-bold uppercase block mb-0.5">Dose (tabs)</label>
+                                    <input id="slider-dose-multivitamin" type="range" min="0.5" max="5.0" step="0.5" value="1.0" class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer" style="accent-color:#1e293b;">
+                                </div>
+                                <div>
+                                    <label class="text-[7px] text-slate-400 font-bold uppercase block mb-0.5">Frequency (hours)</label>
+                                    <input id="slider-freq-multivitamin" type="range" min="12" max="168" step="12" value="24" class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer" style="accent-color:#1e293b;">
+                                </div>
+                                <div class="flex items-center gap-1.5 mt-0.5">
+                                    <span class="text-[7px] text-slate-400 uppercase font-bold shrink-0">PK/PD Wave:</span>
+                                    <svg id="sparkline-multivitamin" class="w-full h-5 bg-slate-100 rounded border border-slate-200 overflow-hidden" preserveAspectRatio="none"></svg>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Toxicity Hazard Banner -->
+                <div id="pred-hazard-banner" class="hidden mb-4 p-3.5 bg-red-50 border border-red-200 rounded-2xl text-xs text-slate-800 font-sans leading-relaxed animation-pulse flex gap-2 items-start">
+                    <i data-lucide="shield-alert" class="w-4 h-4 text-slate-800 shrink-0 mt-0.5"></i>
+                    <span id="pred-hazard-text"></span>
+                </div>
+
+                <!-- Prediction Metrics Grid -->
+                <div class="grid grid-cols-3 gap-3 mb-4">
+                    <div class="bg-slate-50 border border-slate-100 p-2.5 rounded-2xl text-center">
+                        <div class="text-[8px] text-slate-500 font-bold uppercase mb-1">TIME-seq CpG Delta</div>
+                        <div id="pred-age-shift" class="text-xs text-slate-900 font-bold font-mono">--</div>
+                    </div>
+                    <div class="bg-slate-50 border border-slate-100 p-2.5 rounded-2xl text-center">
+                        <div class="text-[8px] text-slate-500 font-bold uppercase mb-1">Transcriptome Stability</div>
+                        <div id="pred-stability" class="text-xs text-slate-900 font-bold font-mono">--</div>
+                    </div>
+                    <div class="bg-slate-50 border border-slate-100 p-2.5 rounded-2xl text-center">
+                        <div class="text-[8px] text-slate-500 font-bold uppercase mb-1">Sirtuin Activity</div>
+                        <div id="pred-sirt-index" class="text-xs text-slate-900 font-bold font-mono">--</div>
+                    </div>
+                    <div class="bg-slate-50 border border-slate-100 p-2.5 rounded-2xl text-center">
+                        <div class="text-[8px] text-slate-500 font-bold uppercase mb-1">Endothelial Rejuv</div>
+                        <div id="pred-endo-score" class="text-xs text-slate-900 font-bold font-mono">--</div>
+                    </div>
+                    <div class="bg-slate-50 border border-slate-100 p-2.5 rounded-2xl text-center">
+                        <div class="text-[8px] text-slate-500 font-bold uppercase mb-1">Syncytial Safety</div>
+                        <div id="pred-sync-safety" class="text-xs text-slate-900 font-bold font-mono">--</div>
+                    </div>
+                    <div class="bg-slate-50 border border-slate-100 p-2.5 rounded-2xl text-center">
+                        <div class="text-[8px] text-slate-500 font-bold uppercase mb-1">AFRAID Frailty Age</div>
+                        <div id="pred-afraid-age" class="text-xs text-slate-900 font-bold font-mono">--</div>
+                    </div>
+                </div>
+                
+                <!-- Clinical Trial Metrics Card -->
+                <div id="clinical-metrics-card" class="mb-4 p-3.5 bg-slate-100/60 border border-slate-200/80 rounded-2xl animation-fade-in">
+                    <div class="text-[7px] text-slate-800 font-black uppercase mb-2 tracking-widest flex items-center gap-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" class="text-slate-700"><circle cx="12" cy="8" r="7"/><path d="M8.21 13.89L7 23l5-3 5 3-1.21-9.12"/></svg>
+                        Clinical Trial Outcomes & Provenance (Harvard Genetic Studies)
+                    </div>
+                    <div class="grid grid-cols-3 gap-2 text-center mb-2">
+                        <div class="bg-white border border-slate-200/40 p-2 rounded-xl">
+                            <div class="text-[6px] text-slate-500 font-bold uppercase mb-0.5">DunedinPACE Rate</div>
+                            <div id="pred-dunedin-pace" class="text-[10px] text-slate-800 font-mono font-black">1.000</div>
+                        </div>
+                        <div class="bg-white border border-slate-200/40 p-2 rounded-xl">
+                            <div class="text-[6px] text-slate-500 font-bold uppercase mb-0.5">Causal DamAge</div>
+                            <div id="pred-damage-shift" class="text-[10px] text-slate-800 font-mono font-black">0.00 Yrs</div>
+                        </div>
+                        <div class="bg-white border border-slate-200/40 p-2 rounded-xl">
+                            <div class="text-[6px] text-slate-500 font-bold uppercase mb-0.5">Causal AdaptAge</div>
+                            <div id="pred-adaptive-shift" class="text-[10px] text-slate-800 font-mono font-black">0.00 Yrs</div>
+                        </div>
+                    </div>
+                    <div class="text-[7px] text-slate-800/70 font-medium italic leading-relaxed flex gap-1.5 items-start bg-white/50 p-1.5 rounded-lg border border-slate-100/30">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="text-slate-600 shrink-0 mt-0.5"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+                        <span id="pred-clinical-citation">Source: Adiv A. Johnson & Harvard Genetic Studies, Frontiers in Genetics, 2026. Systematic review of 41 human trials.</span>
+                    </div>
+                </div>
+                
+                <!-- Epigenetic CpG Methylome Heatmap -->
+                <div class="space-y-2 mb-4 animation-fade-in">
+                    <div class="text-[9px] text-slate-500 font-bold uppercase tracking-wider flex items-center gap-1.5">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="text-slate-700"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+                        TIME-seq Epigenetic CpG Methylome Heatmap (100 Loci)
+                        <span class="ml-auto text-[8px] text-slate-800 bg-slate-100 px-1.5 py-0.5 rounded border border-slate-200 font-mono font-bold">Zenith v31 Engine</span>
+                    </div>
+                    <div class="bg-slate-900 border border-slate-800 p-3 rounded-2xl">
+                        <div id="cpg-heatmap-grid" class="grid grid-cols-10 gap-[2px] w-full aspect-video bg-slate-950 p-1.5 rounded-lg border border-slate-800/60 overflow-hidden">
+                            <!-- Dynamically generated 100 blocks via JavaScript -->
+                        </div>
+                        <script>
+                        (function initCpGGrid() {
+                            const grid = document.getElementById('cpg-heatmap-grid');
+                            if (!grid) return;
+                            let html = '';
+                            for (let k = 0; k < 100; k++) {
+                                const val = 0.50 + 0.30 * Math.sin(k / 5);
+                                const hue = 142 + (271 - 142) * val;
+                                const sat = 70 + (80 - 70) * val;
+                                const light = 45;
+                                html += `<div class="w-full h-full rounded-[2px] border border-slate-950/20" style="background-color: hsl(${hue}, ${sat}%, ${light}%);" title="CpG Locus #${k+1}: ${val.toFixed(2)} methylation"></div>`;
+                            }
+                            grid.innerHTML = html;
+                        })();
+                        </script>
+                        <div class="flex items-center justify-between text-[7px] text-slate-400 mt-2 font-mono uppercase tracking-widest px-0.5">
+                            <span>Youthful (0.0 Methylation)</span>
+                            <div class="h-1.5 w-24 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 border border-slate-800"></div>
+                            <span>Aged (1.0 Methylation)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Expression Profiles -->
+                <div class="space-y-2">
+                    <div class="text-[9px] text-slate-500 font-bold uppercase mb-2 tracking-wider">Epigenetic & Structural Expression Profiles</div>
+                    <div id="pred-expressions" class="space-y-3 bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                        <!-- Will be dynamically populated -->
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- LNP DELIVERY OPTIMIZER -->
+            <div id="lnp-optimizer-panel" class="p-6 bg-white border border-slate-200 rounded-[24px] shadow-sm relative overflow-hidden animation-fade-in">
+                <div class="text-[11px] text-slate-800 font-bold uppercase tracking-wider mb-4 flex items-center gap-1.5">
+                    <i data-lucide="package" class="w-3.5 h-3.5 text-slate-800"></i>
+                    mRNA-LNP Formulation Delivery Optimizer
+                    <span class="ml-auto text-[9px] px-2.5 py-0.5 bg-slate-100 text-slate-800 border border-slate-200 rounded-full font-bold tracking-normal font-sans">Encapsulation</span>
+                </div>
+                <!-- LNP Parameter Sliders -->
+                <div class="grid grid-cols-2 gap-4 mb-4 bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                    <div>
+                        <label class="text-[9px] text-slate-600 font-bold block mb-1.5 uppercase tracking-wider">Ionizable Molar %: <span id="val-lnp-ion" class="text-slate-800 font-mono font-bold">50.0%</span></label>
+                        <input id="slider-lnp-ion" type="range" min="30" max="60" step="1" value="50" class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer" style="accent-color:#1e293b;">
+                    </div>
+                    <div>
+                        <label class="text-[9px] text-slate-600 font-bold block mb-1.5 uppercase tracking-wider">Cholesterol Molar %: <span id="val-lnp-chol" class="text-slate-800 font-mono font-bold">38.5%</span></label>
+                        <input id="slider-lnp-chol" type="range" min="20" max="50" step="0.5" value="38.5" class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer" style="accent-color:#1e293b;">
+                    </div>
+                    <div>
+                        <label class="text-[9px] text-slate-600 font-bold block mb-1.5 uppercase tracking-wider">Helper Lipid Molar %: <span id="val-lnp-helper" class="text-slate-800 font-mono font-bold">10.0%</span></label>
+                        <input id="slider-lnp-helper" type="range" min="5" max="20" step="0.5" value="10" class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer" style="accent-color:#1e293b;">
+                    </div>
+                    <div>
+                        <label class="text-[9px] text-slate-600 font-bold block mb-1.5 uppercase tracking-wider">PEG-Lipid Molar %: <span id="val-lnp-peg" class="text-slate-800 font-mono font-bold">1.5%</span></label>
+                        <input id="slider-lnp-peg" type="range" min="0.5" max="5.0" step="0.1" value="1.5" class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer" style="accent-color:#1e293b;">
+                    </div>
+                    <div class="col-span-2">
+                        <label class="text-[9px] text-slate-600 font-bold block mb-1.5 uppercase tracking-wider">N/P Ratio (Nitrogen/Phosphate): <span id="val-lnp-np" class="text-slate-800 font-mono font-bold">6.0</span></label>
+                        <input id="slider-lnp-np" type="range" min="1.0" max="15.0" step="0.1" value="6.0" class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer" style="accent-color:#1e293b;">
+                    </div>
+                    <div class="col-span-2 flex items-center gap-2 mt-2 pt-2 border-t border-slate-200/60">
+                        <input id="chk-lnp-active" type="checkbox" class="rounded text-slate-800 focus:ring-slate-500 h-3.5 w-3.5 cursor-pointer">
+                        <label for="chk-lnp-active" class="text-[9px] text-slate-500 font-bold uppercase tracking-wider cursor-pointer">Active Ligand Conjugation (Bypasses liver barrier)</label>
+                    </div>
+                    <div id="lnp-ligand-density-container" class="col-span-2 hidden transition-all duration-300">
+                        <label class="text-[9px] text-slate-600 font-bold block mb-1.5 uppercase tracking-wider">Ligand Conjugation Density (%): <span id="val-lnp-ligand" class="text-slate-800 font-mono font-bold">2.5%</span></label>
+                        <input id="slider-lnp-ligand" type="range" min="0.1" max="10.0" step="0.1" value="2.5" class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer" style="accent-color:#1e293b;">
+                    </div>
+                    <div class="col-span-2">
+                        <label class="text-[9px] text-slate-600 font-bold block mb-1.5 uppercase tracking-wider">PEG Molecular Weight (Da): <span id="val-lnp-peg-mw" class="text-slate-800 font-mono font-bold">2000 Da</span></label>
+                        <input id="slider-lnp-peg-mw" type="range" min="1000" max="5000" step="500" value="2000" class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer" style="accent-color:#1e293b;">
+                    </div>
+                </div>
+                <!-- LNP Target Tropism Metrics -->
+                <div class="grid grid-cols-3 gap-3 mb-4">
+                    <div class="bg-slate-50 border border-slate-100 p-2.5 rounded-2xl text-center">
+                        <div class="text-[8px] text-slate-500 font-bold uppercase mb-1">Encapsulation %</div>
+                        <div id="lnp-ee" class="text-xs text-slate-900 font-bold font-mono">--</div>
+                    </div>
+                    <div class="bg-slate-50 border border-slate-100 p-2.5 rounded-2xl text-center">
+                        <div class="text-[8px] text-slate-500 font-bold uppercase mb-1">Cardiac Tropism</div>
+                        <div id="lnp-tropism" class="text-xs text-slate-900 font-bold font-mono">--</div>
+                    </div>
+                    <div class="bg-slate-50 border border-slate-100 p-2.5 rounded-2xl text-center">
+                        <div class="text-[8px] text-slate-500 font-bold uppercase mb-1">Liver Seq.</div>
+                        <div id="lnp-liver-seq" class="text-xs text-slate-900 font-bold font-mono">--</div>
+                    </div>
+                    <div class="bg-slate-50 border border-slate-100 p-2.5 rounded-2xl text-center">
+                        <div class="text-[8px] text-slate-500 font-bold uppercase mb-1">Endosomal Escape</div>
+                        <div id="lnp-escape-rate" class="text-xs text-slate-900 font-bold font-mono">--</div>
+                    </div>
+                    <div class="bg-slate-50 border border-slate-100 p-2.5 rounded-2xl text-center">
+                        <div class="text-[8px] text-slate-500 font-bold uppercase mb-1">Half-Life (t1/2)</div>
+                        <div id="lnp-half-life" class="text-xs text-slate-900 font-bold font-mono">--</div>
+                    </div>
+                    <div class="bg-slate-50 border border-slate-100 p-2.5 rounded-2xl text-center">
+                        <div class="text-[8px] text-slate-500 font-bold uppercase mb-1">Cytotoxicity</div>
+                        <div id="lnp-toxicity" class="text-xs text-slate-900 font-bold font-mono">--</div>
+                    </div>
+                </div>
+                <div class="flex items-center justify-between text-xs text-slate-500 font-sans mb-3">
+                    <span>Status: <span id="lnp-status-val" class="text-slate-800 font-bold uppercase">--</span></span>
+                    <span>Target: Heart (Cardiomyocytes)</span>
+                </div>
+                <!-- Biophysical Mechanism Banner -->
+                <div id="lnp-mechanism-banner" class="p-3 bg-slate-50 border border-slate-100 rounded-2xl text-[9px] text-slate-500 font-sans leading-relaxed mb-6">
+                    Adjust parameters or toggle active targeting to resolve the continuous endothelial barrier.
+                </div>
+
+                <!-- NEUROS-X 512-NODE CARDIAC SYNCYTIUM SAFETY AUDIT -->
+                <div class="mt-6 p-6 bg-white rounded-3xl border border-slate-200/80 shadow-sm" style="font-family:'Inter', sans-serif;">
+                    <div class="flex items-center gap-2 mb-3 text-xs font-bold text-slate-800">
+                        <i data-lucide="activity" class="w-4 h-4 text-blue-600"></i>
+                        NEUROS-X Arrhythmia Safety Engine
+                        <span class="ml-auto text-[9px] px-2.5 py-0.5 bg-blue-50 text-blue-700 border border-blue-200 rounded-full font-bold">512-Node Cardiac Syncytium (ESI Conduction Substrate)</span>
+                    </div>
+                    <p class="text-[10px] text-slate-500 font-medium leading-relaxed mb-4">
+                        Audits candidate cocktails for in silico arrhythmia risks (Long QT, conduction block) across a 512-node cardiac syncytium substrate.
+                    </p>
+                    <div class="text-center mb-3">
+                        <div id="safety-badge" class="inline-block text-[11px] font-extrabold font-mono px-3.5 py-1.5 rounded-lg bg-emerald-50 text-emerald-700 border border-emerald-200">
+                            VERIFIED SAFE — STABLE CONDUCTION (512-NODE CARDIAC SYNCYTIUM)
+                        </div>
+                    </div>
+                    <canvas id="ecg-canvas" width="680" height="150" class="w-full h-[140px] bg-slate-950 rounded-xl block mx-auto border border-slate-800 mb-4"></canvas>
+                    <div class="flex justify-center gap-3">
+                        <button onclick="runSafetyTest('SAFE')" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl shadow-sm transition-all">Simulate SAFE Cocktail</button>
+                        <button onclick="runSafetyTest('BLOCKED')" class="px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs rounded-xl shadow-sm transition-all">Simulate BLOCKED Cocktail</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div style="margin-top:40px;text-align:center;font-size:8px;color:#bdc1c6;width:100%;max-width:720px;">
+            Zenith v31.0 &nbsp;·&nbsp; ~2.42M Cells (1.94M Generalist + 486k Specialist) &nbsp;·&nbsp; Research Use Only
+        </div>
+    </div>
+</div>
+
+
+
+<!-- ═══ VIEW 2: SIMULATION LAB (existing layout, hidden by default) ═══ -->
+
+<div 

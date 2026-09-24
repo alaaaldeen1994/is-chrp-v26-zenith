@@ -1,0 +1,175 @@
+================================================================================
+ZENITH / NL-101 — CHECK 1: CLOCK CIRCULARITY ANALYSIS
+================================================================================
+Seed: 42
+
+SECTION 1.1 — Clock Characterisation
+------------------------------------------------------------
+Clock feature set |G_clock| = 15 genes
+Total weight mass Σ|β_k|   = 21.6800
+
+Clock feature weights (sorted by |β|):
+  Gene              β_k     |β_k|/Σ
+  CDKN2A          2.450      0.1130
+  SIRT1          -2.150      0.0992
+  SIRT6          -1.950      0.0899
+  FOXO3          -1.650      0.0761
+  ATP2A2         -1.550      0.0715
+  CDKN1A          1.480      0.0683
+  PPARGC1A       -1.450      0.0669
+  GJA1           -1.350      0.0623
+  ZBTB16         -1.300      0.0600
+  GATA4          -1.250      0.0577
+  IL6             1.150      0.0530
+  TNNT2          -1.100      0.0507
+  SERPINE1        1.050      0.0484
+  TET2           -0.950      0.0438
+  COL1A1          0.850      0.0392
+
+SECTION 1.1 — NL-101 Factors Directly in Clock
+------------------------------------------------------------
+NL-101 factors = ['SIRT1', 'SIRT6', 'GATA4', 'ZBTB16']
+Factors in G_clock directly: ['SIRT1', 'SIRT6', 'GATA4', 'ZBTB16']
+  SIRT1: β = -2.150  (|β|/Σ = 0.0992)
+  SIRT6: β = -1.950  (|β|/Σ = 0.0899)
+  GATA4: β = -1.250  (|β|/Σ = 0.0577)
+  ZBTB16: β = -1.300  (|β|/Σ = 0.0600)
+  Direct factor weight-mass fraction: 6.6500 / 21.6800 = 0.3067
+
+================================================================================
+SECTION 1.2 — Direct Target Sets
+------------------------------------------------------------
+NOTE: TRRUST v2 and DoRothEA API queries require internet connectivity. Targets below are sourced from TRRUST v2 (Han et al. 2018 NAR) supplementary table, restricted to human targets with activation/repression confidence A or B. An external reviewer should re-run with live API access to verify completeness.
+
+Factor: SIRT1
+  TRRUST v2 A+B targets: ['CDKN1A', 'CDKN2A', 'FOXO3', 'GADD45A', 'IL6', 'MYC', 'PPARGC1A', 'SERPINE1', 'TERT', 'TP53']
+  Target set size: 10
+  Targets ∩ G_clock: ['CDKN1A', 'CDKN2A', 'FOXO3', 'IL6', 'PPARGC1A', 'SERPINE1'] (n=6)
+  Weight-mass overlap: 9.2300
+  Weight-mass fraction: 0.4257
+
+Factor: SIRT6
+  TRRUST v2 A+B targets: ['CDKN2A', 'IL6', 'MYC', 'SERPINE1', 'TERT', 'TP53']
+  Target set size: 6
+  Targets ∩ G_clock: ['CDKN2A', 'IL6', 'SERPINE1'] (n=3)
+  Weight-mass overlap: 4.6500
+  Weight-mass fraction: 0.2145
+
+Factor: GATA4
+  TRRUST v2 A+B targets: ['ACTC1', 'ATP2A2', 'GJA1', 'HAND2', 'MYH6', 'MYH7', 'NKX2-5', 'NPPA', 'RYR2', 'TBX5', 'TNNI3', 'TNNT2']
+  Target set size: 12
+  Targets ∩ G_clock: ['ATP2A2', 'GJA1', 'TNNT2'] (n=3)
+  Weight-mass overlap: 4.0000
+  Weight-mass fraction: 0.1845
+
+Factor: ZBTB16
+  TRRUST v2 A+B targets: ['CDKN1A', 'CDKN2A', 'IL6', 'LIN28A', 'MYC', 'TERT']
+  Target set size: 6
+  Targets ∩ G_clock: ['CDKN1A', 'CDKN2A', 'IL6'] (n=3)
+  Weight-mass overlap: 5.0800
+  Weight-mass fraction: 0.2343
+
+Union of all four factor targets: 23 unique genes
+Union ∩ G_clock: ['ATP2A2', 'CDKN1A', 'CDKN2A', 'FOXO3', 'GJA1', 'IL6', 'PPARGC1A', 'SERPINE1', 'TNNT2'] (n=9)
+Union weight-mass overlap: 13.2300 / 21.6800 = 0.6102
+
+================================================================================
+SECTION 1.4 — Masked Sensitivity Analysis
+------------------------------------------------------------
+
+Methodology:
+  Full clock:   ΔAge computed with all 15 clock features active.
+  Variant A:   Genes in (targets ∪ NL-101 factors) ∩ G_clock are held at
+               their pre-perturbation binarized value when scoring perturbed cell.
+  Variant B:   Overlapping clock features removed; remaining coefficients
+               renormalised so Σ|β_k| is preserved.
+
+Masked gene set (Variant A/B): ['ATP2A2', 'CDKN1A', 'CDKN2A', 'FOXO3', 'GATA4', 'GJA1', 'IL6', 'PPARGC1A', 'SERPINE1', 'SIRT1', 'SIRT6', 'TNNT2', 'ZBTB16']
+
+Variant B: 2 clock features remaining after masking
+Renormalisation scale factor: 12.0444
+
+Arm                        ΔAge_full     ΔAge_A     ΔAge_B   ratio_A   ratio_B
+--------------------------------------------------------------------------------
+NL-101 (Full)                  15.45      -5.67      -8.98    -0.367    -0.581
+Ablation: dZBTB16               4.99      -5.67      -8.98    -1.136      -1.8
+Ablation: dGATA4                8.07      -5.67      -8.98    -0.703    -1.113
+Ablation: dSIRT1               -0.42      -5.67      -8.98      13.5    21.381
+Ablation: dSIRT6                1.00      -5.67      -8.98     -5.67     -8.98
+GATA4+ZBTB16                   -3.48      -5.67      -8.98     1.629      2.58
+SIRT1+SIRT6                     3.79      -5.67      -8.98    -1.496    -2.369
+
+NL-101 CIRCULARITY VERDICT (Variant A):
+  ratio_A = -0.367  →  HIGH CIRCULARITY — masked delta < 30% of full. Claim is substantially clock-driven.
+
+================================================================================
+SECTION 1.5 — Full 516-Candidate Re-Screen Under Masked Clock (Variant A)
+------------------------------------------------------------
+
+Loaded 516 candidates from zenith_screening_audit.csv
+
+CRITICAL FINDING RE: HARDCODED VALUES IN PIPELINE
+============================================================
+The screening pipeline (run_zenith_screening_pipeline.py, lines 279-329)
+HARDCODES delta_age and ESI for 9 named candidates including NL-101:
+  NL-101:        delta = 13.00 (hardcoded), ESI = 0.928 (hardcoded)
+  Ablation arms: all hardcoded to match the pitch deck.
+
+The masked-clock re-screen above uses SIMULATED (not hardcoded) values for
+NL-101 via simulate_perturbation(), giving a computed baseline prior to masking.
+The masked delta_A for NL-101 therefore reflects what the MODEL actually computes.
+
+Dual-gate survivors under ORIGINAL clock: 1 candidates
+Dual-gate survivors under MASKED clock:   0 candidates
+
+NO candidates pass the dual gate under the masked clock.
+
+NL-101 rank under masked clock: 1 (was: 1)
+NL-101 delta under masked clock (computed, not hardcoded): -5.67y
+NL-101 dual-gate pass under masked clock: False
+
+================================================================================
+SECTION 1.6 — ACCEPTANCE CRITERIA VERDICT
+------------------------------------------------------------
+Verdict: FAIL — Claim substantially clock-driven. Re-nominate lead using masked clock.
+
+================================================================================
+HOUSEKEEPING — 4,908 vs 5,009 Discrepancy
+------------------------------------------------------------
+SKILL.md states: '4,908 highly variable genes'
+run_zenith_screening_pipeline.py line 185 prints: '5,009D scVI Latent Space'
+
+Root cause identified:
+  The label '5,009D scVI Latent Space' is INCORRECT and MISLEADING.
+  - The scVI VAE latent bottleneck is 20-dimensional (confirmed from perturbation_engine.py
+    which explicitly notes 'n_latent=20').
+  - The input feature space is 4,908 HVGs (from SKILL.md and gene_index.json).
+  - '5,009' does not correspond to any real architectural parameter.
+  - The run log labels INPUT DIMENSIONALITY as 'Latent Space' — this is wrong.
+
+ACTION REQUIRED: Correct line 185 of run_zenith_screening_pipeline.py to read:
+  '[*] Input Gene Space: 4,908 HVGs; Latent Bottleneck: 20-dimensional (scVI VAE)'
+  This is a label fix only — it does not change any computed result.
+
+================================================================================
+HOUSEKEEPING — ESI Continuous Formula (from model.py)
+------------------------------------------------------------
+ESI = 0.35·ψ_Cx43 + 0.25·φ_Ca + 0.20·ξ_ion + 0.20·sarcomere_coherence
+
+Component definitions (from model.py CardiacConductionSafetyEngine):
+  ψ_Cx43   = clamp(GJA1_perturbed / GJA1_baseline, 0, 1)
+  φ_Ca     = clamp((SERCA2a + PLN) / (2 × RYR2), 0, 1.1) / 1.1
+  ξ_ion    = clamp(KCNJ2_perturbed / KCNJ2_baseline, 0, 1)
+  sarcomere = clamp(TNNT2_perturbed / TNNT2_baseline, 0, 1)
+
+ESI verdicts:
+  ESI ≥ 0.90 → OPTIMAL_CONDUCTION
+  ESI ≥ 0.80 → STABLE_MONITORED
+  ESI < 0.80 → ELECTRICAL_UNCOUPLING_WARNING
+
+NOTE: The 'synchrony' variable in neuros_substrate_service.py is implemented as
+  σ(population_spikes) / μ(population_spikes)  [coefficient of variation]
+This is a DISPERSION measure, NOT synchrony. High CV = irregular firing,
+which in cardiac context maps to arrhythmia risk — the gate is directionally
+correct but the variable name inverts the cardiac intuition. Should be renamed
+'spike_cv' or 'pop_dispersion' to avoid confusion with electrophysiologists.

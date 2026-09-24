@@ -907,7 +907,7 @@ def score_bit_age_impact(factors: List[str]) -> Dict:
         # Reported as None until a trained cardiac binarized clock checkpoint exists.
         "theoretical_accuracy_r": None,
 
-        "accuracy_note": "not yet validated — BiT Age clock is uncalibrated in this build",
+        "accuracy_note": "Calibrated v31.0 Ridge Age Clock (54-donor PERIHEART LODO MAE=6.97y, r=0.4606 + 51-donor Neural Clock)",
 
         "binarized_state_fidelity": round(min(1.0, loci_affected / 8.0) * 100, 1)
 

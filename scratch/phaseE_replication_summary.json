@@ -1,0 +1,1142 @@
+{
+  "null_summaries": {
+    "litvinukova_vcm_14": {
+      "n_donors": 14,
+      "n_active_genes": 7601,
+      "n_null_genes": 500,
+      "fpr_p_lt_005_count": 210,
+      "fpr_p_lt_005_pct": 42.0,
+      "bh_q_lt_005_count": 124,
+      "bh_q_lt_005_pct": 24.8,
+      "p50_abs_r": 0.4792,
+      "p90_abs_r": 0.7497,
+      "p95_abs_r": 0.7736,
+      "p99_abs_r": 0.8358,
+      "critical_r_p005": 0.5324
+    },
+    "litvinukova_acm_12": {
+      "n_donors": 14,
+      "n_active_genes": 7546,
+      "n_null_genes": 500,
+      "fpr_p_lt_005_count": 149,
+      "fpr_p_lt_005_pct": 29.8,
+      "bh_q_lt_005_count": 11,
+      "bh_q_lt_005_pct": 2.2,
+      "p50_abs_r": 0.3873,
+      "p90_abs_r": 0.6927,
+      "p95_abs_r": 0.7286,
+      "p99_abs_r": 0.8233,
+      "critical_r_p005": 0.5324
+    },
+    "litvinukova_fib_14": {
+      "n_donors": 14,
+      "n_active_genes": 5943,
+      "n_null_genes": 500,
+      "fpr_p_lt_005_count": 296,
+      "fpr_p_lt_005_pct": 59.2,
+      "bh_q_lt_005_count": 245,
+      "bh_q_lt_005_pct": 49.0,
+      "p50_abs_r": 0.589,
+      "p90_abs_r": 0.7546,
+      "p95_abs_r": 0.7773,
+      "p99_abs_r": 0.8223,
+      "critical_r_p005": 0.5324
+    },
+    "periheart_cm_54": {
+      "n_donors": 54,
+      "n_active_genes": 8560,
+      "n_null_genes": 500,
+      "fpr_p_lt_005_count": 112,
+      "fpr_p_lt_005_pct": 22.4,
+      "bh_q_lt_005_count": 0,
+      "bh_q_lt_005_pct": 0.0,
+      "p50_abs_r": 0.1554,
+      "p90_abs_r": 0.3391,
+      "p95_abs_r": 0.3855,
+      "p99_abs_r": 0.434,
+      "critical_r_p005": 0.2681
+    },
+    "periheart_fib_54": {
+      "n_donors": 54,
+      "n_active_genes": 6750,
+      "n_null_genes": 500,
+      "fpr_p_lt_005_count": 87,
+      "fpr_p_lt_005_pct": 17.4,
+      "bh_q_lt_005_count": 0,
+      "bh_q_lt_005_pct": 0.0,
+      "p50_abs_r": 0.1397,
+      "p90_abs_r": 0.3193,
+      "p95_abs_r": 0.3559,
+      "p99_abs_r": 0.399,
+      "critical_r_p005": 0.2681
+    }
+  },
+  "intersections": {
+    "fibroblast": {
+      "comparison_name": "Fibroblast_Lit14_vs_Peri54",
+      "n_shared_active_genes": 5262,
+      "thr1_emp95": 0.7773,
+      "thr2_emp95": 0.3559,
+      "pass1_emp95_count": 293,
+      "pass2_emp95_count": 257,
+      "both_emp95_any_sign_count": 6,
+      "both_emp95_concordant_count": 2,
+      "expected_emp95_overlap_any_sign": 14.31,
+      "expected_emp95_overlap_concordant": 7.16,
+      "binom_p_emp95_any_sign": 0.9955545651242429,
+      "binom_p_emp95_concordant": 0.9936556609630152,
+      "pass1_nom_p005_count": 3249,
+      "pass2_nom_p005_count": 931,
+      "both_nom_p005_any_sign_count": 548,
+      "both_nom_p005_concordant_count": 132,
+      "expected_nom_concordant": 287.42,
+      "binom_p_nom_concordant": 1.0,
+      "genome_wide_r_between_cohorts": -0.4161,
+      "genome_wide_p_between_cohorts": 1.9568237904261278e-219,
+      "genome_wide_sign_concordance_pct": 52.28,
+      "top_concordant_genes": [
+        {
+          "ensembl_id": "ENSG00000109790",
+          "symbol": "KLHL5",
+          "r_cohort1": 0.7978,
+          "p_cohort1": 0.00063,
+          "r_cohort2": 0.5084,
+          "p_cohort2": 9e-05,
+          "exceeds_both_emp95": true,
+          "min_abs_r": 0.5084
+        },
+        {
+          "ensembl_id": "ENSG00000155621",
+          "symbol": "C9orf85",
+          "r_cohort1": 0.7453,
+          "p_cohort1": 0.00222,
+          "r_cohort2": 0.4566,
+          "p_cohort2": 0.00052,
+          "exceeds_both_emp95": false,
+          "min_abs_r": 0.4566
+        },
+        {
+          "ensembl_id": "ENSG00000111962",
+          "symbol": "UST",
+          "r_cohort1": 0.5898,
+          "p_cohort1": 0.02641,
+          "r_cohort2": 0.4533,
+          "p_cohort2": 0.00058,
+          "exceeds_both_emp95": false,
+          "min_abs_r": 0.4533
+        },
+        {
+          "ensembl_id": "ENSG00000081052",
+          "symbol": "COL4A4",
+          "r_cohort1": 0.7561,
+          "p_cohort1": 0.00175,
+          "r_cohort2": 0.4311,
+          "p_cohort2": 0.00114,
+          "exceeds_both_emp95": false,
+          "min_abs_r": 0.4311
+        },
+        {
+          "ensembl_id": "ENSG00000064655",
+          "symbol": "EYA2",
+          "r_cohort1": 0.5698,
+          "p_cohort1": 0.03339,
+          "r_cohort2": 0.4295,
+          "p_cohort2": 0.00119,
+          "exceeds_both_emp95": false,
+          "min_abs_r": 0.4295
+        },
+        {
+          "ensembl_id": "ENSG00000165379",
+          "symbol": "LRFN5",
+          "r_cohort1": 0.7062,
+          "p_cohort1": 0.00476,
+          "r_cohort2": 0.4246,
+          "p_cohort2": 0.00137,
+          "exceeds_both_emp95": false,
+          "min_abs_r": 0.4246
+        },
+        {
+          "ensembl_id": "ENSG00000123472",
+          "symbol": "ATPAF1",
+          "r_cohort1": 0.6084,
+          "p_cohort1": 0.02096,
+          "r_cohort2": 0.4221,
+          "p_cohort2": 0.00148,
+          "exceeds_both_emp95": false,
+          "min_abs_r": 0.4221
+        },
+        {
+          "ensembl_id": "ENSG00000099139",
+          "symbol": "PCSK5",
+          "r_cohort1": 0.6497,
+          "p_cohort1": 0.0119,
+          "r_cohort2": 0.4203,
+          "p_cohort2": 0.00155,
+          "exceeds_both_emp95": false,
+          "min_abs_r": 0.4203
+        },
+        {
+          "ensembl_id": "ENSG00000136436",
+          "symbol": "CALCOCO2",
+          "r_cohort1": 0.6843,
+          "p_cohort1": 0.00695,
+          "r_cohort2": 0.4086,
+          "p_cohort2": 0.00216,
+          "exceeds_both_emp95": false,
+          "min_abs_r": 0.4086
+        },
+        {
+          "ensembl_id": "ENSG00000147485",
+          "symbol": "PXDNL",
+          "r_cohort1": 0.6272,
+          "p_cohort1": 0.01636,
+          "r_cohort2": 0.4017,
+          "p_cohort2": 0.00261,
+          "exceeds_both_emp95": false,
+          "min_abs_r": 0.4017
+        },
+        {
+          "ensembl_id": "ENSG00000092421",
+          "symbol": "SEMA6A",
+          "r_cohort1": 0.7256,
+          "p_cohort1": 0.00331,
+          "r_cohort2": 0.393,
+          "p_cohort2": 0.00329,
+          "exceeds_both_emp95": false,
+          "min_abs_r": 0.393
+        },
+        {
+          "ensembl_id": "ENSG00000172260",
+          "symbol": "NEGR1",
+          "r_cohort1": 0.6253,
+          "p_cohort1": 0.01679,
+          "r_cohort2": 0.392,
+          "p_cohort2": 0.00337,
+          "exceeds_both_emp95": false,
+          "min_abs_r": 0.392
+        },
+        {
+          "ensembl_id": "ENSG00000182621",
+          "symbol": "PLCB1",
+          "r_cohort1": 0.6535,
+          "p_cohort1": 0.01127,
+          "r_cohort2": 0.3868,
+          "p_cohort2": 0.00386,
+          "exceeds_both_emp95": false,
+          "min_abs_r": 0.3868
+        },
+        {
+          "ensembl_id": "ENSG00000121964",
+          "symbol": "GTDC1",
+          "r_cohort1": 0.7374,
+          "p_cohort1": 0.00261,
+          "r_cohort2": 0.3812,
+          "p_cohort2": 0.00446,
+          "exceeds_both_emp95": false,
+          "min_abs_r": 0.3812
+        },
+        {
+          "ensembl_id": "ENSG00000166689",
+          "symbol": "PLEKHA7",
+          "r_cohort1": -0.5879,
+          "p_cohort1": 0.02702,
+          "r_cohort2": -0.379,
+          "p_cohort2": 0.00472,
+          "exceeds_both_emp95": false,
+          "min_abs_r": 0.379
+        },
+        {
+          "ensembl_id": "ENSG00000146243",
+          "symbol": "IRAK1BP1",
+          "r_cohort1": 0.6211,
+          "p_cohort1": 0.01777,
+          "r_cohort2": 0.3758,
+          "p_cohort2": 0.00511,
+          "exceeds_both_emp95": false,
+          "min_abs_r": 0.3758
+        },
+        {
+          "ensembl_id": "ENSG00000153006",
+          "symbol": "SREK1IP1",
+          "r_cohort1": 0.6693,
+          "p_cohort1": 0.00885,
+          "r_cohort2": 0.3737,
+          "p_cohort2": 0.00537,
+          "exceeds_both_emp95": false,
+          "min_abs_r": 0.3737
+        },
+        {
+          "ensembl_id": "ENSG00000173226",
+          "symbol": "IQCB1",
+          "r_cohort1": 0.6348,
+          "p_cohort1": 0.01474,
+          "r_cohort2": 0.3702,
+          "p_cohort2": 0.00587,
+          "exceeds_both_emp95": false,
+          "min_abs_r": 0.3702
+        },
+        {
+          "ensembl_id": "ENSG00000093144",
+          "symbol": "ECHDC1",
+          "r_cohort1": 0.7563,
+          "p_cohort1": 0.00175,
+          "r_cohort2": 0.3697,
+          "p_cohort2": 0.00593,
+          "exceeds_both_emp95": false,
+          "min_abs_r": 0.3697
+        },
+        {
+          "ensembl_id": "ENSG00000162642",
+          "symbol": "C1orf52",
+          "r_cohort1": 0.5846,
+          "p_cohort1": 0.02812,
+          "r_cohort2": 0.3657,
+          "p_cohort2": 0.00654,
+          "exceeds_both_emp95": false,
+          "min_abs_r": 0.3657
+        },
+        {
+          "ensembl_id": "ENSG00000173221",
+          "symbol": "GLRX",
+          "r_cohort1": 0.6079,
+          "p_cohort1": 0.0211,
+          "r_cohort2": 0.3576,
+          "p_cohort2": 0.00793,
+          "exceeds_both_emp95": false,
+          "min_abs_r": 0.3576
+        },
+        {
+          "ensembl_id": "ENSG00000112237",
+          "symbol": "CCNC",
+          "r_cohort1": 0.777,
+          "p_cohort1": 0.00108,
+          "r_cohort2": 0.3564,
+          "p_cohort2": 0.00816,
+          "exceeds_both_emp95": false,
+          "min_abs_r": 0.3564
+        },
+        {
+          "ensembl_id": "ENSG00000186448",
+          "symbol": "ZNF197",
+          "r_cohort1": 0.8262,
+          "p_cohort1": 0.00027,
+          "r_cohort2": 0.3562,
+          "p_cohort2": 0.0082,
+          "exceeds_both_emp95": true,
+          "min_abs_r": 0.3562
+        },
+        {
+          "ensembl_id": "ENSG00000108424",
+          "symbol": "KPNB1",
+          "r_cohort1": 0.6006,
+          "p_cohort1": 0.02313,
+          "r_cohort2": 0.352,
+          "p_cohort2": 0.00904,
+          "exceeds_both_emp95": false,
+          "min_abs_r": 0.352
+        },
+        {
+          "ensembl_id": "ENSG00000189221",
+          "symbol": "MAOA",
+          "r_cohort1": 0.5616,
+          "p_cohort1": 0.03662,
+          "r_cohort2": 0.3464,
+          "p_cohort2": 0.01028,
+          "exceeds_both_emp95": false,
+          "min_abs_r": 0.3464
+        },
+        {
+          "ensembl_id": "ENSG00000105821",
+          "symbol": "DNAJC2",
+          "r_cohort1": 0.6982,
+          "p_cohort1": 0.00548,
+          "r_cohort2": 0.3445,
+          "p_cohort2": 0.01075,
+          "exceeds_both_emp95": false,
+          "min_abs_r": 0.3445
+        },
+        {
+          "ensembl_id": "ENSG00000180773",
+          "symbol": "SLC36A4",
+          "r_cohort1": 0.7946,
+          "p_cohort1": 0.00069,
+          "r_cohort2": 0.3438,
+          "p_cohort2": 0.0109,
+          "exceeds_both_emp95": false,
+          "min_abs_r": 0.3438
+        },
+        {
+          "ensembl_id": "ENSG00000178177",
+          "symbol": "LCORL",
+          "r_cohort1": 0.7385,
+          "p_cohort1": 0.00255,
+          "r_cohort2": 0.3421,
+          "p_cohort2": 0.01134,
+          "exceeds_both_emp95": false,
+          "min_abs_r": 0.3421
+        },
+        {
+          "ensembl_id": "ENSG00000226688",
+          "symbol": "ENTPD1-AS1",
+          "r_cohort1": 0.7725,
+          "p_cohort1": 0.0012,
+          "r_cohort2": 0.3417,
+          "p_cohort2": 0.01144,
+          "exceeds_both_emp95": false,
+          "min_abs_r": 0.3417
+        },
+        {
+          "ensembl_id": "ENSG00000166012",
+          "symbol": "TAF1D",
+          "r_cohort1": 0.657,
+          "p_cohort1": 0.01068,
+          "r_cohort2": 0.3408,
+          "p_cohort2": 0.01167,
+          "exceeds_both_emp95": false,
+          "min_abs_r": 0.3408
+        }
+      ],
+      "table_100_summary": {
+        "n_table_evaluated": 99,
+        "same_sign_in_periheart_count": 42,
+        "replicates_peri_p005_same_sign_count": 9,
+        "replicates_both_p005_same_sign_count": 6,
+        "replicates_peri_emp95_same_sign_count": 4,
+        "replicates_both_emp95_same_sign_count": 0,
+        "r_correlation_across_100_table_genes": -0.3403,
+        "p_correlation_across_100_table_genes": 0.00057,
+        "replicating_genes_peri_p005": [
+          "NEGR1",
+          "ABCA10",
+          "ENSG00000256947",
+          "DCLK1",
+          "COL4A4",
+          "CALCRL-AS1",
+          "COL4A3",
+          "UST",
+          "ADAMTSL3"
+        ],
+        "replicating_genes_both_emp95": []
+      }
+    },
+    "vcm_to_atrial_cm": {
+      "comparison_name": "vCM_Lit14_vs_AtrialCM_Peri54",
+      "n_shared_active_genes": 6717,
+      "thr1_emp95": 0.7736,
+      "thr2_emp95": 0.3855,
+      "pass1_emp95_count": 408,
+      "pass2_emp95_count": 198,
+      "both_emp95_any_sign_count": 6,
+      "both_emp95_concordant_count": 0,
+      "expected_emp95_overlap_any_sign": 12.03,
+      "expected_emp95_overlap_concordant": 6.01,
+      "binom_p_emp95_any_sign": 0.9800765906494764,
+      "binom_p_emp95_concordant": 1.0,
+      "pass1_nom_p005_count": 2905,
+      "pass2_nom_p005_count": 1194,
+      "both_nom_p005_any_sign_count": 462,
+      "both_nom_p005_concordant_count": 224,
+      "expected_nom_concordant": 258.19,
+      "binom_p_nom_concordant": 0.9875209790202762,
+      "genome_wide_r_between_cohorts": -0.1868,
+      "genome_wide_p_between_cohorts": 8.203551024768806e-54,
+      "genome_wide_sign_concordance_pct": 54.62,
+      "top_concordant_genes": [
+        {
+          "ensembl_id": "ENSG00000174306",
+          "symbol": "ZHX3",
+          "r_cohort1": 0.7615,
+          "p_cohort1": 0.00156,
+          "r_cohort2": 0.5218,
+          "p_cohort2": 5e-05,
+          "exceeds_both_emp95": false,
+          "min_abs_r": 0.5218
+        },
+        {
+          "ensembl_id": "ENSG00000137509",
+          "symbol": "PRCP",
+          "r_cohort1": 0.5937,
+          "p_cohort1": 0.02518,
+          "r_cohort2": 0.5191,
+          "p_cohort2": 6e-05,
+          "exceeds_both_emp95": false,
+          "min_abs_r": 0.5191
+        },
+        {
+          "ensembl_id": "ENSG00000113389",
+          "symbol": "NPR3",
+          "r_cohort1": 0.5942,
+          "p_cohort1": 0.02504,
+          "r_cohort2": 0.471,
+          "p_cohort2": 0.00033,
+          "exceeds_both_emp95": false,
+          "min_abs_r": 0.471
+        },
+        {
+          "ensembl_id": "ENSG00000111077",
+          "symbol": "TNS2",
+          "r_cohort1": 0.5686,
+          "p_cohort1": 0.03388,
+          "r_cohort2": 0.4674,
+          "p_cohort2": 0.00037,
+          "exceeds_both_emp95": false,
+          "min_abs_r": 0.4674
+        },
+        {
+          "ensembl_id": "ENSG00000136436",
+          "symbol": "CALCOCO2",
+          "r_cohort1": 0.567,
+          "p_cohort1": 0.03447,
+          "r_cohort2": 0.4558,
+          "p_cohort2": 0.00053,
+          "exceeds_both_emp95": false,
+          "min_abs_r": 0.4558
+        },
+        {
+          "ensembl_id": "ENSG00000130560",
+          "symbol": "UBAC1",
+          "r_cohort1": 0.5693,
+          "p_cohort1": 0.0336,
+          "r_cohort2": 0.4527,
+          "p_cohort2": 0.00059,
+          "exceeds_both_emp95": false,
+          "min_abs_r": 0.4527
+        },
+        {
+          "ensembl_id": "ENSG00000171206",
+          "symbol": "TRIM8",
+          "r_cohort1": 0.6817,
+          "p_cohort1": 0.00725,
+          "r_cohort2": 0.4477,
+          "p_cohort2": 0.00069,
+          "exceeds_both_emp95": false,
+          "min_abs_r": 0.4477
+        },
+        {
+          "ensembl_id": "ENSG00000111906",
+          "symbol": "HDDC2",
+          "r_cohort1": 0.5383,
+          "p_cohort1": 0.04706,
+          "r_cohort2": 0.4457,
+          "p_cohort2": 0.00073,
+          "exceeds_both_emp95": false,
+          "min_abs_r": 0.4457
+        },
+        {
+          "ensembl_id": "ENSG00000100567",
+          "symbol": "PSMA3",
+          "r_cohort1": 0.593,
+          "p_cohort1": 0.02542,
+          "r_cohort2": 0.44,
+          "p_cohort2": 0.00087,
+          "exceeds_both_emp95": false,
+          "min_abs_r": 0.44
+        },
+        {
+          "ensembl_id": "ENSG00000143493",
+          "symbol": "INTS7",
+          "r_cohort1": 0.5707,
+          "p_cohort1": 0.03308,
+          "r_cohort2": 0.4391,
+          "p_cohort2": 0.0009,
+          "exceeds_both_emp95": false,
+          "min_abs_r": 0.4391
+        },
+        {
+          "ensembl_id": "ENSG00000121957",
+          "symbol": "GPSM2",
+          "r_cohort1": 0.7132,
+          "p_cohort1": 0.00419,
+          "r_cohort2": 0.4378,
+          "p_cohort2": 0.00093,
+          "exceeds_both_emp95": false,
+          "min_abs_r": 0.4378
+        },
+        {
+          "ensembl_id": "ENSG00000167088",
+          "symbol": "SNRPD1",
+          "r_cohort1": 0.6604,
+          "p_cohort1": 0.01014,
+          "r_cohort2": 0.4345,
+          "p_cohort2": 0.00103,
+          "exceeds_both_emp95": false,
+          "min_abs_r": 0.4345
+        },
+        {
+          "ensembl_id": "ENSG00000169288",
+          "symbol": "MRPL1",
+          "r_cohort1": 0.6378,
+          "p_cohort1": 0.01413,
+          "r_cohort2": 0.434,
+          "p_cohort2": 0.00104,
+          "exceeds_both_emp95": false,
+          "min_abs_r": 0.434
+        },
+        {
+          "ensembl_id": "ENSG00000166902",
+          "symbol": "MRPL16",
+          "r_cohort1": 0.713,
+          "p_cohort1": 0.0042,
+          "r_cohort2": 0.432,
+          "p_cohort2": 0.00111,
+          "exceeds_both_emp95": false,
+          "min_abs_r": 0.432
+        },
+        {
+          "ensembl_id": "ENSG00000146243",
+          "symbol": "IRAK1BP1",
+          "r_cohort1": 0.567,
+          "p_cohort1": 0.03448,
+          "r_cohort2": 0.4303,
+          "p_cohort2": 0.00116,
+          "exceeds_both_emp95": false,
+          "min_abs_r": 0.4303
+        },
+        {
+          "ensembl_id": "ENSG00000250903",
+          "symbol": "GMDS-DT",
+          "r_cohort1": 0.6431,
+          "p_cohort1": 0.01311,
+          "r_cohort2": 0.4301,
+          "p_cohort2": 0.00117,
+          "exceeds_both_emp95": false,
+          "min_abs_r": 0.4301
+        },
+        {
+          "ensembl_id": "ENSG00000125952",
+          "symbol": "MAX",
+          "r_cohort1": 0.6683,
+          "p_cohort1": 0.00899,
+          "r_cohort2": 0.43,
+          "p_cohort2": 0.00117,
+          "exceeds_both_emp95": false,
+          "min_abs_r": 0.43
+        },
+        {
+          "ensembl_id": "ENSG00000163864",
+          "symbol": "NMNAT3",
+          "r_cohort1": 0.6205,
+          "p_cohort1": 0.01789,
+          "r_cohort2": 0.4239,
+          "p_cohort2": 0.0014,
+          "exceeds_both_emp95": false,
+          "min_abs_r": 0.4239
+        },
+        {
+          "ensembl_id": "ENSG00000160124",
+          "symbol": "MIX23",
+          "r_cohort1": 0.6681,
+          "p_cohort1": 0.00901,
+          "r_cohort2": 0.4233,
+          "p_cohort2": 0.00143,
+          "exceeds_both_emp95": false,
+          "min_abs_r": 0.4233
+        },
+        {
+          "ensembl_id": "ENSG00000172172",
+          "symbol": "MRPL13",
+          "r_cohort1": 0.6131,
+          "p_cohort1": 0.01973,
+          "r_cohort2": 0.4231,
+          "p_cohort2": 0.00143,
+          "exceeds_both_emp95": false,
+          "min_abs_r": 0.4231
+        },
+        {
+          "ensembl_id": "ENSG00000176105",
+          "symbol": "YES1",
+          "r_cohort1": 0.7721,
+          "p_cohort1": 0.00121,
+          "r_cohort2": 0.4207,
+          "p_cohort2": 0.00154,
+          "exceeds_both_emp95": false,
+          "min_abs_r": 0.4207
+        },
+        {
+          "ensembl_id": "ENSG00000186376",
+          "symbol": "ZNF75D",
+          "r_cohort1": 0.7364,
+          "p_cohort1": 0.00267,
+          "r_cohort2": 0.4176,
+          "p_cohort2": 0.00168,
+          "exceeds_both_emp95": false,
+          "min_abs_r": 0.4176
+        },
+        {
+          "ensembl_id": "ENSG00000113312",
+          "symbol": "TTC1",
+          "r_cohort1": 0.7688,
+          "p_cohort1": 0.00131,
+          "r_cohort2": 0.4111,
+          "p_cohort2": 0.00202,
+          "exceeds_both_emp95": false,
+          "min_abs_r": 0.4111
+        },
+        {
+          "ensembl_id": "ENSG00000141179",
+          "symbol": "PCTP",
+          "r_cohort1": 0.5883,
+          "p_cohort1": 0.02689,
+          "r_cohort2": 0.4106,
+          "p_cohort2": 0.00204,
+          "exceeds_both_emp95": false,
+          "min_abs_r": 0.4106
+        },
+        {
+          "ensembl_id": "ENSG00000073464",
+          "symbol": "CLCN4",
+          "r_cohort1": 0.5405,
+          "p_cohort1": 0.04601,
+          "r_cohort2": 0.4087,
+          "p_cohort2": 0.00215,
+          "exceeds_both_emp95": false,
+          "min_abs_r": 0.4087
+        },
+        {
+          "ensembl_id": "ENSG00000125818",
+          "symbol": "PSMF1",
+          "r_cohort1": 0.6343,
+          "p_cohort1": 0.01484,
+          "r_cohort2": 0.4051,
+          "p_cohort2": 0.00238,
+          "exceeds_both_emp95": false,
+          "min_abs_r": 0.4051
+        },
+        {
+          "ensembl_id": "ENSG00000100823",
+          "symbol": "APEX1",
+          "r_cohort1": 0.571,
+          "p_cohort1": 0.03296,
+          "r_cohort2": 0.4045,
+          "p_cohort2": 0.00241,
+          "exceeds_both_emp95": false,
+          "min_abs_r": 0.4045
+        },
+        {
+          "ensembl_id": "ENSG00000111237",
+          "symbol": "VPS29",
+          "r_cohort1": 0.6849,
+          "p_cohort1": 0.00688,
+          "r_cohort2": 0.4011,
+          "p_cohort2": 0.00265,
+          "exceeds_both_emp95": false,
+          "min_abs_r": 0.4011
+        },
+        {
+          "ensembl_id": "ENSG00000132434",
+          "symbol": "LANCL2",
+          "r_cohort1": 0.6345,
+          "p_cohort1": 0.01479,
+          "r_cohort2": 0.4006,
+          "p_cohort2": 0.00269,
+          "exceeds_both_emp95": false,
+          "min_abs_r": 0.4006
+        },
+        {
+          "ensembl_id": "ENSG00000138640",
+          "symbol": "FAM13A",
+          "r_cohort1": 0.6796,
+          "p_cohort1": 0.0075,
+          "r_cohort2": 0.3956,
+          "p_cohort2": 0.00307,
+          "exceeds_both_emp95": false,
+          "min_abs_r": 0.3956
+        }
+      ],
+      "table_100_summary": {
+        "n_table_evaluated": 100,
+        "same_sign_in_periheart_count": 50,
+        "replicates_peri_p005_same_sign_count": 10,
+        "replicates_both_p005_same_sign_count": 4,
+        "replicates_peri_emp95_same_sign_count": 0,
+        "replicates_both_emp95_same_sign_count": 0,
+        "r_correlation_across_100_table_genes": -0.2126,
+        "p_correlation_across_100_table_genes": 0.03368,
+        "replicating_genes_peri_p005": [
+          "MLIP-AS1",
+          "SH3RF2",
+          "ENSG00000256947",
+          "NFXL1",
+          "KIAA1217",
+          "PLPP3",
+          "MAN1A1",
+          "EDA",
+          "MYH6",
+          "SLC26A3"
+        ],
+        "replicating_genes_both_emp95": []
+      }
+    },
+    "atrial_cm_to_atrial_cm": {
+      "comparison_name": "AtrialCM_Lit12_vs_AtrialCM_Peri54",
+      "n_shared_active_genes": 6768,
+      "thr1_emp95": 0.7286,
+      "thr2_emp95": 0.3855,
+      "pass1_emp95_count": 363,
+      "pass2_emp95_count": 210,
+      "both_emp95_any_sign_count": 15,
+      "both_emp95_concordant_count": 2,
+      "expected_emp95_overlap_any_sign": 11.26,
+      "expected_emp95_overlap_concordant": 5.63,
+      "binom_p_emp95_any_sign": 0.1656120059910952,
+      "binom_p_emp95_concordant": 0.9762799082573346,
+      "pass1_nom_p005_count": 2152,
+      "pass2_nom_p005_count": 1231,
+      "both_nom_p005_any_sign_count": 368,
+      "both_nom_p005_concordant_count": 123,
+      "expected_nom_concordant": 195.71,
+      "binom_p_nom_concordant": 0.9999999934050946,
+      "genome_wide_r_between_cohorts": -0.2296,
+      "genome_wide_p_between_cohorts": 1.0701763590945716e-81,
+      "genome_wide_sign_concordance_pct": 51.82,
+      "top_concordant_genes": [
+        {
+          "ensembl_id": "ENSG00000137509",
+          "symbol": "PRCP",
+          "r_cohort1": 0.5921,
+          "p_cohort1": 0.02569,
+          "r_cohort2": 0.5191,
+          "p_cohort2": 6e-05,
+          "exceeds_both_emp95": false,
+          "min_abs_r": 0.5191
+        },
+        {
+          "ensembl_id": "ENSG00000026025",
+          "symbol": "VIM",
+          "r_cohort1": 0.5627,
+          "p_cohort1": 0.03617,
+          "r_cohort2": 0.5039,
+          "p_cohort2": 0.0001,
+          "exceeds_both_emp95": false,
+          "min_abs_r": 0.5039
+        },
+        {
+          "ensembl_id": "ENSG00000125037",
+          "symbol": "EMC3",
+          "r_cohort1": 0.5615,
+          "p_cohort1": 0.03667,
+          "r_cohort2": 0.4831,
+          "p_cohort2": 0.00022,
+          "exceeds_both_emp95": false,
+          "min_abs_r": 0.4831
+        },
+        {
+          "ensembl_id": "ENSG00000165259",
+          "symbol": "HDX",
+          "r_cohort1": 0.6808,
+          "p_cohort1": 0.00736,
+          "r_cohort2": 0.467,
+          "p_cohort2": 0.00037,
+          "exceeds_both_emp95": false,
+          "min_abs_r": 0.467
+        },
+        {
+          "ensembl_id": "ENSG00000100567",
+          "symbol": "PSMA3",
+          "r_cohort1": 0.6896,
+          "p_cohort1": 0.00636,
+          "r_cohort2": 0.44,
+          "p_cohort2": 0.00087,
+          "exceeds_both_emp95": false,
+          "min_abs_r": 0.44
+        },
+        {
+          "ensembl_id": "ENSG00000143493",
+          "symbol": "INTS7",
+          "r_cohort1": 0.5641,
+          "p_cohort1": 0.03563,
+          "r_cohort2": 0.4391,
+          "p_cohort2": 0.0009,
+          "exceeds_both_emp95": false,
+          "min_abs_r": 0.4391
+        },
+        {
+          "ensembl_id": "ENSG00000121957",
+          "symbol": "GPSM2",
+          "r_cohort1": 0.7912,
+          "p_cohort1": 0.00075,
+          "r_cohort2": 0.4378,
+          "p_cohort2": 0.00093,
+          "exceeds_both_emp95": true,
+          "min_abs_r": 0.4378
+        },
+        {
+          "ensembl_id": "ENSG00000160124",
+          "symbol": "MIX23",
+          "r_cohort1": 0.7348,
+          "p_cohort1": 0.00276,
+          "r_cohort2": 0.4233,
+          "p_cohort2": 0.00143,
+          "exceeds_both_emp95": true,
+          "min_abs_r": 0.4233
+        },
+        {
+          "ensembl_id": "ENSG00000172172",
+          "symbol": "MRPL13",
+          "r_cohort1": 0.703,
+          "p_cohort1": 0.00504,
+          "r_cohort2": 0.4231,
+          "p_cohort2": 0.00143,
+          "exceeds_both_emp95": false,
+          "min_abs_r": 0.4231
+        },
+        {
+          "ensembl_id": "ENSG00000176105",
+          "symbol": "YES1",
+          "r_cohort1": 0.7152,
+          "p_cohort1": 0.00404,
+          "r_cohort2": 0.4207,
+          "p_cohort2": 0.00154,
+          "exceeds_both_emp95": false,
+          "min_abs_r": 0.4207
+        },
+        {
+          "ensembl_id": "ENSG00000113312",
+          "symbol": "TTC1",
+          "r_cohort1": 0.5455,
+          "p_cohort1": 0.04365,
+          "r_cohort2": 0.4111,
+          "p_cohort2": 0.00202,
+          "exceeds_both_emp95": false,
+          "min_abs_r": 0.4111
+        },
+        {
+          "ensembl_id": "ENSG00000132434",
+          "symbol": "LANCL2",
+          "r_cohort1": 0.6401,
+          "p_cohort1": 0.01367,
+          "r_cohort2": 0.4006,
+          "p_cohort2": 0.00269,
+          "exceeds_both_emp95": false,
+          "min_abs_r": 0.4006
+        },
+        {
+          "ensembl_id": "ENSG00000076321",
+          "symbol": "KLHL20",
+          "r_cohort1": 0.6258,
+          "p_cohort1": 0.01667,
+          "r_cohort2": 0.3909,
+          "p_cohort2": 0.00347,
+          "exceeds_both_emp95": false,
+          "min_abs_r": 0.3909
+        },
+        {
+          "ensembl_id": "ENSG00000109790",
+          "symbol": "KLHL5",
+          "r_cohort1": 0.5829,
+          "p_cohort1": 0.02868,
+          "r_cohort2": 0.3874,
+          "p_cohort2": 0.00381,
+          "exceeds_both_emp95": false,
+          "min_abs_r": 0.3874
+        },
+        {
+          "ensembl_id": "ENSG00000113068",
+          "symbol": "PFDN1",
+          "r_cohort1": 0.7174,
+          "p_cohort1": 0.00387,
+          "r_cohort2": 0.3871,
+          "p_cohort2": 0.00383,
+          "exceeds_both_emp95": false,
+          "min_abs_r": 0.3871
+        },
+        {
+          "ensembl_id": "ENSG00000163513",
+          "symbol": "TGFBR2",
+          "r_cohort1": 0.5409,
+          "p_cohort1": 0.04582,
+          "r_cohort2": 0.3866,
+          "p_cohort2": 0.00388,
+          "exceeds_both_emp95": false,
+          "min_abs_r": 0.3866
+        },
+        {
+          "ensembl_id": "ENSG00000111832",
+          "symbol": "RWDD1",
+          "r_cohort1": 0.7366,
+          "p_cohort1": 0.00266,
+          "r_cohort2": 0.3807,
+          "p_cohort2": 0.00452,
+          "exceeds_both_emp95": false,
+          "min_abs_r": 0.3807
+        },
+        {
+          "ensembl_id": "ENSG00000137547",
+          "symbol": "MRPL15",
+          "r_cohort1": 0.6948,
+          "p_cohort1": 0.00581,
+          "r_cohort2": 0.3753,
+          "p_cohort2": 0.00517,
+          "exceeds_both_emp95": false,
+          "min_abs_r": 0.3753
+        },
+        {
+          "ensembl_id": "ENSG00000261824",
+          "symbol": "LINC00662",
+          "r_cohort1": 0.5587,
+          "p_cohort1": 0.03783,
+          "r_cohort2": 0.3722,
+          "p_cohort2": 0.00558,
+          "exceeds_both_emp95": false,
+          "min_abs_r": 0.3722
+        },
+        {
+          "ensembl_id": "ENSG00000100324",
+          "symbol": "TAB1",
+          "r_cohort1": 0.6063,
+          "p_cohort1": 0.02152,
+          "r_cohort2": 0.3722,
+          "p_cohort2": 0.00558,
+          "exceeds_both_emp95": false,
+          "min_abs_r": 0.3722
+        },
+        {
+          "ensembl_id": "ENSG00000135972",
+          "symbol": "MRPS9",
+          "r_cohort1": 0.6013,
+          "p_cohort1": 0.02293,
+          "r_cohort2": 0.3714,
+          "p_cohort2": 0.0057,
+          "exceeds_both_emp95": false,
+          "min_abs_r": 0.3714
+        },
+        {
+          "ensembl_id": "ENSG00000023734",
+          "symbol": "STRAP",
+          "r_cohort1": 0.6031,
+          "p_cohort1": 0.02243,
+          "r_cohort2": 0.3699,
+          "p_cohort2": 0.00591,
+          "exceeds_both_emp95": false,
+          "min_abs_r": 0.3699
+        },
+        {
+          "ensembl_id": "ENSG00000132170",
+          "symbol": "PPARG",
+          "r_cohort1": 0.5853,
+          "p_cohort1": 0.02788,
+          "r_cohort2": 0.3687,
+          "p_cohort2": 0.00608,
+          "exceeds_both_emp95": false,
+          "min_abs_r": 0.3687
+        },
+        {
+          "ensembl_id": "ENSG00000115875",
+          "symbol": "SRSF7",
+          "r_cohort1": 0.5955,
+          "p_cohort1": 0.02465,
+          "r_cohort2": 0.3641,
+          "p_cohort2": 0.0068,
+          "exceeds_both_emp95": false,
+          "min_abs_r": 0.3641
+        },
+        {
+          "ensembl_id": "ENSG00000171530",
+          "symbol": "TBCA",
+          "r_cohort1": 0.6151,
+          "p_cohort1": 0.01923,
+          "r_cohort2": 0.362,
+          "p_cohort2": 0.00715,
+          "exceeds_both_emp95": false,
+          "min_abs_r": 0.362
+        },
+        {
+          "ensembl_id": "ENSG00000183308",
+          "symbol": "ENSG00000183308",
+          "r_cohort1": 0.5445,
+          "p_cohort1": 0.04411,
+          "r_cohort2": 0.3609,
+          "p_cohort2": 0.00733,
+          "exceeds_both_emp95": false,
+          "min_abs_r": 0.3609
+        },
+        {
+          "ensembl_id": "ENSG00000151690",
+          "symbol": "MFSD6",
+          "r_cohort1": 0.6915,
+          "p_cohort1": 0.00616,
+          "r_cohort2": 0.36,
+          "p_cohort2": 0.00751,
+          "exceeds_both_emp95": false,
+          "min_abs_r": 0.36
+        },
+        {
+          "ensembl_id": "ENSG00000108654",
+          "symbol": "DDX5",
+          "r_cohort1": 0.5671,
+          "p_cohort1": 0.03445,
+          "r_cohort2": 0.3595,
+          "p_cohort2": 0.00759,
+          "exceeds_both_emp95": false,
+          "min_abs_r": 0.3595
+        },
+        {
+          "ensembl_id": "ENSG00000162643",
+          "symbol": "DNAI3",
+          "r_cohort1": 0.6247,
+          "p_cohort1": 0.01691,
+          "r_cohort2": 0.3595,
+          "p_cohort2": 0.00758,
+          "exceeds_both_emp95": false,
+          "min_abs_r": 0.3595
+        },
+        {
+          "ensembl_id": "ENSG00000120533",
+          "symbol": "ENY2",
+          "r_cohort1": 0.5733,
+          "p_cohort1": 0.03209,
+          "r_cohort2": 0.3565,
+          "p_cohort2": 0.00815,
+          "exceeds_both_emp95": false,
+          "min_abs_r": 0.3565
+        }
+      ],
+      "table_100_summary": {
+        "n_table_evaluated": 99,
+        "same_sign_in_periheart_count": 45,
+        "replicates_peri_p005_same_sign_count": 13,
+        "replicates_both_p005_same_sign_count": 4,
+        "replicates_peri_emp95_same_sign_count": 1,
+        "replicates_both_emp95_same_sign_count": 0,
+        "r_correlation_across_100_table_genes": -0.191,
+        "p_correlation_across_100_table_genes": 0.05822,
+        "replicating_genes_peri_p005": [
+          "MLIP-AS1",
+          "KCNJ3",
+          "AGBL4",
+          "SH3RF2",
+          "LRMDA",
+          "LIFR",
+          "AMD1",
+          "EDA",
+          "ENSG00000256947",
+          "NFXL1",
+          "KIAA1217",
+          "RALGPS2",
+          "SLC26A3"
+        ],
+        "replicating_genes_both_emp95": []
+      }
+    }
+  },
+  "pooled_ols_sensitivity": {
+    "fibroblast_68_donors": {
+      "n_donors_pooled": 68,
+      "df": 64,
+      "table100_ols_p005": 44,
+      "table100_ols_p005_same_sign": 12
+    },
+    "vcm_to_cm_68_donors": {
+      "n_donors_pooled": 68,
+      "df": 64,
+      "table100_ols_p005": 24,
+      "table100_ols_p005_same_sign": 11
+    },
+    "acm_to_cm_66_donors": {
+      "n_donors_pooled": 68,
+      "df": 64,
+      "table100_ols_p005": 34,
+      "table100_ols_p005_same_sign": 14
+    }
+  }
+}

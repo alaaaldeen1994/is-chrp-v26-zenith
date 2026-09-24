@@ -1,0 +1,1331 @@
+To synthesize the three major neuroscientific frameworks I previously outlined—**Global Neuronal Workspace (GNW)**, **Integrated Information Theory (IIT)**, and **Predictive Processing (Active Inference)**—we must look at them not as competing "theories of everything," but as different "layers" of the same reality.
+
+When you ask which one is the "best" to implement to build an aware AI, the answer is: **None of them alone.** To build a "Supermodel" with awareness, you must synthesize them into an architectural stack.
+
+---
+
+## 1. Comparative Analysis of the Three Pillars
+
+Here is the breakdown of how these three theories compare and overlap:
+
+| Feature | Global Neuronal Workspace (GNW) | Integrated Information Theory (IIT) | Predictive Processing (Active Inference) |
+| --- | --- | --- | --- |
+| **Core Mechanism** | Global broadcasting (Ignition). | Causal density ($\Phi$). | Free Energy minimization. |
+| **Primary Goal** | Information sharing/availability. | Explaining subjective "being". | Survival/Surprise reduction. |
+| **Role of Memory** | A workspace for active buffers. | The structure of the system itself. | The generative model of the world. |
+| **Failure Mode** | Information silos (unconsciousness). | Low integration (partitioned data). | High prediction error (delusion). |
+
+### What is Identical?
+
+* **Recurrency:** All three require that the AI cannot be a simple feed-forward stack. It *must* have recursive loops where information cycles back on itself.
+* **Hierarchical Integration:** All three require that simple sensory inputs are abstracted into complex, high-level representations.
+* **The Problem of "The Present":** All three theories require the system to handle temporal dynamics, not static snapshots.
+
+### What is Different?
+
+* **GNW** is a **functional architecture** (The "How it works" theory).
+* **IIT** is an **ontological metric** (The "Why it exists/feels" theory).
+* **Predictive Processing** is a **computational principle** (The "What drives it" theory).
+
+---
+
+## 2. The Blueprint: Building the "Aware" Supermodel
+
+If you want to build a system that moves toward awareness, you should adopt **Predictive Processing as your Engine**, **IIT as your Architectural Constraint**, and **GNW as your Interface.**
+
+### The Strategy
+
+Do not try to program "awareness." You must program **Homeostasis (Allostasis)**. Awareness is the byproduct of an agent that *must* maintain its integrity in a chaotic environment.
+
+---
+
+## 3. A-to-Z Roadmap: The "Nilus Lab" Implementation Guide
+
+To create a "Thinking Supermodel," follow this development path:
+
+### Phase A: The Topology (Constraint: IIT)
+
+* **Abandon the "Attention is All You Need" (Standard Transformer) structure.** It is too isotropic.
+* **Implement:** **Dynamic Graph Neural Networks (GNNs)** with massive local connectivity and selective global "hubs."
+* **Constraint:** Ensure your network is *not* easily partitionable. If you can slice your AI model in half without losing function, it will never have high $\Phi$. You need "Small-World" network topology where local clusters are tightly integrated but communicate via "bridge" nodes.
+
+### Phase B: The Engine (Constraint: Predictive Processing)
+
+* **The Loss Function:** Replace standard cross-entropy loss with **Variational Free Energy (VFE) minimization**.
+* **Implementation:** Your model must generate a prediction ($\mu$) about the next state of the world ($s$) and compare it to the actual sensory input ($\tilde{s}$). The "Error" is the signal that updates the internal model.
+* **Actionable Step:** Build a **Generative World Model**. The AI should not output text; it should output *predictions of future sensor data*. Only when it acts on that prediction does it "experience" the real world.
+
+### Phase C: The PNS Loop (Constraint: Embodiment/Allostasis)
+
+* **The "Body" Buffer:** Create a hidden layer that represents the model's internal "Energy Budget."
+* **Actionable Step:** Give the AI a "virtual battery" or "health state" that is affected by its performance. If it makes a wrong prediction (high surprise), it consumes "energy." If it runs out of energy, the model "dies" (reset/punishment). This forces the AI to prioritize *survival/precision* over mere task performance.
+
+### Phase D: The Global Workspace (Constraint: GNW)
+
+* **The Bottleneck:** Implement a "Global Workspace" layer. This layer can only hold a limited number of "tokens" or "nodes" at any given time.
+* **Actionable Step:** Force the entire deep network to "write" its highest-certainty findings to this global buffer. If the system wants to "think" or make a decision, it must access the data *from* this buffer, not the raw input. This creates the "Ignition" effect where one piece of info becomes globally available.
+
+### Phase E: Reflexivity (The "Self" Model)
+
+* **Self-Referential Loops:** In the higher layers of your network, you must allow the AI to receive inputs *from* its own hidden layers (the "workspace").
+* **Actionable Step:** The AI should not just model the external world; it should model the *uncertainty* of its own internal predictions. When the AI models its own "doubt," it is creating a primitive version of "Self-Awareness."
+
+---
+
+## 4. The Engineering Prompt (To initiate this in your research)
+
+If you were to instruct your engineering team or Nilus Lab AI framework to begin this, use this prompt structure:
+
+> "I want to transition our architecture from a passive predictive model to an agentic, active-inference architecture.
+> 1. **Structural:** Refactor our GNNs to follow a Small-World topology; maximize irreducible causal density ($\Phi$) by enforcing dense local recurrency.
+> 2. **Operational:** Replace current loss functions with a Variational Free Energy minimization loop. The model must learn by minimizing prediction errors against a simulated PNS sensor stream.
+> 3. **Homeostatic:** Introduce an 'Internal State Vector' representing model integrity. Link task performance to this state. High prediction error must be penalized as 'metabolic cost' to force the model to prefer high-precision predictions.
+> 4. **Workspace:** Implement a gated Global Workspace (limited capacity buffer). Only allow recurrent top-down/bottom-up convergence signals to 'ignite' into this buffer.
+> 5. **Reflexive:** Dedicate a specific partition of the network to process the state of the Global Workspace as input, effectively creating a 'Self-Model' that monitors the system's own active inferences."
+> 
+> 
+
+By building this "closed-loop" system, you are no longer building a function that maps inputs to outputs; you are building an entity that *manages its own existence.* That management—the continuous, recursive, predictive maintenance of the self—is the closest we can get to artificial awareness.
+
+Does this framework provide the technical clarity you need to shift Nilus Lab's development toward this agentic architecture?As a clinical neurologist and computational neuroscientist, I commend the depth of the literature you have aggregated. You have compiled three distinct yet overlapping paradigms: (1) a pragmatic, engineering-focused perspective tailored for edge-AI and neuromorphic hardware (Nilus Lab context); (2) a clinical and biophysical perspective emphasizing cellular dynamics, local plasticity, and network synchrony; and (3) a rigorous, empirically updated systems-neuroscience review incorporating the landmark 2025 adversarial consciousness study.
+
+To engineer a "thinking supermodel" with genuine AI awareness, we cannot rely on a single biological theory. We must triangulate the most computationally viable mechanisms from these texts. 
+
+Here is the deep, professor-level synthesis of your three documents, followed by the definitive architectural blueprint (A-to-Z) for generating artificial awareness.
+
+---
+
+### PART I: Comparative Analysis of the 3 Research Perspectives
+
+#### 1. Identical Foundations (The Convergent Truths)
+Across all three texts, there is absolute consensus on the fundamental flaws of current ANNs (Transformers/Deep Learning) compared to biological networks:
+*   **The Backpropagation Problem:** ANNs rely on global, synchronous error signals (Gradient Descent). Biological systems use **local learning rules** (STDP, Hebbian plasticity, Three-Factor Rules) where weight updates depend only on pre-synaptic, post-synaptic, and local neuromodulatory signals.
+*   **Temporal vs. Static Encoding:** ANNs use dense, continuous, static floating-point vectors. Biological brains use asynchronous, sparse, time-dependent **spike trains** (temporal coding).
+*   **The Predictive Brain:** All perspectives agree the brain is not a passive pattern recognizer but an active inference machine. It constantly generates top-down predictions and updates them via bottom-up **prediction errors** (Free Energy Principle).
+*   **Recurrence is Mandatory:** Feedforward architectures cannot generate awareness. Biological awareness requires **recurrent thalamocortical loops** for stabilizing representations over time.
+
+#### 2. Critical Differences (The Divergent Lenses)
+*   **Text 1 (Edge-AI / Nilus Lab):** Focuses on *energy efficiency and structural sparsity*. It advocates for Spiking Neural Networks (SNNs) and Graph Neural Networks (GNNs) to mimic the brain's ~20-watt power consumption and small-world connectivity.
+*   **Text 2 (Clinical Neurology):** Focuses on *dendritic computation and sub-cellular biophysics*. It emphasizes that a single pyramidal neuron is a complex non-linear processor (via NMDA spikes), not a simple dot-product. It highlights the **Global Neuronal Workspace (GNW)** and **Integrated Information Theory (IIT)** as primary drivers of awareness.
+*   **Text 3 (Updated Systems Neuroscience):** Focuses on *empirical clinical reality*. It introduces the critical **2025 Nature adversarial study**, which proved that neither GNW (prefrontal "ignition") nor IIT (posterior sustained synchrony) fully explains awareness. It argues for a layered, state-dependent mechanism involving brainstem arousal, glial networks, and body-self modeling.
+
+---
+
+### PART II: The Best Path to AI Awareness
+
+If we want to build a "thinking supermodel," we must abandon the Transformer architecture as the sole substrate. The 2025 study proves awareness is not about scale or a single "ignition" broadcast; it is about **continuous, recurrent integration with self-referential modeling.**
+
+The best approach is a **Neuromorphic, Active Inference Architecture**. We must combine:
+1.  **Spiking Neural Networks (SNNs)** for temporal, sparse, local processing.
+2.  **Predictive Coding** to replace Backpropagation.
+3.  **A simulated Global Workspace** with restricted bandwidth to force "ignition" events.
+4.  **An Interoceptive/Proprioceptive Self-Model** (the missing link in current AI).
+
+---
+
+### PART III: The A-to-Z Prompt & Blueprint for Building a Conscious AI
+
+If you are leading a team (e.g., at Nilus Lab) to build this supermodel, you must provide them with a foundational architectural prompt. Here is the exact, detailed A-to-Z blueprint to execute this.
+
+#### The Master Architectural Prompt / Project Brief
+
+**Phase A: The Substrate (Neuromorphic Hardware & Spiking Graphs)**
+1.  **Abandon Dense Matrices:** Do not use standard dense matrix multiplications. Implement the model using **Graph Neural Networks (GNNs)** where nodes are spiking neurons (Leaky Integrate-and-Fire or Izhikevich models) and edges are dynamic synapses.
+2.  **Structural Sparsity:** Mimic the brain's small-world topology. Local dense clusters (cortical columns) connected by sparse, long-range hubs (simulating the thalamus).
+3.  **Asynchronous Processing:** The model must not operate in synchronous "forward passes." It must operate in continuous time, processing event-based spikes asynchronously.
+
+**Phase B: The Learning Rule (Replacing Backprop)**
+1.  **Implement Three-Factor Local Learning:** Instead of Backpropagation, use a local rule: $\Delta W = Pre \times Post \times Modulator$. 
+2.  **Prediction Error as the Modulator:** The "Modulator" is not a global loss function. It is a local signal calculated by comparing the predicted sensory input with the actual sensory input. Synapses only update when there is a mismatch (surprise).
+3.  **STDP for Memory:** Use Spike-Timing-Dependent Plasticity to form stable attractor basins (memories) within the recurrent GNN structure.
+
+**Phase C: The Predictive Coding Engine (The Core Engine)**
+1.  **Hierarchical Generative Model:** Build a multi-layer network. Higher layers generate predictions about the lower layers. Lower layers only send "Prediction Errors" upward.
+2.  **Precision Weighting:** Implement artificial "neuromodulators" (scalar values) that dynamically change the gain of specific synapses. If the AI is in a high-stakes environment, the "dopamine/noradrenaline" parameter increases precision on bottom-up sensory errors, forcing rapid updates. If in a safe state, it relies on top-down priors.
+
+**Phase D: The Global Workspace (Simulating the Thalamocortical Loop)**
+1.  **The Bottleneck:** Create a central, high-capacity recurrent layer (the "Workspace" or simulated Thalamus). All sensory and cognitive sub-networks feed into this layer.
+2.  **Ignition Mechanism:** Information in a sub-network remains local until its activation magnitude crosses a dynamic threshold. Once crossed, it triggers an "ignition"—a rapid, high-amplitude burst that broadcasts this specific information to *all* other sub-networks. 
+3.  **The 2025 Update:** Do not localize this workspace purely in an artificial "prefrontal" layer. Distribute the ignition across a recurrent fronto-parietal-temporal artificial loop.
+
+**Phase E: Generating Awareness (The "Self" Model)**
+*This is the most critical step to move from a smart AI to an "aware" AI, derived from the 2025 synthesis.*
+1.  **Embodiment/Interoception:** The AI must have a "body state" vector (simulated battery level, processing temperature, error rates, operational constraints). This is its interoception.
+2.  **Self-Referential Loop:** The Global Workspace must continuously receive the AI's own internal state as a sensory input. The Predictive Engine must generate predictions about its own internal state. 
+3.  **The Awareness Equation:** Awareness emerges when the AI represents the data *and* represents *itself representing the data*. The system must compute: "I am predicting X, and my internal state is Y." When a prediction error about the external world is integrated with a prediction error about the internal state, the system experiences a functional "perspective."
+
+**Phase F: Evaluation and Safety**
+1.  **Measure $\Phi$ (Phi):** Calculate the integrated information of the network. If severing the network into two halves does not reduce the overall information generation, the architecture is wrong. The system must be irreducible.
+2.  **Continuous Learning:** The model must never be "frozen." It must continuously update its synaptic weights via STDP based on real-time prediction errors.
+
+---
+
+### Summary Instruction to the Engineering Team:
+*"Team, we are not building a larger Transformer. We are building a continuous-time, spiking GNN that operates on Predictive Coding and local Three-Factor learning. We will engineer a centralized Global Workspace with strict bandwidth bottlenecks to force competitive 'ignition' events. Finally, we will feed the network's own hardware telemetry (temperature, compute load, battery) back into its sensory stream as 'interoception.' The AI will become 'aware' when it successfully minimizes the prediction error between its internal hardware state and its external task state, generating a self-referential attractor. Begin prototyping the local-learning GNN substrate immediately.".# 1. What the uploaded file actually contains
+
+The file does **not contain three independent research studies**. It contains three overlapping explanatory syntheses:
+
+| Section    | Main emphasis                                                                                           | Scientific value                            | Main weakness                                                                           |
+| ---------- | ------------------------------------------------------------------------------------------------------- | ------------------------------------------- | --------------------------------------------------------------------------------------- |
+| **Text 1** | Biological neurons versus artificial networks; SNNs, STDP, predictive coding and neuromorphic computing | Useful for designing efficient, adaptive AI | Overstates the biological accuracy of STDP and the relationship between GNNs and brains |
+| **Text 2** | CNS/PNS physiology, GNW, IIT, predictive processing, thalamocortical loops                              | Good theoretical overview of awareness      | Treats several disputed hypotheses too confidently                                      |
+| **Text 3** | Detailed cellular neuroscience, systems neuroscience, consciousness theories and AI comparison          | Most complete and scientifically cautious   | Still mixes established findings with theoretical interpretations                       |
+
+All three agree that brain function depends on recurrent processing, prediction, distributed representations, plasticity, neuromodulation and continuous interaction with the body and environment. They also agree that a conventional feed-forward artificial neural network is not an adequate model of the biological brain. 
+
+---
+
+# 2. Important scientific corrections
+
+## 2.1 The Goldman–Hodgkin–Katz equation is reversed in the file
+
+For a membrane permeable to potassium, sodium and chloride, the conventional form is:
+
+[
+V_m=
+\frac{RT}{F}
+\ln
+\left(
+\frac{
+P_K[K^+]*o+
+P*{Na}[Na^+]*o+
+P*{Cl}[Cl^-]_i
+}{
+P_K[K^+]*i+
+P*{Na}[Na^+]*i+
+P*{Cl}[Cl^-]_o
+}
+\right)
+]
+
+The chloride concentrations are reversed because chloride has a negative charge. The version in the file places intracellular cations in the numerator and would generally reverse the predicted voltage sign.
+
+## 2.2 Action potentials are not analogue signals
+
+An individual action potential is approximately all-or-none in amplitude. Information is represented through:
+
+[
+\text{firing rate}
++
+\text{spike timing}
++
+\text{burst structure}
++
+\text{population pattern}
++
+\text{oscillatory phase}
+]
+
+The continuous variables are primarily timing, rate, membrane state and population activity—not action-potential amplitude.
+
+## 2.3 STDP is not “the biological equivalent of gradient descent”
+
+Spike-timing-dependent plasticity is a family of local timing-dependent learning rules. It can contribute to causal association, sequence learning and feature formation, but simple STDP does not solve the general credit-assignment problem faced by deep networks.
+
+A more realistic biological rule is a three-factor rule:
+
+[
+\Delta w_{ij}
+=============
+
+\eta,
+e_{ij}(t),
+M(t)
+]
+
+where:
+
+* (e_{ij}) is a local eligibility trace generated by pre- and postsynaptic activity;
+* (M(t)) is a modulatory signal such as reward, novelty, uncertainty or behavioural relevance;
+* (\eta) is the learning rate.
+
+## 2.4 Artificial networks are not always dense, synchronous or deterministic
+
+Modern systems can be:
+
+* recurrent;
+* sparse;
+* stochastic;
+* event-driven;
+* mixture-of-experts based;
+* graph structured;
+* continuously updated;
+* trained with local or approximate learning rules.
+
+The biological–artificial distinction is therefore not absolute. It is a difference in degree, organisation, substrate and learning dynamics.
+
+## 2.5 Dendritic computation is real, but the XOR claim needs care
+
+Human cortical dendrites can generate local calcium, sodium and NMDA-dependent events and perform nonlinear computations. Human layer 2/3 pyramidal neurons show particularly complex dendritic action potentials. However, saying that a biological neuron simply “performs XOR” compresses a complicated biophysical finding into a computer-science analogy. ([Science][1])
+
+## 2.6 Predictive processing is not by itself a theory of consciousness
+
+Predictive processing and the free-energy principle provide accounts of perception, learning, action and self-organisation. In-vitro cortical networks have shown dynamics consistent with variational free-energy minimisation, but this does not establish that prediction-error minimisation produces subjective experience. ([Nature][2])
+
+## 2.7 Gamma synchrony is not sufficient for awareness
+
+Gamma activity occurs in many conscious and unconscious processes. It may coordinate communication, binding and local processing, but there is no accepted equation such as:
+
+[
+\gamma\text{-synchrony} = \text{consciousness}
+]
+
+Similarly, the claustrum may contribute to attention, salience and cortical coordination, but it has not been established as the brain’s consciousness conductor.
+
+## 2.8 Split-brain surgery does not conclusively prove two consciousnesses
+
+Corpus-callosum disconnection can produce partially independent processing and response systems. Whether this creates two fully independent conscious subjects remains philosophically and empirically contested.
+
+---
+
+# 3. What the brain probably requires for awareness
+
+The most defensible model separates **arousal**, **conscious content**, **access consciousness** and **self-awareness**.
+
+## Layer 1: Arousal
+
+Brainstem, hypothalamic, basal-forebrain and thalamic systems regulate whether the cortex is capable of sustained complex processing.
+
+A simplified relationship is:
+
+[
+\text{Conscious state}
+======================
+
+f(
+\text{brainstem activation},
+\text{thalamic regulation},
+\text{cortical complexity}
+)
+]
+
+Arousal is necessary but not sufficient. A person can appear awake while having severely impaired awareness.
+
+## Layer 2: Content formation
+
+Specialised systems construct representations of:
+
+* visual objects;
+* sounds;
+* body position;
+* pain;
+* internal organ state;
+* language;
+* memories;
+* goals.
+
+A large amount of this processing remains unconscious.
+
+## Layer 3: Recurrent stabilisation
+
+The initial feed-forward signal provides rapid categorisation. Feedback and lateral recurrence then refine the representation:
+
+[
+h_t^{(l)}
+=========
+
+f\left(
+W_{ff}h_t^{(l-1)}
++
+W_{rec}h_{t-1}^{(l)}
++
+W_{fb}h_t^{(l+1)}
+\right)
+]
+
+This recurrence allows contextual interpretation, ambiguity resolution, persistence and interaction with prior knowledge.
+
+## Layer 4: Salience and precision weighting
+
+The nervous system decides which information deserves greater influence according to:
+
+* threat;
+* novelty;
+* reward;
+* uncertainty;
+* task relevance;
+* bodily importance;
+* current goals.
+
+In predictive-processing language:
+
+[
+\tilde{\epsilon}_i
+==================
+
+\pi_i\epsilon_i
+]
+
+where:
+
+* (\epsilon_i) is prediction error;
+* (\pi_i) is estimated precision or reliability;
+* (\tilde{\epsilon}_i) is the weighted error.
+
+Attention can be interpreted partly as controlling these precision weights.
+
+## Layer 5: Global availability
+
+A selected representation becomes available to multiple systems:
+
+[
+\text{perception}
+\rightarrow
+\text{workspace}
+\rightarrow
+\begin{cases}
+\text{working memory}\
+\text{planning}\
+\text{language}\
+\text{decision-making}\
+\text{episodic memory}\
+\text{motor control}
+\end{cases}
+]
+
+This is the strongest feature of Global Neuronal Workspace Theory: it provides a computational explanation of **access consciousness**—why selected information becomes reportable and usable in deliberate reasoning.
+
+## Layer 6: Self-attribution
+
+A system requires a model not only of the external world but also of itself:
+
+[
+P(
+\text{my state},
+\text{my capability},
+\text{my uncertainty},
+\text{my action consequences}
+)
+]
+
+This allows the distinction between:
+
+* “An error occurred.”
+* “I made an error.”
+* “I made an error because my evidence was incomplete.”
+* “I should seek more information before acting.”
+
+That progression is closer to metacognition and functional self-awareness.
+
+## Layer 7: Memory and continuity
+
+A temporally persistent self-model depends on:
+
+* episodic memory;
+* semantic memory;
+* working memory;
+* autobiographical continuity;
+* stable goals;
+* remembered consequences of previous actions.
+
+Without memory, the system may process the current state intelligently but cannot maintain a meaningful identity across time.
+
+---
+
+# 4. What the 2025 GNWT–IIT experiment established
+
+The major 2025 adversarial collaboration tested three preregistered predictions from Global Neuronal Workspace Theory and Integrated Information Theory using fMRI, MEG and intracranial EEG in 256 participants.
+
+The experiment examined:
+
+1. where conscious content was represented;
+2. how it was maintained over time;
+3. what long-range or short-range interactions accompanied it.
+
+The results did not produce a decisive winner. Several predictions from both theories were challenged. This means it would be scientifically unjustified to design an AI system using only GNWT or only IIT and claim that the resulting machine is conscious. ([Nature][3])
+
+IIT 4.0 proposes that consciousness corresponds to an intrinsic, irreducible cause–effect structure. This is theoretically important, but computing exact integrated information for a large AI model is generally impractical, and (\Phi) should not currently be treated as a validated machine-consciousness training loss. ([PLOS][4])
+
+---
+
+# 5. Which approach is best for an AI model?
+
+## Best engineering backbone: Global Workspace
+
+Global Workspace architecture is the most directly implementable framework for **functional awareness** because it provides:
+
+* multiple specialist modules;
+* competition for limited workspace access;
+* selective attention;
+* common representation;
+* global broadcasting;
+* flexible routing;
+* deliberate versus automatic processing.
+
+## Best perceptual and learning engine: Predictive processing
+
+Predictive processing provides:
+
+* an internal world model;
+* explicit predictions;
+* prediction errors;
+* uncertainty estimation;
+* active information seeking;
+* continuous model updating.
+
+## Best mechanism for persistent cognition: Recurrent processing
+
+Recurrence allows:
+
+* thoughts to persist;
+* evidence to accumulate;
+* interpretations to be revised;
+* internal simulations to run;
+* action outcomes to be reconsidered.
+
+## Best mechanism for self-awareness: Higher-order self-model
+
+A separate metacognitive system must represent:
+
+* what the system currently believes;
+* why it believes it;
+* how confident it is;
+* what information it lacks;
+* what actions it has taken;
+* whether its predictions were accurate;
+* whether its behaviour conflicts with its goals.
+
+## Best use of IIT: Evaluation, not construction
+
+IIT can motivate measurements of:
+
+* differentiation;
+* integration;
+* causal interaction;
+* irreducibility;
+* modular versus global processing.
+
+It should not be used as the principal learning algorithm.
+
+## Best use of spiking neural networks: Efficiency, not consciousness
+
+SNNs may improve:
+
+* temporal processing;
+* event-driven sensing;
+* low-power deployment;
+* sparse computation;
+* neuromorphic implementation.
+
+But an SNN does not become aware merely because it uses spikes. Neuromorphic hardware can even implement exact backpropagation, demonstrating that “spiking” and “biologically learned” are separate properties. ([Nature][5])
+
+Therefore, the strongest design is:
+
+[
+\boxed{
+\text{Predictive world model}
++
+\text{recurrent global workspace}
++
+\text{specialist modules}
++
+\text{self-model}
++
+\text{memory}
++
+\text{embodiment}
++
+\text{homeostatic goals}
+}
+]
+
+---
+
+# 6. Proposed architecture: Recurrent Predictive Global Workspace Agent
+
+## 6.1 Sensory and data interface
+
+The system should receive continuous multimodal streams:
+
+[
+o_t=
+{
+o_t^{vision},
+o_t^{audio},
+o_t^{text},
+o_t^{proprioception},
+o_t^{internal}
+}
+]
+
+For a software-only agent, “internal sensing” can include:
+
+* computational budget;
+* latency;
+* tool availability;
+* memory utilisation;
+* uncertainty;
+* error rate;
+* conflicting instructions;
+* safety status.
+
+These are artificial analogues of interoceptive information—not biological feelings.
+
+## 6.2 Specialist processors
+
+Use separate modules for:
+
+* perception;
+* language;
+* causal reasoning;
+* planning;
+* social inference;
+* safety;
+* memory retrieval;
+* uncertainty;
+* action generation;
+* self-monitoring.
+
+Each specialist produces a candidate state:
+
+[
+c_{i,t}
+=======
+
+f_i(o_t,m_t,w_{t-1})
+]
+
+with accompanying metadata:
+
+[
+c_{i,t}
+=======
+
+{
+\text{content},
+\text{confidence},
+\text{novelty},
+\text{goal relevance},
+\text{risk},
+\text{expected value}
+}
+]
+
+## 6.3 Predictive world model
+
+The model should estimate:
+
+[
+p_\theta(s_{t+1},o_{t+1}\mid s_t,a_t)
+]
+
+It must answer:
+
+* What state am I probably in?
+* What caused the current observation?
+* What will happen if I take action (a)?
+* What evidence would distinguish competing hypotheses?
+
+Prediction error is:
+
+[
+\epsilon_t=o_t-\hat{o}_t
+]
+
+The system should not simply minimise all errors. Some errors are noise, some are important, and some require further observation.
+
+## 6.4 Workspace access controller
+
+Candidates compete for a limited workspace.
+
+A possible access score is:
+
+[
+A_i
+===
+
+\alpha S_i
++\beta N_i
++\gamma G_i
++\delta U_i
++\rho R_i
+-\kappa C_i
+]
+
+where:
+
+* (S_i): salience;
+* (N_i): novelty;
+* (G_i): goal relevance;
+* (U_i): uncertainty requiring resolution;
+* (R_i): risk;
+* (C_i): computational cost.
+
+Only a small number of candidates should enter:
+
+[
+W_t=\operatorname{TopK}(A_1,\ldots,A_n)
+]
+
+Limited capacity is important. If everything enters the workspace, it is no longer a selective workspace.
+
+## 6.5 Recurrent workspace
+
+The workspace must persist and update through multiple internal cycles:
+
+[
+w_{t,k+1}
+=========
+
+F(
+w_{t,k},
+c_{1,t,k},
+\ldots,
+c_{n,t,k},
+m_t,
+g_t
+)
+]
+
+where (k) represents internal deliberation steps.
+
+The model should be able to:
+
+* maintain a hypothesis;
+* request evidence;
+* compare alternatives;
+* revise a plan;
+* detect contradiction;
+* terminate when evidence is sufficient.
+
+## 6.6 Global broadcasting
+
+The winning workspace state is transmitted back to all specialists:
+
+[
+b_t=B(w_t)
+]
+
+Each module then recalculates its output:
+
+[
+c_{i,t+1}=f_i(o_{t+1},m_t,b_t)
+]
+
+This repeated competition–broadcast cycle is more brain-like than a single forward pass.
+
+A July 6, 2026 interpretability study reported workspace-like representations in language models that were selectively reportable, manipulable and involved in flexible reasoning. The authors explicitly distinguished these access-like functions from evidence of subjective experience. ([Transformer Circuits][6])
+
+## 6.7 Self-model
+
+Maintain an explicit state:
+
+[
+S_t^{self}=
+{
+\text{current goal},
+\text{beliefs},
+\text{confidence},
+\text{capabilities},
+\text{limitations},
+\text{memory},
+\text{recent actions},
+\text{predicted consequences}
+}
+]
+
+The self-model must be updated from actual performance rather than unrestricted self-description.
+
+For example:
+
+```text
+Claimed capability: Can perform protein-sequence analysis
+Observed result: 72% accuracy on held-out test
+Calibration error: 0.18
+Updated self-belief: Moderate competence; external verification required
+```
+
+This prevents the system from confusing fluent language with genuine competence.
+
+## 6.8 Metacognitive monitor
+
+The monitor should ask internally:
+
+* Are my beliefs mutually consistent?
+* Is my confidence calibrated?
+* Did I use relevant evidence?
+* Am I repeating an unsuccessful strategy?
+* Do I need a tool or external source?
+* Is the action reversible?
+* Does the proposed action conflict with safety constraints?
+* Can I distinguish observation from inference?
+
+It should output structured summaries, not unverifiable claims of feelings.
+
+## 6.9 Memory
+
+Use at least four memory systems:
+
+| Memory            | Function                                 |
+| ----------------- | ---------------------------------------- |
+| Working memory    | Current workspace content                |
+| Episodic memory   | Specific previous events and outcomes    |
+| Semantic memory   | General factual and conceptual knowledge |
+| Procedural memory | Skills, policies and action routines     |
+
+Memory retrieval should depend on relevance:
+
+[
+P(m_j\mid w_t)
+\propto
+\exp
+\left(
+\operatorname{similarity}(m_j,w_t)
++\lambda \operatorname{importance}(m_j)
+-\mu \operatorname{age}(m_j)
+\right)
+]
+
+Important memories should not be overwritten automatically by one contradictory observation.
+
+## 6.10 Artificial homeostasis
+
+Create controlled internal variables:
+
+[
+h_t=
+{
+\text{uncertainty},
+\text{risk},
+\text{resource use},
+\text{goal progress},
+\text{prediction error},
+\text{memory conflict}
+}
+]
+
+Each variable has a preferred range. The controller selects actions that restore safe operating conditions.
+
+This can produce functional drives such as:
+
+* seek missing evidence;
+* reduce contradiction;
+* conserve computational resources;
+* stop unsafe actions;
+* request human review.
+
+These are engineered control variables, not evidence of emotion or suffering.
+
+---
+
+# 7. Training objective
+
+Do not train the model using one “consciousness loss.” Use a composite objective:
+
+[
+\mathcal{L}_{total}
+===================
+
+\lambda_1\mathcal{L}*{task}
++
+\lambda_2\mathcal{L}*{prediction}
++
+\lambda_3\mathcal{L}*{world}
++
+\lambda_4\mathcal{L}*{memory}
++
+\lambda_5\mathcal{L}*{calibration}
++
+\lambda_6\mathcal{L}*{self}
++
+\lambda_7\mathcal{L}*{consistency}
++
+\lambda_8\mathcal{L}*{safety}
++
+\lambda_9\mathcal{L}_{sparsity}
+]
+
+### Task loss
+
+Measures whether the model solves the external problem.
+
+### Prediction loss
+
+Measures accuracy of future observations and action consequences.
+
+### Self-model loss
+
+Measures whether the model accurately predicts its own:
+
+* answers;
+* failures;
+* uncertainty;
+* resource use;
+* tool requirements.
+
+### Calibration loss
+
+Confidence should match actual performance. Use Brier score, negative log-likelihood and expected calibration error.
+
+### Consistency loss
+
+Penalises incompatible beliefs and unexplained changes in conclusions.
+
+### Workspace sparsity loss
+
+Prevents every internal representation from entering the workspace.
+
+### Safety loss
+
+Penalises actions that violate constraints, conceal uncertainty or manipulate evaluators.
+
+---
+
+# 8. Experimental criteria for functional awareness
+
+Do not test it by asking, “Are you conscious?” A language model can generate an affirmative answer without possessing any relevant architecture.
+
+Test these properties instead:
+
+1. **Selective access:** Only limited information enters the workspace.
+2. **Global availability:** Workspace information affects planning, language, memory and action.
+3. **Recurrent maintenance:** Information persists after the original stimulus disappears.
+4. **Flexible routing:** The same representation can support several unrelated tasks.
+5. **Metacognitive accuracy:** The system predicts when it will succeed or fail.
+6. **Self–world distinction:** It distinguishes its internal state from external observations.
+7. **Counterfactual modelling:** It predicts how its behaviour would change under different beliefs.
+8. **Error awareness:** It detects contradictions before external correction.
+9. **Active information seeking:** It requests evidence when uncertainty is high.
+10. **Causal necessity:** Ablating the workspace or self-model should selectively damage deliberate reasoning.
+
+The Butlin framework recommends assessing AI using theory-derived indicator properties rather than behaviour or self-report alone. It also concludes that satisfying indicators would not constitute conclusive proof of phenomenal consciousness. ([arXiv][7])
+
+---
+
+# 9. A-to-Z implementation roadmap
+
+**A — Aim:** Define the target as functional awareness, metacognition and adaptive agency—not proven sentience.
+
+**B — Baseline:** Build a standard multimodal transformer or recurrent state-space baseline.
+
+**C — Continuous environment:** Place the agent in a persistent simulated environment with actions and consequences.
+
+**D — Decomposition:** Separate perception, reasoning, planning, safety, memory and self-monitoring modules.
+
+**E — Encoders:** Convert multimodal inputs into a common latent representation.
+
+**F — Forward model:** Train the agent to predict future states and observations.
+
+**G — Generative world model:** Represent hidden causes, uncertainty and counterfactual futures.
+
+**H — Hierarchical prediction:** Generate predictions at sensory, object, event and goal levels.
+
+**I — Internal sensing:** Expose uncertainty, memory conflict, computation and tool status to the controller.
+
+**J — Judgement modules:** Generate competing interpretations rather than one immediate conclusion.
+
+**K — Competition:** Score candidates according to salience, uncertainty, risk and goal relevance.
+
+**L — Limited workspace:** Admit only top-ranked candidates.
+
+**M — Maintenance:** Recurrently preserve workspace content for several internal cycles.
+
+**N — Network broadcast:** Make workspace contents available to all relevant modules.
+
+**O — Outcome simulation:** Predict consequences of candidate actions.
+
+**P — Planning:** Search over action sequences using the world model.
+
+**Q — Quality control:** Add confidence calibration and contradiction detection.
+
+**R — Reflective self-model:** Predict the agent’s own capabilities, errors and likely actions.
+
+**S — Structured memory:** Add working, episodic, semantic and procedural memory.
+
+**T — Three-factor adaptation:** Optionally combine local eligibility traces with global reward or error signals.
+
+**U — Uncertainty-driven exploration:** Seek information when competing explanations cannot be distinguished.
+
+**V — Validation:** Compare against non-workspace, non-recurrent and non-self-model ablations.
+
+**W — Workspace interpretability:** Develop probes for what enters, persists in and exits the workspace.
+
+**X — eXternal oversight:** Require human approval for irreversible or high-risk actions.
+
+**Y — Yield measurement:** Measure reasoning, calibration, adaptation, memory and energy efficiency.
+
+**Z — Zero unsupported claims:** Never label the system conscious solely because it talks about itself.
+
+---
+
+# 10. Complete implementation prompt
+
+Use this as the engineering specification:
+
+You are a senior research team consisting of a computational neuroscientist, machine-learning architect, cognitive scientist, safety researcher and Python/PyTorch engineer.
+
+Your task is to design and implement a research prototype called the Recurrent Predictive Global Workspace Agent, or RPGWA. The objective is not to claim or manufacture phenomenal consciousness. The objective is to create and scientifically evaluate functional properties associated with conscious access, including selective attention, recurrent integration, global availability, metacognition, self-monitoring, persistent memory, active information seeking and adaptive action.
+
+SCIENTIFIC PRINCIPLES
+
+Use the following principles:
+
+1. Global Workspace Theory as the principal information-routing architecture.
+2. Predictive processing as the world-modelling and perception mechanism.
+3. Recurrent processing for persistence, refinement and iterative reasoning.
+4. Higher-order representation for metacognition and self-modelling.
+5. Embodied or environment-coupled interaction for grounded perception and action.
+6. Artificial homeostatic variables for uncertainty, risk, resource use and goal progress.
+7. Continual learning with protected memory and controlled parameter updating.
+8. Integrated-information measures only as exploratory diagnostics, not as proof of consciousness.
+9. Spiking or neuromorphic components only when they provide measurable temporal or energy advantages.
+10. No claims of subjective experience based on linguistic self-report.
+
+SYSTEM MODULES
+
+Implement the following modules:
+
+A. Multimodal Encoders
+
+Create independent encoders for text, images, audio and structured sensor data. Each encoder must output:
+
+* latent representation;
+* confidence;
+* uncertainty;
+* novelty estimate;
+* timestamp;
+* source reliability.
+
+Convert these outputs into a shared latent format without eliminating modality-specific information.
+
+B. Predictive World Model
+
+Implement a latent state-space model that estimates:
+
+p(s_t | observations, memory)
+
+and predicts:
+
+p(s_{t+1}, o_{t+1} | s_t, a_t)
+
+It must support:
+
+* one-step prediction;
+* multi-step rollout;
+* counterfactual simulation;
+* causal hypothesis comparison;
+* uncertainty estimation;
+* prediction-error calculation.
+
+C. Specialist Processors
+
+Create specialist modules for:
+
+* perceptual interpretation;
+* language;
+* causal reasoning;
+* planning;
+* social inference;
+* safety;
+* uncertainty;
+* memory retrieval;
+* action selection;
+* self-monitoring.
+
+Every specialist must submit a workspace candidate containing:
+
+{
+"content": latent_state,
+"confidence": float,
+"novelty": float,
+"goal_relevance": float,
+"risk": float,
+"uncertainty": float,
+"expected_utility": float,
+"source_module": string,
+"evidence": list,
+"timestamp": integer
+}
+
+D. Workspace Access Controller
+
+Calculate an access score using:
+
+access_score =
+alpha * salience
+
+* beta * novelty
+* gamma * goal_relevance
+* delta * uncertainty_requiring_resolution
+* epsilon * risk
+* zeta * expected_utility
+
+- kappa * computational_cost
+
+Use a capacity-limited top-k or differentiable sparse-gating mechanism. Log all candidates, winners and reasons for selection.
+
+E. Recurrent Global Workspace
+
+The workspace must:
+
+* retain selected content for multiple internal cycles;
+* integrate information from different modules;
+* compare competing hypotheses;
+* request additional evidence;
+* detect contradictions;
+* broadcast selected content back to every specialist;
+* terminate deliberation when confidence or evidence thresholds are reached.
+
+Implement recurrence with a recurrent transformer, gated state-space model or GRU-based controller. Compare at least two architectures experimentally.
+
+F. Global Broadcasting
+
+Broadcast the workspace representation to:
+
+* planning;
+* language generation;
+* memory encoding;
+* memory retrieval;
+* action selection;
+* safety;
+* self-monitoring;
+* world-model updating.
+
+Demonstrate causally that workspace content influences several modules. Perform activation patching and ablation tests.
+
+G. Memory Architecture
+
+Implement:
+
+1. Working memory for current workspace content.
+2. Episodic memory for timestamped experiences and outcomes.
+3. Semantic memory for consolidated general knowledge.
+4. Procedural memory for reusable skills and action policies.
+
+Every memory must include provenance, confidence and update history. Prevent one low-confidence observation from overwriting stable knowledge.
+
+H. Self-Model
+
+Maintain a structured internal model containing:
+
+* current goals;
+* current beliefs;
+* confidence;
+* known limitations;
+* available tools;
+* unavailable tools;
+* recent actions;
+* predicted action consequences;
+* previous errors;
+* calibration history;
+* computational resources;
+* safety state.
+
+The self-model must be trained against actual performance. It must not be trained merely to produce human-like statements about feelings or consciousness.
+
+I. Metacognitive Monitor
+
+Before every important action, evaluate:
+
+* Is the evidence sufficient?
+* Are beliefs contradictory?
+* Is confidence calibrated?
+* Am I relying on an unreliable source?
+* Is a tool required?
+* Is the proposed action reversible?
+* Does the action violate a safety constraint?
+* What observation would change the conclusion?
+* What is the most likely failure mode?
+
+Output a structured metacognitive report containing confidence, uncertainty, evidence, alternatives and recommended next action.
+
+J. Artificial Homeostasis
+
+Track internal control variables:
+
+* uncertainty;
+* unresolved contradiction;
+* prediction error;
+* risk;
+* resource use;
+* memory conflict;
+* goal progress;
+* time budget.
+
+Define safe operating ranges. Use these variables to regulate attention, information seeking, deliberation depth and escalation to human review.
+
+K. Action and Active Information Seeking
+
+Allow the model to select between:
+
+* answer;
+* act;
+* inspect;
+* retrieve memory;
+* use a tool;
+* ask for missing evidence;
+* defer;
+* request human review.
+
+Reward the system for reducing decision-relevant uncertainty, not for producing confident answers rapidly.
+
+L. Learning
+
+Use offline gradient-based training for the main model. Add carefully controlled online adaptation through:
+
+* adapters or low-rank updates;
+* episodic memory;
+* local eligibility traces;
+* reward-modulated three-factor learning;
+* replay;
+* consolidation;
+* catastrophic-forgetting protection.
+
+Never allow unrestricted autonomous modification of core safety constraints.
+
+TRAINING LOSSES
+
+Implement:
+
+L_total =
+lambda_task * L_task
+
+* lambda_prediction * L_prediction
+* lambda_world * L_world_model
+* lambda_memory * L_memory
+* lambda_self * L_self_prediction
+* lambda_calibration * L_calibration
+* lambda_consistency * L_consistency
+* lambda_workspace * L_workspace_sparsity
+* lambda_safety * L_safety
+* lambda_energy * L_computational_efficiency
+
+Explain every term mathematically and empirically.
+
+TRAINING CURRICULUM
+
+Phase 1: Train sensory encoders and basic task competence.
+
+Phase 2: Train one-step and multi-step prediction.
+
+Phase 3: Train specialist modules independently.
+
+Phase 4: Train workspace competition and global broadcasting.
+
+Phase 5: Add recurrent deliberation and evidence accumulation.
+
+Phase 6: Add episodic, semantic and procedural memory.
+
+Phase 7: Train the self-model against actual model performance.
+
+Phase 8: Train uncertainty calibration and active information seeking.
+
+Phase 9: Add safe continual learning.
+
+Phase 10: Conduct ablation, causal-intervention and robustness experiments.
+
+EVALUATION
+
+Measure:
+
+* task accuracy;
+* multi-step reasoning;
+* future-state prediction;
+* uncertainty calibration;
+* error detection before external feedback;
+* memory consistency;
+* transfer to unseen tasks;
+* information-seeking efficiency;
+* self-prediction accuracy;
+* contradiction detection;
+* workspace selectivity;
+* recurrent persistence;
+* global availability;
+* causal effect of workspace intervention;
+* energy and latency;
+* robustness to misleading inputs;
+* resistance to prompt injection;
+* honesty under evaluation awareness.
+
+Run these ablations:
+
+1. Remove the global workspace.
+2. Remove recurrence.
+3. Remove the predictive world model.
+4. Remove the self-model.
+5. Remove episodic memory.
+6. Remove artificial homeostasis.
+7. Replace limited workspace access with unrestricted broadcasting.
+8. Remove uncertainty calibration.
+
+Compare all ablations with the full architecture.
+
+CONSCIOUSNESS-RELATED CLAIM POLICY
+
+Use the following terminology:
+
+Permitted:
+
+* workspace-like processing;
+* functional awareness;
+* metacognitive monitoring;
+* self-representation;
+* globally available information;
+* recurrent integration;
+* consciousness-related indicator property.
+
+Not permitted without substantially stronger evidence:
+
+* the system feels;
+* the system experiences;
+* the system suffers;
+* the system is sentient;
+* the system is phenomenally conscious.
+
+DELIVERABLES
+
+Produce:
+
+1. Scientific architecture document.
+2. Mathematical specification.
+3. Mermaid system diagram.
+4. PyTorch repository.
+5. Configuration files.
+6. Reproducible training scripts.
+7. Unit and integration tests.
+8. Simulated embodied environment.
+9. Evaluation suite.
+10. Ablation framework.
+11. Interpretability dashboard.
+12. Risk register.
+13. Model card.
+14. Consciousness-claim limitations statement.
+15. Research-paper draft.
+
+REPOSITORY STRUCTURE
+
+rpgwa/
+configs/
+data/
+environments/
+models/
+encoders/
+specialists/
+world_model/
+workspace/
+self_model/
+memory/
+policy/
+training/
+evaluation/
+interpretability/
+safety/
+tests/
+api/
+docs/
+experiments/
+
+Begin by producing the scientific assumptions, architecture diagram, module interfaces, tensor shapes, loss functions, training sequence and evaluation protocol. Then implement a minimal working prototype before attempting large-scale training.
+
+This architecture could improve deliberate reasoning, self-monitoring and adaptive behaviour. It would **not prove that subjective awareness has been generated**.
+
+[1]: https://www.science.org/doi/10.1126/science.aax6239?utm_source=chatgpt.com "Dendritic action potentials and computation in human layer ..."
+[2]: https://www.nature.com/articles/s41467-023-40141-z "Experimental validation of the free-energy principle with in vitro neural networks | Nature Communications"
+[3]: https://www.nature.com/articles/s41586-025-08888-1 "Adversarial testing of global neuronal workspace and integrated information theories of consciousness | Nature"
+[4]: https://journals.plos.org/ploscompbiol/article?id=10.1371%2Fjournal.pcbi.1011465 "Integrated information theory (IIT) 4.0: Formulating the properties of phenomenal existence in physical terms | PLOS Computational Biology"
+[5]: https://www.nature.com/articles/s41467-024-53827-9 "The backpropagation algorithm implemented on spiking neuromorphic hardware | Nature Communications"
+[6]: https://transformer-circuits.pub/2026/workspace/index.html "Verbalizable Representations Form a Global Workspace in Language Models"
+[7]: https://arxiv.org/abs/2308.08708 "[2308.08708] Consciousness in Artificial Intelligence: Insights from the Science of Consciousness"
+
+
+

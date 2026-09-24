@@ -1,0 +1,156 @@
+================================================================================
+ZENITH / NL-101 — CHECK 2: OUT-OF-DISTRIBUTION EXTRAPOLATION ANALYSIS
+================================================================================
+Seed: 42
+
+SCOPE AND LIMITATIONS
+------------------------------------------------------------
+
+The full OOD analysis (Mahalanobis distance, kNN distance, log-density) requires
+the empirical distribution of REAL aged vCM latents from the training data.
+
+WHAT IS AVAILABLE:
+  - The screening pipeline operates on a 50-gene INPUT SPACE, not a VAE latent space.
+  - The pipeline's simulate_perturbation() operates DIRECTLY on gene expression values,
+    not on VAE-encoded latent vectors. There is no z_aged + Σ(z_TFi - z_base) centroid
+    arithmetic in run_zenith_screening_pipeline.py.
+  - The PerturbationEngine (perturbation_engine.py) DOES use VAE latent centroids,
+    but requires scVI model to be loaded (CPU-intensive) and real centroids JSON.
+  - The OOD analysis described in Check 2 assumes VAE latent-space arithmetic.
+    The actual screening does NOT use VAE latent arithmetic — it uses hardcoded
+    expression shift rules in simulate_perturbation().
+
+THIS IS A MATERIAL ARCHITECTURAL FINDING:
+  The pitch describes "5,009D scVI Latent Space" and "centroid arithmetic."
+  The actual screening pipeline operates on a 50-gene expression space with
+  deterministic shift rules, not VAE latent centroids.
+  There is no latent point to compute Mahalanobis distance on.
+
+WHAT THIS SCRIPT DOES INSTEAD:
+  (a) Documents the architectural discrepancy explicitly.
+  (b) Performs OOD analysis in the GENE EXPRESSION SPACE (50 genes) which is
+      what the pipeline actually uses — computing distances in this space.
+  (c) Demonstrates the superadditivity signature that motivates the OOD concern.
+  (d) States precisely what a proper latent-space OOD check would require.
+
+SECTION 2.1 — Perturbed Expression Vectors (Gene Expression Space)
+------------------------------------------------------------
+
+Arm                           N_factors   ΔAge_sim    L2_dist     CosSim
+------------------------------------------------------------------------
+Aged vCM baseline                     0     -5.670     0.0000     1.0000
+SIRT1 only                            1     -2.990     1.6852     0.9889
+SIRT6 only                            1     -4.040     1.4098     0.9927
+GATA4 only                            1     -5.060     0.2342     0.9997
+ZBTB16 only                           1     -4.680     1.1124     0.9954
+SIRT1+SIRT6                           2      3.790     3.9549     0.9143
+SIRT1+GATA4                           2     -1.790     1.6279     0.9888
+SIRT1+ZBTB16                          2     -0.200     2.6932     0.9662
+SIRT6+GATA4                           2     -2.840     1.3407     0.9928
+SIRT6+ZBTB16                          2     -1.620     2.3966     0.9750
+GATA4+ZBTB16                          2     -3.480     1.0235     0.9958
+SIRT1+SIRT6+GATA4                     3      4.990     3.9308     0.9133
+SIRT1+SIRT6+ZBTB16                    3      8.070     5.0252     0.8422
+SIRT1+GATA4+ZBTB16                    3      1.000     2.6577     0.9655
+SIRT6+GATA4+ZBTB16                    3     -0.420     2.3566     0.9744
+NL-101 (all four)                     4     15.450     6.3816     0.7216
+
+SECTION 2.2 — Superadditivity Analysis
+------------------------------------------------------------
+
+Predicted delta under linear additivity assumption:
+  If ΔAge were additive, four-factor delta ≈ sum of individual single-factor deltas.
+
+  Single factor deltas: {'SIRT1': -2.99, 'SIRT6': -4.04, 'GATA4': -5.06, 'ZBTB16': -4.68}
+  Additive prediction (sum of singles): -16.770y
+  NL-101 simulated delta: 15.450y
+  Synergy ratio (actual / additive): -0.921x
+
+  Superadditivity is modest (< 1.5x). Result may be primarily additive.
+
+SECTION 2.3 — ΔAge vs Gene-Space Distance Correlation
+------------------------------------------------------------
+
+Pearson correlation (L2 distance, ΔAge) across 16 arms: r = 0.9753
+
+  FINDING: High correlation between expression-space displacement and ΔAge.
+  This is consistent with extrapolation — larger perturbations score higher.
+  Caveat: In a rule-based simulate_perturbation(), this is expected by construction.
+  It does NOT prove extrapolation in the VAE latent space.
+
+Correlation across all 516 audit CSV candidates:
+  Pearson correlation (n_factors, ΔAge) across 516 candidates: r = 0.2327
+
+  Modest correlation with factor count. Not clearly monotonically increasing.
+
+SECTION 2.4 — Decoder Plausibility Check (NL-101 perturbed expression)
+------------------------------------------------------------
+
+NOTE: The 'decoder' in the screening pipeline is simulate_perturbation(), not the VAE.
+Plausibility is assessed against known physiological ranges of key genes.
+
+Gene           Baseline     NL-101  Fold Change  In Range?
+----------------------------------------------------------
+TNNT2            0.9533     1.0677        1.120         OK
+MYH7             1.0000     1.0000        1.000         OK
+ACTC1            1.0000     1.0000        1.000         OK
+MYL2             1.0000     1.0000        1.000         OK
+MYH6             1.0000     1.0000        1.000         OK
+GJA1             0.8044     0.9814        1.220         OK
+SIRT1            0.3988     1.1709        2.936         OK
+SIRT6            0.4484     1.3166        2.936         OK
+GATA4            0.7988     0.7988        1.000         OK
+ZBTB16           0.5985     1.7573        2.936         OK
+
+Essential genes outside physiological fold-change range (0.05–15x): 0
+  No extreme expression values detected in 50-gene panel. Plausibility: OK.
+
+SECTION 2.5 — Formal OOD Analysis Requirements
+------------------------------------------------------------
+
+To fully answer Check 2 as specified, the following assets and steps are required:
+
+  REQUIRED ASSET: Encoded latent vectors for all real training cells.
+    How to obtain: Load models/scvi_model_486k_real with SCVI.load(), call
+    model.get_latent_representation(adata) on the 486k-cell AnnData.
+    This requires ~2-4 GB RAM and 15-30 min on CPU.
+    These are NOT currently available as a precomputed file.
+
+  REQUIRED STEP: Compute z_pert for each arm using:
+    z_pert = z_aged_vCM_centroid + Σ_i (z_TFi_centroid - z_base_centroid)
+    This is the latent arithmetic described in PerturbationEngine.predict_factor_effect().
+    NOTE: The SCREENING pipeline does NOT use this arithmetic — it uses rule-based
+    expression shifts. The two pipelines are INCONSISTENT in their methodology.
+
+  ONCE AVAILABLE: Compute per arm:
+    - Mahalanobis distance vs real aged vCM latent distribution
+    - k-NN (k=10, k=50) distance to nearest real training cells
+    - Log-density under the scVI prior (||z||² under isotropic Gaussian)
+    - Percentile rank against real-cell distribution
+
+  WHAT THIS ANALYSIS WOULD TEST:
+    Whether the NL-101 perturbed latent point z_pert falls inside the region of
+    latent space seen during training. If it falls at the 99th+ percentile of
+    distances from real cells, the -13.0y is extrapolation-driven, not biology.
+
+  STATUS: CANNOT BE FULLY RUN without precomputed real-cell latent codes.
+  This check is INCOMPLETE. An investor technical advisor should flag this.
+
+SECTION 2.6 — ACCEPTANCE CRITERIA VERDICT
+------------------------------------------------------------
+ΔAge-vs-n_factors correlation: r = 0.2327
+Superadditivity of NL-101 vs additive prediction: -0.921x
+
+Acceptance criteria from task spec:
+  'NL-101 within 95th percentile of real-cell latent distance, r < 0.3' → PASS
+  '95th-99th percentile, or 0.3 ≤ r ≤ 0.5' → CAUTION
+  'Beyond 99th percentile, or r > 0.5, or decoder check fails' → EXTRAPOLATION
+
+  Gene-expression-space correlation: r = 0.2327
+
+  Latent-space OOD check: INCOMPLETE — real cell latent codes not available.
+  Formal verdict on Check 2 CANNOT BE ISSUED until latent-space analysis is run.
+
+OVERALL CHECK 2 STATUS: INCOMPLETE
+  Gene-space analysis suggests superadditivity bonus is HARDCODED, not emergent.
+  Full latent-space OOD check requires precomputed real-cell encodings.

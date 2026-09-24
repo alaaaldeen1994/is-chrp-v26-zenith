@@ -1,0 +1,637 @@
+id="view-discovery">
+    <div id="nilus-workstation">
+        <!-- FIXED 260px SIDEBAR -->
+        <aside id="ws-sidebar">
+            <div>
+                <!-- Brand Header -->
+                <a href="index.html" class="ws-brand-box">
+                    <svg class="ws-brand-mark" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M 20 60 C 10 42, 22 20, 28 17 C 21 28, 17 40, 26 49 C 35 58, 52 52, 65 38 C 78 24, 91 18, 108 11 C 91 20, 76 31, 61 42 C 46 53, 31 60, 20 60 Z" fill="var(--accent-blue, #1769AA)" transform="scale(0.85) translate(4, 12)"/>
+                        <path d="M 23 56 C 15 46, 21 27, 26 21 C 23 31, 20 41, 28 47 C 37 54, 51 47, 63 35 C 75 23, 89 16, 105 12 C 89 19, 74 29, 60 39 C 46 49, 33 55, 23 56 Z" fill="currentColor" opacity="0.35" transform="scale(0.85) translate(4, 12)"/>
+                    </svg>
+                    <div class="ws-brand-title">
+                        <span class="ws-brand-name">NILUS LAB</span>
+                        <span class="ws-brand-tagline">Science for a Healthier Tomorrow</span>
+                    </div>
+                </a>
+
+                <!-- Primary Nav Group -->
+                <nav class="ws-nav-group">
+                    <a href="index.html" class="ws-nav-item active" title="Workstation Dashboard">
+                        <svg class="ws-nav-icon" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="2"/><rect x="14" y="3" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="2"/><rect x="14" y="14" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="2"/><rect x="3" y="14" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="2"/></svg>
+                        <div class="ws-nav-text">
+                            <span class="ws-nav-label">Dashboard</span>
+                            <span class="ws-nav-sub">Overview &amp; quick access</span>
+                        </div>
+                    </a>
+
+                    <a href="#simulation" onclick="enterSimulation(); return false;" class="ws-nav-item" title="Zenith Mainframe Simulation Engine">
+                        <svg class="ws-nav-icon" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/><circle cx="19" cy="5" r="2" stroke="currentColor" stroke-width="2"/><circle cx="5" cy="19" r="2" stroke="currentColor" stroke-width="2"/><path d="M10.5 10.5L6.5 17.5M13.5 13.5L17.5 6.5" stroke="currentColor" stroke-width="1.75"/></svg>
+                        <div class="ws-nav-text">
+                            <span class="ws-nav-label">Zenith Mainframe</span>
+                            <span class="ws-nav-sub">Generative modelling</span>
+                        </div>
+                    </a>
+
+                    <a href="structure.html" class="ws-nav-item" title="NilusFold 3D Structure Intelligence">
+                        <svg class="ws-nav-icon" viewBox="0 0 24 24" fill="none"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" stroke="currentColor" stroke-width="2"/><polyline points="3.27 6.96 12 12.01 20.73 6.96" stroke="currentColor" stroke-width="1.75"/><line x1="12" y1="22.08" x2="12" y2="12" stroke="currentColor" stroke-width="1.75"/></svg>
+                        <div class="ws-nav-text">
+                            <span class="ws-nav-label">NilusFold</span>
+                            <span class="ws-nav-sub">Protein structure intelligence</span>
+                        </div>
+                    </a>
+
+                    <a href="trials.html" class="ws-nav-item" title="In-Silico Virtual Cohort Trials">
+                        <svg class="ws-nav-icon" viewBox="0 0 24 24" fill="none"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        <div class="ws-nav-text">
+                            <span class="ws-nav-label">Virtual Trials</span>
+                            <span class="ws-nav-sub">In-silico modelling</span>
+                        </div>
+                    </a>
+
+                    <a href="structure.html#generative" class="ws-nav-item" title="Generative Biology Design Studio">
+                        <svg class="ws-nav-icon" viewBox="0 0 24 24" fill="none"><circle cx="6" cy="6" r="3" stroke="currentColor" stroke-width="2"/><circle cx="18" cy="6" r="3" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="18" r="3" stroke="currentColor" stroke-width="2"/><line x1="8.5" y1="7.5" x2="15.5" y2="7.5" stroke="currentColor" stroke-width="1.75"/><line x1="7.5" y1="8.5" x2="10.5" y2="15.5" stroke="currentColor" stroke-width="1.75"/><line x1="16.5" y1="8.5" x2="13.5" y2="15.5" stroke="currentColor" stroke-width="1.75"/></svg>
+                        <div class="ws-nav-text">
+                            <span class="ws-nav-label">Generative Biology</span>
+                            <span class="ws-nav-sub">Gene &amp; cell design</span>
+                        </div>
+                    </a>
+
+                    <a href="structure.html#library" class="ws-nav-item" title="Amino Acid &amp; Monomer Explorer">
+                        <svg class="ws-nav-icon" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="2"/><circle cx="19" cy="8" r="2.5" stroke="currentColor" stroke-width="1.75"/><circle cx="5" cy="16" r="2.5" stroke="currentColor" stroke-width="1.75"/><line x1="9" y1="14" x2="6.5" y2="15" stroke="currentColor" stroke-width="1.75"/><line x1="15" y1="10" x2="17.5" y2="9" stroke="currentColor" stroke-width="1.75"/></svg>
+                        <div class="ws-nav-text">
+                            <span class="ws-nav-label">Amino Acid Explorer</span>
+                            <span class="ws-nav-sub">Structures &amp; properties</span>
+                        </div>
+                    </a>
+
+                    <a href="regulatory.html" class="ws-nav-item" title="Biosafety &amp; Arrhythmia Risk Audit">
+                        <svg class="ws-nav-icon" viewBox="0 0 24 24" fill="none"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="currentColor" stroke-width="2"/><polyline points="9 12 11 14 15 10" stroke="currentColor" stroke-width="2"/></svg>
+                        <div class="ws-nav-text">
+                            <span class="ws-nav-label">Safety Audit</span>
+                            <span class="ws-nav-sub">Risk &amp; biosafety</span>
+                        </div>
+                    </a>
+
+                    <a href="#simulation" onclick="enterSimulation(); return false;" class="ws-nav-item" title="Multi-Omics &amp; Gene Regulatory Networks">
+                        <svg class="ws-nav-icon" viewBox="0 0 24 24" fill="none"><circle cx="18" cy="5" r="3" stroke="currentColor" stroke-width="2"/><circle cx="6" cy="12" r="3" stroke="currentColor" stroke-width="2"/><circle cx="18" cy="19" r="3" stroke="currentColor" stroke-width="2"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49" stroke="currentColor" stroke-width="1.75"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49" stroke="currentColor" stroke-width="1.75"/></svg>
+                        <div class="ws-nav-text">
+                            <span class="ws-nav-label">Multi-Omics &amp; GRN</span>
+                            <span class="ws-nav-sub">Single-cell &amp; networks</span>
+                        </div>
+                    </a>
+
+                    <a href="technical_catalog.html" class="ws-nav-item" title="Lipid Nanoparticle Delivery Optimizer">
+                        <svg class="ws-nav-icon" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.75" stroke-dasharray="2 2"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/></svg>
+                        <div class="ws-nav-text">
+                            <span class="ws-nav-label">LNP Delivery Optimizer</span>
+                            <span class="ws-nav-sub">Therapeutic delivery</span>
+                        </div>
+                    </a>
+
+                    <a href="regulatory.html" class="ws-nav-item" title="Evidence, Provenance &amp; Compliance">
+                        <svg class="ws-nav-icon" viewBox="0 0 24 24" fill="none"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="currentColor" stroke-width="2"/><polyline points="14 2 14 8 20 8" stroke="currentColor" stroke-width="2"/><line x1="16" y1="13" x2="8" y2="13" stroke="currentColor" stroke-width="1.75"/><line x1="16" y1="17" x2="8" y2="17" stroke="currentColor" stroke-width="1.75"/><polyline points="10 9 9 9 8 9" stroke="currentColor" stroke-width="1.75"/></svg>
+                        <div class="ws-nav-text">
+                            <span class="ws-nav-label">Evidence &amp; Compliance</span>
+                            <span class="ws-nav-sub">Research documentation</span>
+                        </div>
+                    </a>
+
+                    <a href="api.html" class="ws-nav-item" title="Developer REST &amp; Python API Documentation">
+                        <svg class="ws-nav-icon" viewBox="0 0 24 24" fill="none"><polyline points="16 18 22 12 16 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><polyline points="8 6 2 12 8 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        <div class="ws-nav-text">
+                            <span class="ws-nav-label">Developer API</span>
+                            <span class="ws-nav-sub">Data &amp; integrations</span>
+                        </div>
+                    </a>
+                </nav>
+            </div>
+
+            <!-- Bottom Utilities -->
+            <div class="ws-sidebar-bottom">
+                <a href="#workspace" class="ws-nav-item" title="Researcher Workspaces">
+                    <svg class="ws-nav-icon" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="7" height="7" stroke="currentColor" stroke-width="2"/><rect x="14" y="3" width="7" height="7" stroke="currentColor" stroke-width="2"/><rect x="14" y="14" width="7" height="7" stroke="currentColor" stroke-width="2"/><rect x="3" y="14" width="7" height="7" stroke="currentColor" stroke-width="2"/></svg>
+                    <span class="ws-nav-label">Workspace</span>
+                </a>
+                <a href="#settings" class="ws-nav-item" title="System Settings">
+                    <svg class="ws-nav-icon" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" stroke="currentColor" stroke-width="1.75"/></svg>
+                    <span class="ws-nav-label">Settings</span>
+                </a>
+                <a href="#help" class="ws-nav-item" title="Documentation &amp; Support">
+                    <svg class="ws-nav-icon" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" stroke="currentColor" stroke-width="2"/><line x1="12" y1="17" x2="12.01" y2="17" stroke="currentColor" stroke-width="2"/></svg>
+                    <span class="ws-nav-label">Help &amp; Support</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- MAIN STAGE -->
+        <main id="ws-stage">
+            <!-- TOP COMMAND BAR -->
+            <header id="ws-command-bar">
+                <div class="ws-search-box">
+                    <svg class="ws-search-icon" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2"/><line x1="21" y1="21" x2="16.65" y2="16.65" stroke="currentColor" stroke-width="2"/></svg>
+                    <input type="text" id="ws-global-search" class="ws-search-input" placeholder="Search proteins, genes, pathways, molecules..." autocomplete="off">
+                    <span class="ws-kbd-badge">&#x2318;K</span>
+                </div>
+
+                <div class="ws-command-actions">
+                    <!-- Light / Dark Mode Toggle Button -->
+                    <button id="theme-toggle-btn" class="ws-icon-btn" title="Toggle Light/Dark Theme" aria-label="Toggle theme">
+                        <svg id="theme-icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+                        <svg id="theme-icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                    </button>
+
+                    <!-- Notifications Button -->
+                    <button class="ws-icon-btn" title="Alerts &amp; Job Status">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                        <span class="ws-notif-dot"></span>
+                    </button>
+
+                    <!-- Researcher Profile Badge -->
+                    <div class="ws-profile-badge" title="Authenticated Researcher Session">
+                        <div class="ws-avatar-circle">AA</div>
+                        <div class="ws-profile-meta">
+                            <span class="ws-profile-name">Alaa Aldeen</span>
+                            <span class="ws-profile-role">Researcher</span>
+                        </div>
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--text-tertiary);"><polyline points="6 9 12 15 18 9"/></svg>
+                    </div>
+                </div>
+            </header>
+
+            <!-- SCROLLABLE WORKSTATION CONTENT -->
+            <div id="ws-content">
+                <!-- Greeting & Heading Block -->
+                <div class="ws-greeting-block">
+                    <div class="ws-greeting-sub">Welcome back, Alaa.</div>
+                    <h1 class="ws-headline">Turn Biology into Real Solutions.</h1>
+                    <p class="ws-tagline">AI-driven tools for biological discovery, modelling and translation.</p>
+                </div>
+
+                <!-- MAIN ASYMMETRIC GRID -->
+                <div class="ws-main-grid">
+                    <!-- LEFT COLUMN: PRIMARY RESEARCH INDEX 01-10 -->
+                    <div class="ws-research-index-card">
+                        <div class="ws-index-header">Research tools</div>
+                        <div class="ws-index-list">
+                            <!-- 01 Zenith Mainframe -->
+                            <a href="#simulation" onclick="enterSimulation(); return false;" class="ws-tool-row" title="Launch Zenith Mainframe Simulation Lab">
+                                <span class="ws-tool-num">01</span>
+                                <div class="ws-tool-info">
+                                    <span class="ws-tool-title">Zenith Mainframe</span>
+                                    <span class="ws-tool-desc">Generative modelling for biological design and discovery.</span>
+                                </div>
+                                <div class="ws-tool-preview">
+                                    <svg width="90" height="30" viewBox="0 0 90 30" fill="none">
+                                        <path d="M10 18 Q25 8, 45 16 T80 12" stroke="currentColor" stroke-width="1.2" stroke-dasharray="2 3" opacity="0.4"/>
+                                        <circle cx="10" cy="18" r="2.5" fill="var(--text-primary)"/>
+                                        <circle cx="22" cy="12" r="1.5" fill="var(--text-secondary)"/>
+                                        <circle cx="34" cy="13" r="1.5" fill="var(--text-secondary)"/>
+                                        <circle cx="46" cy="17" r="1.8" fill="var(--accent-orange)"/>
+                                        <circle cx="58" cy="18" r="2" fill="var(--accent-orange)"/>
+                                        <circle cx="70" cy="14" r="2.2" fill="var(--accent-orange)"/>
+                                        <circle cx="80" cy="12" r="4" fill="var(--accent-orange)"/>
+                                        <circle cx="80" cy="12" r="8" stroke="var(--accent-orange)" stroke-width="0.8" opacity="0.4"/>
+                                    </svg>
+                                </div>
+                                <span class="ws-tool-arrow">&rarr;</span>
+                            </a>
+
+                            <!-- 02 NilusFold -->
+                            <a href="structure.html" class="ws-tool-row" title="Open NilusFold 3D Molecular Workstation">
+                                <span class="ws-tool-num">02</span>
+                                <div class="ws-tool-info">
+                                    <span class="ws-tool-title">NilusFold</span>
+                                    <span class="ws-tool-desc">Protein structure prediction and analysis.</span>
+                                </div>
+                                <div class="ws-tool-preview">
+                                    <svg width="90" height="30" viewBox="0 0 90 30" fill="none">
+                                        <path d="M15 15 C 20 8, 30 22, 40 15 C 48 8, 55 12, 60 16" stroke="var(--text-tertiary)" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+                                        <path d="M52 14 L 68 8 L 74 18 L 60 22 Z" fill="var(--accent-orange)" opacity="0.9"/>
+                                        <path d="M68 8 L 78 12 L 72 24 L 62 20 Z" fill="var(--accent-orange)"/>
+                                    </svg>
+                                </div>
+                                <span class="ws-tool-arrow">&rarr;</span>
+                            </a>
+
+                            <!-- 03 Virtual Trials -->
+                            <a href="trials.html" class="ws-tool-row" title="Open Virtual Trials Suite">
+                                <span class="ws-tool-num">03</span>
+                                <div class="ws-tool-info">
+                                    <span class="ws-tool-title">Virtual Trials</span>
+                                    <span class="ws-tool-desc">In-silico biological and clinical modelling.</span>
+                                </div>
+                                <div class="ws-tool-preview">
+                                    <svg width="90" height="30" viewBox="0 0 90 30" fill="none">
+                                        <line x1="8" y1="24" x2="84" y2="24" stroke="var(--border-hairline)" stroke-width="1.5"/>
+                                        <line x1="8" y1="6" x2="8" y2="24" stroke="var(--border-hairline)" stroke-width="1.5"/>
+                                        <path d="M8 22 C 30 22, 45 18, 80 12" stroke="var(--text-tertiary)" stroke-width="1.5" fill="none"/>
+                                        <path d="M8 24 C 25 24, 40 8, 80 6" stroke="var(--accent-orange)" stroke-width="2" fill="none"/>
+                                    </svg>
+                                </div>
+                                <span class="ws-tool-arrow">&rarr;</span>
+                            </a>
+
+                            <!-- 04 Generative Biology -->
+                            <a href="structure.html#generative" class="ws-tool-row" title="Open Generative Biology Engine">
+                                <span class="ws-tool-num">04</span>
+                                <div class="ws-tool-info">
+                                    <span class="ws-tool-title">Generative Biology</span>
+                                    <span class="ws-tool-desc">Design and model genes, cells and regulatory programmes.</span>
+                                </div>
+                                <div class="ws-tool-preview">
+                                    <svg width="90" height="30" viewBox="0 0 90 30" fill="none">
+                                        <line x1="20" y1="15" x2="45" y2="8" stroke="var(--border-hairline)" stroke-width="1.5"/>
+                                        <line x1="45" y1="8" x2="70" y2="15" stroke="var(--border-hairline)" stroke-width="1.5"/>
+                                        <line x1="20" y1="15" x2="45" y2="22" stroke="var(--border-hairline)" stroke-width="1.5"/>
+                                        <line x1="45" y1="22" x2="70" y2="15" stroke="var(--border-hairline)" stroke-width="1.5"/>
+                                        <line x1="45" y1="8" x2="45" y2="22" stroke="var(--border-hairline)" stroke-width="1.5"/>
+                                        <circle cx="20" cy="15" r="3.5" fill="var(--text-secondary)"/>
+                                        <circle cx="45" cy="8" r="4.5" fill="var(--accent-orange)"/>
+                                        <circle cx="45" cy="22" r="3.5" fill="var(--text-secondary)"/>
+                                        <circle cx="70" cy="15" r="4.5" fill="var(--accent-orange)"/>
+                                    </svg>
+                                </div>
+                                <span class="ws-tool-arrow">&rarr;</span>
+                            </a>
+
+                            <!-- 05 Amino Acid Explorer -->
+                            <a href="structure.html#library" class="ws-tool-row" title="Open 146+ Amino Acid &amp; Monomer Library">
+                                <span class="ws-tool-num">05</span>
+                                <div class="ws-tool-info">
+                                    <span class="ws-tool-title">Amino Acid Explorer</span>
+                                    <span class="ws-tool-desc">Structures, properties and biological context.</span>
+                                </div>
+                                <div class="ws-tool-preview">
+                                    <svg width="90" height="30" viewBox="0 0 90 30" fill="none">
+                                        <circle cx="28" cy="12" r="5.5" fill="var(--accent-blue)"/>
+                                        <circle cx="48" cy="18" r="6" fill="var(--text-primary)"/>
+                                        <circle cx="68" cy="11" r="5.5" fill="var(--accent-orange)"/>
+                                        <line x1="32" y1="14" x2="44" y2="17" stroke="var(--text-secondary)" stroke-width="3"/>
+                                        <line x1="52" y1="17" x2="64" y2="13" stroke="var(--text-secondary)" stroke-width="3"/>
+                                    </svg>
+                                </div>
+                                <span class="ws-tool-arrow">&rarr;</span>
+                            </a>
+
+                            <!-- 06 Safety Audit -->
+                            <a href="regulatory.html" class="ws-tool-row" title="Open Safety Audit &amp; Biosafety Verification">
+                                <span class="ws-tool-num">06</span>
+                                <div class="ws-tool-info">
+                                    <span class="ws-tool-title">Safety Audit</span>
+                                    <span class="ws-tool-desc">Multi-layer biological risk assessment.</span>
+                                </div>
+                                <div class="ws-tool-preview">
+                                    <svg width="90" height="30" viewBox="0 0 90 30" fill="none">
+                                        <rect x="15" y="6" width="9" height="7" rx="1.5" fill="var(--tag-bg)"/>
+                                        <rect x="27" y="6" width="9" height="7" rx="1.5" fill="var(--tag-bg)"/>
+                                        <rect x="39" y="6" width="9" height="7" rx="1.5" fill="var(--tag-bg)"/>
+                                        <rect x="51" y="6" width="9" height="7" rx="1.5" fill="#FDBA74"/>
+                                        <rect x="63" y="6" width="9" height="7" rx="1.5" fill="var(--accent-orange)"/>
+
+                                        <rect x="15" y="16" width="9" height="7" rx="1.5" fill="var(--tag-bg)"/>
+                                        <rect x="27" y="16" width="9" height="7" rx="1.5" fill="var(--tag-bg)"/>
+                                        <rect x="39" y="16" width="9" height="7" rx="1.5" fill="#FED7AA"/>
+                                        <rect x="51" y="16" width="9" height="7" rx="1.5" fill="#FB923C"/>
+                                        <rect x="63" y="16" width="9" height="7" rx="1.5" fill="var(--accent-orange)"/>
+                                    </svg>
+                                </div>
+                                <span class="ws-tool-arrow">&rarr;</span>
+                            </a>
+
+                            <!-- 07 Multi-Omics & GRN -->
+                            <a href="#simulation" onclick="enterSimulation(); return false;" class="ws-tool-row" title="Inspect Single-Cell Multi-Omics &amp; GRN Networks">
+                                <span class="ws-tool-num">07</span>
+                                <div class="ws-tool-info">
+                                    <span class="ws-tool-title">Multi-Omics &amp; GRN</span>
+                                    <span class="ws-tool-desc">Single-cell, multi-omics and regulatory-network analysis.</span>
+                                </div>
+                                <div class="ws-tool-preview">
+                                    <svg width="90" height="30" viewBox="0 0 90 30" fill="none">
+                                        <!-- Left subtle cluster -->
+                                        <circle cx="25" cy="15" r="1.5" fill="var(--text-tertiary)"/>
+                                        <circle cx="21" cy="12" r="1.5" fill="var(--text-tertiary)"/>
+                                        <circle cx="28" cy="18" r="1.5" fill="var(--text-tertiary)"/>
+                                        <circle cx="23" cy="20" r="1.5" fill="var(--text-tertiary)"/>
+                                        <!-- Right dense radiant cluster -->
+                                        <circle cx="65" cy="15" r="8" stroke="var(--accent-orange)" stroke-width="0.75" stroke-dasharray="2 2" opacity="0.4"/>
+                                        <circle cx="65" cy="15" r="4.5" fill="var(--accent-orange)"/>
+                                        <circle cx="60" cy="12" r="1.5" fill="var(--accent-orange)"/>
+                                        <circle cx="70" cy="18" r="1.5" fill="var(--accent-orange)"/>
+                                        <circle cx="68" cy="11" r="1.5" fill="var(--accent-orange)"/>
+                                        <circle cx="62" cy="19" r="1.5" fill="var(--accent-orange)"/>
+                                    </svg>
+                                </div>
+                                <span class="ws-tool-arrow">&rarr;</span>
+                            </a>
+
+                            <!-- 08 LNP Delivery Optimizer -->
+                            <a href="technical_catalog.html" class="ws-tool-row" title="Open LNP Delivery System Optimizer">
+                                <span class="ws-tool-num">08</span>
+                                <div class="ws-tool-info">
+                                    <span class="ws-tool-title">LNP Delivery Optimizer</span>
+                                    <span class="ws-tool-desc">Design and optimise therapeutic delivery systems.</span>
+                                </div>
+                                <div class="ws-tool-preview">
+                                    <svg width="90" height="30" viewBox="0 0 90 30" fill="none">
+                                        <circle cx="48" cy="15" r="12" stroke="var(--text-secondary)" stroke-width="1.5"/>
+                                        <circle cx="48" cy="15" r="9.5" stroke="var(--border-hairline)" stroke-width="1" stroke-dasharray="2 1.5"/>
+                                        <circle cx="48" cy="15" r="6" fill="var(--tag-bg)"/>
+                                        <path d="M45 13 Q48 11, 51 15 T48 18" stroke="var(--accent-orange)" stroke-width="1.75" fill="none"/>
+                                    </svg>
+                                </div>
+                                <span class="ws-tool-arrow">&rarr;</span>
+                            </a>
+
+                            <!-- 09 Evidence & Compliance -->
+                            <a href="regulatory.html" class="ws-tool-row" title="Review Research Evidence &amp; Compliance Trail">
+                                <span class="ws-tool-num">09</span>
+                                <div class="ws-tool-info">
+                                    <span class="ws-tool-title">Evidence &amp; Compliance</span>
+                                    <span class="ws-tool-desc">Research evidence, provenance and documentation.</span>
+                                </div>
+                                <div class="ws-tool-preview">
+                                    <svg width="90" height="30" viewBox="0 0 90 30" fill="none">
+                                        <rect x="18" y="7" width="13" height="17" rx="1.5" stroke="var(--text-tertiary)" stroke-width="1.2" fill="none"/>
+                                        <line x1="33" y1="15" x2="39" y2="15" stroke="var(--accent-orange)" stroke-width="1.2"/>
+                                        <rect x="41" y="7" width="13" height="17" rx="1.5" stroke="var(--text-secondary)" stroke-width="1.2" fill="none"/>
+                                        <line x1="56" y1="15" x2="62" y2="15" stroke="var(--accent-orange)" stroke-width="1.2"/>
+                                        <rect x="64" y="7" width="13" height="17" rx="1.5" stroke="var(--accent-orange)" stroke-width="1.4" fill="none"/>
+                                    </svg>
+                                </div>
+                                <span class="ws-tool-arrow">&rarr;</span>
+                            </a>
+
+                            <!-- 10 Developer API -->
+                            <a href="api.html" class="ws-tool-row" title="Explore Developer APIs &amp; SDKs">
+                                <span class="ws-tool-num">10</span>
+                                <div class="ws-tool-info">
+                                    <span class="ws-tool-title">Developer API</span>
+                                    <span class="ws-tool-desc">Programmatic access to models, data and workflows.</span>
+                                </div>
+                                <div class="ws-tool-preview">
+                                    <svg width="90" height="30" viewBox="0 0 90 30" fill="none">
+                                        <path d="M35 10 L28 15 L35 20" stroke="var(--text-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        <line x1="43" y1="21" x2="49" y2="9" stroke="var(--accent-orange)" stroke-width="2" stroke-linecap="round"/>
+                                        <path d="M57 10 L64 15 L57 20" stroke="var(--text-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                </div>
+                                <span class="ws-tool-arrow">&rarr;</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- RIGHT COLUMN: ACTIVE SCIENTIFIC CANVASES (STACKED) -->
+                    <div class="ws-scientific-canvas-col">
+                        <!-- TOP: NILUSFOLD STRUCTURE INTELLIGENCE -->
+                        <div class="ws-viewer-card">
+                            <div class="ws-viewer-header">
+                                <div class="ws-viewer-title-group">
+                                    <h3 class="ws-viewer-h3">NilusFold</h3>
+                                    <span class="ws-viewer-subtitle">Structure intelligence</span>
+                                </div>
+                                <a href="structure.html" style="font-size:11px;font-weight:600;color:var(--accent-blue);text-decoration:none;">Open Studio &rarr;</a>
+                            </div>
+
+                            <div class="ws-viewer-stage"><div id="molviewer-dashboard" style="width:100%; height:100%; position:relative;">
+                                    <svg id="molviewer-svg-ribbon" viewBox="0 0 540 230" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" style="display:block;">
+                                        <defs>
+                                            <linearGradient id="silverHelix" x1="0%" y1="0%" x2="100%" y2="100%">
+                                                <stop offset="0%" stop-color="#E2E8F0"/>
+                                                <stop offset="50%" stop-color="#94A3B8"/>
+                                                <stop offset="100%" stop-color="#475569"/>
+                                            </linearGradient>
+                                            <linearGradient id="orangeStrand" x1="0%" y1="0%" x2="100%" y2="100%">
+                                                <stop offset="0%" stop-color="#FB923C"/>
+                                                <stop offset="60%" stop-color="#F26A21"/>
+                                                <stop offset="100%" stop-color="#C2410C"/>
+                                            </linearGradient>
+                                            <filter id="ribbonShadow" x="-10%" y="-10%" width="130%" height="130%">
+                                                <feDropShadow dx="1" dy="3" stdDeviation="3" flood-opacity="0.25"/>
+                                            </filter>
+                                        </defs>
+
+                                        <!-- Background Helices & Coils (Silver/Graphite) -->
+                                        <g filter="url(#ribbonShadow)" opacity="0.88">
+                                            <!-- Left N-term loop -->
+                                            <path d="M 60 140 C 45 110, 75 75, 110 85 C 145 95, 130 150, 165 160 C 200 170, 220 120, 245 105 C 270 90, 310 100, 330 130" fill="none" stroke="url(#silverHelix)" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+                                            <!-- Top Arch Helix -->
+                                            <path d="M 230 110 C 260 65, 340 50, 385 75 C 430 100, 410 155, 455 170 C 485 180, 515 150, 500 120 C 485 90, 450 70, 410 60" fill="none" stroke="url(#silverHelix)" stroke-width="10" stroke-linecap="round"/>
+                                            <!-- Bottom Structural Helices -->
+                                            <path d="M 120 160 C 150 200, 220 195, 270 175 C 320 155, 360 185, 410 180 C 450 175, 475 145, 480 125" fill="none" stroke="url(#silverHelix)" stroke-width="11" stroke-linecap="round"/>
+                                            <!-- Outer peripheral loops -->
+                                            <path d="M 75 90 C 110 45, 180 50, 215 80 C 250 110, 270 70, 320 65" fill="none" stroke="url(#silverHelix)" stroke-width="8" stroke-linecap="round" opacity="0.7"/>
+                                        </g>
+
+                                        <!-- Active Catalytic Beta-Sheet Highlight (Vibrant Precision Orange) -->
+                                        <g filter="url(#ribbonShadow)">
+                                            <!-- Beta Strand 1 -->
+                                            <path d="M 280 65 L 360 170 L 372 165 L 300 60 Z" fill="url(#orangeStrand)"/>
+                                            <polygon points="355,160 375,178 380,155" fill="url(#orangeStrand)"/>
+
+                                            <!-- Beta Strand 2 -->
+                                            <path d="M 315 65 L 395 168 L 406 163 L 332 60 Z" fill="url(#orangeStrand)"/>
+                                            <polygon points="390,158 410,175 414,152" fill="url(#orangeStrand)"/>
+
+                                            <!-- Beta Strand 3 -->
+                                            <path d="M 350 70 L 428 165 L 439 160 L 365 65 Z" fill="url(#orangeStrand)"/>
+                                            <polygon points="423,155 442,170 446,148" fill="url(#orangeStrand)"/>
+
+                                            <!-- Connecting Active Loop -->
+                                            <path d="M 370 175 C 385 195, 425 195, 440 170" fill="none" stroke="url(#orangeStrand)" stroke-width="8" stroke-linecap="round"/>
+                                        </g>
+
+                                        <!-- Surface Overlay (Initially hidden, toggled by Surface view) -->
+                                        <g id="molviewer-surface-layer" opacity="0" style="transition: opacity 0.3s ease;">
+                                            <path d="M 50 130 C 40 80, 120 40, 210 50 C 300 60, 380 40, 460 70 C 530 100, 520 180, 440 195 C 360 210, 260 205, 170 190 C 90 180, 60 160, 50 130 Z" fill="var(--accent-orange)" opacity="0.18" stroke="var(--accent-orange)" stroke-width="2" stroke-dasharray="4 4"/>
+                                            <path d="M 260 60 C 320 50, 420 60, 450 110 C 470 150, 420 185, 360 180 C 300 175, 270 130, 260 60 Z" fill="var(--accent-orange)" opacity="0.32"/>
+                                        </g>
+                                    </svg>
+                                </div></div>
+
+                            <div class="ws-viewer-footer">
+                                <span class="ws-caption-text">Example structure &mdash; illustrative</span>
+                                <div class="ws-toggle-group">
+                                    <span class="ws-toggle-label">View:</span>
+                                    <button id="btn-view-cartoon" class="ws-toggle-btn active" onclick="switchMolView('cartoon')">Cartoon</button>
+                                    <span class="ws-toggle-sep">|</span>
+                                    <button id="btn-view-surface" class="ws-toggle-btn" onclick="switchMolView('surface')">Surface</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- BOTTOM: ZENITH MAINFRAME CELL-STATE LANDSCAPE -->
+                        <div class="ws-viewer-card" style="position:relative;">
+                            <div class="ws-viewer-header">
+                                <div class="ws-viewer-title-group">
+                                    <h3 class="ws-viewer-h3">Zenith Mainframe</h3>
+                                    <span class="ws-viewer-subtitle">Cell-state landscape</span>
+                                </div>
+                                <a href="#simulation" onclick="enterSimulation(); return false;" style="font-size:11px;font-weight:600;color:var(--accent-blue);text-decoration:none;">Open Lab &rarr;</a>
+                            </div>
+
+                            <div class="ws-viewer-stage" style="position:relative;">
+                                <svg id="umap-vector-landscape" viewBox="0 0 540 230" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" style="display:block; user-select:none;">
+                                    <defs>
+                                        <radialGradient id="targetRadiance" cx="72%" cy="50%" r="35%">
+                                            <stop offset="0%" stop-color="var(--accent-orange)" stop-opacity="0.3"/>
+                                            <stop offset="50%" stop-color="var(--accent-orange)" stop-opacity="0.08"/>
+                                            <stop offset="100%" stop-color="var(--accent-orange)" stop-opacity="0"/>
+                                        </radialGradient>
+                                        <radialGradient id="restingBasin" cx="28%" cy="50%" r="30%">
+                                            <stop offset="0%" stop-color="var(--cluster-left, #475569)" stop-opacity="0.15"/>
+                                            <stop offset="100%" stop-color="var(--cluster-left, #475569)" stop-opacity="0"/>
+                                        </radialGradient>
+                                    </defs>
+
+                                    <!-- Attractor Field Backdrops -->
+                                    <rect x="0" y="0" width="540" height="230" fill="transparent"/>
+                                    <circle cx="155" cy="115" r="90" fill="url(#restingBasin)"/>
+                                    <circle cx="390" cy="115" r="105" fill="url(#targetRadiance)"/>
+
+                                    <!-- Topographic Iso-Density Contours (Waddington Landscape) -->
+                                    <g id="umap-contours-group" stroke="var(--contour-stroke, rgba(95, 115, 131, 0.28))" fill="none" stroke-width="1" style="transition: opacity 0.3s ease;">
+                                        <!-- Left attractor concentric loops -->
+                                        <ellipse cx="155" cy="115" rx="35" ry="28" stroke-width="1.2"/>
+                                        <ellipse cx="155" cy="115" rx="55" ry="44"/>
+                                        <ellipse cx="155" cy="115" rx="78" ry="62"/>
+                                        <ellipse cx="155" cy="115" rx="100" ry="80"/>
+
+                                        <!-- Right target attractor concentric loops -->
+                                        <ellipse cx="390" cy="115" rx="32" ry="26" stroke="var(--accent-orange)" stroke-width="1.2" opacity="0.6"/>
+                                        <ellipse cx="390" cy="115" rx="52" ry="42" stroke="var(--accent-orange)" opacity="0.45"/>
+                                        <ellipse cx="390" cy="115" rx="75" ry="60" stroke="var(--accent-orange)" opacity="0.3"/>
+                                        <ellipse cx="390" cy="115" rx="98" ry="78" stroke="var(--accent-orange)" opacity="0.2"/>
+                                        <ellipse cx="390" cy="115" rx="120" ry="95" stroke="var(--accent-orange)" opacity="0.12"/>
+
+                                        <!-- Connecting Saddle Ridge Contour -->
+                                        <path d="M 90 95 C 140 70, 230 65, 270 100 C 310 135, 410 70, 480 90" stroke-width="0.9" opacity="0.7"/>
+                                        <path d="M 85 135 C 130 160, 220 165, 270 130 C 320 95, 410 160, 485 140" stroke-width="0.9" opacity="0.7"/>
+                                    </g>
+
+                                    <!-- Coordinate Axes & Grid -->
+                                    <g id="umap-axes-group" stroke="var(--border-hairline, #D9E0E5)" stroke-width="1" fill="none">
+                                        <!-- Horizontal baseline -->
+                                        <line x1="55" y1="200" x2="495" y2="200"/>
+                                        <!-- Vertical baseline -->
+                                        <line x1="55" y1="25" x2="55" y2="200"/>
+
+                                        <!-- X-ticks -->
+                                        <line x1="75" y1="200" x2="75" y2="204"/>
+                                        <line x1="175" y1="200" x2="175" y2="204"/>
+                                        <line x1="275" y1="200" x2="275" y2="204"/>
+                                        <line x1="375" y1="200" x2="375" y2="204"/>
+                                        <line x1="475" y1="200" x2="475" y2="204"/>
+
+                                        <!-- Y-ticks -->
+                                        <line x1="51" y1="185" x2="55" y2="185"/>
+                                        <line x1="51" y1="150" x2="55" y2="150"/>
+                                        <line x1="51" y1="115" x2="55" y2="115"/>
+                                        <line x1="51" y1="80" x2="55" y2="80"/>
+                                        <line x1="51" y1="45" x2="55" y2="45"/>
+                                    </g>
+
+                                    <!-- Axis Tick Labels -->
+                                    <g font-family="Inter, sans-serif" font-size="9" fill="var(--text-tertiary, #8A9CA8)" text-anchor="middle">
+                                        <!-- X Labels -->
+                                        <text x="75" y="214">-10</text>
+                                        <text x="175" y="214">-5</text>
+                                        <text x="275" y="214">0</text>
+                                        <text x="375" y="214">5</text>
+                                        <text x="475" y="214">10</text>
+                                        <text x="275" y="226" font-weight="600" fill="var(--text-secondary, #5F7383)">UMAP 1</text>
+
+                                        <!-- Y Labels -->
+                                        <text x="42" y="188" text-anchor="end">-10</text>
+                                        <text x="42" y="153" text-anchor="end">-5</text>
+                                        <text x="42" y="118" text-anchor="end">0</text>
+                                        <text x="42" y="83" text-anchor="end">5</text>
+                                        <text x="42" y="48" text-anchor="end">10</text>
+                                    </g>
+                                    <text x="18" y="115" font-family="Inter, sans-serif" font-size="9" font-weight="600" fill="var(--text-secondary, #5F7383)" transform="rotate(-90, 18, 115)" text-anchor="middle">UMAP 2</text>
+
+                                    <!-- Left Resting Somatic Point Cloud (Graphite Scatter) -->
+                                    <g id="umap-left-points" fill="var(--cluster-left, #475569)">
+                                        <circle cx="152" cy="112" r="1.5" opacity="0.75"/><circle cx="145" cy="119" r="1.8" opacity="0.8"/><circle cx="160" cy="108" r="1.4" opacity="0.6"/><circle cx="168" cy="116" r="1.5" opacity="0.7"/><circle cx="140" cy="105" r="1.3" opacity="0.5"/><circle cx="155" cy="125" r="1.6" opacity="0.7"/><circle cx="135" cy="114" r="1.5" opacity="0.65"/><circle cx="162" cy="122" r="1.4" opacity="0.7"/><circle cx="148" cy="130" r="1.2" opacity="0.5"/><circle cx="170" cy="104" r="1.5" opacity="0.6"/><circle cx="132" cy="120" r="1.4" opacity="0.55"/><circle cx="158" cy="98" r="1.5" opacity="0.6"/><circle cx="144" cy="96" r="1.3" opacity="0.45"/><circle cx="175" cy="118" r="1.4" opacity="0.6"/><circle cx="150" cy="138" r="1.2" opacity="0.4"/><circle cx="165" cy="132" r="1.5" opacity="0.5"/><circle cx="125" cy="110" r="1.3" opacity="0.4"/><circle cx="138" cy="128" r="1.4" opacity="0.55"/><circle cx="180" cy="112" r="1.5" opacity="0.5"/><circle cx="155" cy="88" r="1.2" opacity="0.35"/><circle cx="142" cy="142" r="1.3" opacity="0.35"/><circle cx="172" cy="128" r="1.4" opacity="0.5"/><circle cx="120" cy="118" r="1.2" opacity="0.3"/><circle cx="162" cy="140" r="1.3" opacity="0.4"/><circle cx="185" cy="120" r="1.4" opacity="0.45"/><circle cx="146" cy="85" r="1.2" opacity="0.3"/><circle cx="150" cy="115" r="3.0" fill="var(--text-primary)"/>
+                                    </g>
+
+                                    <!-- Right Rejuvenated Target Point Cloud (Dense Radiant Orange) -->
+                                    <g id="umap-right-points" fill="var(--accent-orange, #F26A21)">
+                                        <circle cx="390" cy="115" r="3.5"/><circle cx="385" cy="110" r="2.2" opacity="0.9"/><circle cx="395" cy="120" r="2.0" opacity="0.85"/><circle cx="380" cy="118" r="1.8" opacity="0.8"/><circle cx="398" cy="108" r="1.9" opacity="0.8"/><circle cx="392" cy="125" r="1.7" opacity="0.75"/><circle cx="375" cy="112" r="1.8" opacity="0.75"/><circle cx="405" cy="116" r="1.9" opacity="0.8"/><circle cx="388" cy="102" r="1.6" opacity="0.7"/><circle cx="382" cy="126" r="1.8" opacity="0.75"/><circle cx="402" cy="124" r="1.7" opacity="0.7"/><circle cx="370" cy="115" r="1.8" opacity="0.7"/><circle cx="410" cy="110" r="1.6" opacity="0.65"/><circle cx="395" cy="98" r="1.6" opacity="0.65"/><circle cx="385" cy="132" r="1.7" opacity="0.65"/><circle cx="408" cy="122" r="1.6" opacity="0.65"/><circle cx="365" cy="120" r="1.5" opacity="0.6"/><circle cx="415" cy="115" r="1.5" opacity="0.6"/><circle cx="390" cy="92" r="1.5" opacity="0.55"/><circle cx="380" cy="138" r="1.5" opacity="0.55"/><circle cx="415" cy="128" r="1.4" opacity="0.5"/><circle cx="360" cy="112" r="1.4" opacity="0.5"/><circle cx="422" cy="112" r="1.4" opacity="0.5"/><circle cx="400" cy="88" r="1.3" opacity="0.45"/><circle cx="375" cy="144" r="1.4" opacity="0.45"/><circle cx="420" cy="122" r="1.4" opacity="0.45"/><circle cx="355" cy="118" r="1.3" opacity="0.4"/><circle cx="428" cy="118" r="1.3" opacity="0.4"/><circle cx="390" cy="82" r="1.2" opacity="0.35"/><circle cx="388" cy="148" r="1.3" opacity="0.35"/><circle cx="425" cy="132" r="1.2" opacity="0.35"/><circle cx="350" cy="115" r="1.2" opacity="0.3"/><circle cx="435" cy="115" r="1.2" opacity="0.3"/><circle cx="405" cy="80" r="1.1" opacity="0.25"/><circle cx="370" cy="150" r="1.2" opacity="0.25"/><circle cx="430" cy="125" r="1.1" opacity="0.25"/>
+                                    </g>
+
+                                    <!-- Cellular Reprogramming Trajectory Curve -->
+                                    <path d="M 150 115 C 205 110, 240 160, 275 145 C 310 130, 335 115, 390 115" fill="none" stroke="var(--accent-orange, #F26A21)" stroke-width="2.5" stroke-linecap="round"/>
+
+                                    <!-- Trajectory Step Nodes (Interactive on Hover) -->
+                                    <g id="umap-trajectory-nodes" style="cursor: pointer;">
+                                        <!-- Step 0: Somatic Origin -->
+                                        <circle class="umap-node" cx="150" cy="115" r="4.5" fill="var(--cluster-left, #475569)" stroke="#fff" stroke-width="1.5" data-step="0" data-tau="0.00" data-state="Resting Somatic Attractor"/>
+                                        <circle class="umap-node" cx="178" cy="114" r="3.2" fill="var(--cluster-left, #475569)" stroke="#fff" stroke-width="1" data-step="3" data-tau="0.14" data-state="Early Epigenetic Destabilization"/>
+                                        <circle class="umap-node" cx="206" cy="122" r="3.5" fill="#64748B" stroke="#fff" stroke-width="1" data-step="6" data-tau="0.27" data-state="Chromatin Remodeling Phase"/>
+                                        <circle class="umap-node" cx="235" cy="144" r="3.8" fill="#D97706" stroke="#fff" stroke-width="1" data-step="9" data-tau="0.41" data-state="Bistable Saddle Intermediate"/>
+                                        <circle class="umap-node" cx="265" cy="152" r="4.0" fill="#EA580C" stroke="#fff" stroke-width="1.2" data-step="12" data-tau="0.55" data-state="Core Reprogramming Vector"/>
+                                        <circle class="umap-node" cx="295" cy="142" r="4.2" fill="var(--accent-orange, #F26A21)" stroke="#fff" stroke-width="1.2" data-step="15" data-tau="0.68" data-state="Youth Transcriptomic Convergence"/>
+                                        <circle class="umap-node" cx="328" cy="128" r="4.5" fill="var(--accent-orange, #F26A21)" stroke="#fff" stroke-width="1.5" data-step="18" data-tau="0.82" data-state="Rejuvenated Steady State"/>
+                                        <circle class="umap-node" cx="360" cy="119" r="4.8" fill="var(--accent-orange, #F26A21)" stroke="#fff" stroke-width="1.5" data-step="20" data-tau="0.91" data-state="Electrophysiologic Syncytium Safe"/>
+                                        <!-- Final Step: Target State -->
+                                        <circle class="umap-node" cx="390" cy="115" r="5.8" fill="var(--accent-orange, #F26A21)" stroke="#fff" stroke-width="2" data-step="22" data-tau="1.00" data-state="Target Rejuvenation Attractor"/>
+                                    </g>
+                                </svg>
+                                <div id="umap-tooltip"></div>
+                            </div>
+
+                            <div class="ws-viewer-footer">
+                                <span class="ws-caption-text">Illustrative trajectory</span>
+                                <div class="ws-toggle-group">
+                                    <span class="ws-toggle-label">View:</span>
+                                    <button id="btn-view-contours" class="ws-toggle-btn active" onclick="switchUmapView('contours')">Contours</button>
+                                    <span class="ws-toggle-sep">|</span>
+                                    <button id="btn-view-points" class="ws-toggle-btn" onclick="switchUmapView('points')">Points</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- BOTTOM WORKSPACE STRIP -->
+                <div class="ws-workspace-strip">
+                    <div class="ws-ws-left">
+                        <span class="ws-ws-heading">Example workspace</span>
+                        <div class="ws-ws-items">
+                            <a href="structure.html" class="ws-ws-item" title="Open Protein Exploration">
+                                <svg class="ws-doc-icon" viewBox="0 0 24 24" fill="none"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="currentColor" stroke-width="1.8"/><polyline points="14 2 14 8 20 8" stroke="currentColor" stroke-width="1.8"/><line x1="16" y1="13" x2="8" y2="13" stroke="currentColor" stroke-width="1.5"/><line x1="16" y1="17" x2="8" y2="17" stroke="currentColor" stroke-width="1.5"/></svg>
+                                <div>
+                                    <div class="ws-item-title">Protein exploration</div>
+                                    <div class="ws-item-status">Draft</div>
+                                </div>
+                            </a>
+
+                            <a href="#simulation" onclick="enterSimulation(); return false;" class="ws-ws-item" title="Open Cell-State Model">
+                                <svg class="ws-doc-icon" viewBox="0 0 24 24" fill="none"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="currentColor" stroke-width="1.8"/><polyline points="14 2 14 8 20 8" stroke="currentColor" stroke-width="1.8"/><line x1="16" y1="13" x2="8" y2="13" stroke="currentColor" stroke-width="1.5"/><line x1="16" y1="17" x2="8" y2="17" stroke="currentColor" stroke-width="1.5"/></svg>
+                                <div>
+                                    <div class="ws-item-title">Cell-state model</div>
+                                    <div class="ws-item-status">Draft</div>
+                                </div>
+                            </a>
+
+                            <a href="regulatory.html" class="ws-ws-item" title="Open Evidence Review">
+                                <svg class="ws-doc-icon" viewBox="0 0 24 24" fill="none"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="currentColor" stroke-width="1.8"/><polyline points="14 2 14 8 20 8" stroke="currentColor" stroke-width="1.8"/><line x1="16" y1="13" x2="8" y2="13" stroke="currentColor" stroke-width="1.5"/><line x1="16" y1="17" x2="8" y2="17" stroke="currentColor" stroke-width="1.5"/></svg>
+                                <div>
+                                    <div class="ws-item-title">Evidence review</div>
+                                    <div class="ws-item-status">Draft</div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    <a href="profile.html" class="ws-ws-view-all">View all &rarr;</a>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+
+<!-- ═══ VIEW 2: SIMULATION LAB (existing layout, hidden by default) ═══ -->
+
+<div 

@@ -385,7 +385,7 @@ class RidgeNeuralAgeClock:
 
     Trained on 3,569 cells from TWO scVI models:
       - 486k cardiac specialist  (Litviňuková et al., Nature 2020)
-      - 1.94M foundation model   (HCA Heart Atlas)
+      - 1,962,128-cell pan-cardiac foundation model (14 cohorts, 210 donors)   (HCA Heart Atlas)
 
     Uses 8 real markers with Horvath-style log-transform:
       F0 = 40 (adult threshold)

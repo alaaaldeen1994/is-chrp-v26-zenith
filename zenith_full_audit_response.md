@@ -27,7 +27,7 @@ Zenith is an in silico single-cell computational biology platform for exploring 
 | **Training Data (Specialist)** | **99,993 trained cardiac cells** (`89,994` train + `9,999` validation, 5,009 genes) subsampled from the **486,134-cell** Litviňuková et al. (2020) source atlas (`data/foundation/raw_datasets/d4e69e01-3ba2-4d6b-a15d-e7048f78f22e.h5ad`, 14 donors: 8 Sanger `D1–D7, D11` + 6 Harvard `H2–H7`) |
 | **Training Data (Foundation)** | **1,962,128 registered single cells** (`1,765,916` train + `196,212` validation, 5,858 genes) |
 | **Replication Atlas** | **392,819 human cardiac single nuclei** (`data/foundation/raw_datasets/f1606894-59df-4794-a37f-baa7c6fb6de1.h5ad`, PERIHEART, 54 donors, single center, uniform `10x 3' v3`, **100% right atrial appendage [`0` ventricular cells]**) |
-| **Total Local Cardiac Cells** | **878,953 cardiac cells/nuclei** across 68 donors in the two primary `.h5ad` cardiac cohorts (`486,134 + 392,819`) |
+| **Total Local Cardiac Cells** | **486,134 (HCA Heart Atlas; 424,436 evaluated / 99,993 scVI-trained) + 392,819 (PERIHEART; 88,561 CMs across 54 donors) cardiac cells/nuclei** across 68 donors in the two primary `.h5ad` cardiac cohorts (`486,134 + 392,819`) |
 | **NL-101 Canonical Cocktail** | `SIRT1 + SIRT6 + GATA4 + ZBTB16` |
 
 ### What the Platform Computes (Real)

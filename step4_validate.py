@@ -4,7 +4,7 @@ step4_validate.py
 Scientific validation of the trained Zenith foundation model.
 
 V29.0 UPGRADE: Increased validation subsample to 50,000 cells for
-better statistical power at the 3.2M cell scale.
+better statistical power at the 1,962,128 post-QC (from 2,105,588 raw cardiac/vascular across 14 cohorts & 210 donors; originally targeted as 1,962,128 post-QC (from 2,105,588 raw cardiac/vascular across 14 cohorts & 210 donors; originally targeted as 3.2M)) cell scale.
 
 Validation strategy:
   A good scVI model must pass three independent tests before it is

@@ -4,7 +4,7 @@ step2_preprocess.py
 Production-grade preprocessing pipeline for the Zenith cardiac
 foundation model training dataset.
 
-V29.0 UPGRADE: Optimised for 3.2M+ cell scale.
+V29.0 UPGRADE: Optimised for 1,962,128 post-QC (from 2,105,588 raw cardiac/vascular across 14 cohorts & 210 donors; originally targeted as 1,962,128 post-QC (from 2,105,588 raw cardiac/vascular across 14 cohorts & 210 donors; originally targeted as 3.2M))+ cell scale.
   - Increased HVG count from 5,000 to 6,000 to capture broader
     gene programs across the larger, multi-atlas dataset.
   - Memory-efficient sparse matrix operations throughout.
@@ -28,7 +28,7 @@ Scientific rationale for each step:
      which accounts for mean-variance trends in count data and is robust
      to the multi-dataset setting.
      - 6,000 is scaled up from v28.0's 5,000 to capture the broader
-       gene programs present across 3.2M cells from multiple atlases.
+       gene programs present across 1,962,128 post-QC (from 2,105,588 raw cardiac/vascular across 14 cohorts & 210 donors; originally targeted as 1,962,128 post-QC (from 2,105,588 raw cardiac/vascular across 14 cohorts & 210 donors; originally targeted as 3.2M)) cells from multiple atlases.
      - HVG selection is performed on the FULL gene set before subsetting.
      Reference: Stuart et al. 2019, Cell.
 
@@ -59,7 +59,7 @@ OUT_FILE     = "data/foundation/cardiac_preprocessed.h5ad"
 HVGS_FILE    = "data/foundation/selected_hvgs.json"
 METRICS_FILE = "data/foundation/preprocessing_metrics.json"
 
-N_HVG        = 6_000    # Highly variable genes (scaled up for 3.2M cells)
+N_HVG        = 6_000    # Highly variable genes (scaled up for 1,962,128 post-QC (from 2,105,588 raw cardiac/vascular across 14 cohorts & 210 donors; originally targeted as 1,962,128 post-QC (from 2,105,588 raw cardiac/vascular across 14 cohorts & 210 donors; originally targeted as 3.2M)) cells)
 MIN_CELLS    = 10       # Min cells per gene (filters lowly expressed genes)
 
 # ── Preprocessing pipeline ────────────────────────────────────────────────────
@@ -68,7 +68,7 @@ def main():
 
     print("=" * 70)
     print("  Zenith Foundation Model v29.0 — Preprocessing Pipeline")
-    print(f"  Target: 3.2M+ Cell Cardiac Atlas")
+    print(f"  Target: 1,962,128 post-QC (from 2,105,588 raw cardiac/vascular across 14 cohorts & 210 donors; originally targeted as 1,962,128 post-QC (from 2,105,588 raw cardiac/vascular across 14 cohorts & 210 donors; originally targeted as 3.2M))+ Cell Cardiac Atlas")
     print(f"  Started: {start_time.strftime('%Y-%m-%d %H:%M UTC')}")
     print("=" * 70)
 
@@ -192,7 +192,7 @@ def main():
     # Save preprocessing metrics
     metrics = {
         "timestamp_utc":       end_time.strftime("%Y-%m-%d %H:%M UTC"),
-        "pipeline_version":    "v29.0 (3.2M Census)",
+        "pipeline_version":    "v29.0 (1,962,128 post-QC (from 2,105,588 raw cardiac/vascular across 14 cohorts & 210 donors; originally targeted as 1,962,128 post-QC (from 2,105,588 raw cardiac/vascular across 14 cohorts & 210 donors; originally targeted as 3.2M)) Census)",
         "n_cells_input":       n_cells_raw,
         "n_cells_output":      int(adata_hvg.n_obs),
         "n_genes_input":       n_genes_raw,

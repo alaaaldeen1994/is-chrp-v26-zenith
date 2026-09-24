@@ -1,0 +1,139 @@
+id="disc-card"
+                 style="width:100%;max-width:680px;font-family:'Inter','Segoe UI',sans-serif;outline:none;box-shadow: 0 10px 40px rgba(0,0,0,0.1);border-radius:23px;">
+
+            <textarea id="disc-query" rows="3"
+                style="width:100%;padding:20px 22px 12px 22px;box-sizing:border-box;display:block;"
+                placeholder="Ask about genes, pathways, or mechanisms in cardiac ageing..."
+                oninput="if(typeof handleDiscQueryInput==='function')handleDiscQueryInput(this);" 
+                onkeydown="if(event.key==='Enter'&&(event.metaKey||event.ctrlKey))runDiscovery();"></textarea>
+
+            <!-- Bottom action row -->
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px 10px 14px;background:#ffffff;border-radius:0 0 23px 23px;">
+
+                <!-- Claude-style Model Dropdown -->
+                <div style="position:relative;display:inline-block;z-index:999;">
+                    <button id="model-select-btn" onclick="toggleModelDropdown(event)"
+                        style="background:transparent;border:1px solid #d5d5d2;color:#1a1a1a;padding:6px 12px;border-radius:18px;font-size:12px;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:4px;font-family:'Inter','Segoe UI',sans-serif;transition:all 0.15s;"
+                        onmouseover="this.style.background='#f7f7f6';this.style.borderColor='#c0c0bd';"
+                        onmouseout="this.style.background='transparent';this.style.borderColor='#d5d5d2';">
+                        <span id="active-model-name">Zenith</span>
+                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-top:1px;"><path d="m6 9 6 6 6-6"/></svg>
+                    </button>
+                    <!-- Dropdown List -->
+                    <div id="model-dropdown-list"
+                        style="display:none;position:absolute;top:calc(100% + 6px);left:0;background:#ffffff;border:1px solid #d5d5d2;border-radius:14px;padding:6px;box-shadow:0 10px 30px rgba(0,0,0,0.12);flex-direction:column;gap:3px;z-index:9999;min-width:220px;">
+                        <!-- Option 1: Zenith Ensemble -->
+                        <button onclick="selectModelOption('real', 'Zenith Ensemble')" id="model-opt-real"
+                            style="background:#f5f3ef;color:#191919;border:none;text-align:left;padding:8px 12px;border-radius:8px;cursor:pointer;width:100%;font-family:'Inter','Segoe UI',sans-serif;display:flex;flex-direction:column;gap:2px;transition:all 0.15s;">
+                            <span style="font-size:12px;font-weight:600;">Zenith Ensemble</span>
+                            <span style="font-size:9px;color:#8b8b8b;font-weight:400;">1.94M Generalist + 486k Specialist</span>
+                        </button>
+                        <!-- Option 2: GPT Analysis -->
+                        <button onclick="selectModelOption('gpt', 'GPT-4o Clinical Log')" id="model-opt-gpt"
+                            style="background:transparent;color:#6b6b6b;border:none;text-align:left;padding:8px 12px;border-radius:8px;cursor:pointer;width:100%;font-family:'Inter','Segoe UI',sans-serif;display:flex;flex-direction:column;gap:2px;transition:all 0.15s;">
+                            <span style="font-size:12px;font-weight:600;">GPT-4o Clinical Log</span>
+                            <span style="font-size:9px;color:#8b8b8b;font-weight:400;">Comparative synthesis of dual scVI models</span>
+                        </button>
+                        <!-- Option 3: OSK Partial -->
+                        <div style="height:1px;background:#e8e8e6;margin:2px 4px;"></div>
+                        <button onclick="selectModelOption('osk', 'OSK Partial')" id="model-opt-osk"
+                            style="background:transparent;color:#6b6b6b;border:none;text-align:left;padding:8px 12px;border-radius:8px;cursor:pointer;width:100%;font-family:'Inter','Segoe UI',sans-serif;display:flex;flex-direction:column;gap:2px;transition:all 0.15s;">
+                            <span style="font-size:12px;font-weight:600;">OSK Partial</span>
+                            <span style="font-size:9px;color:#8b8b8b;font-weight:400;">Partial reprogramming · Safety-gated</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Cell Type Dropdown -->
+                <div style="position:relative;display:inline-block;z-index:999;margin-left:8px;margin-right:auto;">
+                    <button id="celltype-select-btn" onclick="toggleCellTypeDropdown(event)"
+                        style="background:transparent;border:1px solid #d5d5d2;color:#1a1a1a;padding:6px 12px;border-radius:18px;font-size:12px;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:4px;font-family:'Inter','Segoe UI',sans-serif;transition:all 0.15s;"
+                        onmouseover="this.style.background='#f7f7f6';this.style.borderColor='#c0c0bd';"
+                        onmouseout="this.style.background='transparent';this.style.borderColor='#d5d5d2';">
+                        <span id="active-celltype-name">All cardiac cells</span>
+                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-top:1px;"><path d="m6 9 6 6 6-6"/></svg>
+                    </button>
+                    <!-- Dropdown List -->
+                    <div id="celltype-dropdown-list"
+                        style="display:none;position:absolute;top:calc(100% + 6px);left:0;background:#ffffff;border:1px solid #d5d5d2;border-radius:14px;padding:6px;box-shadow:0 10px 30px rgba(0,0,0,0.12);flex-direction:column;gap:3px;z-index:9999;min-width:260px;max-height:280px;overflow-y:auto;">
+                        <div style="font-size:10px;color:#8b8b8b;padding:8px 12px;text-align:center;">Loading cell types...</div>
+                    </div>
+                </div>
+
+                <!-- Run button -->
+                <button id="disc-run-btn" onclick="runDiscovery()"
+                    style="background:#1a1a1a;color:#f8f8f6;border:none;padding:8px;border-radius:50%;width:32px;height:32px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;white-space:nowrap;transition:all 0.15s;font-family:'Inter','Segoe UI',sans-serif;"
+                    onmouseover="this.style.background='#333'"
+                    onmouseout="this.style.background='#1a1a1a'">
+                    <span id="disc-btn-text" style="display:none;margin-right:2px;font-size:13px;font-weight:500;">Analyse</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- OSK Safety sub-panel (shown when OSK Partial selected) -->
+        <div id="disc-osk-sub" style="display:none;width:100%;max-width:680px;margin-top:8px;font-family:'Inter','Segoe UI',sans-serif;">
+            <div style="background:#ffffff;border:1px solid #d5d5d2;border-radius:16px;padding:10px 16px;box-shadow:0 1px 2px rgba(0,0,0,0.03);">
+                <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#8b8070" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                    <span style="font-size:10px;font-weight:600;color:#8b8070;letter-spacing:0.02em;">OSK Safety Level</span>
+                </div>
+                <div style="display:flex;gap:6px;margin-bottom:10px;">
+                    <button onclick="setSafetyLevel('conservative');updateDiscSafetyButtons('conservative');" class="safety-btn" data-level="conservative"
+                        style="flex:1;padding:6px 8px;border-radius:8px;font-size:10px;font-weight:600;cursor:pointer;border:1.5px solid rgba(37,99,235,0.3);background:rgba(37,99,235,0.06);color:#2563eb;transition:all 0.15s;font-family:'Inter',sans-serif;">
+                        Conservative
+                    </button>
+                    <button onclick="setSafetyLevel('balanced');updateDiscSafetyButtons('balanced');" class="safety-btn active-safety" data-level="balanced"
+                        style="flex:1;padding:6px 8px;border-radius:8px;font-size:10px;font-weight:600;cursor:pointer;border:2px solid rgba(202,138,4,0.5);background:rgba(202,138,4,0.08);color:#ca8a04;transition:all 0.15s;font-family:'Inter',sans-serif;">
+                        Balanced
+                    </button>
+                    <button onclick="setSafetyLevel('aggressive');updateDiscSafetyButtons('aggressive');" class="safety-btn" data-level="aggressive"
+                        style="flex:1;padding:6px 8px;border-radius:8px;font-size:10px;font-weight:600;cursor:pointer;border:1.5px solid rgba(220,38,38,0.25);background:rgba(220,38,38,0.04);color:#dc2626;transition:all 0.15s;font-family:'Inter',sans-serif;">
+                        Aggressive
+                    </button>
+                </div>
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+                    <span style="font-size:10px;font-weight:600;color:#8b8070;">Biological Age</span>
+                    <span id="disc-bio-age-val" style="font-size:11px;font-weight:700;color:#191919;font-family:monospace;">0.5</span>
+                </div>
+                <input id="disc-bio-age-slider" type="range" min="0" max="1" step="0.05" value="0.5"
+                    oninput="document.getElementById('disc-bio-age-val').textContent=this.value;
+                             var s1=document.getElementById('bio-age-slider');if(s1)s1.value=this.value;
+                             var v1=document.getElementById('bio-age-val');if(v1)v1.textContent=this.value;
+                             var s2=document.getElementById('mob-bio-age-slider');if(s2)s2.value=this.value;
+                             var v2=document.getElementById('mob-bio-age-val');if(v2)v2.textContent=this.value;"
+                    style="width:100%;accent-color:#8b8070;height:4px;cursor:pointer;">
+                <div style="display:flex;justify-content:space-between;font-size:9px;color:#8b8b8b;margin-top:2px;">
+                    <span>Embryonic</span><span>Senescent</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Suggestion pills -->
+        <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:14px;justify-content:center;width:100%;max-width:640px;">
+            <button class="sugg-pill" onclick="selectSuggestionPill(this.dataset.q)" data-q="Reverse cardiac aging in HMVEC cells using CACNA1C and RYR2 pathways"
+                style="background:transparent;border:1px solid #d5d5d2;color:#7a7a7a;font-size:12px;font-weight:400;padding:6px 14px;border-radius:20px;cursor:pointer;transition:all 0.15s;font-family:'Inter','Segoe UI',sans-serif;" onmouseover="this.style.borderColor='#bbb8b3';this.style.color='#1a1a1a';this.style.background='#f7f7f6'" onmouseout="this.style.borderColor='#d5d5d2';this.style.color='#7a7a7a';this.style.background='transparent'">
+                Cardiac aging reversal
+            </button>
+            <button class="sugg-pill" onclick="selectSuggestionPill(this.dataset.q)" data-q="Identify anti-senescence genes that suppress B2M and TMSB4X aging markers"
+                style="background:transparent;border:1px solid #d5d5d2;color:#7a7a7a;font-size:12px;font-weight:400;padding:6px 14px;border-radius:20px;cursor:pointer;transition:all 0.15s;font-family:'Inter','Segoe UI',sans-serif;" onmouseover="this.style.borderColor='#bbb8b3';this.style.color='#1a1a1a';this.style.background='#f7f7f6'" onmouseout="this.style.borderColor='#d5d5d2';this.style.color='#7a7a7a';this.style.background='transparent'">
+                Anti-senescence targets
+            </button>
+            <button class="sugg-pill" onclick="selectSuggestionPill(this.dataset.q)" data-q="Vascular endothelial rejuvenation: reactivate calcium signalling via PRKG1 and SLC8A1"
+                style="background:transparent;border:1px solid #d5d5d2;color:#7a7a7a;font-size:12px;font-weight:400;padding:6px 14px;border-radius:20px;cursor:pointer;transition:all 0.15s;font-family:'Inter','Segoe UI',sans-serif;" onmouseover="this.style.borderColor='#bbb8b3';this.style.color='#1a1a1a';this.style.background='#f7f7f6'" onmouseout="this.style.borderColor='#d5d5d2';this.style.color='#7a7a7a';this.style.background='transparent'">
+                Vascular endothelial
+            </button>
+            <button class="sugg-pill" onclick="selectSuggestionPill(this.dataset.q)" data-q="Sarcomere integrity restoration: identify TTN, MYH7, NEXN pathway genes in young donors"
+                style="background:transparent;border:1px solid #d5d5d2;color:#7a7a7a;font-size:12px;font-weight:400;padding:6px 14px;border-radius:20px;cursor:pointer;transition:all 0.15s;font-family:'Inter','Segoe UI',sans-serif;" onmouseover="this.style.borderColor='#bbb8b3';this.style.color='#1a1a1a';this.style.background='#f7f7f6'" onmouseout="this.style.borderColor='#d5d5d2';this.style.color='#7a7a7a';this.style.background='transparent'">
+                Sarcomere integrity
+            </button>
+            <button class="sugg-pill" onclick="selectSuggestionPill(this.dataset.q)" data-q="Find epigenetic clock reversal genes targeting DNMT3A and TET2 pathways in cardiac fibroblasts"
+                style="background:transparent;border:1px solid #d5d5d2;color:#7a7a7a;font-size:12px;font-weight:400;padding:6px 14px;border-radius:20px;cursor:pointer;transition:all 0.15s;font-family:'Inter','Segoe UI',sans-serif;" onmouseover="this.style.borderColor='#bbb8b3';this.style.color='#1a1a1a';this.style.background='#f7f7f6'" onmouseout="this.style.borderColor='#d5d5d2';this.style.color='#7a7a7a';this.style.background='transparent'">
+                Epigenetic clock reset
+            </button>
+        </div>
+
+        <!-- Results area -->
+        <div id="disc-results" style="width:100%;max-width:720px;margin-top:20px;display:none;"></div>
+
+        

@@ -1,0 +1,1862 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Structure Prediction · Nilus Lab Platform</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta http-equiv="Content-Security-Policy" content="
+  default-src 'self';
+  script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://3Dmol.org https://unpkg.com https://www.gstatic.com;
+  style-src 'self' https://fonts.googleapis.com 'unsafe-inline';
+  font-src 'self' https://fonts.gstatic.com;
+  img-src 'self' data:;
+  connect-src 'self' https://api.esm.metainfrastructure.org https://api.openai.com https://cellxgene.cziscience.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://nilus-lab.firebaseapp.com https://firestore.googleapis.com https://rest.uniprot.org https://alphafold.ebi.ac.uk https://files.rcsb.org https://*.rcsb.org https://niluslab.com https://*.niluslab.com;
+" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/3dmol@2.4.2/build/3Dmol-min.js"></script>
+<style>
+  /* ================================================================
+     NILUS LAB — Structure Viewer — Complete Unified Stylesheet
+  ================================================================ */
+
+  /* ── Google Fonts loaded in <head> ── */
+
+  /* ── CSS Tokens ── */
+  :root {
+    --accent:        #3B82F6;
+    --accent-deep:   #2563EB;
+    --accent-bright: #93C5FD;
+    --accent-soft:   rgba(59,130,246,0.12);
+    --accent-glow:   rgba(59,130,246,0.35);
+
+    --plddt-vhigh:   #0053D6;
+    --plddt-high:    #65CBF3;
+    --plddt-low:     #E7CB44;
+    --plddt-vlow:    #FF7D45;
+
+    --bg-base:      #080B12;
+    --bg-surface:   #0C1119;
+    --bg-panel:     #11161F;
+    --bg-card:      rgba(0,0,0,0.35);
+
+    --border:       #1A2234;
+    --border-strong:#1E293B;
+    --border-accent:rgba(88,158,255,0.35);
+
+    --text:         #E2E8F0;
+    --text-mute:    #94A3B8;
+    --text-dim:     #475569;
+    --text-faint:   #334155;
+
+    --coral:        #F87171;
+    --amber:        #FBBF24;
+    --green:        #60a5fa;
+
+    --radius:       12px;
+    --radius-sm:    8px;
+    --ease:         cubic-bezier(0.4,0,0.2,1);
+    --t-fast:       0.12s;
+  }
+
+  /* ── Reset ── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Outfit', 'Inter', system-ui, sans-serif;
+    background: var(--bg-base);
+    color: var(--text);
+    font-size: 13px;
+    line-height: 1.5;
+    overflow: hidden;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── Scrollbars ── */
+  ::-webkit-scrollbar { width: 4px; height: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: #1E293B; border-radius: 2px; }
+  ::-webkit-scrollbar-thumb:hover { background: #334155; }
+
+  /* ================================================================
+     SHELL LAYOUT
+  ================================================================ */
+  .topbar {
+    display: flex; align-items: center; padding: 0 20px;
+    background: #0C1119; border-bottom: 1px solid #1E293B;
+    height: 52px; flex-shrink: 0; z-index: 20; gap: 14px;
+  }
+  .brand-wrap { display: flex; align-items: center; gap: 10px; }
+  .brand-icon {
+    width: 32px; height: 32px; border-radius: 9px;
+    background: linear-gradient(135deg, #3B82F6, #1D4ED8);
+    display: grid; place-items: center; flex-shrink: 0;
+    box-shadow: 0 0 0 1px rgba(255,255,255,0.1), 0 4px 12px rgba(59,130,246,0.3);
+  }
+  .brand-name { font-size: 16px; font-weight: 800; letter-spacing: -0.02em; color: white; }
+  .brand-name span { color: #3B82F6; }
+  .brand-sub {
+    font-size: 9px; font-family: 'JetBrains Mono', monospace;
+    color: var(--text-dim); letter-spacing: 0.08em; text-transform: uppercase;
+    line-height: 1.2; margin-top: 1px;
+  }
+  /* Auth Area & Profile Widget */
+  .auth-widget-wrap {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .auth-icon-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-mute);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    transition: color var(--t-fast);
+    outline: none;
+  }
+  .auth-icon-btn:hover {
+    color: white;
+  }
+  .user-profile-capsule {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    padding: 2px 10px 2px 2px;
+    cursor: pointer;
+    transition: background var(--t-fast);
+  }
+  .user-profile-capsule:hover {
+    background: rgba(255, 255, 255, 0.07);
+  }
+  .user-avatar-circle {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #3B82F6, #8B5CF6);
+    display: grid;
+    place-items: center;
+    font-size: 9px;
+    font-weight: 700;
+    color: white;
+    user-select: none;
+    flex-shrink: 0;
+  }
+  .user-meta-info {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.15;
+    text-align: left;
+  }
+  .user-display-name {
+    font-size: 10px;
+    font-weight: 700;
+    color: white;
+  }
+  .user-org-text {
+    font-size: 7.5px;
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--text-mute);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-top: 1px;
+  }
+
+  .subbar {
+    display: flex; align-items: center; padding: 0 20px; gap: 6px;
+    background: #080B12; border-bottom: 1px solid #1A2234;
+    height: 34px; flex-shrink: 0; font-size: 11px; color: var(--text-dim);
+  }
+  .subbar .crumb { color: var(--text-mute); }
+  .subbar .crumb a { color: var(--accent); text-decoration: none; transition: color var(--t-fast); }
+  .subbar .crumb a:hover { color: var(--accent-bright); }
+  .subbar .crumb .here { color: var(--text); font-weight: 600; }
+  .subbar .sep { color: var(--text-faint); margin: 0 6px; }
+  .subbar-spacer { flex: 1; }
+  .stat-chip {
+    display: flex; align-items: center; gap: 5px;
+    padding: 3px 8px; border-radius: 5px;
+    background: rgba(255,255,255,0.04); border: 1px solid var(--border);
+    font-size: 10.5px; font-family: 'JetBrains Mono', monospace;
+  }
+  .stat-chip .label { color: var(--text-dim); }
+  .stat-chip .val { color: var(--text); font-weight: 600; }
+  .dot-online { width: 6px; height: 6px; border-radius: 50%; background: #60a5fa; box-shadow: 0 0 6px #60a5fa; }
+
+  .main {
+    flex: 1; display: grid; grid-template-columns: 320px 1fr;
+    overflow: hidden; position: relative;
+  }
+  .statusbar {
+    display: flex; align-items: center; padding: 0 20px; gap: 14px;
+    background: #0C1119; border-top: 1px solid #1E293B;
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    color: var(--text-faint); text-transform: uppercase; letter-spacing: .06em;
+    height: 26px; flex-shrink: 0;
+  }
+  .statusbar .sep { color: var(--border-strong); margin: 0 4px; }
+  .statusbar .ok { color: var(--green); }
+  .statusbar .accent { color: var(--accent-bright); }
+  .statusbar > div:last-child { margin-left: auto; }
+
+  /* Run overlay */
+  .run-overlay {
+    display: none; position: absolute; inset: 0; z-index: 100;
+    background: rgba(8,11,18,0.85); backdrop-filter: blur(8px);
+    flex-direction: column; align-items: center; justify-content: center; gap: 20px;
+  }
+  .run-overlay.active { display: flex; }
+  .run-spinner {
+    width: 40px; height: 40px; border-radius: 50%;
+    border: 3px solid rgba(59,130,246,0.2);
+    border-top-color: var(--accent);
+    animation: spin 0.8s linear infinite;
+    box-shadow: 0 0 20px var(--accent-glow);
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  #runTitle { font-size: 16px; font-weight: 700; color: white; }
+  #runStage  { font-size: 11px; color: var(--text-mute); font-family: 'JetBrains Mono', monospace; }
+  .run-progress { width: 200px; height: 3px; background: rgba(255,255,255,0.1); border-radius: 2px; overflow: hidden; }
+  #runProgressBar { height: 100%; background: var(--accent); border-radius: 2px; transition: width 0.3s; }
+
+  /* Login overlay */
+  #loginOverlay {
+    position: fixed; inset: 0; z-index: 9999;
+    background: rgba(8,11,18,0.97); backdrop-filter: blur(20px);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .login-box {
+    background: #11161F; border: 1px solid #1E293B; border-radius: 16px;
+    padding: 36px; max-width: 380px; width: 100%;
+    box-shadow: 0 24px 64px rgba(0,0,0,0.8);
+  }
+  .login-title { font-size: 20px; font-weight: 800; letter-spacing: -0.02em; color: white; margin-bottom: 6px; }
+  .login-sub { font-size: 12px; color: var(--text-dim); margin-bottom: 24px; }
+  .google-btn {
+    width: 100%; display: flex; align-items: center; justify-content: center; gap: 10px;
+    padding: 12px 20px; border-radius: 10px;
+    background: white; border: none; color: #111; font-size: 13px; font-weight: 600;
+    cursor: pointer; transition: all 0.12s; margin-bottom: 12px;
+  }
+  .google-btn:hover { background: #f0f0f0; transform: translateY(-1px); }
+  .login-note { font-size: 10px; color: var(--text-dim); text-align: center; }
+
+  /* ================================================================
+     SIDEBAR
+  ================================================================ */
+  .sidebar {
+    background: #000000;
+    border-right: 1px solid var(--border);
+    display: flex; flex-direction: column;
+    overflow-y: auto; gap: 10px;
+    padding: 14px 12px 20px 12px;
+    height: 100%;
+  }
+
+  /* Panel card */
+  .panel {
+    background: #000000;
+    border: 1px solid #1E293B;
+    border-radius: var(--radius);
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+  .panel.exec-panel { border-color: rgba(59,130,246,0.35); }
+  .panel-head {
+    display: flex; align-items: center; gap: 9px;
+    padding: 10px 14px;
+    background: rgba(255,255,255,0.02);
+    border-bottom: 1px solid #1E293B;
+  }
+  .panel-num {
+    width: 19px; height: 19px; border-radius: 50%; flex-shrink: 0;
+    background: #1E293B; color: var(--text-mute);
+    display: grid; place-items: center;
+    font-size: 10px; font-weight: 700;
+  }
+  .panel-num.active-num { background: var(--accent); color: white; }
+  .panel-title {
+    font-size: 11px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.07em;
+    color: var(--text);
+  }
+  .panel-title.exec-title { color: white; }
+  .panel-tag {
+    margin-left: auto;
+    font-size: 9px; font-family: 'JetBrains Mono', monospace; letter-spacing: 0.04em;
+    padding: 2px 7px; border-radius: 5px;
+    background: #080B12; border: 1px solid #1E293B; color: var(--text-mute);
+  }
+  .panel-tag.exec-tag { color: var(--accent-bright); border-color: rgba(59,130,246,0.35); }
+  .panel-body { padding: 13px 14px; }
+  .panel-body > * + * { margin-top: 10px; }
+
+  /* ── Mode Switch ── */
+  .mode-switch {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 7px;
+  }
+  .mode-btn {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 9px;
+    padding: 11px 12px;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.15s;
+    color: var(--text-mute);
+    width: 100%;
+  }
+  .mode-btn:hover {
+    background: rgba(255,255,255,0.06);
+    border-color: rgba(255,255,255,0.14);
+    color: var(--text);
+  }
+  .mode-btn.active {
+    background: rgba(59,130,246,0.1);
+    border-color: rgba(59,130,246,0.5);
+    color: white;
+  }
+  .mode-btn .mode-name {
+    font-size: 13px; font-weight: 700; margin-bottom: 4px; color: var(--text);
+  }
+  .mode-btn .mode-sub {
+    font-size: 9px; font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-faint);
+  }
+  .mode-btn.active .mode-sub { color: var(--accent-bright); }
+  .mode-desc-text {
+    font-size: 10.5px; color: var(--text-mute); line-height: 1.55;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* ── Sidebar form elements ── */
+  .sb-field { }
+  .sb-label {
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em;
+    color: var(--text); margin-bottom: 6px;
+  }
+  .sb-hint {
+    text-transform: none; font-family: 'JetBrains Mono', monospace;
+    color: var(--text-mute); font-weight: 400; font-size: 10px; letter-spacing: 0;
+  }
+  .sb-input {
+    width: 100%; display: block;
+    background: rgba(0,0,0,0.45); border: 1px solid #1E293B; border-radius: 8px;
+    color: var(--text); padding: 9px 12px;
+    font-family: 'JetBrains Mono', monospace; font-size: 11.5px;
+    outline: none; transition: border-color var(--t-fast);
+  }
+  .sb-input:focus { border-color: rgba(59,130,246,0.6); }
+  .sb-input::placeholder { color: var(--text-dim); }
+  .sb-textarea {
+    width: 100%; display: block;
+    background: rgba(0,0,0,0.45); border: 1px solid #1E293B; border-radius: 9px;
+    color: var(--text); padding: 10px 12px;
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    line-height: 1.6; resize: vertical; min-height: 105px;
+    outline: none; transition: border-color var(--t-fast);
+  }
+  .sb-textarea:focus { border-color: rgba(59,130,246,0.6); }
+  .sb-textarea::placeholder { color: var(--text-dim); }
+  .sb-select {
+    width: 100%; display: block;
+    background: rgba(0,0,0,0.45); border: 1px solid #1E293B; border-radius: 8px;
+    color: var(--text); padding: 8px 28px 8px 11px;
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    outline: none; cursor: pointer; appearance: none; -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 10px center;
+    transition: border-color var(--t-fast);
+  }
+  .sb-select:focus { border-color: rgba(59,130,246,0.6); }
+
+  /* ── API Key row ── */
+  .api-row {
+    display: flex; align-items: center; gap: 7px;
+  }
+  .api-row .sb-input { flex: 1; }
+  .api-dot {
+    width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0;
+    background: #1E293B; transition: all 0.2s; display: inline-block;
+  }
+  .api-dot.set { background: #60a5fa; box-shadow: 0 0 6px #60a5fa; }
+  .icon-action-btn {
+    width: 34px; height: 34px; flex-shrink: 0;
+    background: rgba(0,0,0,0.4); border: 1px solid #1E293B; border-radius: 8px;
+    color: var(--text-mute); cursor: pointer; display: grid; place-items: center;
+    transition: all var(--t-fast);
+  }
+  .icon-action-btn:hover { color: white; border-color: rgba(255,255,255,0.18); background: rgba(255,255,255,0.06); }
+  .api-hint {
+    font-size: 10px; color: var(--text-mute); line-height: 1.5;
+    font-family: 'JetBrains Mono', monospace; margin-top: 5px;
+  }
+
+  /* ── UniProt Lookup Widget ── */
+  .uniprot-lookup-box {
+    background: rgba(99,102,241,0.04);
+    border: 1px solid rgba(99,102,241,0.18);
+    border-radius: 10px;
+    padding: 11px 12px;
+    margin-bottom: 10px;
+  }
+  .uniprot-lookup-label {
+    font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em;
+    color: #6366f1; font-family: 'JetBrains Mono', monospace;
+    margin-bottom: 7px; display: flex; align-items: center; gap: 6px;
+  }
+  .uniprot-lookup-label svg { opacity: 0.75; }
+  .uniprot-search-row {
+    display: flex; gap: 6px; align-items: center;
+  }
+  .uniprot-gene-input {
+    flex: 1;
+    background: rgba(0,0,0,0.4); border: 1px solid #1E293B; border-radius: 8px;
+    color: var(--text); padding: 8px 11px;
+    font-family: 'JetBrains Mono', monospace; font-size: 11.5px;
+    outline: none; transition: border-color 0.15s;
+  }
+  .uniprot-gene-input:focus { border-color: rgba(99,102,241,0.55); }
+  .uniprot-gene-input::placeholder { color: var(--text-dim); }
+  .uniprot-fetch-btn {
+    flex-shrink: 0; padding: 8px 13px; border-radius: 8px; border: none;
+    background: linear-gradient(135deg, #6366f1, #4f46e5);
+    color: white; font-size: 11px; font-weight: 700; cursor: pointer;
+    display: flex; align-items: center; gap: 5px;
+    transition: all 0.15s; white-space: nowrap; font-family: inherit;
+    box-shadow: 0 2px 8px rgba(99,102,241,0.35);
+  }
+  .uniprot-fetch-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 14px rgba(99,102,241,0.5); }
+  .uniprot-fetch-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+  .uniprot-spinner {
+    display: inline-block; width: 11px; height: 11px;
+    border: 2px solid rgba(255,255,255,0.25); border-top-color: white;
+    border-radius: 50%; animation: spin 0.7s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .uniprot-result-card {
+    margin-top: 9px; padding: 10px 12px; border-radius: 9px;
+    background: rgba(0,0,0,0.35); border: 1px solid rgba(99,102,241,0.15);
+  }
+  .uniprot-result-header {
+    display: flex; align-items: center; gap: 7px; flex-wrap: wrap; margin-bottom: 6px;
+  }
+  .uniprot-gene-name {
+    font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 700; color: white;
+  }
+  .uniprot-chip {
+    padding: 2px 7px; border-radius: 4px; font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px; font-weight: 600; display: inline-flex; align-items: center;
+  }
+  .uniprot-chip.acc { background: rgba(99,102,241,0.15); color: #a5b4fc; border: 1px solid rgba(99,102,241,0.25); }
+  .uniprot-chip.len { background: rgba(16,185,129,0.12); color: #6ee7b7; border: 1px solid rgba(16,185,129,0.2); }
+  .uniprot-chip.org { background: rgba(245,158,11,0.1); color: #fcd34d; border: 1px solid rgba(245,158,11,0.2); }
+  .uniprot-result-meta {
+    font-size: 10px; color: var(--text-mute); line-height: 1.5;
+    font-family: 'JetBrains Mono', monospace; margin-bottom: 8px;
+  }
+  .uniprot-result-func {
+    font-size: 10.5px; color: #94a3b8; line-height: 1.55;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+    margin-bottom: 9px;
+  }
+  .uniprot-use-btn {
+    width: 100%; padding: 7px 12px; border-radius: 8px; border: none;
+    background: rgba(99,102,241,0.14); border: 1px solid rgba(99,102,241,0.25);
+    color: #a5b4fc; font-size: 11px; font-weight: 700; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+    transition: all 0.15s; font-family: inherit;
+  }
+  .uniprot-use-btn:hover { background: rgba(99,102,241,0.25); color: white; border-color: rgba(99,102,241,0.45); }
+  .uniprot-error {
+    margin-top: 7px; padding: 7px 10px; border-radius: 7px;
+    background: rgba(248,113,113,0.07); border: 1px solid rgba(248,113,113,0.2);
+    color: #fca5a5; font-size: 10px; font-family: 'JetBrains Mono', monospace;
+    display: flex; align-items: center; gap: 6px;
+  }
+
+  /* ── Two-button row ── */
+  .two-btn-row { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
+  .ghost-btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+    padding: 9px 12px; border-radius: 9px;
+    border: 1px solid rgba(255,255,255,0.09); background: rgba(255,255,255,0.04);
+    color: var(--text-mute); font-size: 11.5px; font-weight: 600;
+    cursor: pointer; transition: all var(--t-fast); white-space: nowrap;
+  }
+  .ghost-btn:hover {
+    background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.16); color: white;
+  }
+  .ghost-btn.full-width { width: 100%; }
+
+  /* ── Two-column grid ── */
+  .two-col-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
+
+  /* ── Chain builder ── */
+  .chain-list { display: flex; flex-direction: column; gap: 8px; }
+  .chain-row {
+    display: flex; align-items: center; gap: 7px;
+    background: rgba(0,0,0,0.3); border: 1px solid #1E293B;
+    border-radius: 9px; padding: 8px 10px; flex-wrap: wrap;
+  }
+  .chain-id-badge {
+    width: 28px; height: 28px; border-radius: 7px; flex-shrink: 0;
+    background: var(--accent); color: white;
+    display: grid; place-items: center;
+    font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 700;
+  }
+  .chain-type-select {
+    flex: 1; min-width: 80px;
+    background: rgba(0,0,0,0.4); border: 1px solid #1E293B; border-radius: 7px;
+    color: var(--text); padding: 6px 22px 6px 9px;
+    font-size: 11px; font-family: 'JetBrains Mono', monospace;
+    appearance: none; -webkit-appearance: none; outline: none; cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='9' height='9' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 7px center;
+  }
+  .chain-copies-input {
+    width: 40px; flex-shrink: 0;
+    background: rgba(0,0,0,0.4); border: 1px solid #1E293B; border-radius: 7px;
+    color: var(--text); padding: 6px 4px;
+    font-size: 11px; font-family: 'JetBrains Mono', monospace;
+    text-align: center; outline: none;
+  }
+  .chain-del-btn {
+    width: 26px; height: 26px; flex-shrink: 0; border-radius: 6px;
+    border: none; background: transparent; color: var(--text-mute);
+    cursor: pointer; display: grid; place-items: center; transition: all 0.1s;
+  }
+  .chain-del-btn:hover { background: rgba(248,113,113,0.12); color: #F87171; }
+  .chain-seq-wrap { width: 100%; margin-top: 4px; }
+  .add-chain-btn {
+    width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;
+    padding: 9px 12px; border-radius: 9px;
+    border: 1px dashed rgba(255,255,255,0.12); background: transparent;
+    color: var(--text-mute); font-size: 11.5px; font-weight: 600; cursor: pointer;
+    transition: all var(--t-fast);
+  }
+  .add-chain-btn:hover { border-color: rgba(59,130,246,0.4); color: var(--accent-bright); background: rgba(59,130,246,0.05); }
+
+  /* ── Cost cards ── */
+  .cost-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
+  .cost-card {
+    background: rgba(0,0,0,0.35); border: 1px solid #1E293B; border-radius: 9px; padding: 10px 12px;
+  }
+  .cost-label { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text-mute); margin-bottom: 4px; font-family: 'JetBrains Mono', monospace; }
+  .cost-value { font-size: 20px; font-weight: 700; font-family: 'JetBrains Mono', monospace; color: white; }
+  .cost-unit { font-size: 11px; color: var(--text-mute); font-weight: 400; }
+  .cost-note { font-size: 10px; color: var(--text-mute); line-height: 1.5; font-family: 'JetBrains Mono', monospace; margin-top: 8px; }
+
+  /* ── Run button ── */
+  .run-btn {
+    width: 100%; display: flex; align-items: center; justify-content: center; gap: 9px;
+    padding: 13px 20px; border-radius: 11px; border: none;
+    background: linear-gradient(180deg, #7AB5FF 0%, #3B82F6 40%, #2563EB 100%);
+    color: white; font-size: 14px; font-weight: 700; cursor: pointer; letter-spacing: -0.01em;
+    box-shadow: 0 2px 12px rgba(59,130,246,0.4), inset 0 1px 0 rgba(255,255,255,0.2);
+    transition: all 0.15s;
+  }
+  .run-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 24px rgba(59,130,246,0.55), inset 0 1px 0 rgba(255,255,255,0.2); }
+  .run-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; box-shadow: none !important; }
+
+  /* ── Diagnostics log ── */
+  .diag-log {
+    background: rgba(0,0,0,0.5); border: 1px solid #1A2234; border-radius: 9px;
+    padding: 10px 12px; max-height: 120px; overflow-y: auto;
+    font-family: 'JetBrains Mono', monospace; font-size: 10px; line-height: 1.55;
+  }
+  .diag-log .diag-line { display: flex; gap: 10px; margin-bottom: 4px; align-items: flex-start; }
+  .diag-log .diag-line:last-child { margin-bottom: 0; }
+  .diag-log .t { color: #334155; flex-shrink: 0; }
+  .diag-log .diag-line.info .m { color: var(--text-mute); }
+  .diag-log .diag-line.ok   .m { color: #60a5fa; }
+  .diag-log .diag-line.warn .m { color: #FBBF24; }
+  .diag-log .diag-line.err  .m { color: #F87171; }
+
+  /* ── Utility ── */
+  .hidden { display: none !important; }
+
+  /* ================================================================
+     VIEWER AREA — Tabs
+  ================================================================ */
+  .viewer-area { display: flex; flex-direction: column; overflow: hidden; background: #000; }
+
+  .tabs {
+    display: flex; padding: 0 20px; gap: 2px;
+    background: #080B12; border-bottom: 1px solid var(--border);
+    height: 46px; align-items: stretch; flex-shrink: 0; z-index: 10;
+  }
+  .tab {
+    display: flex; align-items: center; gap: 7px;
+    padding: 0 18px; color: var(--text-dim); font-size: 12px; font-weight: 500;
+    cursor: pointer; position: relative; transition: color 0.15s;
+    background: transparent; border: none; white-space: nowrap; letter-spacing: 0.01em;
+  }
+  .tab:hover { color: var(--text-mute); }
+  .tab.active { color: var(--text); font-weight: 600; }
+  .tab.active::after {
+    content: ''; position: absolute; bottom: -1px; left: 18px; right: 18px;
+    height: 2px; background: linear-gradient(90deg, var(--accent-deep), var(--accent));
+    box-shadow: 0 0 10px var(--accent-glow); border-radius: 2px 2px 0 0;
+  }
+  .tab .badge {
+    background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.09);
+    color: var(--text-dim); padding: 1px 6px; border-radius: 20px;
+    font-size: 9.5px; font-family: 'JetBrains Mono', monospace; font-weight: 500;
+  }
+  .tab.active .badge { background: var(--accent-soft); border-color: rgba(88,158,255,0.35); color: var(--accent-bright); }
+  .tab-tools { margin-left: auto; display: flex; align-items: center; gap: 6px; }
+  .btn-icon {
+    width: 28px; height: 28px; border-radius: 6px; border: 1px solid transparent;
+    background: transparent; color: var(--text-dim); cursor: pointer;
+    display: grid; place-items: center; transition: all var(--t-fast);
+  }
+  .btn-icon:hover { background: rgba(255,255,255,0.07); color: white; border-color: rgba(255,255,255,0.1); }
+
+  .tab-panel { flex: 1; display: none; position: relative; overflow: hidden; }
+  .tab-panel.active { display: flex; flex-direction: column; }
+
+  /* ================================================================
+     3D VIEWER
+  ================================================================ */
+  .viewer-3d { position: relative; width: 100%; height: 100%; background: #000; overflow: hidden; }
+  #molviewer { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+  .viewer-overlay { position: absolute; top: 16px; left: 16px; z-index: 10; pointer-events: none; }
+  .info-card {
+    background: rgba(8,11,18,0.85); backdrop-filter: blur(16px);
+    border: 1px solid rgba(255,255,255,0.07); border-radius: 12px; padding: 14px 16px;
+    min-width: 190px; box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+  }
+  .info-card .title { font-size: 9px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px; font-family: 'JetBrains Mono', monospace; }
+  .info-card .name  { font-size: 15px; font-weight: 700; color: white; margin-bottom: 10px; }
+  .info-card .meta  { display: flex; flex-direction: column; gap: 3px; font-size: 11.5px; color: var(--text-mute); }
+  .info-card .meta b { color: white; font-weight: 700; }
+
+  .viewer-toolbar { position: absolute; top: 16px; right: 16px; z-index: 10; }
+  .tool-group {
+    display: flex; flex-direction: column; gap: 3px;
+    background: rgba(8,11,18,0.85); backdrop-filter: blur(16px);
+    border: 1px solid rgba(255,255,255,0.07); border-radius: 10px; padding: 5px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+  }
+  .tool-btn {
+    width: 28px; height: 28px; border-radius: 7px; border: none;
+    background: transparent; color: var(--text-mute); cursor: pointer;
+    display: grid; place-items: center; transition: all var(--t-fast);
+  }
+  .tool-btn:hover { color: white; background: rgba(255,255,255,0.08); }
+  .tool-btn.active { background: rgba(59,130,246,0.2); color: white; }
+  .tool-divider { width: 100%; height: 1px; background: rgba(255,255,255,0.06); margin: 2px 0; }
+
+  .legend {
+    position: absolute; bottom: 16px; left: 16px; z-index: 10;
+    background: rgba(8,11,18,0.85); backdrop-filter: blur(16px);
+    border: 1px solid rgba(255,255,255,0.07); border-radius: 10px; padding: 10px 14px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+  }
+  .legend-title { font-size: 10px; font-weight: 600; color: var(--text-mute); margin-bottom: 6px; }
+  .legend-bar { width: 160px; height: 5px; border-radius: 3px; background: linear-gradient(90deg, #FF7D45, #E7CB44, #65CBF3, #0053D6); margin-bottom: 4px; }
+  .legend-labels { display: flex; justify-content: space-between; font-size: 9px; font-family: 'JetBrains Mono', monospace; color: var(--text-dim); width: 160px; }
+
+  .res-tooltip {
+    position: absolute; background: rgba(8,11,18,0.96); backdrop-filter: blur(12px);
+    border: 1px solid var(--border-strong); border-radius: 8px; padding: 7px 11px;
+    pointer-events: none; display: none; z-index: 200; box-shadow: 0 8px 16px rgba(0,0,0,0.5);
+  }
+  .res-tooltip .rt-res { font-weight: 700; font-size: 11.5px; color: white; }
+  .res-tooltip .rt-plddt { font-size: 10px; color: var(--text-mute); font-family: 'JetBrains Mono', monospace; margin-top: 2px; }
+
+  /* ================================================================
+     RESIDUE SELECTION LABEL (Biomolecular Structural Standard)
+  ================================================================ */
+  #af-selection-label {
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+    background: rgba(0, 0, 0, 0.7);
+    color: #ffffff;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
+    pointer-events: none;
+    z-index: 10;
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    display: none;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+    animation: selLabelIn 0.2s ease-out;
+  }
+  #af-selection-label.visible { display: flex; }
+  @keyframes selLabelIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  #af-selection-label .chain-badge {
+    background: rgba(59,130,246,0.2); border: 1px solid rgba(59,130,246,0.4);
+    color: var(--accent-bright); font-weight: 700; font-size: 10px;
+    padding: 2px 7px; border-radius: 5px; letter-spacing: 0.04em;
+  }
+  #af-selection-label .resname { color: white; font-weight: 700; font-size: 12px; }
+  #af-selection-label .resindex { color: var(--text-mute); font-size: 11px; }
+  #af-selection-label .sel-plddt { color: #65CBF3; font-size: 10px; }
+  #af-selection-label .sel-sep { color: rgba(255,255,255,0.15); margin: 0 2px; }
+  #af-selection-label .hbond-badge {
+    background: rgba(0,229,255,0.12); border: 1px solid rgba(0,229,255,0.3);
+    color: #00E5FF; font-size: 9px; font-weight: 600;
+    padding: 2px 6px; border-radius: 4px; letter-spacing: 0.03em;
+  }
+
+  /* ================================================================
+     SEQUENCE VIEWER
+  ================================================================ */
+  .seq-viewer { padding: 20px; overflow-y: auto; height: 100%; }
+  .seq-block { margin-bottom: 24px; }
+  .seq-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+  .seq-chain-id { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 14px; color: var(--accent-bright); background: var(--accent-soft); border: 1px solid rgba(59,130,246,0.3); padding: 2px 8px; border-radius: 4px; }
+  .seq-chain-meta { font-size: 12px; color: var(--text-mute); }
+  .seq-body { background: var(--bg-panel); border: 1px solid var(--border); border-radius: 10px; padding: 16px; }
+  .seq-ruler { display: flex; font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--text-dim); margin-bottom: 6px; }
+  .seq-ruler span { display: inline-block; width: 12px; text-align: center; }
+  .seq-residues { font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.8; letter-spacing: 0.5px; word-break: break-all; }
+  .seq-residues .res { display: inline-block; width: 12px; text-align: center; border-radius: 2px; cursor: pointer; transition: all .1s; }
+  .seq-residues .res:hover { background: rgba(255,255,255,0.08); transform: scale(1.15); }
+  .seq-residues .res.selected { background: var(--accent); color: white !important; box-shadow: 0 0 8px var(--accent-glow); }
+  .c-vhigh { color: #93C5FD; } .c-high { color: #65CBF3; } .c-low { color: #E7CB44; } .c-vlow { color: #FF7D45; }
+
+  /* ================================================================
+     BINDING ANALYSIS
+  ================================================================ */
+  .binding-area { display: flex; height: 100%; }
+  .binding-3d { flex: 1; position: relative; background: #000; }
+  #bindingviewer { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .binding-panel { width: 280px; background: var(--bg-surface); border-left: 1px solid var(--border); display: flex; flex-direction: column; overflow-y: auto; }
+  .binding-section { padding: 16px; border-bottom: 1px solid var(--border); }
+  .binding-section h4 { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-mute); margin-bottom: 12px; }
+  .ligand-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .ligand-stat { background: var(--bg-panel); border: 1px solid var(--border); border-radius: 8px; padding: 8px 10px; }
+  .ligand-stat .k { font-size: 9px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 2px; }
+  .ligand-stat .v { font-size: 15px; font-weight: 700; color: white; font-family: 'JetBrains Mono', monospace; }
+  .contact-list { display: flex; flex-direction: column; gap: 6px; }
+  .contact-row { display: flex; align-items: center; justify-content: space-between; padding: 7px 10px; border-radius: 8px; background: var(--bg-panel); border: 1px solid var(--border); font-family: 'JetBrains Mono', monospace; font-size: 10.5px; transition: all 0.12s; cursor: pointer; }
+  .contact-row:hover { border-color: var(--accent); transform: translateX(3px); }
+  .contact-res { font-weight: 600; color: white; }
+  .contact-res.ligand { color: var(--accent-bright); }
+  .contact-dist { font-weight: 700; color: var(--green); }
+
+  /* ================================================================
+     PAE MATRIX
+  ================================================================ */
+  .pae-area { display: flex; flex-direction: column; height: 100%; }
+  .pae-toolbar { padding: 12px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 12px; background: var(--bg-surface); flex-shrink: 0; }
+  .pae-toolbar .title { font-size: 13px; font-weight: 600; color: white; }
+  .pae-toolbar .desc { font-size: 11px; color: var(--text-mute); margin-top: 2px; }
+  .pae-legend { margin-left: auto; display: flex; align-items: center; gap: 8px; font-size: 10px; color: var(--text-mute); font-family: 'JetBrains Mono', monospace; }
+  .pae-legend-bar { width: 80px; height: 6px; border-radius: 3px; background: linear-gradient(90deg,#1e3a5f,#3b82f6,#fbbf24,#fb7185); }
+  .pae-canvas-wrap { flex: 1; display: grid; place-items: center; padding: 24px; overflow: auto; position: relative; }
+  #paeCanvas { background: var(--bg-panel); border: 1px solid var(--border); border-radius: 8px; box-shadow: 0 10px 24px rgba(0,0,0,0.6); cursor: crosshair; image-rendering: pixelated; }
+  .pae-tooltip { position: absolute; background: rgba(8,11,18,0.96); border: 1px solid var(--border-strong); border-radius: 6px; padding: 6px 10px; font-family: 'JetBrains Mono', monospace; font-size: 10px; pointer-events: none; display: none; z-index: 5; }
+  .pae-tooltip .pt-pair { color: var(--accent-bright); font-weight: 600; }
+  .pae-tooltip .pt-val { color: var(--text-mute); margin-top: 2px; }
+
+  /* ================================================================
+     MEDIA QUERIES
+  ================================================================ */
+  /* ================================================================
+     AI ANALYSIS TAB & ASSISTANT PANEL
+  ================================================================ */
+  .ai-analysis-area { display: flex; flex-direction: column; height: 100%; background: var(--bg-base); }
+  .ai-toolbar {
+    padding: 14px 20px; border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 12px; background: var(--bg-surface); flex-shrink: 0;
+  }
+  .ai-toolbar .title { font-size: 14px; font-weight: 700; color: white; }
+  .ai-toolbar .desc { font-size: 11px; color: var(--text-mute); margin-top: 2px; }
+  .ai-actions { margin-left: auto; display: flex; gap: 8px; }
+
+  .ai-content { flex: 1; overflow-y: auto; padding: 24px; }
+
+  /* Loading state */
+  .ai-loading { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; gap: 20px; }
+  .ai-loading-spinner {
+    width: 44px; height: 44px; border-radius: 50%;
+    border: 3px solid rgba(59,130,246,0.15); border-top-color: var(--accent);
+    animation: spin 0.8s linear infinite; box-shadow: 0 0 20px var(--accent-glow);
+  }
+  .ai-loading-title { font-size: 15px; font-weight: 700; color: white; }
+  .ai-loading-stages { display: flex; flex-direction: column; gap: 8px; width: 320px; }
+  .ai-stage-item {
+    display: flex; align-items: center; gap: 10px; padding: 9px 13px;
+    border-radius: 8px; background: rgba(255,255,255,0.02); border: 1px solid var(--border);
+    font-size: 11.5px; color: var(--text-dim); transition: all 0.18s;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .ai-stage-item.active { color: white; border-color: var(--accent); background: var(--accent-soft); }
+  .ai-stage-item.done { color: var(--green); }
+  .ai-stage-icon {
+    width: 16px; height: 16px; border-radius: 50%;
+    border: 1.5px solid var(--border-strong); flex-shrink: 0;
+  }
+  .ai-stage-item.active .ai-stage-icon { border-color: var(--accent); border-top-color: transparent; animation: spin 0.8s linear infinite; }
+  .ai-stage-item.done .ai-stage-icon { background: var(--green); border-color: var(--green); }
+
+  /* Report layout */
+  .ai-report { max-width: 760px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; }
+
+  /* Summary card with confidence ring */
+  .ai-summary-card {
+    background: var(--bg-panel); border: 1px solid var(--border); border-radius: 14px; padding: 24px;
+  }
+  .ai-summary-header { display: flex; align-items: center; gap: 24px; }
+  .ai-confidence-ring { position: relative; width: 110px; height: 110px; flex-shrink: 0; }
+  .ai-confidence-ring svg { width: 100%; height: 100%; }
+  .ai-conf-val {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -60%);
+    font-size: 26px; font-weight: 800; color: white; font-family: 'JetBrains Mono', monospace;
+  }
+  .ai-conf-label {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, 20px);
+    font-size: 9px; color: var(--text-mute); text-transform: uppercase; letter-spacing: 0.1em;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .ai-summary-text { flex: 1; }
+  .ai-summary-title { font-size: 20px; font-weight: 800; color: white; margin-bottom: 6px; }
+  .ai-summary-meta { font-size: 12px; color: var(--text-mute); font-family: 'JetBrains Mono', monospace; margin-bottom: 12px; }
+  .ai-summary-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .ai-tag {
+    padding: 4px 10px; border-radius: 6px; font-size: 10px; font-weight: 600;
+    font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.04em;
+  }
+  .ai-tag.blue { background: var(--accent-soft); color: var(--accent-bright); border: 1px solid rgba(59,130,246,0.3); }
+  .ai-tag.green { background: rgba(96,165,250,0.1); color: var(--green); border: 1px solid rgba(96,165,250,0.3); }
+  .ai-tag.amber { background: rgba(251,191,36,0.1); color: var(--amber); border: 1px solid rgba(251,191,36,0.3); }
+  .ai-tag.coral { background: rgba(248,113,113,0.1); color: var(--coral); border: 1px solid rgba(248,113,113,0.3); }
+
+  /* Report sections */
+  .ai-section { background: var(--bg-panel); border: 1px solid var(--border); border-radius: 12px; padding: 18px 20px; }
+  .ai-section-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+  .ai-section-icon {
+    width: 28px; height: 28px; border-radius: 7px; flex-shrink: 0;
+    background: var(--accent-soft); color: var(--accent-bright);
+    display: grid; place-items: center;
+  }
+  .ai-section-title { font-size: 14px; font-weight: 700; color: white; }
+  .ai-section-body { font-size: 13px; line-height: 1.7; color: var(--text-mute); }
+  .ai-section-body p { margin-bottom: 10px; }
+  .ai-section-body p:last-child { margin-bottom: 0; }
+  .ai-section-body strong { color: white; font-weight: 600; }
+  .ai-section-body code {
+    background: rgba(0,0,0,0.4); padding: 1px 6px; border-radius: 4px;
+    font-family: 'JetBrains Mono', monospace; font-size: 11.5px; color: var(--accent-bright);
+  }
+
+  /* Metrics grid inside sections */
+  .ai-metrics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-top: 12px; }
+  .ai-metric { background: rgba(0,0,0,0.3); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; }
+  .ai-metric .k { font-size: 9px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.06em; font-family: 'JetBrains Mono', monospace; margin-bottom: 3px; }
+  .ai-metric .v { font-size: 16px; font-weight: 700; color: white; font-family: 'JetBrains Mono', monospace; }
+
+  /* Suggestions */
+  .ai-suggestions { background: var(--bg-panel); border: 1px solid var(--border); border-radius: 12px; padding: 18px 20px; }
+  .ai-suggestions-title { font-size: 13px; font-weight: 700; color: white; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+  .ai-suggestion-list { display: flex; flex-direction: column; gap: 8px; }
+  .ai-suggestion {
+    display: flex; align-items: center; gap: 12px; padding: 11px 14px;
+    background: rgba(0,0,0,0.3); border: 1px solid var(--border); border-radius: 9px;
+    cursor: pointer; transition: all 0.15s;
+  }
+  .ai-suggestion:hover { border-color: var(--accent); background: var(--accent-soft); transform: translateX(3px); }
+  .ai-suggestion-num {
+    width: 24px; height: 24px; border-radius: 6px; flex-shrink: 0;
+    background: var(--accent-soft); color: var(--accent-bright);
+    display: grid; place-items: center; font-size: 11px; font-weight: 700;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .ai-suggestion-text { flex: 1; font-size: 12.5px; color: var(--text); }
+  .ai-suggestion-arrow { color: var(--text-dim); }
+
+  /* ================================================================
+     AI ASSISTANT PANEL
+  ================================================================ */
+  .assistant-toggle {
+    position: fixed; bottom: 40px; right: 20px; z-index: 500;
+    width: 48px; height: 48px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent) 0%, #8B5CF6 100%);
+    color: white; cursor: pointer; display: grid; place-items: center;
+    box-shadow: 0 8px 24px rgba(59,130,246,0.4), inset 0 1px 0 rgba(255,255,255,0.2);
+    transition: all 0.18s;
+  }
+  .assistant-toggle:hover { transform: scale(1.08); box-shadow: 0 12px 32px rgba(59,130,246,0.5); }
+  .assistant-toggle-badge {
+    position: absolute; top: -2px; right: -2px;
+    background: var(--green); color: #000;
+    font-size: 8px; font-weight: 800; font-family: 'JetBrains Mono', monospace;
+    padding: 2px 5px; border-radius: 6px; letter-spacing: 0.04em;
+  }
+
+  .assistant-panel {
+    position: fixed; top: 0; right: 0; bottom: 0; z-index: 600;
+    width: 380px; background: var(--bg-surface);
+    border-left: 1px solid var(--border);
+    display: flex; flex-direction: column;
+    transform: translateX(100%); transition: transform 0.3s cubic-bezier(0.16,1,0.3,1);
+    box-shadow: -10px 0 40px rgba(0,0,0,0.5);
+  }
+  .assistant-panel.open { transform: translateX(0); }
+
+  .assistant-header {
+    display: flex; align-items: center; gap: 12px;
+    padding: 16px 18px; border-bottom: 1px solid var(--border);
+    background: var(--bg-panel); flex-shrink: 0;
+  }
+  .assistant-title-wrap { display: flex; align-items: center; gap: 10px; }
+  .assistant-icon {
+    width: 34px; height: 34px; border-radius: 9px; flex-shrink: 0;
+    background: linear-gradient(135deg, var(--accent) 0%, #8B5CF6 100%);
+    color: white; display: grid; place-items: center;
+    box-shadow: 0 4px 12px rgba(59,130,246,0.3);
+  }
+  .assistant-title { font-size: 14px; font-weight: 700; color: white; }
+  .assistant-status { font-size: 10px; color: var(--text-mute); font-family: 'JetBrains Mono', monospace; margin-top: 2px; }
+  .assistant-status::before {
+    content: ''; display: inline-block; width: 6px; height: 6px; border-radius: 50%;
+    background: var(--green); margin-right: 5px; box-shadow: 0 0 4px var(--green);
+  }
+  .assistant-close {
+    margin-left: auto; width: 30px; height: 30px; border-radius: 7px;
+    background: transparent; border: 1px solid transparent; color: var(--text-mute);
+    cursor: pointer; display: grid; place-items: center; transition: all 0.15s;
+  }
+  .assistant-close:hover { color: var(--coral); background: rgba(248,113,113,0.1); }
+
+  .assistant-messages {
+    flex: 1; overflow-y: auto; padding: 16px;
+    display: flex; flex-direction: column; gap: 14px;
+  }
+
+  .assistant-msg { display: flex; gap: 10px; max-width: 92%; animation: msgIn 0.25s ease-out; }
+  @keyframes msgIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+  .assistant-msg.user { align-self: flex-end; flex-direction: row-reverse; }
+  .assistant-avatar {
+    width: 28px; height: 28px; border-radius: 8px; flex-shrink: 0;
+    font-size: 10px; font-weight: 800; font-family: 'JetBrains Mono', monospace;
+    display: grid; place-items: center;
+  }
+  .assistant-msg.assistant .assistant-avatar {
+    background: linear-gradient(135deg, var(--accent) 0%, #8B5CF6 100%); color: white;
+  }
+  .assistant-msg.user .assistant-avatar {
+    background: var(--bg-elev); color: var(--text-mute); border: 1px solid var(--border);
+  }
+
+  .assistant-bubble {
+    background: var(--bg-panel); border: 1px solid var(--border);
+    border-radius: 12px 12px 12px 4px; padding: 12px 14px;
+    font-size: 12.5px; line-height: 1.6; color: var(--text);
+  }
+  .assistant-msg.user .assistant-bubble {
+    background: var(--accent-soft); border-color: rgba(59,130,246,0.3);
+    border-radius: 12px 12px 4px 12px; color: white;
+  }
+  .assistant-bubble p { margin-bottom: 8px; }
+  .assistant-bubble p:last-child { margin-bottom: 0; }
+  .assistant-bubble strong { color: white; font-weight: 700; }
+  .assistant-bubble code {
+    background: rgba(0,0,0,0.4); padding: 1px 5px; border-radius: 3px;
+    font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--accent-bright);
+  }
+  .assistant-bubble ul { margin: 6px 0 6px 18px; }
+  .assistant-bubble li { margin-bottom: 3px; }
+
+  .assistant-suggestions { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+  .assistant-suggestion-chip {
+    padding: 6px 11px; border-radius: 14px;
+    background: rgba(59,130,246,0.08); border: 1px solid rgba(59,130,246,0.2);
+    color: var(--accent-bright); font-size: 11px; font-weight: 500;
+    cursor: pointer; transition: all 0.15s; font-family: inherit;
+  }
+  .assistant-suggestion-chip:hover { background: rgba(59,130,246,0.15); border-color: var(--accent); }
+
+  /* Typing indicator */
+  .assistant-typing { display: flex; gap: 4px; padding: 4px 0; }
+  .assistant-typing span {
+    width: 7px; height: 7px; border-radius: 50%; background: var(--text-mute);
+    animation: typingDot 1.4s infinite ease-in-out;
+  }
+  .assistant-typing span:nth-child(2) { animation-delay: 0.2s; }
+  .assistant-typing span:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes typingDot {
+    0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+    30% { transform: translateY(-6px); opacity: 1; }
+  }
+
+  /* Input area */
+  .assistant-input-wrap {
+    padding: 12px 14px; border-top: 1px solid var(--border);
+    background: var(--bg-panel); flex-shrink: 0;
+  }
+  .assistant-input-row { display: flex; gap: 8px; align-items: flex-end; }
+  .assistant-input {
+    flex: 1; resize: none; min-height: 38px; max-height: 120px;
+    background: rgba(0,0,0,0.4); border: 1px solid var(--border); border-radius: 10px;
+    padding: 9px 12px; color: var(--text);
+    font-family: 'Inter', sans-serif; font-size: 12.5px; line-height: 1.5;
+    outline: none; transition: border-color 0.15s;
+  }
+  .assistant-input:focus { border-color: var(--accent); }
+  .assistant-input::placeholder { color: var(--text-dim); }
+  .assistant-send {
+    width: 38px; height: 38px; border-radius: 10px; flex-shrink: 0;
+    background: linear-gradient(135deg, var(--accent) 0%, var(--accent-deep) 100%);
+    border: none; color: white; cursor: pointer; display: grid; place-items: center;
+    transition: all 0.15s;
+    box-shadow: 0 2px 8px rgba(59,130,246,0.3);
+  }
+  .assistant-send:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(59,130,246,0.4); }
+  .assistant-send:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+  .assistant-input-hint {
+    display: flex; justify-content: space-between; margin-top: 7px;
+    font-size: 9.5px; color: var(--text-dim); font-family: 'JetBrains Mono', monospace;
+  }
+
+  @media (max-width: 1100px) { .main { grid-template-columns: 290px 1fr; } }
+  @media (max-width: 900px) { .main { grid-template-columns: 1fr; grid-template-rows: auto 1fr; } .sidebar { height: auto; max-height: 45vh; } }
+</style>
+<style>
+/* Guarantee Horizontal Navbar Layout on Mobile & Desktop */
+nav, .nav-dock, #mob-nav {
+    flex-direction: row !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+}
+
+@media (max-width: 1024px) {
+    nav, .nav-dock {
+        flex-direction: row !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        padding: 0.75rem 1.25rem !important;
+    }
+}
+</style>
+<style>
+/* Executive Navbar Logo Alignment & Responsive Sizing */
+.nav-logo-responsive {
+    height: 38px !important;
+    width: auto !important;
+    max-height: 38px !important;
+    object-fit: contain;
+    display: block;
+    transform: translateY(-3px);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.nav-logo-responsive:hover {
+    opacity: 0.85;
+}
+
+@media (max-width: 768px) {
+    .nav-logo-responsive {
+        height: 32px !important;
+        max-height: 32px !important;
+        transform: translateY(-2px);
+    }
+}
+</style>
+</head>
+<body>
+  <!-- ============ SUB BAR ============ -->
+  <div class="subbar">
+    <div class="crumb" style="display:flex; align-items:center;">
+      <a href="index.html">Nilus Lab</a>
+      <span class="sep">/</span>
+      <a href="#">Structural Biology</a>
+      <span class="sep">/</span>
+      <span class="here">Structure Prediction</span>
+    </div>
+    <div class="subbar-spacer"></div>
+    <div class="stat-chip"><span class="dot"></span><span class="label">Bridge</span><span class="val">online</span></div>
+    <div class="stat-chip"><span class="label">GPU Pool</span><span class="val">7 / 12</span></div>
+
+    <div class="stat-chip"><span class="label">Session</span><span class="val" id="sessionId">ses-2f8a1c</span></div>
+
+    <!-- Dynamic Sign In / Profile Area -->
+    <div id="authArea" style="display:flex; align-items:center; gap:12px; margin-left:12px; border-left:1px solid #1E293B; padding-left:12px; height:24px; line-height:1;">
+      <a id="signInBtn" href="login.html" style="color:var(--accent); text-decoration:none; font-weight:600; font-size:11px; display:none;">Sign In</a>
+      <div id="userChip" class="auth-widget-wrap" style="display:none;">
+        <!-- Notification Bell -->
+        <button class="auth-icon-btn" title="Notifications">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        </button>
+        <!-- Settings Gear -->
+        <button class="auth-icon-btn" title="Settings">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        </button>
+        <!-- User Capsule Wrapper -->
+        <div style="position: relative; display: inline-block;">
+          <div class="user-profile-capsule" title="Account Menu" onclick="toggleSignOutDropdown(event);">
+            <div class="user-avatar-circle" id="userAvatar">U</div>
+            <div class="user-meta-info">
+              <span class="user-display-name" id="userName">User</span>
+              <span class="user-org-text">NILUS-RESEARCH</span>
+            </div>
+            <!-- Chevron Down Icon -->
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-left:2px; color:var(--text-mute);"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          
+          <!-- Dropdown menu -->
+          <div id="signOutDropdown" style="display: none; position: absolute; top: calc(100% + 6px); right: 0; background: #0C1119; border: 1px solid #1E293B; border-radius: 8px; box-shadow: 0 10px 24px rgba(0,0,0,0.6); z-index: 1000; min-width: 120px; padding: 4px;">
+            <button onclick="firebase.auth().signOut();" style="width: 100%; text-align: left; background: transparent; border: none; color: #EF4444; font-size: 11px; font-weight: 600; padding: 8px 12px; cursor: pointer; display: flex; align-items: center; gap: 8px; font-family: 'Inter', sans-serif; transition: background var(--t-fast); border-radius: 6px; outline: none;" onmouseover="this.style.background='rgba(239, 68, 68, 0.08)'" onmouseout="this.style.background='transparent'">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="flex-shrink:0;"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+              Sign Out
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ MAIN ============ -->
+  <main class="main">
+
+    <!-- ============ SIDEBAR ============ -->
+    <aside class="sidebar">
+
+      <!-- ─── Panel 1: Prediction Engine ─── -->
+      <section class="panel">
+        <div class="panel-head">
+          <div class="panel-num">1</div>
+          <div class="panel-title">Prediction Engine</div>
+          <div class="panel-tag" id="engineTag">Nilus Atomix</div>
+        </div>
+        <div class="panel-body">
+          <div class="mode-switch" id="modeSwitch">
+            <button class="mode-btn active" data-mode="esm">
+              <div class="mode-name">Nilus Atomix</div>
+              <div class="mode-sub">FAST SINGLE-CHAIN (ESMFold)</div>
+            </button>
+            <button class="mode-btn" data-mode="boltz">
+              <div class="mode-name">NilusFold</div>
+              <div class="mode-sub">SOTA SINGLE-CHAIN &amp; COMPLEX</div>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ─── Panel 2: Credentials (NilusFold only) ─── -->
+      <section class="panel" id="credentialsPanel" style="display:none">
+        <div class="panel-head">
+          <div class="panel-num">2</div>
+          <div class="panel-title">Credentials</div>
+          <div class="panel-tag">ZEN-KEY</div>
+        </div>
+        <div class="panel-body">
+          <div class="sb-field">
+            <div class="sb-label">
+              <span>API Key</span>
+              <span class="sb-hint" id="apiStatus">default · company</span>
+            </div>
+            <div class="api-row">
+              <span class="api-dot" id="apiDot"></span>
+              <input type="password" class="sb-input" id="apiKeyInput" placeholder="Paste Zen-Key (optional)" />
+              <button class="icon-action-btn" id="apiSaveBtn" title="Save to local storage">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+              </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ─── Panel 3/2: Input ─── -->
+      <section class="panel">
+        <div class="panel-head">
+          <div class="panel-num" id="inputPanelNum">2</div>
+          <div class="panel-title">Input</div>
+          <div class="panel-tag" id="inputTag">FASTA · RAW</div>
+        </div>
+        <div class="panel-body">
+
+          <!-- Nilus Atomix: single sequence -->
+          <div id="esmInput">
+            <!-- UniProt Lookup (ESM mode) -->
+            <div class="uniprot-lookup-box" id="esm-uniprot-box">
+              <div class="uniprot-lookup-label">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                UniProt Lookup — Search by protein or gene name
+              </div>
+              <div class="uniprot-search-row">
+                <input class="uniprot-gene-input" id="esm-uniprot-input" type="text"
+                  placeholder="e.g. TP53, BRCA1, OCT4, KLF4..."
+                  autocomplete="off" spellcheck="false" />
+                <button class="uniprot-fetch-btn" id="esm-uniprot-fetch-btn">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="5 12 19 12"/><polyline points="13 6 19 12 13 18"/></svg>
+                  Fetch
+                </button>
+              </div>
+              <div class="uniprot-result-card hidden" id="esm-uniprot-result">
+                <div class="uniprot-result-header">
+                  <span class="uniprot-gene-name" id="esm-uniprot-gene"></span>
+                  <span class="uniprot-chip acc" id="esm-uniprot-acc"></span>
+                  <span class="uniprot-chip len" id="esm-uniprot-len"></span>
+                  <span class="uniprot-chip org">H. sapiens</span>
+                </div>
+                <div class="uniprot-result-meta" id="esm-uniprot-name"></div>
+                <div class="uniprot-result-func" id="esm-uniprot-func"></div>
+                <button class="uniprot-use-btn" id="esm-uniprot-use-btn">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                  Use This Sequence in Nilus Atomix
+                </button>
+              </div>
+              <div class="uniprot-error hidden" id="esm-uniprot-error">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                <span id="esm-uniprot-error-msg"></span>
+              </div>
+            </div>
+            <div class="sb-field">
+              <div class="sb-label">
+                <span>Protein Sequence</span>
+                <span class="sb-hint" id="seqLenHint">0 aa · max 400 aa</span>
+              </div>
+              <textarea class="sb-textarea" id="seqInput" rows="5" placeholder="> example ubiquitin&#10;MQIFVKTLTGKTITLEVEPSDTIENVKAKIQDKEGIPPDQQRLIFAGKQLEDGRTLSDYNIQKESTLHLVLRLRGG"></textarea>
+            </div>
+            <div class="two-btn-row">
+              <button class="ghost-btn" id="loadExampleBtn">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                Load Example
+              </button>
+              <button class="ghost-btn" id="clearBtn">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                Clear
+              </button>
+            </div>
+            <div class="sb-field" style="margin-top:14px">
+              <div class="sb-label">
+                <span>Advanced</span>
+                <span class="sb-hint">defaults · recommended</span>
+              </div>
+              <div class="two-col-grid">
+                <select class="sb-select" id="recyclingSel">
+                  <option>Recycling: 3</option>
+                  <option>Recycling: 1</option>
+                  <option>Recycling: 5</option>
+                </select>
+                <select class="sb-select" id="msaSel">
+                  <option>MSA: auto</option>
+                  <option>MSA: off</option>
+                  <option>MSA: forced</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Boltz: chain builder -->
+          <div id="boltzInput" style="display:none">
+            <!-- UniProt Lookup (Boltz mode) -->
+            <div class="uniprot-lookup-box" id="boltz-uniprot-box">
+              <div class="uniprot-lookup-label">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                UniProt Lookup — Auto-fill a chain sequence
+              </div>
+              <div class="uniprot-search-row">
+                <input class="uniprot-gene-input" id="boltz-uniprot-input" type="text"
+                  placeholder="e.g. TP53, GATA4, SOX2, PCNA..."
+                  autocomplete="off" spellcheck="false" />
+                <button class="uniprot-fetch-btn" id="boltz-uniprot-fetch-btn">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="5 12 19 12"/><polyline points="13 6 19 12 13 18"/></svg>
+                  Fetch
+                </button>
+              </div>
+              <div class="uniprot-result-card hidden" id="boltz-uniprot-result">
+                <div class="uniprot-result-header">
+                  <span class="uniprot-gene-name" id="boltz-uniprot-gene"></span>
+                  <span class="uniprot-chip acc" id="boltz-uniprot-acc"></span>
+                  <span class="uniprot-chip len" id="boltz-uniprot-len"></span>
+                  <span class="uniprot-chip org">H. sapiens</span>
+                </div>
+                <div class="uniprot-result-meta" id="boltz-uniprot-name"></div>
+                <div class="uniprot-result-func" id="boltz-uniprot-func"></div>
+                <button class="uniprot-use-btn" id="boltz-uniprot-use-btn">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                  Fill Chain A with This Sequence
+                </button>
+              </div>
+              <div class="uniprot-error hidden" id="boltz-uniprot-error">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                <span id="boltz-uniprot-error-msg"></span>
+              </div>
+            </div>
+            <div class="sb-field">
+              <div class="sb-label">
+                <span>Chains &amp; Stoichiometry</span>
+                <span class="sb-hint">Protein · DNA · RNA · Ligand</span>
+              </div>
+              <div class="chain-list" id="chainList"><!-- populated by JS --></div>
+              <div style="display: flex; align-items: center; gap: 8px; margin-top: 10px;">
+                <button class="add-chain-btn" id="addChainBtn" style="margin-top: 0;">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                  Add Chain
+                </button>
+                <button class="ghost-btn" id="clearChainsBtn" style="padding: 7px 12px; border-radius: 8px; font-size: 10px; font-weight: 700; display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); color: #94a3b8; cursor: pointer; transition: all 0.15s;" onmouseover="this.style.background='rgba(248,113,113,0.08)';this.style.color='#f87171';this.style.borderColor='rgba(248,113,113,0.15)';" onmouseout="this.style.background='rgba(255,255,255,0.03)';this.style.color='#94a3b8';this.style.borderColor='rgba(255,255,255,0.08)';">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                  Reset Chains
+                </button>
+              </div>
+            </div>
+            <div class="sb-field">
+              <div class="sb-label"><span>Binding Mode</span></div>
+              <select class="sb-select" id="boltz-binding-type">
+                <option value="none">none</option>
+                <option value="ligand_protein_binding">ligand-protein</option>
+                <option value="protein_protein_binding">protein-protein</option>
+              </select>
+            </div>
+            <div class="sb-field hidden" id="boltz-binder-chain-row">
+              <div class="sb-label"><span>Binder Chain ID</span></div>
+              <input type="text" class="sb-input" id="boltz-binder-chain-id" placeholder="e.g. A" maxlength="4" />
+            </div>
+            <div class="sb-field">
+              <div class="sb-label"><span>Job Label</span></div>
+              <input type="text" class="sb-input" id="jobLabel" placeholder="e.g. BRaf-MEK complex v3" />
+            </div>
+            <div class="sb-field">
+              <div class="sb-label">
+                <span>Advanced</span>
+                <span class="sb-hint">defaults · recommended</span>
+              </div>
+              <div class="two-col-grid">
+                <select class="sb-select" id="recyclingSel2">
+                  <option>Recycling: 3</option>
+                  <option>Recycling: 1</option>
+                  <option>Recycling: 5</option>
+                </select>
+                <select class="sb-select" id="msaSel2">
+                  <option>MSA: auto</option>
+                  <option>MSA: off</option>
+                  <option>MSA: forced</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ─── Panel 4: Validate & Estimate (Boltz only) ─── -->
+      <section class="panel" id="costPanel" style="display:none">
+        <div class="panel-head">
+          <div class="panel-num">4</div>
+          <div class="panel-title">Validate &amp; Estimate</div>
+          <div class="panel-tag">PRE-FLIGHT</div>
+        </div>
+        <div class="panel-body">
+          <div class="cost-grid">
+            <div class="cost-card">
+              <div class="cost-label">GPU-MIN</div>
+              <div class="cost-value"><span id="costGpu">—</span><span class="cost-unit"> min</span></div>
+            </div>
+            <div class="cost-card">
+              <div class="cost-label">CREDITS</div>
+              <div class="cost-value"><span id="costCredits">—</span><span class="cost-unit"> cr</span></div>
+            </div>
+            <div class="cost-card">
+              <div class="cost-label">RESIDUES</div>
+              <div class="cost-value"><span id="costRes">—</span></div>
+            </div>
+            <div class="cost-card">
+              <div class="cost-label">ETA</div>
+              <div class="cost-value"><span id="costEta">—</span><span class="cost-unit"> s</span></div>
+            </div>
+          </div>
+          <button class="ghost-btn full-width" id="validateBtn" style="margin-top:10px">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+            Validate Input
+          </button>
+          <p class="cost-note">Estimates are based on chain length, stoichiometry, and current GPU pool availability. Final cost confirmed at submission.</p>
+        </div>
+      </section>
+
+      <!-- ─── Panel 5: Execute ─── -->
+      <section class="panel">
+        <div class="panel-head">
+          <div class="panel-num" id="runNum" style="min-width:26px;text-align:center;">3</div>
+          <div class="panel-title">Execute</div>
+          <div class="panel-tag" id="runTag">READY</div>
+        </div>
+        <div class="panel-body">
+          <button class="run-btn" id="runBtn">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            Predict Structure
+          </button>
+          <div style="margin-top:14px">
+            <div class="sb-label" style="margin-bottom:6px">
+              <span>Diagnostics</span>
+              <span class="sb-hint" id="diagCount">0 events</span>
+            </div>
+            <div class="diag-log" id="diagLog">
+              <div class="diag-line info"><span class="t">00:00:00</span><span class="m">bridge_server.py connected · v2.1.4</span></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </aside>
+
+    <!-- ============ VIEWER AREA ============ -->
+    <section class="viewer-area">
+
+      <!-- Tabs -->
+      <div class="tabs">
+        <button class="tab active" data-tab="3d">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+          3D Structure
+        </button>
+        <button class="tab" data-tab="seq">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>
+          Sequence
+          <span class="badge" id="seqBadge">76 aa</span>
+        </button>
+        <button class="tab" data-tab="binding">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v6m0 10v6m11-11h-6m-10 0H1"/></svg>
+          Binding Analysis
+          <span class="badge">contacts</span>
+        </button>
+        <button class="tab" data-tab="pae">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18M15 3v18M3 9h18M3 15h18"/></svg>
+          PAE Matrix
+        </button>
+        <button class="tab" data-tab="ai" title="AI Analysis">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 2a8 8 0 1 1-8 8 8 8 0 0 1 8-8z"/>
+            <path d="M12 6v6l4 2"/>
+          </svg>
+          AI Analysis
+          <span class="badge" id="aiBadge">new</span>
+        </button>
+
+        <div class="tab-tools">
+          <button class="btn-icon" title="Download PDB" id="downloadBtn">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          </button>
+          <button class="btn-icon" title="Share Snapshot" id="shareBtn">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- ============ 3D VIEW ============ -->
+      <div class="tab-panel active" data-panel="3d">
+        <div class="viewer-3d">
+          <div id="molviewer"></div>
+
+          <div class="viewer-overlay">
+            <div class="info-card">
+              <div class="title">Predicted Model</div>
+              <div class="name" id="modelName">Ubiquitin · B domain</div>
+              <div class="meta">
+                <div><b id="metaRes">76</b> residues</div>
+                <div><b id="metaChain">A</b> chain</div>
+                <div><b id="metaConf">87.4</b> mean pLDDT</div>
+                <div><b id="metaEngine">NilusFold</b></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="viewer-toolbar">
+            <div class="tool-group">
+              <button class="tool-btn active" data-style="cartoon" title="Cartoon">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12c4-8 14-8 18 0M3 12c4 8 14 8 18 0"/></svg>
+              </button>
+              <button class="tool-btn" data-style="stick" title="Sticks">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="6" y1="4" x2="6" y2="20"/><line x1="18" y1="4" x2="18" y2="20"/><line x1="6" y1="12" x2="18" y2="12"/></svg>
+              </button>
+              <button class="tool-btn" data-style="sphere" title="Spheres">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="8"/><circle cx="9" cy="10" r="1.5"/></svg>
+              </button>
+              <button class="tool-btn" data-style="surface" title="Surface">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z"/></svg>
+              </button>
+              <div class="tool-divider"></div>
+              <button class="tool-btn active" data-color="pLDDT" title="Color by pLDDT">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 3v18M3 12h18"/></svg>
+              </button>
+              <button class="tool-btn" data-color="chain" title="Color by chain">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="8" height="8"/><rect x="13" y="13" width="8" height="8"/></svg>
+              </button>
+              <button class="tool-btn" data-color="spectrum" title="Spectrum">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M5 9l-2 3 2 3M19 9l2 3-2 3"/></svg>
+              </button>
+              <div class="tool-divider"></div>
+              <button class="tool-btn" id="zoomFitBtn" title="Reset View">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 14 10 14 10 20"/><polyline points="20 10 14 10 14 4"/><line x1="14" y1="10" x2="21" y2="3"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+              </button>
+              <button class="tool-btn" id="spinBtn" title="Toggle Spin">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1.06 6.7 2.82L21 8"/><polyline points="21 3 21 8 16 8"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="legend">
+            <div class="legend-title">Confidence · pLDDT</div>
+            <div class="legend-bar"></div>
+            <div class="legend-labels">
+              <span>0</span><span>50</span><span>70</span><span>90</span><span>100</span>
+            </div>
+          </div>
+
+          <div class="res-tooltip" id="resTooltip">
+            <div class="rt-res">Residue</div>
+            <div class="rt-plddt">pLDDT: â€”</div>
+          </div>
+
+          <!-- Selection Label (Biomolecular Structural Standard) -->
+          <div id="af-selection-label">
+            <span class="chain-badge" id="selChain">A</span>
+            <span class="sel-sep">|</span>
+            <span class="resname" id="selResName">LEU</span>
+            <span class="resindex" id="selResIndex">77</span>
+            <span class="sel-sep">·</span>
+            <span class="sel-plddt" id="selPlddt">pLDDT 92.1</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============ SEQUENCE VIEW ============ -->
+      <div class="tab-panel" data-panel="seq">
+        <div class="seq-viewer" id="seqViewer">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <!-- ============ BINDING ANALYSIS ============ -->
+      <div class="tab-panel" data-panel="binding">
+        <div class="binding-area">
+          <div class="binding-3d">
+            <div id="bindingviewer"></div>
+            <div class="viewer-overlay">
+              <div class="info-card">
+                <div class="title">Binding Pocket</div>
+                <div class="name">Ligand · ANP</div>
+                <div class="meta">
+                  <div><b>14</b> contacts</div>
+                  <div><b>3.4</b> Å mean</div>
+                  <div><b>5.0</b> Å cutoff</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="binding-panel">
+            <div class="binding-section">
+              <h4>Ligand Statistics</h4>
+              <div class="ligand-stats">
+                <div class="ligand-stat"><div class="k">Atoms</div><div class="v">29</div></div>
+                <div class="ligand-stat"><div class="k">Mol. Wt</div><div class="v">427.2</div></div>
+                <div class="ligand-stat"><div class="k">H-bonds</div><div class="v">6</div></div>
+                <div class="ligand-stat"><div class="k">Hydrophobic</div><div class="v">8</div></div>
+              </div>
+            </div>
+            <div class="binding-section">
+              <h4>Contact Map ( &lt; 5.0 Å )</h4>
+              <div class="contact-list" id="contactList">
+                <!-- populated by JS -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============ PAE HEATMAP ============ -->
+      <div class="tab-panel" data-panel="pae">
+        <div class="pae-area">
+          <div id="paeSimWarning" style="display: none; margin-bottom: 15px; padding: 12px; background: rgba(245, 158, 11, 0.08); border: 1px dashed rgba(245, 158, 11, 0.3); border-radius: 8px; font-size: 12px; color: #F59E0B; align-items: flex-start; gap: 8px; line-height: 1.5;">
+            <span style="font-size: 14px; margin-top: 1px;">⚠️</span>
+            <div>
+              <strong>Simulated PAE Matrix</strong>: Nilus Atomix (ESMFold) does not predict aligned error. This PAE matrix is a distance-based simulation. Use the <strong>NilusFold</strong> engine for true Predicted Aligned Error (PAE) calculations.
+            </div>
+          </div>
+          <div class="pae-toolbar">
+            <div>
+              <div class="title">Predicted Aligned Error</div>
+              <div class="desc">Relative domain position confidence · lower is better</div>
+            </div>
+            <div class="pae-legend">
+              <span>0 Å</span>
+              <div class="pae-legend-bar"></div>
+              <span>30 Å</span>
+            </div>
+          </div>
+          <div class="pae-canvas-wrap">
+            <canvas id="paeCanvas" width="540" height="540"></canvas>
+            <div class="pae-tooltip" id="paeTooltip">
+              <div class="pt-pair">i â†’ j</div>
+              <div class="pt-val">PAE: â€” Å</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============ AI ANALYSIS ============ -->
+      <div class="tab-panel" data-panel="ai">
+        <div class="ai-analysis-area">
+          <div class="ai-toolbar">
+            <div>
+              <div class="title">AI Structure Analysis</div>
+              <div class="desc">Auto-generated insights from NilusFold prediction · powered by GPT-4</div>
+            </div>
+            <div class="ai-actions">
+              <button class="ghost-btn" id="aiRegenerateBtn">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1.06 6.7 2.82L21 8"/>
+                  <polyline points="21 3 21 8 16 8"/>
+                </svg>
+                Regenerate
+              </button>
+              <button class="ghost-btn" id="aiExportBtn">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                  <polyline points="7 10 12 15 17 10"/>
+                  <line x1="12" y1="15" x2="12" y2="3"/>
+                </svg>
+                Export PDF
+              </button>
+            </div>
+          </div>
+
+          <div class="ai-content" id="aiContent">
+            <!-- Loading state (shown during generation) -->
+            <div class="ai-loading" id="aiLoading">
+              <div class="ai-loading-spinner"></div>
+              <div class="ai-loading-title">Analyzing structure</div>
+              <div class="ai-loading-stages" id="aiLoadingStages">
+                <div class="ai-stage-item active">
+                  <div class="ai-stage-icon"></div>
+                  <span>Extracting structural features</span>
+                </div>
+                <div class="ai-stage-item">
+                  <div class="ai-stage-icon"></div>
+                  <span>Computing domain architecture</span>
+                </div>
+                <div class="ai-stage-item">
+                  <div class="ai-stage-icon"></div>
+                  <span>Evaluating confidence metrics</span>
+                </div>
+                <div class="ai-stage-item">
+                  <div class="ai-stage-icon"></div>
+                  <span>Generating natural language report</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Report content (populated by JS) -->
+            <div class="ai-report" id="aiReport" style="display:none;">
+              <!-- Summary card -->
+              <div class="ai-summary-card">
+                <div class="ai-summary-header">
+                  <div class="ai-confidence-ring" id="aiConfRing">
+                    <svg viewBox="0 0 100 100">
+                      <circle cx="50" cy="50" r="42" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="8"/>
+                      <circle id="aiConfArc" cx="50" cy="50" r="42" fill="none" stroke="url(#aiGrad)" stroke-width="8" stroke-linecap="round" stroke-dasharray="263.9" stroke-dashoffset="263.9" transform="rotate(-90 50 50)"/>
+                      <defs>
+                        <linearGradient id="aiGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                          <stop offset="0%" stop-color="#0053D6"/>
+                          <stop offset="100%" stop-color="#65CBF3"/>
+                        </linearGradient>
+                      </defs>
+                    </svg>
+                    <div class="ai-conf-val" id="aiConfVal">—</div>
+                    <div class="ai-conf-label">pLDDT</div>
+                  </div>
+                  <div class="ai-summary-text">
+                    <div class="ai-summary-title" id="aiSummaryTitle">Structure analyzed</div>
+                    <div class="ai-summary-meta" id="aiSummaryMeta">— residues · — chain · NilusFold</div>
+                    <div class="ai-summary-tags" id="aiSummaryTags"></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Report sections (populated by JS) -->
+              <div class="ai-sections" id="aiSections"></div>
+
+              <!-- Action suggestions -->
+              <div class="ai-suggestions">
+                <div class="ai-suggestions-title font-bold text-white flex items-center gap-2">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+                  Suggested Next Steps
+                </div>
+                <div class="ai-suggestion-list" id="aiSuggestionList"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============ RUN OVERLAY ============ -->
+      <div class="run-overlay" id="runOverlay">
+        <div class="run-spinner"></div>
+        <div class="run-title" id="runTitle">Folding sequence</div>
+        <div class="run-stage" id="runStage">Initializing NilusFold</div>
+        <div class="run-progress"><div id="runProgressBar" style="width:0%"></div></div>
+        <div class="run-log" id="runLog">Preparing MSA embeddings</div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============ STATUS BAR ============ -->
+  <footer class="statusbar">
+    <div><span class="ok">â—</span> bridge_server <span class="accent">v2.1.4</span></div>
+    <div class="sep">|</div>
+    <div>model: <span class="accent" id="sbModel">nilus-atomix-v1</span></div>
+    <div class="sep">|</div>
+    <div>latency: <span id="sbLatency">42ms</span></div>
+    <div class="sep">|</div>
+    <div>tokens: <span id="sbTokens">0</span></div>
+    <div class="sep">|</div>
+    <div>cache: <span class="ok">warm</span></div>
+    <div>CSP: strict · connect-src 6 hosts <span class="sep">|</span> <span style="text-transform:none;letter-spacing:0;">Outputs subject to <a href="legal.html#boltz-terms" target="_blank" style="color:var(--accent);text-decoration:underline;">NilusFold Model Output Terms</a></span></div>
+  </footer>
+</div>
+
+<!-- Lucide Icons CDN -->
+<script src="https://unpkg.com/lucide@latest"></script>
+
+<!-- Firebase CDNs -->
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+<script src="js/firebase_config.js"></script>
+
+<script src="js/structure_controller.js" defer></script>
+
+<script>
+  // --- FIREBASE AUTHENTICATION AND REDIRECT ---
+  firebase.auth().onAuthStateChanged((user) => {
+    const userChip = document.getElementById('userChip');
+    const signInBtn = document.getElementById('signInBtn');
+    const userNameEl = document.getElementById('userName');
+    const userAvatarEl = document.getElementById('userAvatar');
+
+    if (user) {
+      if (signInBtn) signInBtn.style.display = 'none';
+      if (userChip) userChip.style.display = 'flex';
+      
+      const displayName = user.displayName || (user.email ? user.email.split('@')[0].toUpperCase() : 'MEMBER');
+      if (userNameEl) userNameEl.innerText = displayName;
+      if (userAvatarEl) userAvatarEl.innerText = displayName.substring(0, 2).toUpperCase();
+      
+      lucide.createIcons();
+    } else {
+      if (userChip) userChip.style.display = 'none';
+      if (signInBtn) signInBtn.style.display = 'inline-flex';
+      
+      setTimeout(() => {
+        window.location.href = "login.html?redirect=structure.html";
+      }, 1000);
+    }
+  });
+
+  // Toggle the sign out dropdown menu
+  function toggleSignOutDropdown(event) {
+    event.stopPropagation();
+    const dropdown = document.getElementById('signOutDropdown');
+    if (dropdown) {
+      const isVisible = dropdown.style.display === 'block';
+      dropdown.style.display = isVisible ? 'none' : 'block';
+    }
+  }
+
+  // Close the dropdown when clicking anywhere else on the document
+  document.addEventListener('click', () => {
+    const dropdown = document.getElementById('signOutDropdown');
+    if (dropdown) dropdown.style.display = 'none';
+  });
+
+  // Initialize Lucide icons on DOM Load
+  document.addEventListener('DOMContentLoaded', () => {
+    lucide.createIcons();
+  });
+</script>
+
+<!-- ============ AI ASSISTANT PANEL ============ -->
+<div class="assistant-toggle" id="assistantToggle" title="Ask AI (Ctrl+/)">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+  </svg>
+  <span class="assistant-toggle-badge" id="assistantBadge">AI</span>
+</div>
+
+<aside class="assistant-panel" id="assistantPanel">
+  <div class="assistant-header">
+    <div class="assistant-title-wrap">
+      <div class="assistant-icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 2a8 8 0 1 1-8 8 8 8 0 0 1 8-8z"/>
+          <path d="M8 12h.01M12 12h.01M16 12h.01"/>
+        </svg>
+      </div>
+      <div>
+        <div class="assistant-title">Structure Assistant</div>
+        <div class="assistant-status" id="assistantStatus">Ready · context loaded</div>
+      </div>
+    </div>
+    <button class="assistant-close" id="assistantClose" title="Close (Esc)">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4">
+        <line x1="18" y1="6" x2="6" y2="18"/>
+        <line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+    </button>
+  </div>
+
+  <div class="assistant-messages" id="assistantMessages">
+    <!-- Welcome message -->
+    <div class="assistant-msg assistant">
+      <div class="assistant-avatar">AI</div>
+      <div class="assistant-bubble">
+        <p>Hi! I'm your structure assistant. I can see you've loaded a <strong id="welcomeSeqLen">76-residue</strong> protein with mean pLDDT <strong id="welcomePlddt">87.4</strong>.</p>
+        <p style="margin-top:8px">Try asking:</p>
+        <div class="assistant-suggestions" id="welcomeSuggestions">
+          <button class="assistant-suggestion-chip" data-q="What does the pLDDT score tell me?">What does pLDDT mean?</button>
+          <button class="assistant-suggestion-chip" data-q="Which residues have low confidence?">Show low-confidence residues</button>
+          <button class="assistant-suggestion-chip" data-q="What secondary structure does this protein have?">Describe the secondary structure</button>
+          <button class="assistant-suggestion-chip" data-q="Is this prediction reliable?">Is this prediction reliable?</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="assistant-input-wrap">
+    <div class="assistant-input-row">
+      <textarea
+        id="assistantInput"
+        class="assistant-input"
+        placeholder="Ask about this structure..."
+        rows="1"
+      ></textarea>
+      <button class="assistant-send" id="assistantSend" title="Send (Enter)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="22" y1="2" x2="11" y2="13"/>
+          <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+        </svg>
+      </button>
+    </div>
+    <div class="assistant-input-hint">
+      <span>Enter to send · Shift+Enter for new line</span>
+      <span id="assistantContextInfo">Context: 0 residues</span>
+    </div>
+  </div>
+</aside>
+
+</body>
+</html>

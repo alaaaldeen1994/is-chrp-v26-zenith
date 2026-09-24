@@ -1,0 +1,37 @@
+=== index.html ===
+  SRC: assets/Bhaa_transparent.png -> LOCAL (exists: True)
+  TAG: <img src="assets/Bhaa_transparent.png" alt="Nilus Lab" class="nav-logo-responsive" style="height:34px!important;max-height:34px!important;width:auto;display:block;transform:none!important;" onmouseover="this.style.opacity=.8" onmouseout="this.style.opacity=1">
+
+  SRC: assets/Bhaa_transparent_darkmode.png -> LOCAL (exists: True)
+  TAG: <img src="assets/Bhaa_transparent_darkmode.png" alt="Nilus Lab" class="mob-nav-logo" style="height:28px!important;max-height:28px!important;width:auto;display:block;">
+
+  SRC: assets/Bhaa_transparent_darkmode.png -> LOCAL (exists: True)
+  TAG: <img src="assets/Bhaa_transparent_darkmode.png" alt="Nilus Lab" class="nav-logo-responsive" style="height:32px!important;max-height:32px!important;width:auto;display:block;transform:none!important;" onmouseover="this.style.opacity=.8" onmouseout="this.style.opacity=1">
+
+=== structure.html ===
+  SRC: assets/Bhaa_transparent_darkmode.png -> LOCAL (exists: True)
+  TAG: <img src="assets/Bhaa_transparent_darkmode.png" alt="Nilus Lab" class="nav-logo-responsive" onerror="this.style.display='none'">
+
+=== trials.html ===
+  SRC: assets/Bhaa_transparent.png -> LOCAL (exists: True)
+  TAG: <img src="assets/Bhaa_transparent.png" alt="Nilus Lab" style="height:34px;width:auto;display:inline-block;margin-right:12px;vertical-align:middle;">
+
+=== regulatory.html ===
+  SRC: assets/Bhaa_transparent.png -> LOCAL (exists: True)
+  TAG: <img src="assets/Bhaa_transparent.png" alt="Nilus Lab" style="height:32px;width:auto;display:block;">
+
+=== technical_catalog.html ===
+  SRC: assets/nilus_lab_logo.svg -> LOCAL (exists: True)
+  TAG: <img src="assets/nilus_lab_logo.svg" alt="Nilus Lab" class="nav-logo-responsive" style="height:38px!important;max-height:38px!important;width:auto;display:block;">
+
+=== api.html ===
+  SRC: assets/Bhaa_transparent.png -> LOCAL (exists: True)
+  TAG: <img src="assets/Bhaa_transparent.png" alt="Nilus Lab" class="nav-logo-responsive">
+
+=== profile.html ===
+  SRC: assets/Bhaa_transparent.png -> LOCAL (exists: True)
+  TAG: <img src="assets/Bhaa_transparent.png" alt="Nilus Lab" class="nav-logo-responsive">
+
+  SRC: assets/nilus_logo.png -> LOCAL (exists: True)
+  TAG: <img src="assets/nilus_logo.png" alt="Nilus Lab" class="drawer-nav-logo" style="height: 22px !important; width: auto !important; max-width: 110px !important; object-fit: contain !important; display: block;">
+
