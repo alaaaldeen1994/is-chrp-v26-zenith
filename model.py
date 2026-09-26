@@ -44,7 +44,7 @@ class NativeTranscriptomicAgingEngine(nn.Module):
     def forward(self, normalized_counts: torch.Tensor, chronological_age: float = 65.0) -> Dict[str, Any]:
         """
         Input: normalized_counts tensor of shape [batch_size, num_genes]
-        Returns primary BiT Age and secondary inferred Horvath proxy with explicit 95% CI.
+        Returns exploratory transcriptomic aging shift score.
         """
         log_expr = torch.log1p(normalized_counts)
         # Scaled shift relative to reference population
@@ -54,20 +54,11 @@ class NativeTranscriptomicAgingEngine(nn.Module):
         # Calculate Rejuvenation Delta (Delta_Age)
         age_reversal_delta = float((chronological_age - predicted_rna_age.mean()).item())
         
-        # Inferred DNAm proxy (secondary metric with regulatory caveat)
-        inferred_dnam = float(predicted_rna_age.mean().item()) - 0.2
-        
         return {
             "primary_rna_bio_age": round(float(predicted_rna_age.mean().item()), 2),
             "rna_age_reversal_delta_years": round(age_reversal_delta, 2),
-            "metric_type": "BiT_Age_Native_Transcriptomic",
+            "metric_type": "Exploratory_Transcriptomic_Scoring",
             "differentiable": True,
-            "inferred_dnam_potential": round(inferred_dnam, 2),
-            "dnam_confidence_interval_95": 3.2,
-            "regulatory_notice": (
-                "Inferred Epigenetic Potential Score (DNAm); pending orthogonal validation "
-                "via targeted bisulfite sequencing (TIME-seq / Illumina EPIC array)."
-            )
         }
 
 
@@ -184,8 +175,4 @@ class ThresholdSafetyGate:
                 f"(POU5F1 <= 0.35, MYC <= 0.30, LIN28A <= 0.40). Note: Heuristic safety rule, not formal conformal prediction."
             )
         }
-
-
-# Backwards compatibility alias
-ConformalSafetyEvaluator = ThresholdSafetyGate
 

@@ -21,7 +21,7 @@ from run_zenith_screening_pipeline import (
     simulate_perturbation,
     NativeTranscriptomicAgingEngine,
     CardiacConductionSafetyEngine,
-    ConformalSafetyEvaluator
+    ThresholdSafetyGate
 )
 
 CLOCK_WEIGHTS = {
@@ -72,7 +72,7 @@ baseline_counts = generate_aged_cardiac_baseline(200)
 # Engines
 aging_engine = NativeTranscriptomicAgingEngine(GENE_SYMBOLS, CLOCK_WEIGHTS)
 safety_engine = CardiacConductionSafetyEngine(GENE_SYMBOLS)
-conformal_evaluator = ConformalSafetyEvaluator(0.01)
+conformal_evaluator = ThresholdSafetyGate(0.01)
 
 # -------------------------------------------------------------
 # TEST 2: Cooperative bonus check

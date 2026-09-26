@@ -232,13 +232,13 @@ class NeuralAgeClock:
                     # boost confidence if substrate agrees
                     confidence = min(1.0, confidence + 0.1)
 
-        # dual-age gap (the KEY marketing metric)
-        dual_age_gap = neural_age - chronological_age
+        # neural marker score gap
+        neural_age_gap = neural_age - chronological_age
 
         return {
             "neural_age": float(neural_age),
             "chronological_age": float(chronological_age),
-            "neural_age_gap": float(dual_age_gap),
+            "neural_age_gap": float(neural_age_gap),
             "confidence": float(confidence),
             "phi_hat": phi_hat,
             "synchrony": synchrony,
@@ -283,76 +283,15 @@ class NeuralAgeClock:
 
 
 # ---------------------------------------------------------------------------
-# Dual-Age comparator (the marketing headline)
+# Decommissioned Multi-Modal Comparator
 # ---------------------------------------------------------------------------
 
 class DualAgeComparator:
-    """Combines Horvath (epigenetic) + Neural (functional) ages.
-
-    This is the unique selling point: NO competitor offers dual-age.
-    The gap between the two ages reveals whether aging is:
-      - Genomic-dominant (Horvath > Neural) → epigenetic drift
-      - Neural-dominant (Neural > Horvath) → autonomic decline
-      - Concordant → uniform aging
-
-    Usage:
-        horvath_age = horvath_clock.predict(betas)
-        neural_result = await neural_clock.predict_with_substrate(expr, age)
-        dual = DualAgeComparator.compare(horvath_age, neural_result)
-    """
+    """Decommissioned comparator. Uncalibrated multi-modal age comparator is removed."""
 
     @staticmethod
     def compare(horvath_age: float, neural_result: Dict[str, Any]) -> Dict[str, Any]:
-        neural_age = neural_result["neural_age"]
-        chrono_age = neural_result["chronological_age"]
-
-        horvath_gap = horvath_age - chrono_age
-        neural_gap = neural_age - chrono_age
-        dual_gap = neural_age - horvath_age  # positive = neural older than epigenetic
-
-        # aging phenotype classification
-        if abs(dual_gap) < 3.0:
-            phenotype = "concordant"
-            phenotype_desc = "Epigenetic and neural ages are aligned — uniform aging profile."
-        elif dual_gap > 3.0:
-            phenotype = "neural_dominant"
-            phenotype_desc = (
-                "Neural age exceeds epigenetic age — autonomic nervous system "
-                "is aging faster than the genome. May indicate vagal decline "
-                "or cardiac denervation. Consider autonomic interventions."
-            )
-        else:
-            phenotype = "genomic_dominant"
-            phenotype_desc = (
-                "Epigenetic age exceeds neural age — genomic drift is the "
-                "primary aging driver. Neural function is relatively preserved. "
-                "Consider epigenetic reprogramming (OSK partial)."
-            )
-
-        # overall rejuvenation potential
-        if neural_result.get("phi_hat") is not None:
-            # if substrate integration is high, rejuvenation potential is good
-            phi = neural_result["phi_hat"]
-            potential = "high" if phi > 0.005 else "moderate" if phi > 0.001 else "low"
-        else:
-            potential = "unknown"
-
-        return {
-            "horvath_age": float(horvath_age),
-            "neural_age": float(neural_age),
-            "chronological_age": float(chrono_age),
-            "horvath_gap": float(horvath_gap),
-            "neural_gap": float(neural_gap),
-            "dual_gap": float(dual_gap),
-            "phenotype": phenotype,
-            "phenotype_description": phenotype_desc,
-            "rejuvenation_potential": potential,
-            "summary": (
-                f"Dual-age assessment: Horvath {horvath_age:.1f}y, "
-                f"Neural {neural_age:.1f}y, Chronological {chrono_age:.0f}y. "
-                f"Profile: {phenotype}."
-            ),
-        }
+        raise RuntimeError("DualAgeComparator is decommissioned: uncalibrated multi-modal comparison endpoint has been removed.")
 
 
 # ---------------------------------------------------------------------------
@@ -520,7 +459,7 @@ class RidgeNeuralAgeClock:
         expression_vector: Dict[str, float],
         chronological_age: float = 50.0,
     ) -> Dict[str, Any]:
-        """Async version — delegates substrate enrichment then returns dual-age result."""
+        """Async version — delegates substrate enrichment then returns neural age result."""
         neural_age, confidence, breakdown = self.predict(
             expression_vector, chronological_age
         )
@@ -548,11 +487,11 @@ class RidgeNeuralAgeClock:
                     breakdown["phi_modulation"] = phi_modulation
                     confidence = min(1.0, confidence + 0.1)
 
-        dual_age_gap = neural_age - chronological_age
+        neural_age_gap = neural_age - chronological_age
         return {
             "neural_age":       float(neural_age),
             "chronological_age": float(chronological_age),
-            "neural_age_gap":   float(dual_age_gap),
+            "neural_age_gap":   float(neural_age_gap),
             "confidence":       float(confidence),
             "phi_hat":          phi_hat,
             "synchrony":        synchrony,

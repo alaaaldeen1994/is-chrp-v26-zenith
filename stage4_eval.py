@@ -13,7 +13,7 @@ import numpy as np
 from model import (
     NativeTranscriptomicAgingEngine,
     CardiacConductionSafetyEngine,
-    ConformalSafetyEvaluator
+    ThresholdSafetyGate
 )
 
 def run_stage4_evaluation():
@@ -30,7 +30,7 @@ def run_stage4_evaluation():
     # 1. Instantiate Core Remediation Engines
     aging_engine = NativeTranscriptomicAgingEngine(gene_symbols=genes)
     cardiac_esi_engine = CardiacConductionSafetyEngine(gene_symbols=genes)
-    conformal_evaluator = ConformalSafetyEvaluator(alpha=0.01)
+    conformal_evaluator = ThresholdSafetyGate(alpha=0.01)
 
     batch_size = 100
     torch.manual_seed(42)

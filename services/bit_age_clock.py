@@ -35,7 +35,7 @@ class BiTAgeClockService:
         self,
         expression_matrix: Optional[Dict[str, float]] = None,
         chronological_age: float = 65.0,
-        rejuvenation_target: float = 13.0
+        rejuvenation_target: Optional[float] = None
     ) -> Dict[str, Any]:
         raise RuntimeError(
             "BiTAgeClockService is uncalibrated: hand-set binarization_thresholds, bit_weights, "

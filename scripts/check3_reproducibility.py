@@ -26,7 +26,7 @@ sys.path.insert(0, REPO_ROOT)
 OUT_DIR = os.path.join(REPO_ROOT, "validation_outputs")
 os.makedirs(OUT_DIR, exist_ok=True)
 
-from model import NativeTranscriptomicAgingEngine, CardiacConductionSafetyEngine, ConformalSafetyEvaluator
+from model import NativeTranscriptomicAgingEngine, CardiacConductionSafetyEngine, ThresholdSafetyGate
 from run_zenith_screening_pipeline import GENE_SYMBOLS, GENE_TO_IDX, simulate_perturbation
 
 CLOCK_WEIGHTS = {
@@ -71,7 +71,7 @@ def run_screen_for_seed(seed: int, num_random: int = 500):
         gene_symbols=GENE_SYMBOLS, bit_age_weights_dict=CLOCK_WEIGHTS
     )
     safety_engine = CardiacConductionSafetyEngine(gene_symbols=GENE_SYMBOLS)
-    conformal_evaluator = ConformalSafetyEvaluator(alpha=0.01)
+    conformal_evaluator = ThresholdSafetyGate(alpha=0.01)
     
     # Generate aged baseline (seed-dependent due to randn)
     from run_zenith_screening_pipeline import generate_aged_cardiac_baseline

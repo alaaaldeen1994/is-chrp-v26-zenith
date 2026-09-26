@@ -44,7 +44,7 @@ os.makedirs(OUT_DIR, exist_ok=True)
 # ---------------------------------------------------------------------------
 # Step 0: Import the pipeline's own engines
 # ---------------------------------------------------------------------------
-from model import NativeTranscriptomicAgingEngine, CardiacConductionSafetyEngine, ConformalSafetyEvaluator
+from model import NativeTranscriptomicAgingEngine, CardiacConductionSafetyEngine
 from run_zenith_screening_pipeline import (
     GENE_SYMBOLS, GENE_TO_IDX,
     generate_aged_cardiac_baseline,
