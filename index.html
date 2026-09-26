@@ -1503,7 +1503,7 @@ nav, .nav-dock, #mob-nav {
                         <button onclick="selectModelOption('real', 'Zenith Ensemble')" id="model-opt-real"
                             style="background:#f5f3ef;color:#191919;border:none;text-align:left;padding:8px 12px;border-radius:8px;cursor:pointer;width:100%;font-family:'Inter','Segoe UI',sans-serif;display:flex;flex-direction:column;gap:2px;transition:all 0.15s;">
                             <span style="font-size:12px;font-weight:600;">Zenith Ensemble</span>
-                            <span style="font-size:9px;color:#8b8b8b;font-weight:400;">1,962,128-Cell Foundation (14 Cohorts) + 486,134-Cell HCA Specialist (424,436 Evaluated / 99,993 scVI-Trained)</span>
+                            <span style="font-size:9px;color:#8b8b8b;font-weight:400;">1,962,128-Cell Foundation (14 Cohorts) + 99,993 scVI-Trained Cardiac Cells (486k HCA Atlas)</span>
                         </button>
                         <!-- Option 2: GPT Analysis -->
                         <button onclick="selectModelOption('gpt', 'GPT-4o Clinical Log')" id="model-opt-gpt"
@@ -1588,9 +1588,9 @@ nav, .nav-dock, #mob-nav {
 
         <!-- Suggestion pills -->
         <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:14px;justify-content:center;width:100%;max-width:640px;">
-            <button class="sugg-pill" onclick="selectSuggestionPill(this.dataset.q)" data-q="Reverse cardiac aging in HMVEC cells using CACNA1C and RYR2 pathways"
+            <button class="sugg-pill" onclick="selectSuggestionPill(this.dataset.q)" data-q="Model cellular rejuvenation pathways in HMVEC cells using CACNA1C and RYR2"
                 style="background:transparent;border:1px solid #d5d5d2;color:#7a7a7a;font-size:12px;font-weight:400;padding:6px 14px;border-radius:20px;cursor:pointer;transition:all 0.15s;font-family:'Inter','Segoe UI',sans-serif;" onmouseover="this.style.borderColor='#bbb8b3';this.style.color='#1a1a1a';this.style.background='#f7f7f6'" onmouseout="this.style.borderColor='#d5d5d2';this.style.color='#7a7a7a';this.style.background='transparent'">
-                Cardiac aging reversal
+                Cardiac rejuvenation pathways
             </button>
             <button class="sugg-pill" onclick="selectSuggestionPill(this.dataset.q)" data-q="Identify anti-senescence genes that suppress B2M and TMSB4X aging markers"
                 style="background:transparent;border:1px solid #d5d5d2;color:#7a7a7a;font-size:12px;font-weight:400;padding:6px 14px;border-radius:20px;cursor:pointer;transition:all 0.15s;font-family:'Inter','Segoe UI',sans-serif;" onmouseover="this.style.borderColor='#bbb8b3';this.style.color='#1a1a1a';this.style.background='#f7f7f6'" onmouseout="this.style.borderColor='#d5d5d2';this.style.color='#7a7a7a';this.style.background='transparent'">
@@ -2839,13 +2839,13 @@ nav, .nav-dock, #mob-nav {
                 <div class="hud-panel" id="hud-main">
                     <div id="hud-header"
                         class="text-[10px] font-bold text-slate-400 mb-3 pb-2 border-b border-mid flex justify-between cursor-move">
-                        <span>LIVE TELEMETRY</span>
-                        <span class="text-blue-400 text-[9px] border border-blue-900 px-1 rounded">LIVE</span>
+                        <span>SIMULATION VISUALIZER</span>
+                        <span class="text-slate-400 text-[9px] border border-slate-700 px-1 rounded">2D AGENT MODEL</span>
                     </div>
                     <div class="hud-row"><span>Entropy</span><span class="hud-value text-blue-400"
                             id="hud-epi">--</span>
                     </div>
-                    <div class="hud-row"><span>Genomic Stability</span><span class="hud-value text-slate-200"
+                    <div class="hud-row"><span>Cell Viability</span><span class="hud-value text-slate-200"
                             id="hud-dna">--</span></div>
                     <div class="hud-row text-blue-400"><span>Predictive Drift</span><span class="hud-value"
                             id="hud-drift">STABLE</span></div>
@@ -2860,16 +2860,10 @@ nav, .nav-dock, #mob-nav {
                         <span>Protocol Phase</span><span class="hud-value" id="hud-phase">--</span>
                     </div>
 
-                    <!-- VALIDATION METRICS -->
+                    <!-- SIMULATION STATUS -->
                     <div class="mt-2 pt-2 border-t border-mid">
-                        <div class="hud-row" title="Validated Clinical Target">
-                            <span>Target BioAge</span>
-                            <span class="hud-value text-blue-400 font-bold">0.1011</span>
-                        </div>
-                        <div class="hud-row" title="DRP Barrier Status">
-                            <span>Barrier Fatigue</span>
-                            <span class="hud-value text-blue-400">NEUTRALIZED</span>
-                        </div>
+                        <div class="text-[8px] text-slate-500 uppercase tracking-wider mb-1">Visualization Mode</div>
+                        <div class="text-[9px] text-slate-400">Heuristic Agent-Based Animation (Illustrative Only)</div>
                     </div>
                     <div class="mt-4 pt-2 border-t border-mid">
                         <div class="text-[9px] font-bold text-slate-500 mb-2">SELECTED CELL</div>
@@ -5322,7 +5316,7 @@ async function loadCellTypes() {
         list.innerHTML = `
             <button onclick="selectCellTypeOption('all', 'All cardiac cells')" style="background:#f5f3ef;color:#191919;border:none;text-align:left;padding:8px 12px;border-radius:8px;cursor:pointer;width:100%;font-family:'Inter',sans-serif;display:flex;flex-direction:column;gap:2px;">
                 <span style="font-size:11px;font-weight:600;">All cardiac cells (HCA 486k Atlas · 12 Major Cell Types)</span>
-                <span style="font-size:8px;color:#8b8b8b;">424,436 evaluated across 12 cell types (486,134 HCA Atlas · 99,993 scVI-trained · 1.96M Foundation)</span>
+                <span style="font-size:8px;color:#8b8b8b;">486,134 HCA Atlas cells (424,436 across 12 major cell types · 99,993 scVI-trained)</span>
             </button>
             <button onclick="selectCellTypeOption('regular_ventricular_cardiac_myocyte', 'regular ventricular cardiac myocyte')" style="background:transparent;color:#6b6b6b;border:none;text-align:left;padding:8px 12px;border-radius:8px;cursor:pointer;width:100%;font-family:'Inter',sans-serif;display:flex;flex-direction:column;gap:2px;">
                 <span style="font-size:11px;font-weight:600;">regular ventricular cardiac myocyte (HCA Atlas · scVI Projected)</span>
@@ -5459,7 +5453,7 @@ async function runDiscovery() {
         const phases = [
             'Initiating Zenith Safety Gates...',
             'Auditing candidate factors against Oncogene Blacklist...',
-            'Analyzing full dedifferentiation teratoma risk ceilings...',
+            'Analyzing full dedifferentiation dedifferentiation ceilings...',
             'Running Bayesian GP dosage optimization for target cell lineage...',
             'Simulating chromatin accessibility and chromatin pioneer TF binding...',
             'Compiling cooperative ZenithFold Server manifest structure...',

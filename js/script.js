@@ -1227,7 +1227,7 @@ const BiosimEngine = {
                         // Color code Section 22: >90% Emerald, >80% Yellow, <80% Red
                         dnaEl.style.color = stability > 90 ? '#10b981' : (stability > 80 ? '#facc15' : '#ef4444');
 
-                        if (stability < 80) BiosimUI.showSidebarAlert(`CRITICAL: Genomic Stability at ${stability}%`);
+                        if (stability < 80) BiosimUI.showSidebarAlert(`CRITICAL: Lineage Stability at ${stability}%`);
                     }
 
                     if (lastSnapshot.populations.TUMOR > 0) {
@@ -4566,12 +4566,12 @@ const BiosimBridge = {
 
                 // Define graph layout nodes programmatically
                 const nodes = [
-                    { id: 'GATA4', type: 'TF', safety: 0.95 },
-                    { id: 'MEF2C', type: 'TF', safety: 0.92 },
-                    { id: 'TBX5', type: 'TF', safety: 0.94 },
-                    { id: 'NKX2-5', type: 'TF', safety: 0.93 },
-                    { id: 'MYC', type: 'TF', safety: 0.15 },
-                    { id: 'SNAI1', type: 'TF', safety: 0.35 },
+                    { id: 'GATA4', type: 'TF', isRisk: false },
+                    { id: 'MEF2C', type: 'TF', isRisk: false },
+                    { id: 'TBX5', type: 'TF', isRisk: false },
+                    { id: 'NKX2-5', type: 'TF', isRisk: false },
+                    { id: 'MYC', type: 'TF', isRisk: true },
+                    { id: 'SNAI1', type: 'TF', isRisk: true },
                     { id: 'TNNT2', type: 'Target' },
                     { id: 'MYH6', type: 'Target' },
                     { id: 'ACTC1', type: 'Target' },
@@ -4807,7 +4807,7 @@ const BiosimBridge = {
                         if (!sourceNode || !targetNode) return;
 
                         const isActive = activeTFs.includes(link.source);
-                        const isRisk = sourceNode.safety < 0.50;
+                        const isRisk = !!sourceNode.isRisk;
 
                         const dx = targetNode.x - sourceNode.x;
                         const dy = targetNode.y - sourceNode.y;
@@ -4897,7 +4897,7 @@ const BiosimBridge = {
 
                     if (isActive) {
                         if (node.type === 'TF') {
-                            if (node.safety < 0.50) {
+                            if (node.isRisk) {
                                 fill = 'rgba(127,29,29,0.45)';
                                 stroke = '#ef4444';
                             } else {
@@ -4924,7 +4924,7 @@ const BiosimBridge = {
                         dot.setAttribute('r', '2.5');
                         let dotColor = '#cbd5e1';
                         if (node.type === 'TF') {
-                            dotColor = node.safety < 0.50 ? '#f87171' : '#60a5fa';
+                            dotColor = node.isRisk ? '#f87171' : '#60a5fa';
                         } else {
                             dotColor = '#34d399';
                         }
@@ -4954,11 +4954,10 @@ const BiosimBridge = {
                         let details = `<strong>Node: ${node.id}</strong>`;
                         if (node.type === 'TF') {
                             details += `<br><span style="color:#94a3b8;">Type: Pioneer Transcription Factor</span>`;
-                            details += `<br>Safety Index: <strong>${(node.safety * 100).toFixed(0)}%</strong>`;
-                            if (node.safety < 0.50) {
-                                details += `<br><span style="color:#f87171; font-weight:bold;">⚠ Oncogenic Activation Risk</span>`;
+                            if (node.isRisk) {
+                                details += `<br><span style="color:#f87171; font-weight:bold;">⚠ Oncogenic / Dedifferentiation Factor</span>`;
                             } else {
-                                details += `<br><span style="color:#34d399;">✔ Reprogramming Safety Met</span>`;
+                                details += `<br><span style="color:#34d399;">✔ Cardiac Lineage Specifier</span>`;
                             }
                         } else {
                             details += `<br><span style="color:#94a3b8;">Type: Downstream Target Gene</span>`;
@@ -5615,7 +5614,7 @@ const BiosimUI = {
             obsEl.innerHTML = "CRITICAL: Malignant expansion or genome instability detected. Systemic entropy exceeds safety thresholds. Immediate p53 stabilizing protocol or apoptosis induction required.";
             obsEl.style.color = '#fca5a5';
         } else if (isSuccess) {
-            obsEl.innerHTML = "SUCCESS: Rejuvenation target met. Population demonstrates low entropy (<0.4) and high genomic stability (>90%). Chromatin manifold convergence successful.";
+            obsEl.innerHTML = "SUCCESS: Rejuvenation target met. Population demonstrates low entropy (<0.4) and high viability (>90%). Chromatin manifold convergence successful.";
             obsEl.style.color = '#86efac';
         } else if (last.populations.IPSC > 0) {
             obsEl.innerHTML = "TRANSITION: Partial pluripotency shift observed. Monitoring for differentiation bottlenecks and stochastic drift. Currently in sub-optimal yield phase.";
@@ -6035,7 +6034,7 @@ const BiosimLab = {
             CONFIG.stochastic.noiseStrength = 0.005;
             CONFIG.stochastic.mutationRate = 0.0001;
             CONFIG.reprogramming.potency = 1.2;
-            document.getElementById('research-goal').innerText = "Maximize Genomic Stability & Longevity";
+            document.getElementById('research-goal').innerText = "Maximize Cell Viability & Longevity";
             // Force differentiation pulse
             BiosimBridge.injectVector('CLINICAL_COMBO');
         } else if (type === 'DISCOVERY') {

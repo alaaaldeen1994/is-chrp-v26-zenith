@@ -1543,13 +1543,9 @@ async def lifespan(app: FastAPI):
                         time.sleep(2)
             print(f"[ZENITH DOWNLOADER] Failed to download {file_path} after {retries} attempts.")
 
-        # Download necessary models
+        # Decommissioned/RUO mode: Skip heavy model downloading and torch unpickling at startup to conserve container memory
         hf_repo = "alaaaldeen1994/zenith-models"
-        download_hf_file(hf_repo, "models/scvi_model_486k_real/model.pt", model_pt_486k)
-        if load_1_94m:
-            download_hf_file(hf_repo, "models/zenith_foundation_v1/model.pt", model_pt_1_94m)
-            download_hf_file(hf_repo, "models/zenith_foundation_v1/var_schema.h5ad", os.path.join(model_dir_1_94m, "var_schema.h5ad"))
-            download_hf_file(hf_repo, "models/zenith_foundation_v1/umap_latent.h5ad", os.path.join(model_dir_1_94m, "umap_latent.h5ad"))
+        load_1_94m = False
 
         # --- HUGGING FACE PYTORCH HOTFIX ---
         # scvi-tools versions sometimes add a blank 'pyro_param_store' to the state_dict which crashes newer/older versions on load
@@ -1656,12 +1652,8 @@ async def lifespan(app: FastAPI):
 
     
 
-    # Start structure analysis background engine if Node is available
-    try:
-        from structure_api_bridge import init_structure_node_worker
-        await init_structure_node_worker()
-    except Exception as e:
-        print(f"[STRUCTURE-BRIDGE] Startup warning: {e}")
+    # Structure folding endpoints decommissioned; skip background Node worker
+    print("[STRUCTURE-BRIDGE] Decommissioned mode: Node worker startup bypassed.")
 
     yield
 
@@ -3158,14 +3150,6 @@ async def serve_structure_root():
 @app.get("/structure.html", response_class=HTMLResponse)
 async def serve_structure_file():
     return FileResponse("structure.html")
-
-@app.get("/zenith_proofs", response_class=HTMLResponse)
-async def serve_zenith_proofs_root():
-    return FileResponse("zenith_proofs.html")
-
-@app.get("/zenith_proofs.html", response_class=HTMLResponse)
-async def serve_zenith_proofs_file():
-    return FileResponse("zenith_proofs.html")
 
 
 
@@ -5799,7 +5783,7 @@ async def chat_proxy(req: ChatRequest):
 
             if "reprogram" in lower_msg or "oskm" in lower_msg or "vector" in lower_msg:
 
-                fallback_reply += "To induce pluripotency (iPSC), the **OSKM** (Yamanaka factors) vector is the gold standard. It consists of OCT4, SOX2, KLF4, and c-MYC. Ensure strict timing to avoid teratoma formation."
+                fallback_reply += "To induce pluripotency (iPSC), the **OSKM** (Yamanaka factors) vector is the gold standard. It consists of OCT4, SOX2, KLF4, and c-MYC. Ensure strict timing to avoid dedifferentiation."
 
             elif "analyze" in lower_msg or "vision" in lower_msg:
 
@@ -7565,7 +7549,7 @@ async def run_gpt_discovery(request: Request):
                     safety_audit["reason"] = f"Oncogenic Risk: {len(oncogenes_found)} proto-oncogene(s) detected ({', '.join(oncogenes_found)}). High tumor/proliferation risk. Cocktail blocked."
                 elif dediff_found:
                     safety_audit["classification"] = "BLOCKED"
-                    safety_audit["reason"] = f"Pluripotency Risk: {len(dediff_found)} full dedifferentiation factor(s) detected ({', '.join(dediff_found)}). High teratoma/loss of cell identity risk. Cocktail blocked."
+                    safety_audit["reason"] = f"Dedifferentiation Risk: {len(dediff_found)} full dedifferentiation factor(s) detected ({', '.join(dediff_found)}). High dedifferentiation/loss of cell identity risk. Cocktail blocked."
 
                 # 5. Attach the safety audit to the final response payload
                 result["arrhythmia_safety"] = safety_audit
@@ -7953,7 +7937,7 @@ async def get_leadership():
 # ==============================================================================
 # ZENITH v31.1 PRODUCTION REMEDIATION: /v1/predict/trajectory ENDPOINT
 # Implements Transcriptomic Aging Engine, Electrophysiological Stability Index (ESI),
-# and Conformal Risk Control (CRC) Layer
+# and Heuristic Safety Filtering Layer
 # ==============================================================================
 class TrajectoryPredictionRequest(BaseModel):
     factors: Optional[List[str]] = ["SIRT1", "SIRT6", "GATA4", "ZBTB16"]
@@ -7994,7 +7978,7 @@ async def predict_cellular_trajectory(req: Optional[TrajectoryPredictionRequest]
         baseline_counts[0, gene_to_idx["KCNJ2"]] = 1.50
         baseline_counts[0, gene_to_idx["SIRT1"]] = 0.45
         baseline_counts[0, gene_to_idx["SIRT6"]] = 0.40
-        baseline_counts[0, gene_to_idx["GATA4"]] = 0.90
+        baseline_counts[0, gene_to_idx["GATA4"]] = 0.895
         baseline_counts[0, gene_to_idx["ZBTB16"]] = 0.50
         baseline_counts[0, gene_to_idx["CDKN2A"]] = 3.60
         baseline_counts[0, gene_to_idx["IL6"]] = 2.50
@@ -8033,7 +8017,7 @@ async def predict_cellular_trajectory(req: Optional[TrajectoryPredictionRequest]
         # 2. Evaluate Electrophysiological Stability Index (ESI)
         esi_data = cardiac_esi_engine.calculate_esi(baseline_counts, perturbed_counts)
 
-        # 3. Evaluate Conformal Risk Control (CRC)
+        # 3. Evaluate Heuristic Safety Filtering
         conformal_data = conformal_evaluator.audit_oncogenic_risk({
             "POU5F1": float(perturbed_counts[0, gene_to_idx["POU5F1"]].item()),
             "MYC": float(perturbed_counts[0, gene_to_idx["MYC"]].item()),
