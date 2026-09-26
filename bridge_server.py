@@ -2124,29 +2124,16 @@ async def serve_dna_video():
 
 
 @app.get("/deck.pdf")
+@app.get("/Nilus_Lab_Pitch_Deck.pdf")
 async def serve_deck_pdf():
-    for candidate in ["deck.pdf", "assets/deck.pdf", "reports/Nilus_Lab_Pitch_Deck.pdf", "assets/Nilus_Lab_Pitch_Deck_2026.pdf"]:
-        if os.path.exists(candidate):
-            return FileResponse(candidate, media_type="application/pdf", filename="Nilus_Lab_Pitch_Deck.pdf")
-    raise HTTPException(status_code=404, detail="Pitch deck not found")
+    raise HTTPException(status_code=410, detail="Pitch deck decommissioned.")
 
 
 @app.get("/cv.pdf")
-async def serve_cv_pdf():
-    for candidate in ["cv.pdf", "assets/cv.pdf"]:
-        if os.path.exists(candidate):
-            return FileResponse(candidate, media_type="application/pdf", filename="Alaa_Aldeen_CV.pdf")
-    raise HTTPException(status_code=404, detail="CV not found")
-
-
-@app.get("/Nilus_Lab_Pitch_Deck.pdf")
-async def serve_deck_pdf_alias():
-    return await serve_deck_pdf()
-
-
 @app.get("/Alaa_Aldeen_CV.pdf")
-async def serve_cv_pdf_alias():
-    return await serve_cv_pdf()
+async def serve_cv_pdf():
+    raise HTTPException(status_code=410, detail="Curriculum vitae decommissioned.")
+
 
 
 
@@ -2560,10 +2547,8 @@ async def get_mcp_manifest():
 @app.get("/zenith_scientific_paper.pdf")
 @app.get("/paper.pdf")
 async def get_scientific_paper_pdf():
-    pdf_path = os.path.join(os.path.dirname(__file__), "zenith_scientific_paper.pdf")
-    if os.path.exists(pdf_path):
-        return FileResponse(pdf_path, media_type="application/pdf", filename="zenith_scientific_paper.pdf")
-    return Response(status_code=404, content="Paper PDF not found")
+    raise HTTPException(status_code=410, detail="Scientific paper PDF decommissioned.")
+
 
 @app.get("/zenith_scientific_paper.html")
 @app.get("/paper.html")
