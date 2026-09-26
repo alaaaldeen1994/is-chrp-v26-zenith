@@ -299,54 +299,14 @@ def post_trials_run():
         detail="Endpoint decommissioned. Virtual trial simulation has been removed."
     )
 
-# --- ESMFold 3D Structure Folding ---
-@router.post("/structure/fold", response_model=APIEnvelope)
-def post_structure_fold(
-    payload: ProteinFoldingRequest,
-    request: Request,
-    db: Session = Depends(get_db),
-    folder = Depends(get_structural_folder)
-):
-    start_time = time.time()
-    
-    result = folder.fold_sequence(payload.sequence, db=db)
-    if result["status"] == "error":
-        if result.get("error_type") == "validation_too_long":
-            raise HTTPException(status_code=413, detail=result["message"])
-        elif result.get("error_type") in ["validation_empty", "validation_invalid_chars"]:
-            raise HTTPException(status_code=400, detail=result["message"])
-        else:
-            raise HTTPException(status_code=502, detail=result["message"])
-        
-    duration = int((time.time() - start_time) * 1000)
-    log_api_call(db, request, 200, duration, 10)
-    return APIEnvelope(data=result, meta={"compute_time_ms": duration, "credits_used": 10})
-
-@router.post("/structure/fold/ui", response_model=APIEnvelope)
-def post_structure_fold_ui(
-    payload: ProteinFoldingRequest,
-    request: Request,
-    db: Session = Depends(get_db),
-    folder = Depends(get_structural_folder)
-):
-    ip = request.client.host if request.client else "unknown"
-    if not check_ui_rate_limit(ip):
-        raise HTTPException(status_code=429, detail="Rate limit exceeded. Maximum 10 fold requests per minute.")
-        
-    start_time = time.time()
-    
-    result = folder.fold_sequence(payload.sequence, db=db)
-    if result["status"] == "error":
-        if result.get("error_type") == "validation_too_long":
-            raise HTTPException(status_code=413, detail=result["message"])
-        elif result.get("error_type") in ["validation_empty", "validation_invalid_chars"]:
-            raise HTTPException(status_code=400, detail=result["message"])
-        else:
-            raise HTTPException(status_code=502, detail=result["message"])
-        
-    duration = int((time.time() - start_time) * 1000)
-    log_api_call(db, request, 200, duration, 10)
-    return APIEnvelope(data=result, meta={"compute_time_ms": duration, "credits_used": 10})
+# --- ESMFold 3D Structure Folding (Decommissioned) ---
+@router.post("/structure/fold")
+@router.post("/structure/fold/ui")
+def post_structure_fold():
+    raise HTTPException(
+        status_code=410,
+        detail="Endpoint decommissioned. Structure prediction fallback has been removed."
+    )
 
 # --- AnnData File Download Endpoint ---
 @router.get("/jobs/{job_id}/download")

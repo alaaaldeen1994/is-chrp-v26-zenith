@@ -19,8 +19,27 @@ def verify_api_key(key: str, db: Session) -> APIKey:
 
 class APIKeyAuthMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next):
-        # Exclude specific paths from API key check (e.g. static pages, swagger, openapi)
         path = request.url.path
+        decommissioned_paths = {
+            "/api/v1/clinical/predict/perturbation",
+            "/api/v1/predict/perturbation",
+            "/api/v1/safety/audit",
+            "/api/v1/trials/run",
+            "/api/v1/structure/fold",
+            "/api/v1/structure/fold/ui",
+            "/api/v1/neural/dual-age",
+            "/api/v2/multiomics/integrate",
+            "/api/v2/multiomics/integrate/demo",
+            "/run_virtual_trial",
+            "/structure/fold",
+            "/api/structure/fold"
+        }
+        if path in decommissioned_paths:
+            return JSONResponse(
+                status_code=410,
+                content={"status": "error", "message": "Endpoint decommissioned."}
+            )
+
         if (
             path in ["/", "/index.html", "/profile", "/discovery", "/health", "/api/docs", "/api/openapi.json", "/api/redoc"] 
             or path.startswith("/static")

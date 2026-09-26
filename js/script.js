@@ -955,6 +955,7 @@ const BiosimEngine = {
 
     init() {
         this.canvas = document.getElementById('canvas');
+        if (!this.canvas) return;
         this.ctx = this.canvas.getContext('2d');
         this.resize();
         window.addEventListener('resize', () => this.resize());
@@ -4266,7 +4267,9 @@ const BiosimBridge = {
     },
 
     async runMultiOmicsPredictor() {
-        const gata4 = parseFloat(document.getElementById('slider-gata4').value);
+        const gata4El = document.getElementById('slider-gata4');
+        if (!gata4El) return;
+        const gata4 = parseFloat(gata4El.value);
         const mef2c = parseFloat(document.getElementById('slider-mef2c').value);
         const tbx5 = parseFloat(document.getElementById('slider-tbx5').value);
         const nkx25 = parseFloat(document.getElementById('slider-nkx25').value);
@@ -4382,7 +4385,9 @@ const BiosimBridge = {
 
 
     async runLNPOptimizer() {
-        const ion = parseFloat(document.getElementById('slider-lnp-ion').value);
+        const ionEl = document.getElementById('slider-lnp-ion');
+        if (!ionEl) return;
+        const ion = parseFloat(ionEl.value);
         const chol = parseFloat(document.getElementById('slider-lnp-chol').value);
         const helper = parseFloat(document.getElementById('slider-lnp-helper').value);
         const peg = parseFloat(document.getElementById('slider-lnp-peg').value);
@@ -5834,6 +5839,7 @@ const AIAssistant = {
     addMessage(role, content) {
         this.messages.push({ role, content });
         const chatBody = document.getElementById('ai-messages');
+        if (!chatBody) return;
         const div = document.createElement('div');
         div.className = `p-2 rounded mb-2 text-[11px] leading-relaxed ${role === 'user' ? 'bg-blue-900/40 ml-4 border border-blue-500/30' :
             (role === 'system' ? 'bg-emerald-900/20 text-emerald-300 italic' : 'bg-slate-700/50 mr-4 border border-slate-600/30')}`;

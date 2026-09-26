@@ -96,3 +96,10 @@ def test_decommissioned_endpoint_definitions():
     with pytest.raises(HTTPException) as exc:
         post_trials_run()
     assert exc.value.status_code == 410
+
+    # api_v1 structure fold
+    from routers.api_v1 import post_structure_fold
+    with pytest.raises(HTTPException) as exc:
+        post_structure_fold()
+    assert exc.value.status_code == 410
+

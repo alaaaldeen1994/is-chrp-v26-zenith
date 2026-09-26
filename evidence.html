@@ -8,6 +8,7 @@
     <meta name="description" content="Scientific evidence registry for Zenith v31.0. Benchmarks, validation metrics, and reproducibility data for cardiac reprogramming trajectory models.">
     <!-- RESEARCH USE ONLY - NO CLINICAL CLAIMS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;500;600;700;800;900&family=JetBrains+Mono&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -527,7 +528,7 @@ nav, .nav-dock, #mob-nav {
     <!-- Premium Drawer & Navigation Scripts -->
     <script>
         // Lucide icon replacement trigger
-        lucide.createIcons();
+        if (typeof lucide !== 'undefined') lucide.createIcons();
 
         function toggleMobileMenu() {
             const drawer = document.getElementById('mobile-menu-drawer');

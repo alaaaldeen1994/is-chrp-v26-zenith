@@ -53,6 +53,10 @@ async def integrate_multiomics(request: MultiOmicsRequest):
     "/integrate/demo",
     summary="Demo: 5-Omics Integration (Decommissioned)",
 )
+@router.post(
+    "/integrate/demo",
+    summary="Demo: 5-Omics Integration (Decommissioned)",
+)
 async def multiomics_demo():
     raise HTTPException(
         status_code=status.HTTP_410_GONE,
