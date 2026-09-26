@@ -7,13 +7,6 @@ All software, models, and endpoints are designated strictly for **Research Use O
 
 ---
 
-## 2. Epigenetic & Transcriptomic Clock Validation
-
-### 2.1 Internal Validation: MAGNet Human Heart Cohort
-Model evaluation on human cardiac tissue profiles from the Myocardial Applied Genomics Network (MAGNet) cohort establishes the following internal performance benchmarks:
-* **Coefficient of Determination ($R^2$):** $0.418$
-* **Internal Mean Absolute Error (MAE):** $8.27\text{ years}$
-
 ## 2. Transcriptomic Clock Validation & Transfer Limitations
 
 ### 2.1 Internal Validation: MAGNet Human Heart Cohort

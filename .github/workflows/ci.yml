@@ -1,4 +1,4 @@
-name: Zenith Python SDK CI
+name: Zenith CI & Provenance Verification
 
 on:
   push:
@@ -7,7 +7,36 @@ on:
     branches: [ main ]
 
 jobs:
+  provenance-and-literals:
+    name: Provenance Integrity & Banned Literals Gate
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Python 3.11
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.11"
+
+    - name: Install verification dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pytest torch anndata pandas requests pydantic fastapi
+
+    - name: Run root provenance test suite
+      run: |
+        pytest tests/test_provenance.py
+
+    - name: Run widened banned-literal test with allowlist
+      run: |
+        pytest tests/test_banned_literals.py
+
+    - name: Run standalone provenance verification script
+      run: |
+        python verify_provenance.py
+
   test:
+    name: Python SDK CI (${{ matrix.python-version }})
     runs-on: ubuntu-latest
     strategy:
       matrix:

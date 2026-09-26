@@ -1,4 +1,6 @@
 {
+  "document_type": "OFFLINE_TRAINING_DATA_REGISTRY",
+  "scope_boundary": "Offline metadata registry documenting CELLxGENE 14 cohorts (1,962,128 cells) utilized during offline pre-training of the foundation scVI checkpoint (models/zenith_foundation_v1/model.pt). This is NOT an active platform claims document or runtime screening metric file. Canonical runtime claims and assertions derive exclusively from root provenance.json and CLAIMS.md.",
   "generated_from_checkpoints_utc": "2026-09-23T21:07:00Z",
   "foundation_checkpoint": {
     "path": "models/zenith_foundation_v1/model.pt",

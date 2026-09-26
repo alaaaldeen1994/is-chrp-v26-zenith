@@ -7700,141 +7700,21 @@ async def generate_automation_protocol(req: AutomationRequest):
 # ============================================================
 class CohortSimulationRequest(BaseModel):
     disease: str = "cardiovascular"
-    protocol: str = "OSKM_STANDARD"  # or "CHEMICAL_COCKTAIL"
+    protocol: str = "OSKM_STANDARD"
     cohort_size: int = 100
-    protein_to_carb_ratio: float = 0.15  # Low ratio (0.1 to 0.2) is optimal
+    protein_to_carb_ratio: float = 0.15
     nmn_dosage: float = 2.0
     oral_administration: bool = True
     variance: str = "Medium"
 
 @app.post("/api/v1/clinical/cohort-simulation")
-async def run_cohort_simulation(req: CohortSimulationRequest):
+async def run_cohort_simulation(req: Optional[CohortSimulationRequest] = None):
     """
-    PRIORITY 6: Enterprise Cohort-X Simulator.
-    Integrates low-protein/high-carbohydrate ratios, NMN/Sirtuin synergy,
-    gut deamidation penalties, and SDE-based multi-twin cohort trajectories.
+    Decommissioned endpoint. Uncalibrated synthetic cohort simulation,
+    heuristic PCA projections, and synthetic age reductions have been removed.
     """
-    try:
-        N = req.cohort_size
-        sigma = {"High": 1.0, "Medium": 0.5, "Low": 0.1}.get(req.variance, 0.5)
-        
-        # 1. Generate Cohort (PyTorch Tensor Logic)
-        # Each patient is represented as a 5009-dimensional vector
-        base_population = torch.rand(N, 1000) * 0.1
-        
-        # Induce disease-specific state deviations
-        if req.disease == "cardiovascular":
-            # Downregulate cardiac safety markers, increase stress markers
-            base_population[:, 80:100] += 0.7  # Cellular stress markers
-            base_population[:, 0:10] *= 0.3    # Contractility/structure markers
-            
-        noise = torch.randn(N, 1000) * (0.05 * sigma)
-        patients = torch.clamp(base_population + noise, 0.0, 1.0)
-        
-        active_cohort = patients.clone()
-        placebo_cohort = patients.clone()
-        
-        # 2. Determine Protocol & Diet Perturbations
-        # Dietary Influence (Solon-Biet et al., 2020; Wahl et al., 2018)
-        # Low protein-to-carb ratio (e.g. 0.15) is beneficial and activates SIRT1
-        p_ratio = req.protein_to_carb_ratio
-        diet_benefit = 0.30 * np.tanh(2.0 * (0.5 - p_ratio))
-        
-        # NMN / Sirtuin Synergy with Gut Microbiome Deamidation Penalty
-        nmn_eff = req.nmn_dosage * 0.60 if req.oral_administration else req.nmn_dosage
-        sirt_boost = 0.35 * np.tanh(nmn_eff / 2.0)
-        
-        # Combine diet and Sirtuin boosts into a structural rejuvenation vector
-        rejuvenation_coeff = max(0.0, 0.40 + diet_benefit + sirt_boost)
-        
-        # Define perturbation vector
-        perturbation = torch.zeros(1000)
-        if req.protocol == "OSKM_STANDARD":
-            # OSK pioneer factors open chromatin and restore youthful landscape
-            perturbation[0:10] = 0.85
-            perturbation[10:20] = 0.75
-        elif req.protocol == "CHEMICAL_COCKTAIL":
-            # Yang et al., Aging 2023 small molecules
-            perturbation[0:10] = 0.60
-            perturbation[20:30] = 0.80
-            
-        # 3. Run SDE Simulation (Langevin Dynamics)
-        with torch.no_grad():
-            dt = 0.2  # Time step
-            for step in range(5):
-                dW = torch.randn(N, 1000) * np.sqrt(dt)
-                # Sirtuin boost and optimal diet reduce the diffusion coefficient (epigenetic noise)
-                g_active = max(0.02, 0.06 - 0.03 * sirt_boost)
-                g_placebo = 0.08  # High noise/instability for untreated group
-                
-                # Active Arm SDE Update
-                f_active = (perturbation.expand(N, -1) * rejuvenation_coeff) * 0.5
-                dx_active = (f_active * dt) + (g_active * dW)
-                active_cohort = torch.clamp(active_cohort + dx_active, 0, 1)
-                
-                # Placebo Arm SDE Update
-                f_placebo = torch.randn(N, 1000) * -0.01  # Slow degradation drift
-                dx_placebo = (f_placebo * dt) + (g_placebo * dW)
-                placebo_cohort = torch.clamp(placebo_cohort + dx_placebo, 0, 1)
-                
-        # 4. Calculate Risk & Survival Metrics
-        p_stress = torch.mean(placebo_cohort[:, 80:100], dim=1)
-        p_health = torch.mean(placebo_cohort[:, 0:10], dim=1)
-        placebo_risk = p_stress * (1.5 - p_health)
-        
-        a_stress = torch.mean(active_cohort[:, 80:100], dim=1)
-        a_health = torch.mean(active_cohort[:, 0:10], dim=1)
-        active_risk = a_stress * (1.5 - a_health)
-        
-        days = np.linspace(0, 10, 100)
-        mean_risk_p = float(placebo_risk.mean())
-        mean_risk_a = float(active_risk.mean())
-        
-        km_placebo = [np.exp(-mean_risk_p * t) for t in days]
-        km_active = [np.exp(-mean_risk_a * t) for t in days]
-        
-        delta = (placebo_risk - active_risk).numpy()
-        waterfall_data = sorted(delta.tolist())
-        
-        diff_tensor = patients - active_cohort
-        pca_1 = diff_tensor[:, 0:500].mean(dim=1) * 100
-        pca_2 = diff_tensor[:, 500:1000].mean(dim=1) * 100
-        
-        mean_delta = np.mean(delta)
-        std_delta = np.std(delta)
-        t_stat = mean_delta / (std_delta / np.sqrt(N)) if std_delta > 1e-9 else (10.0 if mean_delta > 0 else 0.0)
-        p_value = float(np.exp(-0.5 * t_stat**2))
-        p_value = max(1e-6, p_value)
-        
-        # Calculate biological age reduction in years (capped at -15.0 years)
-        avg_age_reduction = float(np.round(-15.0 * np.tanh(rejuvenation_coeff / 1.5), 1))
-        
-        # Formulate macronutrient status note
-        if p_ratio < 0.25:
-            macronutrient_status = "OPTIMAL: Low protein-to-carbohydrate ratio successfully activates SIRT1 and FGF21, promoting robust metabolic longevity and suppressing age-related cellular stress."
-        elif p_ratio > 0.8:
-            macronutrient_status = "SUBOPTIMAL: High protein-to-carbohydrate ratio stimulates mTOR signaling, suppressing sirtuin-mediated epigenetic repair and accelerating cell senescence."
-        else:
-            macronutrient_status = "MODERATE: Balanced protein-to-carbohydrate ratio provides neutral metabolic longevity dynamics."
-            
-        return {
-            "km_placebo": km_placebo,
-            "km_active": km_active,
-            "waterfall_data": waterfall_data,
-            "manifold_x": pca_1.tolist(),
-            "manifold_y": pca_2.tolist(),
-            "responder_status": (delta > 0).tolist(),
-            "p_value": p_value,
-            "average_age_reduction_years": avg_age_reduction,
-            "macronutrient_status": macronutrient_status,
-            "sirtuin_activity_score": float(np.round(sirt_boost * 2.5, 3)),
-            "status": "COMPLETED"
-        }
-        
-    except Exception as e:
-        import traceback
-        traceback.print_exc()
-        raise HTTPException(status_code=500, detail=f"Cohort Simulation Failure: {str(e)}")
+    raise HTTPException(status_code=410, detail="Endpoint decommissioned. Uncalibrated cohort simulation has been removed.")
+
 
 
 @app.post("/api/v2/lnp/calculate")

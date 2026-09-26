@@ -30,6 +30,11 @@
       "value": false,
       "source_file": "models/zenith_foundation_v1/model.pt",
       "key_path": "'f1606894-59df-4794-a37f-baa7c6fb6de1' not in batch.state_registry.categorical_mapping"
+    },
+    "offline_cohort_registry": {
+      "value": "data/foundation/foundation_14_cohorts_provenance.json",
+      "source_file": "data/foundation/foundation_14_cohorts_provenance.json",
+      "key_path": "document_type == 'OFFLINE_TRAINING_DATA_REGISTRY'"
     }
   },
   "specialist_model": {

@@ -1,25 +1,11 @@
-"""Neural Age Clock — predicts the biological age of the cardiac nervous system.
+"""Neural Marker Scoring Service — evaluates expression levels of intrinsic cardiac neural markers.
 
-Companion to services/horvath_clock.py.
-
-While Horvath's clock measures epigenetic age from 353-CpG methylation,
-the Neural Age Clock measures the functional age of the heart's intrinsic
-nervous system (ICNS) from gene expression data.
-
-Scientific basis:
-  - The heart has ~40,000 intrinsic neurons (Ardell, 2004)
-  - Vagal tone declines ~1.5%/year after age 40 (Umetani et al., 1998)
-  - Heart Rate Variability (HRV) is a clinical proxy for neural age
-  - Key markers: CHAT (ACh synthesis), TH (sympathetic), NGFR (neuronal
-    health), CHRNA7 (vagal signaling), RET (GDNF survival)
-
-This clock outputs TWO ages side-by-side:
-  - Horvath age (epigenetic) — from horvath_clock.py
-  - Neural age (functional)   — from this module
-
-The DUAL-AGE metric is a unique selling point: no competitor offers it.
-
-IMPORTANT: Operational marker for research. Not a clinical diagnosis.
+PROVENANCE & CALIBRATION DISCLOSURE:
+  - This module computes a heuristic linear expression score from candidate ICNS markers
+    (CHAT, TH, NGFR, CHRNA7, etc.).
+  - NOTE: Heuristic scoring indicator; UNCALIBRATED against longitudinal human cohorts and
+    NOT an empirically validated biological clock.
+  - Outputs are operational research-grade exploratory markers, not clinical diagnostic readouts.
 """
 
 from __future__ import annotations
@@ -86,17 +72,10 @@ ADULT_THRESHOLD = 40.0  # neural decline accelerates after 40
 # ---------------------------------------------------------------------------
 
 class NeuralAgeClock:
-    """Predicts the biological age of the cardiac nervous system.
+    """Heuristic neural marker expression scoring model.
 
-    Usage (companion to HorvathClock):
-        horvath = HorvathClock()
-        neural = NeuralAgeClock()
-
-        horvath_age = horvath.predict(methylation_betas)
-        neural_age, confidence, breakdown = neural.predict(gene_expression, chronological_age)
-
-        # The dual-age gap is the key marketing metric:
-        gap = neural_age - chronological_age
+    NOTE: Exploratory linear indicator mapping marker decline to an exploratory scale.
+    It is NOT an externally validated biological clock.
     """
 
     def __init__(self, substrate_service=None):

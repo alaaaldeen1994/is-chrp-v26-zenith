@@ -1,9 +1,9 @@
 """
 model.py - Zenith v31.1 Core Biological Evaluation & Inference Engines
 Implements:
-  1. NativeTranscriptomicAgingEngine (BiT Age RNA Clock + Inferred Epigenetic Potential)
+  1. NativeTranscriptomicAgingEngine (Exploratory RNA Aging Marker Scoring)
   2. CardiacConductionSafetyEngine (Electrophysiological Stability Index - ESI)
-  3. ConformalSafetyEvaluator (Conformal Risk Control - CRC)
+  3. ThresholdSafetyGate (Heuristic Oncogenic Marker Expression Ceilings)
 """
 
 import torch
@@ -14,9 +14,11 @@ from typing import Dict, Any, List, Optional
 
 class NativeTranscriptomicAgingEngine(nn.Module):
     """
-    Evaluates biological aging directly within transcriptomic space (BiT Age / Meyer et al. Nature Aging 2021)
-    operating over normalized scVI decoder output distributions (mu_ig = l_i * rho_ig).
-    Legacy Horvath 353-CpG outputs are reported as an inferred secondary potential score with 95% CI (+/- 3.2y).
+    Evaluates transcriptomic aging marker shifts using hand-curated linear weights
+    over normalized expression distributions.
+    
+    NOTE: Exploratory scoring model; uncalibrated against longitudinal clinical cohorts
+    and not an empirically fitted or externally validated biological clock.
     """
     def __init__(self, gene_symbols: List[str], bit_age_weights_dict: Optional[Dict[str, float]] = None):
         super().__init__()
@@ -139,40 +141,51 @@ class CardiacConductionSafetyEngine(nn.Module):
         }
 
 
-class ConformalSafetyEvaluator:
+class ThresholdSafetyGate:
     """
-    Implements distribution-free Conformal Risk Control (CRC) over oncogenic and
-    dedifferentiation markers (POU5F1/OCT4, MYC, LIN28A).
-    Guarantees: P(Oncogenic Drift > Threshold) <= alpha with 99.0% statistical confidence.
+    Empirical heuristic threshold gate evaluating normalized factor expressions
+    (POU5F1/OCT4, MYC, LIN28A) against static danger ceilings.
+
+    NOTE: This is a fixed empirical threshold heuristic, NOT distribution-free
+    Conformal Risk Control (CRC). It does not compute non-conformity calibration
+    quantiles over a validation dataset or provide formal finite-sample coverage
+    guarantees.
     """
     def __init__(self, alpha: float = 0.01):
         self.alpha = alpha
-        # Pre-calibrated empirical non-conformity quantiles across 50,000 single-cell validation profiles
+        # Static heuristic threshold cap across normalized factor expressions:
         # Score S_i = max(OCT4 / 0.35, MYC / 0.30, LIN28A / 0.40)
-        self.calibrated_q_hat = 0.884
+        self.threshold_limit = 0.884
+        self.calibrated_q_hat = self.threshold_limit  # retained for backwards compatibility
 
     def audit_oncogenic_risk(self, predicted_expression: Dict[str, float]) -> Dict[str, Any]:
         """
-        Audits single-cell or batch factor expressions under conformal prediction bounds.
+        Audits single-cell or batch factor expressions under heuristic threshold bounds.
         """
         oct4 = float(predicted_expression.get("POU5F1", predicted_expression.get("OCT4", 0.12)))
         myc = float(predicted_expression.get("MYC", 0.15))
         lin28a = float(predicted_expression.get("LIN28A", 0.10))
 
         score = max(oct4 / 0.35, myc / 0.30, lin28a / 0.40)
-        is_conformal_pass = score <= self.calibrated_q_hat
+        is_pass = score <= self.threshold_limit
 
         return {
-            "conformal_verdict": "CONFORMAL_PASS" if is_conformal_pass else "CONFORMAL_FLAG_ONCOGENIC_RISK",
+            "threshold_verdict": "THRESHOLD_PASS" if is_pass else "THRESHOLD_FLAG_ONCOGENIC_RISK",
+            "conformal_verdict": "THRESHOLD_PASS" if is_pass else "THRESHOLD_FLAG_ONCOGENIC_RISK",
+            "threshold_score": round(score, 4),
             "non_conformity_score": round(score, 4),
-            "quantile_threshold_q_hat": self.calibrated_q_hat,
-            "statistical_coverage_guarantee": f"{(1 - self.alpha) * 100:.1f}%",
-            "bounded_error_probability": f"<={self.alpha:.3f}",
+            "quantile_threshold_q_hat": self.threshold_limit,
+            "heuristic_note": "Empirical threshold check; uncalibrated for formal CRC coverage.",
             "oct4_level": round(oct4, 3),
             "myc_level": round(myc, 3),
             "lin28a_level": round(lin28a, 3),
             "regulatory_claim": (
-                "Non-Oncogenic by Computational Design: Bounded under Conformal Risk Control (CRC) "
-                f"with P(Oncogenic Activation) <= {self.alpha} at {((1 - self.alpha) * 100):.1f}% confidence."
+                "Deterministic expression threshold check: Bounded by empirical expression ceilings "
+                f"(POU5F1 <= 0.35, MYC <= 0.30, LIN28A <= 0.40). Note: Heuristic safety rule, not formal conformal prediction."
             )
         }
+
+
+# Backwards compatibility alias
+ConformalSafetyEvaluator = ThresholdSafetyGate
+

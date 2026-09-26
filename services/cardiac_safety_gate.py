@@ -118,15 +118,15 @@ class CardiacSafetyGate:
         # 35% Cx43 gap junction + 25% Ca2+ handling + 20% sarcomere + 20% electrical stability
         esi_score = max(0.0, min(1.0, (0.35 * avg_coupling) + (0.25 * avg_calcium) + (0.20 * avg_sarcomere) + (0.20 * (1.0 - ari))))
         
-        # Conformal Risk Control (CRC) Audit: alpha = 0.01 (99.0% statistical coverage)
+        # Deterministic Expression Threshold Audit (POU5F1 <= 0.35, MYC <= 0.30, LIN28A <= 0.40)
         oct4_val = float(predicted_expression.get("POU5F1", predicted_expression.get("OCT4", 0.12)))
         myc_val = float(predicted_expression.get("MYC", 0.15))
         lin28a_val = float(predicted_expression.get("LIN28A", 0.10))
         non_conformity = max(oct4_val / 0.35, myc_val / 0.30, lin28a_val / 0.40)
-        conformal_pass = non_conformity <= 0.884
+        threshold_pass = non_conformity <= 0.884
 
         return {
-            "cardiac_clearance": "APPROVED" if (is_cleared and conformal_pass) else "RESCUE_REQUIRED",
+            "cardiac_clearance": "APPROVED" if (is_cleared and threshold_pass) else "RESCUE_REQUIRED",
             "ESI_composite_score": round(esi_score, 4),
             "ESI_classification": "OPTIMAL_CONDUCTION" if esi_score >= 0.90 else "STABLE_MONITORED" if esi_score >= 0.80 else "ELECTRICAL_UNCOUPLING_WARNING",
             "sarcomeric_retention_pct": round(avg_sarcomere * 100.0, 1),
@@ -134,15 +134,16 @@ class CardiacSafetyGate:
             "calcium_handling_pct": round(avg_calcium * 100.0, 1),
             "arrhythmia_risk_index": round(ari, 4),
             "arrhythmia_risk_level": "NEGLIGIBLE" if ari < 0.10 else "MODERATE" if ari < 0.30 else "HIGH",
-            "conformal_safety_verdict": "CONFORMAL_PASS" if conformal_pass else "CONFORMAL_FLAG_ONCOGENIC_RISK",
-            "conformal_coverage": "99.0% (alpha=0.01)",
+            "threshold_safety_verdict": "THRESHOLD_PASS" if threshold_pass else "THRESHOLD_FLAG_ONCOGENIC_RISK",
+            "conformal_safety_verdict": "THRESHOLD_PASS" if threshold_pass else "THRESHOLD_FLAG_ONCOGENIC_RISK",
+            "conformal_coverage": "Heuristic expression threshold check (POU5F1<=0.35, MYC<=0.30, LIN28A<=0.40); uncalibrated for formal CRC",
             "non_conformity_score": round(non_conformity, 4),
             "violations_detected": len(violations),
             "violations_detail": violations,
             "pulse_compliance": f"Verified compatible with {pulse_duration_hours:.1f}h transient DRP window",
-            "regulatory_safety_claim": "Non-Oncogenic by Computational Design: Bounded under Conformal Risk Control (CRC) with P(Oncogenic Activation) <= 0.01 at 99.0% confidence.",
-            "electrophysiological_claim": f"In silico Electrophysiological Stability Index (ESI) of {esi_score:.4f} with zero simulated rotor formation across 512-node syncytium models.",
-            "status_summary": "All sarcomeric and gap junction floors verified above physiological safety ceilings with conformal risk bounds." if is_cleared and conformal_pass else "Critical threshold breach or conformal oncogenic risk detected. Triggering Bayesian dosage rescue."
+            "regulatory_safety_claim": "Deterministic expression threshold check: Bounded by empirical expression ceilings (POU5F1 <= 0.35, MYC <= 0.30, LIN28A <= 0.40). Note: Heuristic safety floor rule, not formal conformal prediction.",
+            "electrophysiological_claim": f"In silico Electrophysiological Stability Index (ESI) heuristic of {esi_score:.4f} based on deterministic 512-node syncytium simulation.",
+            "status_summary": "All sarcomeric and gap junction floors verified above physiological safety ceilings with empirical threshold bounds." if is_cleared and threshold_pass else "Critical threshold breach or oncogenic risk detected. Triggering Bayesian dosage rescue."
         }
 
 

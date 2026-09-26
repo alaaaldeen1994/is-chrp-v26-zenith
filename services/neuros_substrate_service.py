@@ -6,15 +6,15 @@ This service follows the same patterns as boltz_service.py:
   - SQLAlchemy caching via SHA-256 hashes
   - safe fallback if the substrate fails
 
-The substrate is a Watts-Strogatz small-world graph of LIF (Leaky
-Integrate-and-Fire) spiking neurons. It is used to:
-  1. Simulate cardiac electrical activity from ion-channel gene expression
-  2. Compute Φ-hat (integration) as a stability/boundedness marker
-  3. Generate synthetic ECG-like traces for "what-if" perturbation analysis
-
-IMPORTANT: This is a research-grade simulation. The spiking substrate models
-neural population dynamics; it is NOT a clinical ECG simulator. Outputs are
-operational markers for research, not diagnostic signals.
+SIMULATION SPECIFICATION & HONEST PROVENANCE:
+  - Deterministic 512-node LIF (Leaky Integrate-and-Fire) simulation (16 clusters of 32 neurons)
+    arranged on a static Watts-Strogatz small-world graph topology.
+  - Contains NO learned weights or trained neural network parameters; synaptic weights and
+    connectivity graphs are fixed heuristics.
+  - UNVALIDATED against in vitro or in vivo electrophysiological patch-clamp or microelectrode
+    array (MEA) recordings.
+  - Outputs are operational computational heuristic markers for exploratory research only,
+    NOT clinical ECG signals, biophysical action potential reconstructions, or diagnostic indicators.
 """
 
 from __future__ import annotations
@@ -72,14 +72,15 @@ class LIFNeuron:
 
 
 class CardiacNeuralSubstrate(nn.Module):
-    """A small-world graph of LIF neurons that simulates cardiac electrical
-    activity. Ion-channel gene expression is encoded as input currents.
+    """Deterministic 512-node LIF (Leaky Integrate-and-Fire) simulation arranged
+    on a small-world Watts-Strogatz graph. Ion-channel gene expression is encoded
+    as input currents.
 
-    Architecture:
-      - 16 clusters of 32 neurons (512 total) — fast enough for real-time API
-      - Each cluster represents a cardiac region (atria, ventricle, SA node,
-        AV node, Purkinje, vagal afferent, vagal efferent, sympathetic, etc.)
-      - Long-range hub connections model the conduction pathways
+    Architecture & Calibration:
+      - 16 clusters of 32 neurons (512 total)
+      - NO learned weights; fixed heuristic synaptic connectivity
+      - UNVALIDATED against biological patch-clamp or electrophysiological recordings
+      - Outputs are research-grade operational markers, not clinical ECG signals
     """
 
     # Map cluster index -> cardiac region name
