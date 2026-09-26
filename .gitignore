@@ -11,6 +11,11 @@ verify_*
 audit_*
 seal_and_push.py
 
+# EXCEPTIONS: Verification and Provenance files (KEEP IN GIT)
+!verify_provenance.py
+!scripts/verify_provenance.py
+!provenance.json
+
 # Data files (too large for GitHub - use download scripts instead)
 *.h5ad
 *.pt

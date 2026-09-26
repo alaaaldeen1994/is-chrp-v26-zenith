@@ -115,8 +115,12 @@ def main():
         g_i = gene_to_idx[g]
         tf_out_deg[g] = int((np.abs(B_all[g_i, :]) > 0).sum())
 
-    df_screen = pd.read_csv("screen_output.csv")
+    screen_csv = os.path.join(os.path.dirname(os.path.dirname(__file__)), "quarantine", "track2", "screen_output.csv")
+    if not os.path.exists(screen_csv):
+        screen_csv = "screen_output.csv"
+    df_screen = pd.read_csv(screen_csv)
     df_singles = df_screen[df_screen["stage"] == "Stage1_SingleTF"].copy()
+
     df_quads = df_screen[df_screen["stage"] == "Stage4_Quad"].copy()
 
     df_singles["n_active_edges"] = [tf_out_deg.get(f, 0) for f in df_singles["factors"]]

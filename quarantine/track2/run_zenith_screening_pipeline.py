@@ -1,6 +1,15 @@
+raise RuntimeError(
+    "QUARANTINED PIPELINE EXECUTION BLOCKED: run_zenith_screening_pipeline.py is a quarantined legacy "
+    "generator that produced fabricated benchmark metrics using a synthetic 200-cell tensor and hardcoded "
+    "factor branches artificially boosting SIRT1/SIRT6/GATA4/ZBTB16 (NL-101). When evaluated on real "
+    "single-cell human ventricular cardiomyocytes, NL-101 ranked 211 of 211 evaluated combinations. "
+    "Execution and import are strictly prohibited."
+)
+
 """
-run_zenith_screening_pipeline.py
+run_zenith_screening_pipeline.py [QUARANTINED]
 ================================================================================
+
 ZENITH v31.1 — High-Dimensional Combinatorial In Silico Screening Pipeline
 ================================================================================
 Executes algorithmic combinatorial perturbation screening across human cardiac 

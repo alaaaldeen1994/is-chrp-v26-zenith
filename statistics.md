@@ -22,7 +22,8 @@
 > 3. **6-Fold Inflated False-Positive Rate Among Random Genes at $n = 14$ Donors (`28.6%` Reach $p < 0.05$):**
 >    When **500 randomly selected cardiac genes** matched for detection frequency (`5%–95%` of vCMs) are correlated against donor chronological age across the 14 donors, **`143 / 500` (`28.6%`, vs `5.0%` expected under a well-calibrated null) reach nominal $p < 0.05$**, and **`10 / 500` (`2.0%`) survive Benjamini–Hochberg $q < 0.05$**. The 95th percentile of $|r|$ for random genes is **`0.7230`** (`90th = 0.6747`, `50th = 0.3785`), because any gene with an institutional expression offset between Harvard and Sanger automatically correlates with donor age. Only **`7 / 100`** genes in the vCM table exceed the 95th percentile (`|r| > 0.7230`) of random frequency-matched genes.
 > 4. **GRN Perturbation Screen Out-Degree Bias ($R^2 = 0.4656$ in Positive Single TFs; $R^2 = 0.4579$ Across 211 Quads):**
->    In our 3-step linear Ridge GRN screen (`screen_output.csv`), $\log_{10}(\text{out-degree})$ explains **$46.56\%$ of the variance ($r = +0.6823, p = 2.13 \times 10^{-23}$)** among positive single TFs ($n = 161$) and **$45.79\%$ of the variance ($r = +0.6767, p = 1.32 \times 10^{-29}$)** across all 211 evaluated 4-TF combinations. When $\log_{10}(\text{total edges})$ is regressed out across the 211 quads, the raw #1 combination **`NFKB1+MITF+CTCF+HIF1A` (`+6.0693%`, `2,652` base edges) drops to Rank #2 (`residual = +1.3406%`)**, overtaken by **`NFKB1+MITF+HIF1A+NFIC` (Rank #1, `residual = +1.3780%`, raw `+5.5736%`, `2,075` base edges)**. Moreover, **2 combinations (`NFKB1+MITF+CTCF+HIF1A` and `NFKB1+MITF+HIF1A+REL`) fall inside the winner's 95% donor-bootstrap CI (`[+5.765%, +6.249%]`)**, and the top 10 quads are separated by only `0.61` percentage points (`+5.4595%` to `+6.0693%`).
+>    In our 3-step linear Ridge GRN screen (`screen_output.csv`, quarantined at `quarantine/track2/screen_output.csv`), $\log_{10}(\text{out-degree})$ explains **$46.56\%$ of the variance ($r = +0.6823, p = 2.13 \times 10^{-23}$)** among positive single TFs ($n = 161$) and **$45.79\%$ of the variance ($r = +0.6767, p = 1.32 \times 10^{-29}$)** across all 211 evaluated 4-TF combinations. When $\log_{10}(\text{total edges})$ is regressed out across the 211 quads, the raw #1 combination **`NFKB1+MITF+CTCF+HIF1A` (`+6.0693%`, `2,652` base edges) drops to Rank #2 (`residual = +1.3406%`)**, overtaken by **`NFKB1+MITF+HIF1A+NFIC` (Rank #1, `residual = +1.3780%`, raw `+5.5736%`, `2,075` base edges)**. Moreover, **2 combinations (`NFKB1+MITF+CTCF+HIF1A` and `NFKB1+MITF+HIF1A+REL`) fall inside the winner's 95% donor-bootstrap CI (`[+5.765%, +6.249%]`)**, and the top 10 quads are separated by only `0.61` percentage points (`+5.4595%` to `+6.0693%`).
+
 
 ---
 
@@ -160,7 +161,8 @@ When we regress `youth_restoration_pct_excl` on $\log_{10}(\text{edges} + 1)$ ac
 
 ### 4.4(c) Overlap Within the Winner's 95% Bootstrap Confidence Interval (`[+5.765%, +6.249%]`)
 
-Across the 211 evaluated 4-TF combinations in `screen_output.csv`, **2 combinations fall within the winner's 95% donor-bootstrap confidence interval (`[+5.765%, +6.249%]`)**, and the 3rd-ranked combination (`+5.7232%`) lies just `0.042%` below the lower bound:
+Across the 211 evaluated 4-TF combinations in `screen_output.csv` (quarantined at `quarantine/track2/screen_output.csv`), **2 combinations fall within the winner's 95% donor-bootstrap confidence interval (`[+5.765%, +6.249%]`)**, and the 3rd-ranked combination (`+5.7232%`) lies just `0.042%` below the lower bound:
+
 
 | Raw Rank | 4-TF Combination | Youth Restoration Excl. (`%`) | Inside Winner's 95% CI (`[5.765%, 6.249%]`)? | `GJA1` Shift | `SCN5A` Shift | `ATP2A2` Shift |
 | :---: | :--- | :---: | :---: | :---: | :---: | :---: |

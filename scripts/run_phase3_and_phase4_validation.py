@@ -15,8 +15,12 @@ REPO_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ADATA_PATH = os.path.join(REPO_DIR, "models", "scvi_model_hca", "adata.h5ad")
 CT_GENES_PATH = os.path.join(REPO_DIR, "models", "cell_type_genes.json")
 SCVI_MODEL_DIR = os.path.join(REPO_DIR, "models", "scvi_model_486k_real")
-SCREEN_CSV_PATH = os.path.join(REPO_DIR, "screen_output.csv")
+SCREEN_CSV_PATH = os.path.join(REPO_DIR, "quarantine", "track2", "screen_output.csv")
+if not os.path.exists(SCREEN_CSV_PATH):
+    SCREEN_CSV_PATH = os.path.join(REPO_DIR, "screen_output.csv")
 GRN_TSV_PATH = os.path.join(REPO_DIR, "models", "omnipath_collectri_dorothea_human.tsv")
+
+
 
 DONOR_AGE_MAP = {
     "D1": 52.5, "D2": 62.5, "D3": 57.5, "D4": 72.5,

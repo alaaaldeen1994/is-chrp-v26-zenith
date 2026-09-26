@@ -1,0 +1,151 @@
+{
+  "foundation_model": {
+    "checkpoint": "models/zenith_foundation_v1/model.pt",
+    "n_cells_registered": {
+      "value": 1962128,
+      "source_file": "models/zenith_foundation_v1/model.pt",
+      "key_path": "attr_dict.registry_.field_registries.X.summary_stats.n_cells"
+    },
+    "n_cells_trained": {
+      "value": 1962128,
+      "source_file": "data/foundation/training_metrics.json",
+      "key_path": "n_cells_trained"
+    },
+    "n_vars": {
+      "value": 5858,
+      "source_file": "models/zenith_foundation_v1/model.pt",
+      "key_path": "attr_dict.registry_.field_registries.X.summary_stats.n_vars"
+    },
+    "n_batch": {
+      "value": 14,
+      "source_file": "models/zenith_foundation_v1/model.pt",
+      "key_path": "attr_dict.registry_.field_registries.batch.summary_stats.n_batch"
+    },
+    "n_latent": {
+      "value": 64,
+      "source_file": "models/zenith_foundation_v1/model.pt",
+      "key_path": "attr_dict.init_params_.non_kwargs.n_latent"
+    },
+    "periheart_in_training_batches": {
+      "value": false,
+      "source_file": "models/zenith_foundation_v1/model.pt",
+      "key_path": "'f1606894-59df-4794-a37f-baa7c6fb6de1' not in batch.state_registry.categorical_mapping"
+    }
+  },
+  "specialist_model": {
+    "checkpoint": "models/scvi_model_486k_real/model.pt",
+    "n_cells_trained": {
+      "value": 99993,
+      "source_file": "models/scvi_model_486k_real/model.pt",
+      "key_path": "attr_dict.registry_.field_registries.X.summary_stats.n_cells"
+    },
+    "n_genes": {
+      "value": 5009,
+      "source_file": "models/scvi_model_486k_real/model.pt",
+      "key_path": "attr_dict.registry_.field_registries.X.summary_stats.n_vars"
+    },
+    "n_hvg_base": {
+      "value": 5000,
+      "source_file": "extract_celltype_genes.py",
+      "key_path": "n_top_genes=5000"
+    },
+    "n_protected_force_added": {
+      "value": 9,
+      "source_file": "models/scvi_model_486k_real/gene_index.json",
+      "key_path": "len(var_names) - n_top_genes"
+    },
+    "protected_ion_channels_verified": {
+      "value": [
+        "SCN5A",
+        "KCNH2",
+        "KCNQ1",
+        "KCNJ2",
+        "CACNA1C",
+        "HCN4",
+        "RYR2",
+        "KCNA5",
+        "KCND3",
+        "KCNIP2",
+        "SLC8A1"
+      ],
+      "source_file": "models/scvi_model_486k_real/ensembl_to_symbol.json",
+      "key_path": "11 force-retained ion channels in ensembl_to_symbol.values()"
+    },
+    "n_latent": {
+      "value": 20,
+      "source_file": "models/scvi_model_486k_real/model.pt",
+      "key_path": "attr_dict.init_params_.non_kwargs.n_latent"
+    }
+  },
+  "hca_source_atlas": {
+    "shape": {
+      "value": [
+        486134,
+        32383
+      ],
+      "source_file": "data/foundation/raw_datasets/d4e69e01-3ba2-4d6b-a15d-e7048f78f22e.h5ad",
+      "key_path": "adata.shape"
+    },
+    "cell_type_genes_count": {
+      "value": 12,
+      "source_file": "models/cell_type_genes.json",
+      "key_path": "len(cell_types)"
+    },
+    "cell_type_genes_sum": {
+      "value": 424436,
+      "source_file": "models/cell_type_genes.json",
+      "key_path": "sum(v['n_cells'] for v in cell_types.values())"
+    },
+    "excluded_cells_sum": {
+      "value": 61698,
+      "source_file": "data/foundation/raw_datasets/d4e69e01-3ba2-4d6b-a15d-e7048f78f22e.h5ad",
+      "key_path": "sum(obs['cell_type'].value_counts() not in cell_type_genes.json)"
+    }
+  },
+  "periheart_offline_validation": {
+    "shape": {
+      "value": [
+        392819,
+        35477
+      ],
+      "source_file": "data/foundation/raw_datasets/f1606894-59df-4794-a37f-baa7c6fb6de1.h5ad",
+      "key_path": "adata.shape"
+    },
+    "n_donors": {
+      "value": 54,
+      "source_file": "data/foundation/raw_datasets/f1606894-59df-4794-a37f-baa7c6fb6de1.h5ad",
+      "key_path": "obs['donor_id'].nunique()"
+    },
+    "cardiac_muscle_n_cells": {
+      "value": 88561,
+      "source_file": "data/foundation/raw_datasets/f1606894-59df-4794-a37f-baa7c6fb6de1.h5ad",
+      "key_path": "obs['cell_type'].value_counts()['cardiac muscle cell']"
+    },
+    "fibroblast_n_cells": {
+      "value": 73050,
+      "source_file": "data/foundation/raw_datasets/f1606894-59df-4794-a37f-baa7c6fb6de1.h5ad",
+      "key_path": "obs['cell_type'].value_counts()['fibroblast']"
+    },
+    "cardiac_muscle_lodo_r": {
+      "value": 0.4606,
+      "source_file": "scratch/phaseE_pseudobulk_cache.pkl",
+      "key_path": "LODO Ridge(alpha=100, top_k=50) on peri_cm"
+    },
+    "cardiac_muscle_lodo_mae": {
+      "value": 6.97,
+      "source_file": "scratch/phaseE_pseudobulk_cache.pkl",
+      "key_path": "LODO Ridge(alpha=100, top_k=50) MAE on peri_cm"
+    }
+  },
+  "quarantined_screening_pipeline": {
+    "status": "QUARANTINED",
+    "quarantine_directory": "quarantine/track2/",
+    "quarantined_files": [
+      "quarantine/track2/run_zenith_screening_pipeline.py",
+      "quarantine/track2/screen_output.csv",
+      "quarantine/track2/zenith_screening_audit.csv",
+      "quarantine/track2/part2_real_screen/screen_output.csv"
+    ],
+    "disposition": "Synthetic cocktail metrics produced by ungrounded 200-cell heuristic generators are permanently quarantined. Import and execution are strictly blocked by module-level RuntimeError guards."
+  }
+}
