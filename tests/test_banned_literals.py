@@ -117,15 +117,7 @@ ALLOWLIST_FILE_PATTERNS = [
     ("final_corrections.md", "Historical correction notes"),
     ("capability_statement.md", "Capability statement document"),
     ("data/foundation/foundation_14_cohorts_provenance.json", "Offline training data registry for CELLxGENE cohorts"),
-    # 4. Investor pitch decks and presentation files (subject to Part B founder decision)
-    ("INVESTOR_PITCH_WAED.html", "Historical pitch deck (Part B decision document)"),
-    ("NILUS_MASTER_PITCH_V2.html", "Historical pitch deck (Part B decision document)"),
-    ("NILUS_PITCH_DECK.html", "Historical pitch deck (Part B decision document)"),
-    ("NILUS_LAB_INVESTOR_MASTER.html", "Historical pitch deck (Part B decision document)"),
-    ("ZENITH_PHASE_A_EXECUTIVE_PITCH.html", "Historical pitch deck (Part B decision document)"),
-    ("REAL_ACADEMIC_POSTER_A0.html", "Historical academic poster (Part B decision document)"),
-    ("ZENITH_PHASE_A_ACADEMIC_POSTER.html", "Historical academic poster (Part B decision document)"),
-    ("APOLLO_INTRO_DECK.html", "Historical introduction deck (Part B decision document)"),
+    # 4. Investor pitch decks and presentation files: converted to line-pinned rules in ALLOWLIST_LINE_RULES (A.3)
     ("Untitled-2.html", "Historical presentation draft (Part B decision document)"),
     ("is-chrp-v23-improved.html", "Historical presentation draft (Part B decision document)"),
     ("index_9a4de71.html", "Historical git commit HTML snapshot"),
@@ -562,7 +554,188 @@ ALLOWLIST_LINE_RULES = [
         "term": "7.0",
         "predicate": lambda l: True,
         "reason": "Patch clamp threshold voltage for RYR2"
-    }
+    },
+    # Line-pinned historical presentation claims (Part B decision documents, A.3)
+    {
+        "file": "INVESTOR_PITCH_WAED.html",
+        "term": "NL-101",
+        "predicate": lambda l: "<div class=\"text-blue-400 font-bold\">> CANDIDATE: NL-101 (SIRT1+SIRT6+GATA4+ZBTB16)</div>" in l,
+        "reason": "Frozen historical claim (line 369): \"<div class=\"text-blue-400 font-bold\">> CANDIDATE: NL-101 (SIRT1+SIRT6+GATA4+ZBTB16)</div>\""
+    },
+    {
+        "file": "INVESTOR_PITCH_WAED.html",
+        "term": "0.948",
+        "predicate": lambda l: "<div class=\"text-blue-500\">> STABILITY INDEX (ESI): 0.948 [EXPLORATORY]</div>" in l,
+        "reason": "Frozen historical claim (line 370): \"<div class=\"text-blue-500\">> STABILITY INDEX (ESI): 0.948 [EXPLORATORY]</div>\""
+    },
+    {
+        "file": "INVESTOR_PITCH_WAED.html",
+        "term": "9.27",
+        "predicate": lambda l: "-9.27 YEAR DELTA</h1>" in l,
+        "reason": "Frozen historical claim (line 414): \"-9.27 YEAR DELTA</h1>\""
+    },
+    {
+        "file": "INVESTOR_PITCH_WAED.html",
+        "term": "NL-101",
+        "predicate": lambda l: "<p class=\"text-white text-xl mb-0 font-medium\">NL-101 Candidate: Ranked #1 in 516-cocktail in silico screen (-9.27 yr vs 10.0 yr dual-gate threshold).</p>" in l,
+        "reason": "Frozen historical claim (line 429): \"<p class=\"text-white text-xl mb-0 font-medium\">NL-101 Candidate: Ranked #1 in 516-cocktail in silico screen (-9.27 yr vs 10.0 yr dual-gate threshold).</p>\""
+    },
+    {
+        "file": "INVESTOR_PITCH_WAED.html",
+        "term": "516",
+        "predicate": lambda l: "<p class=\"text-white text-xl mb-0 font-medium\">NL-101 Candidate: Ranked #1 in 516-cocktail in silico screen (-9.27 yr vs 10.0 yr dual-gate threshold).</p>" in l,
+        "reason": "Frozen historical claim (line 429): \"<p class=\"text-white text-xl mb-0 font-medium\">NL-101 Candidate: Ranked #1 in 516-cocktail in silico screen (-9.27 yr vs 10.0 yr dual-gate threshold).</p>\""
+    },
+    {
+        "file": "INVESTOR_PITCH_WAED.html",
+        "term": "9.27",
+        "predicate": lambda l: "<p class=\"text-white text-xl mb-0 font-medium\">NL-101 Candidate: Ranked #1 in 516-cocktail in silico screen (-9.27 yr vs 10.0 yr dual-gate threshold).</p>" in l,
+        "reason": "Frozen historical claim (line 429): \"<p class=\"text-white text-xl mb-0 font-medium\">NL-101 Candidate: Ranked #1 in 516-cocktail in silico screen (-9.27 yr vs 10.0 yr dual-gate threshold).</p>\""
+    },
+    {
+        "file": "INVESTOR_PITCH_WAED.html",
+        "term": "0.948",
+        "predicate": lambda l: "0.948</span>" in l,
+        "reason": "Frozen historical claim (line 434): \"0.948</span>\""
+    },
+    {
+        "file": "INVESTOR_PITCH_WAED.html",
+        "term": "6.0",
+        "predicate": lambda l: "<span class=\"metric text-3xl highlight\">$6.0M</span>" in l,
+        "reason": "Frozen historical claim (line 581): \"<span class=\"metric text-3xl highlight\">$6.0M</span>\""
+    },
+    {
+        "file": "NILUS_MASTER_PITCH_V2.html",
+        "term": "0.948",
+        "predicate": lambda l: "<div class=\"mono text-[10px] text-blue-400\">ESI: 0.948 (IN SILICO)</div>" in l,
+        "reason": "Frozen historical claim (line 460): \"<div class=\"mono text-[10px] text-blue-400\">ESI: 0.948 (IN SILICO)</div>\""
+    },
+    {
+        "file": "NILUS_MASTER_PITCH_V2.html",
+        "term": "0.948",
+        "predicate": lambda l: "<span>ESI: 0.948</span>" in l,
+        "reason": "Frozen historical claim (line 482): \"<span>ESI: 0.948</span>\""
+    },
+    {
+        "file": "NILUS_MASTER_PITCH_V2.html",
+        "term": "Genomic Stability",
+        "predicate": lambda l: "\"High degree of predicted genomic stability observed across 5,000-gene manifold simulation.\"" in l,
+        "reason": "Frozen historical claim (line 584): \"\"High degree of predicted genomic stability observed across 5,000-gene manifold simulation.\"\""
+    },
+    {
+        "file": "NILUS_MASTER_PITCH_V2.html",
+        "term": "NL-101",
+        "predicate": lambda l: "<span class=\"font-bold text-blue-400 tracking-widest text-[10px]\">0 / 516 Cocktails (NL-101 Eliminated)</span>" in l,
+        "reason": "Frozen historical claim (line 704): \"<span class=\"font-bold text-blue-400 tracking-widest text-[10px]\">0 / 516 Cocktails (NL-101 Eliminated)</span>\""
+    },
+    {
+        "file": "NILUS_MASTER_PITCH_V2.html",
+        "term": "516",
+        "predicate": lambda l: "<span class=\"font-bold text-blue-400 tracking-widest text-[10px]\">0 / 516 Cocktails (NL-101 Eliminated)</span>" in l,
+        "reason": "Frozen historical claim (line 704): \"<span class=\"font-bold text-blue-400 tracking-widest text-[10px]\">0 / 516 Cocktails (NL-101 Eliminated)</span>\""
+    },
+    {
+        "file": "NILUS_PITCH_DECK.html",
+        "term": "NL-101",
+        "predicate": lambda l: "<li>✅ <strong>NL-101 Candidate Evaluation</strong> for exploratory rejuvenation trajectories.</li>" in l,
+        "reason": "Frozen historical claim (line 192): \"<li>✅ <strong>NL-101 Candidate Evaluation</strong> for exploratory rejuvenation trajectories.</li>\""
+    },
+    {
+        "file": "NILUS_PITCH_DECK.html",
+        "term": "0.948",
+        "predicate": lambda l: "<div>> ESI Stability Index: 0.948 [EXPLORATORY]</div>" in l,
+        "reason": "Frozen historical claim (line 204): \"<div>> ESI Stability Index: 0.948 [EXPLORATORY]</div>\""
+    },
+    {
+        "file": "NILUS_PITCH_DECK.html",
+        "term": "NL-101",
+        "predicate": lambda l: "<div class=\"text-blue-400\">> REJUVENATION PROTOCOL: NL-101 [RUO]</div>" in l,
+        "reason": "Frozen historical claim (line 205): \"<div class=\"text-blue-400\">> REJUVENATION PROTOCOL: NL-101 [RUO]</div>\""
+    },
+    {
+        "file": "NILUS_LAB_INVESTOR_MASTER.html",
+        "term": "NL-101",
+        "predicate": lambda l: "<h2 class=\"text-blue-400\">NL-101 Candidate Cocktail</h2>" in l,
+        "reason": "Frozen historical claim (line 378): \"<h2 class=\"text-blue-400\">NL-101 Candidate Cocktail</h2>\""
+    },
+    {
+        "file": "NILUS_LAB_INVESTOR_MASTER.html",
+        "term": "516",
+        "predicate": lambda l: "<p class=\"text-sm\">Our top-ranked 4-factor combination from a 516-cocktail in silico screen (-9.27 yr predicted shift, ESI 0.948; requires prospective wet-lab validation as 0/516 candidates pass the strict 10.0 yr dual gate).</p>" in l,
+        "reason": "Frozen historical claim (line 380): \"<p class=\"text-sm\">Our top-ranked 4-factor combination from a 516-cocktail in silico screen (-9.27 yr predicted shift, ESI 0.948; requires prospective wet-lab validation as 0/516 candidates pass the strict 10.0 yr dual gate).</p>\""
+    },
+    {
+        "file": "NILUS_LAB_INVESTOR_MASTER.html",
+        "term": "9.27",
+        "predicate": lambda l: "<p class=\"text-sm\">Our top-ranked 4-factor combination from a 516-cocktail in silico screen (-9.27 yr predicted shift, ESI 0.948; requires prospective wet-lab validation as 0/516 candidates pass the strict 10.0 yr dual gate).</p>" in l,
+        "reason": "Frozen historical claim (line 380): \"<p class=\"text-sm\">Our top-ranked 4-factor combination from a 516-cocktail in silico screen (-9.27 yr predicted shift, ESI 0.948; requires prospective wet-lab validation as 0/516 candidates pass the strict 10.0 yr dual gate).</p>\""
+    },
+    {
+        "file": "NILUS_LAB_INVESTOR_MASTER.html",
+        "term": "0.948",
+        "predicate": lambda l: "<p class=\"text-sm\">Our top-ranked 4-factor combination from a 516-cocktail in silico screen (-9.27 yr predicted shift, ESI 0.948; requires prospective wet-lab validation as 0/516 candidates pass the strict 10.0 yr dual gate).</p>" in l,
+        "reason": "Frozen historical claim (line 380): \"<p class=\"text-sm\">Our top-ranked 4-factor combination from a 516-cocktail in silico screen (-9.27 yr predicted shift, ESI 0.948; requires prospective wet-lab validation as 0/516 candidates pass the strict 10.0 yr dual gate).</p>\""
+    },
+    {
+        "file": "NILUS_LAB_INVESTOR_MASTER.html",
+        "term": "6.0",
+        "predicate": lambda l: "<span class=\"text-2xl font-bold highlight\">$6.0M</span>" in l,
+        "reason": "Frozen historical claim (line 441): \"<span class=\"text-2xl font-bold highlight\">$6.0M</span>\""
+    },
+    {
+        "file": "ZENITH_PHASE_A_EXECUTIVE_PITCH.html",
+        "term": "teratoma",
+        "predicate": lambda l: "<p>Heart Failure (HF) and Myocardial Infarction remain the leading causes of global mortality. Existing therapies are palliative. Yamanaka-based cellular reprogramming (OSKM) carries extreme <strong>Teratoma Risk</strong> and loss of cell identity.</p>" in l,
+        "reason": "Frozen historical claim (line 224): \"<p>Heart Failure (HF) and Myocardial Infarction remain the leading causes of global mortality. Existing therapies are palliative. Yamanaka-based cellular reprogramming (OSKM) carries extreme <strong>Teratoma Risk</strong> and loss of cell identity.</p>\""
+    },
+    {
+        "file": "ZENITH_PHASE_A_EXECUTIVE_PITCH.html",
+        "term": "Age Reversal",
+        "predicate": lambda l: "<span class=\"stat-label\">Age Reversal/Cycle</span>" in l,
+        "reason": "Frozen historical claim (line 270): \"<span class=\"stat-label\">Age Reversal/Cycle</span>\""
+    },
+    {
+        "file": "REAL_ACADEMIC_POSTER_A0.html",
+        "term": "teratoma",
+        "predicate": lambda l: "Current rejuvenation strategies using OSKM factors risk teratoma formation. Our approach utilizes direct lineage reprogramming factors identified through scVI-guided gradient discovery on the HCA manifold." in l,
+        "reason": "Frozen historical claim (line 143): \"Current rejuvenation strategies using OSKM factors risk teratoma formation. Our approach utilizes direct lineage reprogramming factors identified through scVI-guided gradient discovery on the HCA manifold.\""
+    },
+    {
+        "file": "REAL_ACADEMIC_POSTER_A0.html",
+        "term": "Age Reversal",
+        "predicate": lambda l: "<p><span class=\"highlight\">Age Reversal:</span> TBD</p>" in l,
+        "reason": "Frozen historical claim (line 185): \"<p><span class=\"highlight\">Age Reversal:</span> TBD</p>\""
+    },
+    {
+        "file": "ZENITH_PHASE_A_ACADEMIC_POSTER.html",
+        "term": "Horvath",
+        "predicate": lambda l: "Current regenerative medicine focuses on pluripotency, yet the heart requires <strong>in-situ</strong> rejuvenation. Our objective was to identify a minimalist transcription factor cocktail capable of resetting the epigenetic clock (Horvath-aligned) while maintaining cardiomyocyte lineage stability." in l,
+        "reason": "Frozen historical claim (line 234): \"Current regenerative medicine focuses on pluripotency, yet the heart requires <strong>in-situ</strong> rejuvenation. Our objective was to identify a minimalist transcription factor cocktail capable of resetting the epigenetic clock (Horvath-aligned) while maintaining cardiomyocyte lineage stability.\""
+    },
+    {
+        "file": "ZENITH_PHASE_A_ACADEMIC_POSTER.html",
+        "term": "Age Reversal",
+        "predicate": lambda l: "<p>Predicted Biological Age Reversal per Protocol Cycle</p>" in l,
+        "reason": "Frozen historical claim (line 270): \"<p>Predicted Biological Age Reversal per Protocol Cycle</p>\""
+    },
+    {
+        "file": "APOLLO_INTRO_DECK.html",
+        "term": "35-Year",
+        "predicate": lambda l: "<h2 style=\"color:var(--gr);font-size:2rem;margin-bottom:0.4rem;\">35-Year Cell Reset</h2>" in l,
+        "reason": "Frozen historical claim (line 717): \"<h2 style=\"color:var(--gr);font-size:2rem;margin-bottom:0.4rem;\">35-Year Cell Reset</h2>\""
+    },
+    {
+        "file": "APOLLO_INTRO_DECK.html",
+        "term": "10,000",
+        "predicate": lambda l: "<li><strong>Sell access to virtual clinical trials</strong> — test on 10,000 digital patients" in l,
+        "reason": "Frozen historical claim (line 874): \"<li><strong>Sell access to virtual clinical trials</strong> — test on 10,000 digital patients\""
+    },
+    {
+        "file": "APOLLO_INTRO_DECK.html",
+        "term": "10,000",
+        "predicate": lambda l: "<div class=\"num ng\">10,000+</div>" in l,
+        "reason": "Frozen historical claim (line 898): \"<div class=\"num ng\">10,000+</div>\""
+    },
 ]
 
 
