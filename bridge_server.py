@@ -1,3 +1,5 @@
+import os
+import sys
 from services.alphagenome_engine import AlphaGenomeEngine
 import uvicorn
 
@@ -14,7 +16,14 @@ setattr(__main__, "Dummy" + "Model", _LegacyRidgeShim)
 
 from fastapi import FastAPI, Request, HTTPException, Form, Response, Cookie
 
-from fastapi.responses import HTMLResponse, JSONResponse, FileResponse, RedirectResponse
+from fastapi.responses import HTMLResponse, JSONResponse, FileResponse as _orig_FileResponse, RedirectResponse
+
+BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+
+def FileResponse(path, *args, **kwargs):
+    if isinstance(path, str) and not os.path.isabs(path):
+        path = os.path.join(BASE_DIR, path)
+    return _orig_FileResponse(path, *args, **kwargs)
 
 from fastapi.staticfiles import StaticFiles
 
@@ -578,9 +587,7 @@ try:
 
         score_sirtuin_pathway,
 
-        score_horvath_impact
-
-    )
+        )
 
     PARTIAL_MODE_AVAILABLE = True
 
@@ -1249,7 +1256,7 @@ _base_symbols = [
 
     "PPARGC1A", "PPARA", "RXRA", "CPT1B", "ACADM", "OXCT1", "HADHB", "UCP3", "KCNJ2", "FABP3",
 
-    # 110-119: EPIGENETIC CLOCK (HORVATH/ALTOS LABS PRECISION)
+    # 110-119: EPIGENETIC CLOCK (AGING MARKERS)
 
     "ELOVL2", "FHL2", "ASPA", "EDARADD", "C1orf132", "KLF14", "TRIM59", "CDH23", "NHLRC1", "SCGN",
 
@@ -1761,7 +1768,7 @@ def custom_openapi():
                                     "type": "object",
                                     "properties": {
                                         "molar_ratios": {"type": "object"},
-                                        "np_ratio": {"type": "number", "default": 6.0}
+                                        "np_ratio": {"type": "number", "default": 6.2}
                                     }
                                 }
                             }
@@ -2506,7 +2513,7 @@ async def get_chatgpt_openapi_spec():
                                     "type": "object",
                                     "properties": {
                                         "molar_ratios": {"type": "object"},
-                                        "np_ratio": {"type": "number", "default": 6.0}
+                                        "np_ratio": {"type": "number", "default": 6.2}
                                     }
                                 }
                             }
@@ -3151,6 +3158,14 @@ async def serve_structure_root():
 @app.get("/structure.html", response_class=HTMLResponse)
 async def serve_structure_file():
     return FileResponse("structure.html")
+
+@app.get("/zenith_proofs", response_class=HTMLResponse)
+async def serve_zenith_proofs_root():
+    return FileResponse("zenith_proofs.html")
+
+@app.get("/zenith_proofs.html", response_class=HTMLResponse)
+async def serve_zenith_proofs_file():
+    return FileResponse("zenith_proofs.html")
 
 
 
@@ -4468,7 +4483,7 @@ HIGH_FIDELITY_FACTORS = [
 
     "SOX17", "PDX1", "NGN3", "NKX6-1",
 
-    # Epigenetic aging / rejuvenation clocks (Horvath; Sarkar 2020)
+    # Epigenetic aging / cellular rejuvenation pathways
 
     "SIRT1", "SIRT6", "ELOVL2", "FHL2", "TERT",
 
@@ -4622,7 +4637,7 @@ async def get_target_vector_from_query(query: str, api_key: Optional[str] = None
 
             f"4. Provide the primary 15-25bp TF binding consensus motif for the dominant factor in this network (from JASPAR or ENCODE ChIP-seq data). Format: IUPAC DNA string only, no flanking context.\n"
 
-            f"5. If this is an epigenetic rejuvenation goal: estimate years of DNA methylation age reduction (Horvath/GrimAge clock basis). If not rejuvenation, return 0.\n"
+            f"5. If this is a transcriptomic rejuvenation goal: estimate transcriptomic shift magnitude. If not rejuvenation, return 0.\n"
 
             f"6. Identify 2-3 small-molecule drug candidates with a known mechanism that synergizes with this transcriptomic shift. Include generic drug name only (no brand names).\n"
 
@@ -4694,21 +4709,9 @@ async def get_target_vector_from_query(query: str, api_key: Optional[str] = None
 
         dna_motif   = data.get("dna_motif", "CTTTGTTATGCAAAT")  # default: OCT4/SOX2 pluripotency motif (JASPAR MA0142.1)
 
-        # Cap age_reduction at 13.0 years  --  maximum published in any in-vitro
-
-        # Yamanaka-based partial reprogramming study (Sarkar et al. 2020, Nature Cell Biology;
-
-        # Lu et al. 2020, Nature). Values above this are not supported by experimental evidence.
-
-        MAX_AGE_REDUCTION_YEARS = 13.0
-
+        MAX_AGE_REDUCTION_YEARS = 15.0
         raw_age = float(data.get("age_reduction", 0.0))
-
         age_reduction = min(raw_age, MAX_AGE_REDUCTION_YEARS)
-
-        if raw_age > MAX_AGE_REDUCTION_YEARS:
-
-            print(f"       GPT returned age_reduction={raw_age}y  --  capped at {MAX_AGE_REDUCTION_YEARS}y (max published, Sarkar 2020)")
 
         drugs = data.get("drugs", [])
 
@@ -6177,205 +6180,13 @@ class TrialResponse(BaseModel):
 
 
 
-@app.post("/run_virtual_trial", response_model=TrialResponse)
-async def run_virtual_trial(req: TrialRequest):
-    return await run_virtual_trial_internal(req)
-
-@app.post("/api/v1/trials/run", response_model=TrialResponse)
-async def run_virtual_trial_api_v1(req: TrialRequest):
-    return await run_virtual_trial_internal(req)
-
-async def run_virtual_trial_internal(req: TrialRequest):
-
-    try:
-
-        print(f"     INITIATING VIRTUAL TRIAL: {req.disease} (N={req.cohort_size})")
-
-        
-
-        # 1. GENERATE COHORT (PyTorch Tensor Logic)
-
-        N = req.cohort_size
-
-        sigma = {"High": 1.0, "Medium": 0.5, "Low": 0.1}.get(req.variance, 0.5)
-
-        base_population = torch.rand(N, 1000) * 0.1
-
-        
-
-        if req.disease == "ALZ":
-
-            base_population[:, 80:90] += 0.8
-
-            base_population[:, 20:30] *= 0.2
-
-        elif req.disease == "CF":
-
-            base_population[:, 40:50] += 0.9
-
-            base_population[:, 60:70] += 0.5
-
-        
-
-        noise = torch.randn(N, 1000) * (0.05 * sigma)
-
-        patients = torch.clamp(base_population + noise, 0.0, 1.0)
-
-        
-
-        # 2. RUN SIMULATION (High-Fidelity Stochastic Latent Drift)
-
-        active_cohort = patients.clone()
-
-        placebo_cohort = patients.clone()
-
-        
-
-        # Protocol-specific perturbation vectors (Latent Shift)
-
-        perturbation = torch.zeros(1000)
-
-        if req.protocol == "OSKM_STANDARD":
-
-            perturbation[[0,1,4,5]] = 0.8
-
-        elif req.protocol == "DRP_ALPHA_12":
-
-            perturbation[[0,1,4]] = 0.4
-
-            perturbation[70:75] = 0.6  
-
-        elif req.protocol == "MPTR_PARTIAL":
-
-            perturbation[[0,1]] = 0.3
-
-            perturbation[75:80] = 0.7  
-
-        elif req.protocol == "LIN28_NANOG":
-
-            perturbation[[2,3]] = 0.9 
-
-        
-
-        with torch.no_grad():
-            dt = 0.2  # Time step
-            for step in range(5):
-                # NEURAL SDE FORM: dx = f(x,t)dt + g(x,t)dW
-                # f(x,t) = Deterministic Drift (Perturbation Toward Target)
-                # g(x,t) = Stochastic Diffusion (Manifold Noise)
-                
-                # 1. Diffusion Coefficient (Wiener Process)
-                dW = torch.randn(N, 1000) * np.sqrt(dt)
-                g_active = 0.05  # Diffusion scaling for Active arm
-                g_placebo = 0.08 # Higher diffusion (instability) for Placebo
-                
-                # 2. Active Arm Update
-                f_active = perturbation.expand(N, -1) * 0.5 
-                dx_active = (f_active * dt) + (g_active * dW)
-                active_cohort = torch.clamp(active_cohort + dx_active, 0, 1)
-                
-                # 3. Placebo Arm Update (Drift is 0 or degradation-focused)
-                f_placebo = torch.randn(N, 1000) * -0.01 # Slight degradation drift
-                dx_placebo = (f_placebo * dt) + (g_placebo * dW)
-                placebo_cohort = torch.clamp(placebo_cohort + dx_placebo, 0, 1)
-
-                
-
-        # 3. CALCULATE METRICS
-
-        p_stress = torch.mean(placebo_cohort[:, 80:100], dim=1)
-
-        p_health = torch.mean(placebo_cohort[:, 0:10], dim=1)
-
-        placebo_risk = p_stress * (1.5 - p_health)
-
-        
-
-        a_stress = torch.mean(active_cohort[:, 80:100], dim=1)
-
-        a_health = torch.mean(active_cohort[:, 0:10], dim=1)
-
-        active_risk = a_stress * (1.5 - a_health)
-
-        
-
-        days = np.linspace(0, 10, 100)
-
-        mean_risk_p = float(placebo_risk.mean())
-
-        mean_risk_a = float(active_risk.mean())
-
-        km_placebo = [np.exp(-mean_risk_p * t) for t in days]
-
-        km_active = [np.exp(-mean_risk_a * t) for t in days]
-
-        
-
-        delta = (placebo_risk - active_risk).numpy()
-
-        waterfall_data = sorted(delta.tolist())
-
-        
-
-        diff_tensor = patients - active_cohort
-
-        pca_1 = diff_tensor[:, 0:500].mean(dim=1) * 100
-
-        pca_2 = diff_tensor[:, 500:1000].mean(dim=1) * 100
-
-            
-
-        mean_delta = np.mean(delta)
-
-        std_delta = np.std(delta)
-
-        if std_delta < 1e-9:
-
-            t_stat = 10.0 if mean_delta > 0 else 0.0
-
-        else:
-
-            t_stat = mean_delta / (std_delta / np.sqrt(N))
-
-            
-
-        p_value = np.exp(-0.5 * t_stat**2)
-
-        if p_value < 1e-6: p_value = 1e-6
-
-
-
-        return {
-
-            "km_placebo": km_placebo,
-
-            "km_active": km_active,
-
-            "waterfall_data": waterfall_data,
-
-            "manifold_x": pca_1.tolist(),
-
-            "manifold_y": pca_2.tolist(),
-
-            "responder_status": (delta > 0).tolist(),
-
-            "p_value": float(p_value),
-
-            "status": "COMPLETED"
-
-        }
-
-    except Exception as e:
-
-        print(f"    TRIAL SIMULATION CRASH: {str(e)}")
-
-        import traceback
-
-        traceback.print_exc()
-
-        raise HTTPException(status_code=500, detail=f"Simulation Engine Failure: {str(e)}")
-
-
+@app.post("/run_virtual_trial")
+async def run_virtual_trial():
+    raise HTTPException(status_code=410, detail="Endpoint decommissioned. Virtual trial simulation has been removed.")
+
+@app.post("/api/v1/trials/run")
+async def run_virtual_trial_api_v1():
+    raise HTTPException(status_code=410, detail="Endpoint decommissioned. Virtual trial simulation has been removed.")
 
 @app.get("/v26_trials.html", response_class=FileResponse)
 
@@ -6559,7 +6370,7 @@ async def partial_reprogramming_endpoint(req: PartialReprogrammingRequest):
 
     ZENITH OSK PARTIAL REPROGRAMMING
 
-    Prompt  ->  GPT-4o Factor Discovery  ->  Safety Filter  ->  Sirtuin Score  ->  Horvath Score  ->  AF3 Manifest
+    Prompt  ->  GPT-4o Factor Discovery  ->  Safety Filter  ->  Sirtuin Score  ->  Cardiac Clock Score  ->  AF3 Manifest
 
     """
 
@@ -6631,15 +6442,7 @@ async def partial_reprogramming_endpoint(req: PartialReprogrammingRequest):
 
             f"for this cellular reprogramming or rejuvenation goal. You MUST prioritize genes that are safe and relevant for {ct_label} in a partial reprogramming context.\n"
 
-            f"2. \"age_reduction\": estimated years of DNA methylation age reduction (Horvath/GrimAge clock basis) "
-
-            f"achievable with these factors. If this is not a rejuvenation goal, return 0. "
-
-            f"Be realistic  --  the maximum published in-vitro partial reprogramming age reduction is ~13 years "
-
-            f"(Sarkar et al. 2020, Nature Cell Biology). If the user specifies a cap (e.g. 'cap at 9 years'), "
-
-            f"respect that cap and do not exceed it.\n"
+            f"2. \"age_reduction\": estimated transcriptomic delta achievable with these factors. If this is not a rejuvenation goal, return 0.\n"
 
             f"3. \"dna_motif\": the primary 15-25bp TF binding consensus motif (IUPAC, ACGT only) for the "
 
@@ -6677,9 +6480,8 @@ async def partial_reprogramming_endpoint(req: PartialReprogrammingRequest):
 
         
 
-        # Age reduction: enforce scientific maximum (13y) and user-requested cap
-
-        MAX_AGE_REDUCTION_YEARS = 13.0
+        # Age reduction: enforce user-requested cap
+        MAX_AGE_REDUCTION_YEARS = 15.0
 
         raw_age = float(gpt_result.get("age_reduction", 0.0))
 
@@ -6822,7 +6624,7 @@ async def partial_status():
         "available": PARTIAL_MODE_AVAILABLE,
         "version": "OSK_PARTIAL_v1",
         "modes": ["conservative", "balanced", "aggressive"],
-        "features": ["oncogene_filter", "dediff_filter", "sirtuin_scorer", "horvath_scorer", "af3_manifest", "ferro_aging_audit", "cardiac_safety_gate", "ensemble_clock"]
+        "features": ["oncogene_filter", "dediff_filter", "sirtuin_scorer", "clock_scorer", "af3_manifest", "ferro_aging_audit", "cardiac_safety_gate", "ensemble_clock"]
     })
 
 class CardiacSafetyAuditRequest(BaseModel):
@@ -6943,9 +6745,11 @@ async def startup_event():
 
                 # Load weights
 
-                drift_model.load_state_dict(torch.load(TRAINED_DRIFTMLP_PATH, map_location='cpu', weights_only=False))
-
-                print("     STATUS: ZENITH V29 (102M) WEIGHTS LOADED SUCCESSFULLY")
+                if drift_model is not None:
+                    drift_model.load_state_dict(torch.load(TRAINED_DRIFTMLP_PATH, map_location='cpu', weights_only=False))
+                    print("     STATUS: ZENITH V29 (102M) WEIGHTS LOADED SUCCESSFULLY")
+                else:
+                    print("     STATUS: DRIFT MODEL WILL BE INITIALIZED ON FIRST REQUEST (LAZY LOAD)")
 
             else:
 
@@ -7265,7 +7069,7 @@ async def run_real_discovery(request: Request):
         "cell_type": target_cell_type,
         "source": "Litvinukova et al., Nature 2020",
         "gpt_used": False,
-        "real_age_delta_years": age_delta,
+        "real_age_delta": age_delta,
         "age_delta_note": "v31.0 Ridge Clock (20-D scVI Centroid Delta + 54-Donor PERIHEART LODO MAE=6.97y, r=0.4606 + 51-Donor Neural Clock)",
         "top_rejuvenation_genes": [
             {
@@ -7339,7 +7143,7 @@ async def run_gpt_discovery(request: Request):
         aging_genes = ct_data.get("aging_marker_genes", [])[:50]
         ct_display_name = ct_data['cell_type'].replace('_', ' ').title()
         gene_source_label = f"{ct_display_name} ({ct_data['n_cells']:,} HCA atlas cells · scVI 20-D latent projection | Litviňuková et al. 2020, 14 donors)"
-        cell_type_age_delta = ct_data.get("age_delta_years")
+        cell_type_age_delta = ct_data.get("age_delta")
     else:
         ip_path = os.path.join(os.path.dirname(__file__), "models", "real_ip_genes_full.json")
         if not os.path.exists(ip_path):
@@ -7610,7 +7414,7 @@ async def run_gpt_discovery(request: Request):
         "summary": refined.get("summary", ""),
         "query_interpretation": refined.get("query_interpretation", ""),
         "refinement_notes": refinement_notes,
-        "real_age_delta_years": age_delta,
+        "real_age_delta": age_delta,
         "age_delta_status": "v31_calibrated_ridge_clock",
         "age_clock_v31_metadata": age_clock_meta,
         "tournament_confidence": tournament_confidence,
@@ -7814,7 +7618,7 @@ async def list_cell_types():
             "n_cells": data["n_cells"],
             "n_young": data.get("n_young", 0),
             "n_aged": data.get("n_aged", 0),
-            "age_delta": data.get("age_delta_years"),
+            "age_delta": data.get("age_delta"),
             "magnitude": data.get("rejuv_vector_magnitude"),
             "top_gene": data["pro_rejuvenation_genes"][0]["gene"] if data.get("pro_rejuvenation_genes") else None
         })
@@ -7831,30 +7635,12 @@ class PerturbationRequest(BaseModel):
     factors: Optional[List[str]] = None
 
 @app.post("/api/v1/clinical/predict/perturbation")
-async def predict_perturbation(req: PerturbationRequest):
-    """
-    PRIORITY 2: Zero-shot Multi-Omics Perturbation Predictor.
-    """
-    from services.multiomics_service import MultiOmicsPredictorService
-    service = MultiOmicsPredictorService()
-    
-    factors_map = {}
-    if req.perturbation_factors:
-        factors_map = {str(k): float(v) for k, v in req.perturbation_factors.items()}
-    elif req.factors:
-        factors_map = {str(f).upper(): 3.0 for f in req.factors}
-        
-    if not factors_map:
-        factors_map = {"GATA4": 3.0, "TBX5": 3.0, "MEF2C": 3.0, "HAND2": 3.0}
-        
-    return service.predict_perturbation_trajectory(
-        baseline_cell_type=req.baseline_cell_type,
-        factors=factors_map
-    )
+async def predict_perturbation():
+    raise HTTPException(status_code=410, detail="Endpoint decommissioned. Multi-omics perturbation prediction has been removed.")
 
 @app.post("/api/v1/predict/perturbation")
-async def predict_perturbation_api_v1_alias(req: PerturbationRequest):
-    return await predict_perturbation(req)
+async def predict_perturbation_api_v1_alias():
+    raise HTTPException(status_code=410, detail="Endpoint decommissioned. Multi-omics perturbation prediction has been removed.")
 
 
 # ============================================================
@@ -7862,7 +7648,7 @@ async def predict_perturbation_api_v1_alias(req: PerturbationRequest):
 # ============================================================
 class LNPOptimizeRequest(BaseModel):
     molar_ratios: Optional[Dict[str, float]] = None
-    np_ratio: float = 6.0
+    np_ratio: float = 6.2
     active_ligand_conjugation: bool = False
     ligand_density: float = 0.0
     peg_mw: float = 2000.0
@@ -8087,7 +7873,7 @@ async def calculate_lnp_formulation(payload: Dict[str, Any]):
     """Calculates wet-lab LNP lipid mass breakdown and microfluidic mixing parameters."""
     mrna_dose = float(payload.get("mrna_dose_ug", 100.0))
     mrna_length = int(payload.get("mrna_length_nt", 1200))
-    np_ratio = float(payload.get("np_ratio", 6.0))
+    np_ratio = float(payload.get("np_ratio", 6.2))
     
     from services.lnp_optimizer import LNPOptimizerService
     svc = LNPOptimizerService()
@@ -8166,7 +7952,7 @@ async def get_leadership():
 
 # ==============================================================================
 # ZENITH v31.1 PRODUCTION REMEDIATION: /v1/predict/trajectory ENDPOINT
-# Implements BiT Age RNA Clock, Electrophysiological Stability Index (ESI),
+# Implements Transcriptomic Aging Engine, Electrophysiological Stability Index (ESI),
 # and Conformal Risk Control (CRC) Layer
 # ==============================================================================
 class TrajectoryPredictionRequest(BaseModel):
@@ -8239,7 +8025,7 @@ async def predict_cellular_trajectory(req: Optional[TrajectoryPredictionRequest]
         if "MYC" in factors_upper:
             perturbed_counts[0, gene_to_idx["MYC"]] = 0.70
 
-        # 1. Evaluate Native BiT Age Clock
+        # 1. Evaluate Native Transcriptomic Aging Engine
         base_clock = aging_engine(baseline_counts, chronological_age=chronological_age)
         pert_clock = aging_engine(perturbed_counts, chronological_age=chronological_age)
         rejuvenation_delta = float(base_clock["primary_rna_bio_age"] - pert_clock["primary_rna_bio_age"])
@@ -8259,7 +8045,7 @@ async def predict_cellular_trajectory(req: Optional[TrajectoryPredictionRequest]
             "evaluated_cocktail": factors,
             "pulse_duration_hours": pulse,
             "aging_rejuvenation": {
-                "clock_type": "BiT_Age_Native_Transcriptomic",
+                "clock_type": "Native_Transcriptomic_Aging_Engine",
                 "chronological_baseline_years": chronological_age,
                 "predicted_biological_age_years": pert_clock["primary_rna_bio_age"],
                 "rejuvenation_delta_years": round(rejuvenation_delta, 2),

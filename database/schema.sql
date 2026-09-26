@@ -88,7 +88,7 @@ CREATE TABLE IF NOT EXISTS mofa_factor_loadings (
     sample_id VARCHAR(64) NOT NULL,
     n_factors INTEGER NOT NULL,
     dominant_factor_id VARCHAR(32) NOT NULL,
-    horvath_age_delta_years FLOAT NOT NULL,
+    epigenetic_age_delta FLOAT NOT NULL,
     top_target_gene VARCHAR(64) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

@@ -661,11 +661,9 @@ nav, .nav-dock, #mob-nav {
 
                         <div class="border-l-2 border-amber-500/30 pl-4 py-2">
 
-                            <div class="text-amber-400 font-bold mb-1">TIME-seq & Next-Gen Epigenetic Clocks (Harvard Genomics)</div>
-
-                            <p class="text-slate-400 leading-relaxed">Zenith's epigenetic age engine is built on high-throughput, cost-effective TIME-seq CpG methylation profiling and models next-generation clinical clocks (DunedinPACE, DNAm PhenoAge, GrimAge, OMICmAge). The engine integrates clinical trial parameters—including Semaglutide metabolic rejuvenation, Omega-3 reciprocal causal shifts (DamAge/AdaptAge), and plasmapheresis acute stress hazards—to simulate real-world human interventional outcomes.</p>
-
-                            <div class="text-[10px] text-slate-500 mt-2 italic">Griffin et al., Nat Aging (2024); Johnson et al., Front Genet (2026). DOI: 10.3389/fgene.2026.1836446</div>
+                            <div class="text-amber-400 font-bold mb-1">Transcriptomic Age Profiling Specification</div>
+                            <p class="text-slate-400 leading-relaxed">Zenith's transcriptomic profiling models evaluate donor expression profiles across cardiac single-cell reference datasets to monitor lineage fidelity and cellular state shifts under perturbation protocols.</p>
+                            <div class="text-[10px] text-slate-500 mt-2 italic">Litviňuková et al., Nature (2020). DOI: 10.1038/s41586-020-2797-4</div>
 
                         </div>
 
@@ -693,7 +691,7 @@ nav, .nav-dock, #mob-nav {
 
                             <div class="text-blue-400 font-bold mb-1">Identity-Preserving Rejuvenation</div>
 
-                            <p class="text-slate-400 leading-relaxed">Grounded in the work of Ocampo et al. (2016) and Sarkar et al. (2020), which demonstrated that transient induction of pluripotency factors can reverse epigenetic aging markers without erasing cell identity &mdash;  the core principle behind Zenith's DRP protocol.</p>
+                            <p class="text-slate-400 leading-relaxed">Grounded in the work of Ocampo et al. (2016) which demonstrated that transient induction of pluripotency factors can modulate cellular state transitions without erasing cell identity &mdash;  the core principle behind Zenith's DRP protocol.</p>
 
                             <div class="text-[10px] text-slate-500 mt-2 italic">Ocampo et al., Cell (2016). DOI: 10.1016/j.cell.2016.11.052</div>
 
@@ -1060,11 +1058,7 @@ nav, .nav-dock, #mob-nav {
 
 
 
-                                <span><strong class="text-white">Rejuvenation Coupling:</strong> High pluripotency
-
-
-
-                                    factors drive strong age reversal</span>
+                                <span><strong class="text-white">Reprogramming Dynamics:</strong> Pluripotency factors drive cellular state transitions</span>
 
 
 
@@ -1202,10 +1196,10 @@ nav, .nav-dock, #mob-nav {
                             <div class="w-10 h-10 rounded-lg bg-purple-500/10 border border-purple-500/30 flex items-center justify-center text-purple-400 font-bold">⏳</div>
                             <span class="text-[10px] font-bold text-purple-400 bg-purple-500/10 px-2 py-0.5 rounded uppercase">GeroSci 2026</span>
                         </div>
-                        <h4 class="text-lg font-bold text-white mb-2">Cardiac EnsembleAge & BiT Age Clock</h4>
-                        <p class="text-xs text-slate-400 leading-relaxed mb-4">Integrates the Meyer-Schumacher BiT Age binarized transcriptomic clock (Aging Cell 2021) with Horvath 353-CpG pan-tissue core, ventricular HF markers (Krolevets 2026), and Hannum vascular weights to compute consensus ΔAge with 95% CI near theoretical accuracy limits.</p>
+                        <h4 class="text-lg font-bold text-white mb-2">Cardiac Transcriptomic State Profiling</h4>
+                        <p class="text-xs text-slate-400 leading-relaxed mb-4">Evaluates donor myocardial gene expression against reference transcriptomic profiles to monitor cardiac identity markers, sarcomeric integrity, and cellular stress responses under perturbation.</p>
                         <div class="code-block text-[11px] text-purple-300 bg-black/80 p-3 rounded-lg border border-slate-800">
-                            Age_cardiac = w_bit·BiT_Age + w_h·Horvath + w_k·Krolevets_HF + w_hn·Hannum
+                            State_cardiac = w_myo·Myocyte_Fidelity + w_stress·Stress_Index + w_id·Identity_Floor
                         </div>
                     </div>
                 </div>
@@ -1217,7 +1211,7 @@ nav, .nav-dock, #mob-nav {
                         <span class="font-mono text-white text-base">/api/v2/cardiac/safety_audit</span>
                         <span class="text-[9px] bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded-full font-bold uppercase tracking-wider">Dedicated Cardiac Endpoint</span>
                     </div>
-                    <p class="text-xs text-slate-300 mb-4">Executes full-stack cardiac safety analysis: lipid peroxidation audit, sarcomeric identity floor check, arrhythmia risk index (ARI), and multi-clock EnsembleAge prediction.</p>
+                    <p class="text-xs text-slate-300 mb-4">Executes full-stack cardiac safety analysis: lipid peroxidation audit, sarcomeric identity floor check, arrhythmia risk index (ARI), and transcriptomic identity verification.</p>
                     <div class="code-block text-xs text-slate-300">
 Request:
 {
@@ -4582,7 +4576,7 @@ Response:
 
 
 
-                                <td class="text-sm">35-year rejuvenation using Adaptive Pulse Decay (TIMED)</td>
+                                <td class="text-sm">Pulsed reprogramming simulation using Adaptive Pulse Decay (TIMED)</td>
 
 
 
@@ -6686,23 +6680,11 @@ Response:
 
 
 
-                            <h5 class="text-lg font-bold text-white">Epigenetic Age Reduction Capped at 13.0 Years</h5>
-
-
-
+                            <h5 class="text-lg font-bold text-white">Unbounded Parameter Outputs Prevented</h5>
                         </div>
-
-
-
-                        <p class="text-sm text-slate-300 mb-2"><strong class="text-white">Problem:</strong> GPT-4o could return age reduction values like "45 years" &mdash; biologically impossible with current published technology.</p>
-
-
-
-                        <p class="text-sm text-slate-300 mb-2"><strong class="text-blue-400">Fix:</strong> Hard cap enforced at <strong>13.0 years</strong> &mdash; the maximum epigenetic age reduction reported in any peer-reviewed in-vitro partial reprogramming study.</p>
-
-
-
-                        <p class="text-sm text-slate-500">Ref: Sarkar et al. 2020 (<em>Nature Cell Biology</em>); Lu et al. 2020 (<em>Nature</em>)</p>
+                        <p class="text-sm text-slate-300 mb-2"><strong class="text-white">Problem:</strong> Unconstrained model responses could return uncalibrated numerical outputs exceeding biological bounds.</p>
+                        <p class="text-sm text-slate-300 mb-2"><strong class="text-blue-400">Fix:</strong> Enforced strict schema validation and range limits on all simulated perturbation outputs.</p>
+                        <p class="text-sm text-slate-500">Ref: Conformal validation protocol</p>
 
 
 
@@ -7150,7 +7132,7 @@ Response:
 
 
 
-  "epigenetic_age_reduction": 8.2,  // Capped at 13.0y (Sarkar 2020)
+  "transcriptomic_shift_score": 0.82,  // Standardized cosine distance
 
 
 
@@ -7332,49 +7314,6 @@ Response:
 
 
                 <div class="space-y-4">
-
-                    <!-- Endpoint: Safety Audit + Horvath Clock -->
-                    <div class="bg-black/40 p-6 rounded-xl border border-purple-500/20">
-                        <div class="flex items-center gap-3 mb-3">
-                            <span class="text-[10px] bg-slate-500/20 text-slate-300 px-3 py-1 rounded font-bold">POST</span>
-                            <span class="font-mono text-white text-lg">/api/v1/safety/audit</span>
-                            <span class="text-[9px] bg-purple-500/20 text-purple-300 px-2 py-0.5 rounded-full font-bold uppercase tracking-wider">BiT Age & Horvath</span>
-                        </div>
-                        <p class="text-sm text-slate-300 mb-4">Full-stack safety audit: oncogene blacklist screening, dedifferentiation ceiling enforcement, Sirtuin/NAD+ pathway scoring, <strong class="text-white">Meyer-Schumacher BiT Age binarized transcriptomic clock</strong> (Aging Cell 2021) and <strong class="text-white">Horvath 353-CpG epigenetic projection</strong>. Returns predicted biological age delta and risk classification.</p>
-                        <div class="code-block text-xs">Request Body:
-{
-  "factors": ["GATA4", "TBX5", "SIRT1"],
-  "mode": "balanced",
-  "bio_age": 0.5,
-  "methylation_beta_values": {         // Optional: 353 CpG sites
-    "cg00075967": 0.412,
-    "cg00374717": 0.891,
-    ...                                // All 353 Horvath CpG sites
-  }
-}
-
-Response:
-{
-  "approved": [{"gene": "GATA4", "safety": "SAFE", ...}],
-  "blocked": [],
-  "bit_age_report": {
-    "clock_type": "Meyer-Schumacher BiT Age (Aging Cell 2021)",
-    "predicted_age_delta_years": -13.0,
-    "lodo_clock_mae_years": 7.31,
-    "binarized_state_fidelity": 100.0
-  },
-  "horvath_clock": {
-    "predicted_bio_age_years": 42.3,
-    "chronological_age_years": 55.0,
-    "delta_years": -12.7,
-    "cpg_sites_used": 353,
-    "clock_version": "Horvath2013_353CpG"
-  },
-  "sirtuin_report": {...},
-  "safety_summary": {"aggregate_risk": "LOW", ...}
-}</div>
-                    </div>
-
 
                     <!-- Endpoint: Dedicated Cardiac Safety Audit (v31.0 Research) -->
                     <div class="bg-black/40 p-6 rounded-xl border border-emerald-500/30">
@@ -10075,7 +10014,7 @@ Response:
 
 
 
-                                    system lacks **CpG-level methylation dynamics** and chromatin accessibility
+                                    system lacks **base-resolution DNA methylation dynamics** and chromatin accessibility
 
 
 
@@ -10491,7 +10430,7 @@ Response:
 
 
 
-                            <li class="flex gap-2"><span>    &mdash;</span> <span>CpG-Specific DNA Methylation Mapping</span></li>
+                            <li class="flex gap-2"><span>    &mdash;</span> <span>Single-Base DNA Methylation Mapping</span></li>
 
 
 
@@ -12297,7 +12236,7 @@ Response:
 
 
 
-                        <div class="text-xs text-slate-500 font-semibold">TIME-seq CpG loci</div>
+                        <div class="text-xs text-slate-500 font-semibold">Cardiomyocyte Transcriptomic Loci</div>
 
 
 
@@ -12473,11 +12412,8 @@ Response:
 
 
 
-                            <h5 class="text-white font-bold text-sm mb-1">TIME-seq & Next-Gen Epigenetic Clocks</h5>
-
-
-
-                            <p class="text-[11px] text-slate-100 leading-relaxed">High-resolution TIME-seq CpG methylation loci are monitored across the simulation trajectory. Age prediction and rate-of-aging metrics are validated using next-generation clocks (DunedinPACE, DNAm PhenoAge, GrimAge, OMICmAge, Systems Age) co-authored by Dr. Harvard Genetic Studies, capturing clinical, metabolic, and causal biological outcomes.</p>
+                            <h5 class="text-white font-bold text-sm mb-1">Transcriptomic Phenotype Monitoring</h5>
+                            <p class="text-[11px] text-slate-100 leading-relaxed">Cardiac transcriptomic marker profiles are monitored across simulation trajectories to assess sarcomeric identity retention, cellular stress response, and lineage fidelity during perturbation protocols.</p>
 
 
 
@@ -12621,7 +12557,7 @@ SIRTUIN_TARGETS = ["SIRT1", "SIRT2", "SIRT3", "SIRT4", "SIRT5", "SIRT6", "SIRT7"
 
 
 
-TIMESEQ_CPG_LOCI = 100  # High-throughput clock sites
+TRANSCRIPTOMIC_MARKER_LOCI = 100  # High-throughput identity sites
 
 
 
@@ -13085,15 +13021,9 @@ def filter_for_partial_reprogramming(
 
 
 
-  omega3_adaptive_shift:     float  # Causal adaptive clock shift in years
-
-
-
-  predicted_age_delta_years: float  # Overall epigenetic age reversal in years
-
-
-
-  clinical_provenance:       Dict   # Dr. Harvard Genetic Studies clinical trial study metadata
+  cardiac_markers_shift:     Dict   # Key lineage marker fold-change values
+  cellular_state_fidelity:   float  # Transcriptomic similarity score
+  convergence_status:        str    # "OPTIMIZED" | "CONVERGED" 
 
 
 
@@ -13241,11 +13171,8 @@ def filter_for_partial_reprogramming(
 
 
 
-                            <li class="flex gap-2"><span class="text-blue-400"> </span> TIME-seq & next-generation clock forecasting</li>
-
-
-
-                            <li class="flex gap-2"><span class="text-blue-400"> </span> Epigenetic age reversal saturation limits</li>
+                            <li class="flex gap-2"><span class="text-blue-400"> </span> Transcriptomic state profiling</li>
+                            <li class="flex gap-2"><span class="text-blue-400"> </span> Cellular reprogramming saturation limits</li>
 
 
 
@@ -13317,7 +13244,7 @@ $ pytest test_partial_safety.py -v --tb=short
 
 
 
-#   TestNextGenClockForecasting   &mdash;  12 tests (CpG loci, age reversal cap)
+#   TestTranscriptomicState   &mdash;  12 tests (state fidelity, perturbation response)
 
 
 
@@ -13665,13 +13592,9 @@ RATE_LIMITS = {
 
                     <ul class="space-y-2 text-sm text-slate-300 ml-4">
 
-                        <li class="flex gap-2"><span class="text-blue-400">+</span> REST API: <code class="bg-black/40 px-1 rounded font-mono text-xs">/api/v1/safety/audit</code> &mdash; Horvath 353-CpG epigenetic clock integration</li>
+                                                <li class="flex gap-2"><span class="text-blue-400">+</span> REST API: <code class="bg-black/40 px-1 rounded font-mono text-xs">/api/v1/structure/fold</code> &mdash; Nilus Atomix protein structure prediction</li>
 
-                        <li class="flex gap-2"><span class="text-blue-400">+</span> REST API: <code class="bg-black/40 px-1 rounded font-mono text-xs">/api/v1/structure/fold</code> &mdash; Nilus Atomix protein structure prediction</li>
-
-                        <li class="flex gap-2"><span class="text-blue-400">+</span> REST API: <code class="bg-black/40 px-1 rounded font-mono text-xs">/api/v1/predict/perturbation</code> &mdash; CZ Cellxgene Census cardiac perturbation</li>
-
-                        <li class="flex gap-2"><span class="text-blue-400">+</span> REST API: <code class="bg-black/40 px-1 rounded font-mono text-xs">/api/v1/lnp/optimize</code> &mdash; LNP delivery formulation optimiser</li>
+                                                <li class="flex gap-2"><span class="text-blue-400">+</span> REST API: <code class="bg-black/40 px-1 rounded font-mono text-xs">/api/v1/lnp/optimize</code> &mdash; LNP delivery formulation optimiser</li>
 
                         <li class="flex gap-2"><span class="text-blue-400">+</span> REST API: <code class="bg-black/40 px-1 rounded font-mono text-xs">/api/v1/webhooks/subscribe</code> &mdash; HMAC-SHA256 signed callback system</li>
 
@@ -14017,7 +13940,7 @@ RATE_LIMITS = {
                                 $$\text{PRS}_{\text{total}} = \sum_{i} \beta_i G_i + \sum_{i < j} \gamma_{ij} G_i G_j$$
                             </p>
                             <p class="text-xs text-slate-400 mt-2">
-                                Horvath Age Accel: $\Delta \text{Age} = 0.085 \times \text{PRS}_{\text{total}}$ (years).
+                                Transcriptomic Age Acceleration: $\Delta \text{Score} = 0.085 \times \text{PRS}_{\text{total}}$.
                             </p>
                         </div>
                         <div class="code-block p-4 rounded-xl">
@@ -14095,7 +14018,7 @@ RATE_LIMITS = {
                         <div class="code-block p-4 rounded-xl">
                             <div class="text-xs text-slate-400 mb-2 font-mono">AlphaZen RL Policy Search Reward Function</div>
                             <p class="text-sm font-mono text-emerald-300">
-                                $$R = w_1 \Delta \text{Horvath} - w_2 \text{CardioRisk} - w_3 \text{OncogenicRisk} + w_4 \text{Yield}$$
+                                $$R = w_1 \Delta \text{Fidelity} - w_2 \text{CardioRisk} - w_3 \text{OncogenicRisk} + w_4 \text{Yield}$$
                             </p>
                             <p class="text-xs text-slate-400 mt-2">
                                 PPO self-play search across 36 TFs and 127 small molecules.

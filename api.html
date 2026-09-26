@@ -139,9 +139,7 @@ nav, .nav-dock, #mob-nav {
                 <div>
                     <h3 class="font-outfit text-xs font-black uppercase tracking-wider text-zinc-500 mb-3">Endpoints</h3>
                     <ul class="space-y-2.5 font-medium text-zinc-400 font-mono text-xs">
-                        <li><a href="#endpoint-safety" class="hover:text-white transition-colors">POST /safety/audit</a></li>
                         <li><a href="#endpoint-fold" class="hover:text-white transition-colors">POST /structure/fold</a></li>
-                        <li><a href="#endpoint-perturbation" class="hover:text-white transition-colors">POST /predict/perturbation</a></li>
                         <li><a href="#endpoint-lnp" class="hover:text-white transition-colors">POST /lnp/optimize</a></li>
                         <li><a href="#endpoint-webhooks" class="hover:text-white transition-colors">POST /webhooks/subscribe</a></li>
                         <li><a href="#endpoint-jobs" class="hover:text-white transition-colors">GET /jobs/{id}</a></li>
@@ -252,74 +250,6 @@ nav, .nav-dock, #mob-nav {
             <section class="space-y-12 border-t border-zinc-900 pt-16">
                 <h2 class="font-outfit text-2xl font-black text-white">4. Endpoint References</h2>
 
-                <!-- POST /safety/audit -->
-                <div id="endpoint-safety" class="border border-zinc-900 bg-zinc-950/40 rounded-3xl p-8 space-y-6">
-                    <div class="flex items-center gap-3">
-                        <span class="border border-white bg-white text-black font-mono font-bold text-[10px] px-2 py-0.5 rounded tracking-widest uppercase">POST</span>
-                        <span class="font-mono text-white font-bold">/api/v1/safety/audit</span>
-                    </div>
-                    <p class="text-zinc-400 text-sm leading-relaxed">
-                        Evaluates biological sequences or transcriptomic/epigenetic datasets for oncogenic safety compliance and calculates true biological age using the Meyer-Schumacher BiT Age transcriptomic clock (Aging Cell 2021) and cross-modal 353-CpG Horvath Epigenetic Clock model coefficients.
-                    </p>
-                    
-                    <div class="space-y-3">
-                        <span class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest font-outfit">Request Schema</span>
-                        <pre class="bg-black border border-zinc-900 p-4 rounded-xl font-mono text-xs text-zinc-300 overflow-x-auto"><code>{
-  "factors": [
-    "GATA4",
-    "TBX5",
-    "OCT4"
-  ],
-  "cpg_methylation": {
-    "cg00000292": 0.12,
-    "cg00002033": 0.85,
-    "cg00005847": 0.04
-  }
-}</code></pre>
-                    </div>
-
-                    <div class="space-y-3">
-                        <span class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest font-outfit">Response Schema</span>
-                        <pre class="bg-black border border-zinc-900 p-4 rounded-xl font-mono text-xs text-zinc-300 overflow-x-auto"><code>{
-  "status": "success",
-  "data": {
-    "approved_factors": [
-      "GATA4",
-      "TBX5",
-      "OCT4"
-    ],
-    "blocked_factors": [
-      "c-MYC"
-    ],
-    "sirtuin_engagement": {
-      "pathway_score": 0.82,
-      "targeted_sirtuins": [
-        "SIRT1",
-        "SIRT6"
-      ]
-    },
-    "bit_age_report": {
-      "clock_type": "Meyer-Schumacher BiT Age (Aging Cell 2021)",
-      "predicted_age_delta_years": -13.0,
-      "theoretical_accuracy_r": null,
-      "binarized_state_fidelity": 100.0
-    },
-    "horvath_clock_impact": {
-      "predicted_biological_age": 42.15,
-      "probes_matched": 120,
-      "probes_defaulted": 233,
-      "total_clock_probes": 353
-    },
-    "safety_summary": "Passed pioneer safety gate. OSK partial mode active. Blocked oncogene: c-MYC."
-  },
-  "meta": {
-    "model_version": "zenith-v31.0",
-    "credits_used": 1,
-    "compute_time_ms": 12
-  }
-}</code></pre>
-                    </div>
-                </div>
 
                 <!-- POST /structure/fold -->
                 <div id="endpoint-fold" class="border border-zinc-900 bg-zinc-950/40 rounded-3xl p-8 space-y-6">
@@ -372,38 +302,6 @@ nav, .nav-dock, #mob-nav {
                     </div>
                 </div>
 
-                <!-- POST /predict/perturbation -->
-                <div id="endpoint-perturbation" class="border border-zinc-900 bg-zinc-950/40 rounded-3xl p-8 space-y-6">
-                    <div class="flex items-center gap-3">
-                        <span class="border border-white bg-white text-black font-mono font-bold text-[10px] px-2 py-0.5 rounded tracking-widest uppercase">POST</span>
-                        <span class="font-mono text-white font-bold">/api/v1/predict/perturbation</span>
-                    </div>
-                    <p class="text-zinc-400 text-sm leading-relaxed">
-                        Queries live datasets from the Chan Zuckerberg Cellxgene Census, feeds the expression vectors into the scVI specialist models, executes transcriptomic perturbations, and prepares results in standard AnnData format.
-                    </p>
-
-                    <div class="space-y-3">
-                        <span class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest font-outfit">Request Schema</span>
-                        <pre class="bg-black border border-zinc-900 p-4 rounded-xl font-mono text-xs text-zinc-300 overflow-x-auto"><code>{
-  "baseline_cell_type": "ventricular_myocyte",
-  "perturbation_factors": {
-    "GATA4": 1.5,
-    "SIRT1": 2.0
-  },
-  "census_filter": "tissue_general == 'heart' and disease == 'normal'"
-}</code></pre>
-                    </div>
-
-                    <div class="space-y-3">
-                        <span class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest font-outfit">Response Schema</span>
-                        <pre class="bg-black border border-zinc-900 p-4 rounded-xl font-mono text-xs text-zinc-300 overflow-x-auto"><code>{
-  "job_id": "job_01h26c483aefd28e",
-  "status": "pending",
-  "status_url": "https://niluslab.com/api/v1/jobs/job_01h26c483aefd28e",
-  "eta_seconds": 6.0
-}</code></pre>
-                    </div>
-                </div>
 
                 <!-- POST /lnp/optimize -->
                 <div id="endpoint-lnp" class="border border-zinc-900 bg-zinc-950/40 rounded-3xl p-8 space-y-6">
@@ -424,7 +322,7 @@ nav, .nav-dock, #mob-nav {
     "cholesterol": 0.385,
     "peg": 0.015
   },
-  "np_ratio": 6.0,
+  "np_ratio": 6.2,
   "active_ligand_conjugation": true,
   "ligand_density": 2.5,
   "peg_mw": 2000.0
@@ -441,7 +339,7 @@ nav, .nav-dock, #mob-nav {
     "liver_sequestration_score": 0.12,
     "endosomal_escape_percent": 34.2,
     "particle_size_nm": 82.5,
-    "zeta_potential_mv": -14.2,
+    "zeta_potential_mv": -15.4,
     "encapsulation_efficiency_percent": 94.2,
     "cytotoxicity_index": 0.15,
     "formulation_status": "OPTIMAL",
@@ -512,7 +410,7 @@ nav, .nav-dock, #mob-nav {
     "job_id": "job_01h26c483aefd28e",
     "status": "running",
     "status_url": "https://niluslab.com/api/v1/jobs/job_01h26c483aefd28e",
-    "eta_seconds": 6.0
+    "eta_seconds": 5.0
   },
   "meta": {
     "model_version": "zenith-v31.0",
@@ -699,7 +597,7 @@ fetchProteinFold('MGDVEKGKKIFIMKCSQCHTVEKGGKHKTGPNLHGLFG');</code></pre>
       "cholesterol": 0.385,
       "peg": 0.015
     },
-    "np_ratio": 6.0,
+    "np_ratio": 6.2,
     "active_ligand_conjugation": true,
     "ligand_density": 2.5,
     "peg_mw": 2000.0

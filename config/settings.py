@@ -15,7 +15,7 @@ class Settings(BaseSettings):
     ESMFOLD_API_URL: str = "https://api.esmatlas.com/foldSequence/v1/pdb/"
     ESMFOLD_TIMEOUT_SECONDS: float = 30.0
     ESMFOLD_MAX_SEQUENCE_LENGTH: int = 1000
-    ESMFOLD_FALLBACK_ENABLED: bool = True
+    ESMFOLD_FALLBACK_ENABLED: bool = False
     ESMFOLD_PROVIDER_NAME: str = "ESMFold"
     ESMFOLD_CACHE_ENABLED: bool = True
 

@@ -31,12 +31,9 @@ class TestPhase2Services(unittest.TestCase):
         print("Mendelian Randomisation Engine Test: PASSED")
 
     def test_mofa_multiomics_integration(self):
-        res = run_mofa_integration("PATIENT_TEST_001", n_factors=10)
-
-        self.assertEqual(len(res["latent_factor_loadings"]), 10)
-        self.assertIn("horvath_epigenetic_age_delta_years", res)
-        self.assertGreater(len(res["multiomic_therapeutic_targets"]), 0)
-        print("MOFA+ Multi-Omics Engine Test: PASSED")
+        with self.assertRaises(NotImplementedError):
+            run_mofa_integration("PATIENT_TEST_001", n_factors=10)
+        print("MOFA+ Multi-Omics Engine Decommission Test: PASSED")
 
     def test_epistatic_grn_causal_mapper(self):
         # 1. Cascade test

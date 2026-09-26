@@ -14,7 +14,7 @@
       "n_young": 66471,
       "n_aged": 21264,
       "rejuv_vector_magnitude": 0.6199,
-      "age_delta_years": 0.1,
+      "age_delta": 0.1,
       "n_genes_correlated": 4679,
       "pro_rejuvenation_genes": [
         {
@@ -627,7 +627,7 @@
       "n_young": 32227,
       "n_aged": 17839,
       "rejuv_vector_magnitude": 1.4293,
-      "age_delta_years": 0.1,
+      "age_delta": 0.1,
       "n_genes_correlated": 4697,
       "pro_rejuvenation_genes": [
         {
@@ -1240,7 +1240,7 @@
       "n_young": 16440,
       "n_aged": 16434,
       "rejuv_vector_magnitude": 0.5426,
-      "age_delta_years": -0.5,
+      "age_delta": -0.5,
       "n_genes_correlated": 4691,
       "pro_rejuvenation_genes": [
         {
@@ -1853,7 +1853,7 @@
       "n_young": 6713,
       "n_aged": 29191,
       "rejuv_vector_magnitude": 1.4971,
-      "age_delta_years": 0.3,
+      "age_delta": 0.3,
       "n_genes_correlated": 4580,
       "pro_rejuvenation_genes": [
         {
@@ -2466,7 +2466,7 @@
       "n_young": 7744,
       "n_aged": 6934,
       "rejuv_vector_magnitude": 0.5095,
-      "age_delta_years": 0.3,
+      "age_delta": 0.3,
       "n_genes_correlated": 4468,
       "pro_rejuvenation_genes": [
         {
@@ -3079,7 +3079,7 @@
       "n_young": 1829,
       "n_aged": 11358,
       "rejuv_vector_magnitude": 1.3889,
-      "age_delta_years": 1.0,
+      "age_delta": 1.0,
       "n_genes_correlated": 4305,
       "pro_rejuvenation_genes": [
         {
@@ -3692,7 +3692,7 @@
       "n_young": 6118,
       "n_aged": 4451,
       "rejuv_vector_magnitude": 1.9642,
-      "age_delta_years": 2.2,
+      "age_delta": 2.2,
       "n_genes_correlated": 4394,
       "pro_rejuvenation_genes": [
         {
@@ -4305,7 +4305,7 @@
       "n_young": 3176,
       "n_aged": 4704,
       "rejuv_vector_magnitude": 1.6163,
-      "age_delta_years": -0.7,
+      "age_delta": -0.7,
       "n_genes_correlated": 4401,
       "pro_rejuvenation_genes": [
         {
@@ -4918,7 +4918,7 @@
       "n_young": 2077,
       "n_aged": 4083,
       "rejuv_vector_magnitude": 1.0758,
-      "age_delta_years": 0.1,
+      "age_delta": 0.1,
       "n_genes_correlated": 4420,
       "pro_rejuvenation_genes": [
         {
@@ -5531,7 +5531,7 @@
       "n_young": 1232,
       "n_aged": 3350,
       "rejuv_vector_magnitude": 1.4342,
-      "age_delta_years": 0.0,
+      "age_delta": 0.0,
       "n_genes_correlated": 4291,
       "pro_rejuvenation_genes": [
         {
@@ -6144,7 +6144,7 @@
       "n_young": 1755,
       "n_aged": 1047,
       "rejuv_vector_magnitude": 1.0622,
-      "age_delta_years": 0.3,
+      "age_delta": 0.3,
       "n_genes_correlated": 4227,
       "pro_rejuvenation_genes": [
         {
@@ -6757,7 +6757,7 @@
       "n_young": 2196,
       "n_aged": 479,
       "rejuv_vector_magnitude": 0.732,
-      "age_delta_years": -0.8,
+      "age_delta": -0.8,
       "n_genes_correlated": 4334,
       "pro_rejuvenation_genes": [
         {

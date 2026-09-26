@@ -21,7 +21,6 @@ from config.settings import settings
 # Lazy import services to prevent startup memory overhead
 _lnp_optimizer = None
 _multiomics_service = None
-_horvath_clock = None
 _structural_folder = None
 _census_client = None
 
@@ -38,13 +37,6 @@ def get_multiomics_service():
         from services.multiomics_service import MultiOmicsPredictorService
         _multiomics_service = MultiOmicsPredictorService()
     return _multiomics_service
-
-def get_horvath_clock():
-    global _horvath_clock
-    if _horvath_clock is None:
-        from services.horvath_clock import HorvathClockService
-        _horvath_clock = HorvathClockService()
-    return _horvath_clock
 
 def get_structural_folder():
     global _structural_folder
@@ -181,230 +173,21 @@ def post_lnp_optimize(
     log_api_call(db, request, 200, duration, 1)
     return APIEnvelope(data=data, meta={"compute_time_ms": duration, "credits_used": 1})
 
-# --- Multi-Omics Perturbation ---
-# --- Async Census Perturbation Task Runner ---
-def run_local_census_perturbation_task(
-    job_id: str, 
-    payload: PerturbationRequest, 
-    census_client, 
-    predictor,
-    api_key_id: int = None
-):
-    jobs_db[job_id]["status"] = "running"
-    try:
-        # 1. Fetch cell vectors from Census (falls back to synthetic cardiac cells if offline)
-        census_data = census_client.fetch_donor_cells(
-            organism="homo_sapiens",
-            value_filter=payload.census_filter or "tissue_general == 'heart'",
-            max_cells=50
-        )
-        
-        expression_matrix = census_data["expression_matrix"]
-        metadata_list = census_data["metadata"]
-        genes = census_data["genes"]
-        
-        # 2. Simulate perturbation across the cell matrix
-        # For each cell, we calculate regulatory shifts based on MultiOmicsPredictorService
-        perturbed_matrix = expression_matrix.copy()
-        
-        for gene_name, dosage in payload.perturbation_factors.items():
-            if gene_name in genes:
-                col_idx = genes.index(gene_name)
-                # Over-express the factor
-                perturbed_matrix[:, col_idx] += float(dosage)
-                
-            # Cascade transcriptional activation matching Jasper PWM targets in predictor
-            if gene_name in predictor.factor_regulatory_weights:
-                weights = predictor.factor_regulatory_weights[gene_name]
-                for target_gene, weight in weights.items():
-                    if target_gene in genes:
-                        target_idx = genes.index(target_gene)
-                        perturbed_matrix[:, target_idx] += float(dosage) * weight
-                        
-        # Bound matrix values
-        perturbed_matrix = np.clip(perturbed_matrix, 0.0, 50.0)
-        
-        # 3. Simulate latent UMAP coordinates (dim 2)
-        num_cells = perturbed_matrix.shape[0]
-        latent_coords = np.random.normal(0, 1.0, size=(num_cells, 2))
-        # Project cardiac structural markers on UMAP space for visualization separation
-        if "TNNT2" in genes:
-            tnnt2_idx = genes.index("TNNT2")
-            latent_coords[:, 0] += perturbed_matrix[:, tnnt2_idx] * 2.0
-            
-        # 4. Update metadata with predicted clock outcomes
-        for i in range(num_cells):
-            cell_factors = {k: float(v) for k, v in payload.perturbation_factors.items()}
-            # Calculate single-cell metrics
-            single_cell_report = predictor.predict_perturbation_trajectory(
-                baseline_cell_type=payload.baseline_cell_type,
-                factors=cell_factors
-            )
-            metadata_list[i]["predicted_age_delta"] = single_cell_report.get("predicted_age_delta", 0.0)
-            metadata_list[i]["endothelial_rejuvenation_score"] = single_cell_report.get("endothelial_rejuvenation_score", 0.0)
-            metadata_list[i]["sirtuin_activity_index"] = single_cell_report.get("sirtuin_activity_index", 0.0)
-            
-        # 5. Serialize matrix to AnnData (.h5ad) file
-        from utils.anndata_helper import serialize_to_h5ad
-        filepath = serialize_to_h5ad(
-            genes=genes,
-            expression_matrix=perturbed_matrix,
-            latent_coords=latent_coords,
-            obs_metadata=metadata_list
-        )
-        
-        result_payload = {
-            "cell_count": num_cells,
-            "genes_count": len(genes),
-            "source_dataset": census_data["source"],
-            "download_url": f"/api/v1/jobs/{job_id}/download"
-        }
-        
-        jobs_db[job_id]["status"] = "completed"
-        jobs_db[job_id]["filepath"] = filepath
-        jobs_db[job_id]["result"] = result_payload
-        print(f"[CensusPerturbation] Completed! AnnData serialized to: {filepath}")
-        
-        # Dispatch webhook completion notification
-        if api_key_id:
-            from routers.webhooks import dispatch_webhook_sync
-            dispatch_webhook_sync(
-                api_key_id=api_key_id,
-                event_type="job.completed",
-                data={
-                    "job_id": job_id,
-                    "status": "completed",
-                    "result": result_payload
-                }
-            )
-        
-    except Exception as e:
-        jobs_db[job_id]["status"] = "failed"
-        jobs_db[job_id]["error"] = str(e)
-        
-        # Dispatch webhook failure notification
-        if api_key_id:
-            try:
-                from routers.webhooks import dispatch_webhook_sync
-                dispatch_webhook_sync(
-                    api_key_id=api_key_id,
-                    event_type="job.failed",
-                    data={
-                        "job_id": job_id,
-                        "status": "failed",
-                        "error": str(e)
-                    }
-                )
-            except Exception:
-                pass
-
-# --- Multi-Omics Perturbation ---
+# --- Multi-Omics Perturbation (Decommissioned) ---
 @router.post("/predict/perturbation")
-def post_predict_perturbation(
-    payload: PerturbationRequest, 
-    request: Request, 
-    background_tasks: BackgroundTasks,
-    response: Response,
-    db: Session = Depends(get_db),
-    predictor = Depends(get_multiomics_service),
-    census_client = Depends(get_census_client)
-):
-    start_time = time.time()
-    
-    # If census_filter is provided, run asynchronously and serialize to .h5ad
-    if payload.census_filter:
-        job_id = str(uuid.uuid4())
-        status_url = f"{request.base_url}api/v1/jobs/{job_id}"
-        
-        api_key_id = getattr(request.state, "api_key_id", None)
-        if not api_key_id:
-            api_key = getattr(request.state, "api_key", None)
-            try:
-                api_key_id = api_key.id if api_key else None
-            except Exception:
-                api_key_id = None
-        
-        jobs_db[job_id] = {
-            "job_id": job_id,
-            "status": "pending",
-            "status_url": status_url,
-            "eta_seconds": 6.0
-        }
-        
-        background_tasks.add_task(
-            run_local_census_perturbation_task,
-            job_id,
-            payload,
-            census_client,
-            predictor,
-            api_key_id
-        )
-        
-        duration = int((time.time() - start_time) * 1000)
-        log_api_call(db, request, 202, duration, 5)
-        response.status_code = 202
-        return AsyncJobResponse(
-            job_id=job_id,
-            status="pending",
-            status_url=status_url,
-            eta_seconds=6.0
-        )
-        
-    factors_map = payload.perturbation_factors if payload.perturbation_factors else {"GATA4": 3.0, "TBX5": 3.0, "MEF2C": 3.0, "HAND2": 3.0}
-    result = predictor.predict_perturbation_trajectory(
-        baseline_cell_type=payload.baseline_cell_type,
-        factors=factors_map
+def post_predict_perturbation():
+    raise HTTPException(
+        status_code=410,
+        detail="Endpoint decommissioned. Multi-omics perturbation prediction has been removed."
     )
-    
-    duration = int((time.time() - start_time) * 1000)
-    log_api_call(db, request, 200, duration, 2)
-    return APIEnvelope(data=result, meta={"compute_time_ms": duration, "credits_used": 2})
 
-# --- Safety & Clock Audit ---
-@router.post("/safety/audit", response_model=APIEnvelope)
-def post_safety_audit(
-    payload: SafetyAuditRequest, 
-    request: Request, 
-    db: Session = Depends(get_db),
-    horvath_clock = Depends(get_horvath_clock)
-):
-    start_time = time.time()
-    
-    from partial_safety import (
-        filter_for_partial_reprogramming,
-        score_sirtuin_pathway,
-        score_horvath_impact
+# --- Safety & Clock Audit (Decommissioned) ---
+@router.post("/safety/audit")
+def post_safety_audit():
+    raise HTTPException(
+        status_code=410,
+        detail="Endpoint decommissioned. Epigenetic clock and pioneer safety audit heuristics have been removed."
     )
-    
-    # 1. Pioneer factor filter
-    audit_report = filter_for_partial_reprogramming(
-        candidates=payload.factors,
-        mode="balanced",
-        bio_age=0.5
-    )
-    
-    # 2. Sirtuin engagement
-    sirt_report = score_sirtuin_pathway(payload.factors)
-    
-    # 3. Horvath clock calculation
-    if payload.cpg_methylation:
-        # Run actual 353-CpG Horvath mathematical predictor
-        horvath_report = horvath_clock.calculate_age(payload.cpg_methylation)
-    else:
-        # Fallback to heuristic loci hit rate
-        horvath_report = score_horvath_impact(payload.factors)
-    
-    data = {
-        "approved_factors": [item["gene"] for item in audit_report.get("approved", [])],
-        "blocked_factors": audit_report.get("blocked", []),
-        "sirtuin_engagement": sirt_report,
-        "horvath_clock_impact": horvath_report,
-        "safety_summary": audit_report.get("safety_summary", "")
-    }
-    
-    duration = int((time.time() - start_time) * 1000)
-    log_api_call(db, request, 200, duration, 1)
-    return APIEnvelope(data=data, meta={"compute_time_ms": duration, "credits_used": 1})
 
 # --- Async Job Check Status ---
 @router.get("/jobs/{job_id}", response_model=APIEnvelope)
@@ -474,7 +257,6 @@ def run_local_reprogramming_task(job_id: str, prompt: str, cell_type: str):
             "approved_candidates": [item["gene"] for item in audit_report.get("approved", [])],
             "blocked_candidates": audit_report.get("blocked", []),
             "sirtuin_activity_score": sirt_report.get("pathway_score", 0),
-            "age_reduction_estimate_years": 11.9,
             "af3_manifest": {
                 "name": "Zenith_AF3_Job",
                 "sequences": [
@@ -509,49 +291,13 @@ def post_reprogramming_run(
     log_api_call(db, request, 202, duration, 5)
     return AsyncJobResponse(job_id=job_id, status="pending", status_url=status_url, eta_seconds=5.0)
 
-# --- Async Virtual Trial Launcher ---
-def run_local_trial_task(job_id: str, payload: VirtualTrialRequest):
-    jobs_db[job_id]["status"] = "running"
-    try:
-        from bridge_server import get_dosage_optimizer
-        time.sleep(6) # Simulate SDE cohort trajectories
-        
-        # Build dummy trial telemetry
-        jobs_db[job_id]["status"] = "completed"
-        jobs_db[job_id]["result"] = {
-            "disease": payload.disease,
-            "protocol": payload.protocol,
-            "cohort_size": payload.cohort_size,
-            "p_value": 0.0034,
-            "average_age_reduction_years": 9.4,
-            "kaplan_meier_active_survival": [1.0, 0.98, 0.95, 0.92, 0.89],
-            "kaplan_meier_placebo_survival": [1.0, 0.94, 0.88, 0.82, 0.74],
-            "responder_status": "highly_significant"
-        }
-    except Exception as e:
-        jobs_db[job_id]["status"] = "failed"
-        jobs_db[job_id]["error"] = str(e)
-
-@router.post("/trials/run", response_model=AsyncJobResponse, status_code=202)
-def post_trials_run(
-    payload: VirtualTrialRequest,
-    background_tasks: BackgroundTasks,
-    request: Request,
-    db: Session = Depends(get_db)
-):
-    start_time = time.time()
-    job_id = str(uuid.uuid4())
-    status_url = f"{request.base_url}api/v1/jobs/{job_id}"
-    jobs_db[job_id] = {
-        "job_id": job_id,
-        "status": "pending",
-        "status_url": status_url,
-        "eta_seconds": 6.0
-    }
-    background_tasks.add_task(run_local_trial_task, job_id, payload)
-    duration = int((time.time() - start_time) * 1000)
-    log_api_call(db, request, 202, duration, 10)
-    return AsyncJobResponse(job_id=job_id, status="pending", status_url=status_url, eta_seconds=6.0)
+# --- Virtual Trials Simulation (Decommissioned) ---
+@router.post("/trials/run")
+def post_trials_run():
+    raise HTTPException(
+        status_code=410,
+        detail="Endpoint decommissioned. Virtual trial simulation has been removed."
+    )
 
 # --- ESMFold 3D Structure Folding ---
 @router.post("/structure/fold", response_model=APIEnvelope)

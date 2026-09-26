@@ -361,14 +361,14 @@ class TestBiTAgeClock(unittest.TestCase):
         self.assertIn("SIRT1", report["genes_hit"])
         self.assertIn("GATA4", report["genes_hit"])
         self.assertEqual(report["clock_type"], "Meyer-Schumacher BiT Age (Aging Cell 2021)")
-        self.assertEqual(report["theoretical_accuracy_r"], 0.982)
+        self.assertIsNone(report["theoretical_accuracy_r"])
 
     def test_filter_includes_bit_age_report(self):
         """filter_for_partial_reprogramming must output bit_age_report alongside horvath_report."""
         res = filter_for_partial_reprogramming(["SIRT1", "FOXO3", "GATA4"], mode="balanced")
         self.assertIn("bit_age_report", res)
         self.assertIn("horvath_report", res)
-        self.assertEqual(res["bit_age_report"]["theoretical_accuracy_r"], 0.982)
+        self.assertIsNone(res["bit_age_report"]["theoretical_accuracy_r"])
 
 
 # ============================================================

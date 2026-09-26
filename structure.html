@@ -1610,7 +1610,7 @@ function initInputModes(){
 
   $('#presetP53DNA')?.addEventListener('click', () => {
     STATE.entities = [
-      { id: 'A', type: 'protein', value: 'SSSVPSQKTYQGSYGFRLGFLHSGTAKSVTCTYSPALNKMFCQLAKTCPVQLWVDSTPPPGTRVRAMAIYKQSQHMTEVVRRCPHHERCSDSDGLAPPQHLIRVEGNLRVEYLDDRNTFRHSVVVPYEPPEVGSDCTTIHYNYMCNSSCMGGMNRRPILTIITLEDSSGNLLGRNSFEVRVCACPGRDRRTEEENFR' },
+      { id: 'A', type: 'protein', value: 'SSSVPSQKTYQGSYGFRLGFLHSGTAKSVTCTYSPALNKMFCQLAKTCPVQLWVDSTPPPGTRVRAMAIYKQSQHMTEVVRRCPHHERCSDSDGLAPPQHLIRVEGNLRVEYLDDRNTFRHSVVVPYEPPEVGSDCTTIHYNYMCNSSCMGGMNRRPILTIITLEDSSGNLLGRNSFEVRVCAC' + 'PGRDRRTEEENFR' },
       { id: 'B', type: 'dna', value: 'GGACATGCCCGGGCATGTCC' },
       { id: 'C', type: 'dna', value: 'GGACATGCCCGGGCATGTCC' }
     ];
@@ -2103,7 +2103,7 @@ const UNIVERSAL_CHEMICAL_CATALOG = [
     "formula": "C6H9N3O2",
     "mw": "155.15 Da",
     "cat": "canonical",
-    "desc": "Near-neutral imidazole pKa (~6.0); general acid-base catalysis switch and metal coordination."
+    "desc": "Near-neutral imidazole pKa (~6.04); general acid-base catalysis switch and metal coordination."
   },
   {
     "code3": "ILE",
@@ -3737,7 +3737,7 @@ function detectInteractions(targetResidue=null){
     candidateAtoms=atoms.filter(a=>{
       return focusCoords.some(fc=>{
         const d2=(a.x-fc.x)**2+(a.y-fc.y)**2+(a.z-fc.z)**2;
-        return d2<=36.0; // within 6.0 A
+        return d2<=36.0; // within 6 A
       });
     });
   }

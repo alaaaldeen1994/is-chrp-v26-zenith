@@ -52,36 +52,6 @@ class CardiacEnsembleClock:
             "cg05575921": -0.085, "cg08097417": 0.063, "cg22512670": -0.049
         }
 
-    def _synthesize_probe_betas(
-        self, 
-        chronological_age: float, 
-        rejuvenation_target: float
-    ) -> Dict[str, float]:
-        """
-        Biophysically synthesizes a complete 353+ CpG beta-value map based on Horvath linear sum equation.
-        """
-        betas = {}
-        coefs = self.horvath_service.coefficients
-        intercept = self.horvath_service.intercept
-        
-        target_bio_age = max(20.0, chronological_age - rejuvenation_target)
-        target_f_age = (target_bio_age - 20.0) / 21.0
-        
-        base_sum = intercept + sum(c * 0.50 for c in coefs.values())
-        needed_delta = target_f_age - base_sum
-        sum_sq_coef = sum(c**2 for c in coefs.values())
-        
-        for p, c in coefs.items():
-            beta = 0.50 + (needed_delta * c / (sum_sq_coef + 1e-6))
-            betas[p] = max(0.0, min(1.0, float(beta)))
-            
-        for p, meta in self.ventricular_hf_markers.items():
-            w = meta["weight"]
-            base = 0.50 + (0.05 if w > 0 else -0.05) * ((chronological_age - target_bio_age) / 10.0)
-            betas[p] = max(0.05, min(0.95, float(base)))
-
-        return betas
-
     def predict_ensemble_age(
         self, 
         methylation_betas: Optional[Dict[str, float]] = None,
@@ -89,11 +59,20 @@ class CardiacEnsembleClock:
         rejuvenation_target: float = 10.0
     ) -> Dict[str, Any]:
         """
-        Calculates consensus biological age and age reversal delta across the multi-clock ensemble.
-        Calculates probe-level predictions for Horvath 353-CpG, Krolevets HF, and Hannum vascular clocks.
+        Calculates consensus biological age across the multi-clock ensemble when empirical
+        DNA methylation beta values are provided.
+        When methylation array data is absent, returns None and PERIHEART LODO baseline.
         """
         if methylation_betas is None or len(methylation_betas) < 50:
-            methylation_betas = self._synthesize_probe_betas(chronological_age, rejuvenation_target)
+            return {
+                "ensemble_biological_age": None,
+                "chronological_age": round(chronological_age, 1),
+                "rejuvenation_delta_years": None,
+                "status": "AWAITING_METHYLATION_ARRAY",
+                "message": "DNA methylation array data required for epigenetic age estimation. Synthetic probe fallback disabled.",
+                "periheart_lodo_mae_baseline_years": 6.97,
+                "component_clocks": {}
+            }
 
         # 1. Horvath 353-CpG Base Prediction (Genome Biology 2013)
         horvath_res = self.horvath_service.calculate_age(methylation_betas)
@@ -119,9 +98,15 @@ class CardiacEnsembleClock:
             
         hannum_bio_age = max(20.0, min(100.0, horvath_bio_age + (hannum_sum * 10.0)))
 
-        # 4. Meyer-Schumacher BiT Age Binarized Transcriptomic Prediction (Aging Cell 2021)
-        bit_res = self.bit_clock_service.calculate_age(chronological_age=chronological_age, rejuvenation_target=rejuvenation_target)
-        bit_bio_age = float(bit_res["predicted_bit_age"])
+        # 4. Transcriptomic Component (Optional / Handled if calibrated checkpoint present)
+        bit_res = None
+        bit_bio_age = None
+        try:
+            bit_res = self.bit_clock_service.calculate_age(chronological_age=chronological_age, rejuvenation_target=rejuvenation_target)
+            bit_bio_age = float(bit_res.get("predicted_bit_age", 0.0))
+        except (RuntimeError, Exception):
+            bit_res = None
+            bit_bio_age = None
 
         # 5. EnsembleAge Weighted Composite Calculation (Haghani et al., GeroScience 2026)
         ensemble_bio_age = (
@@ -133,11 +118,21 @@ class CardiacEnsembleClock:
         age_delta = round(ensemble_bio_age - chronological_age, 1)
 
         # 95% Confidence Interval Calculation
-        clock_predictions = [bit_bio_age, horvath_bio_age, ventricular_bio_age, hannum_bio_age]
+        clock_predictions = [horvath_bio_age, ventricular_bio_age, hannum_bio_age]
+        if bit_bio_age is not None:
+            clock_predictions.append(bit_bio_age)
         std_err = float(np.std(clock_predictions) / math.sqrt(len(clock_predictions)))
         ci_margin = max(1.2, round(1.96 * std_err, 1))
         ci_95_low = round(age_delta - ci_margin, 1)
         ci_95_high = round(age_delta + ci_margin, 1)
+
+        components = {
+            "horvath_353_pan_tissue": round(horvath_bio_age, 1),
+            "krolevets_ventricular_hf": round(ventricular_bio_age, 1),
+            "hannum_vascular_core": round(hannum_bio_age, 1)
+        }
+        if bit_bio_age is not None:
+            components["bit_age_transcriptomic"] = round(bit_bio_age, 1)
 
         return {
             "ensemble_biological_age": round(ensemble_bio_age, 1),
@@ -145,22 +140,14 @@ class CardiacEnsembleClock:
             "rejuvenation_delta_years": age_delta,
             "ci_95_range": [ci_95_low, ci_95_high],
             "confidence_interval_str": f"{ci_95_low}y to {ci_95_high}y",
-            "component_clocks": {
-                "bit_age_transcriptomic": round(bit_bio_age, 1),
-                "horvath_353_pan_tissue": round(horvath_bio_age, 1),
-                "krolevets_ventricular_hf": round(ventricular_bio_age, 1),
-                "hannum_vascular_core": round(hannum_bio_age, 1)
-            },
-            "primary_transcriptomic_clock": "Meyer-Schumacher BiT Age (Aging Cell 2021)",
-            "bit_age_report": bit_res,
+            "component_clocks": components,
             "probes_evaluated": len(methylation_betas),
             "ventricular_hf_marker_count": len(self.ventricular_hf_markers),
             "literature_benchmarks": [
-                "Meyer & Schumacher, Aging Cell (2021) / Nature Aging (2024) — BiT age binarized transcriptomic clock",
                 "Haghani et al., GeroScience (2026) — EnsembleAge framework",
-                "Krolevets et al., EBioMedicine (2026) — Ventricular heart failure methylation",
-                "Horvath, Genome Biology (2013) — 353-CpG pan-tissue clock",
-                "Hannum et al., Molecular Cell (2013) — 71-CpG blood/vascular clock"
+                "Krolevets et al., EBioMedicine (2026) — Ventricular HF DNAm loci",
+                "Horvath, Genome Biology (2013) — Pan-tissue 353-CpG clock",
+                "Hannum et al., Mol Cell (2013) — Vascular core clock"
             ]
         }
 

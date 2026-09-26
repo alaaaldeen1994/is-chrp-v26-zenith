@@ -64,7 +64,7 @@ class StructuralFolderService:
         if settings.ESMFOLD_CACHE_ENABLED and db is not None:
             try:
                 cached_entry = db.query(StructureCache).filter(StructureCache.sequence_hash == sequence_hash).first()
-                if cached_entry:
+                if cached_entry and cached_entry.source != "Zenith-Synthetic-Fallback":
                     duration = time.time() - start_time
                     metrics = {
                         "length": cached_entry.metrics_length,
@@ -90,17 +90,11 @@ class StructuralFolderService:
 
         # 3. Check settings.ESMFOLD_ENABLED
         if not settings.ESMFOLD_ENABLED:
-            if settings.ESMFOLD_FALLBACK_ENABLED:
-                res = self._generate_fallback_pdb(cleaned_seq, "ESMFold is disabled in settings")
-                res["cache_hit"] = False
-                self._save_to_cache_if_enabled(db, sequence_hash, cleaned_seq, res)
-                return res
-            else:
-                return {
-                    "status": "error",
-                    "error_type": "disabled",
-                    "message": "ESMFold service is disabled and fallback is not enabled."
-                }
+            return {
+                "status": "error",
+                "error_type": "disabled",
+                "message": "ESMFold service is disabled in settings."
+            }
 
         # 4. Query live ESMFold provider
         try:
@@ -156,35 +150,22 @@ class StructuralFolderService:
                 return res
             else:
                 error_msg = f"HTTP {response.status_code}"
-                print(f"[ESMFold] Remote service returned status: {response.status_code}. Using fallback...")
-                if settings.ESMFOLD_FALLBACK_ENABLED:
-                    res = self._generate_fallback_pdb(cleaned_seq, f"ESMFold API Error: {error_msg}")
-                    res["cache_hit"] = False
-                    self._save_to_cache_if_enabled(db, sequence_hash, cleaned_seq, res)
-                    return res
-                else:
-                    return {
-                        "status": "error",
-                        "error_type": "provider_error",
-                        "message": f"External ESMFold provider failed with status {response.status_code} and fallback is disabled."
-                    }
-                
-        except Exception as e:
-            error_msg = str(e)
-            # Make sure we don't leak secrets or tokens if they are in the error string
-            safe_error = re.sub(r'Bearer\s+[a-zA-Z0-9_\-\.]+', 'Bearer ****', error_msg)
-            print(f"[ESMFold] Connection error: {safe_error}. Using fallback...")
-            if settings.ESMFOLD_FALLBACK_ENABLED:
-                res = self._generate_fallback_pdb(cleaned_seq, f"Connection Failed: {safe_error}")
-                res["cache_hit"] = False
-                self._save_to_cache_if_enabled(db, sequence_hash, cleaned_seq, res)
-                return res
-            else:
+                print(f"[ESMFold] Remote service returned status: {response.status_code}.")
                 return {
                     "status": "error",
                     "error_type": "provider_error",
-                    "message": f"External ESMFold provider connection failed: {safe_error} and fallback is disabled."
+                    "message": f"External ESMFold provider failed with status {response.status_code}."
                 }
+                
+        except Exception as e:
+            error_msg = str(e)
+            safe_error = re.sub(r'Bearer\s+[a-zA-Z0-9_\-\.]+', 'Bearer ****', error_msg)
+            print(f"[ESMFold] Connection error: {safe_error}.")
+            return {
+                "status": "error",
+                "error_type": "provider_error",
+                "message": f"External ESMFold provider connection failed: {safe_error}."
+            }
 
     def _validate_pdb_content(self, pdb_content: str, expected_length: int) -> bool:
         if not pdb_content or not pdb_content.strip():
@@ -238,61 +219,8 @@ class StructuralFolderService:
         return None
 
     def _generate_fallback_pdb(self, sequence: str, reason: str) -> Dict[str, Any]:
-        """Generates a syntactically correct fallback PDB structure file."""
-        lines = [
-            f"REMARK 250 ESMFold API call failed: {reason}",
-            f"REMARK 250 Generated synthetic biological residue coordinates as fallback.",
-            f"TITLE     Synthetic fold projection - Zenith v30.0"
-        ]
-        
-        # Simple helix simulation for fallback visualization
-        r = 2.3  # Helix radius
-        z_step = 1.5  # helical rise per residue
-        ang_step = 1.7  # ~100 degrees helical rotation
-        
-        atom_index = 1
-        for res_idx, aa in enumerate(sequence):
-            theta = res_idx * ang_step
-            x = r * math.sin(theta)
-            y = r * math.cos(theta)
-            z = res_idx * z_step
-            
-            # Map single letter AA code to three-letter residue name
-            res_map = {
-                'A': 'ALA', 'R': 'ARG', 'N': 'ASN', 'D': 'ASP', 'C': 'CYS',
-                'E': 'GLU', 'Q': 'GLN', 'G': 'GLY', 'H': 'HIS', 'I': 'ILE',
-                'L': 'LEU', 'K': 'LYS', 'M': 'MET', 'F': 'PHE', 'P': 'PRO',
-                'S': 'SER', 'T': 'THR', 'W': 'TRP', 'Y': 'TYR', 'V': 'VAL',
-                'X': 'UNK'
-            }
-            res_name = res_map.get(aa, 'ALA')
-            
-            # Atom line format matching PDB standard
-            lines.append(
-                f"ATOM  {atom_index:>5}  CA  {res_name} A{res_idx+1:>4}    {x:>8.3f}{y:>8.3f}{z:>8.3f}  1.00 50.00           C"
-            )
-            atom_index += 1
-            
-        lines.append("TER")
-        lines.append("END")
-        
-        return {
-            "status": "success",
-            "source": "Zenith-Synthetic-Fallback",
-            "fallback_used": True,
-            "provider": settings.ESMFOLD_PROVIDER_NAME,
-            "provider_status": "external_provider_failed",
-            "provider_error": reason,
-            "sequence_length": len(sequence),
-            "pdb_data": "\n".join(lines),
-            "metrics": {
-                "length": len(sequence),
-                "compute_time_sec": 0.01,
-                "predicted_lddt": 50.0
-            },
-            "warning": "External ESMFold provider failed. Synthetic fallback coordinates were generated and must not be interpreted as real protein folding output.",
-            "scientific_limitations": self._get_scientific_limitations(fallback_used=True)
-        }
+        """Decommissioned. Synthetic fallback PDB generation is disabled."""
+        raise RuntimeError("Synthetic fallback PDB generation has been decommissioned.")
 
     def _get_scientific_limitations(self, fallback_used: bool) -> list:
         if fallback_used:

@@ -280,7 +280,7 @@
     Restoring youthful cellular function and rescuing multigenic disease in human tissues requires an integrated system that can decode non-coding genetic variants, model complex gene regulatory networks, predict biophysical cardiotoxicity, and optimize molecular delivery. Here we present the architecture, methodology, and computational evaluation of <strong>Nilus Lab Zenith (v31.0)</strong>, a computational biology platform for in silico cellular trajectory modeling. Zenith comprises a generalist scVI foundation model (1,962,128 registered human single cells, 5,858 HVGs, 4 hidden layers &times; 1,024 units, 64 latent dimensions; 37,234,698 trainable parameters) and a cardiac specialist scVI model (trained on <strong>99,993 Specialist Cardiac cells from a 486,134-cell source atlas</strong> across 14 donors, 5,009 HVGs, 2 hidden layers &times; 128 units, 20 latent dimensions; 3,268,462 trainable parameters), coupled with biophysical 3D structural protein prediction (Boltz-1, ESMFold) and a 512-neuron spiking electrophysiological simulation (NEUROS-X). Across five computational layers, Zenith unifies epistatic polygenic risk scoring, 201-base-pair transcription factor binding motif scanning (AlphaGenome), causal inference via Mendelian Randomisation (IVW/Egger), multi-omics factor analysis (MOFA+), structural docking (AutoDock Vina), CRISPR Prime Editor pegRNA synthesis, selective organ targeting (SORT) 5-lipid nanoparticles, reinforcement learning cocktail discovery (AlphaZen), and two-compartment PK/PD virtual clinical trials. In leave-one-donor-out cross-validation across the 54-donor uniform-chemistry PERIHEART human right atrial cohort (392,819 single nuclei), a ridge-regularized pseudobulk aging clock achieved statistically significant out-of-donor age prediction (LODO MAE = 6.97 years, Pearson r = 0.4606, p = 4.57&times;10<sup>&minus;4</sup>; r = 0.4936 across all 8,560 active genes), while in silico screening of candidate reprogramming cocktails is gated by a 12-channel cardiomyocyte leaky integrate-and-fire electrophysiological simulation (&sigma;&sup2;<sub>ISI</sub> = 46.42). Zenith bridges computational predictions to physical laboratory execution via 1-click Opentrons OT-2 robotic pipetting protocol generation and microfluidic LNP formulation.
   </p>
   <div class="keywords">
-    <strong>Keywords:</strong> Cellular Rejuvenation, BiT Age Transcriptomic Clock, Epigenetic Clocks, Single-Cell Omics, Mendelian Randomisation, Prime Editing, Lipid Nanoparticles, Cardiac Electrophysiology, Autonomous AI Agents.
+    <strong>Keywords:</strong> Cellular Reprogramming, Transcriptomic Dynamics, Single-Cell Omics, Mendelian Randomisation, Prime Editing, Lipid Nanoparticles, Cardiac Electrophysiology, Autonomous AI Agents.
   </div>
 </div>
 
@@ -305,12 +305,12 @@
   <p class="no-indent"><strong>Epistatic Polygenic Risk Score (PRS)</strong>:</p>
   <div class="equation-box">
     PRS_total = &sum; &beta;<sub>i</sub> G<sub>i</sub> + &sum; &sum; &gamma;<sub>ij</sub> G<sub>i</sub> G<sub>j</sub> + &epsilon;<br>
-    &Delta;Horvath = 0.085 &times; PRS_total (years)
+    &Delta;Score = 0.085 &times; PRS_total
   </div>
 
   <p class="no-indent"><strong>AlphaGenome 201bp PWM Scanner</strong>: Evaluates 19 JASPAR 2024 pioneer TFs (GATA4, MEF2C, NKX2-5, POU5F1, SOX2, MYC). $|\Delta\text{PWM}| &gt; 2.0$ flags disrupted binding sites.</p>
 
-  <p class="no-indent"><strong>Structural Authority & Clocks</strong>: Incorporates Boltz-1 and ESMFold 3D structure predictions, the Meyer-Schumacher BiT age transcriptomic clock (binarized scRNA regression; the Zenith implementation is uncalibrated and reports no accuracy figure), cross-modal Horvath DNA methylation projection (353 CpGs), DunedinPACE rate, and ADMET cardiotoxicity filters.</p>
+  <p class="no-indent"><strong>Structural Authority & Phenotype Profiling</strong>: Incorporates Boltz-1 and ESMFold 3D structure predictions, transcriptomic cardiac state markers, and ADMET cardiotoxicity filters.</p>
 
   <h3>2.2 Layer 2: Causal Inference & Multi-Omics</h3>
   <p class="no-indent"><strong>Mendelian Randomisation (MR)</strong>:</p>
@@ -326,7 +326,7 @@
 
   <h3>2.4 Layer 4: AlphaZen RL & Virtual Trials</h3>
   <div class="equation-box">
-    R = w<sub>1</sub> &Delta;Horvath - w<sub>2</sub> CardioRisk - w<sub>3</sub> OncogenicRisk + w<sub>4</sub> Yield<br>
+    R = w<sub>1</sub> &Delta;Fidelity - w<sub>2</sub> CardioRisk - w<sub>3</sub> OncogenicRisk + w<sub>4</sub> Yield<br>
     dC<sub>1</sub>/dt = (D/V<sub>1</sub>) - (k<sub>12</sub> + k<sub>10</sub>)C<sub>1</sub> + k<sub>21</sub>C<sub>2</sub>
   </div>
   <p>AlphaZen reinforcement learning PPO policy search coupled with 2-compartment PK/PD virtual trial simulations ($N=1,000$).</p>
@@ -437,7 +437,7 @@ Predicted LNP Encapsulation Efficiency: 94.4% (model output) | >85% Predicted Ca
   <p class="no-indent"><strong>Safety & Robotics</strong>: NEUROS-X simulation reported ISI variance $\sigma^2_{\text{ISI}} = 46.42$ (stable conduction). Zenith exported an Opentrons OT-2 Python script (`zenith_opentrons_1785817573.py`) for automated 96-well pipetting.</p>
 
   <h2>4.0 Discussion</h2>
-  <p class="no-indent">Zenith v31.0 provides an exploratory in silico hypothesis-generation framework for modeling cellular reprogramming trajectories without pluripotency factors. Leveraging lncRNAs (TTN-AS1, MLIP-AS1) and sirtuins (SIRT1, SIRT6) is proposed as a candidate route to epigenetic age reversal with preserved membrane capacitance and titin structural integrity. This is an untested computational hypothesis: none of these factors has been evaluated in vitro or in vivo, and the single-cohort correlations supporting them did not replicate in the independent PERIHEART cohort (see Table 1 note).</p>
+  <p class="no-indent">Zenith v31.0 provides an exploratory in silico hypothesis-generation framework for modeling cellular reprogramming trajectories without pluripotency factors. Leveraging lncRNAs (TTN-AS1, MLIP-AS1) and sirtuins (SIRT1, SIRT6) is proposed as a candidate route to cellular state optimization with preserved membrane capacitance and titin structural integrity. This is an untested computational hypothesis: none of these factors has been evaluated in vitro or in vivo, and the single-cohort correlations supporting them did not replicate in the independent PERIHEART cohort (see Table 1 note).</p>
 
   <h2>5.0 Data & Code Availability</h2>
   <ul class="no-indent" style="font-size: 8pt; padding-left: 12px;">
@@ -450,9 +450,9 @@ Predicted LNP Encapsulation Efficiency: 94.4% (model output) | >85% Predicted Ca
     <h2>References</h2>
     <ol>
       <li>Lopez-Otin, C. et al. (2013). Hallmarks of aging. <em>Cell</em>, 153(6), 1194-1217.</li>
-      <li>Meyer, D. H., & Schumacher, B. (2021). BiT age: A transcriptome-based aging clock near the theoretical limit of accuracy. <em>Aging Cell</em>, 20(3), e13320.</li>
+      <li>Tucker, N. R., et al. (2020). Transcriptional and cellular diversity of the human heart. <em>Circulation</em>, 142(5), 466-482.</li>
       <li>Meyer, D. H., & Schumacher, B. (2024). Aging clocks based on accumulating stochastic variation. <em>Nature Aging</em>, 4, 431-444.</li>
-      <li>Horvath, S. (2013). DNA methylation age. <em>Genome Biol.</em>, 14(10), R115.</li>
+      <li>Kuppe, C., et al. (2022). Spatial multi-omic map of human myocardial infarction. <em>Nature</em>, 608(7924), 766-777.</li>
       <li>Takahashi, K. & Yamanaka, S. (2006). iPSC induction. <em>Cell</em>, 126(4), 663-676.</li>
       <li>Abad, M. et al. (2013). Reprogramming in vivo. <em>Nature</em>, 502, 340-345.</li>
       <li>Jumper, J. et al. (2021). AlphaFold. <em>Nature</em>, 596, 583-589.</li>

@@ -200,7 +200,7 @@ def main():
             "n_young": int(n_young),
             "n_aged": int(n_aged),
             "rejuv_vector_magnitude": round(magnitude, 4),
-            "age_delta_years": age_delta,
+            "age_delta": age_delta,
             "n_genes_correlated": len(correlations),
             "pro_rejuvenation_genes": pro_genes,
             "aging_marker_genes": aging_genes,
@@ -231,7 +231,7 @@ def main():
     print(f"COMPLETE: {len(cell_type_results)} cell types analysed")
     for k, v in cell_type_results.items():
         print(f"  {v['cell_type']}: {v['n_cells']:,} cells, "
-              f"delta={v['age_delta_years']}y, "
+              f"delta={v['age_delta']}y, "
               f"top={v['pro_rejuvenation_genes'][0]['gene']}")
     print(f"{'=' * 65}")
 

@@ -15,8 +15,6 @@ def test_multiomics_cardiac_cocktail():
     
     result = service.predict_perturbation_trajectory("fibroblast", factors)
     
-    assert "predicted_age_delta_years" in result
-    assert result["predicted_age_delta_years"] < -5.0  # Significant rejuvenation shift
     assert "transcriptomic_stability" in result
     assert result["transcriptomic_stability"] > 0.90   # High stability
     assert "expression_profiles" in result
@@ -34,7 +32,6 @@ def test_multiomics_oncogenic_myc():
     
     assert result["transcriptomic_stability"] < 0.90   # Compromised stability due to high MYC
     assert result["status"] == "METASTABLE_DRIFT"
-    assert result["predicted_age_delta_years"] > -5.0  # Rejuvenation is reduced or reversed due to oncogenic drift
 
 def test_multiomics_immune_cell():
     service = MultiOmicsPredictorService()

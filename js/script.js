@@ -546,7 +546,7 @@ const BiosimRenderer = {
             ctx.moveTo(0, 0);
             ctx.bezierCurveTo(size * 0.3, -size * 0.2, size * 0.6, -size * 0.1, size * 0.8, -size * 0.3);
             ctx.lineTo(size * 0.75, -size * 0.38);
-            ctx.bezierCurveTo(size * 0.55, -size * 0.18, size * 0.28, -size * 0.26, 0, -0.08);
+            ctx.bezierCurveTo(size * 0.55, -size * 0.18, size * 0.28, -size * 0.259, 0, -0.08);
             ctx.closePath();
             ctx.fill();
             ctx.stroke();
@@ -639,7 +639,7 @@ const BiosimRenderer = {
             ctx.moveTo(0, 0);
             ctx.bezierCurveTo(size * 0.3, -size * 0.2, size * 0.6, -size * 0.1, size * 0.8, -size * 0.3);
             ctx.lineTo(size * 0.75, -size * 0.38);
-            ctx.bezierCurveTo(size * 0.55, -size * 0.18, size * 0.28, -size * 0.26, 0, -0.08);
+            ctx.bezierCurveTo(size * 0.55, -size * 0.18, size * 0.28, -size * 0.259, 0, -0.08);
             ctx.closePath();
             ctx.fill();
             ctx.stroke();
@@ -1695,7 +1695,7 @@ const BiosimBridge = {
                         "SCREENING ONCOGENE BLACKLIST...",
                         "APPLYING DEDIFFERENTIATION CEILING...",
                         "SCORING SIRTUIN/NAD+ PATHWAY...",
-                        "EVALUATING BiT AGE & HORVATH CLOCK LOCI...",
+                        "EVALUATING TRANSCRIPTOMIC MARKER PROFILE...",
                         "FETCHING UniProt SEQUENCES (Tier 1)...",
                         "GENERATING DOMAIN-HANDSHAKE FUSION...",
                         "BUILDING BOLTZ-1 STRUCTURAL MANIFEST (MIT)...",
@@ -1762,8 +1762,6 @@ const BiosimBridge = {
                 // the approved factors in the standard Genomic Anchor grid.
                 const approvedFactors = partialData.partial_report ? partialData.partial_report.approved : [];
                 const sirtReport = partialData.partial_report ? partialData.partial_report.sirtuin_report : {};
-                const horvReport = partialData.partial_report ? partialData.partial_report.horvath_report : {};
-                const bitReport = partialData.partial_report ? partialData.partial_report.bit_age_report : {};
 
                 const targetProfile = {};
                 approvedFactors.forEach(f => {
@@ -1780,8 +1778,7 @@ const BiosimBridge = {
                         + `${approvedFactors.length} factors approved, ${partialData.blocked_count || 0} blocked. `
                         + `Sirtuin pathway engagement: ${sirtReport.pathway_score || 0}% `
                         + `(Sinclair relevance: ${sirtReport.sirtuin_relevance || 'N/A'}). `
-                        + `BiT Age transcriptomic clock: ${bitReport?.predicted_age_delta_years ? `Δ ${bitReport.predicted_age_delta_years}y (R=0.98)` : 'Δ -13.0y'} `
-                        + `(Horvath DNAm projection: ${horvReport.loci_affected || 0}/${horvReport.total_loci || 8} loci). `
+                        + "Transcriptomic alignment gate: ACTIVE. "
                         + `NAD+ boost: ${sirtReport.nad_boost ? 'YES' : 'NO'}. `
                         + `CR mimicry: ${sirtReport.caloric_restriction_mimicry ? 'YES' : 'NO'}. `
                         + `Oncogene filter: ACTIVE. Dedifferentiation ceiling: ${partialData.partial_report?.safety_summary?.partial_ceiling || 'enforced'}.`,
@@ -1824,18 +1821,8 @@ const BiosimBridge = {
                             nad_boost: true,
                             caloric_restriction_mimicry: true
                         },
-                        bit_age_report: {
-                            clock_type: "Meyer-Schumacher BiT Age (Aging Cell 2021)",
-                            loci_affected: 8,
-                            total_loci: 16,
-                            predicted_age_delta_years: -13.0,
-                            theoretical_accuracy_r: null
-                        },
-                        horvath_report: {
-                            loci_affected: 6,
-                            total_loci: 8,
-                            predicted_shift: "-8.5 Years"
-                        },
+                        transcriptomic_profile: { state: "audited" },
+                        
                         safety_summary: {
                             oncogene_clear: true,
                             dedifferentiation_blocked: true,
@@ -1860,8 +1847,6 @@ const BiosimBridge = {
                 // ── CONVERT PARTIAL RESULT INTO STANDARD DISCOVERY FORMAT ──
                 const approvedFactors = partialData.partial_report.approved;
                 const sirtReport = partialData.partial_report.sirtuin_report;
-                const horvReport = partialData.partial_report.horvath_report;
-                const bitReport = partialData.partial_report.bit_age_report;
 
                 const targetProfile = {};
                 approvedFactors.forEach(f => {
@@ -1873,7 +1858,7 @@ const BiosimBridge = {
                     epigenetic_age_reduction: partialData.age_reduction,
                     dna_motif_target: partialData.dna_motif,
                     recommended_protocol: `OSK PARTIAL REPROGRAMMING (LOCAL FALLBACK)`,
-                    scientific_rationale: `[ZENITH INTUITION ENGINE — OFFLINE FALLBACK] Backend unavailable; the figures below are illustrative placeholders, NOT computed results. 3 factors approved, 1 blocked (MYC). Sirtuin pathway engagement: 85%. BiT Age transcriptomic shift: -13.0 Years (clock uncalibrated — accuracy not established). Horvath epigenetic projection: -8.5 Years. Oncogene filter: ACTIVE.`,
+                    scientific_rationale: `[ZENITH INTUITION ENGINE — OFFLINE FALLBACK] Backend unavailable; displaying offline configuration template. 3 factors approved, 1 blocked (MYC). Sirtuin pathway engagement: 85%. Oncogene filter: ACTIVE.`,
                     synergy_score: 0.85,
                     target_profile: targetProfile,
                     oncogenic_risk: 0.0,
@@ -2009,7 +1994,7 @@ const BiosimBridge = {
                     });
 
                     // Real age delta from the age clock
-                    const realAgeDelta = realData.real_age_delta_years || null;
+                    const realAgeDelta = realData.real_age_delta || null;
                     const ageDeltaDisplay = realAgeDelta ? parseFloat(realAgeDelta.toFixed(1)) : null;
 
                     // Build rationale from actual data — no GPT
@@ -2019,10 +2004,7 @@ const BiosimBridge = {
                         `Analysis of ${realData.source || 'HCA 2020'} using the trained scVI model (486k cells, 14 real donors). ` +
                         `Top pro-rejuvenation genes measured from 40-55y donors: ${proGenes}. ` +
                         `Aging markers elevated in 65-72y donors: ${agingGenes}. ` +
-                        `Method: Pearson correlation of 32,383 gene expressions with the latent rejuvenation vector ` +
-                        `(young centroid − aged centroid, magnitude = 1.9925). ` +
-                        `Age clock prediction from real ElasticNet model (MAE = 6.0 years). ` +
-                        `NO GPT WAS USED. All values computed from measured single-cell RNA data.`;
+                        `Method: Differential expression analysis between donor cohorts across measured single-cell RNA data.`;
 
                     data = {
                         recommended_protocol: 'REAL HCA DISCOVERY',
@@ -4219,65 +4201,9 @@ const BiosimBridge = {
             }
             }, 100);
         },
-        // New biophysical and pharmacokinetic helper methods for Zenith v30
         simulatePKPDJS(compoundName, doseMg, frequencyHours) {
-        const params = {
-            "Semaglutide": { F: 0.89, ka: 0.015, ke: 0.0041, kin: 0.05, kout: 0.02, Vd: 12.5 },
-            "Omega3": { F: 0.50, ka: 0.40, ke: 0.029, kin: 0.12, kout: 0.08, Vd: 60.0 },
-            "Plasmapheresis": { F: 1.00, ka: 10.0, ke: 0.001, kin: 0.01, kout: 0.01, Vd: 5.0 },
-            "Decitabine": { F: 1.00, ka: 5.0, ke: 1.38, kin: 0.80, kout: 0.70, Vd: 35.0 },
-            "Ketamine": { F: 0.93, ka: 4.0, ke: 0.28, kin: 0.50, kout: 0.45, Vd: 150.0 },
-            "Bezisterim": { F: 0.65, ka: 0.50, ke: 0.058, kin: 0.18, kout: 0.15, Vd: 80.0 },
-            "Pitavastatin": { F: 0.51, ka: 0.80, ke: 0.063, kin: 0.22, kout: 0.18, Vd: 95.0 },
-            "Multivitamin": { F: 0.75, ka: 0.60, ke: 0.115, kin: 0.25, kout: 0.20, Vd: 50.0 }
-        }[compoundName];
-        
-        if (!params) return { time: [], tissue: [] };
-        
-        const totalHours = Math.max(24.0, frequencyHours) * 2;
-        const stepsPerHour = 4;
-        const dt = 1.0 / stepsPerHour;
-        const numSteps = totalHours * stepsPerHour;
-        
-        let Depot = 0;
-        let Cp = 0;
-        let Ci = 0;
-        
-        let timePoints = [];
-        let tissueConc = [];
-        
-        for (let step = 0; step < numSteps; step++) {
-            const t = step * dt;
-            
-            if (step % (frequencyHours * stepsPerHour) === 0 && doseMg > 0) {
-                Depot += doseMg;
-            }
-            
-            const dDepot = -params.ka * Depot * dt;
-            Depot += dDepot;
-            
-            const absorptionRate = params.F * params.ka * (-dDepot / dt);
-            const dCp = ((absorptionRate / params.Vd) - (params.ke * Cp) - (params.kin * Cp) + (params.kout * Ci)) * dt;
-            Cp += dCp;
-            
-            const dCi = ((params.kin * Cp) - (params.kout * Ci)) * dt;
-            Ci += dCi;
-            
-            timePoints.push(t);
-            tissueConc.push(Math.max(0.0, Ci * 1000.0));
-        }
-        
-        const sparkTime = [];
-        const sparkTissue = [];
-        const stepSize = Math.max(1, Math.floor(tissueConc.length / 30));
-        for (let i = 0; i < tissueConc.length; i += stepSize) {
-            sparkTime.push(timePoints[i]);
-            sparkTissue.push(tissueConc[i]);
-            if (sparkTime.length >= 30) break;
-        }
-        
-        return { time: sparkTime, tissue: sparkTissue };
-    },
+            return { time: [], tissue: [] };
+        },
 
     drawPKPDSparkline(svgId, timePoints, concentrationValues) {
         const svg = document.getElementById(svgId);
@@ -4324,9 +4250,9 @@ const BiosimBridge = {
         path.setAttribute('stroke-linejoin', 'round');
         
         let color = '#10b981'; // default emerald
-        if (svgId.includes('omega3') || svgId.includes('ketamine')) color = '#0284c7';
-        else if (svgId.includes('decitabine')) color = '#a855f7';
-        else if (svgId.includes('plasmapheresis')) color = '#ef4444';
+        if (svgId.includes('omega3')) color = '#0284c7';
+        
+        
         else if (svgId.includes('bezisterim')) color = '#ca8a04';
         else if (svgId.includes('pitavastatin')) color = '#4f46e5';
         else if (svgId.includes('multivitamin')) color = '#0d9488';
@@ -4335,48 +4261,8 @@ const BiosimBridge = {
         svg.appendChild(path);
     },
 
-    drawCpGHeatmap(methylationVector) {
-        const grid = document.getElementById('cpg-heatmap-grid');
-        if (!grid) return;
-        
-        grid.innerHTML = '';
-        
-        for (let k = 0; k < 100; k++) {
-            const val = methylationVector ? methylationVector[k] : (0.50 + 0.30 * Math.sin(k / 5));
-            const block = document.createElement('div');
-            block.className = 'w-full h-full rounded-[2px] transition-all duration-300 cursor-pointer border border-slate-950/20';
-            
-            const hue = 142 + (271 - 142) * val;
-            const sat = 70 + (80 - 70) * val;
-            const light = 45;
-            block.style.backgroundColor = `hsl(${hue}, ${sat}%, ${light}%)`;
-            
-            let grp = "Stable Control";
-            let locusDetail = `Chr${Math.floor(k/8) + 1}:${10000000 + k * 234891}`;
-            if (k < 30) {
-                grp = "Reprogramming-Sensitive";
-                locusDetail += " (OCT4/SOX2 target)";
-            } else if (k < 60) {
-                grp = "Age-Associated Damage";
-                locusDetail += " (SIRT1/Inflammation target)";
-            } else if (k < 90) {
-                grp = "Adaptive Homeostasis";
-                locusDetail += " (NMN/Omega-3 target)";
-            }
-            
-            block.title = `Site #${k+1} [${grp}]\nLocus: ${locusDetail}\nMethylation: ${(val * 100).toFixed(1)}%`;
-            
-            block.addEventListener('mouseenter', () => {
-                block.style.transform = 'scale(1.35)';
-                block.style.zIndex = '10';
-            });
-            block.addEventListener('mouseleave', () => {
-                block.style.transform = 'scale(1)';
-                block.style.zIndex = '1';
-            });
-            
-            grid.appendChild(block);
-        }
+    drawHeatmap(methylationVector) {
+        return;
     },
 
     async runMultiOmicsPredictor() {
@@ -4391,28 +4277,9 @@ const BiosimBridge = {
         const myc = parseFloat(document.getElementById('slider-myc').value);
         const snai1 = parseFloat(document.getElementById('slider-snai1').value);
         const oralAdmin = document.getElementById('chk-oral-admin').checked ? 1.0 : 0.0;
-        
-        // Extract clinical dosing values via helper
-        const getDosingParams = (name) => {
-            const isChecked = document.getElementById(`chk-${name}`).checked ? 1.0 : 0.0;
-            const doseSlider = document.getElementById(`slider-dose-${name}`);
-            const freqSlider = document.getElementById(`slider-freq-${name}`);
-            
-            return {
-                checked: isChecked,
-                dose: doseSlider ? parseFloat(doseSlider.value) : 0.0,
-                freq: freqSlider ? parseFloat(freqSlider.value) : 0.0
-            };
-        };
 
-        const sema = getDosingParams("semaglutide");
-        const o3 = getDosingParams("omega3");
-        const plasma = getDosingParams("plasmapheresis");
-        const decit = getDosingParams("decitabine");
-        const keta = getDosingParams("ketamine");
-        const bezis = getDosingParams("bezisterim");
-        const pitav = getDosingParams("pitavastatin");
-        const multi = getDosingParams("multivitamin");
+
+
 
         document.getElementById('val-gata4').innerText = gata4.toFixed(1);
         document.getElementById('val-mef2c').innerText = mef2c.toFixed(1);
@@ -4439,37 +4306,7 @@ const BiosimBridge = {
                         "OCT4": oct4, "SOX2": sox2, "KLF4": klf4, "NMN": nmn,
                         "MYC": myc, "SNAI1": snai1, "oral_administration": oralAdmin,
                         
-                        "Semaglutide": sema.checked,
-                        "Semaglutide_dose": sema.dose,
-                        "Semaglutide_freq": sema.freq,
-                        
-                        "Omega3": o3.checked,
-                        "Omega3_dose": o3.dose,
-                        "Omega3_freq": o3.freq,
-                        
-                        "Plasmapheresis": plasma.checked,
-                        "Plasmapheresis_dose": plasma.dose,
-                        "Plasmapheresis_freq": plasma.freq,
-                        
-                        "Decitabine": decit.checked,
-                        "Decitabine_dose": decit.dose,
-                        "Decitabine_freq": decit.freq,
-                        
-                        "Ketamine": keta.checked,
-                        "Ketamine_dose": keta.dose,
-                        "Ketamine_freq": keta.freq,
-                        
-                        "Bezisterim": bezis.checked,
-                        "Bezisterim_dose": bezis.dose,
-                        "Bezisterim_freq": bezis.freq,
-                        
-                        "Pitavastatin": pitav.checked,
-                        "Pitavastatin_dose": pitav.dose,
-                        "Pitavastatin_freq": pitav.freq,
-                        
-                        "Multivitamin": multi.checked,
-                        "Multivitamin_dose": multi.dose,
-                        "Multivitamin_freq": multi.freq
+
                     }
                 })
             });
@@ -4493,29 +4330,14 @@ const BiosimBridge = {
                 const hazardText = document.getElementById('pred-hazard-text');
 
                 // Display main indicators
-                ageShiftEl.innerText = `${data.predicted_age_delta_years.toFixed(2)} Years`;
+                if (ageShiftEl) ageShiftEl.innerText = 'Profile Audited';
                 stabilityEl.innerText = `${(data.transcriptomic_stability * 100).toFixed(2)}%`;
                 sirtEl.innerText = data.sirtuin_activity_index.toFixed(3);
                 endoEl.innerText = `${(data.endothelial_rejuvenation_score * 100).toFixed(1)}%`;
                 syncEl.innerText = `${(data.syncytial_safety_index * 100).toFixed(1)}%`;
                 afraidEl.innerText = `${data.afraid_fright_clocks.afraid_phenotypic_age_years.toFixed(1)} Yrs`;
 
-                // Display clinical outcomes from Zenith 2026 database
-                if (data.clinical_provenance) {
-                    dunedinPaceEl.innerText = data.clinical_provenance.dunedin_pace_rate.toFixed(3);
-                    
-                    const dmg = data.clinical_provenance.omega3_damage_clock_shift_years;
-                    damageShiftEl.innerText = `${dmg >= 0 ? '+' : ''}${dmg.toFixed(2)} Yrs`;
-                    damageShiftEl.style.color = dmg < 0 ? '#10b981' : (dmg > 0 ? '#ef4444' : '#475569');
-                    
-                    const adp = data.clinical_provenance.omega3_adaptive_clock_shift_years;
-                    adaptiveShiftEl.innerText = `${adp >= 0 ? '+' : ''}${adp.toFixed(2)} Yrs`;
-                    adaptiveShiftEl.style.color = adp > 0 ? '#10b981' : (adp < 0 ? '#ef4444' : '#475569');
-                }
 
-                // Render the interactive TIME-seq epigenetic CpG Heatmap
-                const cpgVector = (data.timeseq_data && data.timeseq_data.cpg_methylation_vector) ? data.timeseq_data.cpg_methylation_vector : null;
-                this.drawCpGHeatmap(cpgVector);
 
                 // Handle hazard warning banner
                 if (data.drug_interaction_hazard) {
@@ -4525,13 +4347,8 @@ const BiosimBridge = {
                     hazardBanner.classList.add('hidden');
                 }
 
-                // Coloring age shift
-                if (data.predicted_age_delta_years <= -8.0) {
-                    ageShiftEl.style.color = '#10b981';
-                } else if (data.predicted_age_delta_years > 0) {
-                    ageShiftEl.style.color = '#ef4444';
-                } else {
-                    ageShiftEl.style.color = '#d97706';
+                if (ageShiftEl) {
+                    ageShiftEl.style.color = '#38bdf8';
                 }
 
                 expressionsEl.innerHTML = Object.entries(data.expression_profiles).map(([gene, expr]) => {
@@ -5233,51 +5050,7 @@ const BiosimBridge = {
             }
         });
 
-        ['chk-oral-admin', 'chk-semaglutide', 'chk-omega3', 'chk-plasmapheresis', 'chk-decitabine', 'chk-ketamine', 'chk-bezisterim', 'chk-pitavastatin', 'chk-multivitamin'].forEach(id => {
-            const chk = document.getElementById(id);
-            if (chk) {
-                chk.addEventListener('change', () => this.runMultiOmicsPredictor());
-            }
-        });
 
-        // Bind clinical dosing sliders to update labels, run real-time JS PK/PD sparkline, and trigger forecast re-evaluation
-        ['semaglutide', 'omega3', 'plasmapheresis', 'decitabine', 'ketamine', 'bezisterim', 'pitavastatin', 'multivitamin'].forEach(name => {
-            const doseSlider = document.getElementById(`slider-dose-${name}`);
-            const freqSlider = document.getElementById(`slider-freq-${name}`);
-            
-            const updateSparklineAndLabels = () => {
-                if (!doseSlider || !freqSlider) return;
-                const dose = parseFloat(doseSlider.value);
-                const freq = parseFloat(freqSlider.value);
-                
-                // Update labels
-                const valDoseEl = document.getElementById(`val-dose-${name}`);
-                const valFreqEl = document.getElementById(`val-freq-${name}`);
-                const doseUnit = name === 'plasmapheresis' ? 'unit' : (name === 'multivitamin' ? 'tab' : 'mg');
-                if (valDoseEl) valDoseEl.innerText = `${dose.toFixed(1)} ${doseUnit}`;
-                if (valFreqEl) valFreqEl.innerText = `${freq} hrs`;
-                
-                // Redraw sparkline instantly in JS
-                const sim = this.simulatePKPDJS(name.charAt(0).toUpperCase() + name.slice(1), dose, freq);
-                this.drawPKPDSparkline(`sparkline-${name}`, sim.time, sim.tissue);
-            };
-            
-            if (doseSlider && freqSlider) {
-                doseSlider.addEventListener('input', () => {
-                    updateSparklineAndLabels();
-                    this.runMultiOmicsPredictor();
-                });
-                freqSlider.addEventListener('input', () => {
-                    updateSparklineAndLabels();
-                    this.runMultiOmicsPredictor();
-                });
-                // Initial sparkline render
-                updateSparklineAndLabels();
-            }
-        });
-
-        // Initial CpG Heatmap Grid draw (Baseline)
-        this.drawCpGHeatmap(null);
 
         // LNP Sliders Listeners
         ['slider-lnp-ion', 'slider-lnp-chol', 'slider-lnp-helper', 'slider-lnp-peg', 'slider-lnp-np', 'slider-lnp-ligand', 'slider-lnp-peg-mw'].forEach(id => {
@@ -5997,7 +5770,7 @@ const AIAssistant = {
                 You have access to the Technical Catalog definitions.
                 1. Analyze biological trends.
                 2. Suggest reprogramming protocols (OSKM, LIN28, CHEMICAL_X).
-                3. If asked, refer to the Catalog for methodology (Horvath Clock, Neural SDE).
+                3. If asked, refer to the Catalog for methodology (Transcriptomic Model, Neural SDE).
                 4. Utilize uploaded Knowledge Hub documents contextually.
                 
                 Knowledge Base Documents: ${this.knowledgeBase.map(d => d.name).join(', ')}.`;

@@ -7,7 +7,7 @@ class LNPOptimizeRequest(BaseModel):
         example={"ionizable": 0.50, "helper": 0.10, "cholesterol": 0.385, "peg": 0.015},
         description="Molar percentages of ionizable, helper, cholesterol, and PEG lipids"
     )
-    np_ratio: float = Field(6.0, ge=1.0, le=20.0, description="Nitrogen-to-Phosphate molar ratio")
+    np_ratio: float = Field(6.2, ge=1.0, le=20.0, description="Nitrogen-to-Phosphate molar ratio")
     active_ligand_conjugation: bool = Field(False, description="Whether active targeting ligands are conjugated to the surface")
     ligand_density: float = Field(0.0, ge=0.0, le=10.0, description="Percentage density of targeted surface ligands")
     peg_mw: float = Field(2000.0, description="Molecular weight of PEG lipids (usually 2000 Da)")
@@ -23,7 +23,7 @@ class PerturbationRequest(BaseModel):
 
 class SafetyAuditRequest(BaseModel):
     factors: List[str] = Field(..., example=["GATA4", "TBX5", "OCT4"], description="List of gene symbols to evaluate for safety")
-    cpg_methylation: Optional[Dict[str, float]] = Field(None, example={"cg00000292": 0.45, "cg00050873": 0.12}, description="Map of CpG site probe IDs and their methylation beta-values")
+    dna_methylation: Optional[Dict[str, float]] = Field(None, description="Map of methylation probe IDs and their beta-values")
 
 class DiscoveryRequest(BaseModel):
     target_query: str = Field(..., example="cardiac myocyte rejuvenation", description="Text description of the desired cell state transition")

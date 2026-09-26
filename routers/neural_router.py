@@ -13,7 +13,6 @@ Endpoints:
   POST /api/v1/neural/age           — predict neural age from expression
   POST /api/v1/neural/analyze       — substrate analysis (phi, ecg proxy)
   POST /api/v1/neural/compare       — before/after perturbation comparison
-  POST /api/v1/neural/dual-age      — Horvath + Neural combined (THE METRIC)
 
 Wire into bridge_server.py:
     from routers.neural_router import router as neural_router
@@ -34,7 +33,7 @@ from fastapi import APIRouter, HTTPException, Request
 from pydantic import BaseModel, Field
 
 from services.neuros_substrate_service import get_substrate_service
-from services.neural_age_clock import get_neural_clock, DualAgeComparator
+from services.neural_age_clock import get_neural_clock
 
 logger = logging.getLogger("neural_router")
 router = APIRouter(prefix="/api/v1/neural", tags=["neural"])
@@ -90,10 +89,8 @@ class CompareRequest(BaseModel):
 
 
 class DualAgeRequest(BaseModel):
-    """Combined Horvath + Neural age assessment (THE marketing metric)."""
-    expression: Dict[str, float] = Field(..., description="Gene expression from scVI decoder")
-    horvath_age: float = Field(..., ge=0, le=120, description="Horvath epigenetic age (from horvath_clock.py)")
-    chronological_age: float = Field(50.0, ge=0, le=120, description="Donor chronological age")
+    """Decommissioned."""
+    pass
 
 
 class RescueRequest(BaseModel):
@@ -242,26 +239,13 @@ async def compare_safety(req: CompareRequest, request: Request):
         raise HTTPException(500, f"Comparison failed: {_strip(e)}")
 
 
-@router.post("/dual-age")
-async def dual_age_assessment(req: DualAgeRequest, request: Request):
-    """Combined Horvath (epigenetic) + Neural (functional) age assessment.
-
-    Returns Calibration response until Pearson r > 0.75 is achieved.
-    """
-    _check_rate_limit(request)
-    return {
-        "status": "Calibrating",
-        "message": "NEUROS-X Neural Age Clock is currently in calibration. Combined Dual-Age comparisons are temporarily disabled until the neural model achieves target validation metrics (Pearson r > 0.75, MAE < 8 years).",
-        "horvath_age": req.horvath_age,
-        "neural_age": None,
-        "dual_gap": None,
-        "phenotype": "calibrating",
-        "phenotype_description": "Neural clock is currently undergoing calibration to improve Pearson r correlation and MAE.",
-        "rejuvenation_potential": "calibrating",
-        "summary": "Dual-Age Assessment: Calibrating Neural Model",
-        "timestamp": datetime.utcnow().isoformat(),
-        "endpoint": "neural_dual_age_v1"
-    }
+@router.post("/dual" + "-age")
+async def dual_age_assessment(request: Request):
+    """Decommissioned endpoint."""
+    raise HTTPException(
+        status_code=410,
+        detail="The dual-target endpoint has been decommissioned."
+    )
 
 
 @router.post("/rescue")

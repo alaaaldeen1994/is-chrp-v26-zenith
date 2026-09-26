@@ -46,14 +46,9 @@ def test_esmfold_provider_failure():
     with patch("httpx.Client.post", side_effect=httpx.ConnectError("Connection timed out")) as mock_post:
         result = service.fold_sequence("MAEVPRRLLLLLLLL")
         
-        assert result["status"] == "success"
-        assert result["source"] == "Zenith-Synthetic-Fallback"
-        assert result["fallback_used"] is True
-        assert result["provider_status"] == "external_provider_failed"
-        assert "Connection Failed" in result["provider_error"]
-        assert "warning" in result
-        assert "ATOM" in result["pdb_data"]
-        assert result["metrics"]["predicted_lddt"] == 50.0
+        assert result["status"] == "error"
+        assert result["error_type"] == "provider_error"
+        assert "Connection timed out" in result["message"]
 
 def test_esmfold_invalid_input():
     service = StructuralFolderService()

@@ -63,18 +63,24 @@ def test_cardiac_safety_gate_oncogene_violation():
     assert any(v["marker"] == "MYC" for v in res["violations_detail"])
 
 
-def test_cardiac_ensemble_clock_calculation():
+def test_cardiac_ensemble_clock_absent_methylation():
     clock = get_cardiac_ensemble_clock()
+    res = clock.predict_ensemble_age(methylation_betas=None, chronological_age=65.0)
+    assert res["rejuvenation_delta_years"] is None
+    assert res["status"] == "AWAITING_METHYLATION_ARRAY"
+    assert res["periheart_lodo_mae_baseline_years"] == 6.97
+
+
+def test_cardiac_ensemble_clock_with_betas():
+    clock = get_cardiac_ensemble_clock()
+    betas = {p: 0.50 for p in clock.horvath_service.coefficients.keys()}
     res = clock.predict_ensemble_age(
-        chronological_age=65.0,
-        rejuvenation_target=10.0
+        methylation_betas=betas,
+        chronological_age=65.0
     )
     
-    assert "ensemble_biological_age" in res
-    assert res["ensemble_biological_age"] < 65.0
-    assert res["rejuvenation_delta_years"] < 0.0 # Negative delta = rejuvenation
+    assert res["ensemble_biological_age"] is not None
     assert len(res["ci_95_range"]) == 2
-    assert res["ci_95_range"][0] <= res["rejuvenation_delta_years"] <= res["ci_95_range"][1]
     assert "horvath_353_pan_tissue" in res["component_clocks"]
     assert "krolevets_ventricular_hf" in res["component_clocks"]
     assert "hannum_vascular_core" in res["component_clocks"]
